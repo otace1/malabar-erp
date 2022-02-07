@@ -1,0 +1,1 @@
+update time_dimension set la_date = CONCAT( time_dimension.year, '-', IF (LENGTH(month < 2), CONCAT('0', month), month), '-', IF (LENGTH(day < 2), CONCAT('0', day), day) ) 
