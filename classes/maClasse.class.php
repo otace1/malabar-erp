@@ -1522,18 +1522,20 @@
 				$entree['nbr_bags'] = NULL;
 			}
 
-			$requete = $connexion-> prepare('INSERT INTO dossier(ref_dos, id_cli, num_lic, id_march, 
-																	id_mod_lic, id_mod_trans, id_util, 
-																	num_lot, horse, trailer_1, trailer_2, 
-																	site_load, destination, transporter, 
-																	nbr_bags, poids, load_date, dgda_seal)
-												VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
-			$requete-> execute(array($entree['ref_dos'], $entree['id_cli'], $entree['num_lic'], 
-									$entree['id_march'], $entree['id_mod_lic'], $entree['id_mod_trans'], 
-									$entree['id_util'], $entree['num_lot'], $entree['horse'], 
-									$entree['trailer_1'], $entree['trailer_2'], $entree['site_load'], 
-									$entree['destination'], $entree['transporter'], $entree['nbr_bags'], 
-									$entree['poids'], $entree['load_date'], $entree['dgda_seal']));
+			if (($this-> getDossierRefDos($ref_dos)==NULL)) {
+				$requete = $connexion-> prepare('INSERT INTO dossier(ref_dos, id_cli, num_lic, id_march, 
+																		id_mod_lic, id_mod_trans, id_util, 
+																		num_lot, horse, trailer_1, trailer_2, 
+																		site_load, destination, transporter, 
+																		nbr_bags, poids, load_date, dgda_seal)
+													VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
+				$requete-> execute(array($entree['ref_dos'], $entree['id_cli'], $entree['num_lic'], 
+										$entree['id_march'], $entree['id_mod_lic'], $entree['id_mod_trans'], 
+										$entree['id_util'], $entree['num_lot'], $entree['horse'], 
+										$entree['trailer_1'], $entree['trailer_2'], $entree['site_load'], 
+										$entree['destination'], $entree['transporter'], $entree['nbr_bags'], 
+										$entree['poids'], $entree['load_date'], $entree['dgda_seal']));
+			}
 
 		}
 		
@@ -1593,18 +1595,21 @@
 				$entree['nbr_bags'] = NULL;
 			}
 
-			$requete = $connexion-> prepare('INSERT INTO dossier(ref_dos, id_cli, num_lic, id_march, 
-																	id_mod_lic, id_mod_trans, id_util, 
-																	num_lot, horse, trailer_1, trailer_2, 
-																	site_load, destination, barge, 
-																	nbr_bags, poids, kapulo_load, ship_num)
-												VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
-			$requete-> execute(array($entree['ref_dos'], $entree['id_cli'], $entree['num_lic'], 
-									$entree['id_march'], $entree['id_mod_lic'], $entree['id_mod_trans'], 
-									$entree['id_util'], $entree['num_lot'], $entree['horse'], 
-									$entree['trailer_1'], $entree['trailer_2'], $entree['site_load'], 
-									$entree['destination'], $entree['barge'], $entree['nbr_bags'], 
-									$entree['poids'], $entree['kapulo_load'], $entree['ship_num']));
+			if (($this-> getDossierRefDos($ref_dos)==NULL)) {
+
+				$requete = $connexion-> prepare('INSERT INTO dossier(ref_dos, id_cli, num_lic, id_march, 
+																		id_mod_lic, id_mod_trans, id_util, 
+																		num_lot, horse, trailer_1, trailer_2, 
+																		site_load, destination, barge, 
+																		nbr_bags, poids, kapulo_load, ship_num)
+													VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
+				$requete-> execute(array($entree['ref_dos'], $entree['id_cli'], $entree['num_lic'], 
+										$entree['id_march'], $entree['id_mod_lic'], $entree['id_mod_trans'], 
+										$entree['id_util'], $entree['num_lot'], $entree['horse'], 
+										$entree['trailer_1'], $entree['trailer_2'], $entree['site_load'], 
+										$entree['destination'], $entree['barge'], $entree['nbr_bags'], 
+										$entree['poids'], $entree['kapulo_load'], $entree['ship_num']));
+			}
 
 		}
 		
@@ -1677,41 +1682,45 @@
 				$entree['date_crf'] = NULL;
 			}
 
-			$requete = $connexion-> prepare('INSERT INTO dossier(ref_dos, id_cli, ref_fact, fob, 
-																fret, assurance, autre_frais, num_lic, 
-																id_mod_lic, id_march, id_mod_trans, 
-																ref_av,cod, id_util, road_manif, 
-																date_preal, t1, poids, 
-																po_ref, commodity, horse, 
-																trailer_1, trailer_2, 
-																ref_crf, date_crf, bond_warehouse, 
-																supplier, statut, temporelle)
-												VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 
-														?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, "EXPECTED TO ARRIVE", ?)');
-			$requete-> execute(array($entree['ref_dos'], $entree['id_cli'], $entree['ref_fact'], 
-									$entree['fob'], $entree['fret'], $entree['assurance'], 
-									$entree['autre_frais'], $entree['num_lic'], $entree['id_mod_lic'], 
-									$entree['id_march'], $entree['id_mod_trans'], 
-									$entree['ref_av'], $entree['cod'], $entree['id_util'], 
-									$entree['road_manif'], $entree['date_preal'], $entree['t1'], 
-									$entree['poids'], $entree['po_ref'], $entree['commodity'], 
-									$entree['horse'], $entree['trailer_1'], $entree['trailer_2'], 
-									$entree['ref_crf'], $entree['date_crf'], $entree['bond_warehouse'], 
-									$entree['supplier'], $entree['temporelle']));
+			if (($this-> getDossierRefDos($ref_dos)==NULL)) {
+			
+				$requete = $connexion-> prepare('INSERT INTO dossier(ref_dos, id_cli, ref_fact, fob, 
+																	fret, assurance, autre_frais, num_lic, 
+																	id_mod_lic, id_march, id_mod_trans, 
+																	ref_av,cod, id_util, road_manif, 
+																	date_preal, t1, poids, 
+																	po_ref, commodity, horse, 
+																	trailer_1, trailer_2, 
+																	ref_crf, date_crf, bond_warehouse, 
+																	supplier, statut, temporelle)
+													VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 
+															?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, "EXPECTED TO ARRIVE", ?)');
+				$requete-> execute(array($entree['ref_dos'], $entree['id_cli'], $entree['ref_fact'], 
+										$entree['fob'], $entree['fret'], $entree['assurance'], 
+										$entree['autre_frais'], $entree['num_lic'], $entree['id_mod_lic'], 
+										$entree['id_march'], $entree['id_mod_trans'], 
+										$entree['ref_av'], $entree['cod'], $entree['id_util'], 
+										$entree['road_manif'], $entree['date_preal'], $entree['t1'], 
+										$entree['poids'], $entree['po_ref'], $entree['commodity'], 
+										$entree['horse'], $entree['trailer_1'], $entree['trailer_2'], 
+										$entree['ref_crf'], $entree['date_crf'], $entree['bond_warehouse'], 
+										$entree['supplier'], $entree['temporelle']));
 
-			$id_dos = $this-> getDossierRefDos($ref_dos)['id_dos'];
+				$id_dos = $this-> getDossierRefDos($ref_dos)['id_dos'];
 
-		    for ($i=1; $i <= $_POST['nbre_document']; $i++) { 
-		      
-		      if(isset($_FILES['fichier_'.$i]['name']) && $_FILES['fichier_'.$i]['name'] != ''){
-		        $fichier=$_FILES['fichier_'.$i]['name'];
-		        $tmp=$_FILES['fichier_'.$i]['tmp_name'];
-		        //$num_dos = $maClasse-> getNumDossier($_POST['id_dos']);
+			    for ($i=1; $i <= $_POST['nbre_document']; $i++) { 
+			      
+			      if(isset($_FILES['fichier_'.$i]['name']) && $_FILES['fichier_'.$i]['name'] != ''){
+			        $fichier=$_FILES['fichier_'.$i]['name'];
+			        $tmp=$_FILES['fichier_'.$i]['tmp_name'];
+			        //$num_dos = $maClasse-> getNumDossier($_POST['id_dos']);
 
-		        $this-> archiver($id_dos, $_POST['id_doc_'.$i], $fichier, $tmp, $_POST['ref_dos']);
-		      }
+			        $this-> archiver($id_dos, $_POST['id_doc_'.$i], $fichier, $tmp, $_POST['ref_dos']);
+			      }
 
-		    }
+			    }
+			}
+
 
 
 		}
@@ -2451,7 +2460,7 @@
 			$active = '';
 			$open = '';
 			$reponse['id_cli'] = '';
-			if($_SESSION['id_role'] == '1' || $_SESSION['id_role'] == '6' || $_SESSION['id_role'] == '7' || $_SESSION['id_role'] == '8'){
+			if($_SESSION['id_role'] == '1' || $_SESSION['id_role'] == '6' || $_SESSION['id_role'] == '7' || $_SESSION['id_role'] == '8' || $_SESSION['id_role'] == '9' || $_SESSION['id_role'] == '10'){
 				$sql = "SELECT id_mod_lic, 
 							nom_mod_lic,
 							sigle_mod_lic
@@ -2673,12 +2682,24 @@
 			$open = '';
 			$style = '';
 
+			if ($_SESSION['id_role'] == '10') {
+				$sqlWarehouse = ' AND c.id_cli IN (
+										SELECT DISTINCT(id_cli) 
+										FROM dossier
+										WHERE bond_warehouse = "LUBUMBASHI"
+											AND id_mod_lic = '.$id_mod_lic.'
+									)';
+			}else{
+				$sqlWarehouse = '';
+			}
+
 			$requete = $connexion-> prepare("SELECT UPPER(c.nom_cli) AS nom_cli, c.id_cli AS id_cli 
 												FROM client c, affectation_client_modele_licence cm, modele_licence m 
 												WHERE m.id_mod_lic = ?
 													AND m.id_mod_lic = cm.id_mod_lic
 													AND cm.id_cli = c.id_cli
 													AND cm.id_etat = '1'
+													$sqlWarehouse
 												ORDER BY c.nom_cli");
 			$requete-> execute(array($entree['id_mod_lic']));
 			while ($reponse = $requete-> fetch()) {
@@ -3063,9 +3084,9 @@
 
             }
 
-			if ($_SESSION['id_role'] != '7' && $_SESSION['id_role'] != '8') {
+			if ($_SESSION['id_role'] != '7' && $_SESSION['id_role'] != '8' && $_SESSION['id_role'] != '9' && $_SESSION['id_role'] != '10') {
 				
-			$requete = $connexion-> prepare("SELECT c.titre_col AS titre_col
+			$requete = $connexion-> prepare("SELECT c.titre_col AS titre_col, c.id_col AS id_col
 												FROM colonne c, client cl, affectation_colonne_client_modele_licence af
 												WHERE c.id_col = af.id_col
 													AND af.id_cli = cl.id_cli
@@ -3076,7 +3097,7 @@
 			$requete-> execute(array($entree['id_mod_lic'], $entree['id_mod_trans']));
 
 			}else{
-				$requete = $connexion-> prepare("SELECT c.titre_col AS titre_col
+				$requete = $connexion-> prepare("SELECT c.titre_col AS titre_col, c.id_col AS id_col
 												FROM colonne c, client cl, affectation_colonne_client_modele_licence af, affectation_colonne_role_modele_licence rolic
 												WHERE c.id_col = af.id_col
 													AND af.id_cli = cl.id_cli
@@ -3096,10 +3117,38 @@
 		      <th style="border: 1px solid white; background-color: #222530; color: white;" class=""></th>
 			<?php
 			while ($reponse = $requete-> fetch()) {
+				if ($reponse['id_col']=='42' && $id_mod_lic=='2' && $_SESSION['id_role'] == '10') {
+
+				?>
+				<th style="border: 1px solid white;">
+					AMICONGO STATUS
+				</th>
+				<?php
+
+				}else if ($reponse['id_col']=='42' && $id_mod_lic=='2') {
+
+				?>
+				<th style="border: 1px solid white;">
+					GENERAL STATUS
+				</th>
+				<th style="border: 1px solid white;">
+					KLSA STATUS
+				</th>
+				<th style="border: 1px solid white;">
+					AMICONGO STATUS
+				</th>
+				<th style="border: 1px solid white;">
+					KZI STATUS
+				</th>
+				<?php
+
+				}else{
+
+				?>
+				<th style="border: 1px solid white;"><?php echo $reponse['titre_col'];?></th>
+				<?php
 				
-			?>
-			<th style="border: 1px solid white;"><?php echo $reponse['titre_col'];?></th>
-			<?php
+				}
 
 			}$requete-> closeCursor();
 			?>
@@ -4938,105 +4987,167 @@
 
 		}
 
-		public function afficherSearchFile($mot_cle, $id_mod_lic){
+		public function afficherSearchFile($mot_cle, $id_cli, $id_mod_trans, 
+														$id_mod_lic, $commodity,
+														$id_march=NULL, $statut=NULL, $num_lic=NULL, 
+														$cleared=NULL){
 			include("connexion.php");
 			$entree['mot_cle'] = $mot_cle;
 			$entree['id_mod_lic'] = $id_mod_lic;
+			$entree['id_cli'] = $id_cli;
+			$entree['id_mod_trans'] = $id_mod_trans;
+
+			// echo '<br>mot_cle = '.$mot_cle;
+			// echo '<br>id_mod_lic = '.$id_mod_lic;
+			// echo '<br>id_cli = '.$id_cli;
+			// echo '<br>id_mod_trans = '.$id_mod_trans;
 
 			$compteur = 0;
 			$ligne = '';
-			$requete = $connexion-> prepare("SELECT DATE_FORMAT(d.date_preal, '%d/%m/%Y') AS date_preal,
-													DATE_FORMAT(d.klsa_arriv, '%d/%m/%Y') AS klsa_arriv, 
-													cli.nom_cli AS nom_cli,
-													d.id_dos AS id_dos,
-													d.ref_dos AS ref_dos,
-													d.commodity AS commodity,
-													d.horse AS horse,
-													d.trailer_1 AS trailer_1,
-													d.trailer_2 AS trailer_2,
+			$requete = $connexion-> prepare("SELECT d.ref_dos AS ref_dos,
+													UPPER(cl.nom_cli) AS nom_cli,
 													d.ref_fact AS ref_fact,
-													d.ref_crf AS ref_crf,
-													d.statut AS statut,
-													d.num_lot AS num_lot
-												FROM dossier d, client cli
-												WHERE d.id_cli = cli.id_cli
+													d.fob AS fob_dos,
+													d.fret AS fret,
+													d.assurance AS assurance,
+													d.autre_frais AS autre_frais,
+													d.num_lic AS num_lic,
+													d.montant_decl AS montant_decl,
+													d.*,
+													d.supplier AS fournisseur,
+													s.nom_site AS nom_site,
+													d.dgda_in AS dgda_in_1,
+													d.dgda_out AS dgda_out_1,
+													d.custom_deliv AS custom_deliv_1,
+													d.arrival_date AS arrival_date_1,
+
+													IF(d.id_mod_lic='2',
+														IF(d.date_crf IS NULL, 'AWAITING CRF/AD/INSURANCE',
+															IF(d.date_decl IS NULL AND d.ref_decl IS NULL, 'UNDER PREPARATION',
+																IF(d.date_liq IS NULL AND d.ref_liq IS NULL, 'AWAITING LIQUIDATION',
+																	IF(d.date_quit IS NULL AND d.ref_quit IS NULL, 'AWAITING QUITTANCE',
+																		IF(d.date_quit IS NOT NULL AND d.ref_quit IS NOT NULL AND d.dgda_out IS NULL, 'AWAITING BAE/BS', 
+																			IF(d.dgda_out IS NOT NULL AND d.dispatch_deliv IS NOT NULL, 'CLEARING COMPLETED', '')
+																			)
+																		)
+																	)
+																)
+															)
+														,
+														d.statut) AS statut,
+
+													IF(d.id_mod_trans='1' AND d.id_mod_lic='2', 
+														IF(d.klsa_arriv IS NOT NULL AND d.wiski_arriv IS NULL,'ARRIVED AT K\'LSA', 
+															IF(d.wiski_arriv IS NOT NULL AND d.dispatch_klsa IS NULL, 'AT WISKI',
+																IF(d.dispatch_klsa IS NOT NULL, 'DISPATCHED FROM K\'LSA', 'EXCEPTED TO ARRIVE')
+																)
+															)
+														, '') AS klsa_status,
+													IF(d.id_mod_trans='1' AND d.id_mod_lic='2', 
+														IF(d.bond_warehouse='LUBUMBASHI',
+															IF(d.warehouse_arriv IS NOT NULL AND d.warehouse_arriv IS NOT NULL, 'DISPATCHED FROM AMICONGO', 
+																IF(d.warehouse_arriv IS NOT NULL, 'ARRIVED AT AMICONGO', '')
+																)
+															,'')
+														,'') AS amicongo_status,
+													IF(d.id_mod_trans='1' AND d.id_mod_lic='2', 
+														IF(d.bond_warehouse='KOLWEZI',
+															IF(d.warehouse_arriv IS NOT NULL AND d.warehouse_arriv IS NOT NULL, 'DISPATCHED FROM WAREHOUSE', 
+																IF(d.warehouse_arriv IS NOT NULL, 'ARRIVED AT WAREHOUSE', '')
+																)
+															,'')
+														,'') AS kzi_status,
+
+													DATEDIFF(d.dgda_out, d.dgda_in) AS dgda_delay,
+													DATEDIFF(d.custom_deliv, d.arrival_date) AS arrival_deliver_delay
+												FROM dossier d, client cl, site s, mode_transport mt
+												WHERE d.id_cli = cl.id_cli
 													AND d.id_mod_lic = ?
 													AND (d.ref_dos = ? OR d.ref_fact = ? 
 															OR d.ref_crf = ? OR d.horse = ? 
 															OR d.trailer_1 = ? OR d.trailer_2 = ?
 															OR d.num_lot = ?)
+													AND cl.id_cli = ?
+													AND d.id_site = s.id_site
+													AND d.id_mod_trans = mt.id_mod_trans
+													AND mt.id_mod_trans = ?
+													AND d.id_mod_lic = ?
 												ORDER BY d.date_creat_dos ASC");
-			$requete-> execute(array($entree['id_mod_lic'], $entree['mot_cle'], $entree['mot_cle'], $entree['mot_cle'], $entree['mot_cle'], $entree['mot_cle'], $entree['mot_cle'], $entree['mot_cle']));
+			$requete-> execute(array($entree['id_mod_lic'], $entree['mot_cle'], $entree['mot_cle'], $entree['mot_cle'], $entree['mot_cle'], $entree['mot_cle'], $entree['mot_cle'], $entree['mot_cle'], $entree['id_cli'], $entree['id_mod_trans'], $entree['id_mod_lic']));
 			while ($reponse = $requete-> fetch()) {
 				$compteur++;
-				if($id_mod_lic == '1'){
-					$ligne .= '
-					<tr style="<?php echo $bg;?>">
-						<td class="" style="border: 1px solid black; " class="">
-							'.$compteur.'
-						</td>
-						<td class="" style="border: 1px solid black; " class="">
-							'.$reponse['ref_dos'].'
-						</td>
-						<td class="" style="border: 1px solid black; " class="">
-							'.$reponse['nom_cli'].'
-						</td>
-						<td class="" style="border: 1px solid black; text-align: center;" class="">
-							'.$reponse['num_lot'].'
-						</td>
-						<td class="" style="border: 1px solid black; " class="">
-							'.$reponse['horse'].'
-						</td>
-						<td class="" style="border: 1px solid black; " class="">
-							'.$reponse['trailer_1'].'
-						</td>
-						<td class="" style="border: 1px solid black; " class="">
-							'.$reponse['trailer_2'].'
-						</td>
-						<td class="" style="border: 1px solid black; text-align: center;" class="">
-							'.$reponse['statut'].'
-						</td>
-					</tr>
-					';
-				}else if($id_mod_lic == '2'){
-					$ligne .= '
-					<tr style="<?php echo $bg;?>">
-						<td class="" style="border: 1px solid black; " class="">
-							'.$compteur.'
-						</td>
-						<td class="" style="border: 1px solid black; " class="">
-							'.$reponse['ref_dos'].'
-						</td>
-						<td class="" style="border: 1px solid black; " class="">
-							'.$reponse['nom_cli'].'
-						</td>
-						<td class="" style="border: 1px solid black; " class="">
-							'.$reponse['horse'].'
-						</td>
-						<td class="" style="border: 1px solid black; " class="">
-							'.$reponse['trailer_1'].'
-						</td>
-						<td class="" style="border: 1px solid black; " class="">
-							'.$reponse['trailer_2'].'
-						</td>
-						<td class="" style="border: 1px solid black; text-align: center;" class="">
-							'.$reponse['date_preal'].'
-						</td>
-						<td class="" style="border: 1px solid black; text-align: center;" class="">
-							'.$reponse['ref_fact'].'
-						</td>
-						<td class="" style="border: 1px solid black; text-align: center;" class="">
-							'.$reponse['ref_crf'].'
-						</td>
-						<td class="" style="border: 1px solid black; text-align: center;" class="">
-							'.$reponse['statut'].'
-						</td>
-					</tr>
-					';
-				}
-			}$requete-> closeCursor();
+				$bg = "";
+				$color='';
+				$class = "";
 
-			return $ligne;
+				if ($reponse['cleared'] == '1') {
+					$style = "style='color: blue;'";
+					$color = "color: blue;";
+					$class = "bg-primary";
+				}else if ($reponse['cleared'] == '2') {
+					$style = "style='color: red;'";
+					$color = "color: red;";
+					$class = "bg-danger";
+				}else{
+					$style = "";
+					$color = "";
+					$class = "";
+				}
+
+				$date_exp = $this-> getLastEpirationLicence($reponse['num_lic']);
+				$supplier = $this-> getLicence($reponse['num_lic'])['fournisseur'];
+
+				if (isset($supplier)) {
+					$reponse['fournisseur'] = $supplier;
+				}
+
+				//include('modalDeleteDossier.php');
+				
+
+			?>
+				<input type="hidden" name="ref_dos" value="<?php echo $ref_dos;?>">
+				<input type="hidden" name="rech" value="true">
+				<input type="hidden" name="id_dos_<?php echo $compteur;?>" value="<?php echo $reponse['id_dos'];?>">
+				<tr class="<?php echo $bg;?>" <?php echo $style;?>>
+					<td class="<?php echo $class;?> <?php echo $bg;?>" style=" border-right: 1px solid black; vertical-align: middle; text-align: left; padding: 0.6rem; border-top: 1px solid black;" <?php echo $style;?>><?php echo $compteur;?></td>
+					<td class="<?php echo $class;?> <?php echo $bg;?>" style=" border-right: 1px solid black; vertical-align: middle; text-align: left; padding: 0.6rem; border-top: 1px solid black; <?php echo $color;?>"><span class="" style="<?php ?>"><?php echo $reponse['ref_dos'];?></span>
+					 <?php 
+					  if(!isset($this-> getDataUtilisateur($_SESSION['id_util'])['tracking_enab'])){
+					  
+
+						if ($this-> getDataUtilisateur($_SESSION['id_util'])['tracking_log'] == '1') {
+						?>
+					  	<span title="Historique du dossier" onclick="window.open('popUpLogFile.php?id_dos=<?php echo $reponse['id_dos'];?>','pop1','width=900,height=950');">
+					  		<i class="fa fa-history bg bg-dark"  style="padding: 3px; border-radius: 5px;" aria-hidden="true"></i>
+	                	</span>
+		                <?php
+						}
+					
+					  }
+					  ?>
+					</td>
+					<td style="text-align: center;">
+						<span class="btn-xs bg-purple dropdown-toggle dropdown-hover dropdown-icon" data-toggle="dropdown" title="Documents Joints">
+                        <i class="fa fa-folder-open"></i><sup><span class=""><?php echo $this-> getNombreDocumentDossier($reponse['id_dos']);?></span></sup>
+                        <span class="sr-only">Toggle Dropdown</span>
+                        <div class="dropdown-menu" role="menu">
+                          <?php
+                            $this-> getListeDocumentForDossier($reponse['id_dos'], $reponse['id_mod_lic']);
+                          ?>
+                        </div>
+                      </span>
+					</td>
+					<?php
+					$this-> afficherRowTableau($id_mod_lic, $id_cli, $id_mod_trans, $reponse['id_dos'], $compteur, $reponse['statut'], $reponse['klsa_status'], $reponse['amicongo_status'], $reponse['kzi_status']);
+						/*if ($id_mod_trans == '1') {
+							include('importRouteRow.php');
+						}else if ($id_mod_trans == '3') {
+							include('importAirRow.php');
+						}*/
+					?>
+				</tr>
+			<?php
+			}$requete-> closeCursor();
 
 		}
 
@@ -5962,6 +6073,27 @@
 			return $reponse['nbre'];
 		}
 
+		public function getDataDossierMotCle($mot_cle, $id_mod_lic){
+			include('connexion.php');
+
+			$entree['mot_cle'] = $mot_cle;
+			$entree['id_mod_lic'] = $id_mod_lic;
+
+			$requete = $connexion-> prepare('SELECT *
+												FROM dossier
+												WHERE id_mod_lic = ?
+													AND (ref_dos = ? OR ref_fact = ? 
+															OR ref_crf = ? OR horse = ? 
+															OR trailer_1 = ? OR trailer_2 = ?
+															OR num_lot = ?)
+											');
+			$requete-> execute(array($entree['id_mod_lic'], $entree['mot_cle'], $entree['mot_cle'], $entree['mot_cle'], $entree['mot_cle'], $entree['mot_cle'], $entree['mot_cle'], $entree['mot_cle']));
+
+			$reponse = $requete-> fetch();
+
+			return $reponse;
+		}
+
 		public function nbreKpiFile($id_cli, $id_mod_lic, $id_mod_trans, $debut, $fin){
 			include('connexion.php');
 
@@ -6140,7 +6272,7 @@
 			return $liste;
 		}
 
-		public function afficherRowTableau($id_mod_lic, $id_cli, $id_mod_trans, $id_dos, $compteur){
+		public function afficherRowTableau($id_mod_lic, $id_cli, $id_mod_trans, $id_dos, $compteur, $statut=NULL, $klsa_status=NULL, $amicongo_status=NULL, $kzi_status=NULL){
 			include('connexion.php');
 			$entree['id_mod_lic'] = $id_mod_lic;
 			if ($id_cli == 869 && $_GET['id_march'] == 16) {
@@ -6152,7 +6284,7 @@
 			$entree['id_mod_trans'] = $id_mod_trans;
 			$bg = '';
 
-			if ($_SESSION['id_role'] != '7' && $_SESSION['id_role'] != '8') {
+			if ($_SESSION['id_role'] != '7' && $_SESSION['id_role'] != '8' && $_SESSION['id_role'] != '9' && $_SESSION['id_role'] != '10') {
 				
 			$requete = $connexion-> prepare("SELECT c.champ_col AS champ_col, 
 													c.type_col AS type_col, 
@@ -6478,7 +6610,7 @@
 						<?php
 
 					}
-				}else if ($reponse['id_col'] == '42') {
+				}else if ($reponse['id_col'] == '42' && $id_mod_lic=='2' && $id_mod_trans=='1' && $_SESSION['id_role'] == '10') {
 					// Status
 					$bgStatuts = '';
 					if ( ($this-> getDataRow($reponse['champ_col'], $id_dos) == 'CLEARING COMPLETED') || ($this-> getDataRow($reponse['champ_col'], $id_dos) == 'EXIT DRC') ) {
@@ -6486,6 +6618,25 @@
 					}
 				?>
 				<td class=" <?php echo $bg.$bgStatuts;?>" style="border: 1px solid black; text-align: center;">
+					<span class="badge bg-teal">
+					<?php
+					echo $amicongo_status;
+					?>
+					</span>
+				</td>
+				<?php
+				}else if ($reponse['id_col'] == '42' && $id_mod_lic=='2' && $id_mod_trans=='1') {
+					// Status
+					$bgStatuts = '';
+					if ( ($this-> getDataRow($reponse['champ_col'], $id_dos) == 'CLEARING COMPLETED') || ($this-> getDataRow($reponse['champ_col'], $id_dos) == 'EXIT DRC') ) {
+						$bgStatuts = 'bg bg-primary';
+					}
+				?>
+				<td class=" <?php echo $bg.$bgStatuts;?>" style="border: 1px solid black; text-align: center;"><span class="badge badge-dark">
+					<?php
+					echo $statut;
+					/*
+					?>
 					<select name="<?php echo $reponse['champ_col'];?>_<?php echo $compteur;?>" <?php echo $this-> getDataUtilisateur($_SESSION['id_util'])['tracking_enab'];?>>
 						<option value="<?php echo $this-> getDataRow($reponse['champ_col'], $id_dos);?>">
 							<?php echo $this-> getDataRow($reponse['champ_col'], $id_dos);?>
@@ -6495,7 +6646,58 @@
 							$this-> selectionnerStatusModeleLicence($id_mod_lic);
 						?>
 					</select>
-					<?php //echo $this-> getDifferenceDate($this-> getDataRow('gov_out', $id_dos), $this-> getDataRow('gov_in', $id_dos));?>
+					<?php 
+					*/
+					//echo $this-> getDifferenceDate($this-> getDataRow('gov_out', $id_dos), $this-> getDataRow('gov_in', $id_dos));?>
+					</span>
+				</td>
+				<td class=" <?php echo $bg.$bgStatuts;?>" style="border: 1px solid black; text-align: center;">
+					<span class="badge bg-purple">
+					<?php
+					echo $klsa_status;
+					?>
+					</span>
+				</td>
+				<td class=" <?php echo $bg.$bgStatuts;?>" style="border: 1px solid black; text-align: center;">
+					<span class="badge bg-teal">
+					<?php
+					echo $amicongo_status;
+					?>
+					</span>
+				</td>
+				<td class=" <?php echo $bg.$bgStatuts;?>" style="border: 1px solid black; text-align: center;">
+					<span class="badge bg-info">
+					<?php
+					echo $kzi_status;
+					?>
+					</span>
+				</td>
+				<?php
+				}else if ($reponse['id_col'] == '42') {
+					// Status
+					$bgStatuts = '';
+					if ( ($this-> getDataRow($reponse['champ_col'], $id_dos) == 'CLEARING COMPLETED') || ($this-> getDataRow($reponse['champ_col'], $id_dos) == 'EXIT DRC') ) {
+						$bgStatuts = 'bg bg-primary';
+					}
+				?>
+				<td class=" <?php echo $bg.$bgStatuts;?>" style="border: 1px solid black; text-align: center;">
+					<?php
+					//echo $statut;
+					
+					?>
+					<select name="<?php echo $reponse['champ_col'];?>_<?php echo $compteur;?>" <?php echo $this-> getDataUtilisateur($_SESSION['id_util'])['tracking_enab'];?>>
+						<option value="<?php echo $this-> getDataRow($reponse['champ_col'], $id_dos);?>">
+							<?php echo $this-> getDataRow($reponse['champ_col'], $id_dos);?>
+						</option>
+						<option></option>
+						<?php
+							$this-> selectionnerStatusModeleLicence($id_mod_lic);
+						?>
+					</select>
+					<?php 
+					
+					//echo $this-> getDifferenceDate($this-> getDataRow('gov_out', $id_dos), $this-> getDataRow('gov_in', $id_dos));?>
+					
 				</td>
 				<?php
 				}
@@ -6821,7 +7023,7 @@
 			}$requete-> closeCursor();
 		}
 
-		public function afficherRowTableau3($id_mod_lic, $id_cli, $id_mod_trans, $id_dos, $compteur){
+		public function afficherRowTableau3($id_mod_lic, $id_cli, $id_mod_trans, $id_dos, $compteur, $statut=NULL){
 			include('connexion.php');
 			$entree['id_mod_lic'] = $id_mod_lic;
 			$entree['id_cli'] = $id_cli;
@@ -7129,7 +7331,7 @@
 						<?php
 
 					}
-				}else if ($reponse['id_col'] == '42') {
+				}else if ($reponse['id_col'] == '42' && $id_mod_lic=='2') {
 					// Status
 					$bgStatuts = '';
 					if ( ($this-> getDataRow($reponse['champ_col'], $id_dos) == 'CLEARING COMPLETED') || ($this-> getDataRow($reponse['champ_col'], $id_dos) == 'EXIT DRC') ) {
@@ -7137,6 +7339,11 @@
 					}
 				?>
 				<td class=" <?php echo $bg.$bgStatuts;?>" style="border: 1px solid black; text-align: center;">
+
+					<?php
+					echo $statut;
+					/*
+					?>
 					<select name="<?php echo $reponse['champ_col'];?>_<?php echo $compteur;?>" <?php echo $this-> getDataUtilisateur($_SESSION['id_util'])['tracking_enab'];?>>
 						<option value="<?php echo $this-> getDataRow($reponse['champ_col'], $id_dos);?>">
 							<?php echo $this-> getDataRow($reponse['champ_col'], $id_dos);?>
@@ -7146,7 +7353,36 @@
 							$this-> selectionnerStatusModeleLicence($id_mod_lic);
 						?>
 					</select>
-					<?php //echo $this-> getDifferenceDate($this-> getDataRow('gov_out', $id_dos), $this-> getDataRow('gov_in', $id_dos));?>
+					<?php 
+					*/
+					//echo $this-> getDifferenceDate($this-> getDataRow('gov_out', $id_dos), $this-> getDataRow('gov_in', $id_dos));?>
+				</td>
+				<?php
+				}else if ($reponse['id_col'] == '42' && $id_mod_lic=='1') {
+					// Status
+					$bgStatuts = '';
+					if ( ($this-> getDataRow($reponse['champ_col'], $id_dos) == 'CLEARING COMPLETED') || ($this-> getDataRow($reponse['champ_col'], $id_dos) == 'EXIT DRC') ) {
+						$bgStatuts = 'bg bg-primary';
+					}
+				?>
+				<td class=" <?php echo $bg.$bgStatuts;?>" style="border: 1px solid black; text-align: center;">
+
+					<?php
+					//echo $statut;
+					
+					?>
+					<select name="<?php echo $reponse['champ_col'];?>_<?php echo $compteur;?>" <?php echo $this-> getDataUtilisateur($_SESSION['id_util'])['tracking_enab'];?>>
+						<option value="<?php echo $this-> getDataRow($reponse['champ_col'], $id_dos);?>">
+							<?php echo $this-> getDataRow($reponse['champ_col'], $id_dos);?>
+						</option>
+						<option></option>
+						<?php
+							$this-> selectionnerStatusModeleLicence($id_mod_lic);
+						?>
+					</select>
+					<?php 
+					
+					//echo $this-> getDifferenceDate($this-> getDataRow('gov_out', $id_dos), $this-> getDataRow('gov_in', $id_dos));?>
 				</td>
 				<?php
 				}
@@ -7388,7 +7624,7 @@
 			return $name_champ_col;
 		}
 
-		public function afficherRowTableauExcel($id_mod_lic, $id_cli, $id_mod_trans, $id_dos, $compteur){
+		public function afficherRowTableauExcel($id_mod_lic, $id_cli, $id_mod_trans, $id_dos, $compteur, $statut=NULL, $klsa_status=NULL, $amicongo_status=NULL, $kzi_status=NULL){
 			include('connexion.php');
 			$entree['id_mod_lic'] = $id_mod_lic;
 			$entree['id_cli'] = $id_cli;
@@ -7600,6 +7836,15 @@
 				<td class=" <?php echo $bg;?>" style="border: 1px solid black; text-align: center;">
 					<?php echo $this-> getDataRow($reponse['champ_col'], $id_dos);?>
 					<?php //echo $this-> getDifferenceDate($this-> getDataRow('gov_out', $id_dos), $this-> getDataRow('gov_in', $id_dos));?>
+				</td>
+				<td class=" <?php echo $bg;?>" style="border: 1px solid black; text-align: center;">
+					<?php echo $klsa_status;?>
+				</td>
+				<td class=" <?php echo $bg;?>" style="border: 1px solid black; text-align: center;">
+					<?php echo $amicongo_status;?>
+				</td>
+				<td class=" <?php echo $bg;?>" style="border: 1px solid black; text-align: center;">
+					<?php echo $kzi_status;?>
 				</td>
 				<?php
 				}else if ($reponse['id_col'] == '44'){
@@ -11846,6 +12091,42 @@
 													d.dgda_out AS dgda_out_1,
 													d.custom_deliv AS custom_deliv_1,
 													d.arrival_date AS arrival_date_1,
+
+													IF(d.id_mod_lic='2' AND d.id_mod_trans='1',
+														IF(d.date_crf IS NULL, 'AWAITING CRF/AD/INSURANCE',
+															IF(d.date_decl IS NULL AND d.ref_decl IS NULL, 'UNDER PREPARATION',
+																IF(d.date_liq IS NULL AND d.ref_liq IS NULL, 'AWAITING LIQUIDATION',
+																	IF(d.date_quit IS NULL AND d.ref_quit IS NULL, 'AWAITING QUITTANCE',
+																		IF(d.date_quit IS NOT NULL AND d.ref_quit IS NOT NULL AND d.dgda_out IS NULL, 'AWAITING BAE/BS', 
+																			IF(d.dgda_out IS NOT NULL AND d.dispatch_deliv IS NOT NULL, 'CLEARING COMPLETED', '')
+																			)
+																		)
+																	)
+																)
+															)
+														,
+														d.statut) AS statut,
+													IF(d.id_mod_trans='1' AND d.id_mod_lic='2', 
+														IF(d.klsa_arriv IS NOT NULL AND d.wiski_arriv IS NULL,'ARRIVED AT K\'LSA', 
+															IF(d.wiski_arriv IS NOT NULL AND d.dispatch_klsa IS NULL, 'AT WISKI',
+																IF(d.dispatch_klsa IS NOT NULL, 'DISPATCHED FROM K\'LSA', 'EXCEPTED TO ARRIVE')
+																)
+															)
+														, '') AS klsa_status,
+													IF(d.id_mod_trans='1' AND d.id_mod_lic='2', 
+														IF(d.bond_warehouse='LUBUMBASHI',
+															IF(d.warehouse_arriv IS NOT NULL AND d.warehouse_arriv IS NOT NULL, 'DISPATCHED FROM AMICONGO', 
+																IF(d.warehouse_arriv IS NOT NULL, 'ARRIVED AT AMICONGO', '')
+																)
+															,'')
+														,'') AS amicongo_status,
+													IF(d.id_mod_trans='1' AND d.id_mod_lic='2', 
+														IF(d.bond_warehouse='KOLWEZI',
+															IF(d.warehouse_arriv IS NOT NULL AND d.warehouse_arriv IS NOT NULL, 'DISPATCHED FROM WAREHOUSE', 
+																IF(d.warehouse_arriv IS NOT NULL, 'ARRIVED AT WAREHOUSE', '')
+																)
+															,'')
+														,'') AS kzi_status,
 													DATEDIFF(d.dgda_out, d.dgda_in) AS dgda_delay,
 													DATEDIFF(d.custom_deliv, d.arrival_date) AS arrival_deliver_delay
 												FROM dossier d, client cl, site s, mode_transport mt
@@ -11950,7 +12231,7 @@
                       </span>
 					</td>
 					<?php
-					$this-> afficherRowTableau($id_mod_lic, $id_cli, $id_mod_trans, $reponse['id_dos'], $compteur);
+					$this-> afficherRowTableau($id_mod_lic, $id_cli, $id_mod_trans, $reponse['id_dos'], $compteur, $reponse['statut'], $reponse['klsa_status'], $reponse['amicongo_status'], $reponse['kzi_status']);
 						/*if ($id_mod_trans == '1') {
 							include('importRouteRow.php');
 						}else if ($id_mod_trans == '3') {
@@ -12152,6 +12433,44 @@
 													d.dgda_out AS dgda_out_1,
 													d.custom_deliv AS custom_deliv_1,
 													d.arrival_date AS arrival_date_1,
+
+													IF(d.id_mod_lic='2',
+														IF(d.date_crf IS NULL, 'AWAITING CRF/AD/INSURANCE',
+															IF(d.date_decl IS NULL AND d.ref_decl IS NULL, 'UNDER PREPARATION',
+																IF(d.date_liq IS NULL AND d.ref_liq IS NULL, 'AWAITING LIQUIDATION',
+																	IF(d.date_quit IS NULL AND d.ref_quit IS NULL, 'AWAITING QUITTANCE',
+																		IF(d.date_quit IS NOT NULL AND d.ref_quit IS NOT NULL AND d.dgda_out IS NULL, 'AWAITING BAE/BS', 
+																			IF(d.dgda_out IS NOT NULL AND d.dispatch_deliv IS NOT NULL, 'CLEARING COMPLETED', '')
+																			)
+																		)
+																	)
+																)
+															)
+														,
+														d.statut) AS statut,
+
+													IF(d.id_mod_trans='1' AND d.id_mod_lic='2', 
+														IF(d.klsa_arriv IS NOT NULL AND d.wiski_arriv IS NULL,'ARRIVED AT K\'LSA', 
+															IF(d.wiski_arriv IS NOT NULL AND d.dispatch_klsa IS NULL, 'AT WISKI',
+																IF(d.dispatch_klsa IS NOT NULL, 'DISPATCHED FROM K\'LSA', 'EXCEPTED TO ARRIVE')
+																)
+															)
+														, '') AS klsa_status,
+													IF(d.id_mod_trans='1' AND d.id_mod_lic='2', 
+														IF(d.bond_warehouse='LUBUMBASHI',
+															IF(d.warehouse_arriv IS NOT NULL AND d.warehouse_arriv IS NOT NULL, 'DISPATCHED FROM AMICONGO', 
+																IF(d.warehouse_arriv IS NOT NULL, 'ARRIVED AT AMICONGO', '')
+																)
+															,'')
+														,'') AS amicongo_status,
+													IF(d.id_mod_trans='1' AND d.id_mod_lic='2', 
+														IF(d.bond_warehouse='KOLWEZI',
+															IF(d.warehouse_arriv IS NOT NULL AND d.warehouse_arriv IS NOT NULL, 'DISPATCHED FROM WAREHOUSE', 
+																IF(d.warehouse_arriv IS NOT NULL, 'ARRIVED AT WAREHOUSE', '')
+																)
+															,'')
+														,'') AS kzi_status,
+
 													DATEDIFF(d.dgda_out, d.dgda_in) AS dgda_delay,
 													DATEDIFF(d.custom_deliv, d.arrival_date) AS arrival_deliver_delay
 												FROM dossier d, client cl, site s, mode_transport mt
@@ -12251,7 +12570,7 @@
                       </span>
 					</td>
 					<?php
-					$this-> afficherRowTableau($id_mod_lic, $id_cli, $id_mod_trans, $reponse['id_dos'], $compteur);
+					$this-> afficherRowTableau($id_mod_lic, $id_cli, $id_mod_trans, $reponse['id_dos'], $compteur, $reponse['statut'], $reponse['klsa_status'], $reponse['amicongo_status'], $reponse['kzi_status']);
 						/*if ($id_mod_trans == '1') {
 							include('importRouteRow.php');
 						}else if ($id_mod_trans == '3') {
@@ -12405,6 +12724,224 @@
 					<?php
 					//$this-> afficherRowTableau2($id_mod_lic, $id_cli, $id_mod_trans, $reponse['id_dos'], $compteur);
 					$this-> afficherRowTableau3($id_mod_lic, $id_cli, $id_mod_trans, $reponse['id_dos'], $compteur);
+						/*if ($id_mod_trans == '1') {
+							include('importRouteRow.php');
+						}else if ($id_mod_trans == '3') {
+							include('importAirRow.php');
+						}*/
+					?>
+				</tr>
+			<?php
+			}$requete-> closeCursor();
+			?>
+			<?php
+		}
+
+		public function afficherRowDossierClientModeTransportModeLicenceStatusAuto($id_cli, $id_mod_trans, 
+														$id_mod_lic, $commodity, 
+														$id_march=NULL, $statut=NULL, $num_lic=NULL, 
+														$cleared=NULL){
+			include('connexion.php');
+
+			$entree['id_cli'] = $id_cli;
+			$entree['id_mod_trans'] = $id_mod_trans;
+			$entree['id_mod_lic'] = $id_mod_lic;
+			$compteur = 0;
+			$bg = '';
+			$style = '';
+
+			/*echo '<br> id_cli = '.$id_cli;
+			echo '<br> id_mod_trans = '.$id_mod_trans;
+			echo '<br> id_mod_lic = '.$id_mod_lic;
+			echo '<br> num_lic = '.$num_lic;*/
+				//echo '<br>-------'.$sqlStatus;
+
+			$sql1 = "";
+			$sqlOrder = "";
+			$sqlIdMarch = "";
+			$sqlStatus = "";
+			$sqlLicence = "";
+			$sqlCleared = "";
+			$statut = str_replace('_', '/', $statut);
+
+			if (isset($commodity) && ($commodity != '')) {
+				$sql1 = ' AND d.commodity = "'.$commodity.'"';
+			}
+			if ($id_mod_lic == '1') {
+				$sqlOrder = ' ORDER BY d.id_dos DESC';
+			}else if ($id_mod_lic == '2' && $id_cli == '857') {
+				$sqlOrder = ' ORDER BY d.id_dos DESC';
+			}else if ($id_mod_lic == '2') {
+				$sqlOrder = ' ORDER BY d.ref_dos DESC';
+			}
+
+			if (isset($id_march) && ($id_march != '')) {
+				$sqlIdMarch = ' AND d.id_march = '.$id_march;
+			}
+
+			if (isset($statut) && ($statut != '')) {
+				$sqlStatus = ' AND REPLACE(d.statut,"\'","") = "'.$statut.'"';
+			}
+
+			if (isset($num_lic) && ($num_lic != '')) {
+				$sqlLicence = ' AND d.num_lic = "'.$num_lic.'"';
+			}
+
+			if (isset($cleared) && ($cleared != '')) {
+				$sqlCleared = ' AND d.cleared = "'.$cleared.'"';
+			}
+
+            if ($_GET['id_mod_lic'] == '1') {
+              
+				if (isset($id_cli) && ($id_cli!='')) {
+					$sqlClient = ' AND cl.id_cli = "'.$id_cli.'"';
+				}else{
+					$sqlClient = '';
+				}
+
+            }else if ($_GET['id_mod_lic'] == '2') {
+              
+				if (isset($id_cli) && ($id_cli!='')) {
+					$sqlClient = ' AND cl.id_cli = "'.$id_cli.'"';
+				}else{
+					$sqlClient = '';
+				}
+
+            }
+
+			if ($statut == 'AWAITING CRF/AD/INSURANCE') {
+
+				$sqlStatus = " AND d.date_crf IS NULL
+												AND d.ref_dos NOT LIKE '%20-%'
+												AND d.cleared <> '2'";
+
+			}else if ($statut == 'UNDER PREPARATION') {
+
+				$sqlStatus = " AND d.date_crf IS NOT NULL
+												AND d.date_decl IS NULL 
+												AND d.ref_decl IS NULL
+												AND d.ref_dos NOT LIKE '%20-%'
+												AND d.cleared <> '2'";
+
+			}else if ($statut == 'AWAITING LIQUIDATION') {
+
+				$sqlStatus = " AND d.date_decl IS NOT NULL 
+												AND d.ref_decl IS NOT NULL
+												AND d.date_liq IS NULL 
+												AND d.ref_liq IS NULL
+												AND d.ref_dos NOT LIKE '%20-%'
+												AND d.cleared <> '2'";
+
+			}else if ($statut == 'AWAITING QUITTANCE') {
+
+				$sqlStatus = " AND d.date_liq IS NOT NULL 
+												AND d.ref_liq IS NOT NULL
+												AND d.date_quit IS NULL 
+												AND d.ref_quit IS NULL
+												AND d.ref_dos NOT LIKE '%20-%'
+												AND d.cleared <> '2'";
+
+			}else if ($statut == 'AWAITING BAE/BS') {
+
+				$sqlStatus = " AND d.date_quit IS NOT NULL 
+												AND d.ref_quit IS NOT NULL
+												AND dgda_out IS NULL
+												AND d.cleared <> '2'";
+
+			}else if ($statut == 'CLEARING COMPLETED') {
+
+				$sqlStatus = " AND d.dgda_out IS NOT NULL 
+												AND d.dispatch_deliv IS NOT NULL
+												AND d.cleared <> '2'";
+
+			}
+			$requete = $connexion-> prepare("SELECT d.ref_dos AS ref_dos,
+													UPPER(cl.nom_cli) AS nom_cli,
+													d.ref_fact AS ref_fact,
+													d.fob AS fob_dos,
+													d.fret AS fret,
+													d.assurance AS assurance,
+													d.autre_frais AS autre_frais,
+													d.num_lic AS num_lic,
+													d.montant_decl AS montant_decl,
+													d.*,
+													d.supplier AS fournisseur,
+													s.nom_site AS nom_site,
+													d.dgda_in AS dgda_in_1,
+													d.dgda_out AS dgda_out_1,
+													d.custom_deliv AS custom_deliv_1,
+													d.arrival_date AS arrival_date_1,
+
+													IF(d.id_mod_lic='2',
+														IF(d.date_crf IS NULL, 'AWAITING CRF/AD/INSURANCE',
+															IF(d.date_decl IS NULL AND d.ref_decl IS NULL, 'UNDER PREPARATION',
+																IF(d.date_liq IS NULL AND d.ref_liq IS NULL, 'AWAITING LIQUIDATION',
+																	IF(d.date_quit IS NULL AND d.ref_quit IS NULL, 'AWAITING QUITTANCE',
+																		IF(d.date_quit IS NOT NULL AND d.ref_quit IS NOT NULL AND d.dgda_out IS NULL, 'AWAITING BAE/BS', 
+																			IF(d.dgda_out IS NOT NULL AND d.dispatch_deliv IS NOT NULL, 'CLEARING COMPLETED', '')
+																			)
+																		)
+																	)
+																)
+															)
+														,
+														d.statut) AS statut,
+
+													DATEDIFF(d.dgda_out, d.dgda_in) AS dgda_delay,
+													DATEDIFF(d.custom_deliv, d.arrival_date) AS arrival_deliver_delay
+												FROM dossier d, client cl, site s, mode_transport mt
+												WHERE d.id_cli =  cl.id_cli
+													$sqlClient
+													AND d.id_site = s.id_site
+													AND d.id_mod_trans = mt.id_mod_trans
+													AND mt.id_mod_trans = ?
+													AND d.id_mod_lic = ?
+													$sqlIdMarch
+													$sqlStatus
+													$sqlLicence
+													$sqlCleared
+													$sql1
+												$sqlOrder");
+			$requete-> execute(array($entree['id_mod_trans'], $entree['id_mod_lic']));
+			while ($reponse = $requete-> fetch()) {
+				$compteur++;
+				$bg = "";
+				$color='';
+				$class = "";
+
+				if ($reponse['cleared'] == '1') {
+					$style = "style='color: blue;'";
+					$color = "color: blue;";
+					$class = "bg-primary";
+				}else if ($reponse['cleared'] == '2') {
+					$style = "style='color: red;'";
+					$color = "color: red;";
+					$class = "bg-danger";
+				}else{
+					$style = "";
+					$color = "color: black;";
+					$class = "bg-dark";
+				}
+
+				$date_exp = $this-> getLastEpirationLicence($reponse['num_lic']);
+				$supplier = $this-> getLicence($reponse['num_lic'])['fournisseur'];
+
+				if (isset($supplier)) {
+					$reponse['fournisseur'] = $supplier;
+				}
+
+				//include('modalDeleteDossier.php');
+				
+
+			?>
+				<input type="hidden" name="id_dos_<?php echo $compteur;?>" value="<?php echo $reponse['id_dos'];?>">
+				<tr class="<?php echo $bg;?>" <?php echo $style;?>>
+					<td class="<?php echo $class;?> <?php echo $bg;?>" style=" border-right: 1px solid black; vertical-align: middle; text-align: left; padding: 0.6rem; border-top: 1px solid black;" <?php echo $style;?>><?php echo $compteur;?></td>
+					<td class="<?php echo $class;?>  <?php echo $bg;?>" style=" border-right: 1px solid black; vertical-align: middle; text-align: left; padding: 0.6rem; border-top: 1px solid black; <?php echo $color;?>"><?php echo $reponse['ref_dos'];?>
+					</td>
+					<?php
+					//$this-> afficherRowTableau2($id_mod_lic, $id_cli, $id_mod_trans, $reponse['id_dos'], $compteur);
+					$this-> afficherRowTableau3($id_mod_lic, $id_cli, $id_mod_trans, $reponse['id_dos'], $compteur, $reponse['statut']);
 						/*if ($id_mod_trans == '1') {
 							include('importRouteRow.php');
 						}else if ($id_mod_trans == '3') {
@@ -14652,6 +15189,125 @@
 
 		}
 
+		public function nbreSummaryStatus($statut, $id_mod_lic, $id_cli, $id_mod_trans, $commodity){
+			include('connexion.php');
+			$entree['id_mod_lic'] = $id_mod_lic;
+			$statut = str_replace('_', '/', $statut);
+
+			$sqlClient = '';
+			$sqlModeTransport = '';
+			$sqlCommodity = '';
+
+			if (isset($id_cli) && ($id_cli!='')) {
+				$sqlClient = ' AND id_cli = "'.$id_cli.'"';
+			}else{
+				$sqlClient = '';
+			}
+
+			if (isset($id_mod_trans) && ($id_mod_trans!='')) {
+				$sqlModeTransport = ' AND id_mod_trans = "'.$id_mod_trans.'"';
+			}else{
+				$sqlModeTransport = '';
+			}
+
+			if (isset($commodity) && ($commodity!='')) {
+				$sqlCommodity = ' AND commodity = "'.$commodity.'"';
+			}else{
+				$sqlCommodity = '';
+			}
+
+			if ($statut == 'AWAITING CRF/AD/INSURANCE') {
+
+				$requete = $connexion-> prepare("SELECT COUNT(ref_dos) AS nbre
+											FROM dossier
+											WHERE id_mod_lic = ?
+												AND date_crf IS NULL
+												AND ref_dos NOT LIKE '%20-%'
+												AND cleared <> '2'
+												$sqlClient
+												$sqlModeTransport
+												$sqlCommodity");
+
+			}else if ($statut == 'UNDER PREPARATION') {
+
+				$requete = $connexion-> prepare("SELECT COUNT(ref_dos) AS nbre
+											FROM dossier
+											WHERE id_mod_lic = ?
+												AND date_crf IS NOT NULL
+												AND date_decl IS NULL 
+												AND ref_decl IS NULL
+												AND ref_dos NOT LIKE '%20-%'
+												AND cleared <> '2'
+												$sqlClient
+												$sqlModeTransport
+												$sqlCommodity");
+
+			}else if ($statut == 'AWAITING LIQUIDATION') {
+
+				$requete = $connexion-> prepare("SELECT COUNT(ref_dos) AS nbre
+											FROM dossier
+											WHERE id_mod_lic = ?
+												AND date_decl IS NOT NULL 
+												AND ref_decl IS NOT NULL
+												AND date_liq IS NULL 
+												AND ref_liq IS NULL
+												AND ref_dos NOT LIKE '%20-%'
+												AND cleared <> '2'
+												$sqlClient
+												$sqlModeTransport
+												$sqlCommodity");
+
+			}else if ($statut == 'AWAITING QUITTANCE') {
+
+				$requete = $connexion-> prepare("SELECT COUNT(ref_dos) AS nbre
+											FROM dossier
+											WHERE id_mod_lic = ?
+												AND date_liq IS NOT NULL 
+												AND ref_liq IS NOT NULL
+												AND date_quit IS NULL 
+												AND ref_quit IS NULL
+												AND ref_dos NOT LIKE '%20-%'
+												AND cleared <> '2'
+												$sqlClient
+												$sqlModeTransport
+												$sqlCommodity");
+
+			}else if ($statut == 'AWAITING BAE/BS') {
+
+				$requete = $connexion-> prepare("SELECT COUNT(ref_dos) AS nbre
+											FROM dossier
+											WHERE id_mod_lic = ?
+												AND date_quit IS NOT NULL 
+												AND ref_quit IS NOT NULL
+												AND dgda_out IS NULL
+												$sqlClient
+												$sqlModeTransport
+												$sqlCommodity");
+
+			}else if ($statut == 'CLEARING COMPLETED') {
+
+				$requete = $connexion-> prepare("SELECT COUNT(ref_dos) AS nbre
+											FROM dossier
+											WHERE id_mod_lic = ?
+												AND date_quit IS NOT NULL 
+												AND ref_quit IS NOT NULL
+												AND dgda_out IS NOT NULL
+												AND dispatch_deliv IS NOT NULL
+												$sqlClient
+												$sqlModeTransport
+												$sqlCommodity");
+
+			}
+
+			$requete-> execute(array($entree['id_mod_lic']));
+			$reponse = $requete-> fetch();
+
+			if($reponse){
+				return $reponse['nbre'];
+			}
+
+		}
+
 		public function getSummary($id_mod_lic, $id_cli, $id_mod_trans, $commodity){
 			include('connexion.php');
 			$entree['id_mod_lic'] = $id_mod_lic;
@@ -14697,6 +15353,46 @@
 	        
 			<?php
 			}$requete-> closeCursor();
+		}
+
+		public function getSummaryStatus($id_mod_lic, $id_cli, $id_mod_trans, $commodity, $status){
+			include('connexion.php');
+			$entree['id_mod_lic'] = $id_mod_lic;
+
+			$bg[1] = 'teal';
+			$bg[2] = 'info';
+			$bg[3] = 'primary';
+			$bg[4] = 'success';
+			$bg[5] = 'olive';
+			$bg[6] = 'warning';
+			$bg[7] = 'dark';
+			$bg[8] = 'danger';
+
+			
+			?>
+
+	          <div class="col-md-3 col-sm-6 col-12">
+
+	            <div class="small-box bg-<?php echo $bg[rand(1, 8)];?>">
+	              <div class="inner">
+	                <h3>
+	                  <?php echo number_format($this-> nbreSummaryStatus($status, $id_mod_lic, $id_cli, $id_mod_trans, $commodity), 0, ',', ' ');?>
+	                </h3>
+
+	                <p> <?php echo strtoupper($status);?> </p>
+	              </div>
+	              <div class="icon">
+	                <i class="fas fa-file"></i>
+	              </div>
+	              <a href="#" class="small-box-footer" onclick="window.open('popUpDashboardDossierAutomatique.php?statut=<?php echo str_replace('/', '_', $status);?>&id_mod_lic=<?php echo $_GET['id_mod_trac'];?>&id_mod_trans=<?php echo $_GET['id_mod_trans'];?>&id_cli=<?php echo $_GET['id_cli'];?>&commodity=<?php echo $_GET['commodity'];?>','pop1','width=1500,height=950');">
+	                More info <i class="fas fa-arrow-circle-right"></i>
+	              </a>
+	            </div>
+
+	            <!-- /.info-box -->
+	          </div>
+	        
+			<?php
 		}
 
 		public function getDataRow($champ_col, $id_dos){
@@ -16093,6 +16789,75 @@
 			}
 		}
 
+		public function getNombreDossierClientModeLicenceStatusAutomatique($id_cli, $id_mod_lic, $id_mod_trans, $statut){
+			include('connexion.php');
+			$entree['id_mod_lic'] = $id_mod_lic;
+			$entree['id_cli'] = $id_cli;
+			$entree['id_mod_trans'] = $id_mod_trans;
+			$entree['statut'] = $statut;
+
+			$sqlStatus = '';
+
+			if ($statut == 'AWAITING CRF/AD/INSURANCE') {
+
+				$sqlStatus = " AND d.date_crf IS NULL
+												AND d.ref_dos NOT LIKE '%20-%'
+												AND d.cleared <> '2'";
+
+			}else if ($statut == 'UNDER PREPARATION') {
+
+				$sqlStatus = " AND d.date_crf IS NOT NULL
+												AND d.date_decl IS NULL 
+												AND d.ref_decl IS NULL
+												AND d.ref_dos NOT LIKE '%20-%'
+												AND d.cleared <> '2'";
+
+			}else if ($statut == 'AWAITING LIQUIDATION') {
+
+				$sqlStatus = " AND d.date_decl IS NOT NULL 
+												AND d.ref_decl IS NOT NULL
+												AND d.date_liq IS NULL 
+												AND d.ref_liq IS NULL
+												AND d.ref_dos NOT LIKE '%20-%'
+												AND d.cleared <> '2'";
+
+			}else if ($statut == 'AWAITING QUITTANCE') {
+
+				$sqlStatus = " AND d.date_liq IS NOT NULL 
+												AND d.ref_liq IS NOT NULL
+												AND d.date_quit IS NULL 
+												AND d.ref_quit IS NULL
+												AND d.ref_dos NOT LIKE '%20-%'
+												AND d.cleared <> '2'";
+
+			}else if ($statut == 'AWAITING BAE/BS') {
+
+				$sqlStatus = " AND d.date_quit IS NOT NULL 
+												AND d.ref_quit IS NOT NULL
+												AND dgda_out IS NULL
+												AND d.cleared <> '2'";
+
+			}else if ($statut == 'CLEARING COMPLETED') {
+
+				$sqlStatus = " AND d.dgda_out IS NOT NULL 
+												AND d.dispatch_deliv IS NOT NULL
+												AND d.cleared <> '2'";
+
+			}
+
+			$requete = $connexion-> prepare("SELECT COUNT(d.id_dos) AS nbre
+												FROM dossier d
+												WHERE d.id_mod_lic = ?
+													AND d.id_cli = ?
+													AND d.id_mod_trans = ?
+													$sqlStatus");
+			$requete-> execute(array($entree['id_mod_lic'], $entree['id_cli'], $entree['id_mod_trans']));
+			$reponse = $requete-> fetch();
+			if($reponse){
+				return $reponse['nbre'];
+			}
+		}
+
 		public function getNombreDossierIr($id_cli, $ref_crf){
 			include('connexion.php');
 			$entree['ref_crf'] = $ref_crf;
@@ -16173,6 +16938,85 @@
 														AND statut = ?");
 			$requete-> execute(array($entree['id_cli'], $entree['id_mod_lic'], 
 								$entree['id_mod_trans'], $entree['statut']));
+			while ($reponse = $requete-> fetch()) {
+				
+				if ( ( ( $reponse['arrival_deliver_delay'] - $this-> getWeekendsAndHolidays($reponse['arrival_date'], $reponse['dispatch_deliv']) ) >= $nombreInf ) && ( ( $reponse['arrival_deliver_delay'] - $this-> getWeekendsAndHolidays($reponse['arrival_date'], $reponse['dispatch_deliv']) ) < $nombreSup )){
+					$nbre++;
+				}
+
+			}$requete-> closeCursor();
+			
+			return $nbre;
+		}
+
+		public function getNombreDossierClientModeLicenceStatusCalculNetDaysAutomatique($id_cli, $id_mod_lic, $id_mod_trans, $statut, $nombreInf, $nombreSup){
+			include('connexion.php');
+			//$entree['champ_col'] = $champ_col;
+			$entree['id_cli'] = $id_cli;
+			$entree['id_mod_lic'] = $id_mod_lic;
+			$entree['id_mod_trans'] = $id_mod_trans;
+			$entree['statut'] = $statut;
+			$nbre = 0;
+
+			$sqlStatus = '';
+
+			if ($statut == 'AWAITING CRF/AD/INSURANCE') {
+
+				$sqlStatus = " AND d.date_crf IS NULL
+												AND d.ref_dos NOT LIKE '%20-%'
+												AND d.cleared <> '2'";
+
+			}else if ($statut == 'UNDER PREPARATION') {
+
+				$sqlStatus = " AND d.date_crf IS NOT NULL
+												AND d.date_decl IS NULL 
+												AND d.ref_decl IS NULL
+												AND d.ref_dos NOT LIKE '%20-%'
+												AND d.cleared <> '2'";
+
+			}else if ($statut == 'AWAITING LIQUIDATION') {
+
+				$sqlStatus = " AND d.date_decl IS NOT NULL 
+												AND d.ref_decl IS NOT NULL
+												AND d.date_liq IS NULL 
+												AND d.ref_liq IS NULL
+												AND d.ref_dos NOT LIKE '%20-%'
+												AND d.cleared <> '2'";
+
+			}else if ($statut == 'AWAITING QUITTANCE') {
+
+				$sqlStatus = " AND d.date_liq IS NOT NULL 
+												AND d.ref_liq IS NOT NULL
+												AND d.date_quit IS NULL 
+												AND d.ref_quit IS NULL
+												AND d.ref_dos NOT LIKE '%20-%'
+												AND d.cleared <> '2'";
+
+			}else if ($statut == 'AWAITING BAE/BS') {
+
+				$sqlStatus = " AND d.date_quit IS NOT NULL 
+												AND d.ref_quit IS NOT NULL
+												AND dgda_out IS NULL
+												AND d.cleared <> '2'";
+
+			}else if ($statut == 'CLEARING COMPLETED') {
+
+				$sqlStatus = " AND d.dgda_out IS NOT NULL 
+												AND d.dispatch_deliv IS NOT NULL
+												AND d.cleared <> '2'";
+
+			}
+
+			$requete = $connexion-> prepare("SELECT DATEDIFF(d.dgda_out, d.dgda_in) AS dgda_delay,
+													DATEDIFF(d.dispatch_deliv, d.arrival_date) AS d.arrival_deliver_delay,
+													d.arrival_date, d.dispatch_deliv
+												FROM dossier d
+													WHERE d.id_cli = ?
+														AND d.id_mod_lic = ?
+														AND d.id_mod_trans = ?
+														$sqlStatus");
+			$requete-> execute(array($entree['id_cli'], $entree['id_mod_lic'], 
+								$entree['id_mod_trans']));
 			while ($reponse = $requete-> fetch()) {
 				
 				if ( ( ( $reponse['arrival_deliver_delay'] - $this-> getWeekendsAndHolidays($reponse['arrival_date'], $reponse['dispatch_deliv']) ) >= $nombreInf ) && ( ( $reponse['arrival_deliver_delay'] - $this-> getWeekendsAndHolidays($reponse['arrival_date'], $reponse['dispatch_deliv']) ) < $nombreSup )){
@@ -19719,6 +20563,25 @@
 			$requete = $connexion-> prepare("UPDATE dossier SET warehouse_arriv = ?
 												WHERE id_dos = ?");
 			$requete-> execute(array($entree['warehouse_arriv'], $entree['id_dos']));
+
+		} 
+
+		public function MAJ_warehouse_dep($id_dos, $warehouse_dep){
+
+			//Log
+			if ($this-> getDossier($id_dos)['warehouse_dep'] != $warehouse_dep) {
+				
+				$colonne = $this-> getNomColonneClient('warehouse_dep', $_GET['id_cli'], $_GET['id_mod_trans'], $_GET['id_mod_trac']);
+				$this-> creerLogDossier($colonne, $warehouse_dep, $id_dos, $_SESSION['id_util']);
+
+			}
+
+			include('connexion.php');
+			$entree['id_dos'] = $id_dos;
+			$entree['warehouse_dep'] = $warehouse_dep;
+			$requete = $connexion-> prepare("UPDATE dossier SET warehouse_dep = ?
+												WHERE id_dos = ?");
+			$requete-> execute(array($entree['warehouse_dep'], $entree['id_dos']));
 
 		} 
 
