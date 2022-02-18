@@ -101,7 +101,19 @@
             <button class="btn btn-primary square-btn-adjust" data-toggle="modal" data-target=".rechercheDossier">
                 <i class="fa fa-search"></i> Search File
             </button>
+            <?php
+            if ($_GET['id_mod_trac']=='2' && $_GET['id_mod_trans']=='1') {
+            ?>
+            <button class="btn btn-success square-btn-adjust" onclick="window.location.replace('exportDashboardDossierAutomatique.php?id_cli=<?php echo $_GET['id_cli']; ?>&id_mod_lic=<?php echo $_GET['id_mod_trac']; ?>&id_mod_trans=<?php echo $_GET['id_mod_trans']; ?>','pop1','width=80,height=80');">
+              <i class="fas fa-file-excel"></i> Export Excel
+            </button>
 
+            <button class="btn btn-secondary square-btn-adjust" onclick="window.location.replace('exportDashboardDossier2.php?id_cli=<?php echo $_GET['id_cli']; ?>&id_mod_lic=<?php echo $_GET['id_mod_trac']; ?>&id_mod_trans=<?php echo $_GET['id_mod_trans']; ?>','pop1','width=80,height=80');">
+              <i class="fas fa-file-excel"></i> Export Excel 2
+            </button>
+            <?php
+            }else{
+            ?>
             <button class="btn btn-success square-btn-adjust" onclick="window.location.replace('exportDashboardDossier.php?id_cli=<?php echo $_GET['id_cli']; ?>&id_mod_lic=<?php echo $_GET['id_mod_trac']; ?>&id_mod_trans=<?php echo $_GET['id_mod_trans']; ?>','pop1','width=80,height=80');">
               <i class="fas fa-file-excel"></i> Export Excel
             </button>
@@ -109,6 +121,10 @@
             <button class="btn btn-secondary square-btn-adjust" onclick="window.location.replace('exportDashboardDossier2.php?id_cli=<?php echo $_GET['id_cli']; ?>&id_mod_lic=<?php echo $_GET['id_mod_trac']; ?>&id_mod_trans=<?php echo $_GET['id_mod_trans']; ?>','pop1','width=80,height=80');">
               <i class="fas fa-file-excel"></i> Export Excel 2
             </button>
+            <?php
+            }
+            ?>
+            
           </div>
         </div>
 
@@ -119,9 +135,13 @@
     <section class="content">
       <div class="container-fluid" style="">
         <?php
-          if ($_SESSION['id_role']=='1' || $_SESSION['id_role']=='2' || $_SESSION['id_role']=='6') {
+          if (($_SESSION['id_role']=='1' || $_SESSION['id_role']=='2' || $_SESSION['id_role']=='6') && $_GET['id_mod_trac']=='1') {
 
             include("dashboardTracking.php");
+
+          }else if (($_SESSION['id_role']=='1' || $_SESSION['id_role']=='2' || $_SESSION['id_role']=='6') && $_GET['id_mod_trac']=='2') {
+
+            include("dashboardTrackingAutomatique.php");
 
           }
 

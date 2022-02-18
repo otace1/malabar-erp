@@ -5,7 +5,7 @@
   return $date;
 };
 
-function afficherRowTableauExcel($id_mod_lic, $id_cli, $id_mod_trans, $id_dos, $compteur, $col, $excel, $row, $styleHeader){
+function afficherRowTableauExcel($id_mod_lic, $id_cli, $id_mod_trans, $id_dos, $compteur, $col, $excel, $row, $styleHeader, $statut=NULL, $klsa_status=NULL, $amicongo_status=NULL, $kzi_status=NULL){
 	include('../classes/connexion.php');
 
 	$maClasse = new MaClasse();
@@ -240,9 +240,28 @@ function afficherRowTableauExcel($id_mod_lic, $id_cli, $id_mod_trans, $id_dos, $
 
 			}
 		}else if ($reponse['id_col'] == '42') {
-			// DGDA Delai
-			$excel-> getActiveSheet()
-				-> setCellValue($col.$row, $maClasse-> getDataRow($reponse['champ_col'], $id_dos));
+			// Status
+			if ($id_mod_lic=='2' && $id_mod_trans=='1') {
+				alignement($col.$row);
+				$excel-> getActiveSheet()
+					-> setCellValue($col.$row, $statut);
+				$col++;
+				alignement($col.$row);
+				$excel-> getActiveSheet()
+					-> setCellValue($col.$row, $klsa_status);
+				$col++;
+				alignement($col.$row);
+				$excel-> getActiveSheet()
+					-> setCellValue($col.$row, $amicongo_status);
+				$col++;
+				alignement($col.$row);
+				$excel-> getActiveSheet()
+					-> setCellValue($col.$row, $kzi_status);
+				alignement($col.$row);
+			}else{
+				$excel-> getActiveSheet()
+					-> setCellValue($col.$row, $statut);
+			}
 		
 		}else if ($reponse['id_col'] == '44'){
 

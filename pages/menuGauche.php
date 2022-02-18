@@ -50,7 +50,7 @@
             }
             ?>
           <?php
-            if($_SESSION['id_role'] == '1' || $_SESSION['id_role'] == '6' || $_SESSION['id_role'] == '7' || $_SESSION['id_role'] == '8'){
+            if($_SESSION['id_role'] == '1' || $_SESSION['id_role'] == '6' || $_SESSION['id_role'] == '7' || $_SESSION['id_role'] == '8' || $_SESSION['id_role'] == '9' || $_SESSION['id_role'] == '10'){
           ?>
           <li class="nav-item"  style="">
             <a href="#" class="nav-link active bg bg-danger" style=" font-weight: bold;">

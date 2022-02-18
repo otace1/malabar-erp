@@ -4,42 +4,13 @@
   $couleur = '';
   
   $nombre_dossier = $maClasse-> nbreSearchFile($_GET['mot_cle'], $_GET['id_mod_lic']);
-
-if ($_GET['id_mod_lic']=='1') {
-
-  $message = '<table class="table table-dark table-hover text-nowrap table-sm">
-                         <tr>
-                              <td style="border: 1px solid black;">N.</td>
-                              <td style="border: 1px solid black;">MCA REF. FILE</td>
-                              <td style="border: 1px solid black;">Client</td>
-                              <td style="border: 1px solid black;">Num. Lot</td>
-                              <td style="border: 1px solid black;">Horse</td>
-                              <td style="border: 1px solid black;">Trailer 1</td>
-                              <td style="border: 1px solid black;">Trailer 2</td>
-                              <td style="border: 1px solid black;">Status</td>
-                         </tr>
-                         '.$maClasse-> afficherSearchFile($_GET['mot_cle'], $_GET['id_mod_lic']).'
-                    </table>';
-
-}else if ($_GET['id_mod_lic']=='2') {
+  
 
   $message = '<table class="table table-dark table-hover text-nowrap table-sm">
-                         <tr>
-                              <td style="border: 1px solid black;">N.</td>
-                              <td style="border: 1px solid black;">MCA REF. FILE</td>
-                              <td style="border: 1px solid black;">Client</td>
-                              <td style="border: 1px solid black;">Horse</td>
-                              <td style="border: 1px solid black;">Trailer 1</td>
-                              <td style="border: 1px solid black;">Trailer 2</td>
-                              <td style="border: 1px solid black;">Prealerte Date</td>
-                              <td style="border: 1px solid black;">Invoice</td>
-                              <td style="border: 1px solid black;">CRF Ref.</td>
-                              <td style="border: 1px solid black;">Status</td>
-                         </tr>
-                         '.$maClasse-> afficherSearchFile($_GET['mot_cle'], $_GET['id_mod_lic']).'
+                         
                     </table>';
 
-}
+
 //UPDATES
 
   
@@ -82,10 +53,27 @@ if ($_GET['id_mod_lic']=='1') {
                     <!-- /.card-header -->
                     <div class="card-body">
                         <div class="row">
-                          <div class="col-sm-12">
-                            <?php
-                              echo $message;
-                            ?>  
+                          <div class="col-sm-12  table-responsive">
+                            <table id="user_data_2" cellspacing="0" width="100%" class="tableau-de-donnees  table table-hover text-nowrap table-sm">
+                              <thead>
+                                <?php
+                                $maClasse-> afficherEnTeteTableau($maClasse-> getDataDossierMotCle($_GET['mot_cle'], $_GET['id_mod_lic'])['id_mod_lic'], $maClasse-> getDataDossierMotCle($_GET['mot_cle'], $_GET['id_mod_lic'])['id_cli'], $maClasse-> getDataDossierMotCle($_GET['mot_cle'], $_GET['id_mod_lic'])['id_mod_trans']);
+                                ?>
+                              </thead>
+                              <tbody>
+                                <?php
+                                $maClasse-> afficherSearchFile($_GET['mot_cle'], $maClasse-> getDataDossierMotCle($_GET['mot_cle'], $_GET['id_mod_lic'])['id_cli'], 
+                          $maClasse-> getDataDossierMotCle($_GET['mot_cle'], 
+                          $_GET['id_mod_lic'])['id_mod_trans'], $_GET['id_mod_lic'], 
+                          $maClasse-> getDataDossierMotCle($_GET['mot_cle'], 
+                            $_GET['id_mod_lic'])['commodity'], 
+                          $maClasse-> getDataDossierMotCle($_GET['mot_cle'], $_GET['id_mod_lic'])['id_march'], 
+                          $maClasse-> getDataDossierMotCle($_GET['mot_cle'], $_GET['id_mod_lic'])['statut'], 
+                          $maClasse-> getDataDossierMotCle($_GET['mot_cle'], $_GET['id_mod_lic'])['num_lic'], 
+                          $maClasse-> getDataDossierMotCle($_GET['mot_cle'], $_GET['id_mod_lic'])['cleared'])
+                                ?>
+                              </tbody>
+                            </table>
                         </div>
                     </div>
                         <!-- input states -->

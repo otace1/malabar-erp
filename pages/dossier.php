@@ -597,6 +597,10 @@ for ($i=1; $i <= 15 ; $i++) {
         $maClasse-> MAJ_warehouse_arriv($_POST['id_dos_'.$i], $_POST['warehouse_arriv_'.$i]);
       }
 
+      if (isset($_POST['warehouse_dep_'.$i]) && ($_POST['warehouse_dep_'.$i] != '')) {
+        $maClasse-> MAJ_warehouse_dep($_POST['id_dos_'.$i], $_POST['warehouse_dep_'.$i]);
+      }
+
       if (isset($_POST['cleared_'.$i]) && ($_POST['cleared_'.$i] != '')) {
         $maClasse-> MAJ_cleared($_POST['id_dos_'.$i], $_POST['cleared_'.$i]);
       }
@@ -790,20 +794,20 @@ for ($i=1; $i <= 15 ; $i++) {
                     <i class="fa fa-plus"></i>
                 </button>-->
                 <?php
-                if($_GET['id_mod_trac'] == '1' && $_SESSION['id_role'] != '7' && $_SESSION['id_role'] != '8'){
+                if($_GET['id_mod_trac'] == '1' && $_SESSION['id_role'] != '7' && $_SESSION['id_role'] != '8' && $_SESSION['id_role'] != '9' && $_SESSION['id_role'] != '10'){
                   ?>
                 <button class="btn btn-xs btn-info square-btn-adjust" data-toggle="modal" data-target=".nouveauDossierExport" <?php echo $maClasse-> getDataUtilisateur($_SESSION['id_util'])['tracking_enab']?>>
                     <i class="fa fa-plus"></i> Nouveau Dossier
                 </button>
                   <?php
                 }else if($_GET['id_mod_trac'] == '2'){
-                  if ($_GET['id_cli'] == 869 && $_GET['id_march'] == 6 && $_SESSION['id_role'] != '7' && $_SESSION['id_role'] != '8') {
+                  if ($_GET['id_cli'] == 869 && $_GET['id_march'] == 6 && $_SESSION['id_role'] != '7' && $_SESSION['id_role'] != '8' && $_SESSION['id_role'] != '9' && $_SESSION['id_role'] != '10') {
                     ?>
                   <button class="btn btn-xs btn-info square-btn-adjust" data-toggle="modal" data-target=".nouveauDossierAcid" <?php echo $maClasse-> getDataUtilisateur($_SESSION['id_util'])['tracking_enab']?>>
                       <i class="fa fa-plus"></i> Nouveau Dossier
                   </button>
                     <?php
-                  }else if ($_SESSION['id_role'] != '7' && $_SESSION['id_role'] != '8'){
+                  }else if ($_SESSION['id_role'] != '7' && $_SESSION['id_role'] != '8' && $_SESSION['id_role'] != '9' && $_SESSION['id_role'] != '10'){
                     ?>
                   <button class="btn btn-xs btn-info square-btn-adjust" data-toggle="modal" data-target=".nouveauDossier" <?php echo $maClasse-> getDataUtilisateur($_SESSION['id_util'])['tracking_enab']?>>
                       <i class="fa fa-plus"></i> Nouveau Dossier
@@ -844,7 +848,7 @@ for ($i=1; $i <= 15 ; $i++) {
                     <i class="fa fa-search"></i> Search Licence
                 </button>
                  <?php
-                if($_GET['id_mod_trac'] == '1' && $_SESSION['id_role'] != '7' && $_SESSION['id_role'] != '8'){
+                if($_GET['id_mod_trac'] == '1' && $_SESSION['id_role'] != '7' && $_SESSION['id_role'] != '8' && $_SESSION['id_role'] != '9' && $_SESSION['id_role'] != '10'){
                   ?>
                   <button class="btn btn-xs bg bg-teal square-btn-adjust" data-toggle="modal" data-target=".nouvelleLicence">
                     <i class="fa fa-plus"></i> Nouvelle Licence
@@ -887,13 +891,13 @@ for ($i=1; $i <= 15 ; $i++) {
                         </div>
                     </form>
                     <?php
-                      if($_GET['id_mod_trac'] == '1' && $_SESSION['id_role'] != '7' && $_SESSION['id_role'] != '8'){
+                      if($_GET['id_mod_trac'] == '1' && $_SESSION['id_role'] != '7' && $_SESSION['id_role'] != '8' && $_SESSION['id_role'] != '9' && $_SESSION['id_role'] != '10'){
                         ?>  
                     <button class="btn btn-xs btn-info square-btn-adjust" data-toggle="modal" data-target=".updateExport" <?php echo $maClasse-> getDataUtilisateur($_SESSION['id_util'])['tracking_enab']?>>
                         <i class="fa fa-edit"></i> Update Multiple Files
                     </button>
                         <?php
-                      }else if($_GET['id_mod_trac'] == '2' && $_SESSION['id_role'] != '7' && $_SESSION['id_role'] != '8'){
+                      }else if($_GET['id_mod_trac'] == '2' && $_SESSION['id_role'] != '7' && $_SESSION['id_role'] != '8' && $_SESSION['id_role'] != '9' && $_SESSION['id_role'] != '10'){
                         ?>  
                     <button class="btn btn-xs btn-info square-btn-adjust" data-toggle="modal" data-target=".update" <?php echo $maClasse-> getDataUtilisateur($_SESSION['id_util'])['tracking_enab']?>>
                         <i class="fa fa-edit"></i> Update Multiple Files

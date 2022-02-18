@@ -158,7 +158,7 @@ $indiceSheet = 0;
 													d.trailer_2 AS trailer_2
 												FROM dossier d, client cli
 												WHERE d.id_cli = cli.id_cli
-													AND d.id_mod_lic = 3
+													AND d.id_mod_lic = 2
 													AND d.id_mod_trans = '1'
 													AND DATEDIFF(CURRENT_DATE() , d.klsa_arriv)<3
 													AND d.ref_dos NOT LIKE '%20-%'
@@ -390,7 +390,7 @@ $indiceSheet = 0;
 													d.trailer_2 AS trailer_2
 												FROM dossier d, client cli
 												WHERE d.id_cli = cli.id_cli
-													AND d.id_mod_lic = 3
+													AND d.id_mod_lic = 2
 													AND d.id_mod_trans = '1'
 													AND DATEDIFF(CURRENT_DATE() , d.dispatch_deliv)<3
 													AND d.ref_dos NOT LIKE '%20-%'
