@@ -5045,14 +5045,14 @@
 														, '') AS klsa_status,
 													IF(d.id_mod_trans='1' AND d.id_mod_lic='2', 
 														IF(d.bond_warehouse='LUBUMBASHI',
-															IF(d.warehouse_arriv IS NOT NULL AND d.warehouse_arriv IS NOT NULL, 'DISPATCHED FROM AMICONGO', 
+															IF(d.warehouse_arriv IS NOT NULL AND d.warehouse_dep IS NOT NULL, 'DISPATCHED FROM AMICONGO', 
 																IF(d.warehouse_arriv IS NOT NULL, 'ARRIVED AT AMICONGO', '')
 																)
 															,'')
 														,'') AS amicongo_status,
 													IF(d.id_mod_trans='1' AND d.id_mod_lic='2', 
 														IF(d.bond_warehouse='KOLWEZI',
-															IF(d.warehouse_arriv IS NOT NULL AND d.warehouse_arriv IS NOT NULL, 'DISPATCHED FROM WAREHOUSE', 
+															IF(d.warehouse_arriv IS NOT NULL AND d.warehouse_dep IS NOT NULL, 'DISPATCHED FROM WAREHOUSE', 
 																IF(d.warehouse_arriv IS NOT NULL, 'ARRIVED AT WAREHOUSE', '')
 																)
 															,'')
@@ -12115,14 +12115,14 @@
 														, '') AS klsa_status,
 													IF(d.id_mod_trans='1' AND d.id_mod_lic='2', 
 														IF(d.bond_warehouse='LUBUMBASHI',
-															IF(d.warehouse_arriv IS NOT NULL AND d.warehouse_arriv IS NOT NULL, 'DISPATCHED FROM AMICONGO', 
+															IF(d.warehouse_arriv IS NOT NULL AND d.warehouse_dep IS NOT NULL, 'DISPATCHED FROM AMICONGO', 
 																IF(d.warehouse_arriv IS NOT NULL, 'ARRIVED AT AMICONGO', '')
 																)
 															,'')
 														,'') AS amicongo_status,
 													IF(d.id_mod_trans='1' AND d.id_mod_lic='2', 
 														IF(d.bond_warehouse='KOLWEZI',
-															IF(d.warehouse_arriv IS NOT NULL AND d.warehouse_arriv IS NOT NULL, 'DISPATCHED FROM WAREHOUSE', 
+															IF(d.warehouse_arriv IS NOT NULL AND d.warehouse_dep IS NOT NULL, 'DISPATCHED FROM WAREHOUSE', 
 																IF(d.warehouse_arriv IS NOT NULL, 'ARRIVED AT WAREHOUSE', '')
 																)
 															,'')
@@ -12458,14 +12458,14 @@
 														, '') AS klsa_status,
 													IF(d.id_mod_trans='1' AND d.id_mod_lic='2', 
 														IF(d.bond_warehouse='LUBUMBASHI',
-															IF(d.warehouse_arriv IS NOT NULL AND d.warehouse_arriv IS NOT NULL, 'DISPATCHED FROM AMICONGO', 
+															IF(d.warehouse_arriv IS NOT NULL AND d.warehouse_dep IS NOT NULL, 'DISPATCHED FROM AMICONGO', 
 																IF(d.warehouse_arriv IS NOT NULL, 'ARRIVED AT AMICONGO', '')
 																)
 															,'')
 														,'') AS amicongo_status,
 													IF(d.id_mod_trans='1' AND d.id_mod_lic='2', 
 														IF(d.bond_warehouse='KOLWEZI',
-															IF(d.warehouse_arriv IS NOT NULL AND d.warehouse_arriv IS NOT NULL, 'DISPATCHED FROM WAREHOUSE', 
+															IF(d.warehouse_arriv IS NOT NULL AND d.warehouse_dep IS NOT NULL, 'DISPATCHED FROM WAREHOUSE', 
 																IF(d.warehouse_arriv IS NOT NULL, 'ARRIVED AT WAREHOUSE', '')
 																)
 															,'')
