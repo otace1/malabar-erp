@@ -314,7 +314,7 @@
 												AND d.id_mod_trans = mt.id_mod_trans
 												AND mt.id_mod_trans = ?
 												AND d.id_mod_lic = ?
-												AND DATE(d.date_create_dos) > '2021-06-01'
+												AND DATE(d.date_creat_dos) > '2021-06-01'
 												$sqlIdMarch
 												$sqlStatus
 												$sql1
