@@ -1121,15 +1121,15 @@ $indiceSheet = 0;
 		$statut = str_replace("/", "_", 'AWAITING BAE/BS');
 		$excel->getActiveSheet()->setTitle($statut);
 
-		$statut = "CLEARING COMPLETED";
-		$indiceSheet++;
-		$excel->createSheet();
-		// Set active sheet index to the first sheet, so Excel opens this as the first sheet
-		$excel->setActiveSheetIndex($indiceSheet);
-		$excel->getActiveSheet()->setTitle($statut);
-		//Affichage des contenues des classeurs
-		include('contenueClasseurDashboardDossiersAutomatique.php');
-		//FIN Affichage des contenues des classeurs
+		// $statut = "CLEARING COMPLETED";
+		// $indiceSheet++;
+		// $excel->createSheet();
+		// // Set active sheet index to the first sheet, so Excel opens this as the first sheet
+		// $excel->setActiveSheetIndex($indiceSheet);
+		// $excel->getActiveSheet()->setTitle($statut);
+		// //Affichage des contenues des classeurs
+		// include('contenueClasseurDashboardDossiersAutomatique.php');
+		// //FIN Affichage des contenues des classeurs
 
 
 		//FIN Creation des classeurs par status
