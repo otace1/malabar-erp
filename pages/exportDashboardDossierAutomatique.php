@@ -1029,9 +1029,9 @@ $indiceSheet = 0;
 		$excel->setActiveSheetIndex($indiceSheet);
 		$excel->getActiveSheet()->setTitle('SUMMARY');
 
-		// //Creation des classeurs par status
-		// $row = 3;
-		// $nom_stat = '';
+		//Creation des classeurs par status
+		$row = 3;
+		$nom_stat = '';
 		// $requeteClasseurStatus = $connexion-> prepare("SELECT * 
 		// 										FROM status_dashboard 
 		// 										WHERE id_mod_lic = ?
@@ -1059,6 +1059,79 @@ $indiceSheet = 0;
 
 		// }$requeteClasseurStatus-> closeCursor();
 		
+
+		//$statut = str_replace("/", "_", 'AWAITING CRF/AD/INSURANCE');
+		$statut = "AWAITING CRF/AD/INSURANCE";
+		
+		$indiceSheet++;
+
+		$excel->createSheet();
+
+		// Set active sheet index to the first sheet, so Excel opens this as the first sheet
+		$excel->setActiveSheetIndex($indiceSheet);
+		
+
+		//Affichage des contenues des classeurs
+		include('contenueClasseurDashboardDossiersAutomatique.php');
+		//FIN Affichage des contenues des classeurs
+
+		$statut = str_replace("/", "_", 'AWAITING CRF/AD/INSURANCE');
+		$excel->getActiveSheet()->setTitle($statut);
+
+
+
+		$statut = "UNDER PREPARATION";
+		$indiceSheet++;
+		$excel->createSheet();
+		// Set active sheet index to the first sheet, so Excel opens this as the first sheet
+		$excel->setActiveSheetIndex($indiceSheet);
+		$excel->getActiveSheet()->setTitle($statut);
+		//Affichage des contenues des classeurs
+		include('contenueClasseurDashboardDossiersAutomatique.php');
+		//FIN Affichage des contenues des classeurs
+
+		$statut = "AWAITING LIQUIDATION";
+		$indiceSheet++;
+		$excel->createSheet();
+		// Set active sheet index to the first sheet, so Excel opens this as the first sheet
+		$excel->setActiveSheetIndex($indiceSheet);
+		$excel->getActiveSheet()->setTitle($statut);
+		//Affichage des contenues des classeurs
+		include('contenueClasseurDashboardDossiersAutomatique.php');
+		//FIN Affichage des contenues des classeurs
+
+		$statut = "AWAITING QUITTANCE";
+		$indiceSheet++;
+		$excel->createSheet();
+		// Set active sheet index to the first sheet, so Excel opens this as the first sheet
+		$excel->setActiveSheetIndex($indiceSheet);
+		$excel->getActiveSheet()->setTitle($statut);
+		//Affichage des contenues des classeurs
+		include('contenueClasseurDashboardDossiersAutomatique.php');
+		//FIN Affichage des contenues des classeurs
+
+		$statut = "AWAITING BAE/BS";
+		$indiceSheet++;
+		$excel->createSheet();
+		// Set active sheet index to the first sheet, so Excel opens this as the first sheet
+		$excel->setActiveSheetIndex($indiceSheet);
+		//Affichage des contenues des classeurs
+		include('contenueClasseurDashboardDossiersAutomatique.php');
+		//FIN Affichage des contenues des classeurs
+		$statut = str_replace("/", "_", 'AWAITING BAE/BS');
+		$excel->getActiveSheet()->setTitle($statut);
+
+		$statut = "CLEARING COMPLETED";
+		$indiceSheet++;
+		$excel->createSheet();
+		// Set active sheet index to the first sheet, so Excel opens this as the first sheet
+		$excel->setActiveSheetIndex($indiceSheet);
+		$excel->getActiveSheet()->setTitle($statut);
+		//Affichage des contenues des classeurs
+		include('contenueClasseurDashboardDossiersAutomatique.php');
+		//FIN Affichage des contenues des classeurs
+
+
 		//FIN Creation des classeurs par status
 
 
