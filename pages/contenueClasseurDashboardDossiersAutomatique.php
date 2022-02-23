@@ -133,11 +133,8 @@
 			}else if ($reponse['id_col'] == '42' && $_GET['id_mod_lic']=='2') {
 
 				$excel-> getActiveSheet()-> getColumnDimension($col)-> setWidth(30);
-				$col++;
 				$excel-> getActiveSheet()-> getColumnDimension($col)-> setWidth(30);
-				$col++;
 				$excel-> getActiveSheet()-> getColumnDimension($col)-> setWidth(30);
-				$col++;
 				$excel-> getActiveSheet()-> getColumnDimension($col)-> setWidth(30);
 
 			}else if ($reponse['id_col'] == '42') {
@@ -405,7 +402,6 @@
 				$excel-> getActiveSheet()-> getColumnDimension($col)-> setWidth(30);
 				$col++;
 				$excel-> getActiveSheet()-> getColumnDimension($col)-> setWidth(30);
-				$col++;
 
 			}else if ($reponse['id_col'] == '42') {
 				$excel-> getActiveSheet()-> getColumnDimension($col)-> setWidth(30);
