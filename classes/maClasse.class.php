@@ -11954,7 +11954,8 @@
 													d.custom_deliv AS custom_deliv_1,
 													d.arrival_date AS arrival_date_1,
 													DATEDIFF(d.dgda_out, d.dgda_in) AS dgda_delay,
-													DATEDIFF(d.custom_deliv, d.arrival_date) AS arrival_deliver_delay
+													DATEDIFF(d.custom_deliv, d.arrival_date) AS arrival_deliver_delay,
+													IF(d.cleared IS NULL OR d.cleared='', '0', d.cleared) AS cleared,
 												FROM dossier d, client cl, licence l, site s, mode_transport mt
 												WHERE d.id_cli =  cl.id_cli
 													AND cl.id_cli = ?
