@@ -21344,6 +21344,25 @@
 			
 		}
 
+		public function MAJ_cleared_is_null(){
+			
+			//Log
+			// if ($this-> getDossier($id_dos)['cleared'] != $cleared) {
+				
+			// 	$colonne = $this-> getNomColonneClient('cleared', $_GET['id_cli'], $_GET['id_mod_trans'], $_GET['id_mod_trac']);
+			// 	$this-> creerLogDossier($colonne, $cleared, $id_dos, $_SESSION['id_util']);
+
+			// }
+
+			include('connexion.php');
+			$entree['id_dos'] = $id_dos;
+			$entree['cleared'] = $cleared;
+			$connexion-> exec("UPDATE dossier SET cleared = '0'
+								WHERE cleared = '' OR cleared is null");
+			}
+			
+		}
+
 		public function MAJ_ref_fact($id_dos, $ref_fact){
 			
 			//Log
