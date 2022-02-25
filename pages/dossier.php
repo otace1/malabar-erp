@@ -630,6 +630,9 @@ for ($i=1; $i <= 15 ; $i++) {
         $maClasse-> MAJ_cleared($_POST['id_dos_'.$i], 2);
       }
 
+      //MAJ de tous les dossiers cleared = '' ou cleared is null
+      $maClasse-> MAJ_cleared_is_null();
+
       /*
       if (isset($_POST['_'.$i]) && ($_POST['_'.$i] != '')) {
         $maClasse-> MAJ_($_POST['id_dos_'.$i], $_POST['_'.$i]);
