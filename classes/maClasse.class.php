@@ -6409,7 +6409,7 @@
 					if ( ($getDataRow == '0') ) {
 						$clignoteCleared = true;
 						?>
-							<option>TRANSIT</option>
+							<option value="0">TRANSIT</option>
 							<option value="1">CLEARED</option>
 							<?php
 							if ($_SESSION['id_role'] == '1') {
@@ -6422,7 +6422,7 @@
 						<?php
 					}else if ( ($getDataRow == '1') ) {
 						?>
-							<option>CLEARED</option>
+							<option value="1">CLEARED</option>
 							<option value="0">TRANSIT</option>
 							<?php
 							if ($_SESSION['id_role'] == '1') {
@@ -6434,7 +6434,7 @@
 						<?php
 					}else if ( ($getDataRow == '2') ) {
 						?>
-							<option>CANCELLED</option>
+							<option value="2">CANCELLED</option>
 							<?php
 							if ($_SESSION['id_role'] == '1') {
 							?>
@@ -7130,7 +7130,7 @@
 					if ( ($getDataRow == '0') ) {
 						$clignoteCleared = true;
 						?>
-							<option>TRANSIT</option>
+							<option value="0">TRANSIT</option>
 							<option value="1">CLEARED</option>
 							<?php
 							if ($_SESSION['id_role'] == '1') {
@@ -7143,7 +7143,7 @@
 						<?php
 					}else if ( ($getDataRow == '1') ) {
 						?>
-							<option>CLEARED</option>
+							<option value="1">CLEARED</option>
 							<option value="0">TRANSIT</option>
 							<?php
 							if ($_SESSION['id_role'] == '1') {
@@ -7155,7 +7155,7 @@
 						<?php
 					}else if ( ($getDataRow == '2') ) {
 						?>
-							<option>CANCELLED</option>
+							<option value="2">CANCELLED</option>
 							<?php
 							if ($_SESSION['id_role'] == '1') {
 							?>
