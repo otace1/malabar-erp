@@ -21359,7 +21359,7 @@
 			$entree['cleared'] = $cleared;
 			$connexion-> exec("UPDATE dossier SET cleared = '0'
 								WHERE cleared = '' OR cleared is null");
-			}
+			
 			
 		}
 
