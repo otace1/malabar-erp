@@ -12174,6 +12174,14 @@
 					$couleurDos = '';
 				}
 
+				if (empty($this-> getSouscriptionLicence($reponse['num_lic'])) && ($this-> verifierSouscriptionLicence($id_cli, $id_mod_lic) == true)) {
+					$clignoteDos = ' clignoteb';
+					$couleurDos = ' color: rgb(255,255,0);';
+				}else{
+					$clignoteDos = '';
+					$couleurDos = '';
+				}
+
 				$date_exp = $this-> getLastEpirationLicence($reponse['num_lic']);
 				$supplier = $this-> getLicence($reponse['num_lic'])['fournisseur'];
 
