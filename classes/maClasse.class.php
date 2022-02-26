@@ -12176,7 +12176,7 @@
 
 				if (empty($this-> getSouscriptionLicence($reponse['num_lic'])) && ($this-> verifierSouscriptionLicence($id_cli, $id_mod_lic) == true)) {
 					$clignoteDos = ' clignoteb';
-					$couleurDos = ' color: rgb(255,255,0);';
+					$couleurDos = ' color: rgb(173,255,47);';
 				}else{
 					$clignoteDos = '';
 					$couleurDos = '';
