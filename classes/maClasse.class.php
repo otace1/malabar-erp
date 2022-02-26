@@ -12174,7 +12174,7 @@
 					$couleurDos = '';
 				}
 
-				if (empty($this-> getSouscriptionLicence($reponse['num_lic'])) && ($this-> verifierSouscriptionLicence($id_cli, $id_mod_lic) == true)) {
+				if (empty($this-> getSouscriptionLicence($reponse['num_lic'])) && ($this-> verifierSouscriptionLicence($id_cli, $id_mod_lic) == true) && ($reponse['num_lic'] != 'UNDER VALUE')) {
 					$clignoteDos = ' clignoteb';
 					$couleurDos = ' color: rgb(173,255,47);';
 				}else{
