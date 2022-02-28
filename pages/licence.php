@@ -171,7 +171,7 @@
                                                   $_POST['fret'], $_POST['assurance'], $_POST['autre_frais'], 
                                                   $_POST['num_lic_old'], $_POST['id_mon'], $_POST['id_mod_paie'], 
                                                   $_POST['id_type_lic'], $_POST['id_sous_type_paie'], $_POST['poids'], 
-                                                  $_POST['id_mod_trans']);
+                                                  $_POST['id_mod_trans'], $_POST['cod']);
                       }else{
                         $maClasse-> modifierLicenceExport($_POST['num_lic'], $_POST['date_val'], $_POST['date_exp'], 
                                                   $_POST['acheteur'], $_POST['commodity'], $_POST['fob'], 
@@ -241,7 +241,7 @@
                                                       $_POST['id_type_lic'], $_POST['id_mod_paie'], 
                                                       $_POST['id_sous_type_paie'], $_POST['provenance'],
                                                       $_POST['commodity'], $_POST['tonnage'], 
-                                                      $_POST['poids'], $_POST['unit_mes']);
+                                                      $_POST['poids'], $_POST['unit_mes'], $_POST['cod']);
                             }else{
 
                               echo '<script>alert("Erreur!! Impossible de créer la licence '.$_POST['num_lic'].' car il existe déjà une licence ayant ce numéro.");</script>';
@@ -611,17 +611,25 @@ if(isset($_GET['id_mod_lic'])){
             </select>
           </div>
 
+          <input type="hidden" name="tonnage" value="0">
+
           <div class="col-md-3">
-            <label for="x_card_code" class="control-label mb-1">WEIGHT ACTIVATION</label>
-            <select name="tonnage" onchange="" class="form-control cc-exp" required>
-                <option value="0">NO</option>
-                <option value="1">YES</option>
+            <label for="x_card_code" class="control-label mb-1">REF. COD</label>
+            <input type="text" name="cod" class="form-control cc-exp">
+          </div>
+
+          <div class="col-md-3">
+            <label for="x_card_code" class="control-label mb-1">TYPE MARCHANDISE</label>
+            <select id="consommable" name="consommable" onchange="xajax_afficherPoidsLicenceConsommable(this.value);" class="form-control cc-exp" required>
+                <option></option>
+                <option value="1">CONSOMMABLE</option>
+                <option value="0">DIVERS</option>
             </select>
           </div>
 
           <div class="col-md-3">
             <label for="x_card_code" class="control-label mb-1">WEIGHT</label>
-            <input type="number" step="0.01" name="poids" class="form-control cc-exp">
+            <span id="poids"></span>
           </div>
 
           <div class="col-md-3">

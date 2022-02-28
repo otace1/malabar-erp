@@ -1599,6 +1599,11 @@ if(isset($_GET['id_mod_trac'])){
                         <span id="poids"></span>
                       </div>
 
+                      <div class="col-md-3">
+                        <label for="x_card_code" class="control-label mb-1">CRF REF</label>
+                        <span id="cod"></span>
+                      </div>
+
                           <?php
                         }else{
                           ?>
@@ -1651,9 +1656,19 @@ if(isset($_GET['id_mod_trac'])){
                         <input type="number" min="0" step="0.001" name="poids" class="form-control cc-exp">
                       </div>
 
+                      <div class="col-md-3">
+                        <label for="x_card_code" class="control-label mb-1">CRF REF</label>
+                        <input type="text" name="cod" class="form-control cc-exp">
+                      </div>
+
                           <?php
                         }
                       ?>
+
+                      <div class="col-md-3">
+                        <label for="x_card_code" class="control-label mb-1">CRF RECEIVED DATE</label>
+                        <input type="date"  onchange="is_weekend(this.value);" name="date_crf" class="form-control cc-exp">
+                      </div>
 
                       <div class="col-md-3">
                         <label for="x_card_code" class="control-label mb-1">PO REF</label>
@@ -1675,16 +1690,6 @@ if(isset($_GET['id_mod_trac'])){
                         <span id="cod_dos_1"></span>
                       </div>-->
              
-                      <div class="col-md-3">
-                        <label for="x_card_code" class="control-label mb-1">CRF REF</label>
-                        <input type="text" name="cod" class="form-control cc-exp">
-                      </div>
-
-                      <div class="col-md-3">
-                        <label for="x_card_code" class="control-label mb-1">CRF RECEIVED DATE</label>
-                        <input type="date"  onchange="is_weekend(this.value);" name="date_crf" class="form-control cc-exp">
-                      </div>
-
                       <div class="col-md-3">
                         <label for="x_card_code" class="control-label mb-1">PRE-ALERT DATE</label>
                         <input type="date" id="date_new" onchange="is_weekend(this.value);" name="date_preal" class="form-control cc-exp">

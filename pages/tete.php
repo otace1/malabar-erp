@@ -25,6 +25,7 @@
   $xajax-> registerFunction("afficherDetailFactureExport");
   $xajax-> registerFunction("afficherDetailsDossier");
   $xajax-> registerFunction("afficherDetailsDossierMutliple");
+  $xajax-> registerFunction("afficherPoidsLicenceConsommable");
 
   $xajax-> processRequests();
 ?>
