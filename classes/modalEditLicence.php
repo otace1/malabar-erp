@@ -187,6 +187,11 @@ if ($_GET['id_mod_lic'] == '1') {
           </div>
           
           <div class="col-md-3">
+            <label for="x_card_code" class="control-label mb-1">REF. COD</label>
+            <input type="text" name="cod" value="<?php echo $reponse['cod'];?>" class="form-control cc-exp" required>
+          </div>
+          
+          <div class="col-md-3">
             <label for="x_card_code" class="control-label mb-1">FOURNISSEUR</label>
             <input type="text" name="fournisseur" value="<?php echo $reponse['fournisseur'];?>" class="form-control cc-exp" required>
           </div>

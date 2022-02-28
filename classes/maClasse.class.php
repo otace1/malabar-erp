@@ -102,7 +102,7 @@
 										$date_val, $date_exp, $id_march, $id_mod_lic, 
 										$id_util, $fichier_lic, $tmp, $fichier_fact, $tmp_fact, 
 										$id_type_lic, $id_mod_paie, $id_sous_type_paie,
-										$provenance, $commodity, $tonnage, $poids, $unit_mes){
+										$provenance, $commodity, $tonnage, $poids, $unit_mes, $cod){
 			include('connexion.php');
 			$entree['id_banq'] = $id_banq;$entree['num_lic'] = $num_lic;
 			$entree['id_cli'] = $id_cli;$entree['id_post'] = $id_post;
@@ -118,6 +118,7 @@
 			$entree['commodity'] = $commodity;
 			$entree['tonnage'] = $tonnage; $entree['poids'] = $poids;
 			$entree['unit_mes'] = $unit_mes;
+			$entree['cod'] = $cod;
 
 			if ($entree['date_fact'] == '') {
 				$entree['date_fact'] = NULL;
@@ -170,7 +171,7 @@
 																id_mod_trans, ref_fact, date_fact, 
 																fournisseur, date_val, id_march, 
 																id_mod_lic, id_util, fichier_lic, fichier_fact,
-																id_type_lic, id_mod_paie, id_sous_type_paie, provenance, commodity, tonnage, poids, unit_mes) 
+																id_type_lic, id_mod_paie, id_sous_type_paie, provenance, commodity, tonnage, poids, unit_mes, cod) 
 												VALUES(?, ?, ?, 
 													?, ?, ?, 
 													?, ?, ?, 
@@ -180,7 +181,7 @@
 													?, ?, ?, 
 													?, ?, ?,
 													?, ?, ?,
-													?, ?)');
+													?, ?, ?)');
 			$requete-> execute(array($entree['id_banq'], $entree['num_lic'], $entree['id_cli'], 
 									$entree['id_post'], $entree['id_mon'], $entree['fob'], 
 									$entree['assurance'], $entree['fret'], $entree['autre_frais'], 
@@ -190,7 +191,7 @@
 									$entree['id_mod_lic'], $entree['id_util'], $entree['fichier_lic'], 
 									$entree['fichier_fact'], $entree['id_type_lic'], $entree['id_mod_paie'], 
 									$entree['id_sous_type_paie'], $entree['provenance'], $entree['commodity'], 
-									$entree['tonnage'], $entree['poids'], $entree['unit_mes']));
+									$entree['tonnage'], $entree['poids'], $entree['unit_mes'], $entree['cod']));
 			if ($date_exp != null) {
 				$this-> creerDateExpirationLicence($num_lic, $date_exp);
 			}
@@ -9098,6 +9099,7 @@
 							m.id_mon AS id_mon,
 							l.qte_decl AS qte_decl,
 							l.fichier_lic AS fichier_lic,
+							l.cod AS cod,
 							l.fret AS fret,
 							l.autre_frais AS autre_frais,
 							l.acheteur AS acheteur,
@@ -9183,6 +9185,7 @@
 				}
 				if($id_mod_lic == '2'){
 					?>
+					<td style="text-align: left; border: 1px solid black;"><?php echo $reponse['cod'];?></td>
 					<td style="text-align: left; border: 1px solid black;"><?php echo $reponse['fournisseur'];?></td>
 					<?php
 				}
@@ -9475,6 +9478,7 @@
 							m.sig_mon AS sig_mon,
 							m.id_mon AS id_mon,
 							l.qte_decl AS qte_decl,
+							l.cod AS cod,
 							l.fichier_lic AS fichier_lic,
 							l.fret AS fret,
 							l.acheteur AS acheteur,
@@ -9549,6 +9553,7 @@
 				}
 				if($id_mod_lic == '2'){
 					?>
+					<td style="text-align: left; border: 1px solid black;"><?php echo $reponse['cod'];?></td>
 					<td style="text-align: left; border: 1px solid black;"><?php echo $reponse['fournisseur'];?></td>
 					<?php
 				}
@@ -13333,7 +13338,10 @@
 			$sommeFob = 0;
 			$sommePoids = 0;
 			$requete = $connexion-> prepare("SELECT d.*, 
-													IF(cod IS NOT NULL AND cod <> 'TBC', cod, IF(ref_av IS NOT NULL, ref_av, IF(ref_crf IS NOT NULL, ref_crf, NULL))) AS cod
+													IF(cod IS NOT NULL AND cod <> 'TBC', cod, IF(ref_av IS NOT NULL, ref_av, IF(ref_crf IS NOT NULL, ref_crf, NULL))) AS cod,
+													DATE_FORMAT(d.date_decl, '%d/%m/%Y') AS date_decl,
+													DATE_FORMAT(d.date_liq, '%d/%m/%Y') AS date_liq,
+													DATE_FORMAT(d.date_quit, '%d/%m/%Y') AS date_quit
 												FROM dossier d, client cl
 												WHERE d.num_lic = ?
 													AND d.id_cli =  cl.id_cli
@@ -13344,7 +13352,16 @@
 				$bg = "";
 				$sommeFob += $reponse['fob'];
 				$sommePoids += $reponse['poids'];
+				$ok_apurement = '';
 				
+				if ($this-> verifierApurementDossier($reponse['id_dos'])==true) {
+					$bg = 'text-success';
+					$ok_apurement = '<span class="text-success">YES</span>';
+				}else {
+					//$bg = 'bg bg-success';
+					$ok_apurement = '<span class="text-danger">NO</span>';
+				}
+
 				/*$ref_dos, $id_cli, $ref_fact, $fob, 
 				$fret, $assurance, $autre_frais, $num_lic, 
 				$id_mod_lic, $id_march*/
@@ -13367,16 +13384,28 @@
 						<?php echo $reponse['ref_decl'];?>
 					</td>
 					<td class=" <?php echo $bg;?>" style="text-align: center; ">
+						<?php echo $reponse['date_decl'];?>
+					</td>
+					<td class=" <?php echo $bg;?>" style="text-align: center; ">
 						<?php echo $reponse['ref_liq'];?>
 					</td>
 					<td class=" <?php echo $bg;?>" style="text-align: center; ">
+						<?php echo $reponse['date_liq'];?>
+					</td>
+					<td class=" <?php echo $bg;?>" style="text-align: center; ">
 						<?php echo $reponse['ref_quit'];?>
+					</td>
+					<td class=" <?php echo $bg;?>" style="text-align: center; ">
+						<?php echo $reponse['date_quit'];?>
 					</td>
 					<td class=" <?php echo $bg;?>" style="text-align: right; ">
 						<?php echo number_format($reponse['fob'], 2, ',', ' ');?>
 					</td>
 					<td class=" <?php echo $bg;?>" style="text-align: right; ">
 						<?php echo number_format($reponse['poids'], 2, ',', ' ');?>
+					</td>
+					<td class=" <?php echo $bg;?>" style="text-align: center; ">
+						<?php echo $ok_apurement;?>
 					</td>
 				</tr>
 			<?php
@@ -15127,6 +15156,23 @@
 				return false;
 			}
 		}
+
+		// public function verifierApurementDossier($id_dos){
+		// 	include('connexion.php');
+		// 	$entree['id_dos'] = $id_dos;
+		// 	//$entree['pass_util'] = $pass_util;
+
+		// 	$requete = $connexion-> prepare('SELECT id_dos
+		// 										FROM detail_apurement
+		// 										WHERE id_dos = ?');
+		// 	$requete-> execute(array($entree['id_dos']));
+		// 	$reponse = $requete-> fetch();
+		// 	if($reponse){
+		// 		return $reponse['id_dos'];
+		// 	}else{
+		// 		return false;
+		// 	}
+		// }
 		//FIN Methode permettant de verifier 
 
 		//Methode permettant de recuperer
@@ -16477,6 +16523,23 @@
 			}
 		}
 
+		public function getSommeFobTransmisBanqueLicence($num_lic){
+			include('connexion.php');
+			$entree['num_lic'] = $num_lic;
+
+			$requete = $connexion-> prepare("SELECT SUM(d.fob) AS fob
+													FROM dossier d, detail_apurement det
+													WHERE d.num_lic = ?
+														AND d.id_dos = det.id_dos
+														AND d.cleared <> '2'");
+
+			$requete-> execute(array($entree['num_lic']));
+			$reponse = $requete-> fetch();
+			if($reponse){
+				return $reponse['fob'];
+			}
+		}
+
 		public function getSommePoidsLicence($num_lic){
 			include('connexion.php');
 			$entree['num_lic'] = $num_lic;
@@ -16551,6 +16614,22 @@
 												FROM dossier
 												WHERE num_lic = ?
 													AND cleared <> '2'");
+			$requete-> execute(array($entree['num_lic']));
+			$reponse = $requete-> fetch();
+			if($reponse){
+				return $reponse['nbre'];
+			}
+		}
+
+		public function getNbreDossierTransmisBanqueLicence($num_lic){
+			include('connexion.php');
+			$entree['num_lic'] = $num_lic;
+
+			$requete = $connexion-> prepare("SELECT COUNT(DISTINCT(d.id_dos)) AS nbre
+												FROM dossier d, detail_apurement det
+												WHERE d.num_lic = ?
+													AND d.id_dos = det.id_dos
+													AND d.cleared <> '2'");
 			$requete-> execute(array($entree['num_lic']));
 			$reponse = $requete-> fetch();
 			if($reponse){
@@ -19513,7 +19592,7 @@
 										$fret, $assurance, $autre_frais, 
 										$num_lic_old, $id_mon, $id_mod_paie, 
 										$id_type_lic, $id_sous_type_paie, $poids, 
-										$id_mod_trans){
+										$id_mod_trans, $cod){
 
 			include('connexion.php');
 			$entree['num_lic'] = $num_lic;
@@ -19534,6 +19613,7 @@
 			$entree['id_sous_type_paie'] = $id_sous_type_paie;
 			$entree['poids'] = $poids;
 			$entree['id_mod_trans'] = $id_mod_trans;
+			$entree['cod'] = $cod;
 
 			/*echo '<br> num_lic = '.$num_lic;
 			echo '<br> num_lic_old = '.$num_lic_old;
@@ -19552,13 +19632,14 @@
 													fournisseur = ?, commodity = ?, fob = ?, 
 													fret = ?, assurance = ?, autre_frais = ?, 
 													id_mon = ?, id_mod_paie = ?, id_type_lic = ?,
-													id_sous_type_paie = ?, poids = ?, id_mod_trans = ?
+													id_sous_type_paie = ?, poids = ?, id_mod_trans = ?, 
+													cod = ?
 												WHERE num_lic = ?");
 			$requete-> execute(array($entree['num_lic'], $entree['date_val'], $entree['fournisseur'], 
 									$entree['commodity'], $entree['fob'], $entree['fret'], 
 									$entree['assurance'], $entree['autre_frais'], $entree['id_mon'], 
 									$entree['id_mod_paie'], $entree['id_type_lic'], $entree['id_sous_type_paie'], 
-									$entree['poids'], $entree['id_mod_trans'], $entree['num_lic_old']));
+									$entree['poids'], $entree['id_mod_trans'], $entree['cod'], $entree['num_lic_old']));
 
 			if ($date_exp != $this-> getLastEpirationLicence2($num_lic)) {
 				$this-> annulerDateExpirationLicence($num_lic);

@@ -789,17 +789,20 @@
 				$input3 = "<input name='fret' type='number' step='0.01' class='form-control cc-exp' />";
 				$input4 = "<input name='assurance' type='number' step='0.01' class='form-control cc-exp' />";
 				$input5 = "<input name='autre_frais' type='number' step='0.01' class='form-control cc-exp' />";
-				$input2 = "<input type='number' class='form-control cc-exp' value='2500' disabled='disabled' />";
+				$input5 = "<input name='autre_frais' type='number' step='0.01' class='form-control cc-exp' />";
+				$input_cod = "<input type='text' name='cod' class='form-control cc-exp' required />";
 				$inputBalancePoids = "<input type='number' class='form-control cc-exp' value='' disabled='disabled' />";
 			}else{
 				$fob = $licence['fob']-getSommeFobLicence($num_lic);
 				$poids = $licence['poids']-getSommePoidsLicence($num_lic);
+				$cod = $licence['cod'];
 				$input = "<input name='fob' type='number' step='0.0001' class='form-control cc-exp' max='$fob' />";
 				$inputPoids = "<input name='poids' type='number' step='0.0001' class='form-control cc-exp' max='$poids' />";
 				$input3 = "<input name='fret' type='number' step='0.01' class='form-control cc-exp' />";
 				$input4 = "<input name='assurance' type='number' step='0.01' class='form-control cc-exp' />";
 				$input5 = "<input name='autre_frais' type='number' step='0.01' class='form-control cc-exp' />";
 				$input2 = "<input type='number' class='form-control cc-exp' value='$fob' disabled='disabled' />";
+				$input_cod = "<input type='text' name='cod' class='form-control cc-exp' value='$cod' required />";
 				$inputBalancePoids = "<input type='number' class='form-control cc-exp' value='$poids' disabled='disabled' />";
 			}
 		}else{
@@ -809,6 +812,7 @@
 			$input4 = "<input name='assurance' type='number' step='0.01' class='form-control cc-exp' />";
 			$input5 = "<input name='autre_frais' type='number' step='0.01' class='form-control cc-exp' />";
 			$input2 = "<input step='0.01' class='form-control cc-exp'  type='number' disabled='disabled' />";
+			$input_cod = "<input type='text' name='cod' class='form-control cc-exp' required />";
 			$inputBalancePoids = "<input type='number' class='form-control cc-exp' value='' disabled='disabled' />";
 		}
 
@@ -822,6 +826,27 @@
 		$objResponse-> addAssign("balance_fob", "innerHTML", $input2);
 		$objResponse-> addAssign("balance_poids", "innerHTML", $inputBalancePoids);
 		$objResponse-> addAssign("poids", "innerHTML", $inputPoids);
+		$objResponse-> addAssign("cod", "innerHTML", $input_cod);
+		return $objResponse-> getXML();
+	}
+	
+	function afficherPoidsLicenceConsommable($consommable){
+		include('connexion.php');
+
+		if (isset($licence)) {
+			if ($num_lic == '1') {
+				$input = "<input name='poids' type='number' step='0.01' class='form-control cc-exp' required/>";
+			}else{
+				$input = "<input name='poids' type='number' step='0.01' class='form-control cc-exp'/>";
+			}
+		}else{
+			$input = "<input name='poids' type='number' step='0.01' class='form-control cc-exp'/>";
+		}
+
+		$compteur = 0;
+		$objResponse = new xajaxResponse();
+
+		$objResponse-> addAssign("poids", "innerHTML", $input);
 		return $objResponse-> getXML();
 	}
 	
