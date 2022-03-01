@@ -9138,7 +9138,11 @@
 				$clignoteLic = '';
 				
 				$style = '';//" style='color: black; background-color: orange;'";
-				if( ($reponse['fob'] < $this-> getSommeFobLicence($reponse['num_lic'])) && ($reponse['fob'] != $this-> getSommeFobAppureLicence($reponse['num_lic'])) ){
+				if( ($reponse['fob'] <= $this-> getSommeFobAppureLicence($reponse['num_lic'])) || (($reponse['fob']-$this-> getSommeFobAppureLicence($reponse['num_lic']))<1) ){
+					$bg = "bg-success";
+					$style = " style=''";
+					$couleur = "success";
+				}else if( ($reponse['fob'] < $this-> getSommeFobLicence($reponse['num_lic'])) && ($reponse['fob'] != $this-> getSommeFobAppureLicence($reponse['num_lic'])) ){
 					$bg = "bg-red";
 					$style = " style='color: rgb(255,69,0);'";
 					$couleur = "red";
@@ -9147,10 +9151,6 @@
 					$bg = "bg-dark";
 					$style = " style=''";
 					$couleur = "dark";
-				}else if( ($reponse['fob'] == $this-> getSommeFobLicence($reponse['num_lic'])) ){
-					$bg = "bg-success";
-					$style = " style=''";
-					$couleur = "success";
 				}else if($date_exp < $reponse['aujourdhui']){
 					$bg = "bg-danger";
 					$style = " style=''";
@@ -13412,7 +13412,7 @@
 			}$requete-> closeCursor();
 			?>
 				<tr>
-					<td class="<?php echo $bg;?>" colspan='7' style="text-align: right;" <?php echo $style;?>>
+					<td class="<?php echo $bg;?>" colspan='10' style="text-align: right;" <?php echo $style;?>>
 						TOTAL
 					</td>
 					<td class=" <?php echo $bg;?>" style="text-align: right; ">
@@ -16577,11 +16577,9 @@
 			$entree['num_lic'] = $num_lic;
 
 			$requete = $connexion-> prepare("SELECT SUM(d.fob) AS fob
-												FROM dossier d
+												FROM dossier d, detail_apurement ap
 												WHERE d.num_lic = ?
-													AND d.id_dos IN(
-														SELECT id_dos FROM appurement_licence
-													)
+													AND d.id_dos = ap.id_dos
 													AND d.cleared <> '2'
 												");
 			$requete-> execute(array($entree['num_lic']));
