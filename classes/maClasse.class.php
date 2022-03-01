@@ -2302,12 +2302,13 @@
 			$id_cli = '';
 			$active = '';
 			$open = '';
-			if($_SESSION['id_role'] == '1' || $_SESSION['id_role'] == '5'){
+			if($_SESSION['id_role'] == '1' || $_SESSION['id_role'] == '5' || $_SESSION['id_role'] == '11'){
 				$sql = "SELECT id_mod_lic, 
 							nom_mod_lic,
 							sigle_mod_lic
 						FROM modele_licence
 						WHERE id_etat = 1
+							AND id_mod_lic < 3
 						ORDER BY rang_lic ASC";
 			$requete = $connexion-> query($sql);
 			while($reponse = $requete-> fetch()){
@@ -2461,7 +2462,131 @@
 			$active = '';
 			$open = '';
 			$reponse['id_cli'] = '';
-			if($_SESSION['id_role'] == '1' || $_SESSION['id_role'] == '6' || $_SESSION['id_role'] == '7' || $_SESSION['id_role'] == '8' || $_SESSION['id_role'] == '9' || $_SESSION['id_role'] == '10'){
+			if($_SESSION['id_role'] == '1' || $_SESSION['id_role'] == '6' || $_SESSION['id_role'] == '7' || $_SESSION['id_role'] == '8' || $_SESSION['id_role'] == '9' || $_SESSION['id_role'] == '10' || $_SESSION['id_role'] == '11'){
+				$sql = "SELECT id_mod_lic, 
+							nom_mod_lic,
+							sigle_mod_lic
+						FROM modele_licence
+						WHERE id_etat = 1
+							AND id_mod_lic < 3
+						ORDER BY rang_lic ASC";
+
+			$requete = $connexion-> query($sql);
+			while($reponse = $requete-> fetch()){
+				if( (isset($_GET['id_mod_trac'])) && ($reponse['id_mod_lic'] == $_GET['id_mod_trac']) ){
+					$active = 'active';
+					$open = ' menu-open';
+				}else{
+					$active = '';
+					$open = '';
+				}
+				/*if(!isset($reponse['id_cli'])){
+					$reponse['id_cli'] = '';
+				}*/
+				?>
+				<li class="nav-item has-treeview <?php echo $open;?>">
+			        <a href="#" class="nav-link  <?php echo $active;?>">
+			          <i class="nav-icon fas fa-file"></i>
+			          <p>
+			            <?php echo $reponse['nom_mod_lic'];?>
+			            <i class="right fas fa-angle-left"></i>
+			          </p>
+			        </a>
+		            <ul class="nav nav-treeview">
+		            <?php
+		            	//if ($_SESSION['id_role']!='7') {
+		            		?>
+						<li class="nav-item has-treeview">
+					        <a href="dashboardDossier.php?id_cli=<?php echo $reponse['id_cli'];?>&amp;id_mod_trac=<?php echo $id_mod_lic;?>" class="nav-link" class="nav-link">
+		                  	&nbsp;&nbsp;&nbsp;&nbsp;<i class="nav-icon fas fa-tachometer-alt"></i>
+		                  	<p>Dashboard <?php echo $reponse['sigle_mod_lic'];?></p>
+					        </a>
+				            <ul class="nav nav-treeview">
+				              <?php
+				              	$this-> afficherMenuModeTransportDashboard($id_cli, $reponse['id_mod_lic']);
+				              	//$this-> afficherMenuLicenceClient($reponse['id_cli'], $id_mod_lic);
+				              ?>
+				            </ul>
+					    </li><?php
+		            	//}
+		            ?>
+		              <?php
+		              	//$this-> afficherMenuMarchandiseModeleLicence($reponse['id_mod_lic']);
+		              if ($reponse['id_mod_lic'] == '1') {
+		              	# code...
+		              	$this-> afficherMenuClientModeleLicenceExport($reponse['id_mod_lic']);
+		              }else if ($reponse['id_mod_lic'] == '2') {
+		              	# code...
+		              	$this-> afficherMenuClientModeleLicence($reponse['id_mod_lic']);
+		              }
+		              	
+		              ?>
+		              <li class="nav-item">
+		                <a href="sydonia_upload.php?id_mod_trac=<?php echo $reponse['id_mod_lic'];?>&amp;id_cli=<?php echo $id_cli;?>" class="nav-link">
+		                  &nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-upload nav-icon"></i>
+		                  <p>SYDONIA</p>
+		                </a>
+		              </li>
+		              <!--<li class="nav-item">
+		                <a href="dossier_upload2.php?id_mod_trac=<?php echo $reponse['id_mod_lic'];?>&amp;id_cli=<?php echo $id_cli;?>" class="nav-link">
+		                  &nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-upload nav-icon"></i>
+		                  <p>Upload MMG</p>
+		                </a>
+		              </li>-->
+		              <?php
+		              	if( $reponse['id_mod_lic'] == '1'){
+		              		/*
+		              	?>
+		              	<li class="nav-item">
+			                <a href="uploadExport.php?id_mod_trac=<?php echo $reponse['id_mod_lic'];?>&commodity=" class="nav-link">
+			                  &nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-upload nav-icon"></i>
+			                  <p>UPLOAD </p>
+			                </a>
+			            </li>
+		              	<?php
+		              	*/
+		              	}else if( $reponse['id_mod_lic'] == '2'){
+		              	?>
+		              <!--<li class="nav-item">
+		                <a href="dossier_upload2.php?id_mod_trac=<?php echo $reponse['id_mod_lic'];?>&amp;id_cli=<?php echo $id_cli;?>" class="nav-link">
+		                  &nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-upload nav-icon"></i>
+		                  <p>Upload Fichier Tracking</p>
+		                </a>
+		              </li>
+		              <li class="nav-item">
+		                <a href="upload_fob.php?id_mod_trac=<?php echo $reponse['id_mod_lic'];?>&amp;id_cli=<?php echo $id_cli;?>" class="nav-link">
+		                  &nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-upload nav-icon"></i>
+		                  <p>Upload FOB</p>
+		                </a>
+		              </li>
+		              <li class="nav-item">
+		                <a href="upload_apurement.php?id_mod_trac=<?php echo $reponse['id_mod_lic'];?>&amp;id_cli=<?php echo $id_cli;?>" class="nav-link">
+		                  &nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-upload nav-icon"></i>
+		                  <p>Upload APUREMENT</p>
+		                </a>
+		              </li>-->
+		              	<?php
+		              	}
+		              ?>
+		            </ul>
+			    </li>
+				<?php
+			}$requete-> closeCursor();
+
+			}
+		}
+
+		public function afficherMenuTrackingLogistique(){
+			include("connexion.php");
+			if(!isset($_GET['id_mod_lic'])){
+				$_GET['id_mod_lic'] = '';
+			}
+			$id_mod_lic = $_GET['id_mod_lic'];
+			$id_cli = '';
+			$active = '';
+			$open = '';
+			$reponse['id_cli'] = '';
+			if($_SESSION['id_role'] == '1' || $_SESSION['id_role'] == '6' || $_SESSION['id_role'] == '7' || $_SESSION['id_role'] == '8' || $_SESSION['id_role'] == '9' || $_SESSION['id_role'] == '10' || $_SESSION['id_role'] == '11'){
 				$sql = "SELECT id_mod_lic, 
 							nom_mod_lic,
 							sigle_mod_lic
@@ -9090,7 +9215,7 @@
 
 			$compteur = $premiere_entree;
 			
-			if($_SESSION['id_role'] == 1 || $_SESSION['id_role'] == 5){
+			if($_SESSION['id_role'] == 1 || $_SESSION['id_role'] == 5 || $_SESSION['id_role'] == '11'){
 				$sql = "SELECT l.num_lic AS num_lic,
 							DATE_FORMAT(l.date_val, '%d/%m/%Y') AS date_val,
 							IF(l.id_mod_lic = '1', l.poids, l.fob) AS fob,
@@ -9306,7 +9431,7 @@
 
 			$compteur = $premiere_entree;
 			
-			if($_SESSION['id_role'] == 1 || $_SESSION['id_role'] == 5){
+			if($_SESSION['id_role'] == 1 || $_SESSION['id_role'] == 5 || $_SESSION['id_role'] == '11'){
 				$sql = "SELECT l.num_lic AS num_lic,
 							DATE_FORMAT(l.date_val, '%d/%m/%Y') AS date_val,
 							IF(l.id_mod_lic = '1', l.poids, l.fob) AS fob,
@@ -9470,7 +9595,7 @@
 
 			$compteur = 0;
 			
-			if($_SESSION['id_role'] == 1 || $_SESSION['id_role'] == 5){
+			if($_SESSION['id_role'] == 1 || $_SESSION['id_role'] == 5 || $_SESSION['id_role'] == '11'){
 				$sql = "SELECT l.num_lic AS num_lic,
 							DATE_FORMAT(l.date_val, '%d/%m/%Y') AS date_val,
 							l.fob AS fob,
@@ -19329,7 +19454,8 @@
 		public function selectionnerModeTransport(){
 			include('connexion.php');
 			$requete = $connexion-> query("SELECT id_mod_trans, UPPER(nom_mod_trans) AS nom_mod_trans
-											FROM mode_transport");
+											FROM mode_transport
+											WHERE id_mod_trans < 5");
 			while($reponse = $requete-> fetch()){
 			?>
 			  <option value="<?php echo $reponse['id_mod_trans'];?>">
