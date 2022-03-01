@@ -108,7 +108,7 @@
               <i class="fas fa-file-excel"></i> Export Excel
             </button>
 
-            <button class="btn btn-secondary square-btn-adjust" onclick="window.location.replace('exportDashboardDossier2.php?id_cli=<?php echo $_GET['id_cli']; ?>&id_mod_lic=<?php echo $_GET['id_mod_trac']; ?>&id_mod_trans=<?php echo $_GET['id_mod_trans']; ?>','pop1','width=80,height=80');">
+            <button class="btn btn-secondary square-btn-adjust" onclick="window.location.replace('exportDashboardDossier2Automatique.php?id_cli=<?php echo $_GET['id_cli']; ?>&id_mod_lic=<?php echo $_GET['id_mod_trac']; ?>&id_mod_trans=<?php echo $_GET['id_mod_trans']; ?>','pop1','width=80,height=80');">
               <i class="fas fa-file-excel"></i> Export Excel 2
             </button>
             <?php
