@@ -452,6 +452,12 @@ $indiceSheet = 0;
 				$couleur = 'CD5C5C';
 				$apurement = 'EXPIREE';
 
+			}//Non-apuréé
+			else{
+
+				$couleur = 'FFFFFF';
+				$apurement = 'NON-APPURE';
+
 			}
 
 			$styleHeader = array(
