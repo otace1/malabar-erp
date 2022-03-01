@@ -24,9 +24,14 @@ function afficherDossierLicenceExcel($num_lic, $row, $excel, $compteur, $couleur
 												WHERE num_lic = ?");
 	$requeteDossier-> execute(array($entree['num_lic']));
 	while ($reponseDossier = $requeteDossier-> fetch()) {
+		if ($maClasse-> verifierApurementDossier($reponseDossier['id_dos'])==true) {
+			$statut_apurement = 'Transmis & Apuré';
+		}else{
+			$statut_apurement = 'Non-Apuré';
+		}
 
 		$excel->getActiveSheet()
-			->getStyle('A'.$row.':AF'.$row)->applyFromArray($styleHeader);
+			->getStyle('A'.$row.':AG'.$row)->applyFromArray($styleHeader);
 
 		$excel-> getActiveSheet()
 			-> setCellValue('A'.$row, $compteur)
@@ -45,7 +50,8 @@ function afficherDossierLicenceExcel($num_lic, $row, $excel, $compteur, $couleur
 			-> setCellValue('AB'.$row, $reponseDossier['montant_decl'])
 			-> setCellValue('AC'.$row, $reponseDossier['ref_liq'])
 			-> setCellValue('AD'.$row, $reponseDossier['ref_quit'])
-			-> setCellValue('AE'.$row, $reponseDossier['date_quit']);
+			-> setCellValue('AE'.$row, $reponseDossier['date_quit'])
+			-> setCellValue('AF'.$row, $statut_apurement);
 
 		alignement('A'.$row);
 		alignement('B'.$row);
@@ -65,6 +71,7 @@ function afficherDossierLicenceExcel($num_lic, $row, $excel, $compteur, $couleur
 		alignement('AD'.$row);
 		alignement('AE'.$row);
 		alignement('AF'.$row);
+		alignement('AG'.$row);
 
 		$row++;
 		$compteur++;

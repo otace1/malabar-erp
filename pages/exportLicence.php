@@ -66,7 +66,14 @@ include('afficherDossierLicenceExcel.php');
 $indiceSheet = 0;
 
 	//--- Recuperation d'années -------
-	for ($annee=date('Y'); $annee >= 2020; $annee--) { 
+	if (isset($_GET['annee']) && ($_GET['annee']!='')) {
+		$anneeDebut = $_GET['annee'];
+		$anneeFin = $_GET['annee'];
+	}else{
+		$anneeDebut = date('Y');
+		$anneeFin = 2020;
+	}
+	for ($annee=$anneeDebut; $annee >= $anneeFin; $annee--) { 
 		//$entree['annee']='%'.substr($annee, -2).'-%';
 		$entree['annee']= $annee;
 
@@ -191,7 +198,8 @@ $indiceSheet = 0;
 			-> setCellValue('AC'.$row, 'Nº L')
 			-> setCellValue('AD'.$row, 'Nº Q')
 			-> setCellValue('AE'.$row, 'DATE Q')
-			-> setCellValue('AF'.$row, 'OBSERVATION');
+			-> setCellValue('AF'.$row, 'OBSERVATION DOSSIER')
+			-> setCellValue('AG'.$row, 'OBSERVATION LICENCE');
 
 		cellColor('A'.$row, '000000');
 		cellColor('B'.$row, '000000');
@@ -225,6 +233,7 @@ $indiceSheet = 0;
 		cellColor('AD'.$row, '000000');
 		cellColor('AE'.$row, '000000');
 		cellColor('AF'.$row, '000000');
+		cellColor('AG'.$row, '000000');
 
 
 		alignement('A'.$row);
@@ -259,6 +268,7 @@ $indiceSheet = 0;
 		alignement('AD'.$row);
 		alignement('AE'.$row);
 		alignement('AF'.$row);
+		alignement('AG'.$row);
 
 		$excel->getActiveSheet()
 			->getStyle('A3')->applyFromArray($styleHeader);
@@ -363,8 +373,10 @@ $indiceSheet = 0;
 			->getStyle('AE'.$row)->applyFromArray($styleHeader);
 		$excel->getActiveSheet()
 			->getStyle('AF'.$row)->applyFromArray($styleHeader);
+		$excel->getActiveSheet()
+			->getStyle('AG'.$row)->applyFromArray($styleHeader);
 
-		$excel-> getActiveSheet()-> getStyle('A'.$row.':AF'.$row)-> applyFromArray(
+		$excel-> getActiveSheet()-> getStyle('A'.$row.':AG'.$row)-> applyFromArray(
 			array(
 				'borders' => array(
 					'allborders' => array(
@@ -417,7 +429,7 @@ $indiceSheet = 0;
 			$date_exp = $maClasse-> getLastEpirationLicence2($reponse['num_lic']);
 
 			//Licence Apurée
-			if (($reponse['apurement'] == '1') || ( ($maClasse-> verifierApurementDossierLicence($reponse['num_lic']) == $maClasse-> getNombreDossierLicence($reponse['num_lic'])) && ($maClasse-> getNombreDossierLicence($reponse['num_lic']) > 1) )/**/ ) {
+			if (($reponse['apurement'] == '1') || ( ($maClasse-> verifierApurementDossierLicence($reponse['num_lic']) == $maClasse-> getNombreDossierLicence($reponse['num_lic'])) && ($maClasse-> getNombreDossierLicence($reponse['num_lic']) > 1) ) || (($reponse['fob']-$maClasse-> getSommeFobAppureLicence($reponse['num_lic']))<1) ) {
 
 				$couleur = '00FF7F';
 				$apurement = 'TOTAL';
@@ -465,7 +477,7 @@ $indiceSheet = 0;
 				-> setCellValue('N'.$row, $reponse['aur'])
 				-> setCellValue('O'.$row, $reponse['date_val'])
 				-> setCellValue('P'.$row, $date_exp)
-				-> setCellValue('AF'.$row, $apurement);
+				-> setCellValue('AG'.$row, $apurement);
 
 			//Format date
 			$excel-> getActiveSheet()
@@ -529,7 +541,7 @@ $indiceSheet = 0;
 				$excel-> getActiveSheet()
 					-> mergeCells('P'.$row.':P'.($row+$maClasse-> getNombreDossierLicence($reponse['num_lic'])-1));
 				$excel-> getActiveSheet()
-					-> mergeCells('AF'.$row.':AF'.($row+$maClasse-> getNombreDossierLicence($reponse['num_lic'])-1));
+					-> mergeCells('AG'.$row.':AG'.($row+$maClasse-> getNombreDossierLicence($reponse['num_lic'])-1));
 
 				$row += $maClasse-> getNombreDossierLicence($reponse['num_lic']);
 				$compteur += $maClasse-> getNombreDossierLicence($reponse['num_lic']);
@@ -547,7 +559,7 @@ $indiceSheet = 0;
 		//$excel-> getActiveSheet()-> getColumnDimension('')-> setWidth(25);
 		$incrementColonne = 3;
 		$lettre = 'C';
-		while ($incrementColonne <= 32) {
+		while ($incrementColonne <= 33) {
 
 			if ($lettre == 'C') {
 				$excel-> getActiveSheet()-> getColumnDimension("$lettre")-> setWidth(35);
@@ -600,7 +612,7 @@ $indiceSheet = 0;
 	}
 
 //--- FIN Recuperation années -------
-
+$excel->setActiveSheetIndex(0);
 
 $titre = $maClasse-> getClient($_GET['id_cli'])['nom_cli'].'_LICENCE_'.$transit.'_'.date('d_m_Y_h_i_s');
 // Redirect output to a client’s web browser (Excel5)
