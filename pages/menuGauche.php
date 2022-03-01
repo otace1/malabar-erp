@@ -30,7 +30,7 @@
           <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
           <?php
-            if($_SESSION['id_role'] == '1' || $_SESSION['id_role'] == '5'){
+            if($_SESSION['id_role'] == '1' || $_SESSION['id_role'] == '5' || $_SESSION['id_role'] == '11'){
           ?>
           <li class="nav-item"  style="">
             <a href="#" class="nav-link active bg bg-danger" style=" font-weight: bold;">
@@ -48,9 +48,8 @@
             <hr>
             <?php
             }
-            ?>
-          <?php
-            if($_SESSION['id_role'] == '1' || $_SESSION['id_role'] == '6' || $_SESSION['id_role'] == '7' || $_SESSION['id_role'] == '8' || $_SESSION['id_role'] == '9' || $_SESSION['id_role'] == '10'){
+
+            if($_SESSION['id_role'] == '1' || $_SESSION['id_role'] == '6' || $_SESSION['id_role'] == '7' || $_SESSION['id_role'] == '8' || $_SESSION['id_role'] == '9' || $_SESSION['id_role'] == '10' || $_SESSION['id_role'] == '11'){
           ?>
           <li class="nav-item"  style="">
             <a href="#" class="nav-link active bg bg-danger" style=" font-weight: bold;">
@@ -65,8 +64,23 @@
             <?php
               $maClasse-> afficherMenuTracking();
             }
-            ?>
+
+            /*if($_SESSION['id_role'] == '1' || $_SESSION['id_role'] == '6' || $_SESSION['id_role'] == '7' || $_SESSION['id_role'] == '8' || $_SESSION['id_role'] == '9' || $_SESSION['id_role'] == '10' || $_SESSION['id_role'] == '11'){
+          ?>
+          <li class="nav-item"  style="">
+            <a href="#" class="nav-link active bg bg-danger" style=" font-weight: bold;">
+              <!--<i class="nav-icon fas fa-tachometer-alt"></i>-->
+              <span class="">
+              <p style="font-size: 17px;">
+                MODULE LOGISTIQUE<br>
+              </p></span>
+            </a>
+          </li>
+
             <?php
+              $maClasse-> afficherMenuTrackingLogistique();
+            }*/
+            
             if($_SESSION['id_role'] == '1'){
           ?>
           <hr>

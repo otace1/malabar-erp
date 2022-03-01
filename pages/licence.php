@@ -364,21 +364,36 @@
                         <a class="dropdown-item"onclick="window.location.replace('exportLicence.php?id_cli=<?php echo $_GET['id_cli']; ?>&id_mod_lic=<?php echo $_GET['id_mod_lic']; ?>&id_type_lic=<?php echo $_GET['id_type_lic']; ?>','pop1','width=80,height=80');">
                           Export All Licenses
                         </a>
+                        <a class="dropdown-item"onclick="window.location.replace('exportSyntheseLicence.php?id_cli=<?php echo $_GET['id_cli']; ?>&id_mod_lic=<?php echo $_GET['id_mod_lic']; ?>&id_type_lic=<?php echo $_GET['id_type_lic']; ?>','pop1','width=80,height=80');">
+                          Export Syntheses
+                        </a>
                         <a class="dropdown-item" href="#"><hr></a>
                         <a class="dropdown-item"onclick="window.location.replace('exportLicence.php?id_cli=<?php echo $_GET['id_cli']; ?>&id_mod_lic=<?php echo $_GET['id_mod_lic']; ?>&id_type_lic=<?php echo $_GET['id_type_lic']; ?>&annee=2022','pop1','width=80,height=80');">
                           Export 2022 Licenses
+                        </a>
+                        <a class="dropdown-item"onclick="window.location.replace('exportSyntheseLicence.php?id_cli=<?php echo $_GET['id_cli']; ?>&id_mod_lic=<?php echo $_GET['id_mod_lic']; ?>&id_type_lic=<?php echo $_GET['id_type_lic']; ?>&annee=2022','pop1','width=80,height=80');">
+                          Export 2022 Synthese
                         </a>
                         <a class="dropdown-item" href="#"><hr></a>
                         <a class="dropdown-item"onclick="window.location.replace('exportLicence.php?id_cli=<?php echo $_GET['id_cli']; ?>&id_mod_lic=<?php echo $_GET['id_mod_lic']; ?>&id_type_lic=<?php echo $_GET['id_type_lic']; ?>&annee=2021','pop1','width=80,height=80');">
                           Export 2021 Licenses
                         </a>
+                        <a class="dropdown-item"onclick="window.location.replace('exportSyntheseLicence.php?id_cli=<?php echo $_GET['id_cli']; ?>&id_mod_lic=<?php echo $_GET['id_mod_lic']; ?>&id_type_lic=<?php echo $_GET['id_type_lic']; ?>&annee=2021','pop1','width=80,height=80');">
+                          Export 2021 Synthese
+                        </a>
                         <a class="dropdown-item" href="#"><hr></a>
                         <a class="dropdown-item"onclick="window.location.replace('exportLicence.php?id_cli=<?php echo $_GET['id_cli']; ?>&id_mod_lic=<?php echo $_GET['id_mod_lic']; ?>&id_type_lic=<?php echo $_GET['id_type_lic']; ?>&annee=2020','pop1','width=80,height=80');">
                           Export 2020 Licenses
                         </a>
+                        <a class="dropdown-item"onclick="window.location.replace('exportSyntheseLicence.php?id_cli=<?php echo $_GET['id_cli']; ?>&id_mod_lic=<?php echo $_GET['id_mod_lic']; ?>&id_type_lic=<?php echo $_GET['id_type_lic']; ?>&annee=2020','pop1','width=80,height=80');">
+                          Export 2020 Synthese
+                        </a>
                         <a class="dropdown-item" href="#"><hr></a>
                         <a class="dropdown-item"onclick="window.location.replace('exportLicence.php?id_cli=<?php echo $_GET['id_cli']; ?>&id_mod_lic=<?php echo $_GET['id_mod_lic']; ?>&id_type_lic=<?php echo $_GET['id_type_lic']; ?>&annee=2019','pop1','width=80,height=80');">
                           Export 2019 Licenses
+                        </a>
+                        <a class="dropdown-item"onclick="window.location.replace('exportSyntheseLicence.php?id_cli=<?php echo $_GET['id_cli']; ?>&id_mod_lic=<?php echo $_GET['id_mod_lic']; ?>&id_type_lic=<?php echo $_GET['id_type_lic']; ?>&annee=2019','pop1','width=80,height=80');">
+                          Export 2019 Synthese
                         </a>
                         <a class="dropdown-item" href="#"><hr></a>
                       </div>
