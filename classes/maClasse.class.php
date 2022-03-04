@@ -94,6 +94,37 @@
 			move_uploaded_file($tmp_fact, '../dossiers/'.$num_lic.'/' . basename($fichier_fact));
 			//move_uploaded_file($tmp, '../dossiers/');
 		}
+		
+		public function creerDossierLogistique($ref_dos, $ref_mca, $road_manif, $ref_fact, 
+										$ref_batch, $poids, $ref_po, $montant_po, $origine, 
+										$destination, $transit, $id_cli, 
+										$id_mod_trans, $id_trans, $id_util){
+			include('connexion.php');
+			$entree['ref_dos'] = $ref_dos;
+			$entree['ref_mca'] = $ref_mca;
+			$entree['road_manif'] = $road_manif;
+			$entree['ref_fact'] = $ref_fact;
+			$entree['ref_batch'] = $ref_batch;
+			$entree['poids'] = $poids;
+			$entree['ref_po'] = $ref_po;
+			$entree['montant_po'] = $montant_po;
+			$entree['origine'] = $origine;
+			$entree['destination'] = $destination;
+			$entree['transit'] = $transit;
+			$entree['id_cli'] = $id_cli;
+			$entree['id_mod_trans'] = $id_mod_trans;
+			$entree['id_trans'] = $id_trans;
+			$entree['id_util'] = $id_util;
+			
+			$requete = $connexion-> prepare('INSERT INTO dossier_logistique(ref_dos, ref_mca, road_manif, ref_fact, ref_batch, poids, ref_po, montant_po, origine, destination, transit, id_cli, id_mod_trans, id_trans, id_util, statut) 
+												VALUES(?, ?, ?, 
+													?, ?, ?, 
+													?, ?, ?, 
+													?, ?, ?, 
+													?, ?, ?, \'IN TRANSIT\')');
+			$requete-> execute(array($entree['ref_dos'], $entree['ref_mca'], $entree['road_manif'], $entree['ref_fact'], $entree['ref_batch'], $entree['poids'], $entree['ref_po'], $entree['montant_po'], $entree['origine'], $entree['destination'], $entree['transit'], $entree['id_cli'], $entree['id_mod_trans'], $entree['id_trans'], $entree['id_util']));
+			
+		}
 
 		public function creerLicenceIB2($id_banq, $num_lic, $id_cli, $id_post, 
 										$id_mon, $fob, $assurance, $fret, 
@@ -2587,16 +2618,13 @@
 			$open = '';
 			$reponse['id_cli'] = '';
 			if($_SESSION['id_role'] == '1' || $_SESSION['id_role'] == '6' || $_SESSION['id_role'] == '7' || $_SESSION['id_role'] == '8' || $_SESSION['id_role'] == '9' || $_SESSION['id_role'] == '10' || $_SESSION['id_role'] == '11'){
-				$sql = "SELECT id_mod_lic, 
-							nom_mod_lic,
-							sigle_mod_lic
-						FROM modele_licence
-						WHERE id_etat = 1
-						ORDER BY rang_lic ASC";
+				$sql = "SELECT id_trans, 
+							nom_trans
+						FROM transit";
 
 			$requete = $connexion-> query($sql);
 			while($reponse = $requete-> fetch()){
-				if( (isset($_GET['id_mod_trac'])) && ($reponse['id_mod_lic'] == $_GET['id_mod_trac']) ){
+				if( (isset($_GET['id_trans'])) && ($reponse['id_trans'] == $_GET['id_trans']) ){
 					$active = 'active';
 					$open = ' menu-open';
 				}else{
@@ -2611,85 +2639,13 @@
 			        <a href="#" class="nav-link  <?php echo $active;?>">
 			          <i class="nav-icon fas fa-file"></i>
 			          <p>
-			            <?php echo $reponse['nom_mod_lic'];?>
+			            <?php echo $reponse['nom_trans'];?>
 			            <i class="right fas fa-angle-left"></i>
 			          </p>
 			        </a>
 		            <ul class="nav nav-treeview">
-		            <?php
-		            	//if ($_SESSION['id_role']!='7') {
-		            		?>
-						<li class="nav-item has-treeview">
-					        <a href="dashboardDossier.php?id_cli=<?php echo $reponse['id_cli'];?>&amp;id_mod_trac=<?php echo $id_mod_lic;?>" class="nav-link" class="nav-link">
-		                  	&nbsp;&nbsp;&nbsp;&nbsp;<i class="nav-icon fas fa-tachometer-alt"></i>
-		                  	<p>Dashboard <?php echo $reponse['sigle_mod_lic'];?></p>
-					        </a>
-				            <ul class="nav nav-treeview">
-				              <?php
-				              	$this-> afficherMenuModeTransportDashboard($id_cli, $reponse['id_mod_lic']);
-				              	//$this-> afficherMenuLicenceClient($reponse['id_cli'], $id_mod_lic);
-				              ?>
-				            </ul>
-					    </li><?php
-		            	//}
-		            ?>
 		              <?php
-		              	//$this-> afficherMenuMarchandiseModeleLicence($reponse['id_mod_lic']);
-		              if ($reponse['id_mod_lic'] == '1') {
-		              	# code...
-		              	$this-> afficherMenuClientModeleLicenceExport($reponse['id_mod_lic']);
-		              }else if ($reponse['id_mod_lic'] == '2') {
-		              	# code...
-		              	$this-> afficherMenuClientModeleLicence($reponse['id_mod_lic']);
-		              }
-		              	
-		              ?>
-		              <li class="nav-item">
-		                <a href="sydonia_upload.php?id_mod_trac=<?php echo $reponse['id_mod_lic'];?>&amp;id_cli=<?php echo $id_cli;?>" class="nav-link">
-		                  &nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-upload nav-icon"></i>
-		                  <p>SYDONIA</p>
-		                </a>
-		              </li>
-		              <!--<li class="nav-item">
-		                <a href="dossier_upload2.php?id_mod_trac=<?php echo $reponse['id_mod_lic'];?>&amp;id_cli=<?php echo $id_cli;?>" class="nav-link">
-		                  &nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-upload nav-icon"></i>
-		                  <p>Upload MMG</p>
-		                </a>
-		              </li>-->
-		              <?php
-		              	if( $reponse['id_mod_lic'] == '1'){
-		              		/*
-		              	?>
-		              	<li class="nav-item">
-			                <a href="uploadExport.php?id_mod_trac=<?php echo $reponse['id_mod_lic'];?>&commodity=" class="nav-link">
-			                  &nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-upload nav-icon"></i>
-			                  <p>UPLOAD </p>
-			                </a>
-			            </li>
-		              	<?php
-		              	*/
-		              	}else if( $reponse['id_mod_lic'] == '2'){
-		              	?>
-		              <!--<li class="nav-item">
-		                <a href="dossier_upload2.php?id_mod_trac=<?php echo $reponse['id_mod_lic'];?>&amp;id_cli=<?php echo $id_cli;?>" class="nav-link">
-		                  &nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-upload nav-icon"></i>
-		                  <p>Upload Fichier Tracking</p>
-		                </a>
-		              </li>
-		              <li class="nav-item">
-		                <a href="upload_fob.php?id_mod_trac=<?php echo $reponse['id_mod_lic'];?>&amp;id_cli=<?php echo $id_cli;?>" class="nav-link">
-		                  &nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-upload nav-icon"></i>
-		                  <p>Upload FOB</p>
-		                </a>
-		              </li>
-		              <li class="nav-item">
-		                <a href="upload_apurement.php?id_mod_trac=<?php echo $reponse['id_mod_lic'];?>&amp;id_cli=<?php echo $id_cli;?>" class="nav-link">
-		                  &nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-upload nav-icon"></i>
-		                  <p>Upload APUREMENT</p>
-		                </a>
-		              </li>-->
-		              	<?php
-		              	}
+		              	$this-> afficherMenuClientDossierLogistique($reponse['id_trans']);
 		              ?>
 		            </ul>
 			    </li>
@@ -2890,6 +2846,54 @@
 			}$requete-> closeCursor();
 		}
 
+		public function afficherMenuClientDossierLogistique($id_trans){
+			include('connexion.php');
+			$entree['id_trans'] = $id_trans;
+			$active = '';
+			$open = '';
+			$style = '';
+
+			$requete = $connexion-> prepare("SELECT DISTINCT(c.id_cli) AS id_cli , UPPER(c.nom_cli) AS nom_cli
+												FROM client c, dossier_logistique dl
+												WHERE dl.id_trans = ?
+													AND dl.id_cli = c.id_cli
+												ORDER BY c.nom_cli");
+			$requete-> execute(array($entree['id_trans']));
+			while ($reponse = $requete-> fetch()) {
+				if( (isset($_GET['id_cli'])) && ($reponse['id_cli'] == $_GET['id_cli']) ){
+					$active = 'active';
+					$open = ' menu-open';
+				}else{
+					$active = '';
+					$open = '';
+				}
+				if( (isset($_GET['id_cli'])) && ($reponse['id_cli'] == $_GET['id_cli']) && (isset($reponse['id_cli'])) && (isset($_GET['id_march'])) ){
+					$style = 'style="font-weight: bold; color: white;"';
+				}else{
+					$style = '';
+				}
+			?>
+				<li class="nav-item has-treeview <?php echo $open;?>">
+			        <a href="#" class="nav-link <?php echo $active;?>" class="nav-link  <?php echo $active;?>">
+			          &nbsp;&nbsp;&nbsp;&nbsp;<i class="nav-icon fa fa-user"></i>
+			          <p>
+			            <?php echo $reponse['nom_cli'];?>
+			            <i class="right fas fa-angle-left"></i>
+			          </p>
+			        </a>
+		            <ul class="nav nav-treeview">
+		              <?php
+		              	//$this-> afficherMenuLicenceClient($reponse['id_cli'], $id_mod_lic);
+		              ?>
+		              <?php
+		              	$this-> afficherMenuModeTransportClientLogistique($reponse['id_cli'], $id_trans);
+		              ?>
+		            </ul>
+			    </li>
+			<?php
+			}$requete-> closeCursor();
+		}
+
 		public function afficherMenuAvClientModeleLicence($id_mod_lic){
 			include('connexion.php');
 			$entree['id_mod_lic'] = $id_mod_lic;
@@ -3054,6 +3058,38 @@
 			?>
 				<li class="nav-item">
 	                <a href="dossier.php?id_cli=<?php echo $id_cli;?>&amp;id_mod_trac=<?php echo $id_mod_lic;?>&amp;id_mod_trans=<?php echo $reponse['id_mod_trans'];?>&commodity=" class="nav-link" <?php echo $style;?>>
+	                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="far fa-circle nav-icon"></i>
+	                  <p><?php echo $reponse['nom_mod_trans'];?></p>
+	                </a>
+	            </li>
+			<?php
+			}$requete-> closeCursor();
+		}
+
+		public function afficherMenuModeTransportClientLogistique($id_cli, $id_trans){
+			include('connexion.php');
+			$entree['id_trans'] = $id_trans;
+			$entree['id_cli'] = $id_cli;
+			$style = '';
+
+			$requete = $connexion-> prepare("SELECT UPPER(nom_mod_trans) AS nom_mod_trans, id_mod_trans AS id_mod_trans 
+												FROM mode_transport
+												WHERE id_mod_trans IN(
+													SELECT DISTINCT(id_mod_trans) 
+													FROM dossier_logistique
+													WHERE id_cli = ?
+														AND id_trans = ? 		
+											)");
+			$requete-> execute(array($entree['id_cli'], $entree['id_trans']));
+			while ($reponse = $requete-> fetch()) {
+				if( (isset($_GET['id_cli'])) && ($id_cli == $_GET['id_cli']) && (isset($id_cli)) && (isset($_GET['id_mod_trans'])) && ($reponse['id_mod_trans'] == $_GET['id_mod_trans']) ){
+					$style = 'style="font-weight: bold; color: white;"';
+				}else{
+					$style = '';
+				}
+			?>
+				<li class="nav-item">
+	                <a href="dossierLogistique.php?id_cli=<?php echo $id_cli;?>&amp;id_trans=<?php echo $id_trans;?>&amp;id_mod_trans=<?php echo $reponse['id_mod_trans'];?>&commodity=" class="nav-link" <?php echo $style;?>>
 	                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="far fa-circle nav-icon"></i>
 	                  <p><?php echo $reponse['nom_mod_trans'];?></p>
 	                </a>
@@ -12721,6 +12757,283 @@
 			}$requete-> closeCursor();
 		}
 
+		public function afficherDossierLogistiqueClientModeTransport($id_cli, $id_mod_trans, $id_trans, $premiere_entree, $nombre_dossier_par_page){
+			include('connexion.php');
+
+			$entree['id_cli'] = $id_cli;
+			$entree['id_mod_trans'] = $id_mod_trans;
+			$entree['id_trans'] = $id_trans;
+			$compteur = $premiere_entree;
+			$index = 0;
+			$bg = '';
+			$style = '';
+
+			  if (isset($_GET['page'])) {
+			    $page = '&page='.$_GET['page'];
+			  }else{
+			    $page = '&page=1';
+			  }
+
+			$requete = $connexion-> prepare("SELECT *, ROUND(poids, 2) AS poids, ROUND(montant_po, 2) AS montant_po
+												FROM dossier_logistique
+												WHERE id_cli = ?
+													AND id_mod_trans = ?
+													ANd id_trans = ?
+												ORDER BY ref_dos DESC
+												LIMIT $premiere_entree, $nombre_dossier_par_page");
+			$requete-> execute(array($entree['id_cli'], $entree['id_mod_trans'], $entree['id_trans']));
+			while ($reponse = $requete-> fetch()) {
+				$compteur++;
+				$index++;
+				$bg = "";
+				$color='';
+				$class = "";
+
+				if ($reponse['statut'] == 'ARRIVED') {
+					$style = "style='color: blue;'";
+					$color = "color: blue;";
+					$class = "bg-primary";
+				}else if ($reponse['statut'] == 'CANCELLED') {
+					$style = "style='color: red;'";
+					$color = "color: red;";
+					$class = "bg-danger";
+				}else{
+					$style = "";
+					$color = "";
+					$class = "";
+				}
+
+			?>
+				<input type="hidden" name="ref_dos" value="<?php echo $ref_dos;?>">
+				<input type="hidden" name="ref_dos_<?php echo $compteur;?>" value="<?php echo $reponse['ref_dos'];?>">
+				<tr class="<?php echo $bg;?>" <?php echo $style;?>>
+					<td class="<?php echo $class;?> <?php echo $bg;?>" <?php echo $style;?>><?php echo $compteur;?></td>
+					<td class="<?php echo $class;?> <?php echo $bg;?>" style=" <?php echo $color;?>">
+						<?php echo $reponse['ref_dos'];?>
+					</td>
+					<td style="text-align: center;">
+						<input type="text" name="ref_mca_<?php echo $compteur;?>" value="<?php echo $reponse['ref_mca'];?>" style="text-transform:uppercase;">
+					</td>
+					<td style="text-align: center;">
+						<?php
+							echo $this-> getNomModeTransport($reponse['id_mod_trans']);
+						?>
+					</td>
+					<td style="text-align: center;">
+						<input type="text" name="road_manif_<?php echo $compteur;?>" value="<?php echo $reponse['road_manif'];?>" style="text-transform:uppercase; width: 10em;">
+					</td>
+					<td style="text-align: center;">
+						<input type="text" name="ref_fact_<?php echo $compteur;?>" value="<?php echo $reponse['ref_fact'];?>" style="text-transform:uppercase;">
+					</td>
+					<td style="text-align: center;">
+						<input type="text" name="ref_batch_<?php echo $compteur;?>" value="<?php echo $reponse['ref_batch'];?>" style="text-transform:uppercase; width: 7em;">
+					</td>
+					<td style="text-align: center;">
+						<input type="number" step="0.01" min="0" name="poids_<?php echo $compteur;?>" value="<?php echo $reponse['poids'];?>" style="width: 6em;">
+					</td>
+					<td style="text-align: center;">
+						<input type="text" name="ref_po_<?php echo $compteur;?>" value="<?php echo $reponse['ref_po'];?>" style="text-transform:uppercase;">
+					</td>
+					<td style="text-align: center;">
+						<input type="number" step="0.05" min="0" name="montant_po_<?php echo $compteur;?>" value="<?php echo $reponse['montant_po'];?>" style="text-transform:uppercase; width: 6em;">
+					</td>
+					<td style="text-align: center;">
+						<input type="text" name="origine_<?php echo $compteur;?>" value="<?php echo $reponse['origine'];?>" style="text-transform:uppercase;">
+					</td>
+					<td style="text-align: center;">
+						<input type="text" name="destination_<?php echo $compteur;?>" value="<?php echo $reponse['destination'];?>" style="text-transform:uppercase;">
+					</td>
+					<td style="text-align: center;">
+						<input type="date" name="date_dep_fbm_<?php echo $compteur;?>" value="<?php echo $reponse['date_dep_fbm'];?>" style="">
+					</td>
+					<td style="text-align: center;">
+						<input type="text" name="transit_<?php echo $compteur;?>" value="<?php echo $reponse['transit'];?>" style="text-transform:uppercase;">
+					</td>
+					<td style="text-align: center;">
+						<input type="date" name="date_transit_<?php echo $compteur;?>" value="<?php echo $reponse['date_transit'];?>" style="">
+					</td>
+					<td style="text-align: center;">
+						<input type="date" name="date_fd_<?php echo $compteur;?>" value="<?php echo $reponse['date_fd'];?>" style="">
+					</td>
+					<td style="text-align: center;">
+						<input type="date" name="deliv_date_<?php echo $compteur;?>" value="<?php echo $reponse['deliv_date'];?>" style="">
+					</td>
+					<td style="text-align: center;">
+						<input type="text" name="ref_pod_<?php echo $compteur;?>" value="<?php echo $reponse['ref_pod'];?>" style="text-transform:uppercase;">
+					</td>
+					<td style="text-align: center;" class="<?php echo $bg;?> <?php echo $class;?>">
+						<select name="statut_<?php echo $compteur;?>">
+							<?php
+							if ($reponse['statut']=='ARRIVED') {
+							?>
+								<option value="ARRIVED">ARRIVED</option>
+								<option value="IN TRANSIT">IN TRANSIT</option>
+								<option value="CANCELLED">CANCELLED</option>
+							<?php
+							}else if ($reponse['statut']=='IN TRANSIT') {
+							?>
+								<option value="IN TRANSIT">IN TRANSIT</option>
+								<option value="ARRIVED">ARRIVED</option>
+								<option value="CANCELLED">CANCELLED</option>
+							<?php
+							}else if ($reponse['statut']=='CANCELLED') {
+							?>
+								<option value="CANCELLED">CANCELLED</option>
+								<option value="ARRIVED">ARRIVED</option>
+								<option value="IN TRANSIT">IN TRANSIT</option>
+							<?php
+							}
+							?>
+						</select>
+					</td>
+					<td style="text-align: center;">
+						<input type="text" name="remarque_<?php echo $compteur;?>" value="<?php echo $reponse['remarque'];?>" style="text-transform:uppercase; width: 20em;">
+					</td>
+				</tr>
+			<?php
+			}$requete-> closeCursor();
+		}
+
+		public function afficherDossierLogistiqueClientModeTransportRecherche($ref_dos, $id_cli, $id_mod_trans, $id_trans, $premiere_entree, $nombre_dossier_par_page){
+			include('connexion.php');
+
+			$entree['id_cli'] = $id_cli;
+			$entree['id_mod_trans'] = $id_mod_trans;
+			$entree['id_trans'] = $id_trans;
+			$entree['ref_dos'] = trim($ref_dos);
+			$compteur = 0;
+			$index = 0;
+			$bg = '';
+			$style = '';
+
+			  if (isset($_GET['page'])) {
+			    $page = '&page='.$_GET['page'];
+			  }else{
+			    $page = '&page=1';
+			  }
+
+			$requete = $connexion-> prepare("SELECT *, ROUND(poids, 2) AS poids, ROUND(montant_po, 2) AS montant_po
+												FROM dossier_logistique
+												WHERE id_cli = ?
+													AND id_mod_trans = ?
+													ANd id_trans = ?
+													AND ref_dos = ?
+												ORDER BY ref_dos DESC
+												LIMIT $premiere_entree, $nombre_dossier_par_page");
+			$requete-> execute(array($entree['id_cli'], $entree['id_mod_trans'], 
+										$entree['id_trans'], $entree['ref_dos']));
+			while ($reponse = $requete-> fetch()) {
+				$compteur++;
+				$index++;
+				$bg = "";
+				$color='';
+				$class = "";
+
+				if ($reponse['statut'] == 'ARRIVED') {
+					$style = "style='color: blue;'";
+					$color = "color: blue;";
+					$class = "bg-primary";
+				}else if ($reponse['statut'] == 'CANCELLED') {
+					$style = "style='color: red;'";
+					$color = "color: red;";
+					$class = "bg-danger";
+				}else{
+					$style = "";
+					$color = "";
+					$class = "";
+				}
+
+			?>
+				<input type="hidden" name="ref_dos" value="<?php echo $ref_dos;?>">
+				<input type="hidden" name="ref_dos_<?php echo $compteur;?>" value="<?php echo $reponse['ref_dos'];?>">
+				<tr class="<?php echo $bg;?>" <?php echo $style;?>>
+					<td class="<?php echo $class;?> <?php echo $bg;?>" <?php echo $style;?>><?php echo $compteur;?></td>
+					<td class="<?php echo $class;?> <?php echo $bg;?>" style=" <?php echo $color;?>">
+						<?php echo $reponse['ref_dos'];?>
+					</td>
+					<td style="text-align: center;">
+						<input type="text" name="ref_mca_<?php echo $compteur;?>" value="<?php echo $reponse['ref_mca'];?>" style="text-transform:uppercase;">
+					</td>
+					<td style="text-align: center;">
+						<?php
+							echo $this-> getNomModeTransport($reponse['id_mod_trans']);
+						?>
+					</td>
+					<td style="text-align: center;">
+						<input type="text" name="road_manif_<?php echo $compteur;?>" value="<?php echo $reponse['road_manif'];?>" style="text-transform:uppercase; width: 10em;">
+					</td>
+					<td style="text-align: center;">
+						<input type="text" name="ref_fact_<?php echo $compteur;?>" value="<?php echo $reponse['ref_fact'];?>" style="text-transform:uppercase;">
+					</td>
+					<td style="text-align: center;">
+						<input type="text" name="ref_batch_<?php echo $compteur;?>" value="<?php echo $reponse['ref_batch'];?>" style="text-transform:uppercase; width: 7em;">
+					</td>
+					<td style="text-align: center;">
+						<input type="number" step="0.01" min="0" name="poids_<?php echo $compteur;?>" value="<?php echo $reponse['poids'];?>" style="width: 6em;">
+					</td>
+					<td style="text-align: center;">
+						<input type="text" name="ref_po_<?php echo $compteur;?>" value="<?php echo $reponse['ref_po'];?>" style="text-transform:uppercase;">
+					</td>
+					<td style="text-align: center;">
+						<input type="number" step="0.05" min="0" name="montant_po_<?php echo $compteur;?>" value="<?php echo $reponse['montant_po'];?>" style="text-transform:uppercase; width: 6em;">
+					</td>
+					<td style="text-align: center;">
+						<input type="text" name="origine_<?php echo $compteur;?>" value="<?php echo $reponse['origine'];?>" style="text-transform:uppercase;">
+					</td>
+					<td style="text-align: center;">
+						<input type="text" name="destination_<?php echo $compteur;?>" value="<?php echo $reponse['destination'];?>" style="text-transform:uppercase;">
+					</td>
+					<td style="text-align: center;">
+						<input type="date" name="date_dep_fbm_<?php echo $compteur;?>" value="<?php echo $reponse['date_dep_fbm'];?>" style="">
+					</td>
+					<td style="text-align: center;">
+						<input type="text" name="transit_<?php echo $compteur;?>" value="<?php echo $reponse['transit'];?>" style="text-transform:uppercase;">
+					</td>
+					<td style="text-align: center;">
+						<input type="date" name="date_transit_<?php echo $compteur;?>" value="<?php echo $reponse['date_transit'];?>" style="">
+					</td>
+					<td style="text-align: center;">
+						<input type="date" name="date_fd_<?php echo $compteur;?>" value="<?php echo $reponse['date_fd'];?>" style="">
+					</td>
+					<td style="text-align: center;">
+						<input type="date" name="deliv_date_<?php echo $compteur;?>" value="<?php echo $reponse['deliv_date'];?>" style="">
+					</td>
+					<td style="text-align: center;">
+						<input type="text" name="ref_pod_<?php echo $compteur;?>" value="<?php echo $reponse['ref_pod'];?>" style="text-transform:uppercase;">
+					</td>
+					<td style="text-align: center;" class="<?php echo $bg;?> <?php echo $class;?>">
+						<select name="statut_<?php echo $compteur;?>">
+							<?php
+							if ($reponse['statut']=='ARRIVED') {
+							?>
+								<option value="ARRIVED">ARRIVED</option>
+								<option value="IN TRANSIT">IN TRANSIT</option>
+								<option value="CANCELLED">CANCELLED</option>
+							<?php
+							}else if ($reponse['statut']=='IN TRANSIT') {
+							?>
+								<option value="IN TRANSIT">IN TRANSIT</option>
+								<option value="ARRIVED">ARRIVED</option>
+								<option value="CANCELLED">CANCELLED</option>
+							<?php
+							}else if ($reponse['statut']=='CANCELLED') {
+							?>
+								<option value="CANCELLED">CANCELLED</option>
+								<option value="ARRIVED">ARRIVED</option>
+								<option value="IN TRANSIT">IN TRANSIT</option>
+							<?php
+							}
+							?>
+						</select>
+					</td>
+					<td style="text-align: center;">
+						<input type="text" name="remarque_<?php echo $compteur;?>" value="<?php echo $reponse['remarque'];?>" style="text-transform:uppercase; width: 20em;">
+					</td>
+				</tr>
+			<?php
+			}$requete-> closeCursor();
+		}
+
 		public function afficherRowDossierClientModeTransportModeLicence3($id_cli, $id_mod_trans, 
 														$id_mod_lic, $commodity, 
 														$id_march=NULL, $statut=NULL, $num_lic=NULL, 
@@ -15771,6 +16084,20 @@
 			}
 		}
 
+		public function verifierExistanceMCAFileLogistique($ref_dos){
+			include('connexion.php');
+			$entree['ref_dos'] = $ref_dos;
+
+			$requete = $connexion-> prepare("SELECT ref_dos
+												FROM dossier_logistique
+													WHERE ref_dos = ?");
+			$requete-> execute(array($entree['ref_dos']));
+			$reponse=$requete-> fetch();
+			if($reponse){
+				return true;
+			}
+		}
+
 		public function verifierReferenceTransmissionApurement($ref_trans_ap){
 			include('connexion.php');
 			$entree['ref_trans_ap'] = $ref_trans_ap;
@@ -15846,6 +16173,27 @@
 			}
 		}
 
+		public function getNbreMcaFileLogistique($id_cli, $id_trans){
+			include('connexion.php');
+			$entree['id_cli'] = $id_cli;
+			$entree['id_trans'] = $id_trans;
+			$masque_date = '%'.date('y').'-%';
+			$entree['masque_date']= '\'%'.date('y').'-%\'';
+
+			$requete = $connexion-> prepare("SELECT COUNT(ref_dos) AS nbre 
+												FROM dossier_logistique
+												WHERE id_cli = ?
+													AND id_trans = ?
+													-- AND ref_dos LIKE ?");
+			$requete-> execute(array($entree['id_cli'], $entree['id_trans']/*, $entree['masque_date']*/));
+			$reponse=$requete-> fetch();
+			if($reponse){
+				return $reponse['nbre'];
+			}else{
+				return false;
+			}
+		}
+
 		public function getMcaFile($id_cli, $id_mod_trans){
 			include('connexion.php');
 			$entree['id_cli'] = $id_cli;
@@ -15875,6 +16223,45 @@
 			$code = $this-> codePourClient($id_cli).'-'.$cod_mod_trans.date('y').'-'.$a;
 
 			while($this-> verifierExistanceMCAFile($code) == true){
+				$i++;
+
+				$a = $this-> getTailleCompteur($i);
+
+				$code = $this-> codePourClient($id_cli).'-'.$cod_mod_trans.date('y').'-'.$a;
+			}
+
+			return $code;
+		}
+
+		public function getMcaFileLogistique($id_cli, $id_trans){
+			include('connexion.php');
+			$entree['id_cli'] = $id_cli;
+			$code = '';
+
+			$nbre = $this->  getNbreMcaFileLogistique($id_cli, $id_trans);
+
+			if ($nbre > 20) {
+				$i = $nbre;
+			}else{
+				$i = 1;
+			}
+			
+			//$i = $nbre;
+
+			$a = $this-> getTailleCompteur($i);
+
+			//EXP pour export
+			// if ($id_trans=='1') {
+			// 	$cod_mod_trans = 'LOG-EXP';
+			// }//LOC pour local
+			// else if ($id_trans=='2') {
+			// 	$cod_mod_trans = 'LOG-LOC';
+			// }
+			$cod_mod_trans = 'EX';
+
+			$code = $this-> codePourClient($id_cli).'-'.$cod_mod_trans.date('y').'-'.$a;
+
+			while($this-> verifierExistanceMCAFileLogistique($code) == true){
 				$i++;
 
 				$a = $this-> getTailleCompteur($i);
@@ -16147,6 +16534,20 @@
 			$reponse = $requete-> fetch();
 			if($reponse){
 				return $reponse['nom_mod_lic'];
+			}
+		}
+
+		public function getNomTransit($id_trans){
+			include('connexion.php');
+			$entree['id_trans'] = $id_trans;
+
+			$requete = $connexion-> prepare("SELECT UPPER(nom_trans) AS nom_trans
+												FROM transit
+												WHERE id_trans = ?");
+			$requete-> execute(array($entree['id_trans']));
+			$reponse = $requete-> fetch();
+			if($reponse){
+				return $reponse['nom_trans'];
 			}
 		}
 
@@ -17785,6 +18186,182 @@
 			//return $this-> getDifferenceDate('2020-11-15', $date_exp);
 		}
 
+		public function getNombreLicencePartiellementApure($id_cli, $id_mod_lic){
+			include('connexion.php');
+			$entree['id_mod_lic'] = $id_mod_lic;
+
+			$nbre = 0;
+
+			$sqlClient = "";
+			$sql2 = "";
+			
+			if( ($id_cli != null) && ($id_cli != '')){
+				$sqlClient = ' AND cl.id_cli = '.$id_cli;
+			}
+
+			$requete = $connexion-> prepare("SELECT COUNT(l.num_lic) AS nbre
+												FROM licence l, client cl
+												WHERE l.id_cli = cl.id_cli
+													AND l.fob > (
+															SELECT sum(d.fob) AS fob
+																FROM dossier d, detail_apurement det
+																WHERE d.num_lic = l.num_lic
+																	AND d.id_dos = det.id_dos
+														)
+													AND l.num_lic IN (
+															SELECT DISTINCT(d.num_lic) AS num_lic
+																FROM dossier d, detail_apurement det
+																WHERE d.num_lic = l.num_lic
+																	AND d.id_dos = det.id_dos
+														)
+													AND l.id_mod_lic = ?
+													$sqlClient");
+			$requete-> execute(array($entree['id_mod_lic']));
+			$reponse = $requete-> fetch(); 
+
+			return $reponse['nbre'];
+
+		}
+
+		public function getNombreLicenceTotalementApure($id_cli, $id_mod_lic){
+			include('connexion.php');
+			$entree['id_mod_lic'] = $id_mod_lic;
+
+			$nbre = 0;
+
+			$sqlClient = "";
+			$sql2 = "";
+			
+			if( ($id_cli != null) && ($id_cli != '')){
+				$sqlClient = ' AND cl.id_cli = '.$id_cli;
+			}
+
+			$requete = $connexion-> prepare("SELECT COUNT(l.num_lic) AS nbre
+												FROM licence l, client cl
+												WHERE l.id_cli = cl.id_cli
+													AND l.fob <= (
+															SELECT sum(d.fob) AS fob
+																FROM dossier d, detail_apurement det
+																WHERE d.num_lic = l.num_lic
+																	AND d.id_dos = det.id_dos
+														)
+													AND l.id_mod_lic = ?
+													$sqlClient");
+			$requete-> execute(array($entree['id_mod_lic']));
+			$reponse = $requete-> fetch(); 
+
+			return $reponse['nbre'];
+
+		}
+
+		public function getNombreLicenceExpiree($id_cli, $id_mod_lic){
+			include('connexion.php');
+			$entree['id_mod_lic'] = $id_mod_lic;
+
+			$nbre = 0;
+
+			$sqlClient = "";
+			$sql2 = "";
+			
+			if( ($id_cli != null) && ($id_cli != '')){
+				$sqlClient = ' AND cl.id_cli = '.$id_cli;
+			}
+
+			$requete = $connexion-> prepare("SELECT COUNT(l.num_lic) AS nbre
+												FROM licence l, client cl
+												WHERE l.id_cli = cl.id_cli
+													AND (
+															(
+																l.fob > (
+																	SELECT sum(d.fob) AS fob
+																		FROM dossier d, detail_apurement det
+																		WHERE d.num_lic = l.num_lic
+																			AND d.id_dos = det.id_dos
+																)
+																AND
+																l.num_lic IN (
+																	SELECT DISTINCT(d.num_lic)
+																		FROM dossier d, detail_apurement det
+																		WHERE d.num_lic = l.num_lic
+																			AND d.id_dos = det.id_dos
+																)
+															)
+															OR (
+																l.num_lic NOT IN (
+																	SELECT DISTINCT(d.num_lic)
+																		FROM dossier d, detail_apurement det
+																		WHERE d.num_lic = l.num_lic
+																			AND d.id_dos = det.id_dos
+																)
+															)
+														)
+
+													AND l.num_lic IN (
+															SELECT num_lic
+																FROM expiration_licence
+																WHERE date_exp <= CURRENT_DATE()
+																AND id_date_exp = (
+																		SELECT MAX(id_date_exp)
+																			FROM expiration_licence
+																			WHERE num_lic = l.num_lic
+																	)
+														)
+													AND l.id_mod_lic = ?
+													$sqlClient");
+			$requete-> execute(array($entree['id_mod_lic']));
+			$reponse = $requete-> fetch(); 
+
+			return $reponse['nbre'];
+
+		}
+
+		public function getNombreLicenceEnCours($id_cli, $id_mod_lic){
+			include('connexion.php');
+			$entree['id_mod_lic'] = $id_mod_lic;
+
+			$nbre = 0;
+
+			$sqlClient = "";
+			$sql2 = "";
+			
+			if( ($id_cli != null) && ($id_cli != '')){
+				$sqlClient = ' AND cl.id_cli = '.$id_cli;
+			}
+
+			$requete = $connexion-> prepare("SELECT COUNT(l.num_lic) AS nbre
+												FROM licence l, client cl
+												WHERE l.id_cli = cl.id_cli
+													AND l.fob > (
+															SELECT sum(d.fob) AS fob
+																FROM dossier d, detail_apurement det
+																WHERE d.num_lic = l.num_lic
+																	AND d.id_dos = det.id_dos
+														)
+													AND (l.fob-5) > (
+															SELECT sum(d.fob) AS fob
+																FROM dossier d, detail_apurement det
+																WHERE d.num_lic = l.num_lic
+																	AND d.id_dos = det.id_dos
+														)
+													AND l.num_lic IN (
+															SELECT num_lic
+																FROM expiration_licence
+																WHERE date_exp >= CURRENT_DATE()
+																AND id_date_exp = (
+																		SELECT MAX(id_date_exp)
+																			FROM expiration_licence
+																			WHERE num_lic = l.num_lic
+																	)
+														)
+													AND l.id_mod_lic = ?
+													$sqlClient");
+			$requete-> execute(array($entree['id_mod_lic']));
+			$reponse = $requete-> fetch(); 
+
+			return $reponse['nbre'];
+
+		}
+
 		public function getNombreLicenceExpiration40JoursModele($id_mod_lic, $id_cli, $id_type_lic){
 			include('connexion.php');
 			$entree['id_mod_lic'] = $id_mod_lic;
@@ -18100,6 +18677,32 @@
 													AND d.id_mod_lic = ?
 												ORDER BY d.id_dos DESC");
 			$requete-> execute(array($entree['id_cli'], $entree['id_mod_trans'], $entree['id_mod_lic']));
+			$reponse = $requete-> fetch();
+			return $reponse['nbre'];
+
+		}
+
+		public function getNombreDossierLogistiqueClientModeTransport($id_cli, $id_mod_trans, $id_trans){
+			include('connexion.php');
+
+			$entree['id_cli'] = $id_cli;
+			$entree['id_mod_trans'] = $id_mod_trans;
+			$entree['id_trans'] = $id_trans;
+			//$entree['num_lic'] = $num_lic;
+
+			/*echo '<br> id_cli = '.$id_cli;
+			echo '<br> id_mod_trans = '.$id_mod_trans;
+			echo '<br> id_trans = '.$id_trans;
+			echo '<br> num_lic = '.$num_lic;*/
+
+			$requete = $connexion-> prepare("SELECT COUNT(d.ref_dos) AS nbre
+												FROM dossier_logistique d, client cl, mode_transport mt
+												WHERE d.id_cli =  cl.id_cli
+													AND cl.id_cli = ?
+													AND d.id_mod_trans = mt.id_mod_trans
+													AND mt.id_mod_trans = ?
+													AND d.id_trans = ?");
+			$requete-> execute(array($entree['id_cli'], $entree['id_mod_trans'], $entree['id_trans']));
 			$reponse = $requete-> fetch();
 			return $reponse['nbre'];
 
@@ -22553,8 +23156,198 @@
 			$requete-> execute(array($entree['affichier_tracking'], $entree['num_lic']));
 
 		} 
-/*
-*/
+
+		/*
+		MAJ dossier logistique
+		*/
+
+		public function MAJ_ref_mca_logistic($ref_dos, $ref_mca){
+			
+			include('connexion.php');
+			$entree['ref_dos'] = $ref_dos;
+			$entree['ref_mca'] = $ref_mca;
+			$requete = $connexion-> prepare("UPDATE dossier_logistique SET ref_mca = ?
+												WHERE ref_dos = ?");
+			$requete-> execute(array($entree['ref_mca'], $entree['ref_dos']));
+
+		} 
+
+		public function MAJ_road_manif_logistic($ref_dos, $road_manif){
+			
+			include('connexion.php');
+			$entree['ref_dos'] = $ref_dos;
+			$entree['road_manif'] = $road_manif;
+			$requete = $connexion-> prepare("UPDATE dossier_logistique SET road_manif = ?
+												WHERE ref_dos = ?");
+			$requete-> execute(array($entree['road_manif'], $entree['ref_dos']));
+
+		} 
+
+		public function MAJ_ref_fact_logistic($ref_dos, $ref_fact){
+			
+			include('connexion.php');
+			$entree['ref_dos'] = $ref_dos;
+			$entree['ref_fact'] = $ref_fact;
+			$requete = $connexion-> prepare("UPDATE dossier_logistique SET ref_fact = ?
+												WHERE ref_dos = ?");
+			$requete-> execute(array($entree['ref_fact'], $entree['ref_dos']));
+
+		} 
+
+		public function MAJ_ref_batch_logistic($ref_dos, $ref_batch){
+			
+			include('connexion.php');
+			$entree['ref_dos'] = $ref_dos;
+			$entree['ref_batch'] = $ref_batch;
+			$requete = $connexion-> prepare("UPDATE dossier_logistique SET ref_batch = ?
+												WHERE ref_dos = ?");
+			$requete-> execute(array($entree['ref_batch'], $entree['ref_dos']));
+
+		} 
+
+		public function MAJ_poids_logistic($ref_dos, $poids){
+			
+			include('connexion.php');
+			$entree['ref_dos'] = $ref_dos;
+			$entree['poids'] = $poids;
+			$requete = $connexion-> prepare("UPDATE dossier_logistique SET poids = ?
+												WHERE ref_dos = ?");
+			$requete-> execute(array($entree['poids'], $entree['ref_dos']));
+
+		} 
+
+		public function MAJ_ref_po_logistic($ref_dos, $ref_po){
+			
+			include('connexion.php');
+			$entree['ref_dos'] = $ref_dos;
+			$entree['ref_po'] = $ref_po;
+			$requete = $connexion-> prepare("UPDATE dossier_logistique SET ref_po = ?
+												WHERE ref_dos = ?");
+			$requete-> execute(array($entree['ref_po'], $entree['ref_dos']));
+
+		} 
+
+		public function MAJ_montant_po_logistic($ref_dos, $montant_po){
+			
+			include('connexion.php');
+			$entree['ref_dos'] = $ref_dos;
+			$entree['montant_po'] = $montant_po;
+			$requete = $connexion-> prepare("UPDATE dossier_logistique SET montant_po = ?
+												WHERE ref_dos = ?");
+			$requete-> execute(array($entree['montant_po'], $entree['ref_dos']));
+
+		} 
+
+		public function MAJ_origine_logistic($ref_dos, $origine){
+			
+			include('connexion.php');
+			$entree['ref_dos'] = $ref_dos;
+			$entree['origine'] = $origine;
+			$requete = $connexion-> prepare("UPDATE dossier_logistique SET origine = ?
+												WHERE ref_dos = ?");
+			$requete-> execute(array($entree['origine'], $entree['ref_dos']));
+
+		} 
+
+		public function MAJ_destination_logistic($ref_dos, $destination){
+			
+			include('connexion.php');
+			$entree['ref_dos'] = $ref_dos;
+			$entree['destination'] = $destination;
+			$requete = $connexion-> prepare("UPDATE dossier_logistique SET destination = ?
+												WHERE ref_dos = ?");
+			$requete-> execute(array($entree['destination'], $entree['ref_dos']));
+
+		} 
+
+		public function MAJ_date_dep_fbm_logistic($ref_dos, $date_dep_fbm){
+			
+			include('connexion.php');
+			$entree['ref_dos'] = $ref_dos;
+			$entree['date_dep_fbm'] = $date_dep_fbm;
+			$requete = $connexion-> prepare("UPDATE dossier_logistique SET date_dep_fbm = ?
+												WHERE ref_dos = ?");
+			$requete-> execute(array($entree['date_dep_fbm'], $entree['ref_dos']));
+
+		} 
+
+		public function MAJ_transit_logistic($ref_dos, $transit){
+			
+			include('connexion.php');
+			$entree['ref_dos'] = $ref_dos;
+			$entree['transit'] = $transit;
+			$requete = $connexion-> prepare("UPDATE dossier_logistique SET transit = ?
+												WHERE ref_dos = ?");
+			$requete-> execute(array($entree['transit'], $entree['ref_dos']));
+
+		} 
+
+		public function MAJ_date_transit_logistic($ref_dos, $date_transit){
+			
+			include('connexion.php');
+			$entree['ref_dos'] = $ref_dos;
+			$entree['date_transit'] = $date_transit;
+			$requete = $connexion-> prepare("UPDATE dossier_logistique SET date_transit = ?
+												WHERE ref_dos = ?");
+			$requete-> execute(array($entree['date_transit'], $entree['ref_dos']));
+
+		} 
+
+		public function MAJ_date_fd_logistic($ref_dos, $date_fd){
+			
+			include('connexion.php');
+			$entree['ref_dos'] = $ref_dos;
+			$entree['date_fd'] = $date_fd;
+			$requete = $connexion-> prepare("UPDATE dossier_logistique SET date_fd = ?
+												WHERE ref_dos = ?");
+			$requete-> execute(array($entree['date_fd'], $entree['ref_dos']));
+
+		} 
+
+		public function MAJ_deliv_date_logistic($ref_dos, $deliv_date){
+			
+			include('connexion.php');
+			$entree['ref_dos'] = $ref_dos;
+			$entree['deliv_date'] = $deliv_date;
+			$requete = $connexion-> prepare("UPDATE dossier_logistique SET deliv_date = ?
+												WHERE ref_dos = ?");
+			$requete-> execute(array($entree['deliv_date'], $entree['ref_dos']));
+
+		} 
+
+		public function MAJ_ref_pod_logistic($ref_dos, $ref_pod){
+			
+			include('connexion.php');
+			$entree['ref_dos'] = $ref_dos;
+			$entree['ref_pod'] = $ref_pod;
+			$requete = $connexion-> prepare("UPDATE dossier_logistique SET ref_pod = ?
+												WHERE ref_dos = ?");
+			$requete-> execute(array($entree['ref_pod'], $entree['ref_dos']));
+
+		} 
+
+		public function MAJ_statut_logistic($ref_dos, $statut){
+			
+			include('connexion.php');
+			$entree['ref_dos'] = $ref_dos;
+			$entree['statut'] = $statut;
+			$requete = $connexion-> prepare("UPDATE dossier_logistique SET statut = ?
+												WHERE ref_dos = ?");
+			$requete-> execute(array($entree['statut'], $entree['ref_dos']));
+
+		} 
+
+		public function MAJ_remarque_logistic($ref_dos, $remarque){
+			
+			include('connexion.php');
+			$entree['ref_dos'] = $ref_dos;
+			$entree['remarque'] = $remarque;
+			$requete = $connexion-> prepare("UPDATE dossier_logistique SET remarque = ?
+												WHERE ref_dos = ?");
+			$requete-> execute(array($entree['remarque'], $entree['ref_dos']));
+
+		} 
+
 		//FIN Methodes permettant de mettre à jour
 
 		//Methode permettant de supprimer
