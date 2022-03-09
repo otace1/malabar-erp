@@ -1654,15 +1654,8 @@
 										$date_crf, $bond_warehouse='KOLWEZI', $supplier, $temporelle='0'){
 			include('connexion.php');
 
-			/*echo '<br> ref_dos = '.$ref_dos;echo '<br> id_cli = '.$id_cli;
-			echo '<br> ref_fact = '.$ref_fact;echo '<br> fob = '.$fob;
-			echo '<br> fret = '.$fret;echo '<br> assurance = '.$assurance;
-			echo '<br> autre_frais = '.$autre_frais;echo '<br> num_lic = '.$num_lic;
-			echo '<br> id_mod_lic = '.$id_mod_lic;*/
-			//echo '<br> -----------------------supplier = '.$supplier;
-
 			if ($id_cli != '845' && $id_cli != '856' && $id_cli != '857' && $id_cli != '863' && $id_cli != '864' && $id_cli != '884' && $id_cli != '885') {
-				$bond_warehouse = NULL;
+				$bond_warehouse = 'LUBUMBASHI';
 			}else{
 				//if (isset($bond_warehouse) && ($bond_warehouse!=null)) {
 					$bond_warehouse = 'KOLWEZI';
