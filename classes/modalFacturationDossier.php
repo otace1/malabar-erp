@@ -1,14 +1,11 @@
-<?php
 
-?>
-<div class="modal fade facture_<?php echo $reponse['id_dos'];?>" id="modal-default">
-  <div class="modal-dialog modal-lg">
+<div class="modal fade validerFacture_<?php echo $reponse['ref_fact'];?>" id="modal-default">
+  <div class="modal-dialog modal-sm">
     <form id="demo-form2" method="POST" action="" data-parsley-validate enctype="multipart/form-data">
-      <input type="hidden" name="id_dos" value="<?php echo $reponse['id_dos'];?>">
-      <input type="hidden" name="ref_dos" value="<?php echo $reponse['ref_dos'];?>">
+      <input type="hidden" name="ref_fact" value="<?php echo $reponse['ref_fact'];?>">
     <div class="modal-content">
       <div class="modal-header bg-info">
-        <h4 class="modal-title"><i class="fa fa-calculator"></i> FACTURATION</h4>
+        <h4 class="modal-title"><i class="fa fa-exclamation-circle"></i> CONFIRMATION</h4>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -18,15 +15,15 @@
 
           <div class="col-md-12">
             <label  class="control-label" style="text-align: center;">
-              Voulez-vous facturer le dossier <b><?php echo $reponse['ref_dos'];?></b> ?
+              <center>Voulez-vous valider la facture <b><?php echo $reponse['ref_fact'];?></b> ?</center>
             </label>
           </div>
 
         </div>
       </div>
       <div class="modal-footer justify-content-between">
-        <button type="button" class="btn btn-danger" data-dismiss="modal">Annuler</button>
-        <button type="submit" name="facturerDossier" class="btn btn-primary">Valider</button>
+        <button type="button" class="btn btn-danger btn-xs" data-dismiss="modal">Annuler</button>
+        <button type="submit" name="validerFacture" class="btn btn-primary btn-xs">Valider</button>
       </div>
     </div>
     </form>
