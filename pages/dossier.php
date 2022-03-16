@@ -220,6 +220,14 @@ for ($i=1; $i <= 15 ; $i++) {
         $maClasse-> MAJ_date_crf($_POST['id_dos_'.$i], $_POST['date_crf_'.$i]);
       }
 
+      if (isset($_POST['date_ad_'.$i]) && ($_POST['date_ad_'.$i] != '')) {
+        $maClasse-> MAJ_date_ad($_POST['id_dos_'.$i], $_POST['date_ad_'.$i]);
+      }
+
+      if (isset($_POST['date_assurance_'.$i]) && ($_POST['date_assurance_'.$i] != '')) {
+        $maClasse-> MAJ_date_assurance($_POST['id_dos_'.$i], $_POST['date_assurance_'.$i]);
+      }
+
       if (isset($_POST['date_preal_'.$i]) && ($_POST['date_preal_'.$i] != '')) {
         $maClasse-> MAJ_date_preal($_POST['id_dos_'.$i], $_POST['date_preal_'.$i]);
       }
@@ -1001,7 +1009,7 @@ for ($i=1; $i <= 15 ; $i++) {
               <div class="card-body table-responsive p-0 cadre-tableau-de-donnees">
     <div id="alert_message"></div>
 
-                <table id="user_data_2" cellspacing="0" width="100%" class="tableau-de-donnees  table table-hover text-nowrap table-sm">
+                <table id="user_data_2" cellspacing="0" width="100%" class="tableau-de-donnees  table table-hover text-nowrap table-sm small">
                   <thead>
                     <?php
                       $maClasse-> afficherEnTeteTableau($_GET['id_mod_trac'], $_GET['id_cli'], $_GET['id_mod_trans']);

@@ -606,13 +606,17 @@ while ($reponseModeTransport = $requeteModeTransport-> fetch()) {
 												d.arrival_date AS arrival_date_1,
 												d.cleared AS cleared,
 
-												IF(d.id_mod_lic='2',
-													IF(d.date_crf IS NULL, 'AWAITING CRF/AD/INSURANCE',
-														IF(d.date_decl IS NULL AND d.ref_decl IS NULL, 'UNDER PREPARATION',
-															IF(d.date_liq IS NULL AND d.ref_liq IS NULL, 'AWAITING LIQUIDATION',
-																IF(d.date_quit IS NULL AND d.ref_quit IS NULL, 'AWAITING QUITTANCE',
-																	IF(d.date_quit IS NOT NULL AND d.ref_quit IS NOT NULL AND d.dgda_out IS NULL, 'AWAITING BAE/BS', 
-																		IF(d.dgda_out IS NOT NULL AND d.dispatch_deliv IS NOT NULL, 'CLEARING COMPLETED', '')
+												IF(d.id_mod_lic='2' AND d.id_mod_trans='1',
+													IF(d.date_crf IS NULL, 'AWAITING CRF',
+														IF(d.date_ad IS NULL, 'AWAITING AD',
+															IF(d.date_assurance IS NULL, 'AWAITING INSURANCE',
+																IF(d.date_decl IS NULL AND d.ref_decl IS NULL, 'UNDER PREPARATION',
+																	IF(d.date_liq IS NULL AND d.ref_liq IS NULL, 'AWAITING LIQUIDATION',
+																		IF(d.date_quit IS NULL AND d.ref_quit IS NULL, 'AWAITING QUITTANCE',
+																			IF(d.date_quit IS NOT NULL AND d.ref_quit IS NOT NULL AND d.dgda_out IS NULL, 'AWAITING BAE/BS', 
+																				IF(d.dgda_out IS NOT NULL AND d.dispatch_deliv IS NOT NULL, 'CLEARING COMPLETED', '')
+																				)
+																			)
 																		)
 																	)
 																)
@@ -620,7 +624,7 @@ while ($reponseModeTransport = $requeteModeTransport-> fetch()) {
 														)
 													,
 													d.statut) AS statut,
-												
+
 												IF(d.id_mod_trans='1' AND d.id_mod_lic='2', 
 													IF(d.klsa_arriv IS NOT NULL AND d.wiski_arriv IS NULL,'ARRIVED AT K\'LSA', 
 														IF(d.wiski_arriv IS NOT NULL AND d.dispatch_klsa IS NULL, 'AT WISKI',

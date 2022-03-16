@@ -13,6 +13,8 @@ function afficherRowTableauExcel($id_mod_lic, $id_cli, $id_mod_trans, $id_dos, $
 	$entree['id_cli'] = $id_cli;
 	$entree['id_mod_trans'] = $id_mod_trans;
 	$bg = '';
+	$col_debut = '';
+	$col_fin = '';
 
             if ($id_mod_lic == '1') {
               
@@ -48,6 +50,14 @@ function afficherRowTableauExcel($id_mod_lic, $id_cli, $id_mod_trans, $id_dos, $
 		//getDataRow($champ_col, $id_dos)
 		$excel->getActiveSheet()
 			->getStyle($col.$row)->applyFromArray($styleHeader);
+
+		if ($reponse['id_col'] == '65') {
+			$col_debut = $col;
+		}
+
+		if ($reponse['id_col'] == '77') {
+			$col_fin = $col;
+		}
 
 		if ($reponse['id_col'] == '40' && $id_mod_lic == '2') {
 			$getDataRowCalculNetDays = $maClasse-> getDataRowCalculNetDays($reponse['champ_col'], $id_dos);
@@ -116,8 +126,8 @@ function afficherRowTableauExcel($id_mod_lic, $id_cli, $id_mod_trans, $id_dos, $
 			$excel->getActiveSheet()
 				->getStyle($col.$row)->applyFromArray($styleCalcul);
 
-			$excel-> getActiveSheet()
-				-> setCellValue($col.$row, $maClasse-> getDataRowCalculNetDays($reponse['champ_col'], $id_dos));
+			// $excel-> getActiveSheet()
+			// 	-> setCellValue($col.$row, $maClasse-> getDataRowCalculNetDays($reponse['champ_col'], $id_dos));
 
 			$excel->getActiveSheet()
 				->getStyle($col.$row)->
@@ -131,8 +141,19 @@ function afficherRowTableauExcel($id_mod_lic, $id_cli, $id_mod_trans, $id_dos, $
 		         )
 					);
 
-			$excel-> getActiveSheet()
-				-> setCellValue($col.$row, $maClasse-> getDifferenceDate($maClasse-> getDataRow('dispatch_date', $id_dos), $maClasse-> getDataRow('load_date', $id_dos)) - $maClasse-> getWeekendsAndHolidays($maClasse-> getDataRow('load_date', $id_dos), $maClasse-> getDataRow('dispatch_date', $id_dos)));
+			if (($maClasse-> getDataRow('dispatch_date', $id_dos)!='')) {
+				$excel-> getActiveSheet()
+					-> setCellValue($col.$row, $maClasse-> getDifferenceDate($maClasse-> getDataRow('dispatch_date', $id_dos), $maClasse-> getDataRow('load_date', $id_dos)) - $maClasse-> getWeekendsAndHolidays($maClasse-> getDataRow('load_date', $id_dos), $maClasse-> getDataRow('dispatch_date', $id_dos)));
+			}else {
+				$excel-> getActiveSheet()
+					-> setCellValue($col.$row, $maClasse-> getDifferenceDate(date('Y-m-d'), $maClasse-> getDataRow('load_date', $id_dos)) - $maClasse-> getWeekendsAndHolidays($maClasse-> getDataRow('load_date', $id_dos), date('Y-m-d')));
+			}
+				
+			// $excel-> getActiveSheet()
+			// 	-> setCellValue($col.$row, '=IF('.$col_fin.$row.'<>"", NETWORKDAYS('.$col_fin.$row.','.$col_debut.$row.'), NETWORKDAYS(NOW(),'.$col_debut.$row.'))');
+
+			// $excel-> getActiveSheet()
+			// 	-> setCellValue($col.$row, '=NETWORKDAYS(NOW(),'.$maClasse-> getDataRow('load_date', $id_dos).')');
 				
 					$bg = '';
 

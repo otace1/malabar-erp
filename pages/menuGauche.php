@@ -36,8 +36,8 @@
             <a href="#" class="nav-link active bg bg-danger" style=" font-weight: bold;">
               <!--<i class="nav-icon fas fa-tachometer-alt"></i>-->
               <span class="">
-              <p style="font-size: 17px;">
-                MODULE LICENCES<br>
+              <p style="">
+                LICENSES<br>
               </p></span>
             </a>
           </li>
@@ -55,8 +55,8 @@
             <a href="#" class="nav-link active bg bg-danger" style=" font-weight: bold;">
               <!--<i class="nav-icon fas fa-tachometer-alt"></i>-->
               <span class="">
-              <p style="font-size: 17px;">
-                MODULE TRACKING<br>
+              <p style="">
+                TRACKING<br>
               </p></span>
             </a>
           </li>
@@ -71,8 +71,8 @@
             <a href="#" class="nav-link active bg bg-danger" style=" font-weight: bold;">
               <!--<i class="nav-icon fas fa-tachometer-alt"></i>-->
               <span class="">
-              <p style="font-size: 17px;">
-                MODULE LOGISTIQUE<br>
+              <p style="">
+                LOGISTIC<br>
               </p></span>
             </a>
           </li>
@@ -88,8 +88,8 @@
             <a href="#" class="nav-link active bg bg-danger" style=" font-weight: bold;">
               <!--<i class="nav-icon fas fa-tachometer-alt"></i>-->
               <span class="">
-              <p style="font-size: 17px;">
-                MODULE FACTURATION<br>
+              <p style="">
+                INVOICING<br>
               </p></span>
             </a>
           </li>

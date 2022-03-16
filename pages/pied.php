@@ -2,7 +2,7 @@
   <!-- /.content-wrapper -->
   <footer class="main-footer">
     <div class="float-right d-none d-sm-block">
-      <b>Version</b> 0.1
+      <b>Version</b> 0.5
     </div>
     <strong>Copyright &copy; <font style="color: rgb(193, 0, 0) ">MALABAR</font> <font style="color: black;">GROUP</font> <?php date("Y");?> All rights
     reserved. Build by <a href="http://www.belej-consulting.com"> <font style="color: orange;">BELEJ - </font><font style="color: grey;">CONSULTING</font> </a></strong>

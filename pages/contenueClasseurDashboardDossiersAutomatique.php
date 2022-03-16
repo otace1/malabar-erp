@@ -201,9 +201,21 @@
 
             }
 
-		if ($statut == 'AWAITING CRF/AD/INSURANCE') {
+		if ($statut == 'AWAITING CRF') {
 
 			$sqlStatus = " AND d.date_crf IS NULL
+											AND d.ref_dos NOT LIKE '%20-%'
+											AND d.cleared <> '2'";
+
+		}else if ($statut == 'AWAITING AD') {
+
+			$sqlStatus = " AND d.date_ad IS NULL
+											AND d.ref_dos NOT LIKE '%20-%'
+											AND d.cleared <> '2'";
+
+		}else if ($statut == 'AWAITING INSURANCE') {
+
+			$sqlStatus = " AND d.date_assurance IS NULL
 											AND d.ref_dos NOT LIKE '%20-%'
 											AND d.cleared <> '2'";
 

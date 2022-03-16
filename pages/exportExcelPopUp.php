@@ -584,9 +584,21 @@ while ($reponseModeTransport = $requeteModeTransport-> fetch()) {
             }
 
 			if ($_GET['id_mod_trac']=='2' && $_GET['id_mod_trans']=='1') {
-				if ($_GET['statut'] == 'AWAITING CRF_AD_INSURANCE') {
+				if ($_GET['statut'] == 'AWAITING CRF') {
 
 					$sqlStatus = ' AND d.date_crf IS NULL
+													AND d.ref_dos NOT LIKE "%20-%"
+													AND d.cleared <> "2"';
+
+				}else if ($_GET['statut'] == 'AWAITING AD') {
+
+					$sqlStatus = ' AND d.date_ad IS NULL
+													AND d.ref_dos NOT LIKE "%20-%"
+													AND d.cleared <> "2"';
+
+				}else if ($_GET['statut'] == 'AWAITING INSURANCE') {
+
+					$sqlStatus = ' AND d.date_assurance IS NULL
 													AND d.ref_dos NOT LIKE "%20-%"
 													AND d.cleared <> "2"';
 

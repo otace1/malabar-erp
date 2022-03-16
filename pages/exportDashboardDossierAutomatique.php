@@ -173,7 +173,51 @@ $indiceSheet = 0;
 		$col2 = '';
 
 		$excel-> getActiveSheet()
-				-> setCellValue($col.'2', 'AWAITING CRF/AD/INSURANCE');
+				-> setCellValue($col.'2', 'AWAITING CRF');
+			cellColor($col.'2', 'AF002A');
+			alignement($col.'2');
+			$excel->getActiveSheet()
+				->getStyle($col.'2')->applyFromArray($styleHeader);
+
+			$excel-> getActiveSheet()-> getColumnDimension($col)-> setWidth(20);
+
+			//Fusion
+			$col2 = $col;
+			for ($J=1; $J <= 2 ; $J++) { 
+				$col2++;
+			}
+
+			$excel-> getActiveSheet()
+				-> mergeCells($col.'2:'.($col2).'2');
+			
+			for ($J=1; $J <= 3 ; $J++) { 
+				$col++;
+			}
+
+		$excel-> getActiveSheet()
+				-> setCellValue($col.'2', 'AWAITING AD');
+			cellColor($col.'2', 'AF002A');
+			alignement($col.'2');
+			$excel->getActiveSheet()
+				->getStyle($col.'2')->applyFromArray($styleHeader);
+
+			$excel-> getActiveSheet()-> getColumnDimension($col)-> setWidth(20);
+
+			//Fusion
+			$col2 = $col;
+			for ($J=1; $J <= 2 ; $J++) { 
+				$col2++;
+			}
+
+			$excel-> getActiveSheet()
+				-> mergeCells($col.'2:'.($col2).'2');
+			
+			for ($J=1; $J <= 3 ; $J++) { 
+				$col++;
+			}
+
+		$excel-> getActiveSheet()
+				-> setCellValue($col.'2', 'AWAITING INSURANCE');
 			cellColor($col.'2', 'AF002A');
 			alignement($col.'2');
 			$excel->getActiveSheet()
@@ -606,16 +650,16 @@ $indiceSheet = 0;
 			//Recuperation des nombres
 				//------------------
 				$excel-> getActiveSheet()
-					-> setCellValue($col.$row, $maClasse-> getNombreDossierClientModeLicenceStatusAutomatique($reponseClient['id_cli'], $_GET['id_mod_lic'], $_GET['id_mod_trans'], 'AWAITING CRF/AD/INSURANCE'));
+					-> setCellValue($col.$row, $maClasse-> getNombreDossierClientModeLicenceStatusAutomatique($reponseClient['id_cli'], $_GET['id_mod_lic'], $_GET['id_mod_trans'], 'AWAITING CRF'));
 
 				alignement($col.$row);
-				if (($maClasse-> getNombreDossierClientModeLicenceStatusAutomatique($reponseClient['id_cli'], $_GET['id_mod_lic'], $_GET['id_mod_trans'], 'AWAITING CRF/AD/INSURANCE'))>0) {
+				if (($maClasse-> getNombreDossierClientModeLicenceStatusAutomatique($reponseClient['id_cli'], $_GET['id_mod_lic'], $_GET['id_mod_trans'], 'AWAITING CRF'))>0) {
 					cellColor($col.$row, 'CD853F');
 				}
 				
 				$col++;
 
-				$nombre_jour = $maClasse-> getNombreDossierClientModeLicenceStatusCalculNetDaysAutomatique($reponseClient['id_cli'], $_GET['id_mod_lic'], $_GET['id_mod_trans'], 'AWAITING CRF/AD/INSURANCE', 5, 10);
+				$nombre_jour = $maClasse-> getNombreDossierClientModeLicenceStatusCalculNetDaysAutomatique($reponseClient['id_cli'], $_GET['id_mod_lic'], $_GET['id_mod_trans'], 'AWAITING CRF', 5, 10);
 
 				
 				$excel-> getActiveSheet()
@@ -628,7 +672,83 @@ $indiceSheet = 0;
 
 				$col++;
 
-				$nombre_jour = $maClasse-> getNombreDossierClientModeLicenceStatusCalculNetDaysAutomatique($reponseClient['id_cli'], $_GET['id_mod_lic'], $_GET['id_mod_trans'], 'AWAITING CRF/AD/INSURANCE', 10, 1000);
+				$nombre_jour = $maClasse-> getNombreDossierClientModeLicenceStatusCalculNetDaysAutomatique($reponseClient['id_cli'], $_GET['id_mod_lic'], $_GET['id_mod_trans'], 'AWAITING CRF', 10, 1000);
+
+
+				$excel-> getActiveSheet()
+					-> setCellValue($col.$row, $nombre_jour);
+					
+				alignement($col.$row);
+				if ($nombre_jour>0) {
+					cellColor($col.$row, 'CD853F');
+				}
+
+				$col++;
+
+				//------------------
+				//------------------
+				$excel-> getActiveSheet()
+					-> setCellValue($col.$row, $maClasse-> getNombreDossierClientModeLicenceStatusAutomatique($reponseClient['id_cli'], $_GET['id_mod_lic'], $_GET['id_mod_trans'], 'AWAITING AD'));
+
+				alignement($col.$row);
+				if (($maClasse-> getNombreDossierClientModeLicenceStatusAutomatique($reponseClient['id_cli'], $_GET['id_mod_lic'], $_GET['id_mod_trans'], 'AWAITING AD'))>0) {
+					cellColor($col.$row, 'CD853F');
+				}
+				
+				$col++;
+
+				$nombre_jour = $maClasse-> getNombreDossierClientModeLicenceStatusCalculNetDaysAutomatique($reponseClient['id_cli'], $_GET['id_mod_lic'], $_GET['id_mod_trans'], 'AWAITING AD', 5, 10);
+
+				
+				$excel-> getActiveSheet()
+					-> setCellValue($col.$row, $nombre_jour);
+
+				alignement($col.$row);
+				if ($nombre_jour>0) {
+					cellColor($col.$row, 'CD853F');
+				}
+
+				$col++;
+
+				$nombre_jour = $maClasse-> getNombreDossierClientModeLicenceStatusCalculNetDaysAutomatique($reponseClient['id_cli'], $_GET['id_mod_lic'], $_GET['id_mod_trans'], 'AWAITING AD', 10, 1000);
+
+
+				$excel-> getActiveSheet()
+					-> setCellValue($col.$row, $nombre_jour);
+					
+				alignement($col.$row);
+				if ($nombre_jour>0) {
+					cellColor($col.$row, 'CD853F');
+				}
+
+				$col++;
+
+				//------------------
+				//------------------
+				$excel-> getActiveSheet()
+					-> setCellValue($col.$row, $maClasse-> getNombreDossierClientModeLicenceStatusAutomatique($reponseClient['id_cli'], $_GET['id_mod_lic'], $_GET['id_mod_trans'], 'AWAITING INSURANCE'));
+
+				alignement($col.$row);
+				if (($maClasse-> getNombreDossierClientModeLicenceStatusAutomatique($reponseClient['id_cli'], $_GET['id_mod_lic'], $_GET['id_mod_trans'], 'AWAITING INSURANCE'))>0) {
+					cellColor($col.$row, 'CD853F');
+				}
+				
+				$col++;
+
+				$nombre_jour = $maClasse-> getNombreDossierClientModeLicenceStatusCalculNetDaysAutomatique($reponseClient['id_cli'], $_GET['id_mod_lic'], $_GET['id_mod_trans'], 'AWAITING INSURANCE', 5, 10);
+
+				
+				$excel-> getActiveSheet()
+					-> setCellValue($col.$row, $nombre_jour);
+
+				alignement($col.$row);
+				if ($nombre_jour>0) {
+					cellColor($col.$row, 'CD853F');
+				}
+
+				$col++;
+
+				$nombre_jour = $maClasse-> getNombreDossierClientModeLicenceStatusCalculNetDaysAutomatique($reponseClient['id_cli'], $_GET['id_mod_lic'], $_GET['id_mod_trans'], 'AWAITING INSURANCE', 10, 1000);
 
 
 				$excel-> getActiveSheet()
@@ -1061,7 +1181,7 @@ $indiceSheet = 0;
 		
 
 		//$statut = str_replace("/", "_", 'AWAITING CRF/AD/INSURANCE');
-		$statut = "AWAITING CRF/AD/INSURANCE";
+		$statut = "AWAITING CRF";
 		
 		$indiceSheet++;
 
@@ -1075,9 +1195,45 @@ $indiceSheet = 0;
 		include('contenueClasseurDashboardDossiersAutomatique.php');
 		//FIN Affichage des contenues des classeurs
 
-		$statut = str_replace("/", "_", 'AWAITING CRF/AD/INSURANCE');
+		$statut = str_replace("/", "_", 'AWAITING CRF');
 		$excel->getActiveSheet()->setTitle($statut);
+		//--------------------------------
 
+		$statut = "AWAITING AD";
+		
+		$indiceSheet++;
+
+		$excel->createSheet();
+
+		// Set active sheet index to the first sheet, so Excel opens this as the first sheet
+		$excel->setActiveSheetIndex($indiceSheet);
+		
+
+		//Affichage des contenues des classeurs
+		include('contenueClasseurDashboardDossiersAutomatique.php');
+		//FIN Affichage des contenues des classeurs
+
+		$statut = str_replace("/", "_", 'AWAITING AD');
+		$excel->getActiveSheet()->setTitle($statut);
+		//--------------------------------
+
+		$statut = "AWAITING INSURANCE";
+		
+		$indiceSheet++;
+
+		$excel->createSheet();
+
+		// Set active sheet index to the first sheet, so Excel opens this as the first sheet
+		$excel->setActiveSheetIndex($indiceSheet);
+		
+
+		//Affichage des contenues des classeurs
+		include('contenueClasseurDashboardDossiersAutomatique.php');
+		//FIN Affichage des contenues des classeurs
+
+		$statut = str_replace("/", "_", 'AWAITING INSURANCE');
+		$excel->getActiveSheet()->setTitle($statut);
+		//--------------------------------
 
 
 		$statut = "UNDER PREPARATION";
