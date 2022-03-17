@@ -832,13 +832,13 @@ for ($i=1; $i <= 15 ; $i++) {
                 if($_GET['id_mod_trac'] == '1'){
                   ?>
                   <button class="btn btn-xs btn-dark square-btn-adjust" data-toggle="modal" data-target=".rechercheClientLicence">
-                    <i class="fa fa-filter"></i> Filtrage Licence
+                    <i class="fa fa-filter"></i> Licence
                 </button>
                   <?php
                 }if(($_GET['id_mod_trac'] == '2') && ($_GET['id_cli'] == '869') && ($_GET['id_march'] == '6')){
                   ?>
                   <button class="btn btn-xs btn-dark square-btn-adjust" data-toggle="modal" data-target=".rechercheClientLicence">
-                    <i class="fa fa-filter"></i> Filtrage Licence
+                    <i class="fa fa-filter"></i> Licence
                 </button>
                   <?php
                 }/*else if($_GET['id_mod_trac'] == '2'){
@@ -850,10 +850,10 @@ for ($i=1; $i <= 15 ; $i++) {
                 }*/
                 ?>
                 <button class="btn btn-xs btn-secondary square-btn-adjust" data-toggle="modal" data-target=".rechercheStatus">
-                    <i class="fa fa-filter"></i> Filtrage Status
+                    <i class="fa fa-filter"></i> File Status
                 </button>
                 <button class="btn btn-xs bg-olive square-btn-adjust" data-toggle="modal" data-target=".rechercheClearingStatus">
-                    <i class="fa fa-filter"></i> Filtrage Clearing Status
+                    <i class="fa fa-filter"></i> Clearing Status
                 </button>
                 <button class="btn btn-xs bg-dark square-btn-adjust" data-toggle="modal" data-target=".rechercheLicence">
                     <i class="fa fa-search"></i> Search Licence
@@ -862,7 +862,7 @@ for ($i=1; $i <= 15 ; $i++) {
                 if($_GET['id_mod_trac'] == '1' && $_SESSION['id_role'] != '7' && $_SESSION['id_role'] != '8' && $_SESSION['id_role'] != '9' && $_SESSION['id_role'] != '10'){
                   ?>
                   <button class="btn btn-xs bg bg-teal square-btn-adjust" data-toggle="modal" data-target=".nouvelleLicence">
-                    <i class="fa fa-plus"></i> Nouvelle Licence
+                    <i class="fa fa-plus"></i> Licence
                 </button>
                   <button class="btn btn-xs bg bg-dark square-btn-adjust" data-toggle="modal" data-target=".activationLicence">
                     <i class="fa fa-cogs"></i> Activation Licences
