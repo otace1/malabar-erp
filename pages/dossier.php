@@ -282,7 +282,7 @@ for ($i=1; $i <= 15 ; $i++) {
 
       if (isset($_POST['fob_'.$i]) && ($_POST['fob_'.$i] != '')) {
         $maClasse-> MAJ_fob($_POST['id_dos_'.$i], $_POST['fob_'.$i]);
-        echo '<br>FOB = '.$_POST['fob_'.$i];
+        //echo '<br>FOB = '.$_POST['fob_'.$i];
       }
 
       if (isset($_POST['fret_'.$i]) && ($_POST['fret_'.$i] != '')) {
