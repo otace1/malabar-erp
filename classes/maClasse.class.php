@@ -1227,12 +1227,7 @@
 			$entree['valeur'] = $valeur;
 			$entree['id_dos'] = $id_dos;
 			$entree['id_util'] = $id_util;
-
-			// echo '<br>-----------------colonne = '.$colonne;
-			// echo '<br>-----------------valeur = '.$valeur;
-			// echo '<br>-----------------id_dos = '.$id_dos;
-			// echo '<br>-----------------id_util = '.$id_util;
-
+			
 			$requete = $connexion-> prepare('INSERT INTO log_dossier(colonne, valeur, id_dos, id_util)
 												VALUES(?, ?, ?, ?)');
 			$requete-> execute(array($entree['colonne'], $entree['valeur'], $entree['id_dos'], $entree['id_util']));
@@ -1709,7 +1704,7 @@
 										$date_crf, $bond_warehouse='KOLWEZI', $supplier, $temporelle='0'){
 			include('connexion.php');
 
-			if ($id_cli != '845' && $id_cli != '856' && $id_cli != '857' && $id_cli != '863' && $id_cli != '864' && $id_cli != '884' && $id_cli != '885') {
+			if ($id_cli != '845' && $id_cli != '856' && $id_cli != '857' && $id_cli != '863' && $id_cli != '864' && $id_cli != '884' && $id_cli != '885' && $id_cli != '901') {
 				$bond_warehouse = 'LUBUMBASHI';
 			}else{
 				//if (isset($bond_warehouse) && ($bond_warehouse!=null)) {
@@ -1812,10 +1807,6 @@
 			$entree['id_doc']=$id_doc;
 			$entree['fichier']=$fichier;
 
-			// echo "----- ID DOS = $id_dos<br>";
-			// echo "----- ID DOC = $id_doc<br>";
-			// echo "----- FICHIER = $fichier<br>";
-
 			$requete = $connexion-> prepare('INSERT INTO dossier_document VALUES(?, ?, ?)');
 			$requete-> execute(array($entree['id_dos'], $entree['id_doc'], $entree['fichier']));
 	
@@ -1906,13 +1897,6 @@
 										$montant_decl, $ref_liq, $id_util, $ref_quit, $date_quit){
 			include('connexion.php');
 
-			/*echo '<br> ref_dos = '.$ref_dos;echo '<br> id_cli = '.$id_cli;
-			echo '<br> ref_fact = '.$ref_fact;echo '<br> fob = '.$fob;
-			echo '<br> fret = '.$fret;echo '<br> assurance = '.$assurance;
-			echo '<br> autre_frais = '.$autre_frais;echo '<br> num_lic = '.$num_lic;
-			echo '<br> id_mod_lic = '.$id_mod_lic;*/
-			//echo '<br> id_mod_lic = '.$id_mod_lic;
-
 			$entree['ref_dos'] = $ref_dos; $entree['id_cli'] = $id_cli; $entree['ref_fact'] = $ref_fact; 
 			$entree['fob'] = $fob; $entree['fret'] = $fret; $entree['assurance'] = $assurance; 
 			$entree['autre_frais'] = $autre_frais; $entree['num_lic'] = $num_lic;
@@ -1955,18 +1939,6 @@
 										$wiski_dep, $remarque, $id_util, $id_mod_lic, 
 										$num_lic){
 			include('connexion.php');
-
-			/*echo '<br> ref_dos = '.$ref_dos;echo '<br> id_cli = '.$id_cli;
-			echo '<br> t1 = '.$t1;echo '<br> poids = '.$poids;
-			echo '<br> ref_fact = '.$ref_fact;echo '<br> horse = '.$horse;
-			echo '<br> trailer_1 = '.$trailer_1;echo '<br> trailer_2 = '.$trailer_2;
-			echo '<br> transporteur = '.$transporteur;echo '<br> destination = '.$destination;
-			echo '<br> id_mod_trans = '.$id_mod_trans;echo '<br> arrival_date = '.$arrival_date;
-			echo '<br> crossing_date = '.$crossing_date;echo '<br> wiski_arriv = '.$wiski_arriv;
-			echo '<br> wiski_dep = '.$wiski_dep;echo '<br> remarque = '.$remarque;
-			echo '<br> id_util = '.$id_util;echo '<br> id_mod_lic = '.$id_mod_lic;
-			echo '<br><br>------------';*/
-			//echo '<br> transporteur = '.$transporteur;
 
 			$entree['ref_dos'] = $ref_dos; $entree['id_cli'] = $id_cli; $entree['t1'] = $t1; 
 			$entree['poids'] = $poids; $entree['ref_fact'] = $ref_fact; $entree['horse'] = $horse; 
@@ -2013,18 +1985,6 @@
 		public function creerDossierEBUpload($ref_dos, $num_lic, $ship_num, $barge, $horse, $trailer_1, $trailer_2, $num_lot, $nbr_bags, $poids, $kapulo_load, $dispatch_pweto, $arrival_pweto, $barge_load, $barge_dispatch_date, $doc_receiv, $nbre_seal, $dgda_seal, $remarque, $transporter, $load_date, $pv_mine, $demande_attestation, $assay_date, $ceec_in, $ceec_out, $min_div_in, $min_div_out, $date_decl, $dgda_in, $date_liq, $date_quit, $dgda_out, $gov_in, $gov_out, $dispatch_date, $klsa_arriv, $end_form, $exit_drc, $cleared, $statut, $site_load, $destination, $ref_decl, $ref_liq, $ref_quit, $impala_sncc, $docs_sncc, $sncc_sakania, $sakania_date, $id_cli, $id_util, $id_mod_trans){
 			include('connexion.php');
 
-			/*echo '<br> ref_dos = '.$ref_dos;echo '<br> id_cli = '.$id_cli;
-			echo '<br> t1 = '.$t1;echo '<br> poids = '.$poids;
-			echo '<br> ref_fact = '.$ref_fact;echo '<br> horse = '.$horse;
-			echo '<br> trailer_1 = '.$trailer_1;echo '<br> trailer_2 = '.$trailer_2;
-			echo '<br> transporter = '.$transporter;echo '<br> destination = '.$destination;
-			echo '<br> id_mod_trans = '.$id_mod_trans;echo '<br> arrival_date = '.$arrival_date;
-			echo '<br> crossing_date = '.$crossing_date;echo '<br> wiski_arriv = '.$wiski_arriv;
-			echo '<br> wiski_dep = '.$wiski_dep;echo '<br> remarque = '.$remarque;
-			echo '<br> id_util = '.$id_util;echo '<br> id_mod_lic = '.$id_mod_lic;
-			echo '<br><br>------------';*/
-			//echo '<br> transporter = '.$transporter;
-
 			if (strpos(strtoupper($cleared), 'CLEARED') !== false) {
 			    $cleared = '1';
 			}else if (strpos(strtoupper($cleared), 'TRANSIT') !== false) {
@@ -2037,17 +1997,6 @@
 				$cleared = '0';
 			}
 			
-			/*echo $ref_dos.'  '.$num_lic.'  '.$ship_num.'  '.$barge.'  '.$horse.'  '.$trailer_1.'  '.$trailer_2.'  '.$num_lot.'  '.$nbr_bags.'  '.$poids.'  '.$kapulo_load.'  '.$dispatch_pweto.'  '.$arrival_pweto.'  '.$barge_load.'  '.$barge_dispatch_date.'  '.$doc_receiv.'  '.$nbre_seal.'  '.$dgda_seal.'  '.$remarque.'  '.$transporter.'  '.$load_date.'  '.$pv_mine.'  '.$demande_attestation.'  '.$assay_date.'  '.$ceec_in.'  '.$ceec_out.'  '.$min_div_in.'  '.$min_div_out.'  '.$date_decl.'  '.$dgda_in.'  '.$date_liq.'  '.$date_quit.'  '.$dgda_out.'  '.$gov_in.'  '.$gov_out.'  '.$dispatch_date.'  '.$klsa_arriv.'  '.$end_form.'  '.$exit_drc.'  CL = '.$cleared.'  '.$statut.'  '.$site_load.'  '.$destination.'  '.$ref_decl.'  '.$ref_liq.'  '.$ref_quit.'  '.$impala_sncc.'  '.$docs_sncc.'  '.$sncc_sakania.'  '.$sakania_date.'  '.$id_cli.'  '.$id_util.'  '.$id_mod_trans.'<br>---------<br>';*/
-			/*if (str_contains(strtoupper($cleared), 'CLEARED')) {
-				$cleared = '1';
-			}else if (str_contains(strtoupper($cleared), 'TRANSIT')) {
-				$cleared = '0';
-			}else if (str_contains(strtoupper($cleared), 'CANCEL')) {
-				$cleared = '2';
-			}else{
-				$cleared = '0';
-			}*/
-
 			$entree['ref_dos'] = $ref_dos;$entree['num_lic'] = $num_lic;
 			$entree['ship_num'] = $ship_num;$entree['barge'] = $barge;
 			$entree['horse'] = $horse;$entree['trailer_1'] = $trailer_1;
@@ -2225,8 +2174,6 @@
 										$date_liq, $ref_quit, $date_quit, $dgda_out, $custom_deliv, $dispatch_deliv,
 										$remarque, $statut, $bl, $id_mod_trac, $id_util, $id_mod_trans, $credit_enlev_by, $bond_warehouse){
 			include('connexion.php');
-
-			/*echo '<br> client = '.$client;echo '<br> ref_dos = '.$ref_dos;echo '<br> mca_b_ref = '.$mca_b_ref;echo '<br> road_manif = '.$road_manif;echo '<br> date_preal = '.$date_preal;echo '<br> t1 = '.$t1;echo '<br> poids = '.$poids;echo '<br> ref_fact = '.$ref_fact;echo '<br> fob = '.$fob;echo '<br> fret = '.$fret;echo '<br> assurance = '.$assurance;echo '<br> autre_frais = '.$autre_frais;echo '<br> po_ref = '.$po_ref;echo '<br> commodity = '.$commodity;echo '<br> horse = '.$horse;echo '<br> trailer_1 = '.$trailer_1;echo '<br> trailer_2 = '.$trailer_2;echo '<br> num_lic = '.$num_lic;echo '<br> num_exo = '.$num_exo;echo '<br> arrival_date = '.$arrival_date;echo '<br> crossing_date = '.$crossing_date;echo '<br> wiski_arriv = '.$wiski_arriv;echo '<br> wiski_dep = '.$wiski_dep;echo '<br> amicongo_arriv = '.$amicongo_arriv;echo '<br> insp_report = '.$insp_report;echo '<br> ir = '.$ir;echo '<br> ref_crf = '.$ref_crf;echo '<br> date_crf = '.$date_crf;echo '<br> ref_decl = '.$ref_decl;echo '<br> dgda_in = '.$dgda_in;echo '<br> ref_liq = '.$ref_liq;echo '<br> date_liq = '.$date_liq;echo '<br> ref_quit = '.$ref_quit;echo '<br> date_quit = '.$date_quit;echo '<br> dgda_out = '.$dgda_out;echo '<br> custom_deliv = '.$custom_deliv;echo '<br> dispatch_deliv = '.$dispatch_deliv;echo '<br> remarque = '.$remarque;echo '<br> statut = '.$statut;echo '<br> id_mod_trac = '.$id_mod_trac;echo '<br> id_util = '.$id_util;echo '<br> id_mod_trans = '.$id_mod_trans;echo '<br><br>------------------<br><br>';*/
 
 			$entree['client'] = $client;$entree['ref_dos'] = $ref_dos;$entree['mca_b_ref'] = $mca_b_ref;
 			$entree['date_preal'] = $date_preal;$entree['t1'] = $t1;
@@ -5055,11 +5002,6 @@
 			$entree['id_trans_fact'] = $id_trans_fact;
 			$entree['ref_fact'] = $ref_fact;
 
-			/*echo '<br>id_trans_fact = '.$id_trans_fact;
-			echo '<br>ref_fact = '.$ref_fact;
-			echo '<br>id_util = '.$id_util;
-			echo '---------<br>';*/
-
 			$requete = $connexion-> prepare('INSERT INTO detail_transmis_facture_dossier(id_trans_fact, ref_fact)
 												VALUES(?, ?)');
 			$requete-> execute(array($entree['id_trans_fact'], $entree['ref_fact']));
@@ -5076,11 +5018,6 @@
 			$entree['type_fact'] = $type_fact;
 			$entree['information'] = $information;
 			$entree['note_debit'] = $note_debit;
-
-			/*echo '<br>ref_fact = '.$ref_fact;
-			echo '<br>id_cli = '.$id_cli;
-			echo '<br>id_util = '.$id_util;
-			echo '---------<br>';*/
 
 			$requete = $connexion-> prepare('INSERT INTO facture_dossier(ref_fact, id_cli, id_util, 
 																			id_mod_lic, type_fact, information, 
@@ -7676,11 +7613,6 @@
 
 			//$entree['num_lic'] = $num_lic;
 
-			/*echo '<br> id_cli = '.$id_cli;
-			echo '<br> id_mod_trans = '.$id_mod_trans;
-			echo '<br> id_mod_lic = '.$id_mod_lic;
-			echo '<br> num_lic = '.$num_lic;*/
-
 			$requete = $connexion-> query("SELECT COUNT(d.ref_dos) AS nbre
 												FROM dossier d, client cli
 												WHERE d.id_cli = cli.id_cli
@@ -7794,11 +7726,6 @@
 			}
 
 			//$entree['num_lic'] = $num_lic;
-
-			/*echo '<br> id_cli = '.$id_cli;
-			echo '<br> id_mod_trans = '.$id_mod_trans;
-			echo '<br> id_mod_lic = '.$id_mod_lic;
-			echo '<br> num_lic = '.$num_lic;*/
 
 			$requete = $connexion-> query("SELECT COUNT(d.ref_dos) AS nbre
 												FROM dossier d
@@ -8633,11 +8560,6 @@
 			$entree['id_mod_lic'] = $id_mod_lic;
 			$entree['id_cli'] = $id_cli;
 			$entree['id_mod_trans'] = $id_mod_trans;
-
-			// echo '<br>mot_cle = '.$mot_cle;
-			// echo '<br>id_mod_lic = '.$id_mod_lic;
-			// echo '<br>id_cli = '.$id_cli;
-			// echo '<br>id_mod_trans = '.$id_mod_trans;
 
 			$compteur = 0;
 			$ligne = '';
@@ -15462,11 +15384,6 @@
 			$bg = '';
 			$style = '';
 
-			/*echo '<br> id_cli = '.$id_cli;
-			echo '<br> id_mod_trans = '.$id_mod_trans;
-			echo '<br> id_mod_lic = '.$id_mod_lic;
-			echo '<br> num_lic = '.$num_lic;*/
-
 			$requete = $connexion-> prepare("SELECT d.ref_dos AS ref_dos,
 													UPPER(cl.nom_cli) AS nom_cli,
 													d.ref_fact AS ref_fact,
@@ -15568,11 +15485,6 @@
 			$compteur = $premiere_entree;
 			$bg = '';
 			$style = '';
-
-			/*echo '<br> id_cli = '.$id_cli;
-			echo '<br> id_mod_trans = '.$id_mod_trans;
-			echo '<br> id_mod_lic = '.$id_mod_lic;
-			echo '<br> num_lic = '.$num_lic;*/
 
 			$sql1 = "";
 			if (isset($commodity) && ($commodity != '')) {
@@ -24928,10 +24840,6 @@
 			$entree['id_dos'] = $id_dos;
 			$entree['roe_decl'] = $roe_decl;
 
-			// echo '<br>id_dos = '.$id_dos;
-			// echo '<br>roe_decl = '.$roe_decl.'<br><br>';
-
-			
 			//Log
 			if ($this-> getDossier($id_dos)['roe_decl'] != $roe_decl) {
 				
@@ -25195,13 +25103,7 @@
 			include('connexion.php');
 			$entree['ref_crf'] = $ref_crf;
 			$entree['cod'] = $cod;
-			/*
-			?>
-			<script type="text/javascript">
-				alert("ref_crf = <?php echo $ref_crf;?> cod = <?php echo $cod;?>");
-			</script>
-			<?php
-			*/
+
 			$requete = $connexion-> prepare("UPDATE dossier SET cod = ?, montant_av = fob, fxi = ?
 												WHERE ref_crf = ?");
 			$requete-> execute(array($entree['cod'], $this-> getDataAv($cod)['fxi'], $entree['ref_crf']));
@@ -25228,13 +25130,7 @@
 		} 
 
 		public function MAJ_montant_av($id_dos, $montant_av){
-			/*
-			?>
-			<script type="text/javascript">
-				alert("id_dos = <?php echo $id_dos;?> montant_av = <?php echo $montant_av;?>");
-			</script>
-			<?php
-			*/
+
 			//Log
 			if ($this-> getDossier($id_dos)['montant_av'] != $montant_av) {
 				
@@ -25253,13 +25149,7 @@
 		} 
 
 		public function MAJ_ref_av($id_dos, $ref_av){
-			/*
-			?>
-			<script type="text/javascript">
-				alert("id_dos = <?php echo $id_dos;?> ref_av = <?php echo $ref_av;?>");
-			</script>
-			<?php
-			*/
+
 			//Log
 			if ($this-> getDossier($id_dos)['ref_av'] != $ref_av) {
 				
@@ -25818,12 +25708,6 @@
 		public function MAJ_cleared_is_null(){
 			
 			//Log
-			// if ($this-> getDossier($id_dos)['cleared'] != $cleared) {
-				
-			// 	$colonne = $this-> getNomColonneClient('cleared', $_GET['id_cli'], $_GET['id_mod_trans'], $_GET['id_mod_trac']);
-			// 	$this-> creerLogDossier($colonne, $cleared, $id_dos, $_SESSION['id_util']);
-
-			// }
 
 			include('connexion.php');
 			$entree['id_dos'] = $id_dos;
