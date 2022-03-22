@@ -582,23 +582,61 @@ while ($reponseModeTransport = $requeteModeTransport-> fetch()) {
 				}
 
             }
-
+$statut = str_replace('_', '/', $statut);
 			if ($_GET['id_mod_trac']=='2' && $_GET['id_mod_trans']=='1') {
-				if ($_GET['statut'] == 'AWAITING CRF') {
+				if (str_replace('_', '/', $_GET['statut']) == 'AWAITING CRF/AD/INSURRANCE') {
 
-					$sqlStatus = ' AND d.date_crf IS NULL
+					$sqlStatus = ' AND d.date_crf IS NULL 
+													AND d.date_ad IS NULL
+													AND d.date_assurance IS NULL
 													AND d.ref_dos NOT LIKE "%20-%"
 													AND d.cleared <> "2"';
 
-				}else if ($_GET['statut'] == 'AWAITING AD') {
+				}else if (str_replace('_', '/', $_GET['statut']) == 'AWAITING CRF/AD') {
 
-					$sqlStatus = ' AND d.date_ad IS NULL
+					$sqlStatus = ' AND d.date_crf IS NULL 
+													AND d.date_ad IS NULL
+													AND d.date_assurance IS NOT NULL
 													AND d.ref_dos NOT LIKE "%20-%"
 													AND d.cleared <> "2"';
 
-				}else if ($_GET['statut'] == 'AWAITING INSURANCE') {
+				}else if (str_replace('_', '/', $_GET['statut']) == 'AWAITING CRF/INSURRANCE') {
 
-					$sqlStatus = ' AND d.date_assurance IS NULL
+					$sqlStatus = ' AND d.date_crf IS NULL 
+													AND d.date_ad IS NOT NULL
+													AND d.date_assurance IS NULL
+													AND d.ref_dos NOT LIKE "%20-%"
+													AND d.cleared <> "2"';
+
+				}else if (str_replace('_', '/', $_GET['statut']) == 'AWAITING CRF') {
+
+					$sqlStatus = ' AND d.date_crf IS NULL 
+													AND d.date_ad IS NOT NULL
+													AND d.date_assurance IS NOT NULL
+													AND d.ref_dos NOT LIKE "%20-%"
+													AND d.cleared <> "2"';
+
+				}else if (str_replace('_', '/', $_GET['statut']) == 'AWAITING AD/INSURRANCE') {
+
+					$sqlStatus = ' AND d.date_crf IS NOT NULL 
+													AND d.date_ad IS NULL
+													AND d.date_assurance IS NULL
+													AND d.ref_dos NOT LIKE "%20-%"
+													AND d.cleared <> "2"';
+
+				}else if (str_replace('_', '/', $_GET['statut']) == 'AWAITING AD') {
+
+					$sqlStatus = ' AND d.date_crf IS NOT NULL 
+													AND d.date_ad IS NOT NULL
+													AND d.date_assurance IS NOT NULL
+													AND d.ref_dos NOT LIKE "%20-%"
+													AND d.cleared <> "2"';
+
+				}else if (str_replace('_', '/', $_GET['statut']) == 'AWAITING INSURRANCE') {
+
+					$sqlStatus = ' AND d.date_crf IS NOT NULL 
+													AND d.date_ad IS NULL
+													AND d.date_assurance IS NULL
 													AND d.ref_dos NOT LIKE "%20-%"
 													AND d.cleared <> "2"';
 
@@ -610,7 +648,7 @@ while ($reponseModeTransport = $requeteModeTransport-> fetch()) {
 													AND d.ref_dos NOT LIKE "%20-%"
 													AND d.cleared <> "2"';
 
-				}else if ($_GET['statut'] == 'AWAITING LIQUIDATION') {
+				}else if (str_replace('_', '/', $_GET['statut']) == 'AWAITING LIQUIDATION') {
 
 					$sqlStatus = ' AND d.date_decl IS NOT NULL 
 													AND d.ref_decl IS NOT NULL
@@ -619,7 +657,7 @@ while ($reponseModeTransport = $requeteModeTransport-> fetch()) {
 													AND d.ref_dos NOT LIKE "%20-%"
 													AND d.cleared <> "2"';
 
-				}else if ($_GET['statut'] == 'AWAITING QUITTANCE') {
+				}else if (str_replace('_', '/', $_GET['statut']) == 'AWAITING QUITTANCE') {
 
 					$sqlStatus = ' AND d.date_liq IS NOT NULL 
 													AND d.ref_liq IS NOT NULL
@@ -628,7 +666,7 @@ while ($reponseModeTransport = $requeteModeTransport-> fetch()) {
 													AND d.ref_dos NOT LIKE "%20-%"
 													AND d.cleared <> "2"';
 
-				}else if ($_GET['statut'] == 'AWAITING BAE_BS') {
+				}else if (str_replace('_', '/', $_GET['statut']) == 'AWAITING BAE_BS') {
 
 					$sqlStatus = ' AND d.date_quit IS NOT NULL 
 													AND d.ref_quit IS NOT NULL
