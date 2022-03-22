@@ -3028,11 +3028,11 @@
 			$entree['id_t_deb'] = $id_t_deb;
 			$tbl = '
 					<tr>
-						<td style="text-align: left; font-weight: bold; border-left: 1px solid black; border-right: 0.5px dotted black; border-bottom: 0.5px dotted black;" colspan="2" width="35%"></td>
-						<td style="text-align: center; border-bottom: 0.5px dotted black; border-right: 0.5px dotted black;" colspan="2" width="5%"></td>
-						<td style="text-align: right; border-right: 0.5px dotted black; border-bottom: 0.5px dotted black;" width="25%"></td>
-						<td style="text-align: right; border-right: 0.5px dotted black; border-bottom: 0.5px dotted black;" width="15%"></td>
-						<td style="text-align: right; border-right: 1px solid black; border-bottom: 0.5px dotted black;" width="20%"></td>
+						<td style="text-align: left; font-weight: bold; border-left: 1px solid black; border-right: 0.5px solid black;" colspan="2" width="35%"></td>
+						<td style="text-align: center; border-right: 0.5px solid black;" colspan="2" width="5%"></td>
+						<td style="text-align: right; border-right: 0.5px solid black;" width="25%"></td>
+						<td style="text-align: right; border-right: 0.5px solid black;" width="15%"></td>
+						<td style="text-align: right; border-right: 1px solid black;" width="20%"></td>
 					</tr>
 					';
 			$requete = $connexion-> prepare('SELECT d.nom_deb AS nom_deb,
@@ -3076,22 +3076,22 @@
 
 					$tbl .= '
 						<tr>
-							<td style="text-align: left; font-weight: bold; border-left: 1px solid black; border-right: 0.5px dotted black; border-bottom: 0.5px dotted black; font-size: 7px;" colspan="2" width="35%">&nbsp;&nbsp;'
+							<td style="text-align: left; font-weight: bold; border-left: 1px solid black; border-right: 0.5px solid black; font-size: 8px;" colspan="2" width="35%">&nbsp;&nbsp;'
 								.$reponse['nom_deb'].
 							'</td>
-							<td style="text-align: center; font-weight: bold; border-bottom: 0.5px dotted black; font-size: 7px; border-right: 0.5px dotted black;" colspan="2" width="5%">'
+							<td style="text-align: center; font-weight: bold; font-size: 8px; border-right: 0.5px solid black;" colspan="2" width="5%">'
 								.$reponse['abr_deb'].
 							'</td>
-							<td style="text-align: right; font-weight: bold; border-right: 0.5px dotted black; border-bottom: 0.5px dotted black; font-size: 7px;" width="12%">'
+							<td style="text-align: right; font-weight: bold; border-right: 0.5px solid black; font-size: 8px;" width="12%">'
 								.number_format($reponse['ht_cdf'], 2, ',', ' ').
 							'&nbsp;&nbsp;</td>
-							<td style="text-align: right; font-weight: bold; border-right: 0.5px dotted black; border-bottom: 0.5px dotted black; font-size: 7px;" width="13%">'
+							<td style="text-align: right; font-weight: bold; border-right: 0.5px solid black; font-size: 8px;" width="13%">'
 								.number_format($reponse['ht_usd'], 2, ',', ' ').
 							'&nbsp;&nbsp;</td>
-							<td style="text-align: right; font-weight: bold; border-right: 0.5px dotted black; border-bottom: 0.5px dotted black; font-size: 7px;" width="15%">'
+							<td style="text-align: right; font-weight: bold; border-right: 0.5px solid black; font-size: 8px;" width="15%">'
 								.number_format($tva, 2, ',', ' ').
 							'&nbsp;&nbsp;</td>
-							<td style="text-align: right; font-weight: bold; border-right: 1px solid black; border-bottom: 0.5px dotted black; font-size: 7px;" width="20%">'
+							<td style="text-align: right; font-weight: bold; border-right: 1px solid black; font-size: 8px;" width="20%">'
 								.number_format($ttc, 2, ',', ' ').
 							'&nbsp;&nbsp;</td>
 						</tr>
@@ -3101,13 +3101,13 @@
 
 					$tbl .= '
 						<tr>
-							<td style="text-align: left; font-weight: bold; border-left: 1px solid black; border-right: 0.5px dotted black; border-bottom: 0.5px dotted black; font-size: 7px;" colspan="2" width="40%">&nbsp;&nbsp;'
+							<td style="text-align: left; font-weight: bold; border-left: 1px solid black; border-right: 0.5px dotted black; border-bottom: 0.5px dotted black; font-size: 8px;" colspan="2" width="40%">&nbsp;&nbsp;'
 								.$reponse['nom_deb'].$reponse['detail'].
 							'</td>
-							<td style="text-align: right; font-weight: bold; border-right: 0.5px dotted black; border-bottom: 0.5px dotted black; font-size: 7px;" width="25%">'
+							<td style="text-align: right; font-weight: bold; border-right: 0.5px dotted black; border-bottom: 0.5px dotted black; font-size: 8px;" width="25%">'
 								.number_format($reponse['ht_usd'], 2, ',', ' ').
 							'&nbsp;&nbsp;</td>
-							<td style="text-align: right; font-weight: bold; border-right: 0.5px dotted black; border-bottom: 0.5px dotted black; font-size: 7px;" width="15%">'
+							<td style="text-align: right; font-weight: bold; border-right: 0.5px dotted black; border-bottom: 0.5px dotted black; font-size: 8px;" width="15%">'
 								.number_format($tva, 2, ',', ' ').
 							'&nbsp;&nbsp;</td>
 							<td style="text-align: right; font-weight: bold; border-right: 1px solid black; border-bottom: 0.5px dotted black; font-size: 7px;" width="20%">'
@@ -3120,16 +3120,16 @@
 
 					$tbl .= '
 						<tr>
-							<td style="text-align: left; font-weight: bold; border-left: 1px solid black; border-right: 0.5px dotted black; border-bottom: 0.5px dotted black; font-size: 7px;" colspan="2" width="35%">&nbsp;&nbsp;'
+							<td style="text-align: left; font-weight: bold; border-left: 1px solid black; border-right: 0.5px dotted black; border-bottom: 0.5px dotted black; font-size: 8px;" colspan="2" width="35%">&nbsp;&nbsp;'
 								.$reponse['nom_deb'].
 							'</td>
 							<td style="text-align: center; font-weight: bold; border-bottom: 0.5px dotted black; font-size: 7px; border-right: 0.5px dotted black;" colspan="2" width="5%">'
 								.$reponse['abr_deb'].
 							'</td>
-							<td style="text-align: right; font-weight: bold; border-right: 0.5px dotted black; border-bottom: 0.5px dotted black; font-size: 7px;" width="25%">'
+							<td style="text-align: right; font-weight: bold; border-right: 0.5px dotted black; border-bottom: 0.5px dotted black; font-size: 8px;" width="25%">'
 								.number_format($reponse['ht_usd'], 2, ',', ' ').
 							'&nbsp;&nbsp;</td>
-							<td style="text-align: right; font-weight: bold; border-right: 0.5px dotted black; border-bottom: 0.5px dotted black; font-size: 7px;" width="15%">'
+							<td style="text-align: right; font-weight: bold; border-right: 0.5px dotted black; border-bottom: 0.5px dotted black; font-size: 8px;" width="15%">'
 								.number_format($tva, 2, ',', ' ').
 							'&nbsp;&nbsp;</td>
 							<td style="text-align: right; font-weight: bold; border-right: 1px solid black; border-bottom: 0.5px dotted black; font-size: 7px;" width="20%">'
@@ -3143,10 +3143,10 @@
 			}
 			$tbl .='
 					<tr>
-						<td style="text-align: left; border-left: 1px solid black; border-right: 0.5px dotted black; border-bottom: 0.5px dotted black; font-size: 7px;" width="35%"></td>
+						<td style="text-align: left; border-left: 1px solid black; border-right: 0.5px dotted black; border-bottom: 0.5px dotted black; font-size: 8px;" width="35%"></td>
 						<td style="text-align: center; border-bottom: 0.5px dotted black; font-size: 7px; border-right: 0.5px dotted black;" colspan="2" width="5%"></td>
-						<td style="text-align: right; border-right: 0.5px dotted black; border-bottom: 0.5px dotted black; font-size: 7px;" width="25%"></td>
-						<td style="text-align: right; border-right: 0.5px dotted black; border-bottom: 0.5px dotted black; font-size: 7px;" width="15%"></td>
+						<td style="text-align: right; border-right: 0.5px dotted black; border-bottom: 0.5px dotted black; font-size: 8px;" width="25%"></td>
+						<td style="text-align: right; border-right: 0.5px dotted black; border-bottom: 0.5px dotted black; font-size: 8px;" width="15%"></td>
 						<td style="text-align: right; border-right: 1px solid black; border-bottom: 0.5px dotted black; font-size: 7px;" width="20%"></td>
 					</tr>
 					';
@@ -3204,13 +3204,13 @@
 			}
 
 				$tbl .= '
-						<td style="text-align: right; border-right: 0.5px dotted black; border-bottom: 0.5px dotted black; font-weight: bold; font-size: 7px;" width="25%">'
+						<td style="text-align: right; border-right: 0.5px solid black; border-bottom: 0.5px solid black; font-weight: bold; font-size: 7px;background-color: rgb(192,192,192);" width="25%">'
 							.number_format($sommeHT, 2, ',', ' ').
 						'&nbsp;&nbsp;</td>
-						<td style="text-align: right; border-right: 0.5px dotted black; border-bottom: 0.5px dotted black; font-weight: bold; font-size: 7px;" width="15%">'
+						<td style="text-align: right; border-right: 0.5px solid black; border-bottom: 0.5px solid black; font-weight: bold; font-size: 7px;background-color: rgb(192,192,192);" width="15%">'
 							.number_format($sommeTVA, 2, ',', ' ').
 						'&nbsp;&nbsp;</td>
-						<td style="text-align: right; border-right: 1px solid black; border-bottom: 0.5px dotted black; font-weight: bold; font-size: 7px;" width="20%">'
+						<td style="text-align: right; border-right: 1px solid black; border-bottom: 0.5px solid black; font-weight: bold; font-size: 7px; background-color: rgb(192,192,192);" width="20%">'
 							.number_format($sommeTTC, 2, ',', ' ').
 						'&nbsp;&nbsp;</td>
 					
@@ -4374,6 +4374,18 @@
 												FROM transmis_facture_dossier
 												WHERE id_trans_fact = ?");
 			$requete-> execute(array($entree['id_trans_fact']));
+			$reponse = $requete-> fetch();
+			return $reponse;
+		}
+
+		public function getModeTransport($id_mod_trans){
+			include('connexion.php');
+			$entree['id_mod_trans'] = $id_mod_trans;
+
+			$requete = $connexion-> prepare("SELECT *
+												FROM mode_transport
+												WHERE id_mod_trans = ?");
+			$requete-> execute(array($entree['id_mod_trans']));
 			$reponse = $requete-> fetch();
 			return $reponse;
 		}
@@ -6699,7 +6711,7 @@
 				</th>
 				<?php
 
-				}else if ($reponse['id_col']=='42' && $id_mod_lic=='2') {
+				}else if ($reponse['id_col']=='42' && $id_mod_lic=='2' && $id_mod_trans=='1') {
 
 				?>
 				<th style="border: 1px solid white;">
@@ -8580,22 +8592,40 @@
 													d.custom_deliv AS custom_deliv_1,
 													d.arrival_date AS arrival_date_1,
 
+													
 													IF(d.id_mod_lic='2' AND d.id_mod_trans='1',
-														IF(d.date_crf IS NULL, 'AWAITING CRF',
-															IF(d.date_ad IS NULL, 'AWAITING AD',
-																IF(d.date_assurance IS NULL, 'AWAITING INSURANCE',
-																	IF(d.date_decl IS NULL AND d.ref_decl IS NULL, 'UNDER PREPARATION',
-																		IF(d.date_liq IS NULL AND d.ref_liq IS NULL, 'AWAITING LIQUIDATION',
-																			IF(d.date_quit IS NULL AND d.ref_quit IS NULL, 'AWAITING QUITTANCE',
-																				IF(d.date_quit IS NOT NULL AND d.ref_quit IS NOT NULL AND d.dgda_out IS NULL, 'AWAITING BAE/BS', 
-																					IF(d.dgda_out IS NOT NULL AND d.dispatch_deliv IS NOT NULL, 'CLEARING COMPLETED', '')
-																					)
-																				)
-																			)
-																		)
-																	)
-																)
-															)
+														IF(d.date_crf IS NULL AND d.date_ad IS NULL AND d.date_assurance IS NULL,
+													      'AWAITING CRF/AD/INSURRANCE',
+													      IF(d.date_crf IS NULL AND d.date_ad IS NULL AND d.date_assurance IS NOT NULL,
+													        'AWAITING CRF/AD',
+													          IF(d.date_crf IS NULL AND d.date_ad IS NOT NULL AND d.date_assurance IS NULL,
+													            'AWAITING CRF/INSURRANCE',
+													            IF(d.date_crf IS NULL AND d.date_ad IS NOT NULL AND d.date_assurance IS NOT NULL,
+													              'AWAITING CRF', 
+													              IF(d.date_crf IS NOT NULL AND d.date_ad IS NULL AND d.date_assurance IS NULL,
+													                'AWAITING AD/INSURRANCE',
+													                IF(d.date_crf IS NOT NULL AND d.date_ad IS NULL AND d.date_assurance IS NOT NULL,
+													                  'AWAITING AD',
+													                    IF(d.date_crf IS NOT NULL AND d.date_ad IS NOT NULL AND d.date_assurance IS NULL,
+													                      'AWAITING INSURRANCE',
+
+													                      IF(d.date_decl IS NULL AND d.ref_decl IS NULL, 'UNDER PREPARATION',
+													                        IF(d.date_liq IS NULL AND d.ref_liq IS NULL, 'AWAITING LIQUIDATION',
+													                          IF(d.date_quit IS NULL AND d.ref_quit IS NULL, 'AWAITING QUITTANCE',
+													                            IF(d.date_quit IS NOT NULL AND d.ref_quit IS NOT NULL AND d.dgda_out IS NULL, 'AWAITING BAE/BS', 
+													                              IF(d.dgda_out IS NOT NULL AND d.dispatch_deliv IS NOT NULL, 'CLEARING COMPLETED', '')
+													                              )
+													                            )
+													                          )
+													                        )
+													                      
+													                      )
+													                  )
+													                )
+													              )
+													            )
+													          )
+													      )
 														,
 														d.statut) AS statut,
 
@@ -15652,21 +15682,38 @@
 
 
 													IF(d.id_mod_lic='2' AND d.id_mod_trans='1',
-														IF(d.date_crf IS NULL, 'AWAITING CRF',
-															IF(d.date_ad IS NULL, 'AWAITING AD',
-																IF(d.date_assurance IS NULL, 'AWAITING INSURANCE',
-																	IF(d.date_decl IS NULL AND d.ref_decl IS NULL, 'UNDER PREPARATION',
-																		IF(d.date_liq IS NULL AND d.ref_liq IS NULL, 'AWAITING LIQUIDATION',
-																			IF(d.date_quit IS NULL AND d.ref_quit IS NULL, 'AWAITING QUITTANCE',
-																				IF(d.date_quit IS NOT NULL AND d.ref_quit IS NOT NULL AND d.dgda_out IS NULL, 'AWAITING BAE/BS', 
-																					IF(d.dgda_out IS NOT NULL AND d.dispatch_deliv IS NOT NULL, 'CLEARING COMPLETED', '')
-																					)
-																				)
-																			)
-																		)
-																	)
-																)
-															)
+														IF(d.date_crf IS NULL AND d.date_ad IS NULL AND d.date_assurance IS NULL,
+													      'AWAITING CRF/AD/INSURRANCE',
+													      IF(d.date_crf IS NULL AND d.date_ad IS NULL AND d.date_assurance IS NOT NULL,
+													        'AWAITING CRF/AD',
+													          IF(d.date_crf IS NULL AND d.date_ad IS NOT NULL AND d.date_assurance IS NULL,
+													            'AWAITING CRF/INSURRANCE',
+													            IF(d.date_crf IS NULL AND d.date_ad IS NOT NULL AND d.date_assurance IS NOT NULL,
+													              'AWAITING CRF', 
+													              IF(d.date_crf IS NOT NULL AND d.date_ad IS NULL AND d.date_assurance IS NULL,
+													                'AWAITING AD/INSURRANCE',
+													                IF(d.date_crf IS NOT NULL AND d.date_ad IS NULL AND d.date_assurance IS NOT NULL,
+													                  'AWAITING AD',
+													                    IF(d.date_crf IS NOT NULL AND d.date_ad IS NOT NULL AND d.date_assurance IS NULL,
+													                      'AWAITING INSURRANCE',
+
+													                      IF(d.date_decl IS NULL AND d.ref_decl IS NULL, 'UNDER PREPARATION',
+													                        IF(d.date_liq IS NULL AND d.ref_liq IS NULL, 'AWAITING LIQUIDATION',
+													                          IF(d.date_quit IS NULL AND d.ref_quit IS NULL, 'AWAITING QUITTANCE',
+													                            IF(d.date_quit IS NOT NULL AND d.ref_quit IS NOT NULL AND d.dgda_out IS NULL, 'AWAITING BAE/BS', 
+													                              IF(d.dgda_out IS NOT NULL AND d.dispatch_deliv IS NOT NULL, 'CLEARING COMPLETED', '')
+													                              )
+													                            )
+													                          )
+													                        )
+													                      
+													                      )
+													                  )
+													                )
+													              )
+													            )
+													          )
+													      )
 														,
 														d.statut) AS statut,
 													IF(d.id_mod_trans='1' AND d.id_mod_lic='2', 
@@ -16005,22 +16052,40 @@
 													d.custom_deliv AS custom_deliv_1,
 													d.arrival_date AS arrival_date_1,
 
+													
 													IF(d.id_mod_lic='2' AND d.id_mod_trans='1',
-														IF(d.date_crf IS NULL, 'AWAITING CRF',
-															IF(d.date_ad IS NULL, 'AWAITING AD',
-																IF(d.date_assurance IS NULL, 'AWAITING INSURANCE',
-																	IF(d.date_decl IS NULL AND d.ref_decl IS NULL, 'UNDER PREPARATION',
-																		IF(d.date_liq IS NULL AND d.ref_liq IS NULL, 'AWAITING LIQUIDATION',
-																			IF(d.date_quit IS NULL AND d.ref_quit IS NULL, 'AWAITING QUITTANCE',
-																				IF(d.date_quit IS NOT NULL AND d.ref_quit IS NOT NULL AND d.dgda_out IS NULL, 'AWAITING BAE/BS', 
-																					IF(d.dgda_out IS NOT NULL AND d.dispatch_deliv IS NOT NULL, 'CLEARING COMPLETED', '')
-																					)
-																				)
-																			)
-																		)
-																	)
-																)
-															)
+														IF(d.date_crf IS NULL AND d.date_ad IS NULL AND d.date_assurance IS NULL,
+													      'AWAITING CRF/AD/INSURRANCE',
+													      IF(d.date_crf IS NULL AND d.date_ad IS NULL AND d.date_assurance IS NOT NULL,
+													        'AWAITING CRF/AD',
+													          IF(d.date_crf IS NULL AND d.date_ad IS NOT NULL AND d.date_assurance IS NULL,
+													            'AWAITING CRF/INSURRANCE',
+													            IF(d.date_crf IS NULL AND d.date_ad IS NOT NULL AND d.date_assurance IS NOT NULL,
+													              'AWAITING CRF', 
+													              IF(d.date_crf IS NOT NULL AND d.date_ad IS NULL AND d.date_assurance IS NULL,
+													                'AWAITING AD/INSURRANCE',
+													                IF(d.date_crf IS NOT NULL AND d.date_ad IS NULL AND d.date_assurance IS NOT NULL,
+													                  'AWAITING AD',
+													                    IF(d.date_crf IS NOT NULL AND d.date_ad IS NOT NULL AND d.date_assurance IS NULL,
+													                      'AWAITING INSURRANCE',
+
+													                      IF(d.date_decl IS NULL AND d.ref_decl IS NULL, 'UNDER PREPARATION',
+													                        IF(d.date_liq IS NULL AND d.ref_liq IS NULL, 'AWAITING LIQUIDATION',
+													                          IF(d.date_quit IS NULL AND d.ref_quit IS NULL, 'AWAITING QUITTANCE',
+													                            IF(d.date_quit IS NOT NULL AND d.ref_quit IS NOT NULL AND d.dgda_out IS NULL, 'AWAITING BAE/BS', 
+													                              IF(d.dgda_out IS NOT NULL AND d.dispatch_deliv IS NOT NULL, 'CLEARING COMPLETED', '')
+													                              )
+													                            )
+													                          )
+													                        )
+													                      
+													                      )
+													                  )
+													                )
+													              )
+													            )
+													          )
+													      )
 														,
 														d.statut) AS statut,
 
@@ -16661,17 +16726,61 @@
 
             }
 
-			if ($statut == 'AWAITING CRF') {
+			if ($statut == 'AWAITING CRF/AD/INSURANCE') {
 
 				$sqlStatus = " AND d.date_crf IS NULL
-												AND d.ref_dos NOT LIKE '%20-%'
-												AND d.cleared <> '2'";
+								AND d.date_ad IS NULL
+								AND d.date_assurance IS NULL
+								AND d.ref_dos NOT LIKE '%20-%'
+								AND d.cleared <> '2'";
+
+			}else if ($statut == 'AWAITING CRF/AD') {
+
+				$sqlStatus = " AND d.date_crf IS NULL
+								AND d.date_ad IS NULL
+								AND d.date_assurance IS NOT NULL
+								AND d.ref_dos NOT LIKE '%20-%'
+								AND d.cleared <> '2'";
+
+			}else if ($statut == 'AWAITING CRF/INSURRANCE') {
+
+				$sqlStatus = " AND d.date_crf IS NULL
+								AND d.date_ad IS NOT NULL
+								AND d.date_assurance IS NULL
+								AND d.ref_dos NOT LIKE '%20-%'
+								AND d.cleared <> '2'";
+
+			}else if ($statut == 'AWAITING CRF') {
+
+				$sqlStatus = " AND d.date_crf IS NULL
+								AND d.date_ad IS NOT NULL
+								AND d.date_assurance IS NOT NULL
+								AND d.ref_dos NOT LIKE '%20-%'
+								AND d.cleared <> '2'";
+
+			}else if ($statut == 'AWAITING AD/INSURRANCE') {
+
+				$sqlStatus = " AND d.date_crf IS NOT NULL
+								AND d.date_ad IS NULL
+								AND d.date_assurance IS NULL
+								AND d.ref_dos NOT LIKE '%20-%'
+								AND d.cleared <> '2'";
 
 			}else if ($statut == 'AWAITING AD') {
 
-				$sqlStatus = " AND d.date_ad IS NULL
-												AND d.ref_dos NOT LIKE '%20-%'
-												AND d.cleared <> '2'";
+				$sqlStatus = " AND d.date_crf IS NOT NULL
+								AND d.date_ad IS NULL
+								AND d.date_assurance IS NOT NULL
+								AND d.ref_dos NOT LIKE '%20-%'
+								AND d.cleared <> '2'";
+
+			}else if ($statut == 'AWAITING INSURANCE') {
+
+				$sqlStatus = " AND d.date_crf IS NOT NULL
+								AND d.date_ad IS NOT NULL
+								AND d.date_assurance IS NULL
+								AND d.ref_dos NOT LIKE '%20-%'
+								AND d.cleared <> '2'";
 
 			}else if ($statut == 'AWAITING INSURANCE') {
 
@@ -16736,22 +16845,40 @@
 													d.custom_deliv AS custom_deliv_1,
 													d.arrival_date AS arrival_date_1,
 
+													
 													IF(d.id_mod_lic='2' AND d.id_mod_trans='1',
-														IF(d.date_crf IS NULL, 'AWAITING CRF',
-															IF(d.date_ad IS NULL, 'AWAITING AD',
-																IF(d.date_assurance IS NULL, 'AWAITING INSURANCE',
-																	IF(d.date_decl IS NULL AND d.ref_decl IS NULL, 'UNDER PREPARATION',
-																		IF(d.date_liq IS NULL AND d.ref_liq IS NULL, 'AWAITING LIQUIDATION',
-																			IF(d.date_quit IS NULL AND d.ref_quit IS NULL, 'AWAITING QUITTANCE',
-																				IF(d.date_quit IS NOT NULL AND d.ref_quit IS NOT NULL AND d.dgda_out IS NULL, 'AWAITING BAE/BS', 
-																					IF(d.dgda_out IS NOT NULL AND d.dispatch_deliv IS NOT NULL, 'CLEARING COMPLETED', '')
-																					)
-																				)
-																			)
-																		)
-																	)
-																)
-															)
+														IF(d.date_crf IS NULL AND d.date_ad IS NULL AND d.date_assurance IS NULL,
+													      'AWAITING CRF/AD/INSURRANCE',
+													      IF(d.date_crf IS NULL AND d.date_ad IS NULL AND d.date_assurance IS NOT NULL,
+													        'AWAITING CRF/AD',
+													          IF(d.date_crf IS NULL AND d.date_ad IS NOT NULL AND d.date_assurance IS NULL,
+													            'AWAITING CRF/INSURRANCE',
+													            IF(d.date_crf IS NULL AND d.date_ad IS NOT NULL AND d.date_assurance IS NOT NULL,
+													              'AWAITING CRF', 
+													              IF(d.date_crf IS NOT NULL AND d.date_ad IS NULL AND d.date_assurance IS NULL,
+													                'AWAITING AD/INSURRANCE',
+													                IF(d.date_crf IS NOT NULL AND d.date_ad IS NULL AND d.date_assurance IS NOT NULL,
+													                  'AWAITING AD',
+													                    IF(d.date_crf IS NOT NULL AND d.date_ad IS NOT NULL AND d.date_assurance IS NULL,
+													                      'AWAITING INSURRANCE',
+
+													                      IF(d.date_decl IS NULL AND d.ref_decl IS NULL, 'UNDER PREPARATION',
+													                        IF(d.date_liq IS NULL AND d.ref_liq IS NULL, 'AWAITING LIQUIDATION',
+													                          IF(d.date_quit IS NULL AND d.ref_quit IS NULL, 'AWAITING QUITTANCE',
+													                            IF(d.date_quit IS NOT NULL AND d.ref_quit IS NOT NULL AND d.dgda_out IS NULL, 'AWAITING BAE/BS', 
+													                              IF(d.dgda_out IS NOT NULL AND d.dispatch_deliv IS NOT NULL, 'CLEARING COMPLETED', '')
+													                              )
+													                            )
+													                          )
+													                        )
+													                      
+													                      )
+													                  )
+													                )
+													              )
+													            )
+													          )
+													      )
 														,
 														d.statut) AS statut,
 
@@ -19125,12 +19252,70 @@
 				$sqlCommodity = '';
 			}
 
-			if ($statut == 'AWAITING CRF') {
+			if ($statut == 'AWAITING CRF/AD/INSURANCE') {
 
 				$requete = $connexion-> prepare("SELECT COUNT(ref_dos) AS nbre
 											FROM dossier
 											WHERE id_mod_lic = ?
 												AND date_crf IS NULL
+												AND date_ad IS NULL
+												AND date_assurance IS NULL
+												AND ref_dos NOT LIKE '%20-%'
+												AND cleared <> '2'
+												$sqlClient
+												$sqlModeTransport
+												$sqlCommodity");
+
+			}else if ($statut == 'AWAITING CRF/AD') {
+
+				$requete = $connexion-> prepare("SELECT COUNT(ref_dos) AS nbre
+											FROM dossier
+											WHERE id_mod_lic = ?
+												AND date_crf IS NULL
+												AND date_ad IS NULL
+												AND date_assurance IS NOT NULL
+												AND ref_dos NOT LIKE '%20-%'
+												AND cleared <> '2'
+												$sqlClient
+												$sqlModeTransport
+												$sqlCommodity");
+
+			}else if ($statut == 'AWAITING CRF/INSURRANCE') {
+
+				$requete = $connexion-> prepare("SELECT COUNT(ref_dos) AS nbre
+											FROM dossier
+											WHERE id_mod_lic = ?
+												AND date_crf IS NULL
+												AND date_ad IS NOT NULL
+												AND date_assurance IS NULL
+												AND ref_dos NOT LIKE '%20-%'
+												AND cleared <> '2'
+												$sqlClient
+												$sqlModeTransport
+												$sqlCommodity");
+
+			}else if ($statut == 'AWAITING CRF') {
+
+				$requete = $connexion-> prepare("SELECT COUNT(ref_dos) AS nbre
+											FROM dossier
+											WHERE id_mod_lic = ?
+												AND date_crf IS NULL
+												AND date_ad IS NOT NULL
+												AND date_assurance IS NOT NULL
+												AND ref_dos NOT LIKE '%20-%'
+												AND cleared <> '2'
+												$sqlClient
+												$sqlModeTransport
+												$sqlCommodity");
+
+			}else if ($statut == 'AWAITING AD/INSURRANCE') {
+
+				$requete = $connexion-> prepare("SELECT COUNT(ref_dos) AS nbre
+											FROM dossier
+											WHERE id_mod_lic = ?
+												AND date_crf IS NOT NULL
+												AND date_ad IS NULL
+												AND date_assurance IS NULL
 												AND ref_dos NOT LIKE '%20-%'
 												AND cleared <> '2'
 												$sqlClient
@@ -19142,7 +19327,9 @@
 				$requete = $connexion-> prepare("SELECT COUNT(ref_dos) AS nbre
 											FROM dossier
 											WHERE id_mod_lic = ?
+												AND date_crf IS NOT NULL
 												AND date_ad IS NULL
+												AND date_assurance IS NOT NULL
 												AND ref_dos NOT LIKE '%20-%'
 												AND cleared <> '2'
 												$sqlClient
@@ -19154,6 +19341,8 @@
 				$requete = $connexion-> prepare("SELECT COUNT(ref_dos) AS nbre
 											FROM dossier
 											WHERE id_mod_lic = ?
+												AND date_crf IS NOT NULL
+												AND date_ad IS NOT NULL
 												AND date_assurance IS NULL
 												AND ref_dos NOT LIKE '%20-%'
 												AND cleared <> '2'
