@@ -16791,6 +16791,8 @@
 			}else if ($statut == 'UNDER PREPARATION') {
 
 				$sqlStatus = " AND d.date_crf IS NOT NULL
+												AND d.date_ad IS NOT NULL
+												AND d.date_assurance IS NOT NULL
 												AND d.date_decl IS NULL 
 												AND d.ref_decl IS NULL
 												AND d.ref_dos NOT LIKE '%20-%'
@@ -19356,6 +19358,8 @@
 											FROM dossier
 											WHERE id_mod_lic = ?
 												AND date_crf IS NOT NULL
+												AND date_ad IS NOT NULL
+												AND date_assurance IS NOT NULL
 												AND date_decl IS NULL 
 												AND ref_decl IS NULL
 												AND ref_dos NOT LIKE '%20-%'
@@ -21049,6 +21053,8 @@
 			}else if ($statut == 'UNDER PREPARATION') {
 
 				$sqlStatus = " AND d.date_crf IS NOT NULL
+												AND d.date_ad IS NOT NULL
+												AND d.date_assurance IS NOT NULL
 												AND d.date_decl IS NULL 
 												AND d.ref_decl IS NULL
 												AND d.ref_dos NOT LIKE '%20-%'
@@ -21223,6 +21229,8 @@
 			}else if ($statut == 'UNDER PREPARATION') {
 
 				$sqlStatus = " AND d.date_crf IS NOT NULL
+												AND d.date_ad IS NOT NULL
+												AND d.date_assurance IS NOT NULL
 												AND d.date_decl IS NULL 
 												AND d.ref_decl IS NULL
 												AND d.ref_dos NOT LIKE '%20-%'
