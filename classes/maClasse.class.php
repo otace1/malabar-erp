@@ -16726,7 +16726,7 @@
 
             }
 
-			if ($statut == 'AWAITING CRF/AD/INSURANCE') {
+			if ($statut == 'AWAITING CRF/AD/INSURRANCE') {
 
 				$sqlStatus = " AND d.date_crf IS NULL
 								AND d.date_ad IS NULL
@@ -16774,7 +16774,7 @@
 								AND d.ref_dos NOT LIKE '%20-%'
 								AND d.cleared <> '2'";
 
-			}else if ($statut == 'AWAITING INSURANCE') {
+			}else if ($statut == 'AWAITING INSURRANCE') {
 
 				$sqlStatus = " AND d.date_crf IS NOT NULL
 								AND d.date_ad IS NOT NULL
@@ -16782,7 +16782,7 @@
 								AND d.ref_dos NOT LIKE '%20-%'
 								AND d.cleared <> '2'";
 
-			}else if ($statut == 'AWAITING INSURANCE') {
+			}else if ($statut == 'AWAITING INSURRANCE') {
 
 				$sqlStatus = " AND d.date_assurance IS NULL
 												AND d.ref_dos NOT LIKE '%20-%'
@@ -19252,7 +19252,7 @@
 				$sqlCommodity = '';
 			}
 
-			if ($statut == 'AWAITING CRF/AD/INSURANCE') {
+			if ($statut == 'AWAITING CRF/AD/INSURRANCE') {
 
 				$requete = $connexion-> prepare("SELECT COUNT(ref_dos) AS nbre
 											FROM dossier
@@ -19336,7 +19336,7 @@
 												$sqlModeTransport
 												$sqlCommodity");
 
-			}else if ($statut == 'AWAITING INSURANCE') {
+			}else if ($statut == 'AWAITING INSURRANCE') {
 
 				$requete = $connexion-> prepare("SELECT COUNT(ref_dos) AS nbre
 											FROM dossier
@@ -21040,7 +21040,7 @@
 
 			$sqlStatus = '';
 
-			if ($statut == 'AWAITING CRF/AD/INSURANCE') {
+			if ($statut == 'AWAITING CRF/AD/INSURRANCE') {
 
 				$sqlStatus = " AND d.date_crf IS NULL
 												AND d.ref_dos NOT LIKE '%20-%'
@@ -21214,7 +21214,7 @@
 												AND d.ref_dos NOT LIKE '%20-%'
 												AND d.cleared <> '2'";
 
-			}else if ($statut == 'AWAITING INSURANCE') {
+			}else if ($statut == 'AWAITING INSURRANCE') {
 
 				$sqlStatus = " AND d.date_assurance IS NULL
 												AND d.ref_dos NOT LIKE '%20-%'
