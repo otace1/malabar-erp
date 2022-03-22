@@ -203,7 +203,7 @@ $indiceSheet = 0;
 				
 				//------------
 
-				$statut = 'AWAITING CRF/AD/INSURANCE';
+				$statut = 'AWAITING CRF/AD/INSURRANCE';
 
 				$colonneStatus = $colonneTMP;
 				$ligne++;
@@ -341,7 +341,7 @@ $indiceSheet = 0;
 
 				//------------
 
-				$statut = 'AWAITING INSURANCE';
+				$statut = 'AWAITING INSURRANCE';
 
 				$colonneStatus = $colonneTMP;
 				$ligne++;

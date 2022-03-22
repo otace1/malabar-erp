@@ -643,6 +643,8 @@ $statut = str_replace('_', '/', $statut);
 				}else if ($_GET['statut'] == 'UNDER PREPARATION') {
 
 					$sqlStatus = ' AND d.date_crf IS NOT NULL
+													AND d.date_ad IS NOT NULL
+													AND d.date_assurance IS NOT NULL
 													AND d.date_decl IS NULL 
 													AND d.ref_decl IS NULL
 													AND d.ref_dos NOT LIKE "%20-%"
