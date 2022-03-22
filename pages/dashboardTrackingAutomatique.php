@@ -93,7 +93,19 @@
     //                             $_GET['id_mod_trans'], $_GET['commodity'], 'AWAITING CRF/AD/INSURANCE');
 
     $maClasse-> getSummaryStatus($_GET['id_mod_trac'], $_GET['id_cli'], 
+                                $_GET['id_mod_trans'], $_GET['commodity'], 'AWAITING CRF/AD/INSURANCE');
+
+    $maClasse-> getSummaryStatus($_GET['id_mod_trac'], $_GET['id_cli'], 
+                                $_GET['id_mod_trans'], $_GET['commodity'], 'AWAITING CRF/AD');
+
+    $maClasse-> getSummaryStatus($_GET['id_mod_trac'], $_GET['id_cli'], 
+                                $_GET['id_mod_trans'], $_GET['commodity'], 'AWAITING CRF/INSURRANCE');
+
+    $maClasse-> getSummaryStatus($_GET['id_mod_trac'], $_GET['id_cli'], 
                                 $_GET['id_mod_trans'], $_GET['commodity'], 'AWAITING CRF');
+
+    $maClasse-> getSummaryStatus($_GET['id_mod_trac'], $_GET['id_cli'], 
+                                $_GET['id_mod_trans'], $_GET['commodity'], 'AWAITING AD/INSURRANCE');
 
     $maClasse-> getSummaryStatus($_GET['id_mod_trac'], $_GET['id_cli'], 
                                 $_GET['id_mod_trans'], $_GET['commodity'], 'AWAITING AD');
