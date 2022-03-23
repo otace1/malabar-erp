@@ -8595,19 +8595,19 @@
 													
 													IF(d.id_mod_lic='2' AND d.id_mod_trans='1',
 														IF(d.date_crf IS NULL AND d.date_ad IS NULL AND d.date_assurance IS NULL,
-													      'AWAITING CRF/AD/INSURRANCE',
+													      'AWAITING CRF/AD/INSURANCE',
 													      IF(d.date_crf IS NULL AND d.date_ad IS NULL AND d.date_assurance IS NOT NULL,
 													        'AWAITING CRF/AD',
 													          IF(d.date_crf IS NULL AND d.date_ad IS NOT NULL AND d.date_assurance IS NULL,
-													            'AWAITING CRF/INSURRANCE',
+													            'AWAITING CRF/INSURANCE',
 													            IF(d.date_crf IS NULL AND d.date_ad IS NOT NULL AND d.date_assurance IS NOT NULL,
 													              'AWAITING CRF', 
 													              IF(d.date_crf IS NOT NULL AND d.date_ad IS NULL AND d.date_assurance IS NULL,
-													                'AWAITING AD/INSURRANCE',
+													                'AWAITING AD/INSURANCE',
 													                IF(d.date_crf IS NOT NULL AND d.date_ad IS NULL AND d.date_assurance IS NOT NULL,
 													                  'AWAITING AD',
 													                    IF(d.date_crf IS NOT NULL AND d.date_ad IS NOT NULL AND d.date_assurance IS NULL,
-													                      'AWAITING INSURRANCE',
+													                      'AWAITING INSURANCE',
 
 													                      IF(d.date_decl IS NULL AND d.ref_decl IS NULL, 'UNDER PREPARATION',
 													                        IF(d.date_liq IS NULL AND d.ref_liq IS NULL, 'AWAITING LIQUIDATION',
@@ -15683,19 +15683,19 @@
 
 													IF(d.id_mod_lic='2' AND d.id_mod_trans='1',
 														IF(d.date_crf IS NULL AND d.date_ad IS NULL AND d.date_assurance IS NULL,
-													      'AWAITING CRF/AD/INSURRANCE',
+													      'AWAITING CRF/AD/INSURANCE',
 													      IF(d.date_crf IS NULL AND d.date_ad IS NULL AND d.date_assurance IS NOT NULL,
 													        'AWAITING CRF/AD',
 													          IF(d.date_crf IS NULL AND d.date_ad IS NOT NULL AND d.date_assurance IS NULL,
-													            'AWAITING CRF/INSURRANCE',
+													            'AWAITING CRF/INSURANCE',
 													            IF(d.date_crf IS NULL AND d.date_ad IS NOT NULL AND d.date_assurance IS NOT NULL,
 													              'AWAITING CRF', 
 													              IF(d.date_crf IS NOT NULL AND d.date_ad IS NULL AND d.date_assurance IS NULL,
-													                'AWAITING AD/INSURRANCE',
+													                'AWAITING AD/INSURANCE',
 													                IF(d.date_crf IS NOT NULL AND d.date_ad IS NULL AND d.date_assurance IS NOT NULL,
 													                  'AWAITING AD',
 													                    IF(d.date_crf IS NOT NULL AND d.date_ad IS NOT NULL AND d.date_assurance IS NULL,
-													                      'AWAITING INSURRANCE',
+													                      'AWAITING INSURANCE',
 
 													                      IF(d.date_decl IS NULL AND d.ref_decl IS NULL, 'UNDER PREPARATION',
 													                        IF(d.date_liq IS NULL AND d.ref_liq IS NULL, 'AWAITING LIQUIDATION',
@@ -16055,19 +16055,19 @@
 													
 													IF(d.id_mod_lic='2' AND d.id_mod_trans='1',
 														IF(d.date_crf IS NULL AND d.date_ad IS NULL AND d.date_assurance IS NULL,
-													      'AWAITING CRF/AD/INSURRANCE',
+													      'AWAITING CRF/AD/INSURANCE',
 													      IF(d.date_crf IS NULL AND d.date_ad IS NULL AND d.date_assurance IS NOT NULL,
 													        'AWAITING CRF/AD',
 													          IF(d.date_crf IS NULL AND d.date_ad IS NOT NULL AND d.date_assurance IS NULL,
-													            'AWAITING CRF/INSURRANCE',
+													            'AWAITING CRF/INSURANCE',
 													            IF(d.date_crf IS NULL AND d.date_ad IS NOT NULL AND d.date_assurance IS NOT NULL,
 													              'AWAITING CRF', 
 													              IF(d.date_crf IS NOT NULL AND d.date_ad IS NULL AND d.date_assurance IS NULL,
-													                'AWAITING AD/INSURRANCE',
+													                'AWAITING AD/INSURANCE',
 													                IF(d.date_crf IS NOT NULL AND d.date_ad IS NULL AND d.date_assurance IS NOT NULL,
 													                  'AWAITING AD',
 													                    IF(d.date_crf IS NOT NULL AND d.date_ad IS NOT NULL AND d.date_assurance IS NULL,
-													                      'AWAITING INSURRANCE',
+													                      'AWAITING INSURANCE',
 
 													                      IF(d.date_decl IS NULL AND d.ref_decl IS NULL, 'UNDER PREPARATION',
 													                        IF(d.date_liq IS NULL AND d.ref_liq IS NULL, 'AWAITING LIQUIDATION',
@@ -16726,7 +16726,7 @@
 
             }
 
-			if ($statut == 'AWAITING CRF/AD/INSURRANCE') {
+			if ($statut == 'AWAITING CRF/AD/INSURANCE') {
 
 				$sqlStatus = " AND d.date_crf IS NULL
 								AND d.date_ad IS NULL
@@ -16742,7 +16742,7 @@
 								AND d.ref_dos NOT LIKE '%20-%'
 								AND d.cleared <> '2'";
 
-			}else if ($statut == 'AWAITING CRF/INSURRANCE') {
+			}else if ($statut == 'AWAITING CRF/INSURANCE') {
 
 				$sqlStatus = " AND d.date_crf IS NULL
 								AND d.date_ad IS NOT NULL
@@ -16753,12 +16753,10 @@
 			}else if ($statut == 'AWAITING CRF') {
 
 				$sqlStatus = " AND d.date_crf IS NULL
-								AND d.date_ad IS NOT NULL
-								AND d.date_assurance IS NOT NULL
 								AND d.ref_dos NOT LIKE '%20-%'
 								AND d.cleared <> '2'";
 
-			}else if ($statut == 'AWAITING AD/INSURRANCE') {
+			}else if ($statut == 'AWAITING AD/INSURANCE') {
 
 				$sqlStatus = " AND d.date_crf IS NOT NULL
 								AND d.date_ad IS NULL
@@ -16768,13 +16766,11 @@
 
 			}else if ($statut == 'AWAITING AD') {
 
-				$sqlStatus = " AND d.date_crf IS NOT NULL
-								AND d.date_ad IS NULL
-								AND d.date_assurance IS NOT NULL
+				$sqlStatus = " AND d.date_ad IS NULL
 								AND d.ref_dos NOT LIKE '%20-%'
 								AND d.cleared <> '2'";
 
-			}else if ($statut == 'AWAITING INSURRANCE') {
+			}/*else if ($statut == 'AWAITING INSURANCE') {
 
 				$sqlStatus = " AND d.date_crf IS NOT NULL
 								AND d.date_ad IS NOT NULL
@@ -16782,7 +16778,7 @@
 								AND d.ref_dos NOT LIKE '%20-%'
 								AND d.cleared <> '2'";
 
-			}else if ($statut == 'AWAITING INSURRANCE') {
+			}*/else if ($statut == 'AWAITING INSURANCE') {
 
 				$sqlStatus = " AND d.date_assurance IS NULL
 												AND d.ref_dos NOT LIKE '%20-%'
@@ -16850,19 +16846,19 @@
 													
 													IF(d.id_mod_lic='2' AND d.id_mod_trans='1',
 														IF(d.date_crf IS NULL AND d.date_ad IS NULL AND d.date_assurance IS NULL,
-													      'AWAITING CRF/AD/INSURRANCE',
+													      'AWAITING CRF/AD/INSURANCE',
 													      IF(d.date_crf IS NULL AND d.date_ad IS NULL AND d.date_assurance IS NOT NULL,
 													        'AWAITING CRF/AD',
 													          IF(d.date_crf IS NULL AND d.date_ad IS NOT NULL AND d.date_assurance IS NULL,
-													            'AWAITING CRF/INSURRANCE',
+													            'AWAITING CRF/INSURANCE',
 													            IF(d.date_crf IS NULL AND d.date_ad IS NOT NULL AND d.date_assurance IS NOT NULL,
 													              'AWAITING CRF', 
 													              IF(d.date_crf IS NOT NULL AND d.date_ad IS NULL AND d.date_assurance IS NULL,
-													                'AWAITING AD/INSURRANCE',
+													                'AWAITING AD/INSURANCE',
 													                IF(d.date_crf IS NOT NULL AND d.date_ad IS NULL AND d.date_assurance IS NOT NULL,
 													                  'AWAITING AD',
 													                    IF(d.date_crf IS NOT NULL AND d.date_ad IS NOT NULL AND d.date_assurance IS NULL,
-													                      'AWAITING INSURRANCE',
+													                      'AWAITING INSURANCE',
 
 													                      IF(d.date_decl IS NULL AND d.ref_decl IS NULL, 'UNDER PREPARATION',
 													                        IF(d.date_liq IS NULL AND d.ref_liq IS NULL, 'AWAITING LIQUIDATION',
@@ -17673,6 +17669,104 @@
 													AND (poids IS NULL OR poids = '' OR poids = 0)
 													AND (ref_dos LIKE '%21-%' OR ref_dos LIKE ?)");
 			$requete-> execute(array($entree['id_cli'], $entree['id_mod_trans'], $entree['id_mod_lic'], $entree['annee']));
+			$reponse = $requete-> fetch();
+			return $reponse['nbre'];
+		}
+
+		public function getNbreDossierCancelledAwaitingCRFAtWiski($id_cli){
+			include('connexion.php');
+
+			$entree['id_cli'] = $id_cli;
+
+			$requete = $connexion-> prepare("SELECT COUNT(id_dos) AS nbre
+												FROM dossier
+												WHERE id_cli = ?
+													AND date_crf IS NULL
+													AND wiski_arriv IS NOT NULL
+													AND wiski_dep IS NULL
+													AND ref_dos NOT LIKE '%20-%'
+													AND id_mod_lic = '2'
+													AND id_mod_trans = '1'
+													AND cleared = '2'");
+			$requete-> execute(array($entree['id_cli']));
+			$reponse = $requete-> fetch();
+			return $reponse['nbre'];
+		}
+
+		public function getNbreDossierCancelledAwaitingCRFDispatchFromKlsa($id_cli){
+			include('connexion.php');
+
+			$entree['id_cli'] = $id_cli;
+
+			$requete = $connexion-> prepare("SELECT COUNT(id_dos) AS nbre
+												FROM dossier
+												WHERE id_cli = ?
+													AND date_crf IS NULL
+													AND dispatch_klsa IS NOT NULL
+													AND warehouse_arriv IS NULL
+													AND id_mod_lic = '2'
+													AND id_mod_trans = '1'
+													AND ref_dos NOT LIKE '%20-%'
+													AND cleared = '2'");
+			$requete-> execute(array($entree['id_cli']));
+			$reponse = $requete-> fetch();
+			return $reponse['nbre'];
+		}
+
+		public function getNbreDossierCancelledAwaitingAssuranceDispatchFromKlsa($id_cli){
+			include('connexion.php');
+
+			$entree['id_cli'] = $id_cli;
+
+			$requete = $connexion-> prepare("SELECT COUNT(id_dos) AS nbre
+												FROM dossier
+												WHERE id_cli = ?
+													AND date_assurance IS NULL
+													AND dispatch_klsa IS NOT NULL
+													AND warehouse_arriv IS NULL
+													AND id_mod_lic = '2'
+													AND id_mod_trans = '1'
+													AND ref_dos NOT LIKE '%20-%'
+													AND cleared = '2'");
+			$requete-> execute(array($entree['id_cli']));
+			$reponse = $requete-> fetch();
+			return $reponse['nbre'];
+		}
+
+		public function getNbreDossierCancelledAwaitingCRFExceptedToArrival($id_cli){
+			include('connexion.php');
+
+			$entree['id_cli'] = $id_cli;
+
+			$requete = $connexion-> prepare("SELECT COUNT(id_dos) AS nbre
+												FROM dossier
+												WHERE id_cli = ?
+													AND date_crf IS NULL
+													AND klsa_arriv IS NULL
+													AND id_mod_lic = '2'
+													AND id_mod_trans = '1'
+													AND ref_dos NOT LIKE '%20-%'
+													AND cleared = '2'");
+			$requete-> execute(array($entree['id_cli']));
+			$reponse = $requete-> fetch();
+			return $reponse['nbre'];
+		}
+
+		public function getNbreDossierCancelledAwaitingAssuranceExceptedToArrival($id_cli){
+			include('connexion.php');
+
+			$entree['id_cli'] = $id_cli;
+
+			$requete = $connexion-> prepare("SELECT COUNT(id_dos) AS nbre
+												FROM dossier
+												WHERE id_cli = ?
+													AND date_assurance IS NULL
+													AND klsa_arriv IS NULL
+													AND id_mod_lic = '2'
+													AND id_mod_trans = '1'
+													AND ref_dos NOT LIKE '%20-%'
+													AND cleared = '2'");
+			$requete-> execute(array($entree['id_cli']));
 			$reponse = $requete-> fetch();
 			return $reponse['nbre'];
 		}
@@ -19254,7 +19348,7 @@
 				$sqlCommodity = '';
 			}
 
-			if ($statut == 'AWAITING CRF/AD/INSURRANCE') {
+			if ($statut == 'AWAITING CRF/AD/INSURANCE') {
 
 				$requete = $connexion-> prepare("SELECT COUNT(ref_dos) AS nbre
 											FROM dossier
@@ -19282,7 +19376,7 @@
 												$sqlModeTransport
 												$sqlCommodity");
 
-			}else if ($statut == 'AWAITING CRF/INSURRANCE') {
+			}else if ($statut == 'AWAITING CRF/INSURANCE') {
 
 				$requete = $connexion-> prepare("SELECT COUNT(ref_dos) AS nbre
 											FROM dossier
@@ -19302,15 +19396,13 @@
 											FROM dossier
 											WHERE id_mod_lic = ?
 												AND date_crf IS NULL
-												AND date_ad IS NOT NULL
-												AND date_assurance IS NOT NULL
 												AND ref_dos NOT LIKE '%20-%'
 												AND cleared <> '2'
 												$sqlClient
 												$sqlModeTransport
 												$sqlCommodity");
 
-			}else if ($statut == 'AWAITING AD/INSURRANCE') {
+			}else if ($statut == 'AWAITING AD/INSURANCE') {
 
 				$requete = $connexion-> prepare("SELECT COUNT(ref_dos) AS nbre
 											FROM dossier
@@ -19329,22 +19421,18 @@
 				$requete = $connexion-> prepare("SELECT COUNT(ref_dos) AS nbre
 											FROM dossier
 											WHERE id_mod_lic = ?
-												AND date_crf IS NOT NULL
 												AND date_ad IS NULL
-												AND date_assurance IS NOT NULL
 												AND ref_dos NOT LIKE '%20-%'
 												AND cleared <> '2'
 												$sqlClient
 												$sqlModeTransport
 												$sqlCommodity");
 
-			}else if ($statut == 'AWAITING INSURRANCE') {
+			}else if ($statut == 'AWAITING INSURANCE') {
 
 				$requete = $connexion-> prepare("SELECT COUNT(ref_dos) AS nbre
 											FROM dossier
 											WHERE id_mod_lic = ?
-												AND date_crf IS NOT NULL
-												AND date_ad IS NOT NULL
 												AND date_assurance IS NULL
 												AND ref_dos NOT LIKE '%20-%'
 												AND cleared <> '2'
@@ -21044,7 +21132,7 @@
 
 			$sqlStatus = '';
 
-			if ($statut == 'AWAITING CRF/AD/INSURRANCE') {
+			if ($statut == 'AWAITING CRF/AD/INSURANCE') {
 
 				$sqlStatus = " AND d.date_crf IS NULL
 												AND d.ref_dos NOT LIKE '%20-%'
@@ -21220,7 +21308,7 @@
 												AND d.ref_dos NOT LIKE '%20-%'
 												AND d.cleared <> '2'";
 
-			}else if ($statut == 'AWAITING INSURRANCE') {
+			}else if ($statut == 'AWAITING INSURANCE') {
 
 				$sqlStatus = " AND d.date_assurance IS NULL
 												AND d.ref_dos NOT LIKE '%20-%'
