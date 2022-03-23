@@ -416,11 +416,103 @@ while ($reponseModeTransport = $requeteModeTransport-> fetch()) {
 		$valeur_annee = date('Y');
 		$valeur_annee_fin = 2020;
 	}
+
 	for ($annee=$valeur_annee; $annee >= $valeur_annee_fin; $annee--) { 
 		$entree['annee']='%'.substr($annee, -2).'-%';
 
 		//Selecting active sheet
 		$excel-> setActiveSheetIndex($indiceSheet);
+
+
+		//SUMMARY POUR IMPORT ROUTE
+		if ($reponseModeTransport['id_mod_trans']=='1') {
+			
+			$styleHeader = array(
+			    'font'  => array(
+			        'bold' => true,
+			        'color' => array('rgb' => 'FFFFFF'),
+			        'name' => 'Verdana'
+			    ));
+
+			$excel->setActiveSheetIndex($indiceSheet);
+
+			$excel-> getActiveSheet()
+				-> setCellValue('A4', 'CLEARING STATUS')
+				-> setCellValue('B4', 'GENERAL STATUS')
+				-> setCellValue('C4', 'TRUCK  STATUS')
+				-> setCellValue('D4', 'Total');
+
+			cellColor('A4', '000000');
+			cellColor('B4', '000000');
+			cellColor('C4', '000000');
+			cellColor('D4', '000000');
+			// alignement('A4');
+			// alignement('B4');
+			$excel->getActiveSheet()
+				->getStyle('A4')->applyFromArray($styleHeader);
+			$excel->getActiveSheet()
+				->getStyle('B4')->applyFromArray($styleHeader);
+			$excel->getActiveSheet()
+				->getStyle('C4')->applyFromArray($styleHeader);
+			$excel->getActiveSheet()
+				->getStyle('D4')->applyFromArray($styleHeader);
+
+			$excel-> getActiveSheet()
+				-> setCellValue('A5', 'CANCELLED');
+			$excel-> getActiveSheet()
+				-> mergeCells('A5:A9');
+
+			$excel-> getActiveSheet()
+				-> setCellValue('B5', 'AWAITING CRF');
+			$excel-> getActiveSheet()
+				-> mergeCells('B5:B7');
+			
+			$excel-> getActiveSheet()
+				-> setCellValue('C5', 'AT WISKI')
+				-> setCellValue('D5', $maClasse-> getNbreDossierCancelledAwaitingCRFAtWiski($_GET['id_cli']));
+
+			$excel-> getActiveSheet()
+				-> setCellValue('C6', 'DISPATCHED FROM K\'LSA')
+				-> setCellValue('D6', $maClasse-> getNbreDossierCancelledAwaitingCRFDispatchFromKlsa($_GET['id_cli']));
+
+			$excel-> getActiveSheet()
+				-> setCellValue('C7', 'EXCEPTED TO ARRIVE')
+				-> setCellValue('D7', $maClasse-> getNbreDossierCancelledAwaitingCRFExceptedToArrival($_GET['id_cli']));
+
+			$excel->getActiveSheet()->setTitle('SUMMARY '.$annee);
+
+			$excel-> getActiveSheet()
+				-> setCellValue('B8', 'AWAITING INSURANCE');
+			$excel-> getActiveSheet()
+				-> mergeCells('B8:B9');
+			
+			$excel-> getActiveSheet()
+				-> setCellValue('C8', 'DISPATCHED FROM K\'LSA')
+				-> setCellValue('D8', $maClasse-> getNbreDossierCancelledAwaitingAssuranceDispatchFromKlsa($_GET['id_cli']));
+
+			$excel-> getActiveSheet()
+				-> setCellValue('C9', 'EXCEPTED TO ARRIVE')
+				-> setCellValue('D9', $maClasse-> getNbreDossierCancelledAwaitingAssuranceExceptedToArrival($_GET['id_cli']));
+
+			$excel-> getActiveSheet()
+				-> setCellValue('A10', 'CANCELLED Total')
+				-> setCellValue('D10', '=SUM(D5:D9)');
+			$excel-> getActiveSheet()
+				-> mergeCells('A10:C10');
+			cellColor('A10', '000000');
+			$excel->getActiveSheet()
+				->getStyle('A10')->applyFromArray($styleHeader);
+
+			$excel->getActiveSheet()->setTitle('SUMMARY '.$annee);
+
+
+			$indiceSheet++;
+
+			$excel->createSheet();
+			$excel->setActiveSheetIndex($indiceSheet);
+
+		}
+		//SUMMARY POUR IMPORT ROUTE
 
 
 		//Get data

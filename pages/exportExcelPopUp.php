@@ -584,7 +584,7 @@ while ($reponseModeTransport = $requeteModeTransport-> fetch()) {
             }
 $statut = str_replace('_', '/', $statut);
 			if ($_GET['id_mod_trac']=='2' && $_GET['id_mod_trans']=='1') {
-				if (str_replace('_', '/', $_GET['statut']) == 'AWAITING CRF/AD/INSURRANCE') {
+				if (str_replace('_', '/', $_GET['statut']) == 'AWAITING CRF/AD/INSURANCE') {
 
 					$sqlStatus = ' AND d.date_crf IS NULL 
 													AND d.date_ad IS NULL
@@ -600,7 +600,7 @@ $statut = str_replace('_', '/', $statut);
 													AND d.ref_dos NOT LIKE "%20-%"
 													AND d.cleared <> "2"';
 
-				}else if (str_replace('_', '/', $_GET['statut']) == 'AWAITING CRF/INSURRANCE') {
+				}else if (str_replace('_', '/', $_GET['statut']) == 'AWAITING CRF/INSURANCE') {
 
 					$sqlStatus = ' AND d.date_crf IS NULL 
 													AND d.date_ad IS NOT NULL
@@ -611,12 +611,10 @@ $statut = str_replace('_', '/', $statut);
 				}else if (str_replace('_', '/', $_GET['statut']) == 'AWAITING CRF') {
 
 					$sqlStatus = ' AND d.date_crf IS NULL 
-													AND d.date_ad IS NOT NULL
-													AND d.date_assurance IS NOT NULL
 													AND d.ref_dos NOT LIKE "%20-%"
 													AND d.cleared <> "2"';
 
-				}else if (str_replace('_', '/', $_GET['statut']) == 'AWAITING AD/INSURRANCE') {
+				}else if (str_replace('_', '/', $_GET['statut']) == 'AWAITING AD/INSURANCE') {
 
 					$sqlStatus = ' AND d.date_crf IS NOT NULL 
 													AND d.date_ad IS NULL
@@ -626,17 +624,13 @@ $statut = str_replace('_', '/', $statut);
 
 				}else if (str_replace('_', '/', $_GET['statut']) == 'AWAITING AD') {
 
-					$sqlStatus = ' AND d.date_crf IS NOT NULL 
-													AND d.date_ad IS NOT NULL
-													AND d.date_assurance IS NOT NULL
+					$sqlStatus = ' AND d.date_ad IS NULL
 													AND d.ref_dos NOT LIKE "%20-%"
 													AND d.cleared <> "2"';
 
-				}else if (str_replace('_', '/', $_GET['statut']) == 'AWAITING INSURRANCE') {
+				}else if (str_replace('_', '/', $_GET['statut']) == 'AWAITING INSURANCE') {
 
-					$sqlStatus = ' AND d.date_crf IS NOT NULL 
-													AND d.date_ad IS NULL
-													AND d.date_assurance IS NULL
+					$sqlStatus = ' AND d.date_assurance IS NULL
 													AND d.ref_dos NOT LIKE "%20-%"
 													AND d.cleared <> "2"';
 

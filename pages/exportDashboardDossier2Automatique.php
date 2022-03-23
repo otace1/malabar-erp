@@ -203,7 +203,7 @@ $indiceSheet = 0;
 				
 				//------------
 
-				$statut = 'AWAITING CRF/AD/INSURRANCE';
+				$statut = 'AWAITING CRF/AD/INSURANCE';
 
 				$colonneStatus = $colonneTMP;
 				$ligne++;
@@ -224,51 +224,51 @@ $indiceSheet = 0;
 			    $compteurStatus += $maClasse-> nbreSummaryStatus($statut, $_GET['id_mod_lic'], $reponseClient['id_cli'], $_GET['id_mod_trans'], NULL);
 				//-----------
 
-				//------------
+				// //------------
 
-				$statut = 'AWAITING CRF/AD';
+				// $statut = 'AWAITING CRF/AD';
 
-				$colonneStatus = $colonneTMP;
-				$ligne++;
+				// $colonneStatus = $colonneTMP;
+				// $ligne++;
 				
-				$excel-> getActiveSheet()
-					-> setCellValue($colonneStatus.$ligne, $statut);
+				// $excel-> getActiveSheet()
+				// 	-> setCellValue($colonneStatus.$ligne, $statut);
 
-				$excel->getActiveSheet()
-			        ->getColumnDimension($colonneStatus)
-			        ->setAutoSize(true);
+				// $excel->getActiveSheet()
+			 //        ->getColumnDimension($colonneStatus)
+			 //        ->setAutoSize(true);
 
-				$colonneStatus++;
+				// $colonneStatus++;
 
-				$excel-> getActiveSheet()
-					-> setCellValue($colonneStatus.$ligne, $maClasse-> nbreSummaryStatus($statut, $_GET['id_mod_lic'], $reponseClient['id_cli'], $_GET['id_mod_trans'], NULL));
+				// $excel-> getActiveSheet()
+				// 	-> setCellValue($colonneStatus.$ligne, $maClasse-> nbreSummaryStatus($statut, $_GET['id_mod_lic'], $reponseClient['id_cli'], $_GET['id_mod_trans'], NULL));
 
 
-			    $compteurStatus += $maClasse-> nbreSummaryStatus($statut, $_GET['id_mod_lic'], $reponseClient['id_cli'], $_GET['id_mod_trans'], NULL);
-				//-----------
+			 //    $compteurStatus += $maClasse-> nbreSummaryStatus($statut, $_GET['id_mod_lic'], $reponseClient['id_cli'], $_GET['id_mod_trans'], NULL);
+				// //-----------
 
-				//------------
+				// //------------
 
-				$statut = 'AWAITING CRF/INSURRANCE';
+				// $statut = 'AWAITING CRF/INSURANCE';
 
-				$colonneStatus = $colonneTMP;
-				$ligne++;
+				// $colonneStatus = $colonneTMP;
+				// $ligne++;
 				
-				$excel-> getActiveSheet()
-					-> setCellValue($colonneStatus.$ligne, $statut);
+				// $excel-> getActiveSheet()
+				// 	-> setCellValue($colonneStatus.$ligne, $statut);
 
-				$excel->getActiveSheet()
-			        ->getColumnDimension($colonneStatus)
-			        ->setAutoSize(true);
+				// $excel->getActiveSheet()
+			 //        ->getColumnDimension($colonneStatus)
+			 //        ->setAutoSize(true);
 
-				$colonneStatus++;
+				// $colonneStatus++;
 
-				$excel-> getActiveSheet()
-					-> setCellValue($colonneStatus.$ligne, $maClasse-> nbreSummaryStatus($statut, $_GET['id_mod_lic'], $reponseClient['id_cli'], $_GET['id_mod_trans'], NULL));
+				// $excel-> getActiveSheet()
+				// 	-> setCellValue($colonneStatus.$ligne, $maClasse-> nbreSummaryStatus($statut, $_GET['id_mod_lic'], $reponseClient['id_cli'], $_GET['id_mod_trans'], NULL));
 
 
-			    $compteurStatus += $maClasse-> nbreSummaryStatus($statut, $_GET['id_mod_lic'], $reponseClient['id_cli'], $_GET['id_mod_trans'], NULL);
-				//-----------
+			 //    $compteurStatus += $maClasse-> nbreSummaryStatus($statut, $_GET['id_mod_lic'], $reponseClient['id_cli'], $_GET['id_mod_trans'], NULL);
+				// //-----------
 
 				//------------
 
@@ -293,28 +293,28 @@ $indiceSheet = 0;
 			    $compteurStatus += $maClasse-> nbreSummaryStatus($statut, $_GET['id_mod_lic'], $reponseClient['id_cli'], $_GET['id_mod_trans'], NULL);
 				//-----------
 
-				//------------
+				// //------------
 
-				$statut = 'AWAITING AD/INSURRANCE';
+				// $statut = 'AWAITING AD/INSURANCE';
 
-				$colonneStatus = $colonneTMP;
-				$ligne++;
+				// $colonneStatus = $colonneTMP;
+				// $ligne++;
 				
-				$excel-> getActiveSheet()
-					-> setCellValue($colonneStatus.$ligne, $statut);
+				// $excel-> getActiveSheet()
+				// 	-> setCellValue($colonneStatus.$ligne, $statut);
 
-				$excel->getActiveSheet()
-			        ->getColumnDimension($colonneStatus)
-			        ->setAutoSize(true);
+				// $excel->getActiveSheet()
+			 //        ->getColumnDimension($colonneStatus)
+			 //        ->setAutoSize(true);
 
-				$colonneStatus++;
+				// $colonneStatus++;
 
-				$excel-> getActiveSheet()
-					-> setCellValue($colonneStatus.$ligne, $maClasse-> nbreSummaryStatus($statut, $_GET['id_mod_lic'], $reponseClient['id_cli'], $_GET['id_mod_trans'], NULL));
+				// $excel-> getActiveSheet()
+				// 	-> setCellValue($colonneStatus.$ligne, $maClasse-> nbreSummaryStatus($statut, $_GET['id_mod_lic'], $reponseClient['id_cli'], $_GET['id_mod_trans'], NULL));
 
 
-			    $compteurStatus += $maClasse-> nbreSummaryStatus($statut, $_GET['id_mod_lic'], $reponseClient['id_cli'], $_GET['id_mod_trans'], NULL);
-				//-----------
+			 //    $compteurStatus += $maClasse-> nbreSummaryStatus($statut, $_GET['id_mod_lic'], $reponseClient['id_cli'], $_GET['id_mod_trans'], NULL);
+				// //-----------
 
 				//------------
 
@@ -341,7 +341,7 @@ $indiceSheet = 0;
 
 				//------------
 
-				$statut = 'AWAITING INSURRANCE';
+				$statut = 'AWAITING INSURANCE';
 
 				$colonneStatus = $colonneTMP;
 				$ligne++;
