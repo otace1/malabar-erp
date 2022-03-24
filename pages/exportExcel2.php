@@ -457,6 +457,8 @@ while ($reponseModeTransport = $requeteModeTransport-> fetch()) {
 			$excel->getActiveSheet()
 				->getStyle('D4')->applyFromArray($styleHeader);
 
+			//-----CANCELLED
+
 			$excel-> getActiveSheet()
 				-> setCellValue('A5', 'CANCELLED');
 			$excel-> getActiveSheet()
@@ -469,15 +471,15 @@ while ($reponseModeTransport = $requeteModeTransport-> fetch()) {
 			
 			$excel-> getActiveSheet()
 				-> setCellValue('C5', 'AT WISKI')
-				-> setCellValue('D5', $maClasse-> getNbreDossierCancelledAwaitingCRFAtWiski($_GET['id_cli']));
+				-> setCellValue('D5', $maClasse-> getNbreDossierCancelledAwaitingCRFAtWiski($_GET['id_cli'], $entree['annee']));
 
 			$excel-> getActiveSheet()
 				-> setCellValue('C6', 'DISPATCHED FROM K\'LSA')
-				-> setCellValue('D6', $maClasse-> getNbreDossierCancelledAwaitingCRFDispatchFromKlsa($_GET['id_cli']));
+				-> setCellValue('D6', $maClasse-> getNbreDossierCancelledAwaitingCRFDispatchFromKlsa($_GET['id_cli'], $entree['annee']));
 
 			$excel-> getActiveSheet()
 				-> setCellValue('C7', 'EXCEPTED TO ARRIVE')
-				-> setCellValue('D7', $maClasse-> getNbreDossierCancelledAwaitingCRFExceptedToArrival($_GET['id_cli']));
+				-> setCellValue('D7', $maClasse-> getNbreDossierCancelledAwaitingCRFExceptedToArrival($_GET['id_cli'], $entree['annee']));
 
 			$excel->getActiveSheet()->setTitle('SUMMARY '.$annee);
 
@@ -488,11 +490,11 @@ while ($reponseModeTransport = $requeteModeTransport-> fetch()) {
 			
 			$excel-> getActiveSheet()
 				-> setCellValue('C8', 'DISPATCHED FROM K\'LSA')
-				-> setCellValue('D8', $maClasse-> getNbreDossierCancelledAwaitingAssuranceDispatchFromKlsa($_GET['id_cli']));
+				-> setCellValue('D8', $maClasse-> getNbreDossierCancelledAwaitingAssuranceDispatchFromKlsa($_GET['id_cli'], $entree['annee']));
 
 			$excel-> getActiveSheet()
 				-> setCellValue('C9', 'EXCEPTED TO ARRIVE')
-				-> setCellValue('D9', $maClasse-> getNbreDossierCancelledAwaitingAssuranceExceptedToArrival($_GET['id_cli']));
+				-> setCellValue('D9', $maClasse-> getNbreDossierCancelledAwaitingAssuranceExceptedToArrival($_GET['id_cli'], $entree['annee']));
 
 			$excel-> getActiveSheet()
 				-> setCellValue('A10', 'CANCELLED Total')
@@ -500,8 +502,170 @@ while ($reponseModeTransport = $requeteModeTransport-> fetch()) {
 			$excel-> getActiveSheet()
 				-> mergeCells('A10:C10');
 			cellColor('A10', '000000');
+			cellColor('D10', '000000');
 			$excel->getActiveSheet()
 				->getStyle('A10')->applyFromArray($styleHeader);
+			$excel->getActiveSheet()
+				->getStyle('D10')->applyFromArray($styleHeader);
+
+			//-----CANCELLED
+
+			//-----CLEARED
+
+			$excel-> getActiveSheet()
+				-> setCellValue('A11', 'CLEARED');
+			$excel-> getActiveSheet()
+				-> mergeCells('A11:A15');
+
+			$excel-> getActiveSheet()
+				-> setCellValue('B11', 'AWAITING BAE/BS');
+			$excel-> getActiveSheet()
+				-> setCellValue('C11', 'DISPATCHED FROM K\'LSA')
+				-> setCellValue('D11', $maClasse-> getNbreDossierClearedAwaitingBAEDispatchFromKlsa($_GET['id_cli'], $entree['annee']));
+
+			$excel-> getActiveSheet()
+				-> setCellValue('B12', 'AWAITING CRF');
+			$excel-> getActiveSheet()
+				-> setCellValue('C12', 'DISPATCHED FROM K\'LSA')
+				-> setCellValue('D12', $maClasse-> getNbreDossierClearedAwaitingCRFDispatchFromKlsa($_GET['id_cli'], $entree['annee']));
+
+			$excel-> getActiveSheet()
+				-> setCellValue('B13', 'AWAITING INSURANCE');
+			$excel-> getActiveSheet()
+				-> setCellValue('C13', 'DISPATCHED FROM K\'LSA')
+				-> setCellValue('D13', $maClasse-> getNbreDossierClearedAwaitingAssuranceDispatchFromKlsa($_GET['id_cli'], $entree['annee']));
+
+			$excel-> getActiveSheet()
+				-> setCellValue('B14', 'CLEARING COMPLETED');
+			$excel-> getActiveSheet()
+				-> mergeCells('B14:B15');
+			$excel-> getActiveSheet()
+				-> setCellValue('C14', 'DISPATCHED FROM K\'LSA')
+				-> setCellValue('D14', $maClasse-> getNbreDossierClearedCompletedDispatchFromKlsa($_GET['id_cli'], $entree['annee']));
+			$excel-> getActiveSheet()
+				-> setCellValue('C15', 'EXCEPTED TO ARRIVE')
+				-> setCellValue('D15', $maClasse-> getNbreDossierClearedCompletedCRFExceptedToArrival($_GET['id_cli'], $entree['annee']));
+
+			$excel-> getActiveSheet()
+				-> setCellValue('A16', 'CLEARED Total')
+				-> setCellValue('D16', '=SUM(D11:D15)');
+			$excel-> getActiveSheet()
+				-> mergeCells('A16:C16');
+			cellColor('A16', '000000');
+			cellColor('D16', '000000');
+			$excel->getActiveSheet()
+				->getStyle('A16')->applyFromArray($styleHeader);
+			$excel->getActiveSheet()
+				->getStyle('D16')->applyFromArray($styleHeader);
+
+			//-----CLEARED
+
+			//-----TRANSIT
+
+			$excel-> getActiveSheet()
+				-> setCellValue('A17', 'TRANSIT');
+			$excel-> getActiveSheet()
+				-> mergeCells('A17:A26');
+
+			$excel-> getActiveSheet()
+				-> setCellValue('B17', 'AWAITING BAE/BS');
+			$excel-> getActiveSheet()
+				-> setCellValue('C17', 'DISPATCHED FROM K\'LSA')
+				-> setCellValue('D17', $maClasse-> getNbreDossierTransitAwaitingBAEDispatchFromKlsa($_GET['id_cli'], $entree['annee']));
+
+			$excel-> getActiveSheet()
+				-> setCellValue('B18', 'AWAITING CRF');
+			$excel-> getActiveSheet()
+				-> setCellValue('C18', 'DISPATCHED FROM K\'LSA')
+				-> setCellValue('D18', $maClasse-> getNbreDossierTransitAwaitingCRFDispatchFromKlsa($_GET['id_cli'], $entree['annee']));
+
+			$excel-> getActiveSheet()
+				-> setCellValue('B19', 'AWAITING CRF');
+			$excel-> getActiveSheet()
+				-> setCellValue('C19', 'EXCEPTED TO ARRIVE')
+				-> setCellValue('D19', $maClasse-> getNbreDossierClearedTransitCRFExceptedToArrival($_GET['id_cli'], $entree['annee']));
+
+			$excel-> getActiveSheet()
+				-> setCellValue('B20', 'AWAITING INSURANCE');
+			$excel-> getActiveSheet()
+				-> setCellValue('C20', 'AT WISKI')
+				-> setCellValue('D20', $maClasse-> getNbreDossierTransitAwaitingAssuranceAtWiski($_GET['id_cli'], $entree['annee']));
+
+			$excel-> getActiveSheet()
+				-> setCellValue('B21', 'AWAITING INSURANCE');
+			$excel-> getActiveSheet()
+				-> setCellValue('C21', 'DISPATCHED FROM K\'LSA')
+				-> setCellValue('D21', $maClasse-> getNbreDossierTransitAwaitingAssuranceDispatchFromKlsa($_GET['id_cli'], $entree['annee']));
+
+			$excel-> getActiveSheet()
+				-> setCellValue('B22', 'AWAITING INSURANCE');
+			$excel-> getActiveSheet()
+				-> setCellValue('C22', 'EXCEPTED TO ARRIVE')
+				-> setCellValue('D22', $maClasse-> getNbreDossierTransitAwaitingAssuranceExceptedToArrive($_GET['id_cli'], $entree['annee']));
+
+			$excel-> getActiveSheet()
+				-> setCellValue('B23', 'AWAITING QUITTANCE');
+			$excel-> getActiveSheet()
+				-> setCellValue('C23', 'DISPATCHED FROM K\'LSA')
+				-> setCellValue('D23', $maClasse-> getNbreDossierClearedAwaitingQuittanceDispatchFromKlsa($_GET['id_cli'], $entree['annee']));
+
+			$excel-> getActiveSheet()
+				-> setCellValue('B24', 'CLEARING COMPLETED');
+			$excel-> getActiveSheet()
+				-> setCellValue('C24', 'DISPATCHED FROM K\'LSA')
+				-> setCellValue('D24', $maClasse-> getNbreDossierTransitClearedCompletedDispatchFromKlsa($_GET['id_cli'], $entree['annee']));
+
+			$excel-> getActiveSheet()
+				-> setCellValue('B25', 'UNDER PREPARATION');
+			$excel-> getActiveSheet()
+				-> mergeCells('B25:B26');
+			$excel-> getActiveSheet()
+				-> setCellValue('C25', 'DISPATCHED FROM K\'LSA')
+				-> setCellValue('D25', $maClasse-> getNbreDossierTransitUnderPreparationDispatchFromKlsa($_GET['id_cli'], $entree['annee']));
+			$excel-> getActiveSheet()
+				-> setCellValue('C26', 'EXCEPTED TO ARRIVE')
+				-> setCellValue('D26', $maClasse-> getNbreDossierTransitExceptedToArrival($_GET['id_cli'], $entree['annee']));
+
+			$excel-> getActiveSheet()
+				-> setCellValue('A27', 'TRANSIT Total')
+				-> setCellValue('D27', '=SUM(D17:D26)');
+			$excel-> getActiveSheet()
+				-> mergeCells('A27:C27');
+			cellColor('A27', '000000');
+			cellColor('D27', '000000');
+			$excel->getActiveSheet()
+				->getStyle('A27')->applyFromArray($styleHeader);
+			$excel->getActiveSheet()
+				->getStyle('D27')->applyFromArray($styleHeader);
+
+			//-----TRANSIT
+			
+			$excel-> getActiveSheet()
+				-> setCellValue('A28', 'TRANSIT Total')
+				-> setCellValue('D28', '=D10+D16+D27');
+			$excel-> getActiveSheet()
+				-> mergeCells('A28:C28');
+			cellColor('A28', '000000');
+			cellColor('D28', '000000');
+			$excel->getActiveSheet()
+				->getStyle('A28')->applyFromArray($styleHeader);
+			$excel->getActiveSheet()
+				->getStyle('D28')->applyFromArray($styleHeader);
+
+			$excel-> getActiveSheet()-> getStyle('A4:D28')-> applyFromArray(
+				array(
+					'borders' => array(
+						'allborders' => array(
+							'style' => PHPExcel_Style_Border::BORDER_THIN
+						)
+					)
+				)
+			);
+
+			$excel-> getActiveSheet()-> getColumnDimension('A')-> setWidth(25);
+			$excel-> getActiveSheet()-> getColumnDimension('B')-> setWidth(20);
+			$excel-> getActiveSheet()-> getColumnDimension('C')-> setWidth(20);
+			$excel-> getActiveSheet()-> getColumnDimension('D')-> setWidth(10);
 
 			$excel->getActiveSheet()->setTitle('SUMMARY '.$annee);
 
