@@ -17695,6 +17695,26 @@
 			return $reponse['nbre'];
 		}
 
+		public function getNbreDossierCancelledAwaitingCRFAtWiskiAll($id_cli){
+			include('connexion.php');
+
+			$entree['id_cli'] = $id_cli;
+
+			$requete = $connexion-> prepare("SELECT COUNT(id_dos) AS nbre
+												FROM dossier
+												WHERE id_cli = ?
+													AND date_crf IS NULL
+													AND wiski_arriv IS NOT NULL
+													AND dispatch_klsa IS NULL
+													AND ref_dos NOT LIKE '%20-%'
+													AND id_mod_lic = '2'
+													AND id_mod_trans = '1'
+													AND cleared = '2'");
+			$requete-> execute(array($entree['id_cli']));
+			$reponse = $requete-> fetch();
+			return $reponse['nbre'];
+		}
+
 		public function getNbreDossierCancelledAwaitingCRFDispatchFromKlsa($id_cli, $annee){
 			include('connexion.php');
 
@@ -17713,6 +17733,27 @@
 													AND cleared = '2'
 													AND ref_dos LIKE (?)");
 			$requete-> execute(array($entree['id_cli'], $entree['annee']));
+			$reponse = $requete-> fetch();
+			return $reponse['nbre'];
+		}
+
+		public function getNbreDossierCancelledAwaitingCRFDispatchFromKlsaAll($id_cli){
+			include('connexion.php');
+
+			$entree['id_cli'] = $id_cli;
+			// $entree['annee'] = $annee;
+
+			$requete = $connexion-> prepare("SELECT COUNT(id_dos) AS nbre
+												FROM dossier
+												WHERE id_cli = ?
+													AND date_crf IS NULL
+													AND dispatch_klsa IS NOT NULL
+													AND warehouse_arriv IS NULL
+													AND id_mod_lic = '2'
+													AND id_mod_trans = '1'
+													AND ref_dos NOT LIKE '%20-%'
+													AND cleared = '2'");
+			$requete-> execute(array($entree['id_cli']));
 			$reponse = $requete-> fetch();
 			return $reponse['nbre'];
 		}
@@ -17739,6 +17780,27 @@
 			return $reponse['nbre'];
 		}
 
+		public function getNbreDossierClearedAwaitingCRFDispatchFromKlsaAll($id_cli){
+			include('connexion.php');
+
+			$entree['id_cli'] = $id_cli;
+			// $entree['annee'] = $annee;
+
+			$requete = $connexion-> prepare("SELECT COUNT(id_dos) AS nbre
+												FROM dossier
+												WHERE id_cli = ?
+													AND date_crf IS NULL
+													AND dispatch_klsa IS NOT NULL
+													AND warehouse_arriv IS NULL
+													AND id_mod_lic = '2'
+													AND id_mod_trans = '1'
+													AND ref_dos NOT LIKE '%20-%'
+													AND cleared = '1'");
+			$requete-> execute(array($entree['id_cli']));
+			$reponse = $requete-> fetch();
+			return $reponse['nbre'];
+		}
+
 		public function getNbreDossierTransitAwaitingCRFDispatchFromKlsa($id_cli, $annee){
 			include('connexion.php');
 
@@ -17757,6 +17819,27 @@
 													AND cleared = '0'
 													AND ref_dos LIKE (?)");
 			$requete-> execute(array($entree['id_cli'], $entree['annee']));
+			$reponse = $requete-> fetch();
+			return $reponse['nbre'];
+		}
+
+		public function getNbreDossierTransitAwaitingCRFDispatchFromKlsaAll($id_cli){
+			include('connexion.php');
+
+			$entree['id_cli'] = $id_cli;
+			// $entree['annee'] = $annee;
+
+			$requete = $connexion-> prepare("SELECT COUNT(id_dos) AS nbre
+												FROM dossier
+												WHERE id_cli = ?
+													AND date_crf IS NULL
+													AND dispatch_klsa IS NOT NULL
+													AND warehouse_arriv IS NULL
+													AND id_mod_lic = '2'
+													AND id_mod_trans = '1'
+													AND ref_dos NOT LIKE '%20-%'
+													AND cleared = '0'");
+			$requete-> execute(array($entree['id_cli']));
 			$reponse = $requete-> fetch();
 			return $reponse['nbre'];
 		}
@@ -17784,6 +17867,28 @@
 			return $reponse['nbre'];
 		}
 
+		public function getNbreDossierClearedAwaitingBAEDispatchFromKlsaAll($id_cli){
+			include('connexion.php');
+
+			$entree['id_cli'] = $id_cli;
+			// $entree['annee'] = $annee;
+
+			$requete = $connexion-> prepare("SELECT COUNT(id_dos) AS nbre
+												FROM dossier
+												WHERE id_cli = ?
+													AND dgda_out IS NULL
+													AND date_quit IS NOT NULL
+													AND dispatch_klsa IS NOT NULL
+													AND warehouse_arriv IS NULL
+													AND id_mod_lic = '2'
+													AND id_mod_trans = '1'
+													AND ref_dos NOT LIKE '%20-%'
+													AND cleared = '1'");
+			$requete-> execute(array($entree['id_cli']));
+			$reponse = $requete-> fetch();
+			return $reponse['nbre'];
+		}
+
 		public function getNbreDossierTransitAwaitingBAEDispatchFromKlsa($id_cli, $annee){
 			include('connexion.php');
 
@@ -17803,6 +17908,28 @@
 													AND cleared = '0'
 													AND ref_dos LIKE (?)");
 			$requete-> execute(array($entree['id_cli'], $entree['annee']));
+			$reponse = $requete-> fetch();
+			return $reponse['nbre'];
+		}
+
+		public function getNbreDossierTransitAwaitingBAEDispatchFromKlsaAll($id_cli){
+			include('connexion.php');
+
+			$entree['id_cli'] = $id_cli;
+			// $entree['annee'] = $annee;
+
+			$requete = $connexion-> prepare("SELECT COUNT(id_dos) AS nbre
+												FROM dossier
+												WHERE id_cli = ?
+													AND dgda_out IS NULL
+													AND date_quit IS NOT NULL
+													AND dispatch_klsa IS NOT NULL
+													AND warehouse_arriv IS NULL
+													AND id_mod_lic = '2'
+													AND id_mod_trans = '1'
+													AND ref_dos NOT LIKE '%20-%'
+													AND cleared = '0'");
+			$requete-> execute(array($entree['id_cli']));
 			$reponse = $requete-> fetch();
 			return $reponse['nbre'];
 		}
@@ -17829,6 +17956,27 @@
 			return $reponse['nbre'];
 		}
 
+		public function getNbreDossierCancelledAwaitingAssuranceDispatchFromKlsaAll($id_cli){
+			include('connexion.php');
+
+			$entree['id_cli'] = $id_cli;
+			// $entree['annee'] = $annee;
+
+			$requete = $connexion-> prepare("SELECT COUNT(id_dos) AS nbre
+												FROM dossier
+												WHERE id_cli = ?
+													AND date_assurance IS NULL
+													AND dispatch_klsa IS NOT NULL
+													AND warehouse_arriv IS NULL
+													AND id_mod_lic = '2'
+													AND id_mod_trans = '1'
+													AND ref_dos NOT LIKE '%20-%'
+													AND cleared = '2'");
+			$requete-> execute(array($entree['id_cli']));
+			$reponse = $requete-> fetch();
+			return $reponse['nbre'];
+		}
+
 		public function getNbreDossierClearedAwaitingAssuranceDispatchFromKlsa($id_cli, $annee){
 			include('connexion.php');
 
@@ -17847,6 +17995,27 @@
 													AND cleared = '1'
 													AND ref_dos LIKE (?)");
 			$requete-> execute(array($entree['id_cli'], $entree['annee']));
+			$reponse = $requete-> fetch();
+			return $reponse['nbre'];
+		}
+
+		public function getNbreDossierClearedAwaitingAssuranceDispatchFromKlsaAll($id_cli){
+			include('connexion.php');
+
+			$entree['id_cli'] = $id_cli;
+			// $entree['annee'] = $annee;
+
+			$requete = $connexion-> prepare("SELECT COUNT(id_dos) AS nbre
+												FROM dossier
+												WHERE id_cli = ?
+													AND date_assurance IS NULL
+													AND dispatch_klsa IS NOT NULL
+													AND warehouse_arriv IS NULL
+													AND id_mod_lic = '2'
+													AND id_mod_trans = '1'
+													AND ref_dos NOT LIKE '%20-%'
+													AND cleared = '1'");
+			$requete-> execute(array($entree['id_cli']));
 			$reponse = $requete-> fetch();
 			return $reponse['nbre'];
 		}
@@ -17894,6 +18063,28 @@
 			return $reponse['nbre'];
 		}
 
+		public function getNbreDossierTransitClearedCompletedDispatchFromKlsaAll($id_cli){
+			include('connexion.php');
+
+			$entree['id_cli'] = $id_cli;
+			// $entree['annee'] = $annee;
+
+			$requete = $connexion-> prepare("SELECT COUNT(id_dos) AS nbre
+												FROM dossier
+												WHERE id_cli = ?
+													AND dgda_out IS NOT NULL
+													AND date_quit IS NOT NULL
+													AND dispatch_klsa IS NOT NULL
+													AND warehouse_arriv IS NULL
+													AND id_mod_lic = '2'
+													AND id_mod_trans = '1'
+													AND ref_dos NOT LIKE '%20-%'
+													AND cleared = '0'");
+			$requete-> execute(array($entree['id_cli']));
+			$reponse = $requete-> fetch();
+			return $reponse['nbre'];
+		}
+
 		public function getNbreDossierClearedAwaitingQuittanceDispatchFromKlsa($id_cli, $annee){
 			include('connexion.php');
 
@@ -17913,6 +18104,28 @@
 													AND cleared = '1'
 													AND ref_dos LIKE (?)");
 			$requete-> execute(array($entree['id_cli'], $entree['annee']));
+			$reponse = $requete-> fetch();
+			return $reponse['nbre'];
+		}
+
+		public function getNbreDossierClearedAwaitingQuittanceDispatchFromKlsaAll($id_cli){
+			include('connexion.php');
+
+			$entree['id_cli'] = $id_cli;
+			// $entree['annee'] = $annee;
+
+			$requete = $connexion-> prepare("SELECT COUNT(id_dos) AS nbre
+												FROM dossier
+												WHERE id_cli = ?
+													AND date_quit IS NULL
+													AND date_liq IS NOT NULL
+													AND dispatch_klsa IS NOT NULL
+													AND warehouse_arriv IS NULL
+													AND id_mod_lic = '2'
+													AND id_mod_trans = '1'
+													AND ref_dos NOT LIKE '%20-%'
+													AND cleared = '1'");
+			$requete-> execute(array($entree['id_cli']));
 			$reponse = $requete-> fetch();
 			return $reponse['nbre'];
 		}
@@ -17939,6 +18152,27 @@
 			return $reponse['nbre'];
 		}
 
+		public function getNbreDossierTransitAwaitingAssuranceDispatchFromKlsaAll($id_cli){
+			include('connexion.php');
+
+			$entree['id_cli'] = $id_cli;
+			// $entree['annee'] = $annee;
+
+			$requete = $connexion-> prepare("SELECT COUNT(id_dos) AS nbre
+												FROM dossier
+												WHERE id_cli = ?
+													AND date_assurance IS NULL
+													AND dispatch_klsa IS NOT NULL
+													AND warehouse_arriv IS NULL
+													AND id_mod_lic = '2'
+													AND id_mod_trans = '1'
+													AND ref_dos NOT LIKE '%20-%'
+													AND cleared = '0'");
+			$requete-> execute(array($entree['id_cli']));
+			$reponse = $requete-> fetch();
+			return $reponse['nbre'];
+		}
+
 		public function getNbreDossierTransitAwaitingAssuranceExceptedToArrive($id_cli, $annee){
 			include('connexion.php');
 
@@ -17956,6 +18190,26 @@
 													AND cleared = '0'
 													AND ref_dos LIKE (?)");
 			$requete-> execute(array($entree['id_cli'], $entree['annee']));
+			$reponse = $requete-> fetch();
+			return $reponse['nbre'];
+		}
+
+		public function getNbreDossierTransitAwaitingAssuranceExceptedToArriveAll($id_cli){
+			include('connexion.php');
+
+			$entree['id_cli'] = $id_cli;
+			// $entree['annee'] = $annee;
+
+			$requete = $connexion-> prepare("SELECT COUNT(id_dos) AS nbre
+												FROM dossier
+												WHERE id_cli = ?
+													AND date_assurance IS NULL
+													AND klsa_arriv IS NULL
+													AND id_mod_lic = '2'
+													AND id_mod_trans = '1'
+													AND ref_dos NOT LIKE '%20-%'
+													AND cleared = '0'");
+			$requete-> execute(array($entree['id_cli']));
 			$reponse = $requete-> fetch();
 			return $reponse['nbre'];
 		}
@@ -17982,6 +18236,27 @@
 			return $reponse['nbre'];
 		}
 
+		public function getNbreDossierTransitAwaitingAssuranceAtWiskiAll($id_cli){
+			include('connexion.php');
+
+			$entree['id_cli'] = $id_cli;
+			// $entree['annee'] = $annee;
+
+			$requete = $connexion-> prepare("SELECT COUNT(id_dos) AS nbre
+												FROM dossier
+												WHERE id_cli = ?
+													AND date_assurance IS NULL
+													AND wiski_arriv IS NOT NULL
+													AND dispatch_klsa IS NULL
+													AND id_mod_lic = '2'
+													AND id_mod_trans = '1'
+													AND ref_dos NOT LIKE '%20-%'
+													AND cleared = '0'");
+			$requete-> execute(array($entree['id_cli']));
+			$reponse = $requete-> fetch();
+			return $reponse['nbre'];
+		}
+
 		public function getNbreDossierClearedCompletedDispatchFromKlsa($id_cli, $annee){
 			include('connexion.php');
 
@@ -18001,6 +18276,28 @@
 													AND cleared = '1'
 													AND ref_dos LIKE (?)");
 			$requete-> execute(array($entree['id_cli'], $entree['annee']));
+			$reponse = $requete-> fetch();
+			return $reponse['nbre'];
+		}
+
+		public function getNbreDossierClearedCompletedDispatchFromKlsaAll($id_cli){
+			include('connexion.php');
+
+			$entree['id_cli'] = $id_cli;
+			// $entree['annee'] = $annee;
+
+			$requete = $connexion-> prepare("SELECT COUNT(id_dos) AS nbre
+												FROM dossier
+												WHERE id_cli = ?
+													AND dgda_out IS NOT NULL
+													AND date_quit IS NOT NULL
+													AND dispatch_klsa IS NOT NULL
+													AND warehouse_arriv IS NULL
+													AND id_mod_lic = '2'
+													AND id_mod_trans = '1'
+													AND ref_dos NOT LIKE '%20-%'
+													AND cleared = '1'");
+			$requete-> execute(array($entree['id_cli']));
 			$reponse = $requete-> fetch();
 			return $reponse['nbre'];
 		}
@@ -18029,6 +18326,29 @@
 			return $reponse['nbre'];
 		}
 
+		public function getNbreDossierTransitUnderPreparationDispatchFromKlsaAll($id_cli){
+			include('connexion.php');
+
+			$entree['id_cli'] = $id_cli;
+			// $entree['annee'] = $annee;
+
+			$requete = $connexion-> prepare("SELECT COUNT(id_dos) AS nbre
+												FROM dossier
+												WHERE id_cli = ?
+													AND date_crf IS NOT NULL
+													AND date_ad IS NOT NULL
+													AND date_assurance IS NOT NULL
+													AND dispatch_klsa IS NOT NULL
+													AND warehouse_arriv IS NULL
+													AND id_mod_lic = '2'
+													AND id_mod_trans = '1'
+													AND ref_dos NOT LIKE '%20-%'
+													AND cleared = '0'");
+			$requete-> execute(array($entree['id_cli']));
+			$reponse = $requete-> fetch();
+			return $reponse['nbre'];
+		}
+
 		public function getNbreDossierCancelledAwaitingCRFExceptedToArrival($id_cli, $annee){
 			include('connexion.php');
 
@@ -18050,6 +18370,25 @@
 			return $reponse['nbre'];
 		}
 
+		public function getNbreDossierCancelledAwaitingCRFExceptedToArrivalAll($id_cli){
+			include('connexion.php');
+
+			$entree['id_cli'] = $id_cli;
+
+			$requete = $connexion-> prepare("SELECT COUNT(id_dos) AS nbre
+												FROM dossier
+												WHERE id_cli = ?
+													AND date_crf IS NULL
+													AND klsa_arriv IS NULL
+													AND id_mod_lic = '2'
+													AND id_mod_trans = '1'
+													AND ref_dos NOT LIKE '%20-%'
+													AND cleared = '2'");
+			$requete-> execute(array($entree['id_cli']));
+			$reponse = $requete-> fetch();
+			return $reponse['nbre'];
+		}
+
 		public function getNbreDossierClearedCompletedCRFExceptedToArrival($id_cli, $annee){
 			include('connexion.php');
 
@@ -18066,6 +18405,25 @@
 													AND cleared = '1'
 													AND ref_dos LIKE (?)");
 			$requete-> execute(array($entree['id_cli'], $entree['annee']));
+			$reponse = $requete-> fetch();
+			return $reponse['nbre'];
+		}
+
+		public function getNbreDossierClearedCompletedCRFExceptedToArrivalAll($id_cli){
+			include('connexion.php');
+
+			$entree['id_cli'] = $id_cli;
+			// $entree['annee'] = $annee;
+
+			$requete = $connexion-> prepare("SELECT COUNT(id_dos) AS nbre
+												FROM dossier
+												WHERE id_cli = ?
+													AND klsa_arriv IS NULL
+													AND id_mod_lic = '2'
+													AND id_mod_trans = '1'
+													AND ref_dos NOT LIKE '%20-%'
+													AND cleared = '1'");
+			$requete-> execute(array($entree['id_cli']));
 			$reponse = $requete-> fetch();
 			return $reponse['nbre'];
 		}
@@ -18093,6 +18451,28 @@
 			return $reponse['nbre'];
 		}
 
+		public function getNbreDossierTransitExceptedToArrivalAll($id_cli){
+			include('connexion.php');
+
+			$entree['id_cli'] = $id_cli;
+			// $entree['annee'] = $annee;
+
+			$requete = $connexion-> prepare("SELECT COUNT(id_dos) AS nbre
+												FROM dossier
+												WHERE id_cli = ?
+													AND klsa_arriv IS NULL
+													AND date_crf IS NOT NULL
+													AND date_ad IS NOT NULL
+													AND date_assurance IS NOT NULL
+													AND id_mod_lic = '2'
+													AND id_mod_trans = '1'
+													AND ref_dos NOT LIKE '%20-%'
+													AND cleared = '0'");
+			$requete-> execute(array($entree['id_cli']));
+			$reponse = $requete-> fetch();
+			return $reponse['nbre'];
+		}
+
 		public function getNbreDossierClearedTransitCRFExceptedToArrival($id_cli, $annee){
 			include('connexion.php');
 
@@ -18109,6 +18489,25 @@
 													AND cleared = '0'
 													AND ref_dos LIKE (?)");
 			$requete-> execute(array($entree['id_cli'], $entree['annee']));
+			$reponse = $requete-> fetch();
+			return $reponse['nbre'];
+		}
+
+		public function getNbreDossierClearedTransitCRFExceptedToArrivalAll($id_cli){
+			include('connexion.php');
+
+			$entree['id_cli'] = $id_cli;
+			// $entree['annee'] = $annee;
+
+			$requete = $connexion-> prepare("SELECT COUNT(id_dos) AS nbre
+												FROM dossier
+												WHERE id_cli = ?
+													AND klsa_arriv IS NULL
+													AND id_mod_lic = '2'
+													AND id_mod_trans = '1'
+													AND ref_dos NOT LIKE '%20-%'
+													AND cleared = '0'");
+			$requete-> execute(array($entree['id_cli']));
 			$reponse = $requete-> fetch();
 			return $reponse['nbre'];
 		}
@@ -18130,6 +18529,26 @@
 													AND cleared = '2'
 													AND ref_dos LIKE(?)");
 			$requete-> execute(array($entree['id_cli'], $entree['annee']));
+			$reponse = $requete-> fetch();
+			return $reponse['nbre'];
+		}
+
+		public function getNbreDossierCancelledAwaitingAssuranceExceptedToArrivalAll($id_cli){
+			include('connexion.php');
+
+			$entree['id_cli'] = $id_cli;
+			// $entree['annee'] = $annee;
+
+			$requete = $connexion-> prepare("SELECT COUNT(id_dos) AS nbre
+												FROM dossier
+												WHERE id_cli = ?
+													AND date_assurance IS NULL
+													AND klsa_arriv IS NULL
+													AND id_mod_lic = '2'
+													AND id_mod_trans = '1'
+													AND ref_dos NOT LIKE '%20-%'
+													AND cleared = '2'");
+			$requete-> execute(array($entree['id_cli']));
 			$reponse = $requete-> fetch();
 			return $reponse['nbre'];
 		}
