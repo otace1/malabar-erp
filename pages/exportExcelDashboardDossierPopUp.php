@@ -48,7 +48,8 @@ $indiceSheet = 0;
 		//$maClasse-> afficherEnTeteTableauExcel2($_GET['id_mod_trac'], $_GET['id_cli'], $_GET['id_mod_trans'], $excel);
 
 		$row = 3;
-		$col = 'D';
+		$col = 'C';
+		$compteur = 0;
 
 		//Image dans la cellule
 		$objDrawing = new PHPExcel_Worksheet_Drawing();
@@ -60,7 +61,7 @@ $indiceSheet = 0;
 		$objDrawing->setWorksheet($excel->getActiveSheet());
 
 		//Figer colonne
-		$excel->getActiveSheet()->freezePane('J4');
+		$excel->getActiveSheet()->freezePane('D4');
 
 		/*$objDrawing = new PHPExcel_Worksheet_MemoryDrawing();
 		$objDrawing->setName('Sample image');
@@ -98,70 +99,49 @@ $indiceSheet = 0;
 			-> mergeCells('A1:I1');
 
 		//Recuperation des en-tête
-		$excel-> getActiveSheet()
-			-> setCellValue('A'.$row, '#')
-			-> setCellValue('B'.$row, 'MCA REF')
-			-> setCellValue('C'.$row, 'CUSTOMER NAME')
-			-> setCellValue('D'.$row, 'Commodity')
-			-> setCellValue('E'.$row, 'Ref. Decl.')
-			-> setCellValue('F'.$row, 'Date Decl.')
-			-> setCellValue('G'.$row, 'Ref. Liq.')
-			-> setCellValue('H'.$row, 'Date Liq.')
-			-> setCellValue('I'.$row, 'Ref. Quit.')
-			-> setCellValue('J'.$row, 'Date Quit.');
+		if($_GET['id_mod_lic']=='1'){
 
-		cellColor('A'.$row, '000000');
-		cellColor('B'.$row, '000000');
-		cellColor('C'.$row, '000000');
-		cellColor('D'.$row, '000000');
-		cellColor('E'.$row, '000000');
-		cellColor('F'.$row, '000000');
-		cellColor('G'.$row, '000000');
-		cellColor('H'.$row, '000000');
-		cellColor('I'.$row, '000000');
-		cellColor('J'.$row, '000000');
-		alignement('A'.$row);
-		alignement('B'.$row);
-		alignement('C'.$row);
-		alignement('D'.$row);
-		alignement('E'.$row);
-		alignement('F'.$row);
-		alignement('G'.$row);
-		alignement('H'.$row);
-		alignement('I'.$row);
-		alignement('J'.$row);
-		$excel->getActiveSheet()
-			->getStyle('A'.$row)->applyFromArray($styleHeader);
-		$excel->getActiveSheet()
-			->getStyle('B'.$row)->applyFromArray($styleHeader);
-		$excel->getActiveSheet()
-			->getStyle('C'.$row)->applyFromArray($styleHeader);
-		$excel->getActiveSheet()
-			->getStyle('D'.$row)->applyFromArray($styleHeader);
-		$excel->getActiveSheet()
-			->getStyle('E'.$row)->applyFromArray($styleHeader);
-		$excel->getActiveSheet()
-			->getStyle('F'.$row)->applyFromArray($styleHeader);
-		$excel->getActiveSheet()
-			->getStyle('G'.$row)->applyFromArray($styleHeader);
-		$excel->getActiveSheet()
-			->getStyle('H'.$row)->applyFromArray($styleHeader);
-		$excel->getActiveSheet()
-			->getStyle('I'.$row)->applyFromArray($styleHeader);
-		$excel->getActiveSheet()
-			->getStyle('J'.$row)->applyFromArray($styleHeader);
+			$entree['id_cli'] = 869;
 
-		//----------- Récuperation des dossiers ------------
-		$row = 4;
-		$col = 'A';
-		$compteur = 0;
-		$id_cli = $_GET['id_cli'];
-		$id_mod_lic = $_GET['id_mod_lic'];
-		$id_mod_trans = $_GET['id_mod_trans'];
-		$commodity = $_GET['commodity'];
+			$excel-> getActiveSheet()
+				-> setCellValue('A'.$row, '#')
+				-> setCellValue('B'.$row, 'MCA REF');
+
+			cellColor('A'.$row, '000000');
+			cellColor('B'.$row, '000000');
+			alignement('A'.$row);
+			alignement('B'.$row);
+			$excel->getActiveSheet()
+				->getStyle('A'.$row)->applyFromArray($styleHeader);
+			$excel->getActiveSheet()
+				->getStyle('B'.$row)->applyFromArray($styleHeader);
+
+			$excel-> getActiveSheet()-> getColumnDimension('A')-> setWidth(5);
+			$excel-> getActiveSheet()-> getColumnDimension('B')-> setWidth(15);
+
+			$requete = $connexion-> prepare("SELECT c.titre_col AS titre_col, c.id_col AS id_col
+											FROM colonne c, client cl, affectation_colonne_client_modele_licence af
+											WHERE c.id_col = af.id_col
+												AND af.id_cli = cl.id_cli
+											    AND cl.id_cli = ?
+											    AND af.id_mod_lic = ?
+											    AND af.id_mod_trans = ?
+											ORDER BY af.rang ASC");
+			$requete-> execute(array($entree['id_cli'], $_GET['id_mod_lic'], $_GET['id_mod_trans']));
+			while ($reponse = $requete-> fetch()) {
+				$excel-> getActiveSheet()
+					-> setCellValue($col.$row, $reponse['titre_col']);
+				cellColor($col.$row, '000000');
+				alignement($col.$row);
+				$excel->getActiveSheet()
+					->getStyle($col.$row)->applyFromArray($styleHeader);
+				$col++;
+			}$requete-> closeCursor();
+
+
 
 			if (isset($_GET['id_cli']) && ($_GET['id_cli']!='')) {
-				$sqlClient = " AND d.id_cli = $id_cli"; 
+				$sqlClient = ' AND d.id_cli = '.$_GET['id_cli']; 
 			}else{
 				$sqlClient = '';
 			}
@@ -183,243 +163,429 @@ $indiceSheet = 0;
 			}else{
 				$sqlCommodity = '';
 			}
-
+			
+			$sqlCleared = '';
 			if ($_GET['etat'] == 'TOTAL FILES') {
-				$requete = $connexion-> query("SELECT d.ref_dos AS ref_dos, cl.nom_cli AS nom_cli,
-														d.commodity AS commodity,
-														d.ref_decl AS ref_decl,
-														DATE_FORMAT(d.date_decl, '%d/%m/%Y') AS date_decl,
-														d.ref_liq AS ref_liq,
-														DATE_FORMAT(d.date_liq, '%d/%m/%Y') AS date_liq,
-														d.ref_quit AS ref_quit,
-														DATE_FORMAT(d.date_quit, '%d/%m/%Y') AS date_quit,
-														d.cleared AS cleared
-													FROM dossier d, client cl
-													WHERE d.ref_dos IS NOT NULL
-														AND d.id_cli = cl.id_cli
-														$sqlClient
-														$sqlModeLic
-														$sqlTrans
-														$sqlCommodity
-												");
+				$sqlCleared = '';
 			}else if ($_GET['etat'] == 'CLEARING COMPLETED') {
-				$requete = $connexion-> query("SELECT d.ref_dos AS ref_dos, cl.nom_cli AS nom_cli,
-														d.commodity AS commodity,
-														d.ref_decl AS ref_decl,
-														DATE_FORMAT(d.date_decl, '%d/%m/%Y') AS date_decl,
-														d.ref_liq AS ref_liq,
-														DATE_FORMAT(d.date_liq, '%d/%m/%Y') AS date_liq,
-														d.ref_quit AS ref_quit,
-														DATE_FORMAT(d.date_quit, '%d/%m/%Y') AS date_quit,
-														d.cleared AS cleared
-													FROM dossier d, client cl
-													WHERE d.ref_dos IS NOT NULL
-														AND d.id_cli = cl.id_cli
-														AND d.cleared = '1'
-														$sqlClient
-														$sqlModeLic
-														$sqlTrans
-														$sqlCommodity
-												");
+				$sqlCleared = "AND d.cleared='1'";
 			}else if ($_GET['etat'] == 'FILES IN PROCESS') {
-				$requete = $connexion-> query("SELECT d.ref_dos AS ref_dos, cl.nom_cli AS nom_cli,
-														d.commodity AS commodity,
-														d.ref_decl AS ref_decl,
-														DATE_FORMAT(d.date_decl, '%d/%m/%Y') AS date_decl,
-														d.ref_liq AS ref_liq,
-														DATE_FORMAT(d.date_liq, '%d/%m/%Y') AS date_liq,
-														d.ref_quit AS ref_quit,
-														DATE_FORMAT(d.date_quit, '%d/%m/%Y') AS date_quit,
-														d.cleared AS cleared
-													FROM dossier d, client cl
-													WHERE d.ref_dos IS NOT NULL
-														AND d.id_cli = cl.id_cli
-														AND d.cleared = '0'
-														$sqlClient
-														$sqlModeLic
-														$sqlTrans
-														$sqlCommodity
-												");
+				$sqlCleared = "AND d.cleared='0'";
 			}else if ($_GET['etat'] == 'CANCELLED') {
-				$requete = $connexion-> query("SELECT d.ref_dos AS ref_dos, cl.nom_cli AS nom_cli,
-														d.commodity AS commodity,
-														d.ref_decl AS ref_decl,
-														DATE_FORMAT(d.date_decl, '%d/%m/%Y') AS date_decl,
-														d.ref_liq AS ref_liq,
-														DATE_FORMAT(d.date_liq, '%d/%m/%Y') AS date_liq,
-														d.ref_quit AS ref_quit,
-														DATE_FORMAT(d.date_quit, '%d/%m/%Y') AS date_quit,
-														d.cleared AS cleared
-													FROM dossier d, client cl
-													WHERE d.ref_dos IS NOT NULL
-														AND d.id_cli = cl.id_cli
-														AND d.cleared = '2'
-														$sqlClient
-														$sqlModeLic
-														$sqlTrans
-														$sqlCommodity
-												");
+				$sqlCleared = "AND d.cleared='2'";
 			}
 
-		//$requete-> execute(array($entree['id_mod_trans'], $entree['id_mod_lic']));
-		while ($reponse = $requete-> fetch()) {
-			$compteur++;
-			$bg = "";
-			$col = 'A';
-			if ($reponse['cleared'] == '1') {
-				$style = "style='color: blue;'";
-				$styleHeader = array(
-				    'font'  => array(
-				        'color' => array('rgb' => '0000FF')
-				    ));
+			$row = 4;
+			$col = 'C';
+			$requete = $connexion-> prepare("SELECT d.ref_dos AS ref_dos,
+													UPPER(cl.nom_cli) AS nom_cli,
+													d.ref_fact AS ref_fact,
+													d.fob AS fob_dos,
+													d.fret AS fret,
+													d.assurance AS assurance,
+													d.autre_frais AS autre_frais,
+													d.num_lic AS num_lic,
+													d.montant_decl AS montant_decl,
+													d.*,
+													s.nom_site AS nom_site,
+													d.dgda_in AS dgda_in_1,
+													d.dgda_out AS dgda_out_1,
+													d.custom_deliv AS custom_deliv_1,
+													d.arrival_date AS arrival_date_1,
+													d.cleared AS cleared,
 
-			}else if ($reponse['cleared'] == '2') {
-				$style = "style='color: red;'";
-				$styleHeader = array(
-				    'font'  => array(
-				        'color' => array('rgb' => 'FF0000')
-				    ));
+													
+													IF(d.id_mod_lic='2' AND d.id_mod_trans='1',
+														IF(d.date_crf IS NULL AND d.date_ad IS NULL AND d.date_assurance IS NULL,
+													      'AWAITING CRF/AD/INSURRANCE',
+													      IF(d.date_crf IS NULL AND d.date_ad IS NULL AND d.date_assurance IS NOT NULL,
+													        'AWAITING CRF/AD',
+													          IF(d.date_crf IS NULL AND d.date_ad IS NOT NULL AND d.date_assurance IS NULL,
+													            'AWAITING CRF/INSURRANCE',
+													            IF(d.date_crf IS NULL AND d.date_ad IS NOT NULL AND d.date_assurance IS NOT NULL,
+													              'AWAITING CRF', 
+													              IF(d.date_crf IS NOT NULL AND d.date_ad IS NULL AND d.date_assurance IS NULL,
+													                'AWAITING AD/INSURRANCE',
+													                IF(d.date_crf IS NOT NULL AND d.date_ad IS NULL AND d.date_assurance IS NOT NULL,
+													                  'AWAITING AD',
+													                    IF(d.date_crf IS NOT NULL AND d.date_ad IS NOT NULL AND d.date_assurance IS NULL,
+													                      'AWAITING INSURRANCE',
+
+													                      IF(d.date_decl IS NULL AND d.ref_decl IS NULL, 'UNDER PREPARATION',
+													                        IF(d.date_liq IS NULL AND d.ref_liq IS NULL, 'AWAITING LIQUIDATION',
+													                          IF(d.date_quit IS NULL AND d.ref_quit IS NULL, 'AWAITING QUITTANCE',
+													                            IF(d.date_quit IS NOT NULL AND d.ref_quit IS NOT NULL AND d.dgda_out IS NULL, 'AWAITING BAE/BS', 
+													                              IF(d.dgda_out IS NOT NULL AND d.dispatch_deliv IS NOT NULL, 'CLEARING COMPLETED', '')
+													                              )
+													                            )
+													                          )
+													                        )
+													                      
+													                      )
+													                  )
+													                )
+													              )
+													            )
+													          )
+													      )
+														,
+														d.statut) AS statut,
+
+													IF(d.id_mod_trans='1' AND d.id_mod_lic='2', 
+														IF(d.klsa_arriv IS NOT NULL AND d.wiski_arriv IS NULL,'ARRIVED AT K\'LSA', 
+															IF(d.wiski_arriv IS NOT NULL AND d.dispatch_klsa IS NULL, 'AT WISKI',
+																IF(d.dispatch_klsa IS NOT NULL, 'DISPATCHED FROM K\'LSA', 'EXCEPTED TO ARRIVE')
+																)
+															)
+														, '') AS klsa_status,
+													IF(d.id_mod_trans='1' AND d.id_mod_lic='2', 
+														IF(d.bond_warehouse='LUBUMBASHI',
+															IF(d.warehouse_arriv IS NOT NULL AND d.warehouse_dep IS NOT NULL, 'DISPATCHED FROM AMICONGO', 
+																IF(d.warehouse_arriv IS NOT NULL, 'ARRIVED AT AMICONGO', '')
+																)
+															,'')
+														,'') AS amicongo_status,
+													IF(d.id_mod_trans='1' AND d.id_mod_lic='2', 
+														IF(d.bond_warehouse='KOLWEZI',
+															IF(d.warehouse_arriv IS NOT NULL AND d.warehouse_dep IS NOT NULL, 'DISPATCHED FROM WAREHOUSE', 
+																IF(d.warehouse_arriv IS NOT NULL, 'ARRIVED AT WAREHOUSE', '')
+																)
+															,'')
+														,'') AS kzi_status,
+
+													DATEDIFF(d.dgda_out, d.dgda_in) AS dgda_delay,
+													DATEDIFF(d.custom_deliv, d.arrival_date) AS arrival_deliver_delay
+												FROM dossier d, client cl, site s, mode_transport mt
+												WHERE d.id_cli =  cl.id_cli
+													$sqlClient
+													AND d.id_site = s.id_site
+													AND d.id_mod_trans = mt.id_mod_trans
+													AND mt.id_mod_trans = ?
+													AND d.id_mod_lic = ?
+													$sqlCleared
+												ORDER BY d.id_dos ASC");
+			$requete-> execute(array($_GET['id_mod_trans'], $_GET['id_mod_lic']));
+			while ($reponse = $requete-> fetch()) {
+				$compteur++;
+				$bg = "";
+
+				if ($reponse['cleared'] == '1') {
+					$style = "style='color: blue;'";
+					$styleHeader = array(
+					    'font'  => array(
+					        'color' => array('rgb' => '0000FF')
+					    ));
+
+				}else if ($reponse['cleared'] == '2') {
+					$style = "style='color: red;'";
+					$styleHeader = array(
+					    'font'  => array(
+					        'color' => array('rgb' => 'FF0000')
+					    ));
+				}else{
+					$style = "";
+					$styleHeader = array(
+					    'font'  => array(
+					        'color' => array('rgb' => '000000')
+					    ));
+				}
+
+				$date_exp = $maClasse-> getLastEpirationLicence($reponse['num_lic']);
+
+				$excel-> getActiveSheet()
+					-> setCellValue('A'.$row, $compteur)
+					-> setCellValue('B'.$row, $reponse['ref_dos']);
+
+				$excel->getActiveSheet()
+					->getStyle('A'.$row)->applyFromArray($styleHeader);
+				$excel->getActiveSheet()
+					->getStyle('B'.$row)->applyFromArray($styleHeader);
+
+				alignement('A'.$row);
+				alignement('B'.$row);
+
+				afficherRowTableauExcel($_GET['id_mod_lic'], $entree['id_cli'], $_GET['id_mod_trans'], $reponse['id_dos'], $compteur, $col, $excel, $row, $styleHeader, $reponse['statut'], $reponse['klsa_status'], $reponse['amicongo_status'], $reponse['kzi_status']);
+
+				$row++;
+
+			}$requete-> closeCursor();
+
+		}else if($_GET['id_mod_lic']=='2'){
+
+			$entree['id_cli'] = 857;
+
+			$excel-> getActiveSheet()
+				-> setCellValue('A'.$row, '#')
+				-> setCellValue('B'.$row, 'MCA REF');
+
+			cellColor('A'.$row, '000000');
+			cellColor('B'.$row, '000000');
+			alignement('A'.$row);
+			alignement('B'.$row);
+			$excel->getActiveSheet()
+				->getStyle('A'.$row)->applyFromArray($styleHeader);
+			$excel->getActiveSheet()
+				->getStyle('B'.$row)->applyFromArray($styleHeader);
+
+			$excel-> getActiveSheet()-> getColumnDimension('A')-> setWidth(5);
+			$excel-> getActiveSheet()-> getColumnDimension('B')-> setWidth(15);
+
+			$requete = $connexion-> prepare("SELECT c.titre_col AS titre_col, c.id_col AS id_col
+											FROM colonne c, client cl, affectation_colonne_client_modele_licence af
+											WHERE c.id_col = af.id_col
+												AND af.id_cli = cl.id_cli
+											    AND cl.id_cli = ?
+											    AND af.id_mod_lic = ?
+											    AND af.id_mod_trans = ?
+											ORDER BY af.rang ASC");
+			$requete-> execute(array($entree['id_cli'], $_GET['id_mod_lic'], $_GET['id_mod_trans']));
+			while ($reponse = $requete-> fetch()) {
+				
+				if ($reponse['id_col']=='42' && $_GET['id_mod_trans']=='1' && $_GET['id_mod_lic']=='2') {
+					$excel-> getActiveSheet()
+						-> setCellValue($col.$row, 'GENERAL STATUS');
+					cellColor($col.$row, '000000');
+					alignement($col.$row);
+					$excel->getActiveSheet()
+						->getStyle($col.$row)->applyFromArray($styleHeader);
+
+					$excel->getActiveSheet()
+				        ->getColumnDimension($col)
+				        ->setAutoSize(true);
+
+					$col++;
+
+					$excel-> getActiveSheet()
+						-> setCellValue($col.$row, 'KLSA STATUS');
+					cellColor($col.$row, '000000');
+					alignement($col.$row);
+					$excel->getActiveSheet()
+						->getStyle($col.$row)->applyFromArray($styleHeader);
+
+					$excel->getActiveSheet()
+				        ->getColumnDimension($col)
+				        ->setAutoSize(true);
+
+					$col++;
+
+					$excel-> getActiveSheet()
+						-> setCellValue($col.$row, 'AMICONGO STATUS');
+					cellColor($col.$row, '000000');
+					alignement($col.$row);
+					$excel->getActiveSheet()
+						->getStyle($col.$row)->applyFromArray($styleHeader);
+
+					$excel->getActiveSheet()
+				        ->getColumnDimension($col)
+				        ->setAutoSize(true);
+
+					$col++;
+
+					$excel-> getActiveSheet()
+						-> setCellValue($col.$row, 'KZI STATUS');
+					cellColor($col.$row, '000000');
+					alignement($col.$row);
+					$excel->getActiveSheet()
+						->getStyle($col.$row)->applyFromArray($styleHeader);
+
+					$excel->getActiveSheet()
+				        ->getColumnDimension($col)
+				        ->setAutoSize(true);
+
+					$col++;
+				}else{
+					$excel-> getActiveSheet()
+						-> setCellValue($col.$row, $reponse['titre_col']);
+					cellColor($col.$row, '000000');
+					alignement($col.$row);
+					$excel->getActiveSheet()
+						->getStyle($col.$row)->applyFromArray($styleHeader);
+
+					$excel->getActiveSheet()
+				        ->getColumnDimension($col)
+				        ->setAutoSize(true);
+
+					$col++;
+				}
+				
+			}$requete-> closeCursor();
+
+
+
+			if (isset($_GET['id_cli']) && ($_GET['id_cli']!='')) {
+				$sqlClient = ' AND d.id_cli = '.$_GET['id_cli']; 
 			}else{
-				$style = "";
-				$styleHeader = array(
-				    'font'  => array(
-				        'color' => array('rgb' => '000000')
-				    ));
+				$sqlClient = '';
 			}
 
-			$excel->getActiveSheet()
-				->getStyle($col.$row)->applyFromArray($styleHeader);
-				
-			$excel-> getActiveSheet()
-				-> setCellValue($col.$row, $compteur);
+			if (isset($_GET['id_mod_lic']) && ($_GET['id_mod_lic']!='')) {
+				$sqlModeLic = ' AND d.id_mod_lic = '.$_GET['id_mod_lic']; 
+			}else{
+				$sqlModeLic = '';
+			}
 
-			alignement($col.$row);
+			if (isset($_GET['id_mod_trans']) && ($_GET['id_mod_trans']!='')) {
+				$sqlTrans = ' AND d.id_mod_trans = '.$_GET['id_mod_trans']; 
+			}else{
+				$sqlTrans = '';
+			}
 
-			$excel->getActiveSheet()
-		        ->getColumnDimension($col)
-		        ->setAutoSize(true);
-		    $col++;
+			if (isset($_GET['commodity']) && ($_GET['commodity']!='')) {
+				$sqlCommodity = " AND d.commodity = $commodity"; 
+			}else{
+				$sqlCommodity = '';
+			}
+			
+			$sqlCleared = '';
+			if ($_GET['etat'] == 'TOTAL FILES') {
+				$sqlCleared = '';
+			}else if ($_GET['etat'] == 'CLEARING COMPLETED') {
+				$sqlCleared = "AND d.cleared='1'";
+			}else if ($_GET['etat'] == 'FILES IN PROCESS') {
+				$sqlCleared = "AND d.cleared='0'";
+			}else if ($_GET['etat'] == 'CANCELLED') {
+				$sqlCleared = "AND d.cleared='2'";
+			}
 
-			$excel->getActiveSheet()
-				->getStyle($col.$row)->applyFromArray($styleHeader);
-				
-			$excel-> getActiveSheet()
-				-> setCellValue($col.$row, $reponse['ref_dos']);
+			$row = 4;
+			$col = 'C';
+			$requete = $connexion-> prepare("SELECT d.ref_dos AS ref_dos,
+													UPPER(cl.nom_cli) AS nom_cli,
+													d.ref_fact AS ref_fact,
+													d.fob AS fob_dos,
+													d.fret AS fret,
+													d.assurance AS assurance,
+													d.autre_frais AS autre_frais,
+													d.num_lic AS num_lic,
+													d.montant_decl AS montant_decl,
+													d.*,
+													s.nom_site AS nom_site,
+													d.dgda_in AS dgda_in_1,
+													d.dgda_out AS dgda_out_1,
+													d.custom_deliv AS custom_deliv_1,
+													d.arrival_date AS arrival_date_1,
+													d.cleared AS cleared,
 
-			alignement($col.$row);
+													
+													IF(d.id_mod_lic='2' AND d.id_mod_trans='1',
+														IF(d.date_crf IS NULL AND d.date_ad IS NULL AND d.date_assurance IS NULL,
+													      'AWAITING CRF/AD/INSURRANCE',
+													      IF(d.date_crf IS NULL AND d.date_ad IS NULL AND d.date_assurance IS NOT NULL,
+													        'AWAITING CRF/AD',
+													          IF(d.date_crf IS NULL AND d.date_ad IS NOT NULL AND d.date_assurance IS NULL,
+													            'AWAITING CRF/INSURRANCE',
+													            IF(d.date_crf IS NULL AND d.date_ad IS NOT NULL AND d.date_assurance IS NOT NULL,
+													              'AWAITING CRF', 
+													              IF(d.date_crf IS NOT NULL AND d.date_ad IS NULL AND d.date_assurance IS NULL,
+													                'AWAITING AD/INSURRANCE',
+													                IF(d.date_crf IS NOT NULL AND d.date_ad IS NULL AND d.date_assurance IS NOT NULL,
+													                  'AWAITING AD',
+													                    IF(d.date_crf IS NOT NULL AND d.date_ad IS NOT NULL AND d.date_assurance IS NULL,
+													                      'AWAITING INSURRANCE',
 
-			$excel->getActiveSheet()
-		        ->getColumnDimension($col)
-		        ->setAutoSize(true);
-		    $col++;
+													                      IF(d.date_decl IS NULL AND d.ref_decl IS NULL, 'UNDER PREPARATION',
+													                        IF(d.date_liq IS NULL AND d.ref_liq IS NULL, 'AWAITING LIQUIDATION',
+													                          IF(d.date_quit IS NULL AND d.ref_quit IS NULL, 'AWAITING QUITTANCE',
+													                            IF(d.date_quit IS NOT NULL AND d.ref_quit IS NOT NULL AND d.dgda_out IS NULL, 'AWAITING BAE/BS', 
+													                              IF(d.dgda_out IS NOT NULL AND d.dispatch_deliv IS NOT NULL, 'CLEARING COMPLETED', '')
+													                              )
+													                            )
+													                          )
+													                        )
+													                      
+													                      )
+													                  )
+													                )
+													              )
+													            )
+													          )
+													      )
+														,
+														d.statut) AS statut,
 
-			$excel->getActiveSheet()
-				->getStyle($col.$row)->applyFromArray($styleHeader);
-				
-			$excel-> getActiveSheet()
-				-> setCellValue($col.$row, $reponse['nom_cli']);
+													IF(d.id_mod_trans='1' AND d.id_mod_lic='2', 
+														IF(d.klsa_arriv IS NOT NULL AND d.wiski_arriv IS NULL,'ARRIVED AT K\'LSA', 
+															IF(d.wiski_arriv IS NOT NULL AND d.dispatch_klsa IS NULL, 'AT WISKI',
+																IF(d.dispatch_klsa IS NOT NULL, 'DISPATCHED FROM K\'LSA', 'EXCEPTED TO ARRIVE')
+																)
+															)
+														, '') AS klsa_status,
+													IF(d.id_mod_trans='1' AND d.id_mod_lic='2', 
+														IF(d.bond_warehouse='LUBUMBASHI',
+															IF(d.warehouse_arriv IS NOT NULL AND d.warehouse_dep IS NOT NULL, 'DISPATCHED FROM AMICONGO', 
+																IF(d.warehouse_arriv IS NOT NULL, 'ARRIVED AT AMICONGO', '')
+																)
+															,'')
+														,'') AS amicongo_status,
+													IF(d.id_mod_trans='1' AND d.id_mod_lic='2', 
+														IF(d.bond_warehouse='KOLWEZI',
+															IF(d.warehouse_arriv IS NOT NULL AND d.warehouse_dep IS NOT NULL, 'DISPATCHED FROM WAREHOUSE', 
+																IF(d.warehouse_arriv IS NOT NULL, 'ARRIVED AT WAREHOUSE', '')
+																)
+															,'')
+														,'') AS kzi_status,
 
-			alignement($col.$row);
+													DATEDIFF(d.dgda_out, d.dgda_in) AS dgda_delay,
+													DATEDIFF(d.custom_deliv, d.arrival_date) AS arrival_deliver_delay
+												FROM dossier d, client cl, site s, mode_transport mt
+												WHERE d.id_cli =  cl.id_cli
+													$sqlClient
+													AND d.id_site = s.id_site
+													AND d.id_mod_trans = mt.id_mod_trans
+													AND mt.id_mod_trans = ?
+													AND d.id_mod_lic = ?
+													$sqlCleared
+												ORDER BY d.id_dos ASC");
+			$requete-> execute(array($_GET['id_mod_trans'], $_GET['id_mod_lic']));
+			while ($reponse = $requete-> fetch()) {
+				$compteur++;
+				$bg = "";
 
-			$excel->getActiveSheet()
-		        ->getColumnDimension($col)
-		        ->setAutoSize(true);
-		    $col++;
+				if ($reponse['cleared'] == '1') {
+					$style = "style='color: blue;'";
+					$styleHeader = array(
+					    'font'  => array(
+					        'color' => array('rgb' => '0000FF')
+					    ));
 
-			$excel->getActiveSheet()
-				->getStyle($col.$row)->applyFromArray($styleHeader);
-				
-			$excel-> getActiveSheet()
-				-> setCellValue($col.$row, $reponse['commodity']);
+				}else if ($reponse['cleared'] == '2') {
+					$style = "style='color: red;'";
+					$styleHeader = array(
+					    'font'  => array(
+					        'color' => array('rgb' => 'FF0000')
+					    ));
+				}else{
+					$style = "";
+					$styleHeader = array(
+					    'font'  => array(
+					        'color' => array('rgb' => '000000')
+					    ));
+				}
 
-			alignement($col.$row);
+				$date_exp = $maClasse-> getLastEpirationLicence($reponse['num_lic']);
 
-			$excel->getActiveSheet()
-		        ->getColumnDimension($col)
-		        ->setAutoSize(true);
-		    $col++;
+				$excel-> getActiveSheet()
+					-> setCellValue('A'.$row, $compteur)
+					-> setCellValue('B'.$row, $reponse['ref_dos']);
 
-			$excel->getActiveSheet()
-				->getStyle($col.$row)->applyFromArray($styleHeader);
-				
-			$excel-> getActiveSheet()
-				-> setCellValue($col.$row, $reponse['ref_decl']);
+				$excel->getActiveSheet()
+					->getStyle('A'.$row)->applyFromArray($styleHeader);
+				$excel->getActiveSheet()
+					->getStyle('B'.$row)->applyFromArray($styleHeader);
 
-			alignement($col.$row);
+				alignement('A'.$row);
+				alignement('B'.$row);
 
-			$excel->getActiveSheet()
-		        ->getColumnDimension($col)
-		        ->setAutoSize(true);
-		    $col++;
+				afficherRowTableauExcel($_GET['id_mod_lic'], $entree['id_cli'], $_GET['id_mod_trans'], $reponse['id_dos'], $compteur, $col, $excel, $row, $styleHeader, $reponse['statut'], $reponse['klsa_status'], $reponse['amicongo_status'], $reponse['kzi_status']);
 
-			$excel->getActiveSheet()
-				->getStyle($col.$row)->applyFromArray($styleHeader);
-				
-			$excel-> getActiveSheet()
-				-> setCellValue($col.$row, $reponse['date_decl']);
+				$row++;
 
-			alignement($col.$row);
+			}$requete-> closeCursor();
 
-			$excel->getActiveSheet()
-		        ->getColumnDimension($col)
-		        ->setAutoSize(true);
-		    $col++;
-
-			$excel->getActiveSheet()
-				->getStyle($col.$row)->applyFromArray($styleHeader);
-				
-			$excel-> getActiveSheet()
-				-> setCellValue($col.$row, $reponse['ref_liq']);
-
-			alignement($col.$row);
-
-			$excel->getActiveSheet()
-		        ->getColumnDimension($col)
-		        ->setAutoSize(true);
-		    $col++;
-
-			$excel->getActiveSheet()
-				->getStyle($col.$row)->applyFromArray($styleHeader);
-				
-			$excel-> getActiveSheet()
-				-> setCellValue($col.$row, $reponse['date_liq']);
-
-			alignement($col.$row);
-
-			$excel->getActiveSheet()
-		        ->getColumnDimension($col)
-		        ->setAutoSize(true);
-		    $col++;
-
-			$excel->getActiveSheet()
-				->getStyle($col.$row)->applyFromArray($styleHeader);
-				
-			$excel-> getActiveSheet()
-				-> setCellValue($col.$row, $reponse['ref_quit']);
-
-			alignement($col.$row);
-
-			$excel->getActiveSheet()
-		        ->getColumnDimension($col)
-		        ->setAutoSize(true);
-		    $col++;
-
-			$excel->getActiveSheet()
-				->getStyle($col.$row)->applyFromArray($styleHeader);
-				
-			$excel-> getActiveSheet()
-				-> setCellValue($col.$row, $reponse['date_quit']);
-
-			alignement($col.$row);
-
-			$excel->getActiveSheet()
-		        ->getColumnDimension($col)
-		        ->setAutoSize(true);
-		    $col++;
-
-			$row++;
-
-		}$requete-> closeCursor();
+		}
+			
+		//----------- Récuperation des dossiers ------------
+		
 		//----------- FIN Récuperation des dossiers ------------
 		$excel-> getActiveSheet()-> getStyle('A4:'.$col.($row-1))-> applyFromArray(
 				array(
