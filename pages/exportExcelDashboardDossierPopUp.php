@@ -48,7 +48,7 @@ $indiceSheet = 0;
 		//$maClasse-> afficherEnTeteTableauExcel2($_GET['id_mod_trac'], $_GET['id_cli'], $_GET['id_mod_trans'], $excel);
 
 		$row = 3;
-		$col = 'C';
+		$col = 'D';
 		$compteur = 0;
 
 		//Image dans la cellule
@@ -105,19 +105,25 @@ $indiceSheet = 0;
 
 			$excel-> getActiveSheet()
 				-> setCellValue('A'.$row, '#')
-				-> setCellValue('B'.$row, 'MCA REF');
+				-> setCellValue('B'.$row, 'MCA REF')
+				-> setCellValue('C'.$row, 'CLIENT');
 
 			cellColor('A'.$row, '000000');
 			cellColor('B'.$row, '000000');
+			cellColor('C'.$row, '000000');
 			alignement('A'.$row);
 			alignement('B'.$row);
+			alignement('C'.$row);
 			$excel->getActiveSheet()
 				->getStyle('A'.$row)->applyFromArray($styleHeader);
 			$excel->getActiveSheet()
 				->getStyle('B'.$row)->applyFromArray($styleHeader);
+			$excel->getActiveSheet()
+				->getStyle('C'.$row)->applyFromArray($styleHeader);
 
 			$excel-> getActiveSheet()-> getColumnDimension('A')-> setWidth(5);
 			$excel-> getActiveSheet()-> getColumnDimension('B')-> setWidth(15);
+			$excel-> getActiveSheet()-> getColumnDimension('C')-> setWidth(10);
 
 			$requete = $connexion-> prepare("SELECT c.titre_col AS titre_col, c.id_col AS id_col
 											FROM colonne c, client cl, affectation_colonne_client_modele_licence af
@@ -176,7 +182,7 @@ $indiceSheet = 0;
 			}
 
 			$row = 4;
-			$col = 'C';
+			$col = 'D';
 			$requete = $connexion-> prepare("SELECT d.ref_dos AS ref_dos,
 													UPPER(cl.nom_cli) AS nom_cli,
 													d.ref_fact AS ref_fact,
@@ -254,7 +260,8 @@ $indiceSheet = 0;
 														,'') AS kzi_status,
 
 													DATEDIFF(d.dgda_out, d.dgda_in) AS dgda_delay,
-													DATEDIFF(d.custom_deliv, d.arrival_date) AS arrival_deliver_delay
+													DATEDIFF(d.custom_deliv, d.arrival_date) AS arrival_deliver_delay,
+													cl.code_cli AS code_cli
 												FROM dossier d, client cl, site s, mode_transport mt
 												WHERE d.id_cli =  cl.id_cli
 													$sqlClient
@@ -294,15 +301,19 @@ $indiceSheet = 0;
 
 				$excel-> getActiveSheet()
 					-> setCellValue('A'.$row, $compteur)
-					-> setCellValue('B'.$row, $reponse['ref_dos']);
+					-> setCellValue('B'.$row, $reponse['ref_dos'])
+					-> setCellValue('C'.$row, $reponse['code_cli']);
 
 				$excel->getActiveSheet()
 					->getStyle('A'.$row)->applyFromArray($styleHeader);
 				$excel->getActiveSheet()
 					->getStyle('B'.$row)->applyFromArray($styleHeader);
+				$excel->getActiveSheet()
+					->getStyle('C'.$row)->applyFromArray($styleHeader);
 
 				alignement('A'.$row);
 				alignement('B'.$row);
+				alignement('C'.$row);
 
 				afficherRowTableauExcel($_GET['id_mod_lic'], $entree['id_cli'], $_GET['id_mod_trans'], $reponse['id_dos'], $compteur, $col, $excel, $row, $styleHeader, $reponse['statut'], $reponse['klsa_status'], $reponse['amicongo_status'], $reponse['kzi_status']);
 
@@ -316,19 +327,25 @@ $indiceSheet = 0;
 
 			$excel-> getActiveSheet()
 				-> setCellValue('A'.$row, '#')
-				-> setCellValue('B'.$row, 'MCA REF');
+				-> setCellValue('B'.$row, 'MCA REF')
+				-> setCellValue('C'.$row, 'CLIENT');
 
 			cellColor('A'.$row, '000000');
 			cellColor('B'.$row, '000000');
+			cellColor('C'.$row, '000000');
 			alignement('A'.$row);
 			alignement('B'.$row);
+			alignement('C'.$row);
 			$excel->getActiveSheet()
 				->getStyle('A'.$row)->applyFromArray($styleHeader);
 			$excel->getActiveSheet()
 				->getStyle('B'.$row)->applyFromArray($styleHeader);
+			$excel->getActiveSheet()
+				->getStyle('C'.$row)->applyFromArray($styleHeader);
 
 			$excel-> getActiveSheet()-> getColumnDimension('A')-> setWidth(5);
 			$excel-> getActiveSheet()-> getColumnDimension('B')-> setWidth(15);
+			$excel-> getActiveSheet()-> getColumnDimension('C')-> setWidth(10);
 
 			$requete = $connexion-> prepare("SELECT c.titre_col AS titre_col, c.id_col AS id_col
 											FROM colonne c, client cl, affectation_colonne_client_modele_licence af
@@ -448,7 +465,7 @@ $indiceSheet = 0;
 			}
 
 			$row = 4;
-			$col = 'C';
+			$col = 'D';
 			$requete = $connexion-> prepare("SELECT d.ref_dos AS ref_dos,
 													UPPER(cl.nom_cli) AS nom_cli,
 													d.ref_fact AS ref_fact,
@@ -526,7 +543,8 @@ $indiceSheet = 0;
 														,'') AS kzi_status,
 
 													DATEDIFF(d.dgda_out, d.dgda_in) AS dgda_delay,
-													DATEDIFF(d.custom_deliv, d.arrival_date) AS arrival_deliver_delay
+													DATEDIFF(d.custom_deliv, d.arrival_date) AS arrival_deliver_delay,
+													cl.code_cli AS code_cli
 												FROM dossier d, client cl, site s, mode_transport mt
 												WHERE d.id_cli =  cl.id_cli
 													$sqlClient
@@ -566,15 +584,19 @@ $indiceSheet = 0;
 
 				$excel-> getActiveSheet()
 					-> setCellValue('A'.$row, $compteur)
-					-> setCellValue('B'.$row, $reponse['ref_dos']);
+					-> setCellValue('B'.$row, $reponse['ref_dos'])
+					-> setCellValue('C'.$row, $reponse['code_cli']);
 
 				$excel->getActiveSheet()
 					->getStyle('A'.$row)->applyFromArray($styleHeader);
 				$excel->getActiveSheet()
 					->getStyle('B'.$row)->applyFromArray($styleHeader);
+				$excel->getActiveSheet()
+					->getStyle('C'.$row)->applyFromArray($styleHeader);
 
 				alignement('A'.$row);
 				alignement('B'.$row);
+				alignement('C'.$row);
 
 				afficherRowTableauExcel($_GET['id_mod_lic'], $entree['id_cli'], $_GET['id_mod_trans'], $reponse['id_dos'], $compteur, $col, $excel, $row, $styleHeader, $reponse['statut'], $reponse['klsa_status'], $reponse['amicongo_status'], $reponse['kzi_status']);
 
