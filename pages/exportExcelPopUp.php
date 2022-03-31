@@ -662,7 +662,7 @@ $statut = str_replace('_', '/', $statut);
 													AND d.ref_dos NOT LIKE "%20-%"
 													AND d.cleared <> "2"';
 
-				}else if (str_replace('_', '/', $_GET['statut']) == 'AWAITING BAE_BS') {
+				}else if (str_replace('_', '/', $_GET['statut']) == 'AWAITING BAE/BS') {
 
 					$sqlStatus = ' AND d.date_quit IS NOT NULL 
 													AND d.ref_quit IS NOT NULL
