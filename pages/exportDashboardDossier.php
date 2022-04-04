@@ -241,7 +241,7 @@ $indiceSheet = 0;
 			$col++;
 
 			$excel-> getActiveSheet()
-				-> setCellValue($col.'3', 'FILES OVER 5 DAYS');
+				-> setCellValue($col.'3', 'FILES OVER 2 DAYS');
 
 			cellColor($col.'3', '87CEEB');
 			alignement($col.'3');
@@ -347,7 +347,7 @@ $indiceSheet = 0;
 				
 				$col++;
 
-				$nombre_jour = $maClasse-> getNombreDossierClientModeLicenceStatusCalculNetDays($reponseClient['id_cli'], $_GET['id_mod_lic'], $_GET['id_mod_trans'], $reponseStatus['nom_stat'], 5, 10);
+				$nombre_jour = $maClasse-> getNombreDossierClientModeLicenceStatusCalculNetDays($reponseClient['id_cli'], $_GET['id_mod_lic'], $_GET['id_mod_trans'], $reponseStatus['nom_stat'], 2, 5);
 
 				
 				$excel-> getActiveSheet()
@@ -360,7 +360,7 @@ $indiceSheet = 0;
 
 				$col++;
 
-				$nombre_jour = $maClasse-> getNombreDossierClientModeLicenceStatusCalculNetDays($reponseClient['id_cli'], $_GET['id_mod_lic'], $_GET['id_mod_trans'], $reponseStatus['nom_stat'], 10, 1000);
+				$nombre_jour = $maClasse-> getNombreDossierClientModeLicenceStatusCalculNetDays($reponseClient['id_cli'], $_GET['id_mod_lic'], $_GET['id_mod_trans'], $reponseStatus['nom_stat'], 5, 1000);
 
 
 				$excel-> getActiveSheet()
