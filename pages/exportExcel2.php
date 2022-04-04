@@ -61,7 +61,7 @@ $requeteModeTransport-> execute(array($_GET['id_cli']));
 while ($reponseModeTransport = $requeteModeTransport-> fetch()) {
 
 	//Pour EXPORT créer des tableurs par licence et modes de transport
-	if ($_GET['id_mod_trac'] == '1') {
+	if ($_GET['id_mod_trac'] == '1' && $_GET['id_march'] != '18') {
 		
 		//--- Recuperation d'années -------
 		if(isset($_GET['annee']) && ($_GET['annee']!='')){
@@ -418,7 +418,7 @@ while ($reponseModeTransport = $requeteModeTransport-> fetch()) {
 	}
 
 	//GLOBAL SUMMARY POUR IMPORT ROUTE
-	if ($reponseModeTransport['id_mod_trans']=='1') {
+	if ($reponseModeTransport['id_mod_trans']=='1' && $_GET['id_mod_trac'] != '1') {
 		
 		$styleHeader = array(
 		    'font'  => array(
@@ -634,7 +634,7 @@ while ($reponseModeTransport = $requeteModeTransport-> fetch()) {
 		//-----TRANSIT
 		
 		$excel-> getActiveSheet()
-			-> setCellValue('A28', 'TRANSIT Total')
+			-> setCellValue('A28', 'GLOBAL Total')
 			-> setCellValue('D28', '=D10+D16+D27');
 		$excel-> getActiveSheet()
 			-> mergeCells('A28:C28');
@@ -680,7 +680,7 @@ while ($reponseModeTransport = $requeteModeTransport-> fetch()) {
 
 
 		//SUMMARY POUR IMPORT ROUTE
-		if ($reponseModeTransport['id_mod_trans']=='1') {
+		if ($reponseModeTransport['id_mod_trans']=='1' && $_GET['id_mod_trac'] != '1') {
 			
 			$styleHeader = array(
 			    'font'  => array(
@@ -896,7 +896,7 @@ while ($reponseModeTransport = $requeteModeTransport-> fetch()) {
 			//-----TRANSIT
 			
 			$excel-> getActiveSheet()
-				-> setCellValue('A28', 'TRANSIT Total')
+				-> setCellValue('A28', 'GLOBAL Total')
 				-> setCellValue('D28', '=D10+D16+D27');
 			$excel-> getActiveSheet()
 				-> mergeCells('A28:C28');

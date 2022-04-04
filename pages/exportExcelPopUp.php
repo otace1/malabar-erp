@@ -214,6 +214,12 @@ while ($reponseModeTransport = $requeteModeTransport-> fetch()) {
 				$sqlStatus = ' AND d.statut = "'.$_GET['statut'].'"';
 			}
 
+			if (isset($_GET['id_cli']) && ($_GET['id_cli']!='')) {
+				$sqlClient = ' AND d.id_cli = "'.$_GET['id_cli'].'"';
+			}else{
+				$sqlClient = '';
+			}
+
 			$row = 4;
 			$col = 'D';
 			$requete = $connexion-> prepare("SELECT d.ref_dos AS ref_dos,

@@ -739,6 +739,18 @@ for ($i=1; $i <= 15 ; $i++) {
                           }
 
                         }
+                        else if($_GET['id_mod_trac'] == '1' && $_GET['id_march'] == '18'){
+                          $maClasse-> creerDossierIB($_POST['ref_dos'], $_GET['id_cli'], $_POST['ref_fact'], 
+                                                      $_POST['fob'],$_POST['fret'], $_POST['assurance'], 
+                                                      $_POST['autre_frais'], $_POST['num_lic'], $_GET['id_mod_trac'], 
+                                                      $_GET['id_march'], $_GET['id_mod_trans'],
+                                                      NULL, $_POST['cod'], $_SESSION['id_util'],
+                                                      $_POST['road_manif'], $_POST['date_preal'], $_POST['t1'], 
+                                                      $_POST['poids'], $_POST['po_ref'], $_POST['commodity'], 
+                                                      $_POST['horse'], $_POST['trailer_1'], $_POST['trailer_2'], 
+                                                      $_POST['cod'], $_POST['date_crf'], NULL, $_POST['supplier'], 
+                                                      $_POST['temporelle']);
+                        }
                         else if($_GET['id_mod_trac'] == '1'){
 
                           if ($_GET['id_cli'] == '874') {
@@ -805,9 +817,15 @@ for ($i=1; $i <= 15 ; $i++) {
                     <i class="fa fa-plus"></i>
                 </button>-->
                 <?php
-                if($_GET['id_mod_trac'] == '1' && $_SESSION['id_role'] != '7' && $_SESSION['id_role'] != '8' && $_SESSION['id_role'] != '9' && $_SESSION['id_role'] != '10'){
+                if($_GET['id_mod_trac'] == '1' && $_SESSION['id_role'] != '7' && $_SESSION['id_role'] != '8' && $_SESSION['id_role'] != '9' && $_SESSION['id_role'] != '10' && $_GET['id_march'] != '18'){
                   ?>
                 <button class="btn btn-xs btn-info square-btn-adjust" data-toggle="modal" data-target=".nouveauDossierExport" <?php echo $maClasse-> getDataUtilisateur($_SESSION['id_util'])['tracking_enab']?>>
+                    <i class="fa fa-plus"></i> Nouveau Dossier
+                </button>
+                  <?php
+                }else if($_GET['id_mod_trac'] == '1' && $_SESSION['id_role'] != '7' && $_SESSION['id_role'] != '8' && $_SESSION['id_role'] != '9' && $_SESSION['id_role'] != '10' && $_GET['id_march'] == '18'){
+                  ?>
+                <button class="btn btn-xs btn-info square-btn-adjust" data-toggle="modal" data-target=".nouveauDossier" <?php echo $maClasse-> getDataUtilisateur($_SESSION['id_util'])['tracking_enab']?>>
                     <i class="fa fa-plus"></i> Nouveau Dossier
                 </button>
                   <?php
@@ -885,7 +903,7 @@ for ($i=1; $i <= 15 ; $i++) {
                 if ($maClasse-> verifierRegimeSuspensionSansDateExtreme($_GET['id_cli'], $_GET['id_mod_trans'], $_GET['id_mod_trac'])>0) {
                  ?>
                  <button class="clignote btn btn-xs bg-danger square-btn-adjust"  data-toggle="modal" data-target=".regimeSuspens">
-                      <i class="fa fa-exclamation-triangle"></i> Regime suspension
+                      <i class="fa fa-exclamation-triangle"></i> Regime suspensif
                   </button>
                  <?php
                 }
@@ -1485,7 +1503,7 @@ if(isset($_GET['id_mod_trac']) && ($_GET['id_mod_trac']=='1')){
 
 
 <?php
-if(isset($_GET['id_mod_trac'])){
+if(isset($_GET['id_mod_trac']) && $_GET['id_mod_trac']=='2'){
 
   $modele = $maClasse-> getElementModeleLicence($_GET['id_mod_trac']);
 ?>
@@ -1768,7 +1786,7 @@ if(isset($_GET['id_mod_trac'])){
                       ?>
 
                       <div class="col-md-3">
-                        <label for="x_card_code" class="control-label mb-1">REGIME SUSPENSION</label>
+                        <label for="x_card_code" class="control-label mb-1">REGIME SUSPENSIF</label>
                         <select name="temporelle" class="form-control cc-exp" required>
                           <option></option>
                           <option value="0">NO</option>
@@ -1808,15 +1826,344 @@ if(isset($_GET['id_mod_trac'])){
 </div>
 
 <?php
+}else if(isset($_GET['id_mod_trac']) && $_GET['id_mod_trac']=='1' && $_GET['id_march']=='18'){
+
+  $modele = $maClasse-> getElementModeleLicence($_GET['id_mod_trac']);
+?>
+
+<div class="modal fade nouveauDossier" id="modal-default">
+  <div class="modal-dialog modal-xl">
+    <form id="demo-form2" method="POST" action="" data-parsley-validate enctype="multipart/form-data">
+    <div class="modal-content">
+      <div class="modal-header ">
+        <h4 class="modal-title"><i class="fa fa-plus"></i> Nouveau dossier .</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+<!-- ------------------------------------------------------------------ -->
+        <div class="col-md-12">
+          
+            <div class="card">
+              <div class="card-header d-flex p-0">
+                <h3 class="card-title p-3"></h3>
+                <ul class="nav nav-pills ml-auto p-2">
+                  <li class="nav-item"><a class="nav-link active" href="#tab_1" data-toggle="tab">FORMULAIRE</a></li>
+                  <li class="nav-item"><a class="nav-link" href="#tab_2" data-toggle="tab">DOCUMENTS</a></li>
+                </ul>
+              </div><!-- /.card-header -->
+              <div class="card-body">
+                <div class="tab-content">
+                  <div class="tab-pane active" id="tab_1">
+                    <div class="row">
+                      
+
+                      <div class="col-md-3">
+                        <label for="x_card_code" class="control-label mb-1">CLIENT</label>
+                        <select name="id_cli" id="id_cli" onchange="xajax_selectionnerLicencePourClientModele(this.value, <?php echo $_GET['id_mod_trac'];?>),xajax_afficherRefDos(this.value, <?php echo $_GET['id_mod_trans'];?>, <?php echo $_GET['id_march'];?>), xajax_afficherFobMaxLicence(num_lic.value),xajax_selectionnerAVPourLicence(num_lic.value),xajax_afficherMaskAV(av.value)" class="form-control cc-exp" required>
+                            <option value="<?php echo $_GET['id_cli'];?>"><?php echo $maClasse-> getNomClient($_GET['id_cli']);?></option>
+                            <?php
+                                //$maClasse->selectionnerClientModeleLicence($modele['id_mod_lic']);
+                              
+                            ?>
+                        </select>
+                      </div>
+
+                      <div class="col-md-3">
+                        <label for="x_card_code" class="control-label mb-1">MCA FILE NUMBER</label>
+                        <input type="text" name="ref_dos" value="<?php echo $maClasse-> getMcaFileExport($_GET['id_cli'], $_GET['id_mod_trans'], $_GET['id_march'], $_GET['id_mod_trac'], 1);?>" class="form-control cc-exp" required>
+                      </div>
+                
+                      <div class="col-md-3">
+                        <label for="x_card_code" class="control-label mb-1">N<sup><u>o</u></sup> FACTURE</label>
+                        <input type="text" name="ref_fact" class="form-control cc-exp" required>
+                      </div>
+
+                      <!--<div class="col-md-3">
+                        <label for="x_card_code" class="control-label mb-1">DATE FACTURE</label>
+                        <input type="date"  onchange="is_weekend(this.value);" name="date_fact" max="<?php echo date('Y-m-d');?>" class="form-control cc-exp" required>
+                      </div>-->
+
+                      <?php
+                        if ($maClasse-> verifierSouscriptionLicence($_GET['id_cli'], $_GET['id_mod_trac'])==true) {
+                          ?>
+
+                      <div class="col-md-3">
+                        <label for="x_card_code" class="control-label mb-1">LICENCE </label>
+                        <!-- <input type="text" id="txtCountry" name="num_lic" autocomplete="off" class="form-control cc-exp" required> -->
+                        <select name="num_lic" id="num_lic" class="form-control cc-exp" onchange="xajax_afficherFobMaxLicence(this.value),xajax_selectionnerAVPourLicence(this.value),xajax_afficherMaskAV(av.value)" required>
+                          <option></option>
+                          <option value="UNDER VALUE">UNDER VALUE</option>
+                            <?php
+                              $maClasse->selectionnerLicenceEnCoursModeleClient($_GET['id_mod_trac'], $_GET['id_cli']);
+                            ?>
+                        </select>
+                      </div>
+
+                      <div class="col-md-3">
+                        <label for="x_card_code" class="control-label mb-1">BALANCE LICENCE</label>
+                        <span id="balance_fob"></span>
+                      </div>
+             
+                      <input type="hidden" name="supplier" value="" class="form-control cc-exp">
+                      <!-- <div class="col-md-3">
+                        <label for="x_card_code" class="control-label mb-1">FOURNISSEUR</label>
+                        
+                        <input type="text" name="supplier" class="form-control cc-exp">
+                      </div> -->
+             
+                      <div class="col-md-3">
+                        <label for="x_card_code" class="control-label mb-1">FOB DECLAREE</label>
+                        <span id="fob"></span>
+                        <!-- <input type="number" min="0" step="0.001" name="fob" class="form-control cc-exp"> -->
+                      </div>
+             
+                      <div class="col-md-3">
+                        <label for="x_card_code" class="control-label mb-1">FRET</label>
+                        <!--<span id="fret"></span>-->
+                        <input type="number" min="0" step="0.001" name="fret" class="form-control cc-exp">
+                      </div>
+
+                      <div class="col-md-3">
+                        <label for="x_card_code" class="control-label mb-1">ASSURANCE</label>
+                        <!--<span id="assurance"></span>-->
+                        <input type="number" min="0" step="0.001" name="assurance" class="form-control cc-exp">
+                      </div>
+
+                      <div class="col-md-3">
+                        <label for="x_card_code" class="control-label mb-1">AUTRE FRAIS</label>
+                        <!--<span id="autre_frais"></span>-->
+                        <input type="number" min="0" step="0.001" name="autre_frais" class="form-control cc-exp">
+                      </div>
+
+                      <div class="col-md-3">
+                        <label for="x_card_code" class="control-label mb-1">BALANCE WEIGHT</label>
+                        <span id="balance_poids"></span>
+                      </div>
+
+                      <div class="col-md-3">
+                        <label for="x_card_code" class="control-label mb-1">WEIGHT</label>
+                        <span id="poids"></span>
+                      </div>
+
+                      <div class="col-md-3">
+                        <label for="x_card_code" class="control-label mb-1">CRF REF</label>
+                        <span id="cod"></span>
+                      </div>
+
+                          <?php
+                        }else{
+                          ?>
+
+                      <div class="col-md-3">
+                        <label for="x_card_code" class="control-label mb-1">LICENCE </label>
+                        <input type="text" id="txtCountry" name="num_lic" autocomplete="off" class="form-control cc-exp" required>
+                        <!-- <select name="num_lic" id="num_lic" class="form-control cc-exp" onchange="xajax_afficherFobMaxLicence(this.value),xajax_selectionnerAVPourLicence(this.value),xajax_afficherMaskAV(av.value)" required>
+                          <option></option>
+                          <option value="UNDER VALUE">UNDER VALUE</option>
+                            <?php
+                              //$maClasse->selectionnerLicenceEnCoursModeleClient($_GET['id_mod_trac'], $_GET['id_cli']);
+                            ?>
+                        </select> -->
+                      </div>
+
+                      <input type="hidden" name="supplier" value="" class="form-control cc-exp">
+                      <!-- <div class="col-md-3">
+                        <label for="x_card_code" class="control-label mb-1">FOURNISSEUR</label>
+                        
+                        <input type="text" name="supplier" class="form-control cc-exp">
+                      </div> -->
+             
+                      <div class="col-md-3">
+                        <label for="x_card_code" class="control-label mb-1">FOB DECLAREE</label>
+                        <!-- <span id="fob"></span> -->
+                        <input type="number" min="0" step="0.001" name="fob" class="form-control cc-exp">
+                      </div>
+             
+                      <div class="col-md-3">
+                        <label for="x_card_code" class="control-label mb-1">FRET</label>
+                        <!--<span id="fret"></span>-->
+                        <input type="number" min="0" step="0.001" name="fret" class="form-control cc-exp">
+                      </div>
+
+                      <div class="col-md-3">
+                        <label for="x_card_code" class="control-label mb-1">ASSURANCE</label>
+                        <!--<span id="assurance"></span>-->
+                        <input type="number" min="0" step="0.001" name="assurance" class="form-control cc-exp">
+                      </div>
+
+                      <div class="col-md-3">
+                        <label for="x_card_code" class="control-label mb-1">AUTRE FRAIS</label>
+                        <!--<span id="autre_frais"></span>-->
+                        <input type="number" min="0" step="0.001" name="autre_frais" class="form-control cc-exp">
+                      </div>
+
+                      <div class="col-md-3">
+                        <label for="x_card_code" class="control-label mb-1">WEIGHT</label>
+                        <input type="number" min="0" step="0.001" name="poids" class="form-control cc-exp">
+                      </div>
+
+                      <input type="hidden" name="cod" value="" class="form-control cc-exp"> 
+<!-- 
+                      <div class="col-md-3">
+                        <label for="x_card_code" class="control-label mb-1">CRF REF</label>
+                        <input type="text" name="cod" class="form-control cc-exp">
+                      </div> -->
+
+                          <?php
+                        }
+                      ?>
+                      <input type="hidden" name="po_ref" value="" class="form-control cc-exp"> 
+                      <input type="hidden"  onchange="is_weekend(this.value);" value="" name="date_crf" class="form-control cc-exp">
+                      <!-- <div class="col-md-3">
+                        <label for="x_card_code" class="control-label mb-1">CRF RECEIVED DATE</label>
+                        <input type="date"  onchange="is_weekend(this.value);" name="date_crf" class="form-control cc-exp">
+                      </div>
+
+                      <div class="col-md-3">
+                        <label for="x_card_code" class="control-label mb-1">PO REF</label>
+                        <input type="text" name="po_ref" class="form-control cc-exp">
+                      </div> -->
+
+                      <!--<div class="col-md-3">
+                        <label for="x_card_code" class="control-label mb-1">AV LICENCE</label>
+                        <select name="ref_av" id="av" class="form-control cc-exp" onchange="xajax_afficherMaskAV(this.value)" >
+                          <option value=""></option>
+                            <?php
+                              //$maClasse->selectionnerLicenceEnCoursModele($_GET['id_mod_trac']);
+                            ?>
+                        </select>
+                      </div>-->
+
+                      <!--<div class="col-md-3">
+                        <label for="x_card_code" class="control-label mb-1">AV AVEC MASK</label>
+                        <span id="cod_dos_1"></span>
+                      </div>-->
+             
+                      <div class="col-md-3">
+                        <label for="x_card_code" class="control-label mb-1">PRE-ALERT DATE</label>
+                        <input type="date" id="date_new" onchange="is_weekend(this.value);" name="date_preal" class="form-control cc-exp">
+                      </div>
+
+                      <!-- <div class="col-md-3">
+                        <label for="x_card_code" class="control-label mb-1">T1</label>
+                        <input type="text" name="t1" class="form-control cc-exp">
+                      </div> -->
+                      <input type="hidden" name="t1" value="">
+                      <input type="hidden" name="nbre" value="1">
+                      <div class="col-md-3">
+                        <label for="x_card_code" class="control-label mb-1">COMMODITY</label>
+                        <input type="text" name="commodity" class="form-control cc-exp">
+                      </div>
+                      <?php
+                      if($_GET['id_mod_trans'] == '1'){
+                        ?>
+
+                      <div class="col-md-3">
+                        <label for="x_card_code" class="control-label mb-1">ROAD MANIF</label>
+                        <input type="text" name="road_manif" class="form-control cc-exp">
+                      </div>
+
+                      <div class="col-md-3">
+                        <label for="x_card_code" class="control-label mb-1">HORSE</label>
+                        <input type="text" name="horse" class="form-control cc-exp">
+                      </div>
+
+                      <div class="col-md-3">
+                        <label for="x_card_code" class="control-label mb-1">TRAILER 1</label>
+                        <input type="text" name="trailer_1" class="form-control cc-exp">
+                      </div>
+
+                      <div class="col-md-3">
+                        <label for="x_card_code" class="control-label mb-1">TRAILER 2/CONTAINER</label>
+                        <input type="text" name="trailer_2" class="form-control cc-exp">
+                      </div>
+
+                        <?php
+                      }else if($_GET['id_mod_trans'] == '4'){
+                        ?>
+
+                      <div class="col-md-3">
+                        <label for="x_card_code" class="control-label mb-1">RAIL MANIFEST</label>
+                        <input type="text" name="road_manif" class="form-control cc-exp">
+                      </div>
+
+                      <div class="col-md-3">
+                        <label for="x_card_code" class="control-label mb-1">WAGON</label>
+                        <input type="text" name="horse" class="form-control cc-exp">
+                      </div>
+
+                      <input type="hidden" name="trailer_1" value="N/A">
+                      <input type="hidden" name="trailer_2" value="N/A">
+                        <?php
+                      }else{
+                        ?>
+
+                      <div class="col-md-3">
+                        <label for="x_card_code" class="control-label mb-1">AWB NUM.</label>
+                        <input type="text" name="horse" class="form-control cc-exp">
+                      </div>
+                      <input type="hidden" name="trailer_1" value="N/A">
+                      <input type="hidden" name="trailer_2" value="N/A">
+                      <input type="hidden" name="road_manif" value="N/A">
+                        <?php
+                      }
+                      ?>
+
+                      <div class="col-md-3">
+                        <label for="x_card_code" class="control-label mb-1">REGIME SUSPENSIF</label>
+                        <select name="temporelle" class="form-control cc-exp" required>
+                          <option></option>
+                          <option value="0">NO</option>
+                          <option value="1">YES</option>
+                        </select>
+                      </div>
+
+                    </div>
+                  </div>
+                  <!-- /.tab-pane -->
+                  <div class="tab-pane" id="tab_2">
+                    <div class="row">
+                      <?php
+                        $maClasse-> afficherDocumentDossierCreate($_GET['id_mod_trac']);
+                      ?>
+                    </div>
+                  </div>
+                  <!-- /.tab-pane -->
+                </div>
+                <!-- /.tab-content -->
+              </div><!-- /.card-body -->
+            </div>
+        </div>
+<!-- ------------------------------------------------------------------ -->
+          
+        </div>
+      </div>
+      <div class="modal-footer justify-content-between">
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Annuler</button>
+        <button type="submit" name="creerDossier" class="btn btn-primary">Valider</button>
+      </div>
+    </div>
+    </form>
+    <!-- /.modal-content -->
+  </div>
+  <!-- /.modal-dialog -->
+</div>
+
+<?php
+}else{
+
+include('nouveauExport.php');
+include('nouveauDossierAcid.php');
+include('updateMutipleExport.php');
+
 }
 ?>
 
 
 <?php
-
-include('nouveauExport.php');
-include('nouveauDossierAcid.php');
-include('updateMutipleExport.php');
 
 if(isset($_GET['id_mod_trac']) && isset($_GET['id_mod_trac'])){
 
@@ -2004,7 +2351,7 @@ if (($maClasse-> verifierRegimeSuspensionSansDateExtreme($_GET['id_cli'], $_GET[
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-header ">
-        <h4 class="modal-title"><i class="fa fa-exclamation-triangle"></i> Alert Regime de Suspension.</h4>
+        <h4 class="modal-title"><i class="fa fa-exclamation-triangle"></i> Alert Regime de Suspensif.</h4>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
