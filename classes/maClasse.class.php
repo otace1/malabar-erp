@@ -1479,7 +1479,7 @@
 
 		}
 		
-		public function creerDetailFactureDossier($ref_fact, $id_dos, $id_deb, $montant, $tva, $usd='1', $detail=NULL){
+		public function creerDetailFactureDossier($ref_fact, $id_dos, $id_deb, $montant, $tva, $usd='1', $detail=NULL, $unite=NULL){
 			include('connexion.php');
 
 			$entree['id_dos'] = $id_dos;
@@ -1489,6 +1489,7 @@
 			$entree['tva'] = $tva;
 			$entree['usd'] = $usd;
 			$entree['detail'] = $detail;
+			$entree['unite'] = $unite;
 
 			// echo '<br><br>id_dos = '.$id_dos;
 			// echo '<br>ref_fact = '.$ref_fact;
@@ -1497,11 +1498,13 @@
 			// echo '<br>------------------<br>';
 
 			$requete = $connexion-> prepare("INSERT INTO detail_facture_dossier(ref_fact, id_dos,
-																	id_deb, montant, tva, usd, detail)
-												VALUES(?, ?, ?, ?, ?, ?, ?)");
+																	id_deb, montant, tva, usd, detail, 
+																	unite)
+												VALUES(?, ?, ?, ?, ?, ?, ?, ?)");
 			$requete-> execute(array($entree['ref_fact'], $entree['id_dos'],
 									$entree['id_deb'], $entree['montant'], 
-									$entree['tva'], $entree['usd'], $entree['detail']));
+									$entree['tva'], $entree['usd'], $entree['detail'], 
+									$entree['unite']));
 		}
 
 		public function creerDetailApurement($id_trans_ap, $id_dos){
@@ -3030,9 +3033,11 @@
 					<tr>
 						<td style="text-align: left; font-weight: bold; border-left: 1px solid black; border-right: 0.5px solid black;" colspan="2" width="35%"></td>
 						<td style="text-align: center; border-right: 0.5px solid black;" colspan="2" width="5%"></td>
+						<td style="text-align: center; border-right: 0.5px solid black;" colspan="2" width="10%"></td>
+						<td style="text-align: center; border-right: 0.5px solid black;" colspan="2" width="4%"></td>
 						<td style="text-align: right; border-right: 0.5px solid black;" width="25%"></td>
-						<td style="text-align: right; border-right: 0.5px solid black;" width="15%"></td>
-						<td style="text-align: right; border-right: 1px solid black;" width="20%"></td>
+						<td style="text-align: right; border-right: 0.5px solid black;" width="10%"></td>
+						<td style="text-align: right; border-right: 1px solid black;" width="11%"></td>
 					</tr>
 					';
 			$requete = $connexion-> prepare('SELECT d.nom_deb AS nom_deb,
@@ -3054,7 +3059,9 @@
 													IF(det.detail IS NOT NULL, 
 														CONCAT(": ", det.detail),
 														""
-													) AS detail
+													) AS detail,
+													det.unite AS unite,
+													COUNT(DISTINCT(dos.ref_decl)) AS qte
 												FROM debours d, detail_facture_dossier det, dossier dos
 												WHERE det.ref_fact = ?
 													AND det.id_deb = d.id_deb
@@ -3076,22 +3083,30 @@
 
 					$tbl .= '
 						<tr>
-							<td style="text-align: left; font-weight: bold; border-left: 1px solid black; border-right: 0.5px solid black; font-size: 8px;" colspan="2" width="35%">&nbsp;&nbsp;'
+							<td style="text-align: left; border-left: 1px solid black; border-right: 0.5px solid black; font-size: 8px;" colspan="2" width="35%">&nbsp;&nbsp;'
 								.$reponse['nom_deb'].
 							'</td>
-							<td style="text-align: center; font-weight: bold; font-size: 8px; border-right: 0.5px solid black;" colspan="2" width="5%">'
+							<td style="text-align: center; font-size: 8px; border-right: 0.5px solid black;" colspan="2" width="5%">'
 								.$reponse['abr_deb'].
 							'</td>
-							<td style="text-align: right; font-weight: bold; border-right: 0.5px solid black; font-size: 8px;" width="12%">'
+							<td style="text-align: center; border-right: 0.5px solid black; font-size: 6px; font-weight: bold;" width="10%">'
+								.$reponse['unite'].
+							'
+							</td>
+							<td style="text-align: center; border-right: 0.5px solid black; font-size: 8px;" width="4%">'
+								.$reponse['qte'].
+							'
+							</td>
+							<td style="text-align: right; border-right: 0.5px solid black; font-size: 8px;" width="12%">'
 								.number_format($reponse['ht_cdf'], 2, ',', ' ').
 							'&nbsp;&nbsp;</td>
-							<td style="text-align: right; font-weight: bold; border-right: 0.5px solid black; font-size: 8px;" width="13%">'
+							<td style="text-align: right; border-right: 0.5px solid black; font-size: 8px;" width="13%">'
 								.number_format($reponse['ht_usd'], 2, ',', ' ').
 							'&nbsp;&nbsp;</td>
-							<td style="text-align: right; font-weight: bold; border-right: 0.5px solid black; font-size: 8px;" width="15%">'
+							<td style="text-align: right; border-right: 0.5px solid black; font-size: 8px;" width="10%">'
 								.number_format($tva, 2, ',', ' ').
 							'&nbsp;&nbsp;</td>
-							<td style="text-align: right; font-weight: bold; border-right: 1px solid black; font-size: 8px;" width="20%">'
+							<td style="text-align: right; border-right: 1px solid black; font-size: 8px;" width="11%">'
 								.number_format($ttc, 2, ',', ' ').
 							'&nbsp;&nbsp;</td>
 						</tr>
@@ -3101,16 +3116,24 @@
 
 					$tbl .= '
 						<tr>
-							<td style="text-align: left; font-weight: bold; border-left: 1px solid black; border-right: 0.5px dotted black; border-bottom: 0.5px dotted black; font-size: 8px;" colspan="2" width="40%">&nbsp;&nbsp;'
+							<td style="text-align: left; border-left: 1px solid black; border-right: 0.5px dotted black; border-bottom: 0.5px dotted black; font-size: 8px;" colspan="2" width="40%">&nbsp;&nbsp;'
 								.$reponse['nom_deb'].$reponse['detail'].
 							'</td>
-							<td style="text-align: right; font-weight: bold; border-right: 0.5px dotted black; border-bottom: 0.5px dotted black; font-size: 8px;" width="25%">'
+							<td style="text-align: center; border-right: 0.5px solid black; font-size: 6px; font-weight: bold;" width="10%">'
+								.$reponse['unite'].
+							'
+							</td>
+							<td style="text-align: center; border-right: 0.5px solid black; font-size: 8px;" width="4%">'
+								.$reponse['qte'].
+							'
+							</td>
+							<td style="text-align: right; border-right: 0.5px dotted black; border-bottom: 0.5px dotted black; font-size: 8px;" width="25%">'
 								.number_format($reponse['ht_usd'], 2, ',', ' ').
 							'&nbsp;&nbsp;</td>
-							<td style="text-align: right; font-weight: bold; border-right: 0.5px dotted black; border-bottom: 0.5px dotted black; font-size: 8px;" width="15%">'
+							<td style="text-align: right; border-right: 0.5px dotted black; border-bottom: 0.5px dotted black; font-size: 8px;" width="10%">'
 								.number_format($tva, 2, ',', ' ').
 							'&nbsp;&nbsp;</td>
-							<td style="text-align: right; font-weight: bold; border-right: 1px solid black; border-bottom: 0.5px dotted black; font-size: 7px;" width="20%">'
+							<td style="text-align: right; border-right: 1px solid black; border-bottom: 0.5px dotted black; font-size: 7px;" width="11%">'
 								.number_format($ttc, 2, ',', ' ').
 							'&nbsp;&nbsp;</td>
 						</tr>
@@ -3120,19 +3143,27 @@
 
 					$tbl .= '
 						<tr>
-							<td style="text-align: left; font-weight: bold; border-left: 1px solid black; border-right: 0.5px dotted black; border-bottom: 0.5px dotted black; font-size: 8px;" colspan="2" width="35%">&nbsp;&nbsp;'
+							<td style="text-align: left; border-left: 1px solid black;  font-size: 8px;" colspan="2" width="35%">&nbsp;&nbsp;'
 								.$reponse['nom_deb'].
 							'</td>
-							<td style="text-align: center; font-weight: bold; border-bottom: 0.5px dotted black; font-size: 7px; border-right: 0.5px dotted black;" colspan="2" width="5%">'
+							<td style="text-align: center; border-right: 0.5px solid black; border-left: 0.5px solid black; font-size: 7px; " colspan="2" width="5%">'
 								.$reponse['abr_deb'].
 							'</td>
-							<td style="text-align: right; font-weight: bold; border-right: 0.5px dotted black; border-bottom: 0.5px dotted black; font-size: 8px;" width="25%">'
+							<td style="text-align: center; border-right: 0.5px solid black; font-size: 6px; font-weight: bold;" width="10%">'
+								.$reponse['unite'].
+							'
+							</td>
+							<td style="text-align: center; border-right: 0.5px solid black; font-size: 8px;" width="4%">'
+								.$reponse['qte'].
+							'
+							</td>
+							<td style="text-align: right; border-left: 0.5px solid black; font-size: 8px;" width="25%">'
 								.number_format($reponse['ht_usd'], 2, ',', ' ').
 							'&nbsp;&nbsp;</td>
-							<td style="text-align: right; font-weight: bold; border-right: 0.5px dotted black; border-bottom: 0.5px dotted black; font-size: 8px;" width="15%">'
+							<td style="text-align: right; border-left: 0.5px solid black; font-size: 8px;" width="10%">'
 								.number_format($tva, 2, ',', ' ').
 							'&nbsp;&nbsp;</td>
-							<td style="text-align: right; font-weight: bold; border-right: 1px solid black; border-bottom: 0.5px dotted black; font-size: 7px;" width="20%">'
+							<td style="text-align: right; border-right: 1px solid black; border-left: 0.5px solid black; font-size: 7px;" width="11%">'
 								.number_format($ttc, 2, ',', ' ').
 							'&nbsp;&nbsp;</td>
 						</tr>
@@ -3143,11 +3174,15 @@
 			}
 			$tbl .='
 					<tr>
-						<td style="text-align: left; border-left: 1px solid black; border-right: 0.5px dotted black; border-bottom: 0.5px dotted black; font-size: 8px;" width="35%"></td>
-						<td style="text-align: center; border-bottom: 0.5px dotted black; font-size: 7px; border-right: 0.5px dotted black;" colspan="2" width="5%"></td>
-						<td style="text-align: right; border-right: 0.5px dotted black; border-bottom: 0.5px dotted black; font-size: 8px;" width="25%"></td>
-						<td style="text-align: right; border-right: 0.5px dotted black; border-bottom: 0.5px dotted black; font-size: 8px;" width="15%"></td>
-						<td style="text-align: right; border-right: 1px solid black; border-bottom: 0.5px dotted black; font-size: 7px;" width="20%"></td>
+						<td style="text-align: left; border-left: 1px solid black; border-right: 0.5px solid black; border-bottom: 0.5px solid black; font-size: 8px;" width="35%"></td>
+						<td style="text-align: center; border-bottom: 0.5px solid black; font-size: 7px; border-right: 0.5px solid black;" colspan="2" width="5%"></td>
+						<td style="text-align: right; border-right: 0.5px solid black; font-size: 8px;" width="10%">
+						</td>
+						<td style="text-align: right; border-right: 0.5px solid black; font-size: 8px;" width="4%">
+						</td>
+						<td style="text-align: right; border-right: 0.5px solid black; border-bottom: 0.5px solid black; font-size: 8px;" width="25%"></td>
+						<td style="text-align: right; border-right: 0.5px solid black; border-bottom: 0.5px solid black; font-size: 8px;" width="10%"></td>
+						<td style="text-align: right; border-right: 1px solid black; border-bottom: 0.5px solid black; font-size: 7px;" width="11%"></td>
 					</tr>
 					';
 
@@ -3204,13 +3239,17 @@
 			}
 
 				$tbl .= '
-						<td style="text-align: right; border-right: 0.5px solid black; border-bottom: 0.5px solid black; font-weight: bold; font-size: 7px;background-color: rgb(192,192,192);" width="25%">'
+						<td style="text-align: right; border-right: 0.5px solid black; border: 0.5px solid black; font-weight: bold; background-color: rgb(192,192,192); font-size: 8px;" width="10%">
+						</td>
+						<td style="text-align: right; border-right: 0.5px solid black; border: 0.5px solid black; font-weight: bold; background-color: rgb(192,192,192); font-size: 8px;" width="4%">
+						</td>
+						<td style="text-align: right; border-right: 0.5px solid black; border-bottom: 0.5px solid black; font-weight: bold; background-color: rgb(192,192,192);" width="25%">'
 							.number_format($sommeHT, 2, ',', ' ').
 						'&nbsp;&nbsp;</td>
-						<td style="text-align: right; border-right: 0.5px solid black; border-bottom: 0.5px solid black; font-weight: bold; font-size: 7px;background-color: rgb(192,192,192);" width="15%">'
+						<td style="text-align: right; border-right: 0.5px solid black; border-bottom: 0.5px solid black; font-weight: bold; background-color: rgb(192,192,192);" width="10%">'
 							.number_format($sommeTVA, 2, ',', ' ').
 						'&nbsp;&nbsp;</td>
-						<td style="text-align: right; border-right: 1px solid black; border-bottom: 0.5px solid black; font-weight: bold; font-size: 7px; background-color: rgb(192,192,192);" width="20%">'
+						<td style="text-align: right; border-right: 1px solid black; border-bottom: 0.5px solid black; font-weight: bold;  background-color: rgb(192,192,192);" width="11%">'
 							.number_format($sommeTTC, 2, ',', ' ').
 						'&nbsp;&nbsp;</td>
 					
@@ -4625,6 +4664,59 @@
 			return $tbl;
 		}
 
+		public function getTotalHTFacture($ref_fact){
+			include('connexion.php');
+			$entree['ref_fact'] = $ref_fact;
+			$tbl = '';
+
+			$sommeTVA = 0;
+			$sommeHT = 0;
+			$sommeTTC = 0;
+
+			$requete = $connexion-> prepare('SELECT SUM(
+														IF(det.usd="1",
+															det.montant,
+															det.montant/dos.roe_decl)
+													) AS montant
+												FROM debours d, detail_facture_dossier det, dossier dos
+												WHERE det.ref_fact = ?
+													AND det.id_deb = d.id_deb
+													AND det.id_dos = dos.id_dos');
+			$requete-> execute(array($entree['ref_fact']));
+			$reponse = $requete-> fetch();
+
+			return $reponse['montant'];
+		}
+
+		public function getTotalTVAFacture($ref_fact){
+			include('connexion.php');
+			$entree['ref_fact'] = $ref_fact;
+			$tbl = '';
+
+			$sommeTVA = 0;
+			$sommeHT = 0;
+			$sommeTTC = 0;
+
+			$requete = $connexion-> prepare('SELECT SUM(
+														IF(det.usd="1",
+															IF(det.tva="1",
+																(det.montant*0.16),
+																0),
+															IF(det.tva="1",
+																((det.montant/dos.roe_decl)*0.16),
+																0)
+															)
+													) AS montant
+												FROM debours d, detail_facture_dossier det, dossier dos
+												WHERE det.ref_fact = ?
+													AND det.id_deb = d.id_deb
+													AND det.id_dos = dos.id_dos');
+			$requete-> execute(array($entree['ref_fact']));
+			$reponse = $requete-> fetch();
+
+			return $reponse['montant'];
+		}
+
 		public function getARSPForFacturePartielle($ref_fact){
 			include('connexion.php');
 			$entree['ref_fact'] = $ref_fact;
@@ -5185,36 +5277,58 @@
 					$ref_fact = $compteur.'-'.$_GET['ref_fact'];
 				}
 				$compteur++;
+
+				if ($reponse['roe_decl']>0) {
+					// code...
+				}else{
+					$reponse['roe_decl'] = 2000;
+				}
 			?>
 			<div class="tab-pane <?php echo $active;?> small" id="tab_<?php echo $reponse['id_dos']?>">
-			  <table class="table table-sm table-bordered table-hover table-dark table-head-fixed">
-			    <thead>
-			    	<tr>
+				<div class="row">
+						<div class="col-md-8">
+						  <table class="table table-sm table-bordered table-hover table-dark table-head-fixed">
+						    <thead>
+						        <tr>
+						            <th colspan="2">DEBOURS</th>
+						            <th>UNITE</th>
+						            <th>MONTANT</th>
+						            <th>DEVISE</th>
+						            <th>TVA</th>
+						        </tr>
+						    </thead>
+						    <tbody>
+						    	<?php
+						    		$this-> getDeboursPourFactureClientModeleLicence($this-> getDossier($id_dos)['id_cli'], $_GET['id_mod_lic_fact'], $compteur, $sous_compteur, $reponse['principal'], $id_dos);
+						    	?>
+						    </tbody>
+						</table>
+					</div>
+					<div class="col-md-4">
 			    		<input type="hidden" name="ref_fact_<?php echo $compteur;?>" value="<?php echo $ref_fact?>">
 			    		<input type="hidden" name="id_dos_dos_<?php echo $compteur;?>" value="<?php echo $reponse['id_dos']?>">
-			    		<th colspan="5">
 			    			<div class="row">
-			    				<div class="col-md-2">
+			    				<div class="col-md-6">
 						            <label for="x_card_code" class="control-label mb-1">Taux</label>
-						            <input type="number" step="0.0001" min="0" name="roe_decl_<?php echo $compteur;?>" value="<?php echo $reponse['roe_decl'];?>" class="form-control form-control-sm cc-exp bg bg-dark" required>
+						            <input type="number" step="0.0001" min="0" name="roe_decl_<?php echo $compteur;?>" id="roe_decl" onblur="getTotal()" value="<?php echo $reponse['roe_decl'];?>" class="form-control form-control-sm cc-exp bg bg-dark" required>
 						        </div>
-			    				<div class="col-md-2">
+			    				<div class="col-md-6">
 						            <label for="x_card_code" class="control-label mb-1">FOB</label>
 						            <input type="number" step="0.0001" min="0" name="fob_<?php echo $compteur;?>" value="<?php echo $reponse['fob'];?>" class="form-control form-control-sm cc-exp bg bg-dark" required>
 						        </div>
-			    				<div class="col-md-2">
+			    				<div class="col-md-6">
 						            <label for="x_card_code" class="control-label mb-1">Fret</label>
-						            <input type="number" step="0.0001" min="0" name="fret_<?php echo $compteur;?>" value="<?php echo $reponse['fret'];?>" class="form-control cc-exp bg bg-dark" required>
+						            <input type="number" step="0.0001" min="0" name="fret_<?php echo $compteur;?>" value="<?php echo $reponse['fret'];?>" class="form-control form-control-sm cc-exp bg bg-dark" required>
 						        </div>
-			    				<div class="col-md-2">
+			    				<div class="col-md-6">
 						            <label for="x_card_code" class="control-label mb-1">Assurance</label>
 						            <input type="number" step="0.0001" min="0" name="assurance_<?php echo $compteur;?>" value="<?php echo $reponse['assurance'];?>" class="form-control form-control-sm cc-exp bg bg-dark" required>
 						        </div>
-			    				<div class="col-md-2">
+			    				<div class="col-md-6">
 						            <label for="x_card_code" class="control-label mb-1">Autres Charges</label>
 						            <input type="number" step="0.0001" min="0" name="autre_frais_<?php echo $compteur;?>" value="<?php echo $reponse['autre_frais'];?>" class="form-control form-control-sm cc-exp bg bg-dark" required>
 						        </div>
-			    				<div class="col-md-2">
+			    				<div class="col-md-6">
 						            <label for="x_card_code" class="control-label mb-1">Poids (Kg)</label>
 						            <input type="number" step="0.0001" min="0" name="poids_<?php echo $compteur;?>" value="<?php echo $reponse['poids'];?>" class="form-control form-control-sm cc-exp bg bg-dark" required>
 						        </div>
@@ -5222,22 +5336,21 @@
 						            <label for="x_card_code" class="control-label mb-1">Autres informations / Autres Détails sur la Facture:</label>
 						            <input type="text" name="info" value="" class="form-control form-control-sm cc-exp bg bg-dark">
 						        </div>
+			    				<div class="col-md-12">
+						            <label for="x_card_code" class="control-label mb-1">TOTAL ($):</label>
+						            <input type="text" name="total" id="totalUSD" class="form-control text-primary form-control-lg cc-exp bg bg-dark" style="text-align: center; font-weight: bold;" disabled>
+						        </div>
+			    				<div class="col-md-12">
+						            <label for="x_card_code" class="control-label mb-1">TOTAL (CDF):</label>
+						            <input type="text" name="" id="totalCDF" class="form-control text-primary form-control-lg cc-exp bg bg-dark" style="text-align: center; font-weight: bold;" disabled>
+						        </div>
+			    				<div class="col-md-12">
+						            <label for="x_card_code" class="control-label mb-1">TOTAL Général ($):</label>
+						            <input type="text" name="" id="total" class="form-control text-primary form-control-lg cc-exp bg bg-dark" style="text-align: center; font-weight: bold;" disabled>
+						        </div>
 			    			</div>
-			    		</th>
-			    	</tr>
-			        <tr>
-			            <th colspan="2">DEBOURS</th>
-			            <th>MONTANT</th>
-			            <th>DEVISE</th>
-			            <th>TVA</th>
-			        </tr>
-			    </thead>
-			    <tbody>
-			    	<?php
-			    		$this-> getDeboursPourFactureClientModeleLicence($this-> getDossier($id_dos)['id_cli'], $_GET['id_mod_lic_fact'], $compteur, $sous_compteur, $reponse['principal'], $id_dos);
-			    	?>
-			    </tbody>
-			</table>
+						</div>
+				</div>
 			</div>
 			<?php
 			}$requete-> closeCursor();
@@ -5280,7 +5393,7 @@
 			    			<div class="row">
 			    				<div class="col-md-2">
 						            <label for="x_card_code" class="control-label mb-1">Taux</label>
-						            <input type="number" step="0.0001" min="0" name="roe_decl_<?php echo $compteur;?>" value="<?php echo $reponse['roe_decl'];?>" class="form-control form-control-sm cc-exp bg bg-dark" required>
+						            <input type="number" step="0.0001" min="0" id="roe_decl" name="roe_decl_<?php echo $compteur;?>" value="<?php echo $reponse['roe_decl'];?>" class="form-control form-control-sm cc-exp bg bg-dark" required>
 						        </div>
 			    				<div class="col-md-2">
 						            <label for="x_card_code" class="control-label mb-1">FOB</label>
@@ -5513,12 +5626,21 @@
 														$sqlTypeDebours");
 			while($reponseTypeDebours = $requeteTypeDebours-> fetch()){
 				?>
-				<tr><th colspan="4"><?php echo $reponseTypeDebours['nom_t_deb']; ?></th></tr>
+				<tr id="headingOne_<?php echo $reponseTypeDebours['id_t_deb']; ?>">
+					<th colspan="6">
+						<a class="btn btn-primary" data-toggle="collapse" href="#multiCollapseExample1_<?php echo $reponseTypeDebours['id_t_deb']; ?>" role="button" aria-expanded="false" aria-controls="multiCollapseExample1_<?php echo $reponseTypeDebours['id_t_deb']; ?>">
+							<i class="fa fa-plus"></i>
+						</a>
+						<?php echo $reponseTypeDebours['nom_t_deb']; ?>
+					</th>
+				</tr>
+				<div>
 				<?php 
 				$requeteDebours = $connexion-> prepare("SELECT deb.abr_deb AS abr_deb, UPPER(REPLACE(deb.nom_deb, '\'', '')) AS nom_deb, 
 														deb.id_deb AS id_deb,
 														af.tva AS tva, af.usd AS usd, af.montant AS montant,
-														af.detail AS detail
+														af.detail AS detail,
+														af.unite AS unite
 													FROM debours deb, affectation_debours_client_modele_licence af
 													WHERE deb.id_t_deb = ?
 														AND deb.id_deb = af.id_deb
@@ -5567,7 +5689,7 @@
 					}
 
 					?>
-					<tr>
+					<tr class="collapse multi-collapse" id="multiCollapseExample1_<?php echo $reponseTypeDebours['id_t_deb']; ?>">
 						<td width="10%">
 							<input type="hidden" name="id_deb_<?php echo $sous_compteur.'_'.$compteur_dossier;?>" value="<?php echo $reponseDebours['id_deb']; ?>">
 							<?php echo $reponseDebours['abr_deb']; ?>
@@ -5583,11 +5705,21 @@
 							?>
 						</td>
 						<td style="text-align: center;">
-							<input type="number" step="0.001" name="montant_<?php echo $sous_compteur.'_'.$compteur_dossier;?>" value="<?php echo $reponseDebours['montant']; ?>">
+							<select name="unite_<?php echo $sous_compteur.'_'.$compteur_dossier;?>">
+								<option  value="<?php echo $reponseDebours['unite']; ?>">
+									<?php echo $reponseDebours['unite']; ?>
+								</option>
+								<option></option>
+								<option value="CIF">CIF</option>
+								<option value="par declaration">par declaration</option>
+							</select>
+						</td>
+						<td style="text-align: center;">
+							<input type="number" step="0.001" name="montant_<?php echo $sous_compteur.'_'.$compteur_dossier;?>" id="montant_<?php echo $sous_compteur;?>" value="<?php echo $reponseDebours['montant']; ?>" onblur="getTotal()">
 
 						</td>
 						<td style="text-align: center;">
-							<select name="usd_<?php echo $sous_compteur.'_'.$compteur_dossier;?>">
+							<select name="usd_<?php echo $sous_compteur.'_'.$compteur_dossier;?>" id="usd_<?php echo $sous_compteur;?>" onchange="getTotal()">
 								<?php
 								if ($reponseDebours['usd'] == '0') {
 								?>
@@ -5604,7 +5736,7 @@
 							</select>
 						</td>
 						<td style="text-align: center;">
-							<select name="tva_<?php echo $sous_compteur.'_'.$compteur_dossier;?>">
+							<select name="tva_<?php echo $sous_compteur.'_'.$compteur_dossier;?>" id="tva_<?php echo $sous_compteur;?>" onchange="getTotal()">
 								<?php
 								if ($reponseDebours['tva'] == '0') {
 								?>
@@ -5623,10 +5755,12 @@
 					</tr>
 					<?php
 				}$requeteDebours-> closeCursor();
-
+				?>
+				</div>
+				<?php
 			}$requeteTypeDebours-> closeCursor();
 			?>
-			<input type="hidden" name="sous_compteur_<?php echo $compteur_dossier;?>" value="<?php echo $sous_compteur;?>">
+			<input type="hidden" name="sous_compteur_<?php echo $compteur_dossier;?>" id="sous_compteur" value="<?php echo $sous_compteur;?>">
 			<?php
 		}
 
@@ -11272,11 +11406,11 @@
 						
 
 							//$getDataRowCalculNetDays = $this-> getDataRowCalculNetDays($reponse['champ_col'], $id_dos);
-							if ( ($this-> getDifferenceDate($this-> getDataRow('dispatch_date', $id_dos), $this-> getDataRow('demande_attestation', $id_dos)) - $this-> getWeekendsAndHolidays($this-> getDataRow('demande_attestation', $id_dos), $this-> getDataRow('dispatch_date', $id_dos)) >= 0) && ($this-> getDifferenceDate($this-> getDataRow('dispatch_date', $id_dos), $this-> getDataRow('demande_attestation', $id_dos)) - $this-> getWeekendsAndHolidays($this-> getDataRow('demande_attestation', $id_dos), $this-> getDataRow('dispatch_date', $id_dos)) <= 5) ) {
+							if ( ($this-> getDifferenceDate($this-> getDataRow('dispatch_date', $id_dos), $this-> getDataRow('demande_attestation', $id_dos)) - $this-> getWeekendsAndHolidays($this-> getDataRow('demande_attestation', $id_dos), $this-> getDataRow('dispatch_date', $id_dos)) >= 0) && ($this-> getDifferenceDate($this-> getDataRow('dispatch_date', $id_dos), $this-> getDataRow('demande_attestation', $id_dos)) - $this-> getWeekendsAndHolidays($this-> getDataRow('demande_attestation', $id_dos), $this-> getDataRow('dispatch_date', $id_dos)) <= 2) ) {
 								$bg = "background-color: green; color: white;";
-							}else if ( ($this-> getDifferenceDate($this-> getDataRow('dispatch_date', $id_dos), $this-> getDataRow('demande_attestation', $id_dos)) - $this-> getWeekendsAndHolidays($this-> getDataRow('demande_attestation', $id_dos), $this-> getDataRow('dispatch_date', $id_dos)) > 5) && ($this-> getDifferenceDate($this-> getDataRow('dispatch_date', $id_dos), $this-> getDataRow('demande_attestation', $id_dos)) - $this-> getWeekendsAndHolidays($this-> getDataRow('demande_attestation', $id_dos), $this-> getDataRow('dispatch_date', $id_dos)) <= 7) ) {
+							}else if ( ($this-> getDifferenceDate($this-> getDataRow('dispatch_date', $id_dos), $this-> getDataRow('demande_attestation', $id_dos)) - $this-> getWeekendsAndHolidays($this-> getDataRow('demande_attestation', $id_dos), $this-> getDataRow('dispatch_date', $id_dos)) > 2) && ($this-> getDifferenceDate($this-> getDataRow('dispatch_date', $id_dos), $this-> getDataRow('demande_attestation', $id_dos)) - $this-> getWeekendsAndHolidays($this-> getDataRow('demande_attestation', $id_dos), $this-> getDataRow('dispatch_date', $id_dos)) <= 5) ) {
 								$bg = "background-color: orange; color: white;";
-							}else if ( ($this-> getDifferenceDate($this-> getDataRow('dispatch_date', $id_dos), $this-> getDataRow('demande_attestation', $id_dos)) - $this-> getWeekendsAndHolidays($this-> getDataRow('demande_attestation', $id_dos), $this-> getDataRow('dispatch_date', $id_dos)) > 7) ) {
+							}else if ( ($this-> getDifferenceDate($this-> getDataRow('dispatch_date', $id_dos), $this-> getDataRow('demande_attestation', $id_dos)) - $this-> getWeekendsAndHolidays($this-> getDataRow('demande_attestation', $id_dos), $this-> getDataRow('dispatch_date', $id_dos)) > 5) ) {
 							$bg = "background-color: red; color: white;";
 							}
 						?>
