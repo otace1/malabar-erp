@@ -253,7 +253,7 @@ $indiceSheet = 0;
 			$col++;
 
 			$excel-> getActiveSheet()
-				-> setCellValue($col.'3', 'FILES OVER 10 DAYS');
+				-> setCellValue($col.'3', 'FILES OVER 5 DAYS');
 
 			cellColor($col.'3', '87CEEB');
 			alignement($col.'3');
