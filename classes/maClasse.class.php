@@ -15117,7 +15117,7 @@
 						<?php echo number_format($reponse['autre_frais_fact'], 2, ',', ' ');?>
 					</td>
 					<td class="" style="text-align: right; border: 1px solid black;">
-						<?php echo number_format($reponse['montant_fact']+$reponse['fret_fact']+$reponse['assurance_fact']+$reponse['assurance_fact'], 2, ',', ' ');?>
+						<?php echo number_format($reponse['montant_fact']+$reponse['fret_fact']+$reponse['assurance_fact']+$reponse['autre_frais_fact'], 2, ',', ' ');?>
 					</td>
 					<?php
 					if ($id_mod_lic == '2') {
@@ -15240,7 +15240,7 @@
 						<?php echo number_format($reponse['autre_frais_fact'], 2, ',', ' ');?>
 					</td>
 					<td class="" style="text-align: right; border: 1px solid black;">
-						<?php echo number_format($reponse['montant_fact']+$reponse['fret_fact']+$reponse['assurance_fact']+$reponse['assurance_fact'], 2, ',', ' ');?>
+						<?php echo number_format($reponse['montant_fact']+$reponse['fret_fact']+$reponse['assurance_fact']+$reponse['autre_frais_fact'], 2, ',', ' ');?>
 					</td>
 					<?php
 					if ($id_mod_lic == '2') {
