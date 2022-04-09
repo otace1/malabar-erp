@@ -412,9 +412,6 @@ if ($maClasse-> nbreDelaiStatut('UNDER PREPARATION')>0) {
                               <td style="border: 1px solid black;">N.</td>
                               <td style="border: 1px solid black;">MCA REF. FILE</td>
                               <td style="border: 1px solid black;">Client</td>
-                              <td style="border: 1px solid black;">Horse</td>
-                              <td style="border: 1px solid black;">Trailer 1</td>
-                              <td style="border: 1px solid black;">Trailer 2</td>
                               <td style="border: 1px solid black;">Prealerte Date</td>
                               <td style="border: 1px solid black;">Klsa Arrival</td>
                               <td style="border: 1px solid black;">Wiski Arrival</td>
@@ -531,6 +528,9 @@ if ($maClasse-> nbreArriveKlsa2Jour()>0) {
                               <td style="border: 1px solid black;">N.</td>
                               <td style="border: 1px solid black;">MCA REF. FILE</td>
                               <td style="border: 1px solid black;">Client</td>
+                              <td style="border: 1px solid black;">Horse</td>
+                              <td style="border: 1px solid black;">Trailer 1</td>
+                              <td style="border: 1px solid black;">Trailer 2</td>
                               <td style="border: 1px solid black;">Prealerte Date</td>
                               <td style="border: 1px solid black;">Klsa Arrival</td>
                          </tr>
