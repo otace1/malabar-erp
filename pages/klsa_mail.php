@@ -32,9 +32,9 @@ if ($maClasse-> nbreDelaiDateKlsa()>0) {
         //Recipients
         $mail->setFrom('malabar-erp@belej-consulting.com', 'MALABAR-ERP');
 
-        $mail->addAddress('vijeesh@malabar-group.com');
-        $mail->addAddress('rajeev@malabar-group.com');
-        $mail->addAddress('joshy@malabar-group.com');
+        // $mail->addAddress('vijeesh@malabar-group.com');
+        // $mail->addAddress('rajeev@malabar-group.com');
+        // $mail->addAddress('joshy@malabar-group.com');
         $mail->addAddress('jeremy@belej-consulting.com');
         //$mail->addBCC('bcc@example.com');
 
@@ -53,6 +53,9 @@ if ($maClasse-> nbreDelaiDateKlsa()>0) {
                               <td style="border: 1px solid black;">N.</td>
                               <td style="border: 1px solid black;">MCA REF. FILE</td>
                               <td style="border: 1px solid black;">Client</td>
+                              <td style="border: 1px solid black;">Horse</td>
+                              <td style="border: 1px solid black;">Trailer 1</td>
+                              <td style="border: 1px solid black;">Trailer 2</td>
                               <td style="border: 1px solid black;">Prealerte Date</td>
                               <td style="border: 1px solid black;">Klsa Arrival</td>
                               <td style="border: 1px solid black;">Wiski Arrival</td>
@@ -88,10 +91,10 @@ if ($maClasse-> nbreErreurDateKlsa()>0) {
         $mail->Port       = 587;                                    //TCP port to connect to; use 587 if you have set `SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS`
 
         //Recipients
-        $mail->setFrom('malabar-erp@belej-consulting.com', 'MALABAR-ERP');
-        $mail->addAddress('vijeesh@malabar-group.com');
-        $mail->addAddress('rajeev@malabar-group.com');
-        $mail->addAddress('joshy@malabar-group.com');
+        // $mail->setFrom('malabar-erp@belej-consulting.com', 'MALABAR-ERP');
+        // $mail->addAddress('vijeesh@malabar-group.com');
+        // $mail->addAddress('rajeev@malabar-group.com');
+        // $mail->addAddress('joshy@malabar-group.com');
         $mail->addAddress('jeremy@belej-consulting.com');
         //$mail->addBCC('bcc@example.com');
 
@@ -110,6 +113,9 @@ if ($maClasse-> nbreErreurDateKlsa()>0) {
                               <td style="border: 1px solid black;">N.</td>
                               <td style="border: 1px solid black;">MCA REF. FILE</td>
                               <td style="border: 1px solid black;">Client</td>
+                              <td style="border: 1px solid black;">Horse</td>
+                              <td style="border: 1px solid black;">Trailer 1</td>
+                              <td style="border: 1px solid black;">Trailer 2</td>
                               <td style="border: 1px solid black;">Prealerte Date</td>
                               <td style="border: 1px solid black;">Klsa Arrival</td>
                               <td style="border: 1px solid black;">Wiski Arrival</td>
@@ -345,6 +351,9 @@ if ($maClasse-> nbreDelaiDateWiski()>0) {
                               <td style="border: 1px solid black;">N.</td>
                               <td style="border: 1px solid black;">MCA REF. FILE</td>
                               <td style="border: 1px solid black;">Client</td>
+                              <td style="border: 1px solid black;">Horse</td>
+                              <td style="border: 1px solid black;">Trailer 1</td>
+                              <td style="border: 1px solid black;">Trailer 2</td>
                               <td style="border: 1px solid black;">Prealerte Date</td>
                               <td style="border: 1px solid black;">Klsa Arrival</td>
                               <td style="border: 1px solid black;">Wiski Arrival</td>
@@ -382,9 +391,9 @@ if ($maClasse-> nbreDelaiStatut('UNDER PREPARATION')>0) {
         //Recipients
         $mail->setFrom('malabar-erp@belej-consulting.com', 'MALABAR-ERP');
 
-        $mail->addAddress('vijeesh@malabar-group.com');
-        $mail->addAddress('rajeev@malabar-group.com');
-        $mail->addAddress('joshy@malabar-group.com');
+        // $mail->addAddress('vijeesh@malabar-group.com');
+        // $mail->addAddress('rajeev@malabar-group.com');
+        // $mail->addAddress('joshy@malabar-group.com');
         $mail->addAddress('jeremy@belej-consulting.com');
         //$mail->addBCC('bcc@example.com');
 
@@ -403,6 +412,9 @@ if ($maClasse-> nbreDelaiStatut('UNDER PREPARATION')>0) {
                               <td style="border: 1px solid black;">N.</td>
                               <td style="border: 1px solid black;">MCA REF. FILE</td>
                               <td style="border: 1px solid black;">Client</td>
+                              <td style="border: 1px solid black;">Horse</td>
+                              <td style="border: 1px solid black;">Trailer 1</td>
+                              <td style="border: 1px solid black;">Trailer 2</td>
                               <td style="border: 1px solid black;">Prealerte Date</td>
                               <td style="border: 1px solid black;">Klsa Arrival</td>
                               <td style="border: 1px solid black;">Wiski Arrival</td>
@@ -440,9 +452,9 @@ if ($maClasse-> nbreDelaiDateClotureSansDeliver()>0) {
         //Recipients
         $mail->setFrom('malabar-erp@belej-consulting.com', 'MALABAR-ERP');
 
-        $mail->addAddress('vijeesh@malabar-group.com');
-        $mail->addAddress('rajeev@malabar-group.com');
-        $mail->addAddress('joshy@malabar-group.com');
+        // $mail->addAddress('vijeesh@malabar-group.com');
+        // $mail->addAddress('rajeev@malabar-group.com');
+        // $mail->addAddress('joshy@malabar-group.com');
         $mail->addAddress('jeremy@belej-consulting.com');
         //$mail->addBCC('bcc@example.com');
 
@@ -498,9 +510,9 @@ if ($maClasse-> nbreArriveKlsa2Jour()>0) {
         //Recipients
         $mail->setFrom('malabar-erp@belej-consulting.com', 'MALABAR-ERP');
 
-        $mail->addAddress('vijeesh@malabar-group.com');
-        $mail->addAddress('rajeev@malabar-group.com');
-        $mail->addAddress('joshy@malabar-group.com');
+        // $mail->addAddress('vijeesh@malabar-group.com');
+        // $mail->addAddress('rajeev@malabar-group.com');
+        // $mail->addAddress('joshy@malabar-group.com');
         $mail->addAddress('jeremy@belej-consulting.com');
         //$mail->addBCC('bcc@example.com');
 
