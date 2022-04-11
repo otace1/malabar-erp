@@ -8497,8 +8497,7 @@
 
 			$requeteStatus = $connexion-> query("SELECT *
 												FROM status_dashboard
-												WHERE id_mod_lic = 1
-													AND cleared='0'");
+												WHERE id_mod_lic = 1");
 			while ($reponseStatus = $requeteStatus-> fetch()) {
 				
 				$this-> nbreSummary($reponseStatus['nom_stat'], 1);
