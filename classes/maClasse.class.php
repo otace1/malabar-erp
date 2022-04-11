@@ -8513,12 +8513,15 @@
 	                  <td style="border: 1px solid black;">Horse</td>
 	                  <td style="border: 1px solid black;">Trailer 1</td>
 	                  <td style="border: 1px solid black;">Trailer 2</td>
+	                  <td style="border: 1px solid black;">Trailer 2</td>
+	                  <td style="border: 1px solid black;">LOADING DATE</td>
 	                  <td style="border: 1px solid black;">REF.DECL.</td>
 	                  <td style="border: 1px solid black;">DATE DECL.</td>
 	                  <td style="border: 1px solid black;">REF.LIQ.</td>
 	                  <td style="border: 1px solid black;">DATE LIQ.</td>
 	                  <td style="border: 1px solid black;">REF.QUIT.</td>
 	                  <td style="border: 1px solid black;">DATE QUIT.</td>
+	                  <td style="border: 1px solid black;">DELAY</td>
 	             </tr>
 	            ';
 	             $requeteDossier = $connexion-> prepare("SELECT client.nom_cli AS nom_cli,
@@ -8531,7 +8534,9 @@
 	             												dossier.ref_liq AS ref_liq,
 	             												DATE_FORMAT(dossier.date_liq, '%d/%m/%Y') AS date_liq,
 	             												dossier.ref_quit AS ref_quit,
-	             												DATE_FORMAT(dossier.date_quit, '%d/%m/%Y') AS date_quit
+	             												DATE_FORMAT(dossier.date_quit, '%d/%m/%Y') AS date_quit,
+	             												DATE_FORMAT(dossier.load_date, '%d/%m/%Y') AS load_date,
+	             												DATEDIFF(CURRENT_DATE(), dossier.load_date) AS delay
 	             											FROM dossier, client
 	             											WHERE dossier.cleared = '0'
 	             												AND dossier.statut = ?
@@ -8559,6 +8564,9 @@
 								'.$reponse['trailer_2'].'
 							</td>
 							<td class="" style="border: 1px solid black; " class="">
+								'.$reponse['load_date'].'
+							</td>
+							<td class="" style="border: 1px solid black; " class="">
 								'.$reponse['ref_decl'].'
 							</td>
 							<td class="" style="border: 1px solid black; " class="">
@@ -8575,6 +8583,9 @@
 							</td>
 							<td class="" style="border: 1px solid black; " class="">
 								'.$reponse['date_quit'].'
+							</td>
+							<td class="" style="border: 1px solid black; " class="">
+								'.$reponse['delay'].'
 							</td>
 						</tr>';
 	             }$requeteDossier-> closeCursor();
