@@ -8387,6 +8387,7 @@
 													AND d.dispatch_deliv IS NULL
 													AND d.cleared = '1'
 													AND d.ref_dos NOT LIKE '%20-%'
+													AND (d.ref_dos NOT LIKE '%21-%' AND d.cleared='1')
 												ORDER BY d.date_creat_dos ASC");
 			//$requete-> execute(array($entree['statut']));
 			while ($reponse = $requete-> fetch()) {
@@ -8482,6 +8483,107 @@
 			</tr>
 			';
 			}$requete-> closeCursor();
+
+			return $ligne;
+
+		}
+
+		public function buildNotificationMailExport(){
+			include("connexion.php");
+			//$entree['statut'] = $statut;
+
+			$compteur = 0;
+			$ligne = '';
+
+			$requeteStatus = $connexion-> query("SELECT *
+												FROM status_dashboard
+												WHERE id_mod_lic = 1
+													AND cleared='0'");
+			while ($reponseStatus = $requeteStatus-> fetch()) {
+				
+				$this-> nbreSummary($reponseStatus['nom_stat'], 1);
+				$compteur = 0;
+			$ligne .='
+			<b><font color="red">'.$this-> nbreSummary($reponseStatus['nom_stat'], 1).'</font></b> file(s) '.$reponseStatus['nom_stat'].': <br>
+			<table width="100%" style="  border: 1px solid black; border-radius: 5px; border-collapse:collapse;">
+	             <tr style="font-weight: bold; background-color: black; color: white;">
+	                  <td style="border: 1px solid black;">N.</td>
+	                  <td style="border: 1px solid black;">MCA REF. FILE</td>
+	                  <td style="border: 1px solid black;">Client</td>
+	                  <td style="border: 1px solid black;">Horse</td>
+	                  <td style="border: 1px solid black;">Trailer 1</td>
+	                  <td style="border: 1px solid black;">Trailer 2</td>
+	                  <td style="border: 1px solid black;">REF.DECL.</td>
+	                  <td style="border: 1px solid black;">DATE DECL.</td>
+	                  <td style="border: 1px solid black;">REF.LIQ.</td>
+	                  <td style="border: 1px solid black;">DATE LIQ.</td>
+	                  <td style="border: 1px solid black;">REF.QUIT.</td>
+	                  <td style="border: 1px solid black;">DATE QUIT.</td>
+	             </tr>
+	            ';
+	             $requeteDossier = $connexion-> prepare("SELECT client.nom_cli AS nom_cli,
+	             												dossier.ref_dos AS ref_dos,
+	             												dossier.horse AS horse,
+	             												dossier.trailer_1 AS trailer_1,
+	             												dossier.trailer_2 AS trailer_2,
+	             												dossier.ref_decl AS ref_decl,
+	             												DATE_FORMAT(dossier.date_decl, '%d/%m/%Y') AS date_decl,
+	             												dossier.ref_liq AS ref_liq,
+	             												DATE_FORMAT(dossier.date_liq, '%d/%m/%Y') AS date_liq,
+	             												dossier.ref_quit AS ref_quit,
+	             												DATE_FORMAT(dossier.date_quit, '%d/%m/%Y') AS date_quit
+	             											FROM dossier, client
+	             											WHERE dossier.cleared = '0'
+	             												AND dossier.statut = ?
+	             												AND dossier.id_mod_lic = 1");
+	             while ($reponseDossier = $requeteDossier-> fetch()) {
+	             	$compteur++;
+					$ligne .= '
+						<tr style="<?php echo $bg;?>">
+							<td class="" style="border: 1px solid black; " class="">
+								'.$compteur.'
+							</td>
+							<td class="" style="border: 1px solid black; " class="">
+								'.$reponse['ref_dos'].'
+							</td>
+							<td class="" style="border: 1px solid black; " class="">
+								'.$reponse['nom_cli'].'
+							</td>
+							<td class="" style="border: 1px solid black; " class="">
+								'.$reponse['Horse'].'
+							</td>
+							<td class="" style="border: 1px solid black; " class="">
+								'.$reponse['trailer_1'].'
+							</td>
+							<td class="" style="border: 1px solid black; " class="">
+								'.$reponse['trailer_2'].'
+							</td>
+							<td class="" style="border: 1px solid black; " class="">
+								'.$reponse['ref_decl'].'
+							</td>
+							<td class="" style="border: 1px solid black; " class="">
+								'.$reponse['date_decl'].'
+							</td>
+							<td class="" style="border: 1px solid black; " class="">
+								'.$reponse['ref_liq'].'
+							</td>
+							<td class="" style="border: 1px solid black; " class="">
+								'.$reponse['date_liq'].'
+							</td>
+							<td class="" style="border: 1px solid black; " class="">
+								'.$reponse['ref_quit'].'
+							</td>
+							<td class="" style="border: 1px solid black; " class="">
+								'.$reponse['date_quit'].'
+							</td>
+						</tr>';
+	             }$requeteDossier-> closeCursor();
+	             $ligne .='
+				         </table>
+				         <br>
+				         <br>';
+
+			}$requeteStatus-> closeCursor();
 
 			return $ligne;
 
@@ -9918,6 +10020,7 @@
 													AND dispatch_deliv IS NULL
 													AND cleared = "1"
 													AND ref_dos NOT LIKE "%20-%"
+													AND (ref_dos NOT LIKE "%21-%" AND cleared="1")
 											');
 			//$requete-> execute(array($entree['id_dos']));
 
