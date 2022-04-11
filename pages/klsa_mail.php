@@ -153,9 +153,9 @@ if ($maClasse-> getNombreDossierSansLiquidationApresCotation()>0) {
         //Recipients
         $mail->setFrom('malabar-erp@belej-consulting.com', 'MALABAR-ERP');
         
-        $mail->addAddress('vijeesh@malabar-group.com');
-         $mail->addCC('rajeev@malabar-group.com');
-         $mail->addCC('joshy@malabar-group.com');
+        // $mail->addAddress('vijeesh@malabar-group.com');
+        //  $mail->addCC('rajeev@malabar-group.com');
+        //  $mail->addCC('joshy@malabar-group.com');
          $mail->addCC('jeremy@belej-consulting.com');
         //$mail->addCC('dngoy@douanexpresscustoms.com');
         //$mail->addBCC('bcc@example.com');
@@ -211,69 +211,9 @@ if ($maClasse-> getNombreDossierSansQuittanceApresIM4()>0) {
         //Recipients
         $mail->setFrom('malabar-erp@belej-consulting.com', 'MALABAR-ERP');
         
-        $mail->addAddress('vijeesh@malabar-group.com');
-         $mail->addCC('rajeev@malabar-group.com');
-         $mail->addCC('joshy@malabar-group.com');
-         $mail->addCC('jeremy@belej-consulting.com');
-        //$mail->addCC('dngoy@douanexpresscustoms.com');
-        //$mail->addBCC('bcc@example.com');
-
-        //Attachments
-        //$mail->addAttachment('/var/tmp/file.tar.gz');         //Add attachments
-        //$mail->addAttachment('/tmp/image.jpg', 'new.jpg');    //Optional name
-
-        //Content
-        $mail->isHTML(true);                                  //Set email format to HTML
-        $mail->Subject = "FILES WITHOUT QUITTANCE BEYOND 2 DAYS";
-
-          $message = 'Dear All <br><br>';
-          $message .= 'We have <b><font color="red">'.$maClasse-> getNombreDossierSansQuittanceApresIM4().'</font></b> file(s) without Liquidation of which delay beyond two days: <br>'; 
-          $message .= '<table width="100%" style="  border: 1px solid black; border-radius: 5px; border-collapse:collapse;">
-                         <tr style="font-weight: bold; background-color: black; color: white;">
-                              <td style="border: 1px solid black;">N.</td>
-                              <td style="border: 1px solid black;">MCA REF. FILE</td>
-                              <td style="border: 1px solid black;">Client</td>
-                              <td style="border: 1px solid black;">Prealerte Date</td>
-                              <td style="border: 1px solid black;">Prealerte Delay</td>
-                              <td style="border: 1px solid black;">Declaration Ref.</td>
-                              <td style="border: 1px solid black;">Declaration Date</td>
-                              <td style="border: 1px solid black;">Liq. Ref.</td>
-                              <td style="border: 1px solid black;">Liq Date</td>
-                              <td style="border: 1px solid black;">Liq. Delay </td>
-                         </tr>
-                         '.$maClasse-> afficherNotificationMailDossierSansQuittanceApresIM4().'
-                    </table>';
-
-        $mail->Body    = $message;
-        
-
-        $mail->send();
-        echo 'Message has been sent';
-    } catch (Exception $e) {
-        echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
-    }
-}
-
-if ($maClasse-> getNombreDossierSansQuittanceApresIM4()>0) {
-     
-    try {
-        //Server settings
-        $mail->SMTPDebug = SMTP::DEBUG_SERVER;                      //Enable verbose debug output
-        $mail->isSMTP();                                            //Send using SMTP
-        $mail->Host       = 'mail11.lwspanel.com';                     //Set the SMTP server to send through
-        //$mail->Host       = 'outlook.office365.com';                     //Set the SMTP server to send through
-        $mail->SMTPAuth   = true;                                   //Enable SMTP authentication
-        $mail->Username   = 'malabar-erp@belej-consulting.com';                     //SMTP username
-        $mail->Password   = 'M@l@b@r-3RP';                               //SMTP password
-        $mail->SMTPSecure = 'tls';            //Enable implicit TLS encryption
-        $mail->Port       = 587;                                    //TCP port to connect to; use 587 if you have set `SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS`
-
-        //Recipients
-        $mail->setFrom('malabar-erp@belej-consulting.com', 'MALABAR-ERP');
-        
-        $mail->addAddress('vijeesh@malabar-group.com');
-         $mail->addCC('rajeev@malabar-group.com');
-         $mail->addCC('joshy@malabar-group.com');
+        // $mail->addAddress('vijeesh@malabar-group.com');
+        //  $mail->addCC('rajeev@malabar-group.com');
+        //  $mail->addCC('joshy@malabar-group.com');
          $mail->addCC('jeremy@belej-consulting.com');
         //$mail->addCC('dngoy@douanexpresscustoms.com');
         //$mail->addBCC('bcc@example.com');
@@ -412,6 +352,9 @@ if ($maClasse-> nbreDelaiStatut('UNDER PREPARATION')>0) {
                               <td style="border: 1px solid black;">N.</td>
                               <td style="border: 1px solid black;">MCA REF. FILE</td>
                               <td style="border: 1px solid black;">Client</td>
+                              <td style="border: 1px solid black;">Horse</td>
+                              <td style="border: 1px solid black;">Trailer 1</td>
+                              <td style="border: 1px solid black;">Trailer 2</td>
                               <td style="border: 1px solid black;">Prealerte Date</td>
                               <td style="border: 1px solid black;">Klsa Arrival</td>
                               <td style="border: 1px solid black;">Wiski Arrival</td>
@@ -546,5 +489,51 @@ if ($maClasse-> nbreArriveKlsa2Jour()>0) {
         echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
     }
 }
+
+
+
+//if ($maClasse-> nbreErreurDateKlsa()>0) {
+     
+    try {
+        //Server settings
+        $mail->SMTPDebug = SMTP::DEBUG_SERVER;                      //Enable verbose debug output
+        $mail->isSMTP();                                            //Send using SMTP
+        $mail->Host       = 'mail11.lwspanel.com';                     //Set the SMTP server to send through
+        //$mail->Host       = 'outlook.office365.com';                     //Set the SMTP server to send through
+        $mail->SMTPAuth   = true;                                   //Enable SMTP authentication
+        $mail->Username   = 'malabar-erp@belej-consulting.com';                     //SMTP username
+        $mail->Password   = 'M@l@b@r-3RP';                               //SMTP password
+        $mail->SMTPSecure = 'tls';            //Enable implicit TLS encryption
+        $mail->Port       = 587;                                    //TCP port to connect to; use 587 if you have set `SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS`
+
+        //Recipients
+        // $mail->setFrom('malabar-erp@belej-consulting.com', 'MALABAR-ERP');
+        // $mail->addAddress('vijeesh@malabar-group.com');
+        // $mail->addAddress('rajeev@malabar-group.com');
+        // $mail->addAddress('joshy@malabar-group.com');
+        $mail->addAddress('jeremy@belej-consulting.com');
+        //$mail->addBCC('bcc@example.com');
+
+        //Attachments
+        //$mail->addAttachment('/var/tmp/file.tar.gz');         //Add attachments
+        //$mail->addAttachment('/tmp/image.jpg', 'new.jpg');    //Optional name
+
+        //Content
+        $mail->isHTML(true);                                  //Set email format to HTML
+        $mail->Subject = "EXPORT FILES NOTIFICATION";
+
+          $message = 'Dear All <br><br>';
+          $message .= $maClasse-> buildNotificationMailExport();
+
+        $mail->Body    = $message;
+        
+
+        $mail->send();
+        echo 'Message has been sent';
+    } catch (Exception $e) {
+        echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
+    }
+//}
+
 
 ?>
