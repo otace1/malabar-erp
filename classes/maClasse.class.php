@@ -8500,10 +8500,10 @@
 												WHERE id_mod_lic = 1");
 			while ($reponseStatus = $requeteStatus-> fetch()) {
 				
-				$this-> nbreSummary($reponseStatus['nom_stat'], 1);
+				$this-> nbreSummary($reponseStatus['nom_stat'], 1, NULL, NULL, NULL);
 				$compteur = 0;
 			$ligne .='
-			<b><font color="red">'.$this-> nbreSummary($reponseStatus['nom_stat'], 1).'</font></b> file(s) '.$reponseStatus['nom_stat'].': <br>
+			<b><font color="red">'.$this-> nbreSummary($reponseStatus['nom_stat'], 1, NULL, NULL, NULL).'</font></b> file(s) '.$reponseStatus['nom_stat'].': <br>
 			<table width="100%" style="  border: 1px solid black; border-radius: 5px; border-collapse:collapse;">
 	             <tr style="font-weight: bold; background-color: black; color: white;">
 	                  <td style="border: 1px solid black;">N.</td>
