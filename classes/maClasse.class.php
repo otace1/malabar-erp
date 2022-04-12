@@ -8512,7 +8512,6 @@
 	                  <td style="border: 1px solid black;">Horse</td>
 	                  <td style="border: 1px solid black;">Trailer 1</td>
 	                  <td style="border: 1px solid black;">Trailer 2</td>
-	                  <td style="border: 1px solid black;">Trailer 2</td>
 	                  <td style="border: 1px solid black;">LOADING DATE</td>
 	                  <td style="border: 1px solid black;">REF.DECL.</td>
 	                  <td style="border: 1px solid black;">DATE DECL.</td>
@@ -8543,7 +8542,7 @@
 	             												AND dossier.id_cli = client.id_cli");
 
 	             $requeteDossier-> execute(array($reponseStatus['nom_stat']));
-	             
+
 	             while ($reponseDossier = $requeteDossier-> fetch()) {
 	             	$compteur++;
 					$ligne .= '
