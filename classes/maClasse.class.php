@@ -8541,6 +8541,9 @@
 	             												AND dossier.statut = ?
 	             												AND dossier.id_mod_lic = 1
 	             												AND dossier.id_cli = client.id_cli");
+
+	             $requeteDossier-> execute(array($reponseStatus['nom_stat']));
+	             
 	             while ($reponseDossier = $requeteDossier-> fetch()) {
 	             	$compteur++;
 					$ligne .= '
