@@ -8551,43 +8551,43 @@
 								'.$compteur.'
 							</td>
 							<td class="" style="border: 1px solid black; " class="">
-								'.$reponse['ref_dos'].'
+								'.$reponseDossier['ref_dos'].'
 							</td>
 							<td class="" style="border: 1px solid black; " class="">
-								'.$reponse['nom_cli'].'
+								'.$reponseDossier['nom_cli'].'
 							</td>
 							<td class="" style="border: 1px solid black; " class="">
-								'.$reponse['Horse'].'
+								'.$reponseDossier['Horse'].'
 							</td>
 							<td class="" style="border: 1px solid black; " class="">
-								'.$reponse['trailer_1'].'
+								'.$reponseDossier['trailer_1'].'
 							</td>
 							<td class="" style="border: 1px solid black; " class="">
-								'.$reponse['trailer_2'].'
+								'.$reponseDossier['trailer_2'].'
 							</td>
 							<td class="" style="border: 1px solid black; " class="">
-								'.$reponse['load_date'].'
+								'.$reponseDossier['load_date'].'
 							</td>
 							<td class="" style="border: 1px solid black; " class="">
-								'.$reponse['ref_decl'].'
+								'.$reponseDossier['ref_decl'].'
 							</td>
 							<td class="" style="border: 1px solid black; " class="">
-								'.$reponse['date_decl'].'
+								'.$reponseDossier['date_decl'].'
 							</td>
 							<td class="" style="border: 1px solid black; " class="">
-								'.$reponse['ref_liq'].'
+								'.$reponseDossier['ref_liq'].'
 							</td>
 							<td class="" style="border: 1px solid black; " class="">
-								'.$reponse['date_liq'].'
+								'.$reponseDossier['date_liq'].'
 							</td>
 							<td class="" style="border: 1px solid black; " class="">
-								'.$reponse['ref_quit'].'
+								'.$reponseDossier['ref_quit'].'
 							</td>
 							<td class="" style="border: 1px solid black; " class="">
-								'.$reponse['date_quit'].'
+								'.$reponseDossier['date_quit'].'
 							</td>
 							<td class="" style="border: 1px solid black; " class="">
-								'.$reponse['delay'].'
+								'.$reponseDossier['delay'].'
 							</td>
 						</tr>';
 	             }$requeteDossier-> closeCursor();
