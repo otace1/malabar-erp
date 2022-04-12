@@ -135,23 +135,23 @@
     <section class="content">
       <div class="container-fluid" style="">
         <?php
-          if (($_SESSION['id_role']=='1' || $_SESSION['id_role']=='2' || $_SESSION['id_role']=='6') && $_GET['id_mod_trac']=='1') {
+          if (($_SESSION['id_role']=='1' || $_SESSION['id_role']=='11' || $_SESSION['id_role']=='2' || $_SESSION['id_role']=='6') && $_GET['id_mod_trac']=='1') {
 
             include("dashboardTracking.php");
 
-          }else if (($_SESSION['id_role']=='1' || $_SESSION['id_role']=='2' || $_SESSION['id_role']=='6') && $_GET['id_mod_trac']=='2') {
+          }else if (($_SESSION['id_role']=='1' || $_SESSION['id_role']=='11' || $_SESSION['id_role']=='2' || $_SESSION['id_role']=='6') && $_GET['id_mod_trac']=='2') {
 
             include("dashboardTrackingAutomatique.php");
 
           }
 
-          if (($_SESSION['id_role']=='1' || $_SESSION['id_role']=='2' || $_SESSION['id_role']=='7') && ($_GET['id_mod_trac']=='2' && $_GET['id_mod_trans']=='1')) {
+          if (($_SESSION['id_role']=='1' || $_SESSION['id_role']=='11' || $_SESSION['id_role']=='2' || $_SESSION['id_role']=='7') && ($_GET['id_mod_trac']=='2' && $_GET['id_mod_trans']=='1')) {
 
             include("dashboardKlsa.php");
 
           }
 
-          if (($_SESSION['id_role']=='1' || $_SESSION['id_role']=='2' || $_SESSION['id_role']=='8') && ($_GET['id_mod_trans']=='1')) {
+          if (($_SESSION['id_role']=='1' || $_SESSION['id_role']=='11' || $_SESSION['id_role']=='2' || $_SESSION['id_role']=='8') && ($_GET['id_mod_trans']=='1')) {
 
             include("dashboardKzi.php");
 
