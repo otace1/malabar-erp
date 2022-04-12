@@ -8539,7 +8539,8 @@
 	             											FROM dossier, client
 	             											WHERE dossier.cleared = '0'
 	             												AND dossier.statut = ?
-	             												AND dossier.id_mod_lic = 1");
+	             												AND dossier.id_mod_lic = 1
+	             												AND dossier.id_cli = client.id_cli");
 	             while ($reponseDossier = $requeteDossier-> fetch()) {
 	             	$compteur++;
 					$ligne .= '
