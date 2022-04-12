@@ -32,9 +32,8 @@ if ($maClasse-> nbreDelaiDateKlsa()>0) {
         //Recipients
         $mail->setFrom('malabar-erp@belej-consulting.com', 'MALABAR-ERP');
 
-        // $mail->addAddress('vijeesh@malabar-group.com');
-        // $mail->addAddress('rajeev@malabar-group.com');
-        // $mail->addAddress('joshy@malabar-group.com');
+        $mail->addAddress('vijeesh@malabar-group.com');
+        $mail->addAddress('rajeev@malabar-group.com');
         $mail->addAddress('jeremy@belej-consulting.com');
         //$mail->addBCC('bcc@example.com');
 
@@ -90,11 +89,10 @@ if ($maClasse-> nbreErreurDateKlsa()>0) {
         $mail->SMTPSecure = 'tls';            //Enable implicit TLS encryption
         $mail->Port       = 587;                                    //TCP port to connect to; use 587 if you have set `SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS`
 
-        //Recipients
-        // $mail->setFrom('malabar-erp@belej-consulting.com', 'MALABAR-ERP');
-        // $mail->addAddress('vijeesh@malabar-group.com');
-        // $mail->addAddress('rajeev@malabar-group.com');
-        // $mail->addAddress('joshy@malabar-group.com');
+        // Recipients
+        $mail->setFrom('malabar-erp@belej-consulting.com', 'MALABAR-ERP');
+        $mail->addAddress('vijeesh@malabar-group.com');
+        $mail->addAddress('rajeev@malabar-group.com');
         $mail->addAddress('jeremy@belej-consulting.com');
         //$mail->addBCC('bcc@example.com');
 
@@ -153,11 +151,9 @@ if ($maClasse-> getNombreDossierSansLiquidationApresCotation()>0) {
         //Recipients
         $mail->setFrom('malabar-erp@belej-consulting.com', 'MALABAR-ERP');
         
-        // $mail->addAddress('vijeesh@malabar-group.com');
-        //  $mail->addCC('rajeev@malabar-group.com');
-        //  $mail->addCC('joshy@malabar-group.com');
+        $mail->addAddress('vijeesh@malabar-group.com');
+         $mail->addCC('rajeev@malabar-group.com');
          $mail->addCC('jeremy@belej-consulting.com');
-        //$mail->addCC('dngoy@douanexpresscustoms.com');
         //$mail->addBCC('bcc@example.com');
 
         //Attachments
@@ -211,11 +207,9 @@ if ($maClasse-> getNombreDossierSansQuittanceApresIM4()>0) {
         //Recipients
         $mail->setFrom('malabar-erp@belej-consulting.com', 'MALABAR-ERP');
         
-        // $mail->addAddress('vijeesh@malabar-group.com');
-        //  $mail->addCC('rajeev@malabar-group.com');
-        //  $mail->addCC('joshy@malabar-group.com');
+        $mail->addAddress('vijeesh@malabar-group.com');
+         $mail->addCC('rajeev@malabar-group.com');
          $mail->addCC('jeremy@belej-consulting.com');
-        //$mail->addCC('dngoy@douanexpresscustoms.com');
         //$mail->addBCC('bcc@example.com');
 
         //Attachments
@@ -270,9 +264,8 @@ if ($maClasse-> nbreDelaiDateWiski()>0) {
 
         //Recipients
         // $mail->setFrom('malabar-erp@belej-consulting.com', 'MALABAR-ERP');
-        // // $mail->addAddress('vijeesh@malabar-group.com');
-        // // $mail->addAddress('rajeev@malabar-group.com');
-        // // $mail->addAddress('joshy@malabar-group.com');
+        $mail->addAddress('vijeesh@malabar-group.com');
+        $mail->addAddress('rajeev@malabar-group.com');
         $mail->addAddress('jeremy@belej-consulting.com');
         //$mail->addBCC('bcc@example.com');
 
@@ -314,7 +307,7 @@ if ($maClasse-> nbreDelaiDateWiski()>0) {
     }
 }
 
-if ($maClasse-> nbreDelaiStatut('UNDER PREPARATION')>0) {
+if ($maClasse-> nbreUnderPreparation()>0) {
      
     try {
         //Server settings
@@ -331,9 +324,8 @@ if ($maClasse-> nbreDelaiStatut('UNDER PREPARATION')>0) {
         //Recipients
         $mail->setFrom('malabar-erp@belej-consulting.com', 'MALABAR-ERP');
 
-        // $mail->addAddress('vijeesh@malabar-group.com');
-        // $mail->addAddress('rajeev@malabar-group.com');
-        // $mail->addAddress('joshy@malabar-group.com');
+        $mail->addAddress('vijeesh@malabar-group.com');
+        $mail->addAddress('rajeev@malabar-group.com');
         $mail->addAddress('jeremy@belej-consulting.com');
         //$mail->addBCC('bcc@example.com');
 
@@ -346,7 +338,7 @@ if ($maClasse-> nbreDelaiStatut('UNDER PREPARATION')>0) {
         $mail->Subject = "FILES UNDER PREPARATION OVER 15 DAYS";
 
           $message = 'Dear All <br><br>';
-          $message .= 'We have <b><font color="red">'.$maClasse-> nbreDelaiStatut('UNDER PREPARATION').'</font></b> file(s) under preparation over 15 days: <br>'; 
+          $message .= 'We have <b><font color="red">'.$maClasse-> nbreUnderPreparation().'</font></b> file(s) under preparation over 15 days: <br>'; 
           $message .= '<table width="100%" style="  border: 1px solid black; border-radius: 5px; border-collapse:collapse;">
                          <tr style="font-weight: bold; background-color: black; color: white;">
                               <td style="border: 1px solid black;">N.</td>
@@ -362,7 +354,7 @@ if ($maClasse-> nbreDelaiStatut('UNDER PREPARATION')>0) {
                               <td style="border: 1px solid black;">Dispatch From Klsa</td>
                               <td style="border: 1px solid black;">Delay</td>
                          </tr>
-                         '.$maClasse-> afficherDelaiDateStatut('UNDER PREPARATION').'
+                         '.$maClasse-> afficherDossierUnderPreparation().'
                     </table>';
 
         $mail->Body    = $message;
@@ -392,9 +384,8 @@ if ($maClasse-> nbreDelaiDateClotureSansDeliver()>0) {
         //Recipients
         $mail->setFrom('malabar-erp@belej-consulting.com', 'MALABAR-ERP');
 
-        // $mail->addAddress('vijeesh@malabar-group.com');
-        // $mail->addAddress('rajeev@malabar-group.com');
-        // $mail->addAddress('joshy@malabar-group.com');
+        $mail->addAddress('vijeesh@malabar-group.com');
+        $mail->addAddress('rajeev@malabar-group.com');
         $mail->addAddress('jeremy@belej-consulting.com');
         //$mail->addBCC('bcc@example.com');
 
@@ -450,9 +441,8 @@ if ($maClasse-> nbreArriveKlsa2Jour()>0) {
         //Recipients
         $mail->setFrom('malabar-erp@belej-consulting.com', 'MALABAR-ERP');
 
-        // $mail->addAddress('vijeesh@malabar-group.com');
-        // $mail->addAddress('rajeev@malabar-group.com');
-        // $mail->addAddress('joshy@malabar-group.com');
+        $mail->addAddress('vijeesh@malabar-group.com');
+        $mail->addAddress('rajeev@malabar-group.com');
         $mail->addAddress('jeremy@belej-consulting.com');
         //$mail->addBCC('bcc@example.com');
 
@@ -506,11 +496,10 @@ if ($maClasse-> nbreArriveKlsa2Jour()>0) {
         $mail->SMTPSecure = 'tls';            //Enable implicit TLS encryption
         $mail->Port       = 587;                                    //TCP port to connect to; use 587 if you have set `SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS`
 
-        //Recipients
-        // $mail->setFrom('malabar-erp@belej-consulting.com', 'MALABAR-ERP');
-        // $mail->addAddress('vijeesh@malabar-group.com');
-        // $mail->addAddress('rajeev@malabar-group.com');
-        // $mail->addAddress('joshy@malabar-group.com');
+        // Recipients
+        $mail->setFrom('malabar-erp@belej-consulting.com', 'MALABAR-ERP');
+        $mail->addAddress('vijeesh@malabar-group.com');
+        $mail->addAddress('rajeev@malabar-group.com');
         $mail->addAddress('jeremy@belej-consulting.com');
         //$mail->addBCC('bcc@example.com');
 
