@@ -8557,7 +8557,7 @@
 								'.$reponseDossier['nom_cli'].'
 							</td>
 							<td class="" style="border: 1px solid black; " class="">
-								'.$reponseDossier['Horse'].'
+								'.$reponseDossier['horse'].'
 							</td>
 							<td class="" style="border: 1px solid black; " class="">
 								'.$reponseDossier['trailer_1'].'
