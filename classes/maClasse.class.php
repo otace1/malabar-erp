@@ -9709,6 +9709,76 @@
 
 		}
 
+		public function afficherDossierUnderPreparation(){
+			include("connexion.php");
+			//$entree['statut'] = $statut;
+
+			$compteur = 0;
+			$ligne = '';
+			$requete = $connexion-> query("SELECT DATE_FORMAT(d.klsa_arriv, '%d/%m/%Y') AS klsa_arriv, 
+													DATE_FORMAT(d.wiski_arriv, '%d/%m/%Y') AS wiski_arriv, 
+													DATE_FORMAT(d.date_preal, '%d/%m/%Y') AS date_preal, 
+													DATE_FORMAT(d.wiski_dep, '%d/%m/%Y') AS wiski_dep, 
+													DATE_FORMAT(d.dispatch_klsa, '%d/%m/%Y') AS dispatch_klsa, 
+													cli.nom_cli AS nom_cli,
+													d.id_dos AS id_dos,
+													d.ref_dos AS ref_dos,
+													d.commodity AS commodity,
+													DATEDIFF(CURRENT_DATE(), d.klsa_arriv) AS duree
+												FROM dossier d, client cli
+												WHERE d.id_cli = cli.id_cli
+													AND d.id_mod_lic = 2
+													AND d.id_mod_trans = 1
+													AND d.klsa_arriv IS NOT NULL
+													AND DATEDIFF(CURRENT_DATE() , d.klsa_arriv)>14
+													AND d.date_crf IS NOT NULL
+													AND d.date_ad IS NOT NULL
+													AND d.date_assurance IS NOT NULL
+													AND d.date_decl IS NULL 
+													AND d.ref_decl IS NULL
+													AND d.ref_dos NOT LIKE '%20-%'
+													AND d.cleared <> '2'
+												ORDER BY d.date_creat_dos ASC");
+			$requete-> execute(array($entree['statut']));
+			while ($reponse = $requete-> fetch()) {
+				$compteur++;
+				$ligne .= '
+			<tr style="<?php echo $bg;?>">
+				<td class="" style="border: 1px solid black; " class="">
+					'.$compteur.'
+				</td>
+				<td class="" style="border: 1px solid black; " class="">
+					'.$reponse['ref_dos'].'
+				</td>
+				<td class="" style="border: 1px solid black; " class="">
+					'.$reponse['nom_cli'].'
+				</td>
+				<td class="" style="border: 1px solid black; text-align: center;" class="">
+					'.$reponse['date_preal'].'
+				</td>
+				<td class="" style="border: 1px solid black; text-align: center;" class="">
+					'.$reponse['klsa_arriv'].'
+				</td>
+				<td class="" style="border: 1px solid black; text-align: center;" class="">
+					'.$reponse['wiski_arriv'].'
+				</td>
+				<td class="" style="border: 1px solid black; text-align: center;" class="">
+					'.$reponse['wiski_dep'].'
+				</td>
+				<td class="" style="border: 1px solid black; text-align: center;" class="">
+					'.$reponse['dispatch_klsa'].'
+				</td>
+				<td class="" style="border: 1px solid black; text-align: center;" class="">
+					'.$reponse['duree'].'
+				</td>
+			</tr>
+			';
+			}$requete-> closeCursor();
+
+			return $ligne;
+
+		}
+
 		public function nbreDelaiDateKlsa(){
 			include('connexion.php');
 
@@ -10053,6 +10123,31 @@
 													AND ref_dos NOT LIKE "%20-%"
 											');
 			$requete-> execute(array($entree['statut']));
+
+			$reponse = $requete-> fetch();
+
+			return $reponse['nbre'];
+		}
+
+		public function nbreUnderPreparation(){
+			include('connexion.php');
+
+			//$entree['statut'] = $statut;
+
+			$requete = $connexion-> query('SELECT COUNT(d.id_dos) AS nbre
+												FROM dossier d
+												WHERE d.date_crf IS NOT NULL
+													AND d.date_ad IS NOT NULL
+													AND d.date_assurance IS NOT NULL
+													AND d.date_decl IS NULL 
+													AND d.ref_decl IS NULL
+													AND d.ref_dos NOT LIKE "%20-%"
+													AND DATEDIFF(CURRENT_DATE() , d.klsa_arriv)>14
+													AND d.cleared <> "2"
+													AND d.id_mod_lic = 2
+													AND d.id_mod_trans = 1
+											');
+			//$requete-> execute(array($entree['statut']));
 
 			$reponse = $requete-> fetch();
 
