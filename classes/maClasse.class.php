@@ -9725,6 +9725,9 @@
 													d.id_dos AS id_dos,
 													d.ref_dos AS ref_dos,
 													d.commodity AS commodity,
+													d.horse AS horse,
+													d.trailer_1 AS trailer_1,
+													d.trailer_2 AS trailer_2,
 													DATEDIFF(CURRENT_DATE(), d.klsa_arriv) AS duree
 												FROM dossier d, client cli
 												WHERE d.id_cli = cli.id_cli
@@ -9753,6 +9756,15 @@
 				</td>
 				<td class="" style="border: 1px solid black; " class="">
 					'.$reponse['nom_cli'].'
+				</td>
+				<td class="" style="border: 1px solid black; " class="">
+					'.$reponse['horse'].'
+				</td>
+				<td class="" style="border: 1px solid black; " class="">
+					'.$reponse['trailer_1'].'
+				</td>
+				<td class="" style="border: 1px solid black; " class="">
+					'.$reponse['trailer_2'].'
 				</td>
 				<td class="" style="border: 1px solid black; text-align: center;" class="">
 					'.$reponse['date_preal'].'
