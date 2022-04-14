@@ -24535,6 +24535,41 @@
 
 		//Methodes permettant de Selectionner 
 
+		public function selectionnerDossierPrincipalEnAttenteFacture($id_cli, $id_mod_lic){
+			include('connexion.php');
+
+			$entree['id_cli'] = $id_cli;
+			$entree['id_mod_lic'] = $id_mod_lic;
+			$option = "";
+			$objResponse = new xajaxResponse();
+			$bg = '';
+			$style = '';
+
+			$requete = $connexion-> prepare("SELECT ref_dos, id_dos
+											FROM dossier
+											WHERE id_cli = ?
+												AND id_mod_lic = ?
+												AND ref_quit IS NOT NULL
+												AND ref_quit <> ''
+												AND ref_decl IS NOT NULL
+												AND ref_decl <> ''
+												AND ref_liq IS NOT NULL
+												AND ref_liq <> ''
+												AND id_dos NOT IN (
+														SELECT id_dos FROM detail_facture_dossier
+													)
+												AND not_fact = '0'
+											ORDER BY id_dos  DESC");
+
+			$requete-> execute(array($entree['id_cli'], $entree['id_mod_lic']));
+
+			while($reponse = $requete-> fetch()){
+				echo '<option value="'.$reponse['id_dos'].'">
+								'.$reponse['ref_dos'].'
+							</option>';
+			}$requete-> closeCursor();
+		}
+
 		public function selectionnerFactureEnAttenteTransmis($id_cli, $id_mod_lic, $type_fact){
 			include('connexion.php');
 
