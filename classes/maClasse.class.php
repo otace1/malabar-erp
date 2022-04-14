@@ -5338,15 +5338,15 @@
 						        </div>
 			    				<div class="col-md-12">
 						            <label for="x_card_code" class="control-label mb-1">TOTAL ($):</label>
-						            <input type="text" name="total" id="totalUSD" class="form-control text-primary form-control-lg cc-exp bg bg-dark" style="text-align: center; font-weight: bold;" disabled>
+						            <input type="text" name="total" id="totalUSD" class="form-control text-danger form-control-lg cc-exp" style="text-align: center; font-weight: bold;background-color: black;" disabled>
 						        </div>
 			    				<div class="col-md-12">
 						            <label for="x_card_code" class="control-label mb-1">TOTAL (CDF):</label>
-						            <input type="text" name="" id="totalCDF" class="form-control text-primary form-control-lg cc-exp bg bg-dark" style="text-align: center; font-weight: bold;" disabled>
+						            <input type="text" name="" id="totalCDF" class="form-control text-primary form-control-lg cc-exp bg" style="text-align: center; font-weight: bold;background-color: black;" disabled>
 						        </div>
 			    				<div class="col-md-12">
 						            <label for="x_card_code" class="control-label mb-1">TOTAL Général ($):</label>
-						            <input type="text" name="" id="total" class="form-control text-primary form-control-lg cc-exp bg bg-dark" style="text-align: center; font-weight: bold;" disabled>
+						            <input type="text" name="" id="total" class="form-control form-control-lg cc-exp bg text-success " style="text-align: center; font-weight: bold; background-color: black;" disabled>
 						        </div>
 			    			</div>
 						</div>
@@ -5360,6 +5360,111 @@
 		}
 
 		public function afficherFormulaireFacturePartielleEdit($id_dos){
+			include('connexion.php');
+			// $entree['ref_dos'] = $this-> getDossier($id_dos)['ref_dos'];
+			$entree['id_dos'] = $id_dos;
+			echo '<td></td>';
+			$compteur = '0';
+			$sous_compteur = 0;
+			$active = '';
+			$requete = $connexion-> prepare("SELECT id_dos, ref_dos, principal, roe_decl, fob, 
+													fret, assurance, autre_frais, poids
+												FROM dossier
+												WHERE id_dos = ?
+												ORDER BY id_dos");
+			$requete-> execute(array($entree['id_dos']));
+			while ($reponse = $requete-> fetch()) {
+				if ($compteur == '0') {
+					$active = ' active';
+					$ref_fact = $_GET['ref_fact'];
+				}else{
+					$active = '';
+					$ref_fact = $compteur.'-'.$_GET['ref_fact'];
+				}
+				$compteur++;
+
+				if ($reponse['roe_decl']>0) {
+					// code...
+				}else{
+					$reponse['roe_decl'] = 2000;
+				}
+			?>
+			<div class="tab-pane <?php echo $active;?> small" id="tab_<?php echo $reponse['id_dos']?>">
+				<div class="row">
+						<div class="col-md-8">
+						  <table class="table table-sm table-bordered table-hover table-dark table-head-fixed">
+						    <thead>
+						        <tr>
+						            <th colspan="2">DEBOURS</th>
+						            <th>UNITE</th>
+						            <th>MONTANT</th>
+						            <th>DEVISE</th>
+						            <th>TVA</th>
+						        </tr>
+						    </thead>
+						    <tbody>
+						    	<?php
+						    		$this-> getDeboursPourFactureClientModeleLicenceEdit($this-> getDossier($id_dos)['id_cli'], $_GET['id_mod_lic_fact'], $compteur, $sous_compteur, $reponse['principal'], $id_dos);
+						    	?>
+						    </tbody>
+						</table>
+					</div>
+					<div class="col-md-4">
+			    		<input type="hidden" name="ref_fact_<?php echo $compteur;?>" value="<?php echo $ref_fact?>">
+			    		<input type="hidden" name="id_dos_dos_<?php echo $compteur;?>" value="<?php echo $reponse['id_dos']?>">
+			    			<div class="row">
+			    				<div class="col-md-6">
+						            <label for="x_card_code" class="control-label mb-1">Taux</label>
+						            <input type="number" step="0.0001" min="0" name="roe_decl_<?php echo $compteur;?>" id="roe_decl" onblur="getTotal()" value="<?php echo $reponse['roe_decl'];?>" class="form-control form-control-sm cc-exp bg bg-dark" required>
+						        </div>
+			    				<div class="col-md-6">
+						            <label for="x_card_code" class="control-label mb-1">FOB</label>
+						            <input type="number" step="0.0001" min="0" name="fob_<?php echo $compteur;?>" value="<?php echo $reponse['fob'];?>" class="form-control form-control-sm cc-exp bg bg-dark" required>
+						        </div>
+			    				<div class="col-md-6">
+						            <label for="x_card_code" class="control-label mb-1">Fret</label>
+						            <input type="number" step="0.0001" min="0" name="fret_<?php echo $compteur;?>" value="<?php echo $reponse['fret'];?>" class="form-control form-control-sm cc-exp bg bg-dark" required>
+						        </div>
+			    				<div class="col-md-6">
+						            <label for="x_card_code" class="control-label mb-1">Assurance</label>
+						            <input type="number" step="0.0001" min="0" name="assurance_<?php echo $compteur;?>" value="<?php echo $reponse['assurance'];?>" class="form-control form-control-sm cc-exp bg bg-dark" required>
+						        </div>
+			    				<div class="col-md-6">
+						            <label for="x_card_code" class="control-label mb-1">Autres Charges</label>
+						            <input type="number" step="0.0001" min="0" name="autre_frais_<?php echo $compteur;?>" value="<?php echo $reponse['autre_frais'];?>" class="form-control form-control-sm cc-exp bg bg-dark" required>
+						        </div>
+			    				<div class="col-md-6">
+						            <label for="x_card_code" class="control-label mb-1">Poids (Kg)</label>
+						            <input type="number" step="0.0001" min="0" name="poids_<?php echo $compteur;?>" value="<?php echo $reponse['poids'];?>" class="form-control form-control-sm cc-exp bg bg-dark" required>
+						        </div>
+			    				<div class="col-md-12">
+						            <label for="x_card_code" class="control-label mb-1">Autres informations / Autres Détails sur la Facture:</label>
+						            <input type="text" name="info" value="" class="form-control form-control-sm cc-exp bg bg-dark">
+						        </div>
+			    				<div class="col-md-12">
+						            <label for="x_card_code" class="control-label mb-1">TOTAL ($):</label>
+						            <input type="text" name="total" id="totalUSD" class="form-control text-danger form-control-lg cc-exp" style="text-align: center; font-weight: bold;background-color: black;" disabled>
+						        </div>
+			    				<div class="col-md-12">
+						            <label for="x_card_code" class="control-label mb-1">TOTAL (CDF):</label>
+						            <input type="text" name="" id="totalCDF" class="form-control text-primary form-control-lg cc-exp" style="text-align: center; font-weight: bold;background-color: black;" disabled>
+						        </div>
+			    				<div class="col-md-12">
+						            <label for="x_card_code" class="control-label mb-1">TOTAL Général ($):</label>
+						            <input type="text" name="" id="total" class="form-control form-control-lg cc-exp bg text-success " style="text-align: center; font-weight: bold;background-color: black;" disabled>
+						        </div>
+			    			</div>
+						</div>
+				</div>
+			</div>
+			<?php
+			}$requete-> closeCursor();
+			?>
+			<input type="hidden" name="nbre" value="<?php echo $compteur;?>">
+			<?php
+		}
+
+		public function afficherFormulaireFacturePartielleEdit2($id_dos){
 			include('connexion.php');
 			// $entree['ref_dos'] = $this-> getDossier($id_dos)['ref_dos'];
 			$entree['id_dos'] = $id_dos;
@@ -5628,7 +5733,7 @@
 				?>
 				<tr id="headingOne_<?php echo $reponseTypeDebours['id_t_deb']; ?>">
 					<th colspan="6">
-						<a class="btn btn-primary" data-toggle="collapse" href="#multiCollapseExample1_<?php echo $reponseTypeDebours['id_t_deb']; ?>" role="button" aria-expanded="false" aria-controls="multiCollapseExample1_<?php echo $reponseTypeDebours['id_t_deb']; ?>">
+						<a class="btn btn-primary btn-sm" data-toggle="collapse" href="#multiCollapseExample1_<?php echo $reponseTypeDebours['id_t_deb']; ?>" role="button" aria-expanded="false" aria-controls="multiCollapseExample1_<?php echo $reponseTypeDebours['id_t_deb']; ?>">
 							<i class="fa fa-plus"></i>
 						</a>
 						<?php echo $reponseTypeDebours['nom_t_deb']; ?>
@@ -5782,12 +5887,21 @@
 														$sqlTypeDebours");
 			while($reponseTypeDebours = $requeteTypeDebours-> fetch()){
 				?>
-				<tr><th colspan="4"><?php echo $reponseTypeDebours['nom_t_deb']; ?></th></tr>
+				<tr id="headingOne_<?php echo $reponseTypeDebours['id_t_deb']; ?>">
+					<th colspan="6">
+						<a class="btn btn-primary btn-sm" data-toggle="collapse" href="#multiCollapseExample1_<?php echo $reponseTypeDebours['id_t_deb']; ?>" role="button" aria-expanded="false" aria-controls="multiCollapseExample1_<?php echo $reponseTypeDebours['id_t_deb']; ?>">
+							<i class="fa fa-plus"></i>
+						</a>
+						<?php echo $reponseTypeDebours['nom_t_deb']; ?>
+					</th>
+				</tr>
+				<div>
 				<?php 
 				$requeteDebours = $connexion-> prepare("SELECT deb.abr_deb AS abr_deb, UPPER(REPLACE(deb.nom_deb, '\'', '')) AS nom_deb, 
 														deb.id_deb AS id_deb,
 														af.tva AS tva, af.usd AS usd, af.montant AS montant,
-														af.detail AS detail
+														af.detail AS detail,
+														af.unite AS unite
 													FROM debours deb, affectation_debours_client_modele_licence af
 													WHERE deb.id_t_deb = ?
 														AND deb.id_deb = af.id_deb
@@ -5835,7 +5949,7 @@
 						
 					}
 					?>
-					<tr>
+					<tr class="collapse multi-collapse" id="multiCollapseExample1_<?php echo $reponseTypeDebours['id_t_deb']; ?>">
 						<td width="10%">
 							<input type="hidden" name="id_deb_<?php echo $sous_compteur.'_'.$compteur_dossier;?>" value="<?php echo $reponseDebours['id_deb']; ?>">
 							<?php echo $reponseDebours['abr_deb']; ?>
@@ -5845,17 +5959,27 @@
 								echo $reponseDebours['nom_deb']; 
 								if ($reponseDebours['detail']=='1') {
 								?>
-								: <input type="text" style="width: 20em;" name="detail_<?php echo $sous_compteur.'_'.$compteur_dossier;?>" value="<?php echo $this-> getDataFactureDeboursDossier($_GET['ref_fact'], $reponseDebours['id_deb'], $id_dos)['detail'];?>">
+								: <input type="text" style="width: 20em;" name="detail_<?php echo $sous_compteur.'_'.$compteur_dossier;?>">
 								<?php
 								}
 							?>
 						</td>
 						<td style="text-align: center;">
-							<input type="number" step="0.001" name="montant_<?php echo $sous_compteur.'_'.$compteur_dossier;?>" value="<?php echo $reponseDebours['montant']; ?>">
+							<select name="unite_<?php echo $sous_compteur.'_'.$compteur_dossier;?>">
+								<option  value="<?php echo $reponseDebours['unite']; ?>">
+									<?php echo $reponseDebours['unite']; ?>
+								</option>
+								<option></option>
+								<option value="CIF">CIF</option>
+								<option value="par declaration">par declaration</option>
+							</select>
+						</td>
+						<td style="text-align: center;">
+							<input type="number" step="0.001" name="montant_<?php echo $sous_compteur.'_'.$compteur_dossier;?>" id="montant_<?php echo $sous_compteur;?>" value="<?php echo $reponseDebours['montant']; ?>" onblur="getTotal()">
 
 						</td>
 						<td style="text-align: center;">
-							<select name="usd_<?php echo $sous_compteur.'_'.$compteur_dossier;?>">
+							<select name="usd_<?php echo $sous_compteur.'_'.$compteur_dossier;?>" id="usd_<?php echo $sous_compteur;?>" onchange="getTotal()">
 								<?php
 								if ($reponseDebours['usd'] == '0') {
 								?>
@@ -5872,7 +5996,7 @@
 							</select>
 						</td>
 						<td style="text-align: center;">
-							<select name="tva_<?php echo $sous_compteur.'_'.$compteur_dossier;?>">
+							<select name="tva_<?php echo $sous_compteur.'_'.$compteur_dossier;?>" id="tva_<?php echo $sous_compteur;?>" onchange="getTotal()">
 								<?php
 								if ($reponseDebours['tva'] == '0') {
 								?>
@@ -5892,9 +6016,12 @@
 					<?php
 				}$requeteDebours-> closeCursor();
 
+				?>
+				</div>
+				<?php
 			}$requeteTypeDebours-> closeCursor();
 			?>
-			<input type="hidden" name="sous_compteur_<?php echo $compteur_dossier;?>" value="<?php echo $sous_compteur;?>">
+			<input type="hidden" name="sous_compteur_<?php echo $compteur_dossier;?>" id="sous_compteur" value="<?php echo $sous_compteur;?>">
 			<?php
 		}
 
