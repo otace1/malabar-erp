@@ -9745,7 +9745,7 @@
 													AND d.ref_dos NOT LIKE '%20-%'
 													AND d.cleared <> '2'
 												ORDER BY d.date_creat_dos ASC");
-			$requete-> execute(array($entree['statut']));
+			//$requete-> execute(array($entree['statut']));
 			while ($reponse = $requete-> fetch()) {
 				$compteur++;
 				$ligne .= '
