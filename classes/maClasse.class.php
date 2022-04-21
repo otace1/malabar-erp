@@ -8511,6 +8511,7 @@
 												FROM dossier d, client cli
 												WHERE d.id_cli = cli.id_cli
 													AND d.id_mod_lic = 2
+													AND d.id_mod_trans = 1
 													AND d.dispatch_deliv IS NULL
 													AND d.cleared = '1'
 													AND d.ref_dos NOT LIKE '%20-%'
@@ -10240,6 +10241,7 @@
 												FROM dossier
 												WHERE id_mod_lic = 2
 													AND dispatch_deliv IS NULL
+													AND id_mod_trans = 1
 													AND cleared = "1"
 													AND ref_dos NOT LIKE "%20-%"
 													AND (ref_dos NOT LIKE "%21-%" AND cleared="1")
