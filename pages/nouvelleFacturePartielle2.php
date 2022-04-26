@@ -46,7 +46,7 @@
 
             $maClasse-> creerDetailFactureDossier($prefixe.$_POST['ref_fact'], $_POST['id_dos_dos_'.$i], 
                                                   $_POST['id_deb_'.$a.'_'.$i], $_POST['montant_'.$a.'_'.$i], 
-                                                  $_POST['tva_'.$a.'_'.$i], $_POST['usd_'.$a.'_'.$i], $detail);
+                                                  $_POST['tva_'.$a.'_'.$i], $_POST['usd_'.$a.'_'.$i], $detail, $_POST['unite_'.$a.'_'.$i]);
             //echo '----------------------------------'.$a.' == '.strval($_POST['ref_dos'][$key]).'<br><br>';
           }
         }
@@ -205,68 +205,9 @@
 
       </div>
 
-      <div class="col-md-12">
-        <hr>
-      </div>
     </div>
 
-    </div>  
-
-
-  <div class="card-body">
-
-    <div class="row">
-      <div class="col-md-12">
-        
-        <?php
-          /*if (isset($_GET['id_dos'])) {
-            
-        ?>
-
-        <button type="button" class="btn-xs btn-warning" name="add" id="add">
-          <i class="fa fa-plus"></i>
-        </button>
-        <div class="card-body table-responsive p-0">
-          <table id="table_field" cellspacing="0" width="100%" class="tableau_debours table-dark table-bordered table table-hover text-nowrap table-sm">
-            <thead>
-              <tr class="bg bg-dark">
-                <th style="border: 1px solid white; background-color: #222530; color: white; padding-bottom: 50px; padding-top: 50px;" class="col_debours_1" rowspan="2">#</th>
-                <th style="border: 1px solid white; background-color: #222530; color: white; padding-bottom: 50px; padding-top: 50px;" class="col_debours_6" rowspan="2">DEBOURS</th>
-                <?php
-                  $maClasse-> afficherEnTeteDossierFacturePartielle($_GET['id_dos']);
-                ?>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <?php
-                  $maClasse-> afficherEnTeteDossierFacturePartielle2($_GET['id_dos']);
-                ?>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-        <?php
-
-          }*/
-        ?>
-
-      </div>
-    </div>
-
-    <div class="row">
-        <div class="col-12">
-          <!-- Custom Tabs -->
-          <!-- <div class="card">
-            <div class="card-header d-flex p-0">
-               <h5 class="card-title p-3">Formulaire</h5>
-              <ul class="nav nav-pills ml-auto p-2">
-                <?php
-                  //$maClasse-> afficherBoutonFormulaireFacturePartielle($_GET['id_dos']);
-                ?>
-              </ul>
-            </div> --><!-- /.card-header -->
-            <div class="card-body">
+            <div class="card-body bg-dark">
               <div class="tab-content">
                 <?php
                   $maClasse-> afficherFormulaireFacturePartielle($_GET['id_dos']);
@@ -275,12 +216,60 @@
               </div>
               <!-- /.tab-content -->
             </div><!-- /.card-body -->
-          </div>
+          
           <!-- ./card -->
-        </div>
         <!-- /.col -->
       </div>
   </div>
+<script>
+
+  function getTotal(){
+
+    var sommeUSD = 0;
+    var sommeCDF = 0;
+    var somme = 0;
+
+    var sous_compteur = $('#sous_compteur').val();
+
+    for (var i = 0; i < sous_compteur; i++) {
+      
+      if ($('#montant_'+i).val()>0) {
+
+        if($('#usd_'+i).val()=='1'){
+          
+          if($('#tva_'+i).val()=='1'){
+            sommeUSD += parseFloat($('#montant_'+i).val())*1.16;
+          }else{
+            sommeUSD += parseFloat($('#montant_'+i).val());
+          }
+
+
+        }else{
+
+          if($('#tva_'+i).val()=='1'){
+            sommeCDF += parseFloat($('#montant_'+i).val())*1.16;
+          }else{
+            sommeCDF += parseFloat($('#montant_'+i).val());
+          }
+
+
+        }
+
+      }
+
+      
+      //somme += 1;
+
+    }
+
+    $('#totalUSD').val(sommeUSD);
+    $('#totalCDF').val(sommeCDF);
+    $('#total').val((sommeUSD)+(sommeCDF/parseFloat($('#roe_decl').val())));
+
+
+  }
+</script>
+
 <!-- -------VALIDATION FORMULAIRE------- -->
 
   <div class="modal-footer justify-content-between">
