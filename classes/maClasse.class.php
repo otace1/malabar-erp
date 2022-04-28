@@ -21230,7 +21230,7 @@
 			$nbre = $this->  getNbreMcaFileLogistique($id_cli, $id_trans);
 
 			if ($nbre > 20) {
-				$i = $nbre;
+				$i = $nbre+1;
 			}else{
 				$i = 1;
 			}
@@ -21246,7 +21246,7 @@
 			// else if ($id_trans=='2') {
 			// 	$cod_mod_trans = 'LOG-LOC';
 			// }
-			$cod_mod_trans = 'EX';
+			$cod_mod_trans = 'LOG';
 
 			$code = $this-> codePourClient($id_cli).'-'.$cod_mod_trans.date('y').'-'.$a;
 
