@@ -9121,12 +9121,13 @@
 
 		}
 
-		public function afficherSearchFileKBP($date_preal, $id_mod_trans, 
+		public function afficherSearchFileKBP($debut, $fin, $id_mod_trans, 
 														$id_mod_lic, $commodity,
 														$id_march=NULL, $statut=NULL, $num_lic=NULL, 
 														$cleared=NULL){
 			include("connexion.php");
-			$entree['date_preal'] = $date_preal;
+			$entree['debut'] = $debut;
+			$entree['fin'] = $fin;
 			$entree['id_mod_lic'] = $id_mod_lic;
 			$entree['id_mod_trans'] = $id_mod_trans;
 			
@@ -9220,13 +9221,13 @@
 												FROM dossier d, client cl, site s, mode_transport mt
 												WHERE d.id_cli = cl.id_cli
 													AND d.id_mod_lic = ?
-													AND d.date_preal = ? 
+													AND (d.date_preal BETWEEN ? AND ?)
 													AND d.klsa_arriv IS NOT NULL
 													AND d.id_site = s.id_site
 													AND d.id_mod_trans = mt.id_mod_trans
 													AND mt.id_mod_trans = ?
 												ORDER BY d.date_creat_dos ASC");
-			$requete-> execute(array($entree['id_mod_lic'], $entree['date_preal'], $entree['id_mod_trans']));
+			$requete-> execute(array($entree['id_mod_lic'], $entree['debut'], $entree['fin'], $entree['id_mod_trans']));
 			while ($reponse = $requete-> fetch()) {
 				$compteur++;
 				$bg = "";
@@ -10308,18 +10309,19 @@
 			return $reponse['nbre'];
 		}
 
-		public function nbreSearchFileKPB($date_preal, $id_mod_lic){
+		public function nbreSearchFileKPB($debut, $fin, $id_mod_lic){
 			include('connexion.php');
 
-			$entree['date_preal'] = $date_preal;
+			$entree['debut'] = $debut;
+			$entree['fin'] = $fin;
 			$entree['id_mod_lic'] = $id_mod_lic;
 
 			$requete = $connexion-> prepare('SELECT COUNT(id_dos) AS nbre
 												FROM dossier
 												WHERE id_mod_lic = ?
-													AND date_preal = ? 
+													AND (date_preal BETWEEN ? AND ?) 
 													AND klsa_arriv IS NOT NULL');
-			$requete-> execute(array($entree['id_mod_lic'], $entree['date_preal']));
+			$requete-> execute(array($entree['id_mod_lic'], $entree['debut'], $entree['fin']));
 
 			$reponse = $requete-> fetch();
 
