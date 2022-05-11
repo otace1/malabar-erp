@@ -40,8 +40,9 @@
 
   if(isset($_POST['rechercheKBP'])){
     $id_mod_lic = $_GET['id_mod_trac'];
-    $date_preal = $_POST['date_preal'];
-    echo "<script>window.open('popUprechercheKBP.php?id_mod_lic=$id_mod_lic&date_preal=$date_preal','pop1','width=1500,height=900');</script>";
+    $debut = $_POST['debut'];
+    $fin = $_POST['fin'];
+    echo "<script>window.open('popUprechercheKBP.php?id_mod_lic=$id_mod_lic&debut=$debut&fin=$fin','pop1','width=1500,height=900');</script>";
   }
 
   if(isset($_POST['kpi'])){
@@ -276,7 +277,7 @@ if(isset($_GET['id_mod_trac']) && isset($_GET['id_mod_trac'])){
     <form id="demo-form2" method="POST" action="" data-parsley-validate enctype="multipart/form-data">
     <div class="modal-content">
       <div class="modal-header ">
-        <h4 class="modal-title"><i class="fa fa-search"></i> KBP Report.</h4>
+        <h4 class="modal-title"><i class="fa fa-search"></i> KBP Report. Between Prealert dates</h4>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -284,9 +285,14 @@ if(isset($_GET['id_mod_trac']) && isset($_GET['id_mod_trac'])){
       <div class="modal-body">
         <div class="row">
 
-          <div class="col-md-12">
-            <label for="x_card_code" class="control-label mb-1">Prealert Date</label>
-            <input name="date_preal" type="date" class="form-control cc-exp" required>
+          <div class="col-md-6">
+            <label for="x_card_code" class="control-label mb-1">Begin</label>
+            <input name="debut" type="date" class="form-control cc-exp" required>
+          </div>
+
+          <div class="col-md-6">
+            <label for="x_card_code" class="control-label mb-1">End</label>
+            <input name="fin" type="date" class="form-control cc-exp" required>
           </div>
 
         </div>
