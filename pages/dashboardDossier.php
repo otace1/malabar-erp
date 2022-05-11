@@ -38,6 +38,12 @@
     echo "<script>window.open('popUpRechercheDossier.php?id_mod_lic=$id_mod_lic&mot_cle=$mot_cle','pop1','width=1500,height=900');</script>";
   }
 
+  if(isset($_POST['rechercheKBP'])){
+    $id_mod_lic = $_GET['id_mod_trac'];
+    $date_preal = $_POST['date_preal'];
+    echo "<script>window.open('popUprechercheKBP.php?id_mod_lic=$id_mod_lic&date_preal=$date_preal','pop1','width=1500,height=900');</script>";
+  }
+
   if(isset($_POST['kpi'])){
     $id_mod_lic = $_GET['id_mod_trac'];
     $debut = $_POST['debut'];
@@ -100,6 +106,10 @@
 
             <button class="btn btn-primary square-btn-adjust" data-toggle="modal" data-target=".rechercheDossier">
                 <i class="fa fa-search"></i> Search File
+            </button>
+
+            <button class="btn btn-info square-btn-adjust" data-toggle="modal" data-target=".rechercheKBP">
+                <i class="fa fa-search"></i> KBP Report
             </button>
             <?php
             if ($_GET['id_mod_trac']=='2' && $_GET['id_mod_trans']=='1') {
@@ -253,6 +263,37 @@ if(isset($_GET['id_mod_trac']) && isset($_GET['id_mod_trac'])){
       <div class="modal-footer justify-content-between">
         <button type="button" class="btn btn-danger" data-dismiss="modal">Annuler</button>
         <button type="submit" name="rechercheDossier" class="btn btn-primary">Valider</button>
+      </div>
+    </div>
+    </form>
+    <!-- /.modal-content -->
+  </div>
+  <!-- /.modal-dialog -->
+</div>
+
+<div class="modal fade rechercheKBP" id="modal-default">
+  <div class="modal-dialog modal-md">
+    <form id="demo-form2" method="POST" action="" data-parsley-validate enctype="multipart/form-data">
+    <div class="modal-content">
+      <div class="modal-header ">
+        <h4 class="modal-title"><i class="fa fa-search"></i> KBP Report.</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+
+          <div class="col-md-12">
+            <label for="x_card_code" class="control-label mb-1">Prealert Date</label>
+            <input name="date_preal" type="date" class="form-control cc-exp" required>
+          </div>
+
+        </div>
+      </div>
+      <div class="modal-footer justify-content-between">
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Annuler</button>
+        <button type="submit" name="rechercheKBP" class="btn btn-primary">Valider</button>
       </div>
     </div>
     </form>
