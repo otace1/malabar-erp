@@ -420,7 +420,7 @@ while ($reponseModeTransport = $requeteModeTransport-> fetch()) {
 		$objDrawing->setDescription('Logo en-tete');
 		$objDrawing->setPath('../images/Logo MRDC.JPG');
 		$objDrawing->setHeight(40);
-		$objDrawing->setCoordinates('E1');
+		$objDrawing->setCoordinates('G1');
 		$objDrawing->setWorksheet($excel->getActiveSheet());
 
 		//Figer colonne

@@ -40,7 +40,7 @@
                        
 
                        <button class="btn btn-success square-btn-adjust" onclick="window.location.replace('exportExcelPopUpKBP.php?debut=<?php echo $_GET['debut']; ?>&fin=<?php echo $_GET['fin']; ?>&id_cli=<?php echo $maClasse-> getDataDossierPrealertKBP($_GET['debut'], $_GET['id_mod_lic'])['id_cli']; ?>&id_mod_trans=<?php echo $maClasse-> getDataDossierPrealertKBP($_GET['debut'], 
-                          $_GET['id_mod_lic'])['id_mod_trans']; ?>&id_mod_trac=<?php echo $_GET['id_mod_lic']; ?>;?>&id_march=','pop1','width=80,height=80');">
+                          $_GET['id_mod_lic'])['id_mod_trans']; ?>&id_mod_trac=<?php echo $_GET['id_mod_lic'];?>&id_march=','pop1','width=80,height=80');">
                         <i class="fas fa-file-excel"></i> Export
                       </button>
 

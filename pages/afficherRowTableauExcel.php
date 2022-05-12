@@ -348,7 +348,7 @@ function afficherRowTableauExcelKBP($id_mod_lic, $id_mod_trans, $id_dos, $compte
 
 	$maClasse = new MaClasse();
 	$entree['id_mod_lic'] = $id_mod_lic;
-	$entree['id_cli'] = $id_cli;
+	//$entree['id_cli'] = $id_cli;
 	$entree['id_mod_trans'] = $id_mod_trans;
 	$bg = '';
 	$col_debut = '';
