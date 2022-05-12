@@ -39,8 +39,7 @@
                           <?php echo  'Report KBP| Prealert Date(s) Between <span class="bg bg-dark" style="padding-left: 5px; padding-right: 5px;">'.$_GET['debut'].' and '.$_GET['fin'].'</span> | <span class="bg bg-dark" style="padding-left: 5px; padding-right: 5px;">'.number_format($nombre_dossier, 0, ',', ' ').' File(s)</span>';?>
                        
 
-                       <button class="btn btn-success square-btn-adjust" onclick="window.location.replace('exportExcelPopUpKBP.php?debut=<?php echo $_GET['debut']; ?>&fin=<?php echo $_GET['fin']; ?>&id_cli=<?php echo $maClasse-> getDataDossierPrealertKBP($_GET['debut'], $_GET['id_mod_lic'])['id_cli']; ?>&id_mod_trans=<?php echo $maClasse-> getDataDossierPrealertKBP($_GET['debut'], 
-                          $_GET['id_mod_lic'])['id_mod_trans']; ?>&id_mod_trac=<?php echo $_GET['id_mod_lic'];?>&id_march=','pop1','width=80,height=80');">
+                       <button class="btn btn-success square-btn-adjust" onclick="window.location.replace('exportExcelPopUpKBP.php?debut=<?php echo $_GET['debut']; ?>&fin=<?php echo $_GET['fin']; ?>&id_cli=&id_mod_trans=1&id_mod_trac=2&id_march=','pop1','width=80,height=80');">
                         <i class="fas fa-file-excel"></i> Export
                       </button>
 
@@ -59,20 +58,13 @@
                             <table id="user_data_2" cellspacing="0" width="100%" class="tableau-de-donnees  table table-hover text-nowrap table-sm">
                               <thead>
                                 <?php
-                                $maClasse-> afficherEnTeteTableau($maClasse-> getDataDossierPrealertKBP($_GET['debut'], $_GET['id_mod_lic'])['id_mod_lic'], $maClasse-> getDataDossierPrealertKBP($_GET['debut'], $_GET['id_mod_lic'])['id_cli'], $maClasse-> getDataDossierPrealertKBP($_GET['debut'], $_GET['id_mod_lic'])['id_mod_trans']);
+                                $maClasse-> afficherEnTeteTableau(2, 857, 1);
                                 ?>
                               </thead>
                               <tbody>
                                 <?php
-                                $maClasse-> afficherSearchFileKBP($_GET['debut'], $_GET['fin'], 
-                          $maClasse-> getDataDossierPrealertKBP($_GET['debut'], 
-                          $_GET['id_mod_lic'])['id_mod_trans'], $_GET['id_mod_lic'], 
-                          $maClasse-> getDataDossierPrealertKBP($_GET['debut'], 
-                            $_GET['id_mod_lic'])['commodity'], 
-                          $maClasse-> getDataDossierPrealertKBP($_GET['debut'], $_GET['id_mod_lic'])['id_march'], 
-                          $maClasse-> getDataDossierPrealertKBP($_GET['debut'], $_GET['id_mod_lic'])['statut'], 
-                          $maClasse-> getDataDossierPrealertKBP($_GET['debut'], $_GET['id_mod_lic'])['num_lic'], 
-                          $maClasse-> getDataDossierPrealertKBP($_GET['debut'], $_GET['id_mod_lic'])['cleared'])
+                                $maClasse-> afficherSearchFileKBP($_GET['debut'], $_GET['fin'], 1, 2, 
+                                                                  NULL, NULL, NULL, NULL, NULL)
                                 ?>
                               </tbody>
                             </table>
