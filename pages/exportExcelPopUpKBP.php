@@ -479,74 +479,117 @@ while ($reponseModeTransport = $requeteModeTransport-> fetch()) {
 		$excel->getActiveSheet()
 			->getStyle('C'.$row)->applyFromArray($styleHeader);
 
+		$excel-> getActiveSheet()
+					-> setCellValue($col.$row, 'PRE-ALERTE DATE');
+				cellColor($col.$row, '000000');
+				alignement($col.$row);
+				$excel->getActiveSheet()
+					->getStyle($col.$row)->applyFromArray($styleHeader);
+				$col++;
+
+		$excel-> getActiveSheet()
+					-> setCellValue($col.$row, 'INVOICE');
+				cellColor($col.$row, '000000');
+				alignement($col.$row);
+				$excel->getActiveSheet()
+					->getStyle($col.$row)->applyFromArray($styleHeader);
+				$col++;
 		
-			$sqlClient = ' AND cl.id_cli = 857';
+		$excel-> getActiveSheet()
+					-> setCellValue($col.$row, 'COMMODITY');
+				cellColor($col.$row, '000000');
+				alignement($col.$row);
+				$excel->getActiveSheet()
+					->getStyle($col.$row)->applyFromArray($styleHeader);
+				$col++;
 		
-		$requete = $connexion-> prepare("SELECT c.titre_col AS titre_col, c.id_col AS id_col
-										FROM colonne c, client cl, affectation_colonne_client_modele_licence af
-										WHERE c.id_col = af.id_col
-											AND af.id_cli = cl.id_cli
-										    $sqlClient
-										    AND af.id_mod_lic = ?
-										    AND af.id_mod_trans = ?
-										ORDER BY af.rang ASC");
-		$requete-> execute(array($entree['id_mod_lic'], $entree['id_mod_trans']));
-		while ($reponse = $requete-> fetch()) {
-			$excel-> getActiveSheet()
-				-> setCellValue($col.$row, $reponse['titre_col']);
-			cellColor($col.$row, '000000');
-			alignement($col.$row);
-			$excel->getActiveSheet()
-				->getStyle($col.$row)->applyFromArray($styleHeader);
-
-
-			if ($reponse['id_col'] == '11' || $reponse['id_col'] == '13' || $reponse['id_col'] == '17') {
-				$excel-> getActiveSheet()-> getColumnDimension($col)-> setWidth(25);
-			}else if ($reponse['id_col'] == '44') {
-				$excel-> getActiveSheet()-> getColumnDimension($col)-> setWidth(40);
-			}else if ($reponse['id_col']=='42' && $entree['id_mod_trans']=='1') {
-				$excel-> getActiveSheet()
-					-> setCellValue($col.$row, 'GENERAL STATUS');
+		$excel-> getActiveSheet()
+					-> setCellValue($col.$row, 'SUPPLIER');
 				cellColor($col.$row, '000000');
 				alignement($col.$row);
 				$excel->getActiveSheet()
 					->getStyle($col.$row)->applyFromArray($styleHeader);
 				$col++;
-				$excel-> getActiveSheet()
-					-> setCellValue($col.$row, 'KLSA STATUS');
+		
+		$excel-> getActiveSheet()
+					-> setCellValue($col.$row, 'PO Ref');
 				cellColor($col.$row, '000000');
 				alignement($col.$row);
 				$excel->getActiveSheet()
 					->getStyle($col.$row)->applyFromArray($styleHeader);
 				$col++;
-				$excel-> getActiveSheet()
-					-> setCellValue($col.$row, 'AMICONGO STATUS');
+		
+		$excel-> getActiveSheet()
+					-> setCellValue($col.$row, 'WEIGHT');
 				cellColor($col.$row, '000000');
 				alignement($col.$row);
 				$excel->getActiveSheet()
 					->getStyle($col.$row)->applyFromArray($styleHeader);
 				$col++;
-				$excel-> getActiveSheet()
-					-> setCellValue($col.$row, 'KZI STATUS');
+		
+		$excel-> getActiveSheet()
+					-> setCellValue($col.$row, 'ROAD MANIF');
 				cellColor($col.$row, '000000');
 				alignement($col.$row);
 				$excel->getActiveSheet()
 					->getStyle($col.$row)->applyFromArray($styleHeader);
-			}else if ($reponse['id_col'] == '43') {
-				$excel-> getActiveSheet()-> getColumnDimension($col)-> setWidth(55);
-			}else if ($reponse['id_col'] == '2') {
-				$excel-> getActiveSheet()-> getColumnDimension($col)-> setWidth(25);
-			}else if ($reponse['id_col'] == '12') {
-				$excel-> getActiveSheet()-> getColumnDimension($col)-> setWidth(25);
-			}else if ($reponse['id_col'] == '16') {
-				$excel-> getActiveSheet()-> getColumnDimension($col)-> setWidth(30);
-			}else{
-				$excel-> getActiveSheet()-> getColumnDimension($col)-> setWidth(15);
-			}
-
-			$col++;
-		}$requete-> closeCursor();
-
+				$col++;
+		
+		$excel-> getActiveSheet()
+					-> setCellValue($col.$row, 'HORSE');
+				cellColor($col.$row, '000000');
+				alignement($col.$row);
+				$excel->getActiveSheet()
+					->getStyle($col.$row)->applyFromArray($styleHeader);
+				$col++;
+		
+		$excel-> getActiveSheet()
+					-> setCellValue($col.$row, 'TRAILER 1');
+				cellColor($col.$row, '000000');
+				alignement($col.$row);
+				$excel->getActiveSheet()
+					->getStyle($col.$row)->applyFromArray($styleHeader);
+				$col++;
+		
+		$excel-> getActiveSheet()
+					-> setCellValue($col.$row, 'TRAILER 2/CONTAINER');
+				cellColor($col.$row, '000000');
+				alignement($col.$row);
+				$excel->getActiveSheet()
+					->getStyle($col.$row)->applyFromArray($styleHeader);
+				$col++;
+		
+		$excel-> getActiveSheet()
+					-> setCellValue($col.$row, 'Klesa arrival date ');
+				cellColor($col.$row, '000000');
+				alignement($col.$row);
+				$excel->getActiveSheet()
+					->getStyle($col.$row)->applyFromArray($styleHeader);
+				$col++;
+		
+		$excel-> getActiveSheet()
+					-> setCellValue($col.$row, 'Wiski arrival date');
+				cellColor($col.$row, '000000');
+				alignement($col.$row);
+				$excel->getActiveSheet()
+					->getStyle($col.$row)->applyFromArray($styleHeader);
+				$col++;
+		
+		$excel-> getActiveSheet()
+					-> setCellValue($col.$row, 'Dispacth from K\'lsa');
+				cellColor($col.$row, '000000');
+				alignement($col.$row);
+				$excel->getActiveSheet()
+					->getStyle($col.$row)->applyFromArray($styleHeader);
+				$col++;
+		
+		$excel-> getActiveSheet()
+					-> setCellValue($col.$row, 'REMARKS');
+				cellColor($col.$row, '000000');
+				alignement($col.$row);
+				$excel->getActiveSheet()
+					->getStyle($col.$row)->applyFromArray($styleHeader);
+				$col++;
 		
 		//----------- Récuperation des dossiers ------------
 
@@ -610,6 +653,7 @@ while ($reponseModeTransport = $requeteModeTransport-> fetch()) {
 												d.custom_deliv AS custom_deliv_1,
 												d.arrival_date AS arrival_date_1,
 												d.cleared AS cleared,
+												cl.code_cli AS code_cli,
 
 												IF(d.id_mod_lic='2' AND d.id_mod_trans='1',
 													IF(d.date_crf IS NULL AND d.date_ad IS NULL AND d.date_assurance IS NULL,
@@ -686,6 +730,7 @@ while ($reponseModeTransport = $requeteModeTransport-> fetch()) {
 		while ($reponse = $requete-> fetch()) {
 			$compteur++;
 			$bg = "";
+			$col = 'D';
 
 			if ($reponse['cleared'] == '1') {
 				$style = "style='color: blue;'";
@@ -713,7 +758,7 @@ while ($reponseModeTransport = $requeteModeTransport-> fetch()) {
 			$excel-> getActiveSheet()
 				-> setCellValue('A'.$row, $compteur)
 				-> setCellValue('B'.$row, $reponse['ref_dos'])
-				-> setCellValue('C'.$row, $reponse['nom_cli']);
+				-> setCellValue('C'.$row, $reponse['code_cli']);
 
 			$excel->getActiveSheet()
 				->getStyle('A'.$row)->applyFromArray($styleHeader);
@@ -726,7 +771,272 @@ while ($reponseModeTransport = $requeteModeTransport-> fetch()) {
 			alignement('B'.$row);
 			alignement('C'.$row);
 
-			afficherRowTableauExcelKBP($id_mod_lic, $id_mod_trans, $reponse['id_dos'], $compteur, $col, $excel, $row, $styleHeader, $reponse['statut'], $reponse['klsa_status'], $reponse['amicongo_status'], $reponse['kzi_status']);
+			$excel-> getActiveSheet()
+				-> setCellValue($col.$row, $reponse['date_preal']);
+
+			$excel->getActiveSheet()
+				->getStyle($col.$row)->applyFromArray($styleHeader);
+			alignement($col.$row);
+		$excel->getActiveSheet()
+	        ->getColumnDimension($col)
+	        ->setAutoSize(true);
+			$excel-> getActiveSheet()-> getStyle($col.$row)-> applyFromArray(
+				array(
+					'borders' => array(
+						'allborders' => array(
+							'style' => PHPExcel_Style_Border::BORDER_THIN
+						)
+					)
+				)
+			);
+			$col++;
+
+			$excel-> getActiveSheet()
+				-> setCellValue($col.$row, $reponse['ref_fact']);
+			$excel->getActiveSheet()
+				->getStyle($col.$row)->applyFromArray($styleHeader);
+			alignement($col.$row);
+			$excel->getActiveSheet()
+		        ->getColumnDimension($col)
+		        ->setAutoSize(true);
+			$excel-> getActiveSheet()-> getStyle($col.$row)-> applyFromArray(
+				array(
+					'borders' => array(
+						'allborders' => array(
+							'style' => PHPExcel_Style_Border::BORDER_THIN
+						)
+					)
+				)
+			);
+			$col++;
+
+			$excel-> getActiveSheet()
+				-> setCellValue($col.$row, $reponse['commodity']);
+			$excel->getActiveSheet()
+				->getStyle($col.$row)->applyFromArray($styleHeader);
+			alignement($col.$row);
+			$excel->getActiveSheet()
+		        ->getColumnDimension($col)
+		        ->setAutoSize(true);
+			$excel-> getActiveSheet()-> getStyle($col.$row)-> applyFromArray(
+				array(
+					'borders' => array(
+						'allborders' => array(
+							'style' => PHPExcel_Style_Border::BORDER_THIN
+						)
+					)
+				)
+			);
+			$col++;
+
+			$excel-> getActiveSheet()
+				-> setCellValue($col.$row, $reponse['supplier']);
+			$excel->getActiveSheet()
+				->getStyle($col.$row)->applyFromArray($styleHeader);
+			alignement($col.$row);
+			$excel->getActiveSheet()
+		        ->getColumnDimension($col)
+		        ->setAutoSize(true);
+			$excel-> getActiveSheet()-> getStyle($col.$row)-> applyFromArray(
+				array(
+					'borders' => array(
+						'allborders' => array(
+							'style' => PHPExcel_Style_Border::BORDER_THIN
+						)
+					)
+				)
+			);
+			$col++;
+
+			$excel-> getActiveSheet()
+				-> setCellValue($col.$row, $reponse['po_ref']);
+			$excel->getActiveSheet()
+				->getStyle($col.$row)->applyFromArray($styleHeader);
+			alignement($col.$row);
+			$excel->getActiveSheet()
+		        ->getColumnDimension($col)
+		        ->setAutoSize(true);
+			$excel-> getActiveSheet()-> getStyle($col.$row)-> applyFromArray(
+				array(
+					'borders' => array(
+						'allborders' => array(
+							'style' => PHPExcel_Style_Border::BORDER_THIN
+						)
+					)
+				)
+			);
+			$col++;
+
+			$excel-> getActiveSheet()
+				-> setCellValue($col.$row, $reponse['poids']);
+			$excel->getActiveSheet()
+				->getStyle($col.$row)->applyFromArray($styleHeader);
+			alignement($col.$row);
+			$excel->getActiveSheet()
+		        ->getColumnDimension($col)
+		        ->setAutoSize(true);
+			$excel-> getActiveSheet()-> getStyle($col.$row)-> applyFromArray(
+				array(
+					'borders' => array(
+						'allborders' => array(
+							'style' => PHPExcel_Style_Border::BORDER_THIN
+						)
+					)
+				)
+			);
+			$col++;
+
+			$excel-> getActiveSheet()
+				-> setCellValue($col.$row, $reponse['road_manif']);
+			$excel->getActiveSheet()
+				->getStyle($col.$row)->applyFromArray($styleHeader);
+			alignement($col.$row);
+			$excel->getActiveSheet()
+		        ->getColumnDimension($col)
+		        ->setAutoSize(true);
+			$excel-> getActiveSheet()-> getStyle($col.$row)-> applyFromArray(
+				array(
+					'borders' => array(
+						'allborders' => array(
+							'style' => PHPExcel_Style_Border::BORDER_THIN
+						)
+					)
+				)
+			);
+			$col++;
+
+			$excel-> getActiveSheet()
+				-> setCellValue($col.$row, $reponse['horse']);
+			$excel->getActiveSheet()
+				->getStyle($col.$row)->applyFromArray($styleHeader);
+			alignement($col.$row);
+			$excel->getActiveSheet()
+		        ->getColumnDimension($col)
+		        ->setAutoSize(true);
+			$excel-> getActiveSheet()-> getStyle($col.$row)-> applyFromArray(
+				array(
+					'borders' => array(
+						'allborders' => array(
+							'style' => PHPExcel_Style_Border::BORDER_THIN
+						)
+					)
+				)
+			);
+			$col++;
+
+			$excel-> getActiveSheet()
+				-> setCellValue($col.$row, $reponse['trailer_1']);
+			$excel->getActiveSheet()
+				->getStyle($col.$row)->applyFromArray($styleHeader);
+			alignement($col.$row);
+			$excel->getActiveSheet()
+		        ->getColumnDimension($col)
+		        ->setAutoSize(true);
+			$excel-> getActiveSheet()-> getStyle($col.$row)-> applyFromArray(
+				array(
+					'borders' => array(
+						'allborders' => array(
+							'style' => PHPExcel_Style_Border::BORDER_THIN
+						)
+					)
+				)
+			);
+			$col++;
+
+			$excel-> getActiveSheet()
+				-> setCellValue($col.$row, $reponse['trailer_2']);
+			$excel->getActiveSheet()
+				->getStyle($col.$row)->applyFromArray($styleHeader);
+			alignement($col.$row);
+			$excel->getActiveSheet()
+		        ->getColumnDimension($col)
+		        ->setAutoSize(true);
+			$excel-> getActiveSheet()-> getStyle($col.$row)-> applyFromArray(
+				array(
+					'borders' => array(
+						'allborders' => array(
+							'style' => PHPExcel_Style_Border::BORDER_THIN
+						)
+					)
+				)
+			);
+			$col++;
+
+			$excel-> getActiveSheet()
+				-> setCellValue($col.$row, $reponse['klsa_arriv']);
+			$excel->getActiveSheet()
+				->getStyle($col.$row)->applyFromArray($styleHeader);
+			alignement($col.$row);
+			$excel->getActiveSheet()
+		        ->getColumnDimension($col)
+		        ->setAutoSize(true);
+			$excel-> getActiveSheet()-> getStyle($col.$row)-> applyFromArray(
+				array(
+					'borders' => array(
+						'allborders' => array(
+							'style' => PHPExcel_Style_Border::BORDER_THIN
+						)
+					)
+				)
+			);
+			$col++;
+
+			$excel-> getActiveSheet()
+				-> setCellValue($col.$row, $reponse['wiski_arriv']);
+			$excel->getActiveSheet()
+				->getStyle($col.$row)->applyFromArray($styleHeader);
+			alignement($col.$row);
+			$excel->getActiveSheet()
+		        ->getColumnDimension($col)
+		        ->setAutoSize(true);
+			$excel-> getActiveSheet()-> getStyle($col.$row)-> applyFromArray(
+				array(
+					'borders' => array(
+						'allborders' => array(
+							'style' => PHPExcel_Style_Border::BORDER_THIN
+						)
+					)
+				)
+			);
+			$col++;
+
+			$excel-> getActiveSheet()
+				-> setCellValue($col.$row, $reponse['dispatch_klsa']);
+			$excel->getActiveSheet()
+				->getStyle($col.$row)->applyFromArray($styleHeader);
+			alignement($col.$row);
+			$excel->getActiveSheet()
+		        ->getColumnDimension($col)
+		        ->setAutoSize(true);
+			$excel-> getActiveSheet()-> getStyle($col.$row)-> applyFromArray(
+				array(
+					'borders' => array(
+						'allborders' => array(
+							'style' => PHPExcel_Style_Border::BORDER_THIN
+						)
+					)
+				)
+			);
+			$col++;
+
+			$excel-> getActiveSheet()
+				-> setCellValue($col.$row, $reponse['remarque']);
+			$excel->getActiveSheet()
+				->getStyle($col.$row)->applyFromArray($styleHeader);
+			alignement($col.$row);
+			$excel->getActiveSheet()
+		        ->getColumnDimension($col)
+		        ->setAutoSize(true);
+			$excel-> getActiveSheet()-> getStyle($col.$row)-> applyFromArray(
+				array(
+					'borders' => array(
+						'allborders' => array(
+							'style' => PHPExcel_Style_Border::BORDER_THIN
+						)
+					)
+				)
+			);
+			$col++;
 
 			$row++;
 

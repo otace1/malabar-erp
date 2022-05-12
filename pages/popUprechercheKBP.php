@@ -55,11 +55,27 @@
                     <div class="card-body">
                         <div class="row">
                           <div class="col-sm-12  table-responsive">
-                            <table id="user_data_2" cellspacing="0" width="100%" class="tableau-de-donnees  table table-hover text-nowrap table-sm">
+                            <table id="user_data_2" cellspacing="0" width="100%" class="tableau-de-donnees  table table-hover text-nowrap table-sm small">
                               <thead>
-                                <?php
-                                $maClasse-> afficherEnTeteTableau(2, 857, 1);
-                                ?>
+                                <tr>
+                                  <th style="color: white; text-align: center;">N.</th>
+                                  <th style="color: white; text-align: center;">MCA REF</th>
+                                  <th style="color: white; text-align: center;">CUSTOMER NAME</th>
+                                  <th style="color: white; text-align: center;">PRE-ALERTE DATE</th>
+                                  <th style="color: white; text-align: center;">INVOICE</th>
+                                  <th style="color: white; text-align: center;">COMMODITY</th>
+                                  <th style="color: white; text-align: center;">SUPPLIER</th>
+                                  <th style="color: white; text-align: center;">PO Ref</th>
+                                  <th style="color: white; text-align: center;">WEIGHT</th>
+                                  <th style="color: white; text-align: center;">ROAD MANIF</th>
+                                  <th style="color: white; text-align: center;">HORSE</th>
+                                  <th style="color: white; text-align: center;">TRAILER 1</th>
+                                  <th style="color: white; text-align: center;">TRAILER 2/CONTAINER</th>
+                                  <th style="color: white; text-align: center;">Klesa arrival date </th>
+                                  <th style="color: white; text-align: center;">Wiski arrival date</th>
+                                  <th style="color: white; text-align: center;">Dispacth from K'lsa</th>
+                                  <th style="color: white; text-align: center;">REMARKS</th>
+                                </tr>
                               </thead>
                               <tbody>
                                 <?php
