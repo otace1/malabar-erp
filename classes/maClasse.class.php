@@ -9156,6 +9156,7 @@
 													d.custom_deliv AS custom_deliv_1,
 													d.arrival_date AS arrival_date_1,
 													cl.id_cli AS id_cli,
+													cl.code_cli AS code_cli,
 
 													
 													IF(d.id_mod_lic='2' AND d.id_mod_trans='1',
@@ -9263,36 +9264,56 @@
 				<input type="hidden" name="rech" value="true">
 				<input type="hidden" name="id_dos_<?php echo $compteur;?>" value="<?php echo $reponse['id_dos'];?>">
 				<tr class="<?php echo $bg;?>" <?php echo $style;?>>
-					<td class="<?php echo $class;?> <?php echo $bg;?>" style=" border-right: 1px solid black; vertical-align: middle; text-align: left; padding: 0.6rem; border-top: 1px solid black;" <?php echo $style;?>><?php echo $compteur;?></td>
-					<td class="<?php echo $class;?> <?php echo $bg;?>" style=" border-right: 1px solid black; vertical-align: middle; text-align: left; padding: 0.6rem; border-top: 1px solid black; <?php echo $color;?>"><span class="" style="<?php ?>"><?php echo $reponse['ref_dos'];?></span>
-					 <?php 
-					  if(!isset($this-> getDataUtilisateur($_SESSION['id_util'])['tracking_enab'])){
-					  
-
-						if ($this-> getDataUtilisateur($_SESSION['id_util'])['tracking_log'] == '1') {
-						?>
-					  	<span title="Historique du dossier" onclick="window.open('popUpLogFile.php?id_dos=<?php echo $reponse['id_dos'];?>','pop1','width=900,height=950');">
-					  		<i class="fa fa-history bg bg-dark"  style="padding: 3px; border-radius: 5px;" aria-hidden="true"></i>
-	                	</span>
-		                <?php
-						}
+					<td class="<?php echo $class;?> <?php echo $bg;?>" style=" vertical-align: middle; text-align: left; padding: 0.6rem;" <?php echo $style;?>><?php echo $compteur;?></td>
+					<td class="<?php echo $class;?> <?php echo $bg;?>" style=" vertical-align: middle; text-align: left; padding: 0.6rem;" <?php echo $style;?>><?php echo $reponse['ref_dos'];?></td>
 					
-					  }
-					  ?>
+					<td style="text-align: center;">
+						<?php echo $reponse['code_cli'];?>
 					</td>
 					<td style="text-align: center;">
-						<span class="btn-xs bg-purple dropdown-toggle dropdown-hover dropdown-icon" data-toggle="dropdown" title="Documents Joints">
-                        <i class="fa fa-folder-open"></i><sup><span class=""><?php echo $this-> getNombreDocumentDossier($reponse['id_dos']);?></span></sup>
-                        <span class="sr-only">Toggle Dropdown</span>
-                        <div class="dropdown-menu" role="menu">
-                          <?php
-                            $this-> getListeDocumentForDossier($reponse['id_dos'], $reponse['id_mod_lic']);
-                          ?>
-                        </div>
-                      </span>
+						<?php echo $reponse['date_preal'];?>
+					</td>
+					<td style="text-align: center;">
+						<?php echo $reponse['ref_fact'];?>
+					</td>
+					<td style="text-align: center;">
+						<?php echo $reponse['commodity'];?>
+					</td>
+					<td style="text-align: center;">
+						<?php echo $reponse['supplier'];?>
+					</td>
+					<td style="text-align: center;">
+						<?php echo $reponse['po_ref'];?>
+					</td>
+					<td style="text-align: center;">
+						<?php echo $reponse['poids'];?>
+					</td>
+					<td style="text-align: center;">
+						<?php echo $reponse['road_manif'];?>
+					</td>
+					<td style="text-align: center;">
+						<?php echo $reponse['horse'];?>
+					</td>
+					<td style="text-align: center;">
+						<?php echo $reponse['trailer_1'];?>
+					</td>
+					<td style="text-align: center;">
+						<?php echo $reponse['trailer_2'];?>
+					</td>
+					<td style="text-align: center;">
+						<?php echo $reponse['klsa_arriv'];?>
+					</td>
+					<td style="text-align: center;">
+						<?php echo $reponse['wiski_arriv'];?>
+					</td>
+					<td style="text-align: center;">
+						<?php echo $reponse['dispatch_klsa'];?>
+					</td>
+					<td style="text-align: center;">
+						<?php echo $reponse['remarque'];?>
 					</td>
 					<?php
-					$this-> afficherRowTableau($id_mod_lic, $reponse['id_cli'], $id_mod_trans, $reponse['id_dos'], $compteur, $reponse['statut'], $reponse['klsa_status'], $reponse['amicongo_status'], $reponse['kzi_status']);
+					//$this-> afficherRowTableau($id_mod_lic, $reponse['id_cli'], $id_mod_trans, $reponse['id_dos'], $compteur, $reponse['statut'], $reponse['klsa_status'], $reponse['amicongo_status'], $reponse['kzi_status']);
 						/*if ($id_mod_trans == '1') {
 							include('importRouteRow.php');
 						}else if ($id_mod_trans == '3') {
