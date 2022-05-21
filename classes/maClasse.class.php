@@ -4976,6 +4976,27 @@
 			}
 		}
 
+		public function getUtilisateurClientModeleLicence($id_util, $id_mod_lic){
+			include('connexion.php');
+			$entree['id_util'] = $id_util;
+			$entree['id_mod_lic'] = $id_mod_lic;
+
+			$requete = $connexion-> prepare("SELECT cl.*
+												FROM client cl, utilisateur u, affectation_utilisateur_client af, affectation_client_modele_licence aff
+												WHERE u.id_util = ?
+													AND u.id_util = af.id_util
+													AND af.id_cli = cl.id_cli
+													AND cl.id_cli = aff.id_cli
+													AND aff.id_mod_lic = ?");
+			$requete-> execute(array($entree['id_util'], $entree['id_mod_lic']));
+			$reponse = $requete-> fetch();
+			if($reponse){
+				return $reponse;
+			}else{
+				return false;
+			}
+		}
+
 		public function buildRefFactureGlobale($id_cli){
 			include('connexion.php');
 
