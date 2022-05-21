@@ -25,8 +25,9 @@
   <!-- Google Font: Source Sans Pro
   <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
   <link rel="icon" href="images/logo.jpeg" type="image/x-icon"> -->
+  <link rel="icon" href="images/logo.jpeg" type="image/x-icon">
 </head>
-<body class="hold-transition login-page" style="background: url('images/logo1.jpeg') no-repeat center center fixed;-webkit-background-size: cover; -moz-background-size: cover; -o-background-size: cover; background-size: cover;/*background-image: url(images/logo.jpg);*/">
+<body class="hold-transition login-page small" style="background: url('images/logo1.jpeg') no-repeat center center fixed;-webkit-background-size: cover; -moz-background-size: cover; -o-background-size: cover; background-size: cover;/*background-image: url(images/logo.jpg);*/">
 <div class="login-box" style="background-color: rgb(193, 0, 0); border-radius: 5px;">
   <div class="login-logo">
     <a style="color: white;"><b>MALABAR | </b>ERP</a>
@@ -68,6 +69,12 @@
     </div>
     <!-- /.login-card-body -->
   </div>
+  <div class="small text-light">
+    <div style="text-align: center;">
+      <b>Version</b> 1.8 <br>
+      Build by <a href="http://www.belej-consulting.com/" onclick="window.open(this.href);return false;"><font color="orange">BELEJ</font><font color="black">-CONSULTING</font></a>
+    </div>
+  </div>
 </div>
 <!-- /.login-box -->
 
@@ -83,7 +90,11 @@
         $_SESSION['id_util'] = $maClasse-> verifierUtilisateur($_POST['pseudo_util'], $_POST['pass_util']);
         $_SESSION['id_role'] = $maClasse-> getIdRoleUtilisateur($_SESSION['id_util']);
         $_SESSION['nom_role'] = $maClasse-> getNomRoleUtilisateur($_SESSION['id_util']);
-        header('Location: pages/');
+        if ($_SESSION['id_role']=='4') {
+          header('Location: client/');
+        }else{
+          header('Location: pages/');
+        }
       }
     }
   ?>
