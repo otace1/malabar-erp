@@ -13,7 +13,7 @@
       <div class="icon">
         <i class="fas fa-file"></i>
       </div>
-      <a href="#" class="small-box-footer" onclick="window.open('popUpDossierDashboard.php?etat=TOTAL FILES&id_cli=<?php echo $_GET['id_cli'];?>&id_mod_lic=<?php echo $_GET['id_mod_trac'];?>&id_mod_trans=<?php echo $_GET['id_mod_trans'];?>&commodity=<?php echo $_GET['commodity'];?>','pop1','width=1500,height=900');">
+      <a href="#" class="small-box-footer" onclick="window.open('../pages/popUpDossierDashboard.php?etat=TOTAL FILES&id_cli=<?php echo $_GET['id_cli'];?>&id_mod_lic=<?php echo $_GET['id_mod_trac'];?>&id_mod_trans=<?php echo $_GET['id_mod_trans'];?>&commodity=<?php echo $_GET['commodity'];?>','pop1','width=1500,height=900');">
         More info <i class="fas fa-arrow-circle-right"></i>
       </a>
     </div>
@@ -34,7 +34,7 @@
       <div class="icon">
         <i class="fas fa-file"></i>
       </div>
-      <a href="#" class="small-box-footer" onclick="window.open('popUpDossierDashboard.php?etat=CLEARING COMPLETED&id_cli=<?php echo $_GET['id_cli'];?>&id_mod_lic=<?php echo $_GET['id_mod_trac'];?>&id_mod_trans=<?php echo $_GET['id_mod_trans'];?>&commodity=<?php echo $_GET['commodity'];?>','pop1','width=1500,height=900');">
+      <a href="#" class="small-box-footer" onclick="window.open('../pages/popUpDossierDashboard.php?etat=CLEARING COMPLETED&id_cli=<?php echo $_GET['id_cli'];?>&id_mod_lic=<?php echo $_GET['id_mod_trac'];?>&id_mod_trans=<?php echo $_GET['id_mod_trans'];?>&commodity=<?php echo $_GET['commodity'];?>','pop1','width=1500,height=900');">
         More info <i class="fas fa-arrow-circle-right"></i>
       </a>
     </div>
@@ -55,7 +55,7 @@
       <div class="icon">
         <i class="fas fa-file"></i>
       </div>
-      <a href="#" class="small-box-footer" onclick="window.open('popUpDossierDashboard.php?etat=FILES IN PROCESS&id_cli=<?php echo $_GET['id_cli'];?>&id_mod_lic=<?php echo $_GET['id_mod_trac'];?>&id_mod_trans=<?php echo $_GET['id_mod_trans'];?>&commodity=<?php echo $_GET['commodity'];?>','pop1','width=1500,height=900');">
+      <a href="#" class="small-box-footer" onclick="window.open('../pages/popUpDossierDashboard.php?etat=FILES IN PROCESS&id_cli=<?php echo $_GET['id_cli'];?>&id_mod_lic=<?php echo $_GET['id_mod_trac'];?>&id_mod_trans=<?php echo $_GET['id_mod_trans'];?>&commodity=<?php echo $_GET['commodity'];?>','pop1','width=1500,height=900');">
         More info <i class="fas fa-arrow-circle-right"></i>
       </a>
     </div>
@@ -76,7 +76,7 @@
       <div class="icon">
         <i class="fas fa-file"></i>
       </div>
-      <a href="#" class="small-box-footer" onclick="window.open('popUpDossierDashboard.php?etat=CANCELLED&id_cli=<?php echo $_GET['id_cli'];?>&id_mod_lic=<?php echo $_GET['id_mod_trac'];?>&id_mod_trans=<?php echo $_GET['id_mod_trans'];?>&commodity=<?php echo $_GET['commodity'];?>','pop1','width=1500,height=900');">
+      <a href="#" class="small-box-footer" onclick="window.open('../pages/popUpDossierDashboard.php?etat=CANCELLED&id_cli=<?php echo $_GET['id_cli'];?>&id_mod_lic=<?php echo $_GET['id_mod_trac'];?>&id_mod_trans=<?php echo $_GET['id_mod_trans'];?>&commodity=<?php echo $_GET['commodity'];?>','pop1','width=1500,height=900');">
         More info <i class="fas fa-arrow-circle-right"></i>
       </a>
     </div>

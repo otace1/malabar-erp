@@ -1,6 +1,6 @@
 
   <!-- /.content-wrapper -->
-  <footer class="main-footer">
+  <footer class="main-footer small">
     <div class="float-right d-none d-sm-block">
       <b>Version</b> 0.5
     </div>

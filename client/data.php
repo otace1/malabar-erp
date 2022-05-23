@@ -43,14 +43,19 @@
 									          )
 									      )
 										,
-										d.statut) AS statut
+										d.statut) AS statut,
+										IF(d.id_mod_lic='1',
+											m.nom_march,
+											d.commodity) AS commodity
 										FROM dossier d
+										LEFT JOIN marchandise m
+											ON d.id_march = m.id_march
 										WHERE d.id_cli = $id_cli 
 											AND d.id_mod_trans = $id_mod_trans 
 											AND d.id_mod_lic = $id_mod_lic
 											AND YEAR(d.date_creat_dos) = YEAR(CURRENT_DATE())
 										ORDER BY id_dos DESC");
-	$row = array();
+	$rows = array();
 
 	while ($reponse = $requete-> fetch()) {
 		$compteur++;

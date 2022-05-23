@@ -30,6 +30,43 @@
           <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
           <?php
+            if( $maClasse-> getUtilisateurClientModeleLicence($_SESSION['id_util'], '1') != false){
+          ?>
+          <li class="nav-item"  style="">
+            <a href="#" class="nav-link active bg bg-danger" style=" font-weight: bold;">
+              <!--<i class="nav-icon fas fa-tachometer-alt"></i>-->
+              <img src="../images/export.png" width="20px">&nbsp;&nbsp;
+              EXPORT
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="dashboardDossier.php?id_mod_trac=1&id_mod_trans=1&commodity=&id_cli=<?php echo $maClasse-> getUtilisateurClientModeleLicence($_SESSION['id_util'], '2')['id_cli'];?>" class="nav-link">
+              &nbsp;&nbsp;&nbsp;&nbsp;<!-- <i class="nav-icon fas fa-tachometer-alt"></i> -->
+              <img src="../images/business-report.png" width="30px">&nbsp;&nbsp;
+              <p>Dashboard</p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="dossier.php?id_mod_lic=1&id_cli=<?php echo $maClasse-> getUtilisateurClientModeleLicence($_SESSION['id_util'], '1')['id_cli'];?>&id_mod_trans=1&id_march=" class="nav-link">
+              &nbsp;&nbsp;&nbsp;&nbsp;<!-- <i class="nav-icon fas fa-tachometer-alt"></i> -->
+              <img src="../images/truck.png" width="30px">&nbsp;&nbsp;
+              <p>Road Files</p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="dossier.php?id_mod_lic=1&id_cli=<?php echo $maClasse-> getUtilisateurClientModeleLicence($_SESSION['id_util'], '1')['id_cli'];?>&id_mod_trans=4&id_march=" class="nav-link">
+              &nbsp;&nbsp;&nbsp;&nbsp;<!-- <i class="nav-icon fas fa-tachometer-alt"></i> -->
+              <img src="../images/train.png" width="30px">&nbsp;&nbsp;
+              <p>Wagon</p>
+            </a>
+          </li>
+            <?php
+              //$maClasse-> afficherMenuLicence();
+            ?>
+            <hr>
+            <?php
+            }
+
             if( $maClasse-> getUtilisateurClientModeleLicence($_SESSION['id_util'], '2') != false){
           ?>
           <li class="nav-item"  style="">
@@ -47,14 +84,14 @@
             </a>
           </li>
           <li class="nav-item">
-            <a href="dossierImport.php?id_mod_lic=2&id_cli=<?php echo $maClasse-> getUtilisateurClientModeleLicence($_SESSION['id_util'], '2')['id_cli'];?>&id_mod_trans=1&id_march=" class="nav-link">
+            <a href="dossier.php?id_mod_lic=2&id_cli=<?php echo $maClasse-> getUtilisateurClientModeleLicence($_SESSION['id_util'], '2')['id_cli'];?>&id_mod_trans=1&id_march=" class="nav-link">
               &nbsp;&nbsp;&nbsp;&nbsp;<!-- <i class="nav-icon fas fa-tachometer-alt"></i> -->
-              <img src="../images/train.png" width="30px">&nbsp;&nbsp;
+              <img src="../images/truck.png" width="30px">&nbsp;&nbsp;
               <p>Road Files</p>
             </a>
           </li>
           <li class="nav-item">
-            <a href="dossierImport.php?id_mod_lic=2&id_cli=<?php echo $maClasse-> getUtilisateurClientModeleLicence($_SESSION['id_util'], '2')['id_cli'];?>&id_mod_trans=3&id_march=" class="nav-link">
+            <a href="dossier.php?id_mod_lic=2&id_cli=<?php echo $maClasse-> getUtilisateurClientModeleLicence($_SESSION['id_util'], '2')['id_cli'];?>&id_mod_trans=3&id_march=" class="nav-link">
               &nbsp;&nbsp;&nbsp;&nbsp;<!-- <i class="nav-icon fas fa-tachometer-alt"></i> -->
               <img src="../images/airplane.png" width="30px">&nbsp;&nbsp;
               <p>Air Files</p>

@@ -97,47 +97,7 @@
       <div class="container-fluid">
         <div class="header">
           <h5><i class="nav-icon fas fa-tachometer-alt"></i> DASHBOARD <?php echo $modele['nom_mod_lic'].' ('.$modele['sigle_mod_lic'].')'.$mode_transport.$client.$type_licence.$commodity;?></h5>
-          <?php /*?><div class="pull-right">
-            <button class="btn btn-dark square-btn-adjust" data-toggle="modal" data-target=".rechercheClient">
-                <i class="fa fa-filter"></i> Filtrage
-            </button>
-
-            <button class="btn btn-danger square-btn-adjust" data-toggle="modal" data-target=".kpi">
-                <i class="fa fa-tachometer-alt"></i> KPI
-            </button>
-
-            <button class="btn btn-primary square-btn-adjust" data-toggle="modal" data-target=".rechercheDossier">
-                <i class="fa fa-search"></i> Search File
-            </button>
-
-            <button class="btn btn-info square-btn-adjust" data-toggle="modal" data-target=".rechercheKBP">
-                <i class="fa fa-search"></i> KBP Report
-            </button>
-            <?php
-            if ($_GET['id_mod_trac']=='2' && $_GET['id_mod_trans']=='1') {
-            ?>
-            <button class="btn btn-success square-btn-adjust" onclick="window.location.replace('exportDashboardDossierAutomatique.php?id_cli=<?php echo $_GET['id_cli']; ?>&id_mod_lic=<?php echo $_GET['id_mod_trac']; ?>&id_mod_trans=<?php echo $_GET['id_mod_trans']; ?>','pop1','width=80,height=80');">
-              <i class="fas fa-file-excel"></i> Export Excel
-            </button>
-
-            <button class="btn btn-secondary square-btn-adjust" onclick="window.location.replace('exportDashboardDossier2Automatique.php?id_cli=<?php echo $_GET['id_cli']; ?>&id_mod_lic=<?php echo $_GET['id_mod_trac']; ?>&id_mod_trans=<?php echo $_GET['id_mod_trans']; ?>','pop1','width=80,height=80');">
-              <i class="fas fa-file-excel"></i> Export Excel 2
-            </button>
-            <?php
-            }else{
-            ?>
-            <button class="btn btn-success square-btn-adjust" onclick="window.location.replace('exportDashboardDossier.php?id_cli=<?php echo $_GET['id_cli']; ?>&id_mod_lic=<?php echo $_GET['id_mod_trac']; ?>&id_mod_trans=<?php echo $_GET['id_mod_trans']; ?>','pop1','width=80,height=80');">
-              <i class="fas fa-file-excel"></i> Export Excel
-            </button>
-
-            <button class="btn btn-secondary square-btn-adjust" onclick="window.location.replace('exportDashboardDossier2.php?id_cli=<?php echo $_GET['id_cli']; ?>&id_mod_lic=<?php echo $_GET['id_mod_trac']; ?>&id_mod_trans=<?php echo $_GET['id_mod_trans']; ?>','pop1','width=80,height=80');">
-              <i class="fas fa-file-excel"></i> Export Excel 2
-            </button>
-            <?php
-            }
-            ?>
-            
-          </div><?php */?>
+          
         </div>
 
       </div><!-- /.container-fluid -->
@@ -147,29 +107,232 @@
     <!-- Main content -->
     <section class="content">
       <div class="container-fluid" style="">
+        <div class="row  small">
         <?php
           if ($_GET['id_mod_trac']=='1') {
 
-            include("dashboardTracking.php");
+            //include("dashboardTracking.php");
+            $maClasse-> getSummaryClient($_GET['id_mod_trac'], $_GET['id_cli'], 
+                                $_GET['id_mod_trans'], $_GET['commodity']);
 
           }else if ($_GET['id_mod_trac']=='2') {
 
-            include("dashboardTrackingAutomatique.php");
+            //include("dashboardTrackingAutomatique.php");
+            ?>
+
+            <div class="col-md-3 col-sm-6 col-12">
+              <?php
+                $status = 'AWAITING CRF/AD/INSURANCE';
+              ?>
+              <div class="small-box bg-dark">
+                <div class="inner">
+                  <h5>
+                    <?php echo number_format($maClasse-> nbreSummaryStatus($status, 2, $_GET['id_cli'], $_GET['id_mod_trans'], $_GET['commodity']), 0, ',', ' ');?>
+                  </h5>
+
+                  <p> <?php echo strtoupper($status);?> </p>
+                </div>
+                <div class="icon">
+                  <i class="fas fa-file"></i>
+                </div>
+                <a href="#" class="small-box-footer" onclick="window.open('popUpDashboardAutomatique.php?statut=<?php echo str_replace('/', '_', $status);?>&id_mod_lic=<?php echo $_GET['id_mod_trac'];?>&id_mod_trans=<?php echo $_GET['id_mod_trans'];?>&id_cli=<?php echo $_GET['id_cli'];?>&commodity=<?php echo $_GET['commodity'];?>','pop1','width=800,height=600');">
+                  More info <i class="fas fa-arrow-circle-right"></i>
+                </a>
+              </div>
+
+              <!-- /.info-box -->
+            </div>
+          
+            <div class="col-md-3 col-sm-6 col-12">
+              <?php
+                $status = 'AWAITING CRF';
+              ?>
+              <div class="small-box bg-dark">
+                <div class="inner">
+                  <h5>
+                    <?php echo number_format($maClasse-> nbreSummaryStatus($status, 2, $_GET['id_cli'], $_GET['id_mod_trans'], $_GET['commodity']), 0, ',', ' ');?>
+                  </h5>
+
+                  <p> <?php echo strtoupper($status);?> </p>
+                </div>
+                <div class="icon">
+                  <i class="fas fa-file"></i>
+                </div>
+                <a href="#" class="small-box-footer" onclick="window.open('popUpDashboardAutomatique.php?statut=<?php echo str_replace('/', '_', $status);?>&id_mod_lic=<?php echo $_GET['id_mod_trac'];?>&id_mod_trans=<?php echo $_GET['id_mod_trans'];?>&id_cli=<?php echo $_GET['id_cli'];?>&commodity=<?php echo $_GET['commodity'];?>','pop1','width=800,height=600');">
+                  More info <i class="fas fa-arrow-circle-right"></i>
+                </a>
+              </div>
+
+              <!-- /.info-box -->
+            </div>
+          
+            <div class="col-md-3 col-sm-6 col-12">
+              <?php
+                $status = 'AWAITING AD';
+              ?>
+              <div class="small-box bg-dark">
+                <div class="inner">
+                  <h5>
+                    <?php echo number_format($maClasse-> nbreSummaryStatus($status, 2, $_GET['id_cli'], $_GET['id_mod_trans'], $_GET['commodity']), 0, ',', ' ');?>
+                  </h5>
+
+                  <p> <?php echo strtoupper($status);?> </p>
+                </div>
+                <div class="icon">
+                  <i class="fas fa-file"></i>
+                </div>
+                <a href="#" class="small-box-footer" onclick="window.open('popUpDashboardAutomatique.php?statut=<?php echo str_replace('/', '_', $status);?>&id_mod_lic=<?php echo $_GET['id_mod_trac'];?>&id_mod_trans=<?php echo $_GET['id_mod_trans'];?>&id_cli=<?php echo $_GET['id_cli'];?>&commodity=<?php echo $_GET['commodity'];?>','pop1','width=800,height=600');">
+                  More info <i class="fas fa-arrow-circle-right"></i>
+                </a>
+              </div>
+
+              <!-- /.info-box -->
+            </div>
+          
+            <div class="col-md-3 col-sm-6 col-12">
+              <?php
+                $status = 'AWAITING INSURANCE';
+              ?>
+              <div class="small-box bg-dark">
+                <div class="inner">
+                  <h5>
+                    <?php echo number_format($maClasse-> nbreSummaryStatus($status, 2, $_GET['id_cli'], $_GET['id_mod_trans'], $_GET['commodity']), 0, ',', ' ');?>
+                  </h5>
+
+                  <p> <?php echo strtoupper($status);?> </p>
+                </div>
+                <div class="icon">
+                  <i class="fas fa-file"></i>
+                </div>
+                <a href="#" class="small-box-footer" onclick="window.open('popUpDashboardAutomatique.php?statut=<?php echo str_replace('/', '_', $status);?>&id_mod_lic=<?php echo $_GET['id_mod_trac'];?>&id_mod_trans=<?php echo $_GET['id_mod_trans'];?>&id_cli=<?php echo $_GET['id_cli'];?>&commodity=<?php echo $_GET['commodity'];?>','pop1','width=800,height=600');">
+                  More info <i class="fas fa-arrow-circle-right"></i>
+                </a>
+              </div>
+
+              <!-- /.info-box -->
+            </div>
+          
+            <div class="col-md-3 col-sm-6 col-12">
+              <?php
+                $status = 'UNDER PREPARATION';
+              ?>
+              <div class="small-box bg-dark">
+                <div class="inner">
+                  <h5>
+                    <?php echo number_format($maClasse-> nbreSummaryStatus($status, 2, $_GET['id_cli'], $_GET['id_mod_trans'], $_GET['commodity']), 0, ',', ' ');?>
+                  </h5>
+
+                  <p> <?php echo strtoupper($status);?> </p>
+                </div>
+                <div class="icon">
+                  <i class="fas fa-file"></i>
+                </div>
+                <a href="#" class="small-box-footer" onclick="window.open('popUpDashboardAutomatique.php?statut=<?php echo str_replace('/', '_', $status);?>&id_mod_lic=<?php echo $_GET['id_mod_trac'];?>&id_mod_trans=<?php echo $_GET['id_mod_trans'];?>&id_cli=<?php echo $_GET['id_cli'];?>&commodity=<?php echo $_GET['commodity'];?>','pop1','width=800,height=600');">
+                  More info <i class="fas fa-arrow-circle-right"></i>
+                </a>
+              </div>
+
+              <!-- /.info-box -->
+            </div>
+          
+            <div class="col-md-3 col-sm-6 col-12">
+              <?php
+                $status = 'AWAITING LIQUIDATION';
+              ?>
+              <div class="small-box bg-dark">
+                <div class="inner">
+                  <h5>
+                    <?php echo number_format($maClasse-> nbreSummaryStatus($status, 2, $_GET['id_cli'], $_GET['id_mod_trans'], $_GET['commodity']), 0, ',', ' ');?>
+                  </h5>
+
+                  <p> <?php echo strtoupper($status);?> </p>
+                </div>
+                <div class="icon">
+                  <i class="fas fa-file"></i>
+                </div>
+                <a href="#" class="small-box-footer" onclick="window.open('popUpDashboardAutomatique.php?statut=<?php echo str_replace('/', '_', $status);?>&id_mod_lic=<?php echo $_GET['id_mod_trac'];?>&id_mod_trans=<?php echo $_GET['id_mod_trans'];?>&id_cli=<?php echo $_GET['id_cli'];?>&commodity=<?php echo $_GET['commodity'];?>','pop1','width=800,height=600');">
+                  More info <i class="fas fa-arrow-circle-right"></i>
+                </a>
+              </div>
+
+              <!-- /.info-box -->
+            </div>
+          
+            <div class="col-md-3 col-sm-6 col-12">
+              <?php
+                $status = 'AWAITING QUITTANCE';
+              ?>
+              <div class="small-box bg-dark">
+                <div class="inner">
+                  <h5>
+                    <?php echo number_format($maClasse-> nbreSummaryStatus($status, 2, $_GET['id_cli'], $_GET['id_mod_trans'], $_GET['commodity']), 0, ',', ' ');?>
+                  </h5>
+
+                  <p> <?php echo strtoupper($status);?> </p>
+                </div>
+                <div class="icon">
+                  <i class="fas fa-file"></i>
+                </div>
+                <a href="#" class="small-box-footer" onclick="window.open('popUpDashboardAutomatique.php?statut=<?php echo str_replace('/', '_', $status);?>&id_mod_lic=<?php echo $_GET['id_mod_trac'];?>&id_mod_trans=<?php echo $_GET['id_mod_trans'];?>&id_cli=<?php echo $_GET['id_cli'];?>&commodity=<?php echo $_GET['commodity'];?>','pop1','width=800,height=600');">
+                  More info <i class="fas fa-arrow-circle-right"></i>
+                </a>
+              </div>
+
+              <!-- /.info-box -->
+            </div>
+          
+            <div class="col-md-3 col-sm-6 col-12">
+              <?php
+                $status = 'AWAITING BAE/BS';
+              ?>
+              <div class="small-box bg-dark">
+                <div class="inner">
+                  <h5>
+                    <?php echo number_format($maClasse-> nbreSummaryStatus($status, 2, $_GET['id_cli'], $_GET['id_mod_trans'], $_GET['commodity']), 0, ',', ' ');?>
+                  </h5>
+
+                  <p> <?php echo strtoupper($status);?> </p>
+                </div>
+                <div class="icon">
+                  <i class="fas fa-file"></i>
+                </div>
+                <a href="#" class="small-box-footer" onclick="window.open('popUpDashboardAutomatique.php?statut=<?php echo str_replace('/', '_', $status);?>&id_mod_lic=<?php echo $_GET['id_mod_trac'];?>&id_mod_trans=<?php echo $_GET['id_mod_trans'];?>&id_cli=<?php echo $_GET['id_cli'];?>&commodity=<?php echo $_GET['commodity'];?>','pop1','width=800,height=600');">
+                  More info <i class="fas fa-arrow-circle-right"></i>
+                </a>
+              </div>
+
+              <!-- /.info-box -->
+            </div>
+          
+            <div class="col-md-3 col-sm-6 col-12">
+              <?php
+                $status = 'CLEARING COMPLETED';
+              ?>
+              <div class="small-box bg-dark">
+                <div class="inner">
+                  <h5>
+                    <?php echo number_format($maClasse-> nbreSummaryStatus($status, 2, $_GET['id_cli'], $_GET['id_mod_trans'], $_GET['commodity']), 0, ',', ' ');?>
+                  </h5>
+
+                  <p> <?php echo strtoupper($status);?> </p>
+                </div>
+                <div class="icon">
+                  <i class="fas fa-file"></i>
+                </div>
+                <a href="#" class="small-box-footer" onclick="window.open('popUpDashboardAutomatique.php?statut=<?php echo str_replace('/', '_', $status);?>&id_mod_lic=<?php echo $_GET['id_mod_trac'];?>&id_mod_trans=<?php echo $_GET['id_mod_trans'];?>&id_cli=<?php echo $_GET['id_cli'];?>&commodity=<?php echo $_GET['commodity'];?>','pop1','width=800,height=700');">
+                  More info <i class="fas fa-arrow-circle-right"></i>
+                </a>
+              </div>
+
+              <!-- /.info-box -->
+            </div>
+          
+            <?php
 
           }
 
-          if (($_SESSION['id_role']=='1' || $_SESSION['id_role']=='11' || $_SESSION['id_role']=='2' || $_SESSION['id_role']=='7') && ($_GET['id_mod_trac']=='2' && $_GET['id_mod_trans']=='1')) {
-
-            include("dashboardKlsa.php");
-
-          }
-
-          if (($_SESSION['id_role']=='1' || $_SESSION['id_role']=='11' || $_SESSION['id_role']=='2' || $_SESSION['id_role']=='8') && ($_GET['id_mod_trans']=='1')) {
-
-            include("dashboardKzi.php");
-
-          }
         ?>
+      </div>
       </div><!-- /.container-fluid -->
     </section>
     <!-- /.content -->
