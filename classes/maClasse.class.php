@@ -4429,6 +4429,27 @@
 			return $reponse;
 		}
 
+		public function getClientModeleLicenceModeTransport($id_cli, $id_mod_lic, $id_mod_trans){
+			include('connexion.php');
+			$entree['id_cli'] = $id_cli;
+			$entree['id_mod_lic'] = $id_mod_lic;
+			$entree['id_mod_trans'] = $id_mod_trans;
+
+			$requete = $connexion-> prepare("SELECT *
+												FROM dossier
+												WHERE id_cli = ?
+													AND id_mod_lic = ?
+													AND id_mod_trans = ?");
+			$requete-> execute(array($entree['id_cli'], $entree['id_mod_lic'], $entree['id_mod_trans']));
+			$reponse = $requete-> fetch();
+			if ($reponse) {
+				return $reponse;
+			}else{
+				return false;
+			}
+			//return $reponse;
+		}
+
 		public function getNombreFactureDossierValideesTransmise($id_cli, $id_mod_lic){
 			include("connexion.php");
 			$entree['id_cli'] = $id_cli;
@@ -20856,7 +20877,7 @@
 		public function nbreSummaryStatus($statut, $id_mod_lic, $id_cli, $id_mod_trans, $commodity){
 			include('connexion.php');
 			$entree['id_mod_lic'] = $id_mod_lic;
-			$statut = str_replace('_', '/', $statut);
+			$statut = str_replace('\'', '', str_replace('_', '/', $statut));
 
 			$sqlClient = '';
 			$sqlModeTransport = '';
@@ -20880,169 +20901,178 @@
 				$sqlCommodity = '';
 			}
 
-			if ($statut == 'AWAITING CRF/AD/INSURANCE') {
+			if($id_mod_lic=='2'){
+				if ($statut == 'AWAITING CRF/AD/INSURANCE') {
 
+					$requete = $connexion-> prepare("SELECT COUNT(ref_dos) AS nbre
+												FROM dossier
+												WHERE id_mod_lic = ?
+													AND date_crf IS NULL
+													AND date_ad IS NULL
+													AND date_assurance IS NULL
+													AND ref_dos NOT LIKE '%20-%'
+													AND cleared <> '2'
+													$sqlClient
+													$sqlModeTransport
+													$sqlCommodity");
+
+				}else if ($statut == 'AWAITING CRF/AD') {
+
+					$requete = $connexion-> prepare("SELECT COUNT(ref_dos) AS nbre
+												FROM dossier
+												WHERE id_mod_lic = ?
+													AND date_crf IS NULL
+													AND date_ad IS NULL
+													AND date_assurance IS NOT NULL
+													AND ref_dos NOT LIKE '%20-%'
+													AND cleared <> '2'
+													$sqlClient
+													$sqlModeTransport
+													$sqlCommodity");
+
+				}else if ($statut == 'AWAITING CRF/INSURANCE') {
+
+					$requete = $connexion-> prepare("SELECT COUNT(ref_dos) AS nbre
+												FROM dossier
+												WHERE id_mod_lic = ?
+													AND date_crf IS NULL
+													AND date_ad IS NOT NULL
+													AND date_assurance IS NULL
+													AND ref_dos NOT LIKE '%20-%'
+													AND cleared <> '2'
+													$sqlClient
+													$sqlModeTransport
+													$sqlCommodity");
+
+				}else if ($statut == 'AWAITING CRF') {
+
+					$requete = $connexion-> prepare("SELECT COUNT(ref_dos) AS nbre
+												FROM dossier
+												WHERE id_mod_lic = ?
+													AND date_crf IS NULL
+													AND ref_dos NOT LIKE '%20-%'
+													AND cleared <> '2'
+													$sqlClient
+													$sqlModeTransport
+													$sqlCommodity");
+
+				}else if ($statut == 'AWAITING AD/INSURANCE') {
+
+					$requete = $connexion-> prepare("SELECT COUNT(ref_dos) AS nbre
+												FROM dossier
+												WHERE id_mod_lic = ?
+													AND date_crf IS NOT NULL
+													AND date_ad IS NULL
+													AND date_assurance IS NULL
+													AND ref_dos NOT LIKE '%20-%'
+													AND cleared <> '2'
+													$sqlClient
+													$sqlModeTransport
+													$sqlCommodity");
+
+				}else if ($statut == 'AWAITING AD') {
+
+					$requete = $connexion-> prepare("SELECT COUNT(ref_dos) AS nbre
+												FROM dossier
+												WHERE id_mod_lic = ?
+													AND date_ad IS NULL
+													AND ref_dos NOT LIKE '%20-%'
+													AND cleared <> '2'
+													$sqlClient
+													$sqlModeTransport
+													$sqlCommodity");
+
+				}else if ($statut == 'AWAITING INSURANCE') {
+
+					$requete = $connexion-> prepare("SELECT COUNT(ref_dos) AS nbre
+												FROM dossier
+												WHERE id_mod_lic = ?
+													AND date_assurance IS NULL
+													AND ref_dos NOT LIKE '%20-%'
+													AND cleared <> '2'
+													$sqlClient
+													$sqlModeTransport
+													$sqlCommodity");
+
+				}else if ($statut == 'UNDER PREPARATION') {
+
+					$requete = $connexion-> prepare("SELECT COUNT(ref_dos) AS nbre
+												FROM dossier
+												WHERE id_mod_lic = ?
+													AND date_crf IS NOT NULL
+													AND date_ad IS NOT NULL
+													AND date_assurance IS NOT NULL
+													AND date_decl IS NULL 
+													AND ref_decl IS NULL
+													AND ref_dos NOT LIKE '%20-%'
+													AND cleared <> '2'
+													$sqlClient
+													$sqlModeTransport
+													$sqlCommodity");
+
+				}else if ($statut == 'AWAITING LIQUIDATION') {
+
+					$requete = $connexion-> prepare("SELECT COUNT(ref_dos) AS nbre
+												FROM dossier
+												WHERE id_mod_lic = ?
+													AND date_decl IS NOT NULL 
+													AND ref_decl IS NOT NULL
+													AND date_liq IS NULL 
+													AND ref_liq IS NULL
+													AND ref_dos NOT LIKE '%20-%'
+													AND cleared <> '2'
+													$sqlClient
+													$sqlModeTransport
+													$sqlCommodity");
+
+				}else if ($statut == 'AWAITING QUITTANCE') {
+
+					$requete = $connexion-> prepare("SELECT COUNT(ref_dos) AS nbre
+												FROM dossier
+												WHERE id_mod_lic = ?
+													AND date_liq IS NOT NULL 
+													AND ref_liq IS NOT NULL
+													AND date_quit IS NULL 
+													AND ref_quit IS NULL
+													AND ref_dos NOT LIKE '%20-%'
+													AND cleared <> '2'
+													$sqlClient
+													$sqlModeTransport
+													$sqlCommodity");
+
+				}else if ($statut == 'AWAITING BAE/BS') {
+
+					$requete = $connexion-> prepare("SELECT COUNT(ref_dos) AS nbre
+												FROM dossier
+												WHERE id_mod_lic = ?
+													AND date_quit IS NOT NULL 
+													AND ref_quit IS NOT NULL
+													AND dgda_out IS NULL
+													$sqlClient
+													$sqlModeTransport
+													$sqlCommodity");
+
+				}else if ($statut == 'CLEARING COMPLETED') {
+
+					$requete = $connexion-> prepare("SELECT COUNT(ref_dos) AS nbre
+												FROM dossier
+												WHERE id_mod_lic = ?
+													AND date_quit IS NOT NULL 
+													AND ref_quit IS NOT NULL
+													AND dgda_out IS NOT NULL
+													AND dispatch_deliv IS NOT NULL
+													$sqlClient
+													$sqlModeTransport
+													$sqlCommodity");
+
+				}
+			}else{
 				$requete = $connexion-> prepare("SELECT COUNT(ref_dos) AS nbre
-											FROM dossier
-											WHERE id_mod_lic = ?
-												AND date_crf IS NULL
-												AND date_ad IS NULL
-												AND date_assurance IS NULL
-												AND ref_dos NOT LIKE '%20-%'
-												AND cleared <> '2'
-												$sqlClient
-												$sqlModeTransport
-												$sqlCommodity");
-
-			}else if ($statut == 'AWAITING CRF/AD') {
-
-				$requete = $connexion-> prepare("SELECT COUNT(ref_dos) AS nbre
-											FROM dossier
-											WHERE id_mod_lic = ?
-												AND date_crf IS NULL
-												AND date_ad IS NULL
-												AND date_assurance IS NOT NULL
-												AND ref_dos NOT LIKE '%20-%'
-												AND cleared <> '2'
-												$sqlClient
-												$sqlModeTransport
-												$sqlCommodity");
-
-			}else if ($statut == 'AWAITING CRF/INSURANCE') {
-
-				$requete = $connexion-> prepare("SELECT COUNT(ref_dos) AS nbre
-											FROM dossier
-											WHERE id_mod_lic = ?
-												AND date_crf IS NULL
-												AND date_ad IS NOT NULL
-												AND date_assurance IS NULL
-												AND ref_dos NOT LIKE '%20-%'
-												AND cleared <> '2'
-												$sqlClient
-												$sqlModeTransport
-												$sqlCommodity");
-
-			}else if ($statut == 'AWAITING CRF') {
-
-				$requete = $connexion-> prepare("SELECT COUNT(ref_dos) AS nbre
-											FROM dossier
-											WHERE id_mod_lic = ?
-												AND date_crf IS NULL
-												AND ref_dos NOT LIKE '%20-%'
-												AND cleared <> '2'
-												$sqlClient
-												$sqlModeTransport
-												$sqlCommodity");
-
-			}else if ($statut == 'AWAITING AD/INSURANCE') {
-
-				$requete = $connexion-> prepare("SELECT COUNT(ref_dos) AS nbre
-											FROM dossier
-											WHERE id_mod_lic = ?
-												AND date_crf IS NOT NULL
-												AND date_ad IS NULL
-												AND date_assurance IS NULL
-												AND ref_dos NOT LIKE '%20-%'
-												AND cleared <> '2'
-												$sqlClient
-												$sqlModeTransport
-												$sqlCommodity");
-
-			}else if ($statut == 'AWAITING AD') {
-
-				$requete = $connexion-> prepare("SELECT COUNT(ref_dos) AS nbre
-											FROM dossier
-											WHERE id_mod_lic = ?
-												AND date_ad IS NULL
-												AND ref_dos NOT LIKE '%20-%'
-												AND cleared <> '2'
-												$sqlClient
-												$sqlModeTransport
-												$sqlCommodity");
-
-			}else if ($statut == 'AWAITING INSURANCE') {
-
-				$requete = $connexion-> prepare("SELECT COUNT(ref_dos) AS nbre
-											FROM dossier
-											WHERE id_mod_lic = ?
-												AND date_assurance IS NULL
-												AND ref_dos NOT LIKE '%20-%'
-												AND cleared <> '2'
-												$sqlClient
-												$sqlModeTransport
-												$sqlCommodity");
-
-			}else if ($statut == 'UNDER PREPARATION') {
-
-				$requete = $connexion-> prepare("SELECT COUNT(ref_dos) AS nbre
-											FROM dossier
-											WHERE id_mod_lic = ?
-												AND date_crf IS NOT NULL
-												AND date_ad IS NOT NULL
-												AND date_assurance IS NOT NULL
-												AND date_decl IS NULL 
-												AND ref_decl IS NULL
-												AND ref_dos NOT LIKE '%20-%'
-												AND cleared <> '2'
-												$sqlClient
-												$sqlModeTransport
-												$sqlCommodity");
-
-			}else if ($statut == 'AWAITING LIQUIDATION') {
-
-				$requete = $connexion-> prepare("SELECT COUNT(ref_dos) AS nbre
-											FROM dossier
-											WHERE id_mod_lic = ?
-												AND date_decl IS NOT NULL 
-												AND ref_decl IS NOT NULL
-												AND date_liq IS NULL 
-												AND ref_liq IS NULL
-												AND ref_dos NOT LIKE '%20-%'
-												AND cleared <> '2'
-												$sqlClient
-												$sqlModeTransport
-												$sqlCommodity");
-
-			}else if ($statut == 'AWAITING QUITTANCE') {
-
-				$requete = $connexion-> prepare("SELECT COUNT(ref_dos) AS nbre
-											FROM dossier
-											WHERE id_mod_lic = ?
-												AND date_liq IS NOT NULL 
-												AND ref_liq IS NOT NULL
-												AND date_quit IS NULL 
-												AND ref_quit IS NULL
-												AND ref_dos NOT LIKE '%20-%'
-												AND cleared <> '2'
-												$sqlClient
-												$sqlModeTransport
-												$sqlCommodity");
-
-			}else if ($statut == 'AWAITING BAE/BS') {
-
-				$requete = $connexion-> prepare("SELECT COUNT(ref_dos) AS nbre
-											FROM dossier
-											WHERE id_mod_lic = ?
-												AND date_quit IS NOT NULL 
-												AND ref_quit IS NOT NULL
-												AND dgda_out IS NULL
-												$sqlClient
-												$sqlModeTransport
-												$sqlCommodity");
-
-			}else if ($statut == 'CLEARING COMPLETED') {
-
-				$requete = $connexion-> prepare("SELECT COUNT(ref_dos) AS nbre
-											FROM dossier
-											WHERE id_mod_lic = ?
-												AND date_quit IS NOT NULL 
-												AND ref_quit IS NOT NULL
-												AND dgda_out IS NOT NULL
-												AND dispatch_deliv IS NOT NULL
-												$sqlClient
-												$sqlModeTransport
-												$sqlCommodity");
-
+												FROM dossier
+												WHERE id_mod_lic = ?
+													AND REPLACE(statut, '\'','') = '$statut'
+													$sqlClient
+													$sqlModeTransport");
 			}
 
 			$requete-> execute(array($entree['id_mod_lic']));
@@ -21090,6 +21120,54 @@
 	                <i class="fas fa-file"></i>
 	              </div>
 	              <a href="#" class="small-box-footer" onclick="window.open('popUpDashboardDossier.php?statut=<?php echo $reponse['nom_stat'];?>&id_mod_lic=<?php echo $_GET['id_mod_trac'];?>&id_mod_trans=<?php echo $_GET['id_mod_trans'];?>&id_cli=<?php echo $_GET['id_cli'];?>&commodity=<?php echo $_GET['commodity'];?>','pop1','width=1500,height=950');">
+	                More info <i class="fas fa-arrow-circle-right"></i>
+	              </a>
+	            </div>
+
+	            <!-- /.info-box -->
+	          </div>
+	        
+			<?php
+			}$requete-> closeCursor();
+		}
+
+		public function getSummaryClient($id_mod_lic, $id_cli, $id_mod_trans, $commodity){
+			include('connexion.php');
+			$entree['id_mod_lic'] = $id_mod_lic;
+
+			$bg[1] = 'teal';
+			$bg[2] = 'info';
+			$bg[3] = 'primary';
+			$bg[4] = 'success';
+			$bg[5] = 'olive';
+			$bg[6] = 'warning';
+			$bg[7] = 'dark';
+			$bg[8] = 'danger';
+
+			$requete = $connexion-> prepare("SELECT REPLACE(nom_stat, '\'','') AS nom_stat, nom_stat AS nom_stat2
+												FROM status_dashboard
+													WHERE id_mod_lic = ?
+													AND active ='1'
+												ORDER BY rang_stat");
+			$requete-> execute(array($entree['id_mod_lic']));
+			while($reponse=$requete-> fetch()){
+			?>
+
+	          <div class="col-md-3 col-sm-6 col-12">
+
+	            <!--<div class="small-box bg-<?php echo $bg[rand(1, 8)];?>">-->
+	            <div class="small-box bg-dark">
+	              <div class="inner">
+	                <h5>
+	                  <?php echo number_format($this-> nbreSummary($reponse['nom_stat2'], $id_mod_lic, $id_cli, $id_mod_trans, $commodity), 0, ',', ' ');?>
+	                </h5>
+
+	                <p> <?php echo $reponse['nom_stat2'];?> </p>
+	              </div>
+	              <div class="icon">
+	                <i class="fas fa-file"></i>
+	              </div>
+	              <a href="#" class="small-box-footer" onclick="window.open('popUpDashboardAutomatique.php?statut=<?php echo $reponse['nom_stat'];?>&id_mod_lic=<?php echo $_GET['id_mod_trac'];?>&id_mod_trans=<?php echo $_GET['id_mod_trans'];?>&id_cli=<?php echo $_GET['id_cli'];?>&commodity=<?php echo $_GET['commodity'];?>','pop1','width=800,height=600');">
 	                More info <i class="fas fa-arrow-circle-right"></i>
 	              </a>
 	            </div>
