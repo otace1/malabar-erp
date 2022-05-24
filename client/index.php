@@ -2,6 +2,22 @@
   include("tete.php");
   include("menuHaut.php");
   //include("menuGauche.php");
+
+  if( isset($_POST['rechercheImport']) ){
+    ?>
+    <script type="text/javascript">
+      window.open('popUpSearchFile.php?id_mod_lic=2&id_cli=<?php echo $maClasse-> getUtilisateurClientModeleLicence($_SESSION['id_util'], '2')['id_cli'];?>&champs_1=<?php echo $_POST['champs_1'];?>&valeur=<?php echo $_POST['valeur'];?>&champs_2=<?php echo $_POST['champs_2'];?>&debut=<?php echo $_POST['debut'];?>&fin=<?php echo $_POST['fin'];?>','pop1','width=900,height=800');
+    </script>
+    <?php
+  }
+  if( isset($_POST['rechercheExport']) ){
+    ?>
+    <script type="text/javascript">
+      window.open('popUpSearchFile.php?id_mod_lic=1&id_cli=<?php echo $maClasse-> getUtilisateurClientModeleLicence($_SESSION['id_util'], '2')['id_cli'];?>&champs_1=<?php echo $_POST['champs_1'];?>&valeur=<?php echo $_POST['valeur'];?>&champs_2=<?php echo $_POST['champs_2'];?>&debut=<?php echo $_POST['debut'];?>&fin=<?php echo $_POST['fin'];?>','pop1','width=900,height=800');
+    </script>
+    <?php
+  }
+
 ?>
   <!-- /.navbar -->
 
@@ -44,7 +60,7 @@
               </div>
 
               <div class="col-md-3 col-sm-6 col-12">
-                <div class="info-box">
+                <div class="info-box" data-toggle="modal" data-target=".rechercheExport">
                   <span class="info-box-icon bg-light">
                     <img src="../images/export.png" width="30px">
                   </span>
@@ -98,7 +114,7 @@
                         <tr>
                           <th style="width: 10px">#</th>
                           <th>Status</th>
-                          <th>Qty</th>
+                          <th>Nbr</th>
                           <th>Action</th>
                         </tr>
                       </thead>
@@ -113,7 +129,7 @@
                             <?php echo number_format($maClasse-> nbreSummaryStatus($statut, 2, $maClasse-> getUtilisateurClientModeleLicence($_SESSION['id_util'], '2')['id_cli'], 1, NULL), 0, ',', ' ');?>
                             </span>
                           </td>
-                          <td>
+                          <td style="text-align: center;">
                             <button class="btn btn-xs bg-purple" onclick="window.open('popUpDashboardAutomatique.php?statut=<?php echo $statut;?>&id_mod_lic=2&id_mod_trans=1&id_cli=<?php echo $maClasse-> getUtilisateurClientModeleLicence($_SESSION['id_util'], '2')['id_cli'];?>&commodity=NULL','pop1','width=800,height=600');">
                               <i class="fa fa-eye"></i>
                             </button>
@@ -129,7 +145,7 @@
                             <?php echo number_format($maClasse-> nbreSummaryStatus($statut, 2, $maClasse-> getUtilisateurClientModeleLicence($_SESSION['id_util'], '2')['id_cli'], 1, NULL), 0, ',', ' ');?>
                             </span>
                           </td>
-                          <td>
+                          <td style="text-align: center;">
                             <button class="btn btn-xs bg-purple" onclick="window.open('popUpDashboardAutomatique.php?statut=<?php echo $statut;?>&id_mod_lic=2&id_mod_trans=1&id_cli=<?php echo $maClasse-> getUtilisateurClientModeleLicence($_SESSION['id_util'], '2')['id_cli'];?>&commodity=NULL','pop1','width=800,height=600');">
                               <i class="fa fa-eye"></i>
                             </button>
@@ -145,7 +161,7 @@
                             <?php echo number_format($maClasse-> nbreSummaryStatus($statut, 2, $maClasse-> getUtilisateurClientModeleLicence($_SESSION['id_util'], '2')['id_cli'], 1, NULL), 0, ',', ' ');?>
                             </span>
                           </td>
-                          <td>
+                          <td style="text-align: center;">
                             <button class="btn btn-xs bg-purple" onclick="window.open('popUpDashboardAutomatique.php?statut=<?php echo $statut;?>&id_mod_lic=2&id_mod_trans=1&id_cli=<?php echo $maClasse-> getUtilisateurClientModeleLicence($_SESSION['id_util'], '2')['id_cli'];?>&commodity=NULL','pop1','width=800,height=600');">
                               <i class="fa fa-eye"></i>
                             </button>
@@ -161,7 +177,7 @@
                             <?php echo number_format($maClasse-> nbreSummaryStatus($statut, 2, $maClasse-> getUtilisateurClientModeleLicence($_SESSION['id_util'], '2')['id_cli'], 1, NULL), 0, ',', ' ');?>
                             </span>
                           </td>
-                          <td>
+                          <td style="text-align: center;">
                             <button class="btn btn-xs bg-purple" onclick="window.open('popUpDashboardAutomatique.php?statut=<?php echo $statut;?>&id_mod_lic=2&id_mod_trans=1&id_cli=<?php echo $maClasse-> getUtilisateurClientModeleLicence($_SESSION['id_util'], '2')['id_cli'];?>&commodity=NULL','pop1','width=800,height=600');">
                               <i class="fa fa-eye"></i>
                             </button>
@@ -177,7 +193,7 @@
                             <?php echo number_format($maClasse-> nbreSummaryStatus($statut, 2, $maClasse-> getUtilisateurClientModeleLicence($_SESSION['id_util'], '2')['id_cli'], 1, NULL), 0, ',', ' ');?>
                             </span>
                           </td>
-                          <td>
+                          <td style="text-align: center;">
                             <button class="btn btn-xs bg-purple" onclick="window.open('popUpDashboardAutomatique.php?statut=<?php echo $statut;?>&id_mod_lic=2&id_mod_trans=1&id_cli=<?php echo $maClasse-> getUtilisateurClientModeleLicence($_SESSION['id_util'], '2')['id_cli'];?>&commodity=NULL','pop1','width=800,height=600');">
                               <i class="fa fa-eye"></i>
                             </button>
@@ -193,7 +209,7 @@
                             <?php echo number_format($maClasse-> nbreSummaryStatus($statut, 2, $maClasse-> getUtilisateurClientModeleLicence($_SESSION['id_util'], '2')['id_cli'], 1, NULL), 0, ',', ' ');?>
                             </span>
                           </td>
-                          <td>
+                          <td style="text-align: center;">
                             <button class="btn btn-xs bg-purple" onclick="window.open('popUpDashboardAutomatique.php?statut=<?php echo $statut;?>&id_mod_lic=2&id_mod_trans=1&id_cli=<?php echo $maClasse-> getUtilisateurClientModeleLicence($_SESSION['id_util'], '2')['id_cli'];?>&commodity=NULL','pop1','width=800,height=600');">
                               <i class="fa fa-eye"></i>
                             </button>
@@ -209,7 +225,7 @@
                             <?php echo number_format($maClasse-> nbreSummaryStatus($statut, 2, $maClasse-> getUtilisateurClientModeleLicence($_SESSION['id_util'], '2')['id_cli'], 1, NULL), 0, ',', ' ');?>
                             </span>
                           </td>
-                          <td>
+                          <td style="text-align: center;">
                             <button class="btn btn-xs bg-purple" onclick="window.open('popUpDashboardAutomatique.php?statut=<?php echo $statut;?>&id_mod_lic=2&id_mod_trans=1&id_cli=<?php echo $maClasse-> getUtilisateurClientModeleLicence($_SESSION['id_util'], '2')['id_cli'];?>&commodity=NULL','pop1','width=800,height=600');">
                               <i class="fa fa-eye"></i>
                             </button>
@@ -225,7 +241,7 @@
                             <?php echo number_format($maClasse-> nbreSummaryStatus($statut, 2, $maClasse-> getUtilisateurClientModeleLicence($_SESSION['id_util'], '2')['id_cli'], 1, NULL), 0, ',', ' ');?>
                             </span>
                           </td>
-                          <td>
+                          <td style="text-align: center;">
                             <button class="btn btn-xs bg-purple" onclick="window.open('popUpDashboardAutomatique.php?statut=<?php echo $statut;?>&id_mod_lic=2&id_mod_trans=1&id_cli=<?php echo $maClasse-> getUtilisateurClientModeleLicence($_SESSION['id_util'], '2')['id_cli'];?>&commodity=NULL','pop1','width=800,height=600');">
                               <i class="fa fa-eye"></i>
                             </button>
@@ -241,7 +257,7 @@
                             <?php echo number_format($maClasse-> nbreSummaryStatus($statut, 2, $maClasse-> getUtilisateurClientModeleLicence($_SESSION['id_util'], '2')['id_cli'], 1, NULL), 0, ',', ' ');?>
                             </span>
                           </td>
-                          <td>
+                          <td style="text-align: center;">
                             <button class="btn btn-xs bg-purple" onclick="window.open('popUpDashboardAutomatique.php?statut=<?php echo $statut;?>&id_mod_lic=2&id_mod_trans=1&id_cli=<?php echo $maClasse-> getUtilisateurClientModeleLicence($_SESSION['id_util'], '2')['id_cli'];?>&commodity=NULL','pop1','width=800,height=600');">
                               <i class="fa fa-eye"></i>
                             </button>
@@ -257,7 +273,7 @@
                             <?php echo number_format($maClasse-> nbreSummaryStatus($statut, 2, $maClasse-> getUtilisateurClientModeleLicence($_SESSION['id_util'], '2')['id_cli'], 1, NULL), 0, ',', ' ');?>
                             </span>
                           </td>
-                          <td>
+                          <td style="text-align: center;">
                             <button class="btn btn-xs bg-purple" onclick="window.open('popUpDashboardAutomatique.php?statut=<?php echo $statut;?>&id_mod_lic=2&id_mod_trans=1&id_cli=<?php echo $maClasse-> getUtilisateurClientModeleLicence($_SESSION['id_util'], '2')['id_cli'];?>&commodity=NULL','pop1','width=800,height=600');">
                               <i class="fa fa-eye"></i>
                             </button>
@@ -273,7 +289,7 @@
                             <?php echo number_format($maClasse-> nbreSummaryStatus($statut, 2, $maClasse-> getUtilisateurClientModeleLicence($_SESSION['id_util'], '2')['id_cli'], 1, NULL), 0, ',', ' ');?>
                             </span>
                           </td>
-                          <td>
+                          <td style="text-align: center;">
                             <button class="btn btn-xs bg-purple" onclick="window.open('popUpDashboardAutomatique.php?statut=<?php echo $statut;?>&id_mod_lic=2&id_mod_trans=1&id_cli=<?php echo $maClasse-> getUtilisateurClientModeleLicence($_SESSION['id_util'], '2')['id_cli'];?>&commodity=NULL','pop1','width=800,height=600');">
                               <i class="fa fa-eye"></i>
                             </button>
@@ -289,7 +305,7 @@
                             <?php echo number_format($maClasse-> nbreSummaryStatus($statut, 2, $maClasse-> getUtilisateurClientModeleLicence($_SESSION['id_util'], '2')['id_cli'], 1, NULL), 0, ',', ' ');?>
                             </span>
                           </td>
-                          <td>
+                          <td style="text-align: center;">
                             <button class="btn btn-xs bg-purple" onclick="window.open('popUpDashboardAutomatique.php?statut=<?php echo $statut;?>&id_mod_lic=2&id_mod_trans=1&id_cli=<?php echo $maClasse-> getUtilisateurClientModeleLicence($_SESSION['id_util'], '2')['id_cli'];?>&commodity=NULL','pop1','width=800,height=600');">
                               <i class="fa fa-eye"></i>
                             </button>
@@ -313,7 +329,7 @@
                         <tr>
                           <th style="width: 10px">#</th>
                           <th>Status</th>
-                          <th>Qty</th>
+                          <th>Nbr</th>
                           <th>Action</th>
                         </tr>
                       </thead>
@@ -338,7 +354,7 @@
                         <tr>
                           <th style="width: 10px">#</th>
                           <th>Status</th>
-                          <th>Qty</th>
+                          <th>Nbr</th>
                           <th>Action</th>
                         </tr>
                       </thead>
@@ -373,7 +389,7 @@
                         <tr>
                           <th style="width: 10px">#</th>
                           <th>Status</th>
-                          <th>Qty</th>
+                          <th>Nbr</th>
                           <th>Action</th>
                         </tr>
                       </thead>
@@ -398,7 +414,7 @@
                         <tr>
                           <th style="width: 10px">#</th>
                           <th>Status</th>
-                          <th>Qty</th>
+                          <th>Nbr</th>
                           <th>Action</th>
                         </tr>
                       </thead>
@@ -423,7 +439,7 @@
                         <tr>
                           <th style="width: 10px">#</th>
                           <th>Status</th>
-                          <th>Qty</th>
+                          <th>Nbr</th>
                           <th>Action</th>
                         </tr>
                       </thead>
@@ -461,7 +477,7 @@
         <div class="row">
 
           <div class="col-md-12">
-            Criteria 1
+            Char Criteria
           </div>
           <div class="col-md-6">
             <label for="x_card_code" class="control-label mb-1">Files</label>
@@ -484,7 +500,7 @@
           </div>
 
           <div class="col-md-12">
-            Criteria 2
+            Date Criteria
           </div>
           <div class="col-md-6">
             <label for="x_card_code" class="control-label mb-1">Field</label>
@@ -513,6 +529,86 @@
       <div class="modal-footer justify-content-between">
         <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
         <button type="submit" name="rechercheImport" class="btn btn-primary">Search</button>
+      </div>
+    </div>
+    </form>
+    <!-- /.modal-content -->
+  </div>
+  <!-- /.modal-dialog -->
+</div>
+
+<div class="modal fade rechercheExport small" id="modal-default">
+  <div class="modal-dialog modal-lg">
+    <form id="demo-form2" method="POST" action="" data-parsley-validate enctype="multipart/form-data">
+    <div class="modal-content">
+      <div class="modal-header ">
+        <h4 class="modal-title"><i class="fa fa-eye"></i> Export Files. <small>Please select criterias</small></h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+
+          <div class="col-md-12">
+            Char Criteria
+          </div>
+          <div class="col-md-6">
+            <label for="x_card_code" class="control-label mb-1">Files</label>
+            <select name="champs_1" onchange="" class="form-control cc-exp">
+                <option></option>
+                <option value="num_lot">Lot Number</option>
+                <option value="num_lic">License Number</option>
+                <option value="horse">Horse</option>
+                <option value="transporter">Transporter</option>
+                <option value="decl_ref">Declaration Ref.</option>
+                <option value="liquid_ref">Liquidation Ref.</option>
+                <option value="quit_ref">Quittance Ref.</option>
+            </select>
+          </div>
+
+          <div class="col-md-6">
+            <label for="x_card_code" class="control-label mb-1">Value</label>
+            <input type="text" name="valeur" class="form-control cc-exp">
+          </div>
+
+          <div class="col-md-12">
+            Date Criteria
+          </div>
+          <div class="col-md-6">
+            <label for="x_card_code" class="control-label mb-1">Field</label>
+            <select name="champs_2" onchange="" class="form-control cc-exp">
+                <option></option>
+                <option value="load_date">Loading Date</option>
+                <option value="pv_mine">PV Mine Date</option>
+                <option value="ceec_in">CEEC In Date</option>
+                <option value="ceec_out">CEEC Out Date</option>
+                <option value="min_div_in">Min Div In Date</option>
+                <option value="min_div_out">Min Div Out Date</option>
+                <option value="decl_date">Declaration Date</option>
+                <option value="liquid_date">Liquidation Date</option>
+                <option value="quit_date">Quittance Date</option>
+                <option value="klsa_arriv">Klsa Arrival Date</option>
+                <option value="end_formal">End Formalities Date</option>
+                <option value="drc_exit">DRC Exit Date</option>
+            </select>
+          </div>
+
+          <div class="col-md-3">
+            <label for="x_card_code" class="control-label mb-1">Begin</label>
+            <input type="date" name="debut" class="form-control cc-exp">
+          </div>
+
+          <div class="col-md-3">
+            <label for="x_card_code" class="control-label mb-1">End</label>
+            <input type="date" name="fin" class="form-control cc-exp">
+          </div>
+
+        </div>
+      </div>
+      <div class="modal-footer justify-content-between">
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+        <button type="submit" name="rechercheExport" class="btn btn-primary">Search</button>
       </div>
     </div>
     </form>
