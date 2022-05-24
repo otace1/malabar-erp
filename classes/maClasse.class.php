@@ -21210,7 +21210,7 @@
               	<?php echo number_format($this-> nbreSummaryStatus($reponse['nom_stat2'], $id_mod_lic, $id_cli, $id_mod_trans, $commodity), 0, ',', ' ');?>
               	<!-- </span> -->
               </td>
-              <td>
+              <td style="text-align: center;">
               	<button class="btn btn-xs bg-purple" onclick="window.open('popUpDashboardAutomatique.php?statut=<?php echo $reponse['nom_stat'];?>&id_mod_lic=<?php echo $id_mod_lic;?>&id_mod_trans=<?php echo $id_mod_trans;?>&id_cli=<?php echo $id_cli;?>&commodity=<?php echo $commodity;?>','pop1','width=800,height=600');">
               		<i class="fa fa-eye"></i>
               	</button>
