@@ -9,7 +9,7 @@
 	$statut = str_replace('_', '/', $_GET['statut']);
 	$compteur = 0;
 
-	if($id_mod_lic=='2'){
+	if($id_mod_lic=='2' && $id_mod_trans=='1'){
 		if ($statut == 'AWAITING CRF/AD/INSURANCE') {
 
 			$sqlStatus = " AND d.date_crf IS NULL
