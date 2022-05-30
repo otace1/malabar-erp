@@ -155,7 +155,9 @@
 </div>
 </section>
 </div>
-
+    <script language="javascript">
+        document.title = "<?php echo $_GET['statut'];?>";
+    </script>
     <script type="text/javascript">
       $('#file_data').DataTable({
 
