@@ -21221,6 +21221,53 @@
 			}$requete-> closeCursor();
 		}
 
+		public function getSummaryClientAIR($id_mod_lic, $id_cli, $id_mod_trans, $commodity){
+			include('connexion.php');
+			$entree['id_mod_lic'] = $id_mod_lic;
+			$compteur = 0;
+			$bg[1] = 'teal';
+			$bg[2] = 'info';
+			$bg[3] = 'primary';
+			$bg[4] = 'success';
+			$bg[5] = 'olive';
+			$bg[6] = 'warning';
+			$bg[7] = 'dark';
+			$bg[8] = 'danger';
+
+			$requete = $connexion-> prepare("SELECT REPLACE(nom_stat, '\'','') AS nom_stat, nom_stat AS nom_stat2
+												FROM status_dashboard
+													WHERE id_mod_lic = ?
+													AND active ='1'
+													AND nom_stat <> 'AT KLSA'
+													AND nom_stat <> 'DISPATCHED FROM WISKI'
+													AND nom_stat <> 'UNDER PROCESS AT WISKI'
+													AND nom_stat <> 'AT KBP'
+													AND nom_stat <> 'AT AMICONGO'
+												ORDER BY rang_stat");
+			$requete-> execute(array($entree['id_mod_lic']));
+			while($reponse=$requete-> fetch()){
+				$compteur++;
+			?>
+
+            <tr>
+              <td><?php echo $compteur;?></td>
+              <td><?php echo $reponse['nom_stat2'];?></td>
+              <td>
+              	<!-- <span class="badge bg-<?php echo $bg[rand(1, 8)];?>"> -->
+              	<?php echo number_format($this-> nbreSummaryStatus($reponse['nom_stat2'], $id_mod_lic, $id_cli, $id_mod_trans, $commodity), 0, ',', ' ');?>
+              	<!-- </span> -->
+              </td>
+              <td style="text-align: center;">
+              	<button class="btn btn-xs bg-purple" onclick="window.open('popUpDashboardAutomatique.php?statut=<?php echo $reponse['nom_stat'];?>&id_mod_lic=<?php echo $id_mod_lic;?>&id_mod_trans=<?php echo $id_mod_trans;?>&id_cli=<?php echo $id_cli;?>&commodity=<?php echo $commodity;?>','pop1','width=800,height=600');">
+              		<i class="fa fa-eye"></i>
+              	</button>
+              </td>
+            </tr>
+	        
+			<?php
+			}$requete-> closeCursor();
+		}
+
 		public function getSummaryStatus($id_mod_lic, $id_cli, $id_mod_trans, $commodity, $status){
 			include('connexion.php');
 			$entree['id_mod_lic'] = $id_mod_lic;
