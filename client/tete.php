@@ -30,10 +30,18 @@
   <!-- Google Font: Source Sans Pro -->
   <!--<link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">-->
 
-  <script src="../plugins/jquery/jquery.min.js"></script>
+  <!-- <script src="../plugins/jquery/jquery.min.js"></script> -->
+  <script type="text/javascript" src="jquery-3.5.1.js"></script>
+  <script type="text/javascript" src="jquery.dataTables2.min.js"></script>
   <script src="jquery.dataTables.min.js"></script>
   <script src="dataTables.bootstrap.min.js"></script>
   <script src="dataTables.autoFill.min.js"></script>
+  <script src="dataTables.buttons.min.js"></script>
+  <script src="jszip.min.js"></script>
+  <script src="pdfmake.min.js"></script>
+  <script src="vfs_fonts.js"></script>
+  <script src="buttons.html5.min.js"></script>
+  <script src="buttons.print.min.js"></script>
 
 
   <link rel="stylesheet" type="text/css" href="dataTables.bootstrap.min.css">

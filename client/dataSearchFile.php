@@ -22,8 +22,6 @@
 
 	}
 
-
-
 	$requete = $connexion-> query("SELECT d.ref_dos AS ref_dos,
 										UPPER(cl.nom_cli) AS nom_cli,
 										d.ref_fact AS ref_fact,

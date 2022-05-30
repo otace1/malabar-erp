@@ -335,7 +335,7 @@
                       </thead>
                       <tbody>
                         <?php
-                          $maClasse-> getSummaryClient2('2', $maClasse-> getUtilisateurClientModeleLicence($_SESSION['id_util'], '2')['id_cli'], 3, NULL);
+                          $maClasse-> getSummaryClientAIR('2', $maClasse-> getUtilisateurClientModeleLicence($_SESSION['id_util'], '2')['id_cli'], 3, NULL);
                         ?>
                       </tbody>
                     </table>
@@ -360,7 +360,7 @@
                       </thead>
                       <tbody>
                         <?php
-                          $maClasse-> getSummaryClient2('2', $maClasse-> getUtilisateurClientModeleLicence($_SESSION['id_util'], '2')['id_cli'], 4, NULL);
+                          $maClasse-> getSummaryClientAIR('2', $maClasse-> getUtilisateurClientModeleLicence($_SESSION['id_util'], '2')['id_cli'], 4, NULL);
                         ?>
                       </tbody>
                     </table>
@@ -420,7 +420,7 @@
                       </thead>
                       <tbody>
                         <?php
-                          $maClasse-> getSummaryClient2('1', $maClasse-> getUtilisateurClientModeleLicence($_SESSION['id_util'], '1')['id_cli'], 3, NULL);
+                          $maClasse-> getSummaryClientAIR('1', $maClasse-> getUtilisateurClientModeleLicence($_SESSION['id_util'], '1')['id_cli'], 3, NULL);
                         ?>
                       </tbody>
                     </table>
@@ -445,7 +445,7 @@
                       </thead>
                       <tbody>
                         <?php
-                          $maClasse-> getSummaryClient2('1', $maClasse-> getUtilisateurClientModeleLicence($_SESSION['id_util'], '1')['id_cli'], 4, NULL);
+                          $maClasse-> getSummaryClientAIR('1', $maClasse-> getUtilisateurClientModeleLicence($_SESSION['id_util'], '1')['id_cli'], 4, NULL);
                         ?>
                       </tbody>
                     </table>
@@ -483,6 +483,7 @@
             <label for="x_card_code" class="control-label mb-1">Files</label>
             <select name="champs_1" onchange="" class="form-control cc-exp">
                 <option></option>
+                <option value="ref_dos">MCA File Ref</option>
                 <option value="ref_fact">Invoice</option>
                 <option value="commodity">Commodity</option>
                 <option value="supplier">Supplier</option>
@@ -491,6 +492,9 @@
                 <option value="horse">Horse</option>
                 <option value="num_lic">Licence</option>
                 <option value="ref_crf">CRF Ref.</option>
+                <option value="decl_ref">Declaration Ref.</option>
+                <option value="liquid_ref">Liquidation Ref.</option>
+                <option value="quit_ref">Quittance Ref.</option>
             </select>
           </div>
 
@@ -509,6 +513,9 @@
                 <option value="date_preal">Prealert Date</option>
                 <option value="klsa_arriv">Klsa Arrival</option>
                 <option value="wiski_arriv">Wiski Arrival</option>
+                <option value="decl_date">Declaration Date</option>
+                <option value="liquid_date">Liquidation Date</option>
+                <option value="quit_date">Quittance Date</option>
                 <option value="dispatch_klsa">Dispatch From Klsa</option>
                 <option value="warehouse_arriv">Warehouse Arrival</option>
             </select>
@@ -557,6 +564,7 @@
             <label for="x_card_code" class="control-label mb-1">Files</label>
             <select name="champs_1" onchange="" class="form-control cc-exp">
                 <option></option>
+                <option value="ref_dos">MCA File Ref</option>
                 <option value="num_lot">Lot Number</option>
                 <option value="num_lic">License Number</option>
                 <option value="horse">Horse</option>

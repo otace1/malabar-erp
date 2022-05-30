@@ -6,7 +6,19 @@
 	$id_cli = $_GET['id_cli'];
 	$id_mod_trans = $_GET['id_mod_trans'];
 	$id_mod_lic = $_GET['id_mod_lic'];
+
+	if ($_GET['statut']=='AT GOVERNORS OFFICE') {
+
+		$_GET['statut'] = 'AT GOVERNOR\'S OFFICE';
+
+	}else if ($_GET['statut']=='GOVERNORS OFFICE OUT') {
+
+		$_GET['statut'] = 'GOVERNOR\'S OFFICE OUT';
+		
+	}
+
 	$statut = str_replace('_', '/', $_GET['statut']);
+	$statut = str_replace('\'', '', $_GET['statut']);
 	$compteur = 0;
 
 	if($id_mod_lic=='2' && $id_mod_trans=='1'){
@@ -114,7 +126,6 @@
 		$sqlStatus = ' AND REPLACE(d.statut,"\'","") = "'.$statut.'"';
 	}
 	$requete = $connexion-> query("SELECT d.ref_dos AS ref_dos,
-										UPPER(cl.nom_cli) AS nom_cli,
 										d.ref_fact AS ref_fact,
 										d.fob AS fob_dos,
 										d.fret AS fret,
@@ -124,11 +135,28 @@
 										d.montant_decl AS montant_decl,
 										d.*,
 										d.supplier AS fournisseur,
-										s.nom_site AS nom_site,
 										d.dgda_in AS dgda_in_1,
 										d.dgda_out AS dgda_out_1,
 										d.custom_deliv AS custom_deliv_1,
 										d.arrival_date AS arrival_date_1,
+										IF(d.id_mod_lic='2', d.commodity, m.nom_march) AS commodity,
+										DATEDIFF(CURRENT_DATE(), d.date_preal) AS delai_prealerte,
+										DATEDIFF(DATE(CURRENT_DATE()), d.date_decl) AS delai_decl,
+										DATEDIFF(DATE(CURRENT_DATE()), d.date_liq) AS delai_liq,
+										DATEDIFF(DATE(CURRENT_DATE()), d.date_quit) AS delai_quit,
+										DATEDIFF(DATE(CURRENT_DATE()), d.warehouse_arriv) AS delai_warehouse,
+										DATEDIFF(DATE(CURRENT_DATE()), d.load_date) AS delai_load,
+										DATEDIFF(DATE(CURRENT_DATE()), d.ceec_in) AS ceec_in_delai,
+										DATEDIFF(DATE(CURRENT_DATE()), d.ceec_out) AS ceec_out_delai,
+										DATEDIFF(DATE(CURRENT_DATE()), d.min_div_in) AS min_div_in_delai,
+										DATEDIFF(DATE(CURRENT_DATE()), d.min_div_out) AS min_div_out_delai,
+										DATEDIFF(DATE(CURRENT_DATE()), d.dgda_out) AS dgda_out_delai,
+										DATEDIFF(DATE(CURRENT_DATE()), d.gov_in) AS gov_in_delai,
+										DATEDIFF(DATE(CURRENT_DATE()), d.gov_out) AS gov_out_delai,
+										DATEDIFF(DATE(CURRENT_DATE()), d.dispatch_date) AS dispatch_date_delai,
+										DATEDIFF(DATE(CURRENT_DATE()), d.klsa_arriv) AS klsa_arriv_delai,
+										DATEDIFF(DATE(CURRENT_DATE()), d.end_form) AS end_form_delai,
+										DATEDIFF(DATE(CURRENT_DATE()), d.exit_drc) AS exit_drc_delai,
 
 										
 										IF(d.id_mod_lic='2' AND d.id_mod_trans='1',
@@ -169,12 +197,11 @@
 
 										DATEDIFF(d.dgda_out, d.dgda_in) AS dgda_delay,
 										DATEDIFF(d.custom_deliv, d.arrival_date) AS arrival_deliver_delay
-									FROM dossier d, client cl, site s, mode_transport mt
-									WHERE d.id_cli =  cl.id_cli
-										AND cl.id_cli = $id_cli
-										AND d.id_site = s.id_site
-										AND d.id_mod_trans = mt.id_mod_trans
-										AND mt.id_mod_trans = $id_mod_trans
+									FROM dossier d
+										LEFT JOIN marchandise m
+											ON d.id_march = m.id_march
+									WHERE d.id_cli =  $id_cli
+										AND d.id_mod_trans = $id_mod_trans
 										AND d.id_mod_lic = $id_mod_lic
 										$sqlStatus
 									");
