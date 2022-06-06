@@ -134,6 +134,10 @@
 </section>
 </div>
 
+<script language="javascript">
+    document.title = "<?php echo $champs_1.'_'.$valeur.'_'.$champs_2.'_'.$debut.'_'.$fin;?>";
+</script>
+
 <?php
   if ($_GET['id_mod_lic']=='2') {
   ?>
@@ -146,6 +150,10 @@
                 $('td', row).eq(10).addClass('highlight');
             }
         },
+      dom: 'Bfrtip',
+      buttons: [
+          'copy', 'csv', 'excel', 'print'
+      ],
       "paging": true,
       "lengthChange": true,
       "searching": true,
@@ -196,6 +204,10 @@
                 $('td', row).eq(10).addClass('highlight');
             }
         },
+        dom: 'Bfrtip',
+        buttons: [
+            'copy', 'csv', 'excel', 'print'
+        ],
       "paging": true,
       "lengthChange": true,
       "searching": true,

@@ -23,7 +23,6 @@
 	}
 
 	$requete = $connexion-> query("SELECT d.ref_dos AS ref_dos,
-										UPPER(cl.nom_cli) AS nom_cli,
 										d.ref_fact AS ref_fact,
 										d.fob AS fob_dos,
 										d.fret AS fret,
@@ -33,7 +32,6 @@
 										d.montant_decl AS montant_decl,
 										d.*,
 										d.supplier AS fournisseur,
-										s.nom_site AS nom_site,
 										d.dgda_in AS dgda_in_1,
 										d.dgda_out AS dgda_out_1,
 										d.custom_deliv AS custom_deliv_1,
@@ -77,12 +75,12 @@
 											d.statut) AS statut,
 
 										DATEDIFF(d.dgda_out, d.dgda_in) AS dgda_delay,
-										DATEDIFF(d.custom_deliv, d.arrival_date) AS arrival_deliver_delay
-									FROM dossier d, client cl, site s, mode_transport mt
-									WHERE d.id_cli =  cl.id_cli
-										AND cl.id_cli = $id_cli
-										AND d.id_site = s.id_site
-										AND d.id_mod_trans = mt.id_mod_trans
+										DATEDIFF(d.custom_deliv, d.arrival_date) AS arrival_deliver_delay,
+										IF(d.id_mod_lic=2, d.commodity, marchandise.nom_march) AS commodity
+									FROM dossier d
+									LEFT JOIN marchandise
+										ON d.id_march = marchandise.id_march
+									WHERE d.id_cli =  $id_cli
 										AND d.id_mod_lic = $id_mod_lic
 										$sqlChamps_1
 										$sqlChamps_2

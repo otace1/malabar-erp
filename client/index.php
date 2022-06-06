@@ -386,10 +386,11 @@
             Char Criteria
           </div>
           <div class="col-md-6">
-            <label for="x_card_code" class="control-label mb-1">Files</label>
+            <label for="x_card_code" class="control-label mb-1">Field</label>
             <select name="champs_1" onchange="" class="form-control cc-exp">
                 <option></option>
                 <option value="ref_dos">MCA File Ref</option>
+                <option value="horse">Horse</option>
                 <option value="ref_fact">Invoice</option>
                 <option value="commodity">Commodity</option>
                 <option value="supplier">Supplier</option>
@@ -398,9 +399,9 @@
                 <option value="horse">Horse</option>
                 <option value="num_lic">Licence</option>
                 <option value="ref_crf">CRF Ref.</option>
-                <option value="decl_ref">Declaration Ref.</option>
-                <option value="liquid_ref">Liquidation Ref.</option>
-                <option value="quit_ref">Quittance Ref.</option>
+                <option value="ref_decl">Declaration Ref.</option>
+                <option value="ref_liq">Liquidation Ref.</option>
+                <option value="ref_quit">Quittance Ref.</option>
             </select>
           </div>
 
@@ -419,9 +420,9 @@
                 <option value="date_preal">Prealert Date</option>
                 <option value="klsa_arriv">Klsa Arrival</option>
                 <option value="wiski_arriv">Wiski Arrival</option>
-                <option value="decl_date">Declaration Date</option>
-                <option value="liquid_date">Liquidation Date</option>
-                <option value="quit_date">Quittance Date</option>
+                <option value="date_decl">Declaration Date</option>
+                <option value="date_liq">Liquidation Date</option>
+                <option value="date_quit">Quittance Date</option>
                 <option value="dispatch_klsa">Dispatch From Klsa</option>
                 <option value="warehouse_arriv">Warehouse Arrival</option>
             </select>
@@ -467,7 +468,7 @@
             Char Criteria
           </div>
           <div class="col-md-6">
-            <label for="x_card_code" class="control-label mb-1">Files</label>
+            <label for="x_card_code" class="control-label mb-1">Field</label>
             <select name="champs_1" onchange="" class="form-control cc-exp">
                 <option></option>
                 <option value="ref_dos">MCA File Ref</option>
@@ -475,9 +476,9 @@
                 <option value="num_lic">License Number</option>
                 <option value="horse">Horse</option>
                 <option value="transporter">Transporter</option>
-                <option value="decl_ref">Declaration Ref.</option>
-                <option value="liquid_ref">Liquidation Ref.</option>
-                <option value="quit_ref">Quittance Ref.</option>
+                <option value="ref_decl">Declaration Ref.</option>
+                <option value="ref_liq">Liquidation Ref.</option>
+                <option value="ref_quit">Quittance Ref.</option>
             </select>
           </div>
 
@@ -499,9 +500,9 @@
                 <option value="ceec_out">CEEC Out Date</option>
                 <option value="min_div_in">Min Div In Date</option>
                 <option value="min_div_out">Min Div Out Date</option>
-                <option value="decl_date">Declaration Date</option>
-                <option value="liquid_date">Liquidation Date</option>
-                <option value="quit_date">Quittance Date</option>
+                <option value="date_decl">Declaration Date</option>
+                <option value="date_liq">Liquidation Date</option>
+                <option value="date_quit">Quittance Date</option>
                 <option value="klsa_arriv">Klsa Arrival Date</option>
                 <option value="end_formal">End Formalities Date</option>
                 <option value="drc_exit">DRC Exit Date</option>
