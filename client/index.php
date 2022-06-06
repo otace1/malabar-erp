@@ -1,5 +1,5 @@
 <?php
-  include("tete.php");
+  include("teteIndex.php");
   include("menuHaut.php");
   //include("menuGauche.php");
 
@@ -121,108 +121,14 @@
                       <tbody>
                         
                         <tr>
-                          <?php $statut = 'AWAITING CRF/AD/INSURANCE';?>
+                          <?php 
+                            $statut = 'AWAITING CRF/AD/INSURANCE';
+                          ?>
                           <td>1</td>
                           <td><?php echo $statut;?></td>
                           <td>
                             <span class="">
-                            <?php echo number_format($maClasse-> nbreSummaryStatus($statut, 2, $maClasse-> getUtilisateurClientModeleLicence($_SESSION['id_util'], '2')['id_cli'], 1, NULL), 0, ',', ' ');?>
-                            </span>
-                          </td>
-                          <td style="text-align: center;">
-                            <button class="btn btn-xs bg-purple" onclick="window.open('popUpDashboardAutomatique.php?statut=<?php echo $statut;?>&id_mod_lic=2&id_mod_trans=1&id_cli=<?php echo $maClasse-> getUtilisateurClientModeleLicence($_SESSION['id_util'], '2')['id_cli'];?>&commodity=NULL','pop1','width=800,height=600');">
-                              <i class="fa fa-eye"></i>
-                            </button>
-                          </td>
-                        </tr>
-                      
-                        <tr>
-                          <?php $statut = 'AWAITING CRF/AD';?>
-                          <td>2</td>
-                          <td><?php echo $statut;?></td>
-                          <td>
-                            <span class="">
-                            <?php echo number_format($maClasse-> nbreSummaryStatus($statut, 2, $maClasse-> getUtilisateurClientModeleLicence($_SESSION['id_util'], '2')['id_cli'], 1, NULL), 0, ',', ' ');?>
-                            </span>
-                          </td>
-                          <td style="text-align: center;">
-                            <button class="btn btn-xs bg-purple" onclick="window.open('popUpDashboardAutomatique.php?statut=<?php echo $statut;?>&id_mod_lic=2&id_mod_trans=1&id_cli=<?php echo $maClasse-> getUtilisateurClientModeleLicence($_SESSION['id_util'], '2')['id_cli'];?>&commodity=NULL','pop1','width=800,height=600');">
-                              <i class="fa fa-eye"></i>
-                            </button>
-                          </td>
-                        </tr>
-                      
-                        <tr>
-                          <?php $statut = 'AWAITING CRF/INSURANCE';?>
-                          <td>3</td>
-                          <td><?php echo $statut;?></td>
-                          <td>
-                            <span class="">
-                            <?php echo number_format($maClasse-> nbreSummaryStatus($statut, 2, $maClasse-> getUtilisateurClientModeleLicence($_SESSION['id_util'], '2')['id_cli'], 1, NULL), 0, ',', ' ');?>
-                            </span>
-                          </td>
-                          <td style="text-align: center;">
-                            <button class="btn btn-xs bg-purple" onclick="window.open('popUpDashboardAutomatique.php?statut=<?php echo $statut;?>&id_mod_lic=2&id_mod_trans=1&id_cli=<?php echo $maClasse-> getUtilisateurClientModeleLicence($_SESSION['id_util'], '2')['id_cli'];?>&commodity=NULL','pop1','width=800,height=600');">
-                              <i class="fa fa-eye"></i>
-                            </button>
-                          </td>
-                        </tr>
-                      
-                        <tr>
-                          <?php $statut = 'AWAITING CRF';?>
-                          <td>4</td>
-                          <td><?php echo $statut;?></td>
-                          <td>
-                            <span class="">
-                            <?php echo number_format($maClasse-> nbreSummaryStatus($statut, 2, $maClasse-> getUtilisateurClientModeleLicence($_SESSION['id_util'], '2')['id_cli'], 1, NULL), 0, ',', ' ');?>
-                            </span>
-                          </td>
-                          <td style="text-align: center;">
-                            <button class="btn btn-xs bg-purple" onclick="window.open('popUpDashboardAutomatique.php?statut=<?php echo $statut;?>&id_mod_lic=2&id_mod_trans=1&id_cli=<?php echo $maClasse-> getUtilisateurClientModeleLicence($_SESSION['id_util'], '2')['id_cli'];?>&commodity=NULL','pop1','width=800,height=600');">
-                              <i class="fa fa-eye"></i>
-                            </button>
-                          </td>
-                        </tr>
-                      
-                        <tr>
-                          <?php $statut = 'AWAITING AD/INSURANCE';?>
-                          <td>5</td>
-                          <td><?php echo $statut;?></td>
-                          <td>
-                            <span class="">
-                            <?php echo number_format($maClasse-> nbreSummaryStatus($statut, 2, $maClasse-> getUtilisateurClientModeleLicence($_SESSION['id_util'], '2')['id_cli'], 1, NULL), 0, ',', ' ');?>
-                            </span>
-                          </td>
-                          <td style="text-align: center;">
-                            <button class="btn btn-xs bg-purple" onclick="window.open('popUpDashboardAutomatique.php?statut=<?php echo $statut;?>&id_mod_lic=2&id_mod_trans=1&id_cli=<?php echo $maClasse-> getUtilisateurClientModeleLicence($_SESSION['id_util'], '2')['id_cli'];?>&commodity=NULL','pop1','width=800,height=600');">
-                              <i class="fa fa-eye"></i>
-                            </button>
-                          </td>
-                        </tr>
-                      
-                        <tr>
-                          <?php $statut = 'AWAITING AD';?>
-                          <td>6</td>
-                          <td><?php echo $statut;?></td>
-                          <td>
-                            <span class="">
-                            <?php echo number_format($maClasse-> nbreSummaryStatus($statut, 2, $maClasse-> getUtilisateurClientModeleLicence($_SESSION['id_util'], '2')['id_cli'], 1, NULL), 0, ',', ' ');?>
-                            </span>
-                          </td>
-                          <td style="text-align: center;">
-                            <button class="btn btn-xs bg-purple" onclick="window.open('popUpDashboardAutomatique.php?statut=<?php echo $statut;?>&id_mod_lic=2&id_mod_trans=1&id_cli=<?php echo $maClasse-> getUtilisateurClientModeleLicence($_SESSION['id_util'], '2')['id_cli'];?>&commodity=NULL','pop1','width=800,height=600');">
-                              <i class="fa fa-eye"></i>
-                            </button>
-                          </td>
-                        </tr>
-                      
-                        <tr>
-                          <?php $statut = 'AWAITING INSURANCE';?>
-                          <td>7</td>
-                          <td><?php echo $statut;?></td>
-                          <td>
-                            <span class="">
-                            <?php echo number_format($maClasse-> nbreSummaryStatus($statut, 2, $maClasse-> getUtilisateurClientModeleLicence($_SESSION['id_util'], '2')['id_cli'], 1, NULL), 0, ',', ' ');?>
+                            <?php echo number_format($maClasse-> nbreSummaryStatusClient($statut, 2, $maClasse-> getUtilisateurClientModeleLicence($_SESSION['id_util'], '2')['id_cli'], 1, NULL), 0, ',', ' ');?>
                             </span>
                           </td>
                           <td style="text-align: center;">
@@ -238,7 +144,7 @@
                           <td><?php echo $statut;?></td>
                           <td>
                             <span class="">
-                            <?php echo number_format($maClasse-> nbreSummaryStatus($statut, 2, $maClasse-> getUtilisateurClientModeleLicence($_SESSION['id_util'], '2')['id_cli'], 1, NULL), 0, ',', ' ');?>
+                            <?php echo number_format($maClasse-> nbreSummaryStatusClient($statut, 2, $maClasse-> getUtilisateurClientModeleLicence($_SESSION['id_util'], '2')['id_cli'], 1, NULL), 0, ',', ' ');?>
                             </span>
                           </td>
                           <td style="text-align: center;">
@@ -254,7 +160,7 @@
                           <td><?php echo $statut;?></td>
                           <td>
                             <span class="">
-                            <?php echo number_format($maClasse-> nbreSummaryStatus($statut, 2, $maClasse-> getUtilisateurClientModeleLicence($_SESSION['id_util'], '2')['id_cli'], 1, NULL), 0, ',', ' ');?>
+                            <?php echo number_format($maClasse-> nbreSummaryStatusClient($statut, 2, $maClasse-> getUtilisateurClientModeleLicence($_SESSION['id_util'], '2')['id_cli'], 1, NULL), 0, ',', ' ');?>
                             </span>
                           </td>
                           <td style="text-align: center;">
@@ -270,7 +176,7 @@
                           <td><?php echo $statut;?></td>
                           <td>
                             <span class="">
-                            <?php echo number_format($maClasse-> nbreSummaryStatus($statut, 2, $maClasse-> getUtilisateurClientModeleLicence($_SESSION['id_util'], '2')['id_cli'], 1, NULL), 0, ',', ' ');?>
+                            <?php echo number_format($maClasse-> nbreSummaryStatusClient($statut, 2, $maClasse-> getUtilisateurClientModeleLicence($_SESSION['id_util'], '2')['id_cli'], 1, NULL), 0, ',', ' ');?>
                             </span>
                           </td>
                           <td style="text-align: center;">
@@ -286,7 +192,7 @@
                           <td><?php echo $statut;?></td>
                           <td>
                             <span class="">
-                            <?php echo number_format($maClasse-> nbreSummaryStatus($statut, 2, $maClasse-> getUtilisateurClientModeleLicence($_SESSION['id_util'], '2')['id_cli'], 1, NULL), 0, ',', ' ');?>
+                            <?php echo number_format($maClasse-> nbreSummaryStatusClient($statut, 2, $maClasse-> getUtilisateurClientModeleLicence($_SESSION['id_util'], '2')['id_cli'], 1, NULL), 0, ',', ' ');?>
                             </span>
                           </td>
                           <td style="text-align: center;">
@@ -302,7 +208,7 @@
                           <td><?php echo $statut;?></td>
                           <td>
                             <span class="">
-                            <?php echo number_format($maClasse-> nbreSummaryStatus($statut, 2, $maClasse-> getUtilisateurClientModeleLicence($_SESSION['id_util'], '2')['id_cli'], 1, NULL), 0, ',', ' ');?>
+                            <?php echo number_format($maClasse-> nbreSummaryStatusClient($statut, 2, $maClasse-> getUtilisateurClientModeleLicence($_SESSION['id_util'], '2')['id_cli'], 1, NULL), 0, ',', ' ');?>
                             </span>
                           </td>
                           <td style="text-align: center;">

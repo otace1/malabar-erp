@@ -61,12 +61,12 @@
                     <div class="card-header">
                       <h3 class="card-title">
                         <i class="fa fa-folder-open nav-icon"></i>
-                          <?php echo  '<span class="bg bg-dark" style="padding-left: 5px; padding-right: 5px;">'.number_format($maClasse-> nbreSummaryStatus($_GET['statut'], $_GET['id_mod_lic'], $_GET['id_cli'], $_GET['id_mod_trans'], $_GET['commodity']), 0, ',', ' ').'</span> | <span class="bg bg-dark" style="padding-left: 5px; padding-right: 5px;">'.$_GET['statut'].'</span>'.$client.$type_licence;?>
+                          <?php echo  '<span class="bg bg-dark" style="padding-left: 5px; padding-right: 5px;">'.number_format($maClasse-> nbreSummaryStatusClient($_GET['statut'], $_GET['id_mod_lic'], $_GET['id_cli'], $_GET['id_mod_trans'], $_GET['commodity']), 0, ',', ' ').'</span> | <span class="bg bg-dark" style="padding-left: 5px; padding-right: 5px;">'.$_GET['statut'].'</span>'.$client.$type_licence;?>
                         <!--<button class="btn btn-default" onclick="exportToExcel('popUpDossier')">
                           <img src="../images/xls.png" width="30px">
                         </button>-->
 
-                    <button class="btn btn-success btn-xs square-btn-adjust" onclick="window.location.replace('../pages/exportExcelPopUp.php?id_cli=<?php echo $_GET['id_cli']; ?>&id_mod_trans=<?php echo $_GET['id_mod_trans']; ?>&id_mod_trac=<?php echo $_GET['id_mod_lic']; ?>&commodity=<?php echo $_GET['commodity']; ?>&statut=<?php echo $_GET['statut'];?>&id_march=','pop1','width=80,height=80');">
+                    <button class="btn btn-success btn-xs square-btn-adjust" onclick="window.location.replace('../pages/exportExcelPopUp.php?id_cli=<?php echo $_GET['id_cli']; ?>&ampid_mod_trans=<?php echo $_GET['id_mod_trans']; ?>&ampid_mod_trac=<?php echo $_GET['id_mod_lic']; ?>&ampcommodity=<?php echo $_GET['commodity']; ?>&ampstatut=<?php echo $_GET['statut'];?>&id_march=','pop1','width=80,height=80');">
                       <i class="fas fa-file-excel"></i> Export To Excel
                     </button>
 
@@ -87,53 +87,6 @@
                               <table id="file_data" cellspacing="0" width="100%" class="table table-bordered table-striped table-sm text-nowrap">
                                 <thead>
                                   <?php
-                                  /*if ($_GET['id_mod_lic']=='2') {
-                                  ?>
-                                  <tr>
-                                    <th>MCA File REF</th>
-                                    <th>PRE-ALERTE DATE</th>
-                                    <th>INVOICE</th>
-                                    <th>HORSE</th>
-                                    <th>TRAILER 1</th>
-                                    <th>TRAILER 2</th>
-                                    <th>COMMODITY</th>
-                                    <th>SUPPLIER</th>
-                                    <th>PO Ref</th>
-                                    <th>WEIGHT</th>
-                                    <th>STATUS</th>
-                                  </tr>
-                                  <?php
-                                  }else if ($_GET['id_mod_lic']=='1' && $_GET['id_mod_trans']=='1') {
-                                  ?>
-                                  <tr>
-                                    <th>MCA File REF</th>
-                                    <th>LOT NUM.</th>
-                                    <th>LICENCE NUM.</th>
-                                    <th>HORSE</th>
-                                    <th>TRAILER 1</th>
-                                    <th>TRAILER 2</th>
-                                    <th>COMMODITY</th>
-                                    <th>LOADING DATE</th>
-                                    <th>TRANSPORTER</th>
-                                    <th>WEIGHT</th>
-                                    <th>STATUS</th>
-                                  </tr>
-                                  <?php
-                                  }else if ($_GET['id_mod_lic']=='1' && $_GET['id_mod_trans']=='4') {
-                                  ?>
-                                  <tr>
-                                    <th>MCA File REF</th>
-                                    <th>LOT NUM.</th>
-                                    <th>LICENCE NUM.</th>
-                                    <th>WAGON</th>
-                                    <th>COMMODITY</th>
-                                    <th>LOADING DATE</th>
-                                    <th>TRANSPORTER</th>
-                                    <th>WEIGHT</th>
-                                    <th>STATUS</th>
-                                  </tr>
-                                  <?php
-                                  }*/
                                   include('enTetePopUp.php');
                                   ?>
                                 </thead>

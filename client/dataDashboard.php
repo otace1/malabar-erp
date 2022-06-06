@@ -24,61 +24,11 @@
 	if($id_mod_lic=='2' && $id_mod_trans=='1'){
 		if ($statut == 'AWAITING CRF/AD/INSURANCE') {
 
-			$sqlStatus = " AND d.date_crf IS NULL
-							AND d.date_ad IS NULL
-							AND d.date_assurance IS NULL
+			$sqlStatus = " AND (d.date_crf IS NULL
+								OR d.date_ad IS NULL
+								OR d.date_assurance IS NULL)
 							AND d.ref_dos NOT LIKE '%20-%'
 							AND d.cleared <> '2'";
-
-		}else if ($statut == 'AWAITING CRF/AD') {
-
-			$sqlStatus = " AND d.date_crf IS NULL
-							AND d.date_ad IS NULL
-							AND d.date_assurance IS NOT NULL
-							AND d.ref_dos NOT LIKE '%20-%'
-							AND d.cleared <> '2'";
-
-		}else if ($statut == 'AWAITING CRF/INSURANCE') {
-
-			$sqlStatus = " AND d.date_crf IS NULL
-							AND d.date_ad IS NOT NULL
-							AND d.date_assurance IS NULL
-							AND d.ref_dos NOT LIKE '%20-%'
-							AND d.cleared <> '2'";
-
-		}else if ($statut == 'AWAITING CRF') {
-
-			$sqlStatus = " AND d.date_crf IS NULL
-							AND d.ref_dos NOT LIKE '%20-%'
-							AND d.cleared <> '2'";
-
-		}else if ($statut == 'AWAITING AD/INSURANCE') {
-
-			$sqlStatus = " AND d.date_crf IS NOT NULL
-							AND d.date_ad IS NULL
-							AND d.date_assurance IS NULL
-							AND d.ref_dos NOT LIKE '%20-%'
-							AND d.cleared <> '2'";
-
-		}else if ($statut == 'AWAITING AD') {
-
-			$sqlStatus = " AND d.date_ad IS NULL
-							AND d.ref_dos NOT LIKE '%20-%'
-							AND d.cleared <> '2'";
-
-		}/*else if ($statut == 'AWAITING INSURANCE') {
-
-			$sqlStatus = " AND d.date_crf IS NOT NULL
-							AND d.date_ad IS NOT NULL
-							AND d.date_assurance IS NULL
-							AND d.ref_dos NOT LIKE '%20-%'
-							AND d.cleared <> '2'";
-
-		}*/else if ($statut == 'AWAITING INSURANCE') {
-
-			$sqlStatus = " AND d.date_assurance IS NULL
-											AND d.ref_dos NOT LIKE '%20-%'
-											AND d.cleared <> '2'";
 
 		}else if ($statut == 'UNDER PREPARATION') {
 
