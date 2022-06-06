@@ -18,7 +18,8 @@
     <!-- Main content -->
     <section class="content">
       <div class="container-fluid" style="text-align: center;">
-        <img src="../images/logo1.jpeg" style="width: 100%; height: auto;">
+        <!-- <img src="../images/logo1.jpeg" style="width: 100%; height: auto;"> -->
+        <img src="../images/malabar.png" style="">
       </div><!-- /.container-fluid -->
     </section>
     <!-- /.content -->
