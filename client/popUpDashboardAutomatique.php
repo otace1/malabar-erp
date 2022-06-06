@@ -66,10 +66,10 @@
                           <img src="../images/xls.png" width="30px">
                         </button>-->
 
-                    <button class="btn btn-success btn-xs square-btn-adjust" onclick="window.location.replace('../pages/exportExcelPopUp.php?id_cli=<?php echo $_GET['id_cli']; ?>&ampid_mod_trans=<?php echo $_GET['id_mod_trans']; ?>&ampid_mod_trac=<?php echo $_GET['id_mod_lic']; ?>&ampcommodity=<?php echo $_GET['commodity']; ?>&ampstatut=<?php echo $_GET['statut'];?>&id_march=','pop1','width=80,height=80');">
+                   <!--  <button class="btn btn-success btn-xs square-btn-adjust" onclick="window.location.replace('../pages/exportExcelPopUp.php?id_cli=<?php echo $_GET['id_cli']; ?>&ampid_mod_trans=<?php echo $_GET['id_mod_trans']; ?>&ampid_mod_trac=<?php echo $_GET['id_mod_lic']; ?>&ampcommodity=<?php echo $_GET['commodity']; ?>&ampstatut=<?php echo $_GET['statut'];?>&id_march=','pop1','width=80,height=80');">
                       <i class="fas fa-file-excel"></i> Export To Excel
                     </button>
-
+ -->
                       </h3>
 
                   <!--<div class="card-tools">
