@@ -21084,6 +21084,134 @@
 
 		}
 
+		public function nbreSummaryStatusClient($statut, $id_mod_lic, $id_cli, $id_mod_trans, $commodity){
+			include('connexion.php');
+			$entree['id_mod_lic'] = $id_mod_lic;
+			$statut = str_replace('\'', '', str_replace('_', '/', $statut));
+
+			$sqlClient = '';
+			$sqlModeTransport = '';
+			$sqlCommodity = '';
+
+			if (isset($id_cli) && ($id_cli!='')) {
+				$sqlClient = ' AND id_cli = "'.$id_cli.'"';
+			}else{
+				$sqlClient = '';
+			}
+
+			if (isset($id_mod_trans) && ($id_mod_trans!='')) {
+				$sqlModeTransport = ' AND id_mod_trans = "'.$id_mod_trans.'"';
+			}else{
+				$sqlModeTransport = '';
+			}
+
+			if (isset($commodity) && ($commodity!='')) {
+				$sqlCommodity = ' AND commodity = "'.$commodity.'"';
+			}else{
+				$sqlCommodity = '';
+			}
+
+			if($id_mod_lic=='2' && $id_mod_trans=='1'){
+				if ($statut == 'AWAITING CRF/AD/INSURANCE') {
+
+					$requete = $connexion-> prepare("SELECT COUNT(ref_dos) AS nbre
+												FROM dossier
+												WHERE id_mod_lic = ?
+													AND (date_crf IS NULL
+														OR date_ad IS NULL
+														OR date_assurance IS NULL
+														)
+													AND ref_dos NOT LIKE '%20-%'
+													AND cleared <> '2'
+													$sqlClient
+													$sqlModeTransport
+													$sqlCommodity");
+
+				}else if ($statut == 'UNDER PREPARATION') {
+
+					$requete = $connexion-> prepare("SELECT COUNT(ref_dos) AS nbre
+												FROM dossier
+												WHERE id_mod_lic = ?
+													AND date_crf IS NOT NULL
+													AND date_ad IS NOT NULL
+													AND date_assurance IS NOT NULL
+													AND date_decl IS NULL 
+													AND ref_decl IS NULL
+													AND ref_dos NOT LIKE '%20-%'
+													AND cleared <> '2'
+													$sqlClient
+													$sqlModeTransport");
+
+				}else if ($statut == 'AWAITING LIQUIDATION') {
+
+					$requete = $connexion-> prepare("SELECT COUNT(ref_dos) AS nbre
+												FROM dossier
+												WHERE id_mod_lic = ?
+													AND date_decl IS NOT NULL 
+													AND ref_decl IS NOT NULL
+													AND date_liq IS NULL 
+													AND ref_liq IS NULL
+													AND ref_dos NOT LIKE '%20-%'
+													AND cleared <> '2'
+													$sqlClient
+													$sqlModeTransport");
+
+				}else if ($statut == 'AWAITING QUITTANCE') {
+
+					$requete = $connexion-> prepare("SELECT COUNT(ref_dos) AS nbre
+												FROM dossier
+												WHERE id_mod_lic = ?
+													AND date_liq IS NOT NULL 
+													AND ref_liq IS NOT NULL
+													AND date_quit IS NULL 
+													AND ref_quit IS NULL
+													AND ref_dos NOT LIKE '%20-%'
+													AND cleared <> '2'
+													$sqlClient
+													$sqlModeTransport");
+
+				}else if ($statut == 'AWAITING BAE/BS') {
+
+					$requete = $connexion-> prepare("SELECT COUNT(ref_dos) AS nbre
+												FROM dossier
+												WHERE id_mod_lic = ?
+													AND date_quit IS NOT NULL 
+													AND ref_quit IS NOT NULL
+													AND dgda_out IS NULL
+													$sqlClient
+													$sqlModeTransport");
+
+				}else if ($statut == 'CLEARING COMPLETED') {
+
+					$requete = $connexion-> prepare("SELECT COUNT(ref_dos) AS nbre
+												FROM dossier
+												WHERE id_mod_lic = ?
+													AND date_quit IS NOT NULL 
+													AND ref_quit IS NOT NULL
+													AND dgda_out IS NOT NULL
+													AND dispatch_deliv IS NOT NULL
+													$sqlClient
+													$sqlModeTransport");
+
+				}
+			}else{
+				$requete = $connexion-> prepare("SELECT COUNT(ref_dos) AS nbre
+												FROM dossier
+												WHERE id_mod_lic = ?
+													AND REPLACE(statut, '\'','') = '$statut'
+													$sqlClient
+													$sqlModeTransport");
+			}
+
+			$requete-> execute(array($entree['id_mod_lic']));
+			$reponse = $requete-> fetch();
+
+			if($reponse){
+				return $reponse['nbre'];
+			}
+
+		}
+
 		public function getSummary($id_mod_lic, $id_cli, $id_mod_trans, $commodity){
 			include('connexion.php');
 			$entree['id_mod_lic'] = $id_mod_lic;
@@ -21195,7 +21323,12 @@
 			$requete = $connexion-> prepare("SELECT REPLACE(nom_stat, '\'','') AS nom_stat, nom_stat AS nom_stat2
 												FROM status_dashboard
 													WHERE id_mod_lic = ?
-													AND active ='1'
+														AND nom_stat <> 'CEEC OUT'
+														AND nom_stat <> 'DECLARATION'
+														AND nom_stat <> 'MINE DIVISION OUT'
+														AND nom_stat <> 'UNDER FORMALITIES'
+														AND nom_stat <> 'BORDER FORMALITIES'
+														AND active ='1'
 												ORDER BY rang_stat");
 			$requete-> execute(array($entree['id_mod_lic']));
 			while($reponse=$requete-> fetch()){
@@ -21243,6 +21376,14 @@
 													AND nom_stat <> 'UNDER PROCESS AT WISKI'
 													AND nom_stat <> 'AT KBP'
 													AND nom_stat <> 'AT AMICONGO'
+													AND nom_stat <> 'AWAITING AD'
+													AND nom_stat <> 'AWAITING ASSURANCE'
+													AND nom_stat <> 'AWAITING CRF'
+													AND nom_stat <> 'CEEC OUT'
+													AND nom_stat <> 'DECLARATION'
+													AND nom_stat <> 'MINE DIVISION OUT'
+													AND nom_stat <> 'UNDER FORMALITIES'
+													AND nom_stat <> 'BORDER FORMALITIES'
 												ORDER BY rang_stat");
 			$requete-> execute(array($entree['id_mod_lic']));
 			while($reponse=$requete-> fetch()){
