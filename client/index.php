@@ -112,7 +112,6 @@
                     <table class="table-dark table table-head-fixed table-sm ">
                       <thead>
                         <tr>
-                          <th style="width: 10px">#</th>
                           <th>Status</th>
                           <th>Nbr</th>
                           <th>Action</th>
@@ -124,7 +123,6 @@
                           <?php 
                             $statut = 'AWAITING CRF/AD/INSURANCE';
                           ?>
-                          <td>1</td>
                           <td><?php echo $statut;?></td>
                           <td>
                             <span class="">
@@ -140,7 +138,6 @@
                       
                         <tr>
                           <?php $statut = 'UNDER PREPARATION';?>
-                          <td>8</td>
                           <td><?php echo $statut;?></td>
                           <td>
                             <span class="">
@@ -156,7 +153,6 @@
                       
                         <tr>
                           <?php $statut = 'AWAITING LIQUIDATION';?>
-                          <td>9</td>
                           <td><?php echo $statut;?></td>
                           <td>
                             <span class="">
@@ -172,7 +168,6 @@
                       
                         <tr>
                           <?php $statut = 'AWAITING QUITTANCE';?>
-                          <td>10</td>
                           <td><?php echo $statut;?></td>
                           <td>
                             <span class="">
@@ -188,7 +183,6 @@
                       
                         <tr>
                           <?php $statut = 'AWAITING BAE/BS';?>
-                          <td>11</td>
                           <td><?php echo $statut;?></td>
                           <td>
                             <span class="">
@@ -204,7 +198,6 @@
                       
                         <tr>
                           <?php $statut = 'CLEARING COMPLETED';?>
-                          <td>12</td>
                           <td><?php echo $statut;?></td>
                           <td>
                             <span class="">
@@ -233,7 +226,6 @@
                     <table class="table-dark table table-head-fixed table-sm ">
                       <thead>
                         <tr>
-                          <th style="width: 10px">#</th>
                           <th>Status</th>
                           <th>Nbr</th>
                           <th>Action</th>
@@ -258,7 +250,6 @@
                     <table class="table-dark table table-head-fixed table-sm ">
                       <thead>
                         <tr>
-                          <th style="width: 10px">#</th>
                           <th>Status</th>
                           <th>Nbr</th>
                           <th>Action</th>
@@ -293,7 +284,6 @@
                     <table class="table-dark table table-head-fixed table-sm ">
                       <thead>
                         <tr>
-                          <th style="width: 10px">#</th>
                           <th>Status</th>
                           <th>Nbr</th>
                           <th>Action</th>
@@ -318,7 +308,6 @@
                     <table class="table-dark table table-head-fixed table-sm ">
                       <thead>
                         <tr>
-                          <th style="width: 10px">#</th>
                           <th>Status</th>
                           <th>Nbr</th>
                           <th>Action</th>
@@ -343,7 +332,6 @@
                     <table class="table-dark table table-head-fixed table-sm ">
                       <thead>
                         <tr>
-                          <th style="width: 10px">#</th>
                           <th>Status</th>
                           <th>Nbr</th>
                           <th>Action</th>
