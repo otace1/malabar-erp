@@ -21336,7 +21336,6 @@
 			?>
 
             <tr>
-              <td><?php echo $compteur;?></td>
               <td><?php echo $reponse['nom_stat2'];?></td>
               <td>
               	<!-- <span class="badge bg-<?php echo $bg[rand(1, 8)];?>"> -->
@@ -21384,6 +21383,7 @@
 													AND nom_stat <> 'MINE DIVISION OUT'
 													AND nom_stat <> 'UNDER FORMALITIES'
 													AND nom_stat <> 'BORDER FORMALITIES'
+													AND nom_stat <> 'AT KOLWEZI'
 												ORDER BY rang_stat");
 			$requete-> execute(array($entree['id_mod_lic']));
 			while($reponse=$requete-> fetch()){
@@ -21391,7 +21391,6 @@
 			?>
 
             <tr>
-              <td><?php echo $compteur;?></td>
               <td><?php echo $reponse['nom_stat2'];?></td>
               <td>
               	<!-- <span class="badge bg-<?php echo $bg[rand(1, 8)];?>"> -->
