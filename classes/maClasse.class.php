@@ -21333,6 +21333,7 @@
 			$requete-> execute(array($entree['id_mod_lic']));
 			while($reponse=$requete-> fetch()){
 				$compteur++;
+				if ($this-> nbreSummaryStatus($reponse['nom_stat2'], $id_mod_lic, $id_cli, $id_mod_trans, $commodity)>0) {
 			?>
 
             <tr>
@@ -21350,6 +21351,8 @@
             </tr>
 	        
 			<?php
+					// code...
+				}
 			}$requete-> closeCursor();
 		}
 
@@ -21388,6 +21391,7 @@
 			$requete-> execute(array($entree['id_mod_lic']));
 			while($reponse=$requete-> fetch()){
 				$compteur++;
+				if ($this-> nbreSummaryStatus($reponse['nom_stat2'], $id_mod_lic, $id_cli, $id_mod_trans, $commodity) > 0) {
 			?>
 
             <tr>
@@ -21405,6 +21409,7 @@
             </tr>
 	        
 			<?php
+				}
 			}$requete-> closeCursor();
 		}
 
