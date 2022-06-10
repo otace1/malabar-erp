@@ -59,7 +59,7 @@
       <a href="" class="navbar-brand">
         <img src="../images/logo.jpeg" alt="AdminLTE Logo" class="brand-image img-circle elevation-3"
              style="opacity: .8">
-        <span class="brand-text font-weight-light">MALABAR | ERP</span>
+        <span class="brand-text font-weight-light">MALABAR RDC</span>
       </a>
       <!-- <a href="" class="brand-link">
         <img src="../images/logo.jpeg"

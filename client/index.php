@@ -43,6 +43,8 @@
             <div class="row mb-2">
 
               <div class="col-md-3 col-sm-6 col-12">
+              </div>
+              <div class="col-md-2 col-sm-6 col-12">
                 <div class="info-box"  data-toggle="modal" data-target=".rechercheImport">
                   <span class="info-box-icon bg-light">
                     <img src="../images/import.png" width="30px">
@@ -59,7 +61,7 @@
                 <!-- /.info-box -->
               </div>
 
-              <div class="col-md-3 col-sm-6 col-12">
+              <div class="col-md-2 col-sm-6 col-12">
                 <div class="info-box" data-toggle="modal" data-target=".rechercheExport">
                   <span class="info-box-icon bg-light">
                     <img src="../images/export.png" width="30px">
@@ -76,7 +78,7 @@
                 <!-- /.info-box -->
               </div>
 
-              <div class="col-md-3 col-sm-6 col-12">
+              <div class="col-md-2 col-sm-6 col-12">
                 <div class="info-box bg-danger" onclick="window.location='../deconnexion.php';">
                   <span class="info-box-icon bg-light">
                     <img src="../images/logout.png" width="30px">
@@ -92,6 +94,8 @@
                 <!-- /.info-box -->
               </div>
 
+              <div class="col-md-3 col-sm-6 col-12">
+              </div>
                 <!-- /.info-box -->
               </div>
 
