@@ -117,7 +117,7 @@
         createdRow: function (row, data, index) {
             if (data['statut'] == 'CLEARING COMPLETED') {
                 $('td', row).eq(0).addClass('highlight');
-                $('td', row).eq(17).addClass('highlight');
+                $('td', row).eq(24).addClass('highlight');
             }
         },
         dom: 'Bfrtip',

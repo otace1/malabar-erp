@@ -211,6 +211,13 @@ if ($_GET['id_mod_lic']=='2' && $_GET['id_mod_trans']=='1' && $_GET['statut']=='
     <th>SUPPLIER</th>
     <th>PO Ref</th>
     <th>WEIGHT</th>
+    <th>KLSA ARRIVAL</th>
+    <th>WISKI ARRIVAL</th>
+    <th>DISPATCH FROM KLSA</th>
+    <th>BONDED WAREHOUSE</th>
+    <th>WAREHOUSE ARRIVAL</th>
+    <th>WAREHOUSE DEPARTURE</th>
+    <th>DISPACTH/DELIVER DATE</th>
     <th>DECL.REF.</th>
     <th>DECL.DATE</th>
     <th>LIQ.REF.</th>
