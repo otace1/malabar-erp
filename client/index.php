@@ -122,7 +122,9 @@
                         </tr>
                       </thead>
                       <tbody>
-                        
+                        <?php
+                        if ($maClasse-> getUtilisateurClientModeleLicence($_SESSION['id_util'], '2')['id_cli']!='') {
+                          ?>
                         <tr>
                           <?php 
                             $statut = 'AWAITING CRF/AD/INSURANCE';
@@ -214,7 +216,10 @@
                             </button>
                           </td>
                         </tr>
-                      
+                      <?php
+                          // code...
+                        }
+                        ?>
                       </tbody>
                     </table>
                   </div>
@@ -237,7 +242,9 @@
                       </thead>
                       <tbody>
                         <?php
+                        if ($maClasse-> getUtilisateurClientModeleLicence($_SESSION['id_util'], '2')['id_cli']!='') {
                           $maClasse-> getSummaryClientAIR('2', $maClasse-> getUtilisateurClientModeleLicence($_SESSION['id_util'], '2')['id_cli'], 3, NULL);
+                        }
                         ?>
                       </tbody>
                     </table>
@@ -261,7 +268,9 @@
                       </thead>
                       <tbody>
                         <?php
+                        if ($maClasse-> getUtilisateurClientModeleLicence($_SESSION['id_util'], '2')['id_cli']!='') {
                           $maClasse-> getSummaryClientAIR('2', $maClasse-> getUtilisateurClientModeleLicence($_SESSION['id_util'], '2')['id_cli'], 4, NULL);
+                        }
                         ?>
                       </tbody>
                     </table>
@@ -295,7 +304,9 @@
                       </thead>
                       <tbody>
                         <?php
+                        if ($maClasse-> getUtilisateurClientModeleLicence($_SESSION['id_util'], '1')['id_cli']!='') {
                           $maClasse-> getSummaryClient2('1', $maClasse-> getUtilisateurClientModeleLicence($_SESSION['id_util'], '1')['id_cli'], 1, NULL);
+                        }
                         ?>
                       </tbody>
                     </table>
@@ -319,7 +330,9 @@
                       </thead>
                       <tbody>
                         <?php
+                        if ($maClasse-> getUtilisateurClientModeleLicence($_SESSION['id_util'], '1')['id_cli']!='') {
                           $maClasse-> getSummaryClientAIR('1', $maClasse-> getUtilisateurClientModeleLicence($_SESSION['id_util'], '1')['id_cli'], 3, NULL);
+                        }
                         ?>
                       </tbody>
                     </table>
@@ -343,7 +356,9 @@
                       </thead>
                       <tbody>
                         <?php
+                        if ($maClasse-> getUtilisateurClientModeleLicence($_SESSION['id_util'], '1')['id_cli']!='') {
                           $maClasse-> getSummaryClientAIR('1', $maClasse-> getUtilisateurClientModeleLicence($_SESSION['id_util'], '1')['id_cli'], 4, NULL);
+                        }
                         ?>
                       </tbody>
                     </table>
