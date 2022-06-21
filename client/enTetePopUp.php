@@ -211,6 +211,12 @@ if ($_GET['id_mod_lic']=='2' && $_GET['id_mod_trans']=='1' && $_GET['statut']=='
     <th>SUPPLIER</th>
     <th>PO Ref</th>
     <th>WEIGHT</th>
+    <th>DECL.REF.</th>
+    <th>DECL.DATE</th>
+    <th>LIQ.REF.</th>
+    <th>LIQ.DATE</th>
+    <th>QUIT.REF.</th>
+    <th>QUIT.DATE</th>
     <th>DGDA OUT</th>
     <th>STATUS</th>
   </tr>

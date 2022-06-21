@@ -211,6 +211,12 @@ if ($_GET['id_mod_lic']=='2' && $_GET['id_mod_trans']=='1' && $_GET['statut']=='
           {"data":"supplier"},
           {"data":"po_ref"},
           {"data":"poids"},
+          {"data":"ref_decl"},
+          {"data":"date_decl"},
+          {"data":"ref_liq"},
+          {"data":"date_liq"},
+          {"data":"ref_quit"},
+          {"data":"date_quit"},
           {"data":"dgda_out"},
           {"data":"statut"}
         ]
