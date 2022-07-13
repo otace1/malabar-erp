@@ -1569,7 +1569,7 @@ if(isset($_GET['id_mod_trac']) && $_GET['id_mod_trac']=='2' && $_GET['id_cli']!=
                       <div class="col-md-3">
                         <label for="x_card_code" class="control-label mb-1">LICENCE </label>
                         <!-- <input type="text" id="txtCountry" name="num_lic" autocomplete="off" class="form-control cc-exp" required> -->
-                        <select name="num_lic" id="num_lic" class="form-control cc-exp" onchange="xajax_afficherFobMaxLicence(this.value),xajax_selectionnerAVPourLicence(this.value),xajax_afficherMaskAV(av.value)" required>
+                        <select name="num_lic" id="num_lic" class="form-control cc-exp" onchange="" required>
                           <option></option>
                           <option value="UNDER VALUE">UNDER VALUE</option>
                             <?php
@@ -1578,11 +1578,6 @@ if(isset($_GET['id_mod_trac']) && $_GET['id_mod_trac']=='2' && $_GET['id_cli']!=
                         </select>
                       </div>
 
-                      <div class="col-md-3">
-                        <label for="x_card_code" class="control-label mb-1">BALANCE LICENCE</label>
-                        <span id="balance_fob"></span>
-                      </div>
-             
                       <input type="hidden" name="supplier" value="" class="form-control cc-exp">
                       <!-- <div class="col-md-3">
                         <label for="x_card_code" class="control-label mb-1">FOURNISSEUR</label>
@@ -1592,8 +1587,8 @@ if(isset($_GET['id_mod_trac']) && $_GET['id_mod_trac']=='2' && $_GET['id_cli']!=
              
                       <div class="col-md-3">
                         <label for="x_card_code" class="control-label mb-1">FOB DECLAREE</label>
-                        <span id="fob"></span>
-                        <!-- <input type="number" min="0" step="0.001" name="fob" class="form-control cc-exp"> -->
+                        <!-- <span id="fob"></span> -->
+                        <input type="number" min="0" step="0.001" name="fob" class="form-control cc-exp">
                       </div>
              
                       <div class="col-md-3">
@@ -1615,19 +1610,16 @@ if(isset($_GET['id_mod_trac']) && $_GET['id_mod_trac']=='2' && $_GET['id_cli']!=
                       </div>
 
                       <div class="col-md-3">
-                        <label for="x_card_code" class="control-label mb-1">BALANCE WEIGHT</label>
-                        <span id="balance_poids"></span>
-                      </div>
-
-                      <div class="col-md-3">
                         <label for="x_card_code" class="control-label mb-1">WEIGHT</label>
-                        <span id="poids"></span>
+                        <input type="number" min="0" step="0.001" name="poids" class="form-control cc-exp">
                       </div>
 
+                      <input type="hidden" name="cod" value="" class="form-control cc-exp"> 
+<!-- 
                       <div class="col-md-3">
                         <label for="x_card_code" class="control-label mb-1">CRF REF</label>
-                        <span id="cod"></span>
-                      </div>
+                        <input type="text" name="cod" class="form-control cc-exp">
+                      </div> -->
 
                           <?php
                         }else{
