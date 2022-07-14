@@ -47,6 +47,8 @@ $excel = new PHPExcel();
 
 
 include('../classes/connexion.php');
+//include('afficherRowTableauExcel.php');
+
 include('afficherRowTableauExcel.php');
 //--- Recuperation des mode de transport -------
 $indiceSheet = 0;
@@ -232,6 +234,63 @@ while ($reponseModeTransport = $requeteModeTransport-> fetch()) {
 													d.custom_deliv AS custom_deliv_1,
 													d.arrival_date AS arrival_date_1,
 													d.cleared AS cleared,
+												
+												IF(d.id_mod_lic='2' AND d.id_mod_trans='1',
+													IF(d.date_crf IS NULL AND d.date_ad IS NULL AND d.date_assurance IS NULL,
+												      'AWAITING CRF/AD/INSURRANCE',
+												      IF(d.date_crf IS NULL AND d.date_ad IS NULL AND d.date_assurance IS NOT NULL,
+												        'AWAITING CRF/AD',
+												          IF(d.date_crf IS NULL AND d.date_ad IS NOT NULL AND d.date_assurance IS NULL,
+												            'AWAITING CRF/INSURRANCE',
+												            IF(d.date_crf IS NULL AND d.date_ad IS NOT NULL AND d.date_assurance IS NOT NULL,
+												              'AWAITING CRF', 
+												              IF(d.date_crf IS NOT NULL AND d.date_ad IS NULL AND d.date_assurance IS NULL,
+												                'AWAITING AD/INSURRANCE',
+												                IF(d.date_crf IS NOT NULL AND d.date_ad IS NULL AND d.date_assurance IS NOT NULL,
+												                  'AWAITING AD',
+												                    IF(d.date_crf IS NOT NULL AND d.date_ad IS NOT NULL AND d.date_assurance IS NULL,
+												                      'AWAITING INSURRANCE',
+												                      IF(d.date_decl IS NULL AND d.ref_decl IS NULL, 'UNDER PREPARATION',
+												                        IF(d.date_liq IS NULL AND d.ref_liq IS NULL, 'AWAITING LIQUIDATION',
+												                          IF(d.date_quit IS NULL AND d.ref_quit IS NULL, 'AWAITING QUITTANCE',
+												                            IF(d.date_quit IS NOT NULL AND d.ref_quit IS NOT NULL AND d.dgda_out IS NULL, 'AWAITING BAE/BS', 
+												                              IF(d.dgda_out IS NOT NULL AND d.dispatch_deliv IS NOT NULL, 'CLEARING COMPLETED', '')
+												                              )
+												                            )
+												                          )
+												                        )
+												                      
+												                      )
+												                  )
+												                )
+												              )
+												            )
+												          )
+												      )
+													,
+													d.statut) AS statut,
+												IF(d.id_mod_trans='1' AND d.id_mod_lic='2', 
+													IF(d.klsa_arriv IS NOT NULL AND d.wiski_arriv IS NULL,'ARRIVED AT K\'LSA', 
+														IF(d.wiski_arriv IS NOT NULL AND d.dispatch_klsa IS NULL, 'AT WISKI',
+															IF(d.dispatch_klsa IS NOT NULL, 'DISPATCHED FROM K\'LSA', 'EXCEPTED TO ARRIVE')
+															)
+														)
+													, '') AS klsa_status,
+												IF(d.id_mod_trans='1' AND d.id_mod_lic='2', 
+													IF(d.bond_warehouse='LUBUMBASHI',
+														IF(d.warehouse_arriv IS NOT NULL AND d.warehouse_dep IS NOT NULL, 'DISPATCHED FROM AMICONGO', 
+															IF(d.warehouse_arriv IS NOT NULL, 'ARRIVED AT AMICONGO', '')
+															)
+														,'')
+													,'') AS amicongo_status,
+												IF(d.id_mod_trans='1' AND d.id_mod_lic='2', 
+													IF(d.bond_warehouse='KOLWEZI',
+														IF(d.warehouse_arriv IS NOT NULL AND d.warehouse_dep IS NOT NULL, 'DISPATCHED FROM WAREHOUSE', 
+															IF(d.warehouse_arriv IS NOT NULL, 'ARRIVED AT WAREHOUSE', '')
+															)
+														,'')
+													,'') AS kzi_status,
+
 													DATEDIFF(d.dgda_out, d.dgda_in) AS dgda_delay,
 													DATEDIFF(d.custom_deliv, d.arrival_date) AS arrival_deliver_delay
 												FROM dossier d, client cl, site s, mode_transport mt
@@ -286,7 +345,9 @@ while ($reponseModeTransport = $requeteModeTransport-> fetch()) {
 				alignement('A'.$row);
 				alignement('B'.$row);
 
-				afficherRowTableauExcel($id_mod_lic, $id_cli, $id_mod_trans, $reponse['id_dos'], $compteur, $col, $excel, $row, $styleHeader);
+				//afficherRowTableauExcel($id_mod_lic, $id_cli, $id_mod_trans, $reponse['id_dos'], $compteur, $col, $excel, $row, $styleHeader);
+				afficherRowTableauExcel($id_mod_lic, $id_cli, $id_mod_trans, $reponse['id_dos'], $compteur, $col, $excel, $row, $styleHeader, $reponse['statut'], $reponse['klsa_status'], $reponse['amicongo_status'], $reponse['kzi_status']);
+
 
 				$row++;
 
