@@ -184,6 +184,37 @@ while ($reponseModeTransport = $requeteModeTransport-> fetch()) {
 											ORDER BY af.rang ASC");
 			$requete-> execute(array($entree['id_cli'], $entree['id_mod_lic'], $entree['id_mod_trans']));
 			while ($reponse = $requete-> fetch()) {
+				
+			if ($reponse['id_col']=='42' && $entree['id_mod_trans']=='1') {
+				$excel-> getActiveSheet()
+					-> setCellValue($col.$row, 'GENERAL STATUS');
+				cellColor($col.$row, '000000');
+				alignement($col.$row);
+				$excel->getActiveSheet()
+					->getStyle($col.$row)->applyFromArray($styleHeader);
+				$col++;
+				$excel-> getActiveSheet()
+					-> setCellValue($col.$row, 'KLSA STATUS');
+				cellColor($col.$row, '000000');
+				alignement($col.$row);
+				$excel->getActiveSheet()
+					->getStyle($col.$row)->applyFromArray($styleHeader);
+				$col++;
+				$excel-> getActiveSheet()
+					-> setCellValue($col.$row, 'AMICONGO STATUS');
+				cellColor($col.$row, '000000');
+				alignement($col.$row);
+				$excel->getActiveSheet()
+					->getStyle($col.$row)->applyFromArray($styleHeader);
+				$col++;
+				$excel-> getActiveSheet()
+					-> setCellValue($col.$row, 'KZI STATUS');
+				cellColor($col.$row, '000000');
+				alignement($col.$row);
+				$excel->getActiveSheet()
+					->getStyle($col.$row)->applyFromArray($styleHeader);
+				$col++;
+			}else{
 				$excel-> getActiveSheet()
 					-> setCellValue($col.$row, $reponse['titre_col']);
 				cellColor($col.$row, '000000');
@@ -191,6 +222,14 @@ while ($reponseModeTransport = $requeteModeTransport-> fetch()) {
 				$excel->getActiveSheet()
 					->getStyle($col.$row)->applyFromArray($styleHeader);
 				$col++;
+			}
+				/*$excel-> getActiveSheet()
+					-> setCellValue($col.$row, $reponse['titre_col']);
+				cellColor($col.$row, '000000');
+				alignement($col.$row);
+				$excel->getActiveSheet()
+					->getStyle($col.$row)->applyFromArray($styleHeader);
+				$col++;*/
 			}$requete-> closeCursor();
 
 			
