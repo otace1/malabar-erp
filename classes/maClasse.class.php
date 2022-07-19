@@ -26385,11 +26385,15 @@
 												FROM licence l
 												WHERE l.id_mod_lic = ?
 													AND (l.id_cli = 845 OR l.id_cli = 885)
-													AND l.fob > ROUND((
+													AND (l.fob > ROUND((
 															SELECT SUM(fob) AS fob
 																FROM dossier
 																WHERE num_lic = l.num_lic
-														))+1
+															))+1
+															OR l.num_lic NOT IN(
+																SELECT DISTINCT(num_lic) FROM dossier
+																)
+														)
 													AND DATE(CURRENT_DATE()) <= (
 															SELECT date_exp
 																FROM expiration_licence
@@ -26410,11 +26414,15 @@
 												FROM licence l
 												WHERE l.id_mod_lic = ?
 													AND l.id_cli = ?
-													AND l.fob > ROUND((
+													AND (l.fob > ROUND((
 															SELECT SUM(fob) AS fob
 																FROM dossier
 																WHERE num_lic = l.num_lic
 														))+1
+																		SELECT num_lic FROM dossier
+
+																		)
+													)
 													AND DATE(CURRENT_DATE()) <= (
 															SELECT date_exp
 																FROM expiration_licence
@@ -26454,11 +26462,15 @@
 												FROM licence l
 												WHERE l.id_mod_lic = ?
 													AND (l.id_cli = 845 OR l.id_cli = 885)
-													AND l.fob > ROUND((
+													AND (l.fob > ROUND((
 															SELECT SUM(fob) AS fob
 																FROM dossier
 																WHERE num_lic = l.num_lic
 														))+1
+																		))
+
+																		)
+																		)
 													AND DATE(CURRENT_DATE()) <= (
 															SELECT date_exp
 																FROM expiration_licence
