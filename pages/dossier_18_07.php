@@ -1,3 +1,4 @@
+
 <?php
   include("tete.php");
   include("menuHaut.php");
@@ -232,14 +233,6 @@ for ($i=1; $i <= 15 ; $i++) {
         $maClasse-> MAJ_date_preal($_POST['id_dos_'.$i], $_POST['date_preal_'.$i]);
       }
 
-      if (isset($_POST['frontiere_'.$i]) && ($_POST['frontiere_'.$i] != '')) {
-        $maClasse-> MAJ_frontiere($_POST['id_dos_'.$i], $_POST['frontiere_'.$i]);
-      }
-
-      if (isset($_POST['entrepot_frontiere_'.$i]) && ($_POST['entrepot_frontiere_'.$i] != '')) {
-        $maClasse-> MAJ_entrepot_frontiere($_POST['id_dos_'.$i], $_POST['entrepot_frontiere_'.$i]);
-      }
-
       if (isset($_POST['po_ref_'.$i]) && ($_POST['po_ref_'.$i] != '')) {
         $maClasse-> MAJ_po_ref($_POST['id_dos_'.$i], $_POST['po_ref_'.$i]);
       }
@@ -286,10 +279,6 @@ for ($i=1; $i <= 15 ; $i++) {
 
       if (isset($_POST['commodity_'.$i]) && ($_POST['commodity_'.$i] != '')) {
         $maClasse-> MAJ_commodity($_POST['id_dos_'.$i], $_POST['commodity_'.$i]);
-      }
-
-      if (isset($_POST['regime_'.$i]) && ($_POST['regime_'.$i] != '')) {
-        $maClasse-> MAJ_regime($_POST['id_dos_'.$i], $_POST['regime_'.$i]);
       }
 
       if (isset($_POST['fob_'.$i]) && ($_POST['fob_'.$i] != '')) {
@@ -746,9 +735,7 @@ for ($i=1; $i <= 15 ; $i++) {
                                                       $_POST['poids'], $_POST['po_ref'], $_POST['commodity'], 
                                                       $_POST['horse'], $_POST['trailer_1'], $_POST['trailer_2'], 
                                                       $_POST['cod'], $_POST['date_crf'], NULL, $_POST['supplier'], 
-                                                      $_POST['temporelle'], 
-                                                      $_POST['frontiere'], 
-                                                      $_POST['regime']);
+                                                      $_POST['temporelle']);
 
                           }
 
@@ -1551,7 +1538,7 @@ if(isset($_GET['id_mod_trac']) && $_GET['id_mod_trac']=='2' && $_GET['id_cli']!=
 
                       <div class="col-md-3">
                         <label for="x_card_code" class="control-label mb-1">CLIENT</label>
-                        <select name="id_cli" id="id_cli" onchange="xajax_selectionnerLicencePourClientModele(this.value, <?php echo $_GET['id_mod_trac'];?>),xajax_afficherRefDos(this.value, <?php echo $_GET['id_mod_trans'];?>, <?php echo $_GET['id_march'];?>), xajax_afficherFobMaxLicence(num_lic.value),xajax_selectionnerAVPourLicence(num_lic.value),xajax_afficherMaskAV(av.value)" class="form-control cc-exp" required>
+                        <select name="id_cli" id="id_cli" onchange="xajax_selectionnerLicencePourClientModele(this.value, <?php echo $_GET['id_mod_trac'];?>),xajax_afficherRefDos(this.value, <?php echo $_GET['id_mod_trans'];?>, <?php echo $_GET['id_march'];?>), xajax_afficherFobMaxLicence(num_lic.value)" class="form-control cc-exp" required>
                             <option value="<?php echo $_GET['id_cli'];?>"><?php echo $maClasse-> getNomClient($_GET['id_cli']);?></option>
                             <?php
                                 //$maClasse->selectionnerClientModeleLicence($modele['id_mod_lic']);
@@ -1578,41 +1565,11 @@ if(isset($_GET['id_mod_trac']) && $_GET['id_mod_trac']=='2' && $_GET['id_cli']!=
                       <?php
                         if ($maClasse-> verifierSouscriptionLicence($_GET['id_cli'], $_GET['id_mod_trac'])==true) {
                           ?>
-                      <!-- <script type="text/javascript" src="../classes/script.js"></script> -->
-                      <script type="text/javascript">
-                        function getBalanceLicence(val){
-                          $.ajax({
-                            type: "POST",
-                            url: "../classes/get_balance_licence.php",
-                            data: 'num_lic='+val,
-                            success:function(data){
-                              //console.log(data);
-                              $('#balance_fob_licence').html(data);
-                            }
 
-                          });
-                        }
-
-                        function getDataLicence(val){
-                          $.ajax({
-                            type: "POST",
-                            url: "../classes/get_data_licence.php",
-                            data: 'num_lic='+val,
-                            dataType:"json",
-                            success:function(data){
-                              console.log(data.fob);
-                              $('#fob').html(data.fob);
-                              $('#cod').html(data.cod);
-                            }
-
-                          });
-                        }
-
-                      </script>
                       <div class="col-md-3">
                         <label for="x_card_code" class="control-label mb-1">LICENCE </label>
                         <!-- <input type="text" id="txtCountry" name="num_lic" autocomplete="off" class="form-control cc-exp" required> -->
-                        <select name="num_lic" id="num_lic" class="form-control cc-exp" onchange="getBalanceLicence(this.value);getDataLicence(this.value);" required>
+                        <select name="num_lic" id="num_lic" class="form-control cc-exp" onchange="xajax_afficherFobMaxLicence(this.value);" required>
                           <option></option>
                           <option value="UNDER VALUE">UNDER VALUE</option>
                             <?php
@@ -1621,17 +1578,21 @@ if(isset($_GET['id_mod_trac']) && $_GET['id_mod_trac']=='2' && $_GET['id_cli']!=
                         </select>
                       </div>
 
-                      <input type="hidden" name="supplier" value="" class="form-control cc-exp">
                       <div class="col-md-3">
-                        <label for="x_card_code" class="control-label mb-1">BALANCE FOB</label>
-                        
-                        <!-- <input type="text" id="balance_fob_licence" name="balance_fob" class="form-control cc-exp"> -->
-                        <span id="balance_fob_licence" class="balance_fob_licence" name="balance_fob_licence"></span>
+                        <label for="x_card_code" class="control-label mb-1">BALANCE LICENCE</label>
+                        <span id="balance_fob"></span>
                       </div>
+             
+                      <input type="hidden" name="supplier" value="" class="form-control cc-exp">
+                      <!-- <div class="col-md-3">
+                        <label for="x_card_code" class="control-label mb-1">FOURNISSEUR</label>
+                        
+                        <input type="text" name="supplier" class="form-control cc-exp">
+                      </div> -->
              
                       <div class="col-md-3">
                         <label for="x_card_code" class="control-label mb-1">FOB DECLAREE</label>
-                        <span id="fob" class="fob" name="fob"></span>
+                        <span id="fob"></span>
                         <!-- <input type="number" min="0" step="0.001" name="fob" class="form-control cc-exp"> -->
                       </div>
              
@@ -1654,15 +1615,17 @@ if(isset($_GET['id_mod_trac']) && $_GET['id_mod_trac']=='2' && $_GET['id_cli']!=
                       </div>
 
                       <div class="col-md-3">
-                        <label for="x_card_code" class="control-label mb-1">WEIGHT</label>
-                        <input type="number" min="0" step="0.001" name="poids" class="form-control cc-exp">
+                        <label for="x_card_code" class="control-label mb-1">BALANCE WEIGHT</label>
+                        <span id="balance_poids"></span>
                       </div>
 
-                      <!-- <input type="hidden" name="cod" value="" class="form-control cc-exp">  -->
+                      <div class="col-md-3">
+                        <label for="x_card_code" class="control-label mb-1">WEIGHT</label>
+                        <span id="poids"></span>
+                      </div>
 
                       <div class="col-md-3">
                         <label for="x_card_code" class="control-label mb-1">CRF REF</label>
-                        <!-- <input type="text" name="cod" class="form-control cc-exp"> -->
                         <span id="cod"></span>
                       </div>
 
@@ -1673,7 +1636,7 @@ if(isset($_GET['id_mod_trac']) && $_GET['id_mod_trac']=='2' && $_GET['id_cli']!=
                       <div class="col-md-3">
                         <label for="x_card_code" class="control-label mb-1">LICENCE </label>
                         <input type="text" id="txtCountry" name="num_lic" autocomplete="off" class="form-control cc-exp" required>
-                        <!-- <select name="num_lic" id="num_lic" class="form-control cc-exp" onchange="xajax_afficherFobMaxLicence(this.value),xajax_selectionnerAVPourLicence(this.value),xajax_afficherMaskAV(av.value)" required>
+                        <!-- <select name="num_lic" id="num_lic" class="form-control cc-exp" onchange="xajax_afficherFobMaxLicence(this.value),xajax_selectionnerAVPourLicence(this.value)" required>
                           <option></option>
                           <option value="UNDER VALUE">UNDER VALUE</option>
                             <?php
@@ -1822,26 +1785,6 @@ if(isset($_GET['id_mod_trac']) && $_GET['id_mod_trac']=='2' && $_GET['id_cli']!=
                       ?>
 
                       <div class="col-md-3">
-                        <label for="x_card_code" class="control-label mb-1">ENTRY POINT</label>
-                        <select name="frontiere" class="form-control cc-exp" required>
-                          <option></option>
-                          <?php
-                            $maClasse-> selectionnerFrontiere2();
-                          ?>
-                        </select>
-                      </div>
-
-                      <div class="col-md-3">
-                        <label for="x_card_code" class="control-label mb-1">REGIME DOUANIER</label>
-                        <select name="regime" class="form-control cc-exp" required>
-                          <option></option>
-                          <?php
-                            $maClasse-> selectionnerRegime2($_GET['id_mod_trac']);
-                          ?>
-                        </select>
-                      </div>
-
-                      <div class="col-md-3">
                         <label for="x_card_code" class="control-label mb-1">REGIME SUSPENSIF</label>
                         <select name="temporelle" class="form-control cc-exp" required>
                           <option></option>
@@ -1918,7 +1861,7 @@ if(isset($_GET['id_mod_trac']) && $_GET['id_mod_trac']=='2' && $_GET['id_cli']!=
 
                       <div class="col-md-3">
                         <label for="x_card_code" class="control-label mb-1">CLIENT</label>
-                        <select name="id_cli" id="id_cli" onchange="xajax_selectionnerLicencePourClientModele(this.value, <?php echo $_GET['id_mod_trac'];?>),xajax_afficherRefDos(this.value, <?php echo $_GET['id_mod_trans'];?>, <?php echo $_GET['id_march'];?>), xajax_afficherFobMaxLicence(num_lic.value),xajax_selectionnerAVPourLicence(num_lic.value),xajax_afficherMaskAV(av.value)" class="form-control cc-exp" required>
+                        <select name="id_cli" id="id_cli" onchange="xajax_selectionnerLicencePourClientModele(this.value, <?php echo $_GET['id_mod_trac'];?>),xajax_afficherRefDos(this.value, <?php echo $_GET['id_mod_trans'];?>, <?php echo $_GET['id_march'];?>), xajax_afficherFobMaxLicence(num_lic.value)" class="form-control cc-exp" required>
                             <option value="<?php echo $_GET['id_cli'];?>"><?php echo $maClasse-> getNomClient($_GET['id_cli']);?></option>
                             <?php
                                 //$maClasse->selectionnerClientModeleLicence($modele['id_mod_lic']);
@@ -1949,7 +1892,7 @@ if(isset($_GET['id_mod_trac']) && $_GET['id_mod_trac']=='2' && $_GET['id_cli']!=
                       <div class="col-md-3">
                         <label for="x_card_code" class="control-label mb-1">LICENCE </label>
                         <!-- <input type="text" id="txtCountry" name="num_lic" autocomplete="off" class="form-control cc-exp" required> -->
-                        <select name="num_lic" id="num_lic" class="form-control cc-exp" onchange="" required>
+                        <select name="num_lic" id="num_lic" class="form-control cc-exp" onchange="xajax_afficherFobMaxLicence(this.value)" required>
                           <option></option>
                           <option value="UNDER VALUE">UNDER VALUE</option>
                             <?php
@@ -1958,6 +1901,11 @@ if(isset($_GET['id_mod_trac']) && $_GET['id_mod_trac']=='2' && $_GET['id_cli']!=
                         </select>
                       </div>
 
+                      <div class="col-md-3">
+                        <label for="x_card_code" class="control-label mb-1">BALANCE LICENCE</label>
+                        <span id="balance_fob"></span>
+                      </div>
+             
                       <input type="hidden" name="supplier" value="" class="form-control cc-exp">
                       <!-- <div class="col-md-3">
                         <label for="x_card_code" class="control-label mb-1">FOURNISSEUR</label>
@@ -1967,8 +1915,8 @@ if(isset($_GET['id_mod_trac']) && $_GET['id_mod_trac']=='2' && $_GET['id_cli']!=
              
                       <div class="col-md-3">
                         <label for="x_card_code" class="control-label mb-1">FOB DECLAREE</label>
-                        <!-- <span id="fob"></span> -->
-                        <input type="number" min="0" step="0.001" name="fob" class="form-control cc-exp">
+                        <span id="fob"></span>
+                        <!-- <input type="number" min="0" step="0.001" name="fob" class="form-control cc-exp"> -->
                       </div>
              
                       <div class="col-md-3">
@@ -1990,16 +1938,19 @@ if(isset($_GET['id_mod_trac']) && $_GET['id_mod_trac']=='2' && $_GET['id_cli']!=
                       </div>
 
                       <div class="col-md-3">
-                        <label for="x_card_code" class="control-label mb-1">WEIGHT</label>
-                        <input type="number" min="0" step="0.001" name="poids" class="form-control cc-exp">
+                        <label for="x_card_code" class="control-label mb-1">BALANCE WEIGHT</label>
+                        <span id="balance_poids"></span>
                       </div>
 
-                      <input type="hidden" name="cod" value="" class="form-control cc-exp"> 
-<!-- 
+                      <div class="col-md-3">
+                        <label for="x_card_code" class="control-label mb-1">WEIGHT</label>
+                        <span id="poids"></span>
+                      </div>
+
                       <div class="col-md-3">
                         <label for="x_card_code" class="control-label mb-1">CRF REF</label>
-                        <input type="text" name="cod" class="form-control cc-exp">
-                      </div> -->
+                        <span id="cod"></span>
+                      </div>
 
                           <?php
                         }else{
@@ -2008,7 +1959,7 @@ if(isset($_GET['id_mod_trac']) && $_GET['id_mod_trac']=='2' && $_GET['id_cli']!=
                       <div class="col-md-3">
                         <label for="x_card_code" class="control-label mb-1">LICENCE </label>
                         <input type="text" id="txtCountry" name="num_lic" autocomplete="off" class="form-control cc-exp" required>
-                        <!-- <select name="num_lic" id="num_lic" class="form-control cc-exp" onchange="xajax_afficherFobMaxLicence(this.value),xajax_selectionnerAVPourLicence(this.value),xajax_afficherMaskAV(av.value)" required>
+                        <!-- <select name="num_lic" id="num_lic" class="form-control cc-exp" onchange="xajax_afficherFobMaxLicence(this.value),xajax_selectionnerAVPourLicence(this.value)" required>
                           <option></option>
                           <option value="UNDER VALUE">UNDER VALUE</option>
                             <?php
