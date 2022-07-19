@@ -26419,9 +26419,10 @@
 																FROM dossier
 																WHERE num_lic = l.num_lic
 														))+1
-																		SELECT num_lic FROM dossier
-
-																		)
+														
+														OR l.num_lic NOT IN(
+															SELECT DISTINCT(num_lic) FROM dossier
+															)
 													)
 													AND DATE(CURRENT_DATE()) <= (
 															SELECT date_exp
