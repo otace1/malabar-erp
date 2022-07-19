@@ -7,7 +7,30 @@
 	while ($reponseClient = $requeteClient-> fetch()) {
 		$compteur++;
 
+		//Recuperation Colonne Import
+		$requeteColonne = $connexion-> prepare("SELECT * 
+													FROM affectation_colonne_client_modele_licence
+													WHERE id_mod_lic = 2
+														AND id_cli = ?");
+		$requeteColonne-> execute(array($reponseClient['id_cli']));
+		while($reponseColonne = $requeteColonne-> fetch()){
+
+			//Insertion Regime
+				//Route
+			if($reponseColonne['id_mod_trans']=='1' && $reponseColonne['id_col']=='16'){
+				$reponseColonne['rang'] += 0.01;
+				$requeteCreationColonne = $connexion-> prepare("INSERT INTO affectation_colonne_client_modele_licence(id_col, id_cli, id_mod_lic, id_mod_trans, rang, id_march) 
+															VALUES (?, ?, '2', '1', ?, NULL);");
+				$
+			}
+			//Fin Insertion Regime
+
+		}$requeteColonne-> closeCursor();
+		//FIN Recuperation Colonne Import
+
 		//Créer Utilisateur Client
+		
+
 		$requeteCreationUtilisateur = $connexion-> prepare("INSERT INTO utilisateur(nom_util, pseudo_util, 
 																		pass_util, id_role, tracking_delete, id_cli)
 																VALUES(?, ?, ?, ?, '0', ?)");

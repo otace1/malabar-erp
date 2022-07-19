@@ -1,4 +1,5 @@
 <?php
+	
 	function getMarchandiseLicence($num_lic){
 		include('connexion.php');
 		$entree['num_lic'] = $num_lic;
@@ -40,6 +41,8 @@
 		$reponse = $requete-> fetch();
 		if($reponse){
 			return $reponse['fob'];
+		}else{
+			return '0';
 		}
 	}
 
@@ -55,6 +58,8 @@
 		$reponse = $requete-> fetch();
 		if($reponse){
 			return $reponse['poids'];
+		}else{
+			return '0';
 		}
 	}
 
@@ -160,28 +165,28 @@
 	function selectionnerAVPourLicence($num_lic){
 		include('connexion.php');
 
-		$entree['num_lic'] = $num_lic;
-		//$entree['id_mod_lic'] = $id_mod_lic;
-		$option = "";
-		$objResponse = new xajaxResponse();
-		$bg = '';
-		$style = '';
-		$option = '<option></option>';
+		// $entree['num_lic'] = $num_lic;
+		// //$entree['id_mod_lic'] = $id_mod_lic;
+		// $option = "";
+		// $objResponse = new xajaxResponse();
+		// $bg = '';
+		// $style = '';
+		// $option = '<option></option>';
 
-		$requete = $connexion-> prepare("SELECT cod
-										FROM av
-										WHERE num_lic = ?
-										ORDER BY date_creat  DESC");
+		// $requete = $connexion-> prepare("SELECT cod
+		// 								FROM av
+		// 								WHERE num_lic = ?
+		// 								ORDER BY date_creat  DESC");
 
-		$requete-> execute(array($entree['num_lic']));
+		// $requete-> execute(array($entree['num_lic']));
 
-		while($reponse = $requete-> fetch()){
-			$option .= '<option value="'.$reponse['cod'].'">
-							'.$reponse['cod'].'
-						</option>';
-		}
-		$objResponse-> addAssign("av", "innerHTML", $option);
-		return $objResponse-> getXML();
+		// while($reponse = $requete-> fetch()){
+		// 	$option .= '<option value="'.$reponse['cod'].'">
+		// 					'.$reponse['cod'].'
+		// 				</option>';
+		// }
+		// $objResponse-> addAssign("av", "innerHTML", $option);
+		// return $objResponse-> getXML();
 	}
 
 	function selectionnerFacturePourClientModele($id_cli, $id_mod_lic){
@@ -778,7 +783,7 @@
 	}
 	
 	function afficherFobMaxLicence($num_lic){
-		include('connexion.php');
+		//include('connexion.php');
 		$licence = getDataLicence($num_lic);
 
 		if (isset($licence)) {
@@ -786,6 +791,7 @@
 				// $input = "<input name='fob' type='number' step='0.01' class='form-control cc-exp' max='2500' />";
 				$input = "<input name='fob' type='number' step='0.0001' class='form-control cc-exp' />";
 				$inputPoids = "<input name='poids' type='number' step='0.0001' class='form-control cc-exp' />";
+				$input2 = "<input type='number' class='form-control cc-exp' value='' disabled='disabled' />";
 				$input3 = "<input name='fret' type='number' step='0.01' class='form-control cc-exp' />";
 				$input4 = "<input name='assurance' type='number' step='0.01' class='form-control cc-exp' />";
 				$input5 = "<input name='autre_frais' type='number' step='0.01' class='form-control cc-exp' />";
