@@ -21858,28 +21858,42 @@
 			include('connexion.php');
 			$entree['id_dos'] = $id_dos;
 
-			$requete = $connexion-> prepare("SELECT *, 
-													entF.nom_ent AS nom_ent_front, 
-													entF.id_ent AS id_ent_front, 
-													entrepot_frontiere_dossier.date_in AS date_in_front, 
-													entrepot_frontiere_dossier.date_out AS date_out_front, 
-													dossier.id_dos AS id_dos
+			$requete = $connexion-> prepare("SELECT *
 												FROM dossier
-												LEFT JOIN frontiere
-													ON dossier.id_front = frontiere.id_front
-												LEFT JOIN regime
-													ON dossier.id_reg = regime.id_reg
-												LEFT JOIN entrepot_frontiere_dossier
-													ON dossier.id_dos = entrepot_frontiere_dossier.id_dos
-												LEFT JOIN entrepot entF
-													ON entrepot_frontiere_dossier.id_ent = entF.id_ent
-												WHERE dossier.id_dos = ?");
+												WHERE id_dos = ?");
 			$requete-> execute(array($entree['id_dos']));
 			$reponse=$requete-> fetch();
 			if($reponse){
 				return $reponse;
 			}
 		}
+
+		// public function getDossier($id_dos){
+		// 	include('connexion.php');
+		// 	$entree['id_dos'] = $id_dos;
+
+		// 	$requete = $connexion-> prepare("SELECT *, 
+		// 											entF.nom_ent AS nom_ent_front, 
+		// 											entF.id_ent AS id_ent_front, 
+		// 											entrepot_frontiere_dossier.date_in AS date_in_front, 
+		// 											entrepot_frontiere_dossier.date_out AS date_out_front, 
+		// 											dossier.id_dos AS id_dos
+		// 										FROM dossier
+		// 										LEFT JOIN frontiere
+		// 											ON dossier.id_front = frontiere.id_front
+		// 										LEFT JOIN regime
+		// 											ON dossier.id_reg = regime.id_reg
+		// 										LEFT JOIN entrepot_frontiere_dossier
+		// 											ON dossier.id_dos = entrepot_frontiere_dossier.id_dos
+		// 										LEFT JOIN entrepot entF
+		// 											ON entrepot_frontiere_dossier.id_ent = entF.id_ent
+		// 										WHERE dossier.id_dos = ?");
+		// 	$requete-> execute(array($entree['id_dos']));
+		// 	$reponse=$requete-> fetch();
+		// 	if($reponse){
+		// 		return $reponse;
+		// 	}
+		// }
 
 		public function getNomColonneClient($nom_champ, $id_cli, $id_mod_trans, $id_mod_lic){
 			include('connexion.php');
@@ -26419,7 +26433,7 @@
 																FROM dossier
 																WHERE num_lic = l.num_lic
 														))+1
-														
+
 														OR l.num_lic NOT IN(
 															SELECT DISTINCT(num_lic) FROM dossier
 															)
