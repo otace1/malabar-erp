@@ -3,7 +3,11 @@
 	require_once("maClasse.class.php");
 	$maClasse = new MaClasse();
 
-	if(!empty($_POST['num_lic'])){
+	if(!empty($_POST['num_lic']) && ($_POST['num_lic']=='UNDER VALUE')){
+		?>
+		<input type="text" name="balance_fob" value="2 500$" disabled class="form-control cc-exp">
+		<?php
+	}else if(!empty($_POST['num_lic'])){
 		$requete = $connexion-> prepare("SELECT SUM(fob) AS fob
 											FROM dossier
 											WHERE num_lic = ?");
