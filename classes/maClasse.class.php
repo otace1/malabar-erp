@@ -22311,12 +22311,12 @@
 				if ($id_cli == 869 && $id_march == 6 && $id_mod_lic == 2) {
 					$a = $this-> getTailleCompteur2($a+$step);
 					//$code = $this-> codePourClient($id_cli).'-'.$code_marchandise.'-'.date('y').'-'.$cod_mod_trans.$a;
-
-					if ($id_cli == 874) {
-						$code = $this-> codePourClient($id_cli).'-'.$code_marchandise.'21'.'-'.$cod_mod_trans.$code_2_marchandise.$a;
-					}else{
-						$code = $this-> codePourClient($id_cli).'-'.$code_marchandise.date('y').'-'.$cod_mod_trans.$code_2_marchandise.$a;
-					}
+					$code = $this-> codePourClient($id_cli).'-'.$code_marchandise.'-'.date('y').'-'.$cod_mod_trans.$a;
+					// if ($id_cli == 874) {
+					// 	$code = $this-> codePourClient($id_cli).'-'.$code_marchandise.'21'.'-'.$cod_mod_trans.$code_2_marchandise.$a;
+					// }else{
+					// 	$code = $this-> codePourClient($id_cli).'-'.$code_marchandise.date('y').'-'.$cod_mod_trans.$code_2_marchandise.$a;
+					// }
 
 				}else{
 					if ( ($id_cli == '845') && ($id_mod_lic == '1') && (date('Y')=='2021') && ($id_march == '13') ) {
