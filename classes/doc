@@ -1,0 +1,11 @@
+UPDATE table
+SET col = (
+SELECT other_col
+FROM other_table
+WHERE other_table.table_id = table.id
+);
+
+
+UPDATE table, other_table
+SET table.col = other_table.other_col
+WHERE table.id = other_table.table_id;

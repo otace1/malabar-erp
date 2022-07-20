@@ -1,6 +1,7 @@
 <?php
 	include('connexion.php');
 	$compteur = 0;
+	$insertColonne['rang'] = 0; 
 
 	$requeteClient = $connexion-> query("SELECT *
 											FROM client");
@@ -15,57 +16,93 @@
 		$requeteColonne-> execute(array($reponseClient['id_cli']));
 		while($reponseColonne = $requeteColonne-> fetch()){
 
+				$insertColonne['id_mod_trans'] = $reponseColonne['id_mod_trans'];
+
 			//Insertion Regime
 				//Route
 			if($reponseColonne['id_mod_trans']=='1' && $reponseColonne['id_col']=='16'){
-				$reponseColonne['rang'] += 0.01;
+				$insertColonne['rang'] = $reponseColonne['rang']+0.01;
+				$insertColonne['id_col'] = 118;
+
 				$requeteCreationColonne = $connexion-> prepare("INSERT INTO affectation_colonne_client_modele_licence(id_col, id_cli, id_mod_lic, id_mod_trans, rang, id_march) 
 															VALUES (?, ?, '2', '1', ?, NULL);");
-				$
+				$requeteCreationColonne-> execute(array($insertColonne['id_col'], $reponseColonne['id_cli'], $insertColonne['rang']));
+
+				$insertColonne['rang'] = $reponseColonne['rang']+0.02;
+				$insertColonne['id_col'] = 113;
+
+				$requeteCreationColonne = $connexion-> prepare("INSERT INTO affectation_colonne_client_modele_licence(id_col, id_cli, id_mod_lic, id_mod_trans, rang, id_march) 
+															VALUES (?, ?, '2', '1', ?, NULL);");
+				$requeteCreationColonne-> execute(array($insertColonne['id_col'], $reponseColonne['id_cli'], $insertColonne['rang']));
+			}
+				//Air
+			if(($reponseColonne['id_mod_trans']=='3'||$reponseColonne['id_mod_trans']=='4') && ($reponseColonne['id_col']=='47' || $reponseColonne['id_col']=='94')){
+				$insertColonne['rang'] = $reponseColonne['rang']+0.01;
+				$insertColonne['id_col'] = 118;
+				$insertColonne['id_mod_trans'] = $reponseColonne['id_mod_trans'];
+
+				$requeteCreationColonne = $connexion-> prepare("INSERT INTO affectation_colonne_client_modele_licence(id_col, id_cli, id_mod_lic, id_mod_trans, rang, id_march) 
+															VALUES (?, ?, '2', ?, ?, NULL);");
+				$requeteCreationColonne-> execute(array($insertColonne['id_col'], $reponseColonne['id_cli'], $insertColonne['id_mod_trans'], $insertColonne['rang']));
+
+				$insertColonne['rang'] = $reponseColonne['rang']+0.02;
+				$insertColonne['id_col'] = 113;
+
+				$requeteCreationColonne = $connexion-> prepare("INSERT INTO affectation_colonne_client_modele_licence(id_col, id_cli, id_mod_lic, id_mod_trans, rang, id_march) 
+															VALUES (?, ?, '2', ?, ?, NULL);");
+				$requeteCreationColonne-> execute(array($insertColonne['id_col'], $reponseColonne['id_cli'], $insertColonne['id_mod_trans'], $insertColonne['rang']));
 			}
 			//Fin Insertion Regime
+
+			//Insertion Border warehouse
+			if($reponseColonne['id_col']=='114'){
+				$insertColonne['rang'] = $reponseColonne['rang']+0.01;
+				$insertColonne['id_col'] = 115;
+
+				$requeteCreationColonne = $connexion-> prepare("INSERT INTO affectation_colonne_client_modele_licence(id_col, id_cli, id_mod_lic, id_mod_trans, rang, id_march) 
+															VALUES (?, ?, '2', ?, ?, NULL);");
+				$requeteCreationColonne-> execute(array($insertColonne['id_col'], $reponseColonne['id_cli'], $insertColonne['id_mod_trans'], $insertColonne['rang']));
+			}
+			//Fin Insertion Border warehouse
+
+			//Insertion Border Arrival Date
+			if($reponseColonne['id_col']=='116'){
+				$insertColonne['rang'] = $reponseColonne['rang']-0.02;
+				$insertColonne['id_col'] = 114;
+
+				$requeteCreationColonne = $connexion-> prepare("INSERT INTO affectation_colonne_client_modele_licence(id_col, id_cli, id_mod_lic, id_mod_trans, rang, id_march) 
+															VALUES (?, ?, '2', ?, ?, NULL);");
+				$requeteCreationColonne-> execute(array($insertColonne['id_col'], $reponseColonne['id_cli'], $insertColonne['id_mod_trans'], $insertColonne['rang']));
+			}
+			//Fin Insertion Border Arrival Date
+
+			//Insertion Border warehouse arrival date
+			if($reponseColonne['id_col']=='117'){
+				$insertColonne['rang'] = $reponseColonne['rang']-0.01;
+				$insertColonne['id_col'] = 116;
+
+				$requeteCreationColonne = $connexion-> prepare("INSERT INTO affectation_colonne_client_modele_licence(id_col, id_cli, id_mod_lic, id_mod_trans, rang, id_march) 
+															VALUES (?, ?, '2', ?, ?, NULL);");
+				$requeteCreationColonne-> execute(array($insertColonne['id_col'], $reponseColonne['id_cli'], $insertColonne['id_mod_trans'], $insertColonne['rang']));
+			}
+			//Fin Insertion Border warehouse arrival date
+
+			//Insertion Border Arrival Date
+			if($reponseColonne['id_col']=='113'){
+				$insertColonne['rang'] = $reponseColonne['rang']+0.01;
+				$insertColonne['id_col'] = 114;
+
+				$requeteCreationColonne = $connexion-> prepare("INSERT INTO affectation_colonne_client_modele_licence(id_col, id_cli, id_mod_lic, id_mod_trans, rang, id_march) 
+															VALUES (?, ?, '2', ?, ?, NULL);");
+				$requeteCreationColonne-> execute(array($insertColonne['id_col'], $reponseColonne['id_cli'], $insertColonne['id_mod_trans'], $insertColonne['rang']));
+			}
+			//Fin Insertion Border Arrival Date
 
 		}$requeteColonne-> closeCursor();
 		//FIN Recuperation Colonne Import
 
-		//Créer Utilisateur Client
-		
-
-		$requeteCreationUtilisateur = $connexion-> prepare("INSERT INTO utilisateur(nom_util, pseudo_util, 
-																		pass_util, id_role, tracking_delete, id_cli)
-																VALUES(?, ?, ?, ?, '0', ?)");
-
-		for ($s = '', $i = 0, $z = strlen($a = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!(!)-$=:;')-1; $i != 10; $x = rand(0,$z), $s .= $a{$x}, $i++); 
-
-		$entree['pass_util'] = $s;
-		echo '<br>----<br>'.$compteur.'<br>Client = '.$reponseClient['nom_cli'].'<br>Code = '.$reponseClient['code_cli'].'<br> password = '.$s;
-
-		$requeteCreationUtilisateur-> execute(array($reponseClient['nom_cli'], $reponseClient['code_cli'], $entree['pass_util'], '4', $reponseClient['id_cli']));
-
-		$requeteCreationUtilisateur = $connexion-> prepare("SELECT * FROM utilisateur 
-																WHERE pseudo_util = ?
-																	AND pass_util = ?");
-		$requeteCreationUtilisateur-> execute(array($reponseClient['code_cli'], $entree['pass_util']));
-		$reponseCreationUtilisateur = $requeteCreationUtilisateur-> fetch();
-		echo '<br>ID UTIL = '.$reponseCreationUtilisateur['id_util'];
-		//FIN Créer Utilisateur Client
-
-		//Affectation Modele Licence
-		$requeteModeleLicence = $connexion-> prepare("SELECT * 
-														FROM affectation_client_modele_licence
-														WHERE id_cli = ?
-															AND id_etat = '1'");
-		$requeteModeleLicence-> execute(array($reponseClient['id_cli']));
-		while ($reponseModeleLicence = $requeteModeleLicence-> fetch()) {
-			
-			//Affectation Utilisateur Client
-			$requeteAffectationClientutilisateur = $connexion-> prepare("INSERT INTO affectation_utilisateur_client(id_util, id_cli, id_role, actif) VALUES(?, ?, '4', '1')");
-			$requeteAffectationClientutilisateur-> execute(array($reponseCreationUtilisateur['id_util'], $reponseClient['id_cli']));
-			//FIN Affectation Utilisateur Client
-
-		}$requeteModeleLicence-> closeCursor();
-		//Fin Affectation Modele Licence
-
 
 	}$requeteClient-> closeCursor();
+
+	//delete from affectation_colonne_client_modele_licence where id_col = 118 or id_col = 113 or id_col = 115 or id_col = 116 or id_col = 114 
 ?>
