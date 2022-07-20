@@ -1585,9 +1585,11 @@ if(isset($_GET['id_mod_trac']) && $_GET['id_mod_trac']=='2' && $_GET['id_cli']!=
                             type: "POST",
                             url: "../classes/get_balance_licence.php",
                             data: 'num_lic='+val,
+                            dataType:"json",
                             success:function(data){
-                              //console.log(data);
-                              $('#balance_fob_licence').html(data);
+                              //console.log(data.balance_fob_licence);
+                              $('#balance_fob_licence').html(data.balance_fob_licence);
+                              $('#balance_poids_licence').html(data.balance_poids_licence);
                             }
 
                           });
@@ -1600,8 +1602,9 @@ if(isset($_GET['id_mod_trac']) && $_GET['id_mod_trac']=='2' && $_GET['id_cli']!=
                             data: 'num_lic='+val,
                             dataType:"json",
                             success:function(data){
-                              console.log(data.fob);
+                              //console.log(data.fob);
                               $('#fob').html(data.fob);
+                              $('#poids').html(data.poids);
                               $('#cod').html(data.cod);
                             }
 
@@ -1654,8 +1657,16 @@ if(isset($_GET['id_mod_trac']) && $_GET['id_mod_trac']=='2' && $_GET['id_cli']!=
                       </div>
 
                       <div class="col-md-3">
+                        <label for="x_card_code" class="control-label mb-1">BALANCE WEIGHT</label>
+                        
+                        <!-- <input type="text" id="balance_fob_licence" name="balance_fob" class="form-control cc-exp"> -->
+                        <span id="balance_poids_licence" class="balance_poids_licence" name="balance_poids_licence"></span>
+                      </div>
+             
+                      <div class="col-md-3">
                         <label for="x_card_code" class="control-label mb-1">WEIGHT</label>
-                        <input type="number" min="0" step="0.001" name="poids" class="form-control cc-exp">
+                        <!-- <input type="number" min="0" step="0.001" name="poids" class="form-control cc-exp"> -->
+                        <span id="poids"></span>
                       </div>
 
                       <!-- <input type="hidden" name="cod" value="" class="form-control cc-exp">  -->
@@ -1709,13 +1720,13 @@ if(isset($_GET['id_mod_trac']) && $_GET['id_mod_trac']=='2' && $_GET['id_cli']!=
 
                       <div class="col-md-3">
                         <label for="x_card_code" class="control-label mb-1">AUTRE FRAIS</label>
-                        <!--<span id="autre_frais"></span>-->
                         <input type="number" min="0" step="0.001" name="autre_frais" class="form-control cc-exp">
                       </div>
 
                       <div class="col-md-3">
                         <label for="x_card_code" class="control-label mb-1">WEIGHT</label>
                         <input type="number" min="0" step="0.001" name="poids" class="form-control cc-exp">
+                        <!-- <span id="poids"></span> -->
                       </div>
 
                       <div class="col-md-3">
