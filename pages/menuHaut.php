@@ -1,5 +1,8 @@
 
 <body class="hold-transition sidebar-mini layout-fixed layout-navbar-fixed hold-transition pace-success">
+  <div id="loading">
+    <img id="loading-image" src="ajax-loader.gif" alt="Loading..." />
+  </div>
 <div class="wrapper small">
   <!-- Navbar -->
   <nav class="main-header navbar navbar-expand navbar-white navbar-light bg-danger" >

@@ -1,19 +1,18 @@
 <?php
-  session_start();
+
+session_start();
 
   if (!$_SESSION) {
     header("Location: ../deconnexion.php");
   }
 
   include('../classes/maClasse.class.php');
-
   $maClasse = new MaClasse();
 
   require_once('../classes/xajax/xajax.inc.php');
   require_once('../classes/fonction.php');
-  
+
   $xajax = new xajax();
-  //$xajax-> debugOn();
 
   $xajax-> registerFunction("selectionnerLicencePourClientModele");
   $xajax-> registerFunction("afficherFobMaxLicence");
@@ -28,6 +27,7 @@
   $xajax-> registerFunction("afficherPoidsLicenceConsommable");
 
   $xajax-> processRequests();
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -220,6 +220,31 @@
         color: #212529;
         background-color: orange;
       }
+
+
+      #loading {
+        position: fixed;
+        display: block;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        text-align: center;
+        opacity: 0.8;
+        background-color: #fff;
+        z-index: 99;
+      }
+
+      #loading-image {
+        position: absolute;
+        /*top: 100px;*/
+        /*left: 240px;*/
+        margin-left: auto;
+        margin-right: auto;
+        /*text-align: center;*/
+        z-index: 100;
+      }
+
 
     </style>
     <script type="text/javascript">

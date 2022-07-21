@@ -1,5 +1,4 @@
-
-  <!-- /.content-wrapper -->
+<!-- /.content-wrapper -->
   <footer class="main-footer">
     <div class="float-right d-none d-sm-block">
       <b>Version</b> 0.5
@@ -43,6 +42,11 @@
             }
         });
     });
+</script>
+<script>
+  $(window).load(function() {
+    $('#loading').hide();
+  });
 </script>
 
 </body>

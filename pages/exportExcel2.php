@@ -1152,7 +1152,38 @@ while ($reponseModeTransport = $requeteModeTransport-> fetch()) {
 												          )
 												      )
 													,
-													d.statut) AS statut,
+													IF(d.id_mod_lic='1', 
+														IF(d.load_date IS NOT NULL AND d.ceec_in IS NULL,
+															'LOADED',
+															IF(d.ceec_in IS NOT NULL AND d.ceec_out IS NULL, 'AT CEEC',
+																IF(d.ceec_out IS NOT NULL AND d.min_div_in IS NULL, 'CEEC OUT',
+																	IF(d.min_div_in IS NOT NULL AND d.min_div_out IS NULL, 'AT MINE DIVISION',
+																		IF(d.min_div_out IS NOT NULL AND d.ref_decl IS NULL, 'MINE DIVISION OUT',
+																			IF(d.ref_decl IS NOT NULL AND d.ref_liq IS NULL, 'DECLARATION',
+																				IF(d.ref_liq IS NOT NULL AND d.ref_quit IS NULL, 'LIQUIDATED',
+																					IF(d.ref_quit IS NOT NULL AND d.gov_in IS  NULL, 'DGDA OUT',
+																						IF(d.gov_in IS NOT NULL AND d.gov_out IS NULL, 'AT GOVERNOR\'S OFFICE',
+																							IF(d.gov_out IS NOT NULL AND d.dispatch_date IS NULL, 'GOVERNOR\'S OFFICE OUT',
+																								IF(d.dispatch_date IS NOT NULL AND d.klsa_arriv IS NULL,
+																									'DISPATCHED', 
+																										IF(d.klsa_arriv IS NOT NULL AND d.end_form IS NULL, 'AT BORDER',
+																											IF(d.end_form IS NOT NULL AND d.exit_drc IS NULL, 'UNDER FORMALITIES',
+																												IF(d.exit_drc IS NOT NULL, 'EXIT DRC', '')
+																												)
+																											)
+																									)
+																								)
+																							)
+																						)
+																					)
+																				)
+																			)
+																		)
+																	)
+																)
+															)
+														, d.statut )
+												) AS statut,
 
 												IF(d.id_mod_trans='1' AND d.id_mod_lic='2', 
 													IF(d.klsa_arriv IS NOT NULL AND d.wiski_arriv IS NULL,'ARRIVED AT K\'LSA', 
