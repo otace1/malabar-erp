@@ -1,6 +1,6 @@
 
 <?php
-if($_GET['id_cli'] == 869 && $_GET['id_march'] == 6){
+if($_GET['id_cli'] == 869 && $_GET['id_mod_trac'] == 2){
 
   $modele = $maClasse-> getElementModeleLicence($_GET['id_mod_trac']);
 ?>
