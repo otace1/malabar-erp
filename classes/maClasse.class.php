@@ -11080,6 +11080,33 @@
 					</span>
 				</td>
 				<?php
+				}else if ($reponse['id_col'] == '42' && $id_mod_lic=='1') {
+					// Status
+					$bgStatuts = '';
+					if ( ($this-> getDataRow($reponse['champ_col'], $id_dos) == 'CLEARING COMPLETED') || ($this-> getDataRow($reponse['champ_col'], $id_dos) == 'EXIT DRC') ) {
+						$bgStatuts = 'bg bg-primary';
+					}
+				?>
+				<td class=" <?php echo $bg.$bgStatuts;?>" style="border: 1px solid black; text-align: center;"><span class="badge badge-dark">
+					<?php
+					echo $statut;
+					/*
+					?>
+					<select name="<?php echo $reponse['champ_col'];?>_<?php echo $compteur;?>" <?php echo $this-> getDataUtilisateur($_SESSION['id_util'])['tracking_enab'];?>>
+						<option value="<?php echo $this-> getDataRow($reponse['champ_col'], $id_dos);?>">
+							<?php echo $this-> getDataRow($reponse['champ_col'], $id_dos);?>
+						</option>
+						<option></option>
+						<?php
+							$this-> selectionnerStatusModeleLicence($id_mod_lic);
+						?>
+					</select>
+					<?php 
+					*/
+					//echo $this-> getDifferenceDate($this-> getDataRow('gov_out', $id_dos), $this-> getDataRow('gov_in', $id_dos));?>
+					</span>
+				</td>
+				<?php
 				}else if ($reponse['id_col'] == '42') {
 					// Status
 					$bgStatuts = '';
@@ -16529,7 +16556,39 @@
 													          )
 													      )
 														,
-														d.statut) AS statut,
+														IF(d.id_mod_lic='1', 
+															IF(d.load_date IS NOT NULL AND d.ceec_in IS NULL,
+																'LOADED',
+																IF(d.ceec_in IS NOT NULL AND d.ceec_out IS NULL, 'AT CEEC',
+																	IF(d.ceec_out IS NOT NULL AND d.min_div_in IS NULL, 'CEEC OUT',
+																		IF(d.min_div_in IS NOT NULL AND d.min_div_out IS NULL, 'AT MINE DIVISION',
+																			IF(d.min_div_out IS NOT NULL AND d.ref_decl IS NULL, 'MINE DIVISION OUT',
+																				IF(d.ref_decl IS NOT NULL AND d.ref_liq IS NULL, 'DECLARATION',
+																					IF(d.ref_liq IS NOT NULL AND d.ref_quit IS NULL, 'LIQUIDATED',
+																						IF(d.ref_quit IS NOT NULL AND d.gov_in IS  NULL, 'DGDA OUT',
+																							IF(d.gov_in IS NOT NULL AND d.gov_out IS NULL, 'AT GOVERNOR\'S OFFICE',
+																								IF(d.gov_out IS NOT NULL AND d.dispatch_date IS NULL, 'GOVERNOR\'S OFFICE OUT',
+																									IF(d.dispatch_date IS NOT NULL AND d.klsa_arriv IS NULL,
+																										'DISPATCHED', 
+																											IF(d.klsa_arriv IS NOT NULL AND d.end_form IS NULL, 'AT BORDER',
+																												IF(d.end_form IS NOT NULL AND d.exit_drc IS NULL, 'UNDER FORMALITIES',
+																													IF(d.exit_drc IS NOT NULL, 'EXIT DRC', '')
+																													)
+																												)
+																										)
+																									)
+																								)
+																							)
+																						)
+																					)
+																				)
+																			)
+																		)
+																	)
+																)
+															, d.statut )
+													) AS statut,
+
 													IF(d.id_mod_trans='1' AND d.id_mod_lic='2', 
 														IF(d.klsa_arriv IS NOT NULL AND d.wiski_arriv IS NULL,'ARRIVED AT K\'LSA', 
 															IF(d.wiski_arriv IS NOT NULL AND d.dispatch_klsa IS NULL, 'AT WISKI',
@@ -17179,7 +17238,38 @@
 													          )
 													      )
 														,
-														d.statut) AS statut,
+														IF(d.id_mod_lic='1', 
+															IF(d.load_date IS NOT NULL AND d.ceec_in IS NULL,
+																'LOADED',
+																IF(d.ceec_in IS NOT NULL AND d.ceec_out IS NULL, 'AT CEEC',
+																	IF(d.ceec_out IS NOT NULL AND d.min_div_in IS NULL, 'CEEC OUT',
+																		IF(d.min_div_in IS NOT NULL AND d.min_div_out IS NULL, 'AT MINE DIVISION',
+																			IF(d.min_div_out IS NOT NULL AND d.ref_decl IS NULL, 'MINE DIVISION OUT',
+																				IF(d.ref_decl IS NOT NULL AND d.ref_liq IS NULL, 'DECLARATION',
+																					IF(d.ref_liq IS NOT NULL AND d.ref_quit IS NULL, 'LIQUIDATED',
+																						IF(d.ref_quit IS NOT NULL AND d.gov_in IS  NULL, 'DGDA OUT',
+																							IF(d.gov_in IS NOT NULL AND d.gov_out IS NULL, 'AT GOVERNOR\'S OFFICE',
+																								IF(d.gov_out IS NOT NULL AND d.dispatch_date IS NULL, 'GOVERNOR\'S OFFICE OUT',
+																									IF(d.dispatch_date IS NOT NULL AND d.klsa_arriv IS NULL,
+																										'DISPATCHED', 
+																											IF(d.klsa_arriv IS NOT NULL AND d.end_form IS NULL, 'AT BORDER',
+																												IF(d.end_form IS NOT NULL AND d.exit_drc IS NULL, 'UNDER FORMALITIES',
+																													IF(d.exit_drc IS NOT NULL, 'EXIT DRC', '')
+																													)
+																												)
+																										)
+																									)
+																								)
+																							)
+																						)
+																					)
+																				)
+																			)
+																		)
+																	)
+																)
+															, d.statut )
+													) AS statut,
 
 													IF(d.id_mod_trans='1' AND d.id_mod_lic='2', 
 														IF(d.klsa_arriv IS NOT NULL AND d.wiski_arriv IS NULL,'ARRIVED AT K\'LSA', 
