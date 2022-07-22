@@ -1,124 +1,5 @@
 <?php
-if ($_GET['id_mod_lic']=='2' && $_GET['id_mod_trans']=='1' && $_GET['statut']=='AWAITING CRF/AD/INSURANCE') {
-  ?>
-  "columns":[
-          {"data":"ref_dos"},
-          {"data":"date_preal"},
-          {"data":"delai_prealerte"},
-          {"data":"ref_fact"},
-          {"data":"horse"},
-          {"data":"trailer_1"},
-          {"data":"trailer_2"},
-          {"data":"commodity"},
-          {"data":"supplier"},
-          {"data":"po_ref"},
-          {"data":"poids"},
-          {"data":"statut"}
-        ]
-  <?php
-}else if ($_GET['id_mod_lic']=='2' && $_GET['id_mod_trans']=='1' && $_GET['statut']=='AWAITING CRF/AD') {
-  ?>
-  "columns":[
-          {"data":"ref_dos"},
-          {"data":"date_preal"},
-          {"data":"delai_prealerte"},
-          {"data":"ref_fact"},
-          {"data":"horse"},
-          {"data":"trailer_1"},
-          {"data":"trailer_2"},
-          {"data":"commodity"},
-          {"data":"supplier"},
-          {"data":"po_ref"},
-          {"data":"poids"},
-          {"data":"statut"}
-        ]
-  <?php
-}else if ($_GET['id_mod_lic']=='2' && $_GET['id_mod_trans']=='1' && $_GET['statut']=='AWAITING CRF/INSURANCE') {
-  ?>
-  "columns":[
-          {"data":"ref_dos"},
-          {"data":"date_preal"},
-          {"data":"delai_prealerte"},
-          {"data":"ref_fact"},
-          {"data":"horse"},
-          {"data":"trailer_1"},
-          {"data":"trailer_2"},
-          {"data":"commodity"},
-          {"data":"supplier"},
-          {"data":"po_ref"},
-          {"data":"poids"},
-          {"data":"statut"}
-        ]
-  <?php
-}else if ($_GET['id_mod_lic']=='2' && $_GET['id_mod_trans']=='1' && $_GET['statut']=='AWAITING CRF') {
-  ?>
-  "columns":[
-          {"data":"ref_dos"},
-          {"data":"date_preal"},
-          {"data":"delai_prealerte"},
-          {"data":"ref_fact"},
-          {"data":"horse"},
-          {"data":"trailer_1"},
-          {"data":"trailer_2"},
-          {"data":"commodity"},
-          {"data":"supplier"},
-          {"data":"po_ref"},
-          {"data":"poids"},
-          {"data":"statut"}
-        ]
-  <?php
-}else if ($_GET['id_mod_lic']=='2' && $_GET['id_mod_trans']=='1' && $_GET['statut']=='AWAITING AD/INSURANCE') {
-  ?>
-  "columns":[
-          {"data":"ref_dos"},
-          {"data":"date_preal"},
-          {"data":"delai_prealerte"},
-          {"data":"ref_fact"},
-          {"data":"horse"},
-          {"data":"trailer_1"},
-          {"data":"trailer_2"},
-          {"data":"commodity"},
-          {"data":"supplier"},
-          {"data":"po_ref"},
-          {"data":"poids"},
-          {"data":"statut"}
-        ]
-  <?php
-}else if ($_GET['id_mod_lic']=='2' && $_GET['id_mod_trans']=='1' && $_GET['statut']=='AWAITING AD') {
-  ?>
-  "columns":[
-          {"data":"ref_dos"},
-          {"data":"date_preal"},
-          {"data":"delai_prealerte"},
-          {"data":"ref_fact"},
-          {"data":"horse"},
-          {"data":"trailer_1"},
-          {"data":"trailer_2"},
-          {"data":"commodity"},
-          {"data":"supplier"},
-          {"data":"po_ref"},
-          {"data":"poids"},
-          {"data":"statut"}
-        ]
-  <?php
-}else if ($_GET['id_mod_lic']=='2' && $_GET['id_mod_trans']=='1' && $_GET['statut']=='AWAITING INSURANCE') {
-  ?>
-  "columns":[
-          {"data":"ref_dos"},
-          {"data":"date_preal"},
-          {"data":"delai_prealerte"},
-          {"data":"ref_fact"},
-          {"data":"horse"},
-          {"data":"trailer_1"},
-          {"data":"trailer_2"},
-          {"data":"commodity"},
-          {"data":"supplier"},
-          {"data":"po_ref"},
-          {"data":"poids"},
-          {"data":"statut"}
-        ]
-  <?php
-}else if ($_GET['id_mod_lic']=='2' && $_GET['id_mod_trans']=='1' && $_GET['statut']=='UNDER PREPARATION') {
+if ($_GET['id_mod_lic']=='2' && $_GET['id_mod_trans']=='1') {
   ?>
   "columns":[
           {"data":"ref_dos"},
@@ -135,17 +16,26 @@ if ($_GET['id_mod_lic']=='2' && $_GET['id_mod_trans']=='1' && $_GET['statut']=='
           {"data":"date_crf"},
           {"data":"date_ad"},
           {"data":"date_assurance"},
+          {"data":"frontiere"},
           {"data":"klsa_arriv"},
+          {"data":"entrepot_frontiere"},
           {"data":"wiski_arriv"},
           {"data":"dispatch_klsa"},
           {"data":"bond_warehouse"},
           {"data":"warehouse_arriv"},
           {"data":"warehouse_dep"},
           {"data":"dispatch_deliv"},
+          {"data":"ref_decl"},
+          {"data":"date_decl"},
+          {"data":"ref_liq"},
+          {"data":"date_liq"},
+          {"data":"ref_quit"},
+          {"data":"date_quit"},
+          {"data":"dgda_out"},
           {"data":"statut"}
         ]
   <?php
-}else if ($_GET['id_mod_lic']=='2' && $_GET['id_mod_trans']=='1' && $_GET['statut']=='AWAITING LIQUIDATION') {
+}else if ($_GET['id_mod_lic']=='2' && $_GET['id_mod_trans']!='1') {
   ?>
   "columns":[
           {"data":"ref_dos"},
@@ -153,8 +43,6 @@ if ($_GET['id_mod_lic']=='2' && $_GET['id_mod_trans']=='1' && $_GET['statut']=='
           {"data":"delai_prealerte"},
           {"data":"ref_fact"},
           {"data":"horse"},
-          {"data":"trailer_1"},
-          {"data":"trailer_2"},
           {"data":"commodity"},
           {"data":"supplier"},
           {"data":"po_ref"},
@@ -162,93 +50,9 @@ if ($_GET['id_mod_lic']=='2' && $_GET['id_mod_trans']=='1' && $_GET['statut']=='
           {"data":"date_crf"},
           {"data":"date_ad"},
           {"data":"date_assurance"},
+          {"data":"frontiere"},
           {"data":"klsa_arriv"},
-          {"data":"wiski_arriv"},
-          {"data":"dispatch_klsa"},
-          {"data":"bond_warehouse"},
-          {"data":"warehouse_arriv"},
-          {"data":"warehouse_dep"},
-          {"data":"dispatch_deliv"},
-          {"data":"ref_decl"},
-          {"data":"date_decl"},
-          {"data":"delai_decl"},
-          {"data":"statut"}
-        ]
-  <?php
-}else if ($_GET['id_mod_lic']=='2' && $_GET['id_mod_trans']=='1' && $_GET['statut']=='AWAITING QUITTANCE') {
-  ?>
-  "columns":[
-          {"data":"ref_dos"},
-          {"data":"date_preal"},
-          {"data":"delai_prealerte"},
-          {"data":"ref_fact"},
-          {"data":"horse"},
-          {"data":"trailer_1"},
-          {"data":"trailer_2"},
-          {"data":"commodity"},
-          {"data":"supplier"},
-          {"data":"po_ref"},
-          {"data":"poids"},
-          {"data":"klsa_arriv"},
-          {"data":"wiski_arriv"},
-          {"data":"dispatch_klsa"},
-          {"data":"bond_warehouse"},
-          {"data":"warehouse_arriv"},
-          {"data":"warehouse_dep"},
-          {"data":"dispatch_deliv"},
-          {"data":"ref_decl"},
-          {"data":"date_decl"},
-          {"data":"ref_liq"},
-          {"data":"date_liq"},
-          {"data":"delai_liq"},
-          {"data":"statut"}
-        ]
-  <?php
-}else if ($_GET['id_mod_lic']=='2' && $_GET['id_mod_trans']=='1' && $_GET['statut']=='AWAITING BAE/BS') {
-  ?>
-  "columns":[
-          {"data":"ref_dos"},
-          {"data":"date_preal"},
-          {"data":"delai_prealerte"},
-          {"data":"ref_fact"},
-          {"data":"horse"},
-          {"data":"trailer_1"},
-          {"data":"trailer_2"},
-          {"data":"commodity"},
-          {"data":"supplier"},
-          {"data":"po_ref"},
-          {"data":"poids"},
-          {"data":"klsa_arriv"},
-          {"data":"wiski_arriv"},
-          {"data":"dispatch_klsa"},
-          {"data":"bond_warehouse"},
-          {"data":"warehouse_arriv"},
-          {"data":"warehouse_dep"},
-          {"data":"dispatch_deliv"},
-          {"data":"ref_decl"},
-          {"data":"date_decl"},
-          {"data":"ref_liq"},
-          {"data":"date_liq"},
-          {"data":"ref_quit"},
-          {"data":"date_quit"},
-          {"data":"delai_quit"},
-          {"data":"statut"}
-        ]
-  <?php
-}else if ($_GET['id_mod_lic']=='2' && $_GET['id_mod_trans']=='1' && $_GET['statut']=='CLEARING COMPLETED') {
-  ?>
-  "columns":[
-          {"data":"ref_dos"},
-          {"data":"date_preal"},
-          {"data":"ref_fact"},
-          {"data":"horse"},
-          {"data":"trailer_1"},
-          {"data":"trailer_2"},
-          {"data":"commodity"},
-          {"data":"supplier"},
-          {"data":"po_ref"},
-          {"data":"poids"},
-          {"data":"klsa_arriv"},
+          {"data":"entrepot_frontiere"},
           {"data":"wiski_arriv"},
           {"data":"dispatch_klsa"},
           {"data":"bond_warehouse"},
@@ -265,711 +69,90 @@ if ($_GET['id_mod_lic']=='2' && $_GET['id_mod_trans']=='1' && $_GET['statut']=='
           {"data":"statut"}
         ]
   <?php
-}else if ($_GET['id_mod_lic']=='2' && ($_GET['id_mod_trans']=='3' || $_GET['id_mod_trans']=='4') && $_GET['statut']=='CLEARING COMPLETED') {
-  ?>
-  "columns":[
-          {"data":"ref_dos"},
-          {"data":"date_preal"},
-          {"data":"ref_fact"},
-          {"data":"horse"},
-          {"data":"commodity"},
-          {"data":"supplier"},
-          {"data":"po_ref"},
-          {"data":"poids"},
-          {"data":"dgda_out"},
-          {"data":"statut"}
-        ]
-  <?php
-}else if ($_GET['id_mod_lic']=='2' && ($_GET['id_mod_trans']=='3' || $_GET['id_mod_trans']=='4') && $_GET['statut']=='AWAITING DOCUMENTS') {
-  ?>
-  "columns":[
-          {"data":"ref_dos"},
-          {"data":"date_preal"},
-          {"data":"delai_prealerte"},
-          {"data":"ref_fact"},
-          {"data":"horse"},
-          {"data":"commodity"},
-          {"data":"supplier"},
-          {"data":"po_ref"},
-          {"data":"poids"},
-          {"data":"statut"}
-        ]
-  <?php
-}else if ($_GET['id_mod_lic']=='2' && ($_GET['id_mod_trans']=='3' || $_GET['id_mod_trans']=='4') && $_GET['statut']=='UNDER PREPARATION') {
-  ?>
-  "columns":[
-          {"data":"ref_dos"},
-          {"data":"date_preal"},
-          {"data":"delai_prealerte"},
-          {"data":"ref_fact"},
-          {"data":"horse"},
-          {"data":"commodity"},
-          {"data":"supplier"},
-          {"data":"po_ref"},
-          {"data":"poids"},
-          {"data":"statut"}
-        ]
-  <?php
-}else if ($_GET['id_mod_lic']=='2' && ($_GET['id_mod_trans']=='3' || $_GET['id_mod_trans']=='4') && $_GET['statut']=='AWAITING AD') {
-  ?>
-  "columns":[
-          {"data":"ref_dos"},
-          {"data":"date_preal"},
-          {"data":"delai_prealerte"},
-          {"data":"ref_fact"},
-          {"data":"horse"},
-          {"data":"commodity"},
-          {"data":"supplier"},
-          {"data":"po_ref"},
-          {"data":"poids"},
-          {"data":"statut"}
-        ]
-  <?php
-}else if ($_GET['id_mod_lic']=='2' && ($_GET['id_mod_trans']=='3' || $_GET['id_mod_trans']=='4') && $_GET['statut']=='AWAITING ASSURANCE') {
-  ?>
-  "columns":[
-          {"data":"ref_dos"},
-          {"data":"date_preal"},
-          {"data":"delai_prealerte"},
-          {"data":"ref_fact"},
-          {"data":"horse"},
-          {"data":"commodity"},
-          {"data":"supplier"},
-          {"data":"po_ref"},
-          {"data":"poids"},
-          {"data":"statut"}
-        ]
-  <?php
-}else if ($_GET['id_mod_lic']=='2' && ($_GET['id_mod_trans']=='3' || $_GET['id_mod_trans']=='4') && $_GET['statut']=='AWAITING CRF') {
-  ?>
-  "columns":[
-          {"data":"ref_dos"},
-          {"data":"date_preal"},
-          {"data":"delai_prealerte"},
-          {"data":"ref_fact"},
-          {"data":"horse"},
-          {"data":"commodity"},
-          {"data":"supplier"},
-          {"data":"po_ref"},
-          {"data":"poids"},
-          {"data":"statut"}
-        ]
-  <?php
-}else if ($_GET['id_mod_lic']=='2' && ($_GET['id_mod_trans']=='3' || $_GET['id_mod_trans']=='4') && $_GET['statut']=='UNDER PROCESS AT CUSTOMS') {
-  ?>
-  "columns":[
-          {"data":"ref_dos"},
-          {"data":"date_preal"},
-          {"data":"delai_prealerte"},
-          {"data":"ref_fact"},
-          {"data":"horse"},
-          {"data":"commodity"},
-          {"data":"supplier"},
-          {"data":"po_ref"},
-          {"data":"poids"},
-          {"data":"statut"}
-        ]
-  <?php
-}else if ($_GET['id_mod_lic']=='2' && ($_GET['id_mod_trans']=='3' || $_GET['id_mod_trans']=='4') && $_GET['statut']=='LIQUIDATED') {
-  ?>
-  "columns":[
-          {"data":"ref_dos"},
-          {"data":"date_preal"},
-          {"data":"ref_fact"},
-          {"data":"horse"},
-          {"data":"commodity"},
-          {"data":"supplier"},
-          {"data":"po_ref"},
-          {"data":"poids"},
-          {"data":"ref_liq"},
-          {"data":"date_liq"},
-          {"data":"delai_liq"},
-          {"data":"statut"}
-        ]
-  <?php
-}else if ($_GET['id_mod_lic']=='2' && ($_GET['id_mod_trans']=='3' || $_GET['id_mod_trans']=='4') && $_GET['statut']=='AWAITING QUITTANCE') {
-  ?>
-  "columns":[
-          {"data":"ref_dos"},
-          {"data":"date_preal"},
-          {"data":"ref_fact"},
-          {"data":"horse"},
-          {"data":"commodity"},
-          {"data":"supplier"},
-          {"data":"po_ref"},
-          {"data":"poids"},
-          {"data":"ref_liq"},
-          {"data":"date_liq"},
-          {"data":"delai_liq"},
-          {"data":"statut"}
-        ]
-  <?php
-}else if ($_GET['id_mod_lic']=='2' && ($_GET['id_mod_trans']=='3' || $_GET['id_mod_trans']=='4') && $_GET['statut']=='AWAITING BAE/BS') {
-  ?>
-  "columns":[
-          {"data":"ref_dos"},
-          {"data":"date_preal"},
-          {"data":"ref_fact"},
-          {"data":"horse"},
-          {"data":"commodity"},
-          {"data":"supplier"},
-          {"data":"po_ref"},
-          {"data":"poids"},
-          {"data":"ref_quit"},
-          {"data":"date_quit"},
-          {"data":"delai_quit"},
-          {"data":"statut"}
-        ]
-  <?php
-}else if ($_GET['id_mod_lic']=='2' && ($_GET['id_mod_trans']=='3' || $_GET['id_mod_trans']=='4') && $_GET['statut']=='EXPECTED TO ARRIVE') {
-  ?>
-  "columns":[
-          {"data":"ref_dos"},
-          {"data":"date_preal"},
-          {"data":"delai_prealerte"},
-          {"data":"ref_fact"},
-          {"data":"horse"},
-          {"data":"commodity"},
-          {"data":"supplier"},
-          {"data":"po_ref"},
-          {"data":"poids"},
-          {"data":"statut"}
-        ]
-  <?php
-}else if ($_GET['id_mod_lic']=='2' && ($_GET['id_mod_trans']=='3' || $_GET['id_mod_trans']=='4') && $_GET['statut']=='UNDER VALUE') {
-  ?>
-  "columns":[
-          {"data":"ref_dos"},
-          {"data":"date_preal"},
-          {"data":"delai_prealerte"},
-          {"data":"ref_fact"},
-          {"data":"horse"},
-          {"data":"commodity"},
-          {"data":"supplier"},
-          {"data":"po_ref"},
-          {"data":"poids"},
-          {"data":"statut"}
-        ]
-  <?php
-}else if ($_GET['id_mod_lic']=='2' && ($_GET['id_mod_trans']=='3' || $_GET['id_mod_trans']=='4') && $_GET['statut']=='CANCELLED') {
-  ?>
-  "columns":[
-          {"data":"ref_dos"},
-          {"data":"date_preal"},
-          {"data":"delai_prealerte"},
-          {"data":"ref_fact"},
-          {"data":"horse"},
-          {"data":"commodity"},
-          {"data":"supplier"},
-          {"data":"po_ref"},
-          {"data":"poids"},
-          {"data":"statut"}
-        ]
-  <?php
-}else if ($_GET['id_mod_lic']=='2' && ($_GET['id_mod_trans']=='3' || $_GET['id_mod_trans']=='4') && $_GET['statut']=='AT KOLWEZI') {
-  ?>
-  "columns":[
-          {"data":"ref_dos"},
-          {"data":"date_preal"},
-          {"data":"ref_fact"},
-          {"data":"horse"},
-          {"data":"commodity"},
-          {"data":"supplier"},
-          {"data":"po_ref"},
-          {"data":"poids"},
-          {"data":"warehouse_arriv"},
-          {"data":"delai_warehouse"},
-          {"data":"statut"}
-        ]
-  <?php
-}else if ($_GET['id_mod_lic']=='1' && $_GET['id_mod_trans']=='1' && $_GET['statut']=='LOADED') {
+}else if ($_GET['id_mod_lic']=='1' && $_GET['id_mod_trans']=='1') {
   ?>
   "columns":[
           {"data":"ref_dos"},
           {"data":"num_lot"},
+          {"data":"num_lic"},
+          {"data":"horse"},
+          {"data":"trailer_1"},
+          {"data":"trailer_2"},
+          {"data":"commodity"},
+          {"data":"transporter"},
+          {"data":"nbr_bags"},
+          {"data":"poids"},
+          {"data":"arrival_date"},
           {"data":"load_date"},
-          {"data":"delai_load"},
-          {"data":"num_lic"},
-          {"data":"horse"},
-          {"data":"trailer_1"},
-          {"data":"trailer_2"},
-          {"data":"commodity"},
-          {"data":"transporter"},
-          {"data":"poids"},
-          {"data":"statut"}
-        ]
-  <?php
-}else if ($_GET['id_mod_lic']=='1' && $_GET['id_mod_trans']=='1' && $_GET['statut']=='AT CEEC') {
-  ?>
-  "columns":[
-          {"data":"ref_dos"},
-          {"data":"num_lot"},
-          {"data":"num_lic"},
-          {"data":"horse"},
-          {"data":"trailer_1"},
-          {"data":"trailer_2"},
-          {"data":"commodity"},
-          {"data":"transporter"},
-          {"data":"poids"},
+          {"data":"doc_receiv"},
+          {"data":"pv_mine"},
+          {"data":"demande_attestation"},
+          {"data":"assay_date"},
           {"data":"ceec_in"},
-          {"data":"ceec_in_delai"},
-          {"data":"statut"}
-        ]
-  <?php
-}else if ($_GET['id_mod_lic']=='1' && $_GET['id_mod_trans']=='1' && $_GET['statut']=='CEEC OUT') {
-  ?>
-  "columns":[
-          {"data":"ref_dos"},
-          {"data":"num_lot"},
-          {"data":"num_lic"},
-          {"data":"horse"},
-          {"data":"trailer_1"},
-          {"data":"trailer_2"},
-          {"data":"commodity"},
-          {"data":"transporter"},
-          {"data":"poids"},
           {"data":"ceec_out"},
-          {"data":"ceec_out_delai"},
-          {"data":"statut"}
-        ]
-  <?php
-}else if ($_GET['id_mod_lic']=='1' && $_GET['id_mod_trans']=='1' && $_GET['statut']=='AT MINE DIVISION') {
-  ?>
-  "columns":[
-          {"data":"ref_dos"},
-          {"data":"num_lot"},
-          {"data":"num_lic"},
-          {"data":"horse"},
-          {"data":"trailer_1"},
-          {"data":"trailer_2"},
-          {"data":"commodity"},
-          {"data":"transporter"},
-          {"data":"poids"},
+          {"data":"ceec_delay"},
           {"data":"min_div_in"},
-          {"data":"min_div_in_delai"},
-          {"data":"statut"}
-        ]
-  <?php
-}else if ($_GET['id_mod_lic']=='1' && $_GET['id_mod_trans']=='1' && $_GET['statut']=='MINE DIVISION OUT') {
-  ?>
-  "columns":[
-          {"data":"ref_dos"},
-          {"data":"num_lot"},
-          {"data":"num_lic"},
-          {"data":"horse"},
-          {"data":"trailer_1"},
-          {"data":"trailer_2"},
-          {"data":"commodity"},
-          {"data":"transporter"},
-          {"data":"poids"},
           {"data":"min_div_out"},
-          {"data":"min_div_out_delai"},
-          {"data":"statut"}
-        ]
-  <?php
-}else if ($_GET['id_mod_lic']=='1' && $_GET['id_mod_trans']=='1' && $_GET['statut']=='DECLARATION') {
-  ?>
-  "columns":[
-          {"data":"ref_dos"},
-          {"data":"num_lot"},
-          {"data":"num_lic"},
-          {"data":"horse"},
-          {"data":"trailer_1"},
-          {"data":"trailer_2"},
-          {"data":"commodity"},
-          {"data":"transporter"},
-          {"data":"poids"},
+          {"data":"min_div_delay"},
           {"data":"ref_decl"},
           {"data":"date_decl"},
-          {"data":"delai_decl"},
-          {"data":"statut"}
-        ]
-  <?php
-}else if ($_GET['id_mod_lic']=='1' && $_GET['id_mod_trans']=='1' && $_GET['statut']=='AT DGDA') {
-  ?>
-  "columns":[
-          {"data":"ref_dos"},
-          {"data":"num_lot"},
-          {"data":"num_lic"},
-          {"data":"horse"},
-          {"data":"trailer_1"},
-          {"data":"trailer_2"},
-          {"data":"commodity"},
-          {"data":"transporter"},
-          {"data":"poids"},
-          {"data":"ref_decl"},
-          {"data":"date_decl"},
-          {"data":"delai_decl"},
-          {"data":"statut"}
-        ]
-  <?php
-}else if ($_GET['id_mod_lic']=='1' && $_GET['id_mod_trans']=='1' && $_GET['statut']=='LIQUIDATED') {
-  ?>
-  "columns":[
-          {"data":"ref_dos"},
-          {"data":"num_lot"},
-          {"data":"num_lic"},
-          {"data":"horse"},
-          {"data":"trailer_1"},
-          {"data":"trailer_2"},
-          {"data":"commodity"},
-          {"data":"transporter"},
-          {"data":"poids"},
+          {"data":"dgda_in"},
           {"data":"ref_liq"},
           {"data":"date_liq"},
-          {"data":"delai_liq"},
-          {"data":"statut"}
-        ]
-  <?php
-}else if ($_GET['id_mod_lic']=='1' && $_GET['id_mod_trans']=='1' && $_GET['statut']=='DGDA OUT') {
-  ?>
-  "columns":[
-          {"data":"ref_dos"},
-          {"data":"num_lot"},
-          {"data":"num_lic"},
-          {"data":"horse"},
-          {"data":"trailer_1"},
-          {"data":"trailer_2"},
-          {"data":"commodity"},
-          {"data":"transporter"},
-          {"data":"poids"},
+          {"data":"ref_quit"},
+          {"data":"date_quit"},
           {"data":"dgda_out"},
-          {"data":"dgda_out_delai"},
-          {"data":"statut"}
-        ]
-  <?php
-}else if ($_GET['id_mod_lic']=='1' && $_GET['id_mod_trans']=='1' && $_GET['statut']=='AT GOVERNORS OFFICE') {
-  ?>
-  "columns":[
-          {"data":"ref_dos"},
-          {"data":"num_lot"},
-          {"data":"num_lic"},
-          {"data":"horse"},
-          {"data":"trailer_1"},
-          {"data":"trailer_2"},
-          {"data":"commodity"},
-          {"data":"transporter"},
-          {"data":"poids"},
           {"data":"gov_in"},
-          {"data":"gov_in_delai"},
-          {"data":"statut"}
-        ]
-  <?php
-}else if ($_GET['id_mod_lic']=='1' && $_GET['id_mod_trans']=='1' && $_GET['statut']=='GOVERNORS OFFICE OUT') {
-  ?>
-  "columns":[
-          {"data":"ref_dos"},
-          {"data":"num_lot"},
-          {"data":"num_lic"},
-          {"data":"horse"},
-          {"data":"trailer_1"},
-          {"data":"trailer_2"},
-          {"data":"commodity"},
-          {"data":"transporter"},
-          {"data":"poids"},
           {"data":"gov_out"},
-          {"data":"gov_out_delai"},
-          {"data":"statut"}
-        ]
-  <?php
-}else if ($_GET['id_mod_lic']=='1' && $_GET['id_mod_trans']=='1' && $_GET['statut']=='DISPATCHED') {
-  ?>
-  "columns":[
-          {"data":"ref_dos"},
-          {"data":"num_lot"},
-          {"data":"num_lic"},
-          {"data":"horse"},
-          {"data":"trailer_1"},
-          {"data":"trailer_2"},
-          {"data":"commodity"},
-          {"data":"transporter"},
-          {"data":"poids"},
+          {"data":"gov_delay"},
           {"data":"dispatch_date"},
-          {"data":"dispatch_date_delai"},
-          {"data":"statut"}
-        ]
-  <?php
-}else if ($_GET['id_mod_lic']=='1' && $_GET['id_mod_trans']=='1' && $_GET['statut']=='AT KLSA') {
-  ?>
-  "columns":[
-          {"data":"ref_dos"},
-          {"data":"num_lot"},
-          {"data":"num_lic"},
-          {"data":"horse"},
-          {"data":"trailer_1"},
-          {"data":"trailer_2"},
-          {"data":"commodity"},
-          {"data":"transporter"},
-          {"data":"poids"},
           {"data":"klsa_arriv"},
-          {"data":"klsa_arriv_delai"},
-          {"data":"statut"}
-        ]
-  <?php
-}else if ($_GET['id_mod_lic']=='1' && $_GET['id_mod_trans']=='1' && $_GET['statut']=='UNDER FORMALITIES') {
-  ?>
-  "columns":[
-          {"data":"ref_dos"},
-          {"data":"num_lot"},
-          {"data":"num_lic"},
-          {"data":"horse"},
-          {"data":"trailer_1"},
-          {"data":"trailer_2"},
-          {"data":"commodity"},
-          {"data":"transporter"},
-          {"data":"poids"},
-          {"data":"klsa_arriv"},
-          {"data":"klsa_arriv_delai"},
-          {"data":"statut"}
-        ]
-  <?php
-}else if ($_GET['id_mod_lic']=='1' && $_GET['id_mod_trans']=='1' && $_GET['statut']=='BORDER FORMALITIES') {
-  ?>
-  "columns":[
-          {"data":"ref_dos"},
-          {"data":"num_lot"},
-          {"data":"num_lic"},
-          {"data":"horse"},
-          {"data":"trailer_1"},
-          {"data":"trailer_2"},
-          {"data":"commodity"},
-          {"data":"transporter"},
-          {"data":"poids"},
           {"data":"end_form"},
-          {"data":"klsa_arriv"},
-          {"data":"klsa_arriv_delai"},
-          {"data":"statut"}
+          {"data":"exit_drc"},
+          {"data":"statut"},
+          {"data":"remarque"}
         ]
   <?php
-}else if ($_GET['id_mod_lic']=='1' && $_GET['id_mod_trans']=='1' && $_GET['statut']=='EXIT DRC') {
+}else if ($_GET['id_mod_lic']=='1' && $_GET['id_mod_trans']!='1') {
   ?>
   "columns":[
           {"data":"ref_dos"},
           {"data":"num_lot"},
           {"data":"num_lic"},
           {"data":"horse"},
-          {"data":"trailer_1"},
-          {"data":"trailer_2"},
           {"data":"commodity"},
           {"data":"transporter"},
+          {"data":"nbr_bags"},
           {"data":"poids"},
-          {"data":"exit_drc"},
-          {"data":"exit_drc_delai"},
-          {"data":"statut"}
-        ]
-  <?php
-}else if ($_GET['id_mod_lic']=='1' && ($_GET['id_mod_trans']=='3' || $_GET['id_mod_trans']=='4') && $_GET['statut']=='LOADED') {
-  ?>
-  "columns":[
-          {"data":"ref_dos"},
-          {"data":"num_lot"},
+          {"data":"arrival_date"},
           {"data":"load_date"},
-          {"data":"delai_load"},
-          {"data":"num_lic"},
-          {"data":"horse"},
-          {"data":"commodity"},
-          {"data":"transporter"},
-          {"data":"poids"},
-          {"data":"statut"}
-        ]
-  <?php
-}else if ($_GET['id_mod_lic']=='1' && ($_GET['id_mod_trans']=='3' || $_GET['id_mod_trans']=='4') && $_GET['statut']=='AT CEEC') {
-  ?>
-  "columns":[
-          {"data":"ref_dos"},
-          {"data":"num_lot"},
-          {"data":"num_lic"},
-          {"data":"horse"},
-          {"data":"commodity"},
-          {"data":"transporter"},
-          {"data":"poids"},
+          {"data":"doc_receiv"},
+          {"data":"pv_mine"},
+          {"data":"demande_attestation"},
+          {"data":"assay_date"},
           {"data":"ceec_in"},
-          {"data":"ceec_in_delai"},
-          {"data":"statut"}
-        ]
-  <?php
-}else if ($_GET['id_mod_lic']=='1' && ($_GET['id_mod_trans']=='3' || $_GET['id_mod_trans']=='4') && $_GET['statut']=='CEEC OUT') {
-  ?>
-  "columns":[
-          {"data":"ref_dos"},
-          {"data":"num_lot"},
-          {"data":"num_lic"},
-          {"data":"horse"},
-          {"data":"commodity"},
-          {"data":"transporter"},
-          {"data":"poids"},
           {"data":"ceec_out"},
-          {"data":"ceec_out_delai"},
-          {"data":"statut"}
-        ]
-  <?php
-}else if ($_GET['id_mod_lic']=='1' && ($_GET['id_mod_trans']=='3' || $_GET['id_mod_trans']=='4') && $_GET['statut']=='AT MINE DIVISION') {
-  ?>
-  "columns":[
-          {"data":"ref_dos"},
-          {"data":"num_lot"},
-          {"data":"num_lic"},
-          {"data":"horse"},
-          {"data":"commodity"},
-          {"data":"transporter"},
-          {"data":"poids"},
+          {"data":"ceec_delay"},
           {"data":"min_div_in"},
-          {"data":"min_div_in_delai"},
-          {"data":"statut"}
-        ]
-  <?php
-}else if ($_GET['id_mod_lic']=='1' && ($_GET['id_mod_trans']=='3' || $_GET['id_mod_trans']=='4') && $_GET['statut']=='MINE DIVISION OUT') {
-  ?>
-  "columns":[
-          {"data":"ref_dos"},
-          {"data":"num_lot"},
-          {"data":"num_lic"},
-          {"data":"horse"},
-          {"data":"commodity"},
-          {"data":"transporter"},
-          {"data":"poids"},
           {"data":"min_div_out"},
-          {"data":"min_div_out_delai"},
-          {"data":"statut"}
-        ]
-  <?php
-}else if ($_GET['id_mod_lic']=='1' && ($_GET['id_mod_trans']=='3' || $_GET['id_mod_trans']=='4') && $_GET['statut']=='DECLARATION') {
-  ?>
-  "columns":[
-          {"data":"ref_dos"},
-          {"data":"num_lot"},
-          {"data":"num_lic"},
-          {"data":"horse"},
-          {"data":"commodity"},
-          {"data":"transporter"},
-          {"data":"poids"},
+          {"data":"min_div_delay"},
           {"data":"ref_decl"},
           {"data":"date_decl"},
-          {"data":"delai_decl"},
-          {"data":"statut"}
-        ]
-  <?php
-}else if ($_GET['id_mod_lic']=='1' && ($_GET['id_mod_trans']=='3' || $_GET['id_mod_trans']=='4') && $_GET['statut']=='AT DGDA') {
-  ?>
-  "columns":[
-          {"data":"ref_dos"},
-          {"data":"num_lot"},
-          {"data":"num_lic"},
-          {"data":"horse"},
-          {"data":"commodity"},
-          {"data":"transporter"},
-          {"data":"poids"},
-          {"data":"ref_decl"},
-          {"data":"date_decl"},
-          {"data":"delai_decl"},
-          {"data":"statut"}
-        ]
-  <?php
-}else if ($_GET['id_mod_lic']=='1' && ($_GET['id_mod_trans']=='3' || $_GET['id_mod_trans']=='4') && $_GET['statut']=='LIQUIDATED') {
-  ?>
-  "columns":[
-          {"data":"ref_dos"},
-          {"data":"num_lot"},
-          {"data":"num_lic"},
-          {"data":"horse"},
-          {"data":"commodity"},
-          {"data":"transporter"},
-          {"data":"poids"},
+          {"data":"dgda_in"},
           {"data":"ref_liq"},
           {"data":"date_liq"},
-          {"data":"delai_liq"},
-          {"data":"statut"}
-        ]
-  <?php
-}else if ($_GET['id_mod_lic']=='1' && ($_GET['id_mod_trans']=='3' || $_GET['id_mod_trans']=='4') && $_GET['statut']=='DGDA OUT') {
-  ?>
-  "columns":[
-          {"data":"ref_dos"},
-          {"data":"num_lot"},
-          {"data":"num_lic"},
-          {"data":"horse"},
-          {"data":"commodity"},
-          {"data":"transporter"},
-          {"data":"poids"},
+          {"data":"ref_quit"},
+          {"data":"date_quit"},
           {"data":"dgda_out"},
-          {"data":"dgda_out_delai"},
-          {"data":"statut"}
-        ]
-  <?php
-}else if ($_GET['id_mod_lic']=='1' && ($_GET['id_mod_trans']=='3' || $_GET['id_mod_trans']=='4') && $_GET['statut']=='AT GOVERNORS OFFICE') {
-  ?>
-  "columns":[
-          {"data":"ref_dos"},
-          {"data":"num_lot"},
-          {"data":"num_lic"},
-          {"data":"horse"},
-          {"data":"commodity"},
-          {"data":"transporter"},
-          {"data":"poids"},
           {"data":"gov_in"},
-          {"data":"gov_in_delai"},
-          {"data":"statut"}
-        ]
-  <?php
-}else if ($_GET['id_mod_lic']=='1' && ($_GET['id_mod_trans']=='3' || $_GET['id_mod_trans']=='4') && $_GET['statut']=='GOVERNORS OFFICE OUT') {
-  ?>
-  "columns":[
-          {"data":"ref_dos"},
-          {"data":"num_lot"},
-          {"data":"num_lic"},
-          {"data":"horse"},
-          {"data":"commodity"},
-          {"data":"transporter"},
-          {"data":"poids"},
           {"data":"gov_out"},
-          {"data":"gov_out_delai"},
-          {"data":"statut"}
-        ]
-  <?php
-}else if ($_GET['id_mod_lic']=='1' && ($_GET['id_mod_trans']=='3' || $_GET['id_mod_trans']=='4') && $_GET['statut']=='DISPATCHED') {
-  ?>
-  "columns":[
-          {"data":"ref_dos"},
-          {"data":"num_lot"},
-          {"data":"num_lic"},
-          {"data":"horse"},
-          {"data":"commodity"},
-          {"data":"transporter"},
-          {"data":"poids"},
+          {"data":"gov_delay"},
           {"data":"dispatch_date"},
-          {"data":"dispatch_date_delai"},
-          {"data":"statut"}
-        ]
-  <?php
-}else if ($_GET['id_mod_lic']=='1' && ($_GET['id_mod_trans']=='3' || $_GET['id_mod_trans']=='4') && $_GET['statut']=='BORDER FORMALITIES') {
-  ?>
-  "columns":[
-          {"data":"ref_dos"},
-          {"data":"num_lot"},
-          {"data":"num_lic"},
-          {"data":"horse"},
-          {"data":"commodity"},
-          {"data":"transporter"},
-          {"data":"poids"},
-          {"data":"end_form"},
           {"data":"klsa_arriv"},
-          {"data":"klsa_arriv_delai"},
-          {"data":"statut"}
-        ]
-  <?php
-}else if ($_GET['id_mod_lic']=='1' && ($_GET['id_mod_trans']=='3' || $_GET['id_mod_trans']=='4') && $_GET['statut']=='EXIT DRC') {
-  ?>
-  "columns":[
-          {"data":"ref_dos"},
-          {"data":"num_lot"},
-          {"data":"num_lic"},
-          {"data":"horse"},
-          {"data":"commodity"},
-          {"data":"transporter"},
-          {"data":"poids"},
+          {"data":"end_form"},
           {"data":"exit_drc"},
-          {"data":"exit_drc_delai"},
-          {"data":"statut"}
+          {"data":"statut"},
+          {"data":"remarque"}
         ]
   <?php
 }

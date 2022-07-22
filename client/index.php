@@ -46,14 +46,21 @@
               </div>
               <div class="col-md-2 col-sm-6 col-12">
                 <div class="info-box"  data-toggle="modal" data-target=".rechercheImport">
-                  <span class="info-box-icon bg-light">
-                    <img src="../images/import.png" width="30px">
+                  <span class="info-box-icon bg-dark">
+                    <img src="../images/search.png" width="30px">
                   </span>
 
                   <div class="info-box-content">
                     <span class="info-box-text">Import Files</span>
                     <span class="info-box-number">
-                      <?php echo number_format($maClasse-> nbreDossierModeleLicence(2, $maClasse-> getUtilisateurClientModeleLicence($_SESSION['id_util'], '2')['id_cli'], NULL, NULL), 0, ',', ' ');?>
+                      <?php 
+                      if ($maClasse-> getUtilisateurClientModeleLicence($_SESSION['id_util'], '2')['id_cli']!='') {
+                        echo number_format($maClasse-> nbreDossierModeleLicence(2, $maClasse-> getUtilisateurClientModeleLicence($_SESSION['id_util'], '2')['id_cli'], NULL, NULL), 0, ',', ' ');
+                      }else{
+                        echo '0';
+                      }
+                        ?>
+                      
                     </span>
                   </div>
                   <!-- /.info-box-content -->
@@ -63,14 +70,20 @@
 
               <div class="col-md-2 col-sm-6 col-12">
                 <div class="info-box" data-toggle="modal" data-target=".rechercheExport">
-                  <span class="info-box-icon bg-light">
-                    <img src="../images/export.png" width="30px">
+                  <span class="info-box-icon bg-dark">
+                    <img src="../images/search.png" width="30px">
                   </span>
 
                   <div class="info-box-content">
                     <span class="info-box-text">Export Files</span>
                     <span class="info-box-number">
-                      <?php echo number_format($maClasse-> nbreDossierModeleLicence(1, $maClasse-> getUtilisateurClientModeleLicence($_SESSION['id_util'], '2')['id_cli'], NULL, NULL), 0, ',', ' ');?>
+                      <?php 
+                      if ($maClasse-> getUtilisateurClientModeleLicence($_SESSION['id_util'], '1')['id_cli']!='') {
+                        echo number_format($maClasse-> nbreDossierModeleLicence(1, $maClasse-> getUtilisateurClientModeleLicence($_SESSION['id_util'], '1')['id_cli'], NULL, NULL), 0, ',', ' ');
+                      }else{
+                        echo '0';
+                      }
+                        ?>
                     </span>
                   </div>
                   <!-- /.info-box-content -->

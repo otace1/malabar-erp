@@ -117,13 +117,34 @@
         createdRow: function (row, data, index) {
             if (data['statut'] == 'CLEARING COMPLETED') {
                 $('td', row).eq(0).addClass('highlight');
-                $('td', row).eq(24).addClass('highlight');
+                $('td', row).eq(30).addClass('highlight');
             }
         },
         dom: 'Bfrtip',
-        buttons: [
-            'copy', 'csv', 'excel', 'print'
-        ], 
+        // buttons: [
+        //     'copy', 'csv', 'excel', 'print'
+        // ], 
+        buttons: [{
+            extend: 'excelHtml5',
+            customize: function(xlsx) {
+                var sheet = xlsx.xl.worksheets['sheet1.xml'];
+                
+                <?php
+                  if ($_GET['id_mod_lic']=='2' && $_GET['id_mod_trans']=='1') {
+                ?>
+                    // Loop over the cells in column `AE`
+                    $('row c[r^="AE"]', sheet).each( function () {
+                        // Get the value
+                        if ( $('is t', this).text() == 'CLEARING COMPLETED' ) {
+                            $(this).attr( 's', '20' );
+                        }
+                    });
+                <?php
+                  }
+                ?>
+
+            }
+        }],
       "paging": true,
       "lengthChange": true,
       "searching": true,

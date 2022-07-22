@@ -107,6 +107,9 @@
 										DATEDIFF(DATE(CURRENT_DATE()), d.klsa_arriv) AS klsa_arriv_delai,
 										DATEDIFF(DATE(CURRENT_DATE()), d.end_form) AS end_form_delai,
 										DATEDIFF(DATE(CURRENT_DATE()), d.exit_drc) AS exit_drc_delai,
+										DATEDIFF(d.ceec_out, d.ceec_in) AS ceec_delay,
+										DATEDIFF(d.gov_out, d.gov_in) AS gov_delay,
+										DATEDIFF(d.min_div_out, d.min_div_in) AS min_div_delay,
 
 										
 										IF(d.id_mod_lic='2' AND d.id_mod_trans='1',
@@ -154,7 +157,7 @@
 										AND d.id_mod_trans = $id_mod_trans
 										AND d.id_mod_lic = $id_mod_lic
 										$sqlStatus
-									");
+									ORDER BY d.date_creat_dos DESC");
 	$rows = array();
 
 	while ($reponse = $requete-> fetch()) {
