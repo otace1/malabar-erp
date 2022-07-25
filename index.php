@@ -93,11 +93,11 @@
 
         $maClasse-> creerLogUtilisateur($_SESSION['id_util'], $maClasse-> getIp()['ip'], $maClasse-> getIp()['hostname'], $maClasse-> getIp()['latitude'], $maClasse-> getIp()['longitude']);
 
-        // if ($_SESSION['id_role']=='4') {
-        //   header('Location: client/');
-        // }else{
-        //   header('Location: pages/');
-        // }
+        if ($_SESSION['id_role']=='4') {
+          header('Location: client/');
+        }else{
+          header('Location: pages/');
+        }
       }
     }
   ?>
