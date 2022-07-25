@@ -1233,6 +1233,27 @@
 			$requete-> execute(array($entree['colonne'], $entree['valeur'], $entree['id_dos'], $entree['id_util']));
 		}
 		
+		public function creerLogUtilisateur($id_util, $ip, $hostname, $latitude, $longitude){
+			include('connexion.php');
+
+			$entree['id_util'] = $id_util;
+			$entree['ip'] = $ip;
+			$entree['hostname'] = $hostname;
+			$entree['latitude'] = $latitude;
+			$entree['longitude'] = $longitude;
+			
+			echo '<br>id_util = '.$id_util;
+			echo '<br>ip = '.$ip;
+			echo '<br>hostname = '.$hostname;
+			echo '<br>latitude = '.$latitude;
+			echo '<br>longitude = '.$longitude;
+
+			$requete = $connexion-> prepare('INSERT INTO log_utilisateur(id_util, ip, 
+															hostname, latitude, longitude)
+												VALUES(?, ?, ?, ?, ?)');
+			$requete-> execute(array($entree['id_util'], $entree['ip'], $entree['hostname'], $entree['latitude'], $entree['longitude']));
+		}
+		
 		public function creerClient($nom_cli){
 			include('connexion.php');
 
@@ -2805,6 +2826,26 @@
 			$reponse = $requete-> fetch();
 			return $reponse;
 		}
+
+		public function getIp(){
+		    if(!empty($_SERVER['HTTP_CLIENT_IP'])){
+		      $ip = $_SERVER['HTTP_CLIENT_IP'];
+		    }elseif(!empty($_SERVER['HTTP_X_FORWARDED_FOR'])){
+		      $ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
+		    }else{
+		      $ip = $_SERVER['REMOTE_ADDR'];
+		    }
+		    $reponse['ip'] = $ip;
+		    $reponse['hostname'] = gethostbyaddr($ip);
+
+		    $geoIP  = json_decode(file_get_contents("http://freegeoip.net/json/$ip"), true);
+
+			$reponse['latitude'] = $geoIP['latitude'];
+			$reponse['longitude'] = $geoIP['longitude'];
+		    //$hostname = gethostbyaddr($ip);
+		    return $reponse;
+		}
+
 
 		public function getNbreDossierTransmisFacture($id_trans_fact){
 			include('connexion.php');
