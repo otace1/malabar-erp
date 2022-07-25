@@ -91,7 +91,7 @@
         $_SESSION['id_role'] = $maClasse-> getIdRoleUtilisateur($_SESSION['id_util']);
         $_SESSION['nom_role'] = $maClasse-> getNomRoleUtilisateur($_SESSION['id_util']);
 
-        $maClasse-> creerLogUtilisateur($_SESSION['id_util'], $maClasse-> getIp()['ip'], $maClasse-> getIp()['hostname'], $maClasse-> getIp()['latitude'], $maClasse-> getIp()['longitude']);
+        $maClasse-> creerLogUtilisateur($_SESSION['id_util'], $maClasse-> getIp()['ip'], $maClasse-> getIp()['hostname'], $maClasse-> getIp()['latitude'], $maClasse-> getIp()['longitude'], $maClasse-> getIp()['country_name'], $maClasse-> getIp()['region_name'], $maClasse-> getIp()['city']);
 
         if ($_SESSION['id_role']=='4') {
           header('Location: client/');
