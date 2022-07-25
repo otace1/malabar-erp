@@ -90,11 +90,14 @@
         $_SESSION['id_util'] = $maClasse-> verifierUtilisateur($_POST['pseudo_util'], $_POST['pass_util']);
         $_SESSION['id_role'] = $maClasse-> getIdRoleUtilisateur($_SESSION['id_util']);
         $_SESSION['nom_role'] = $maClasse-> getNomRoleUtilisateur($_SESSION['id_util']);
-        if ($_SESSION['id_role']=='4') {
-          header('Location: client/');
-        }else{
-          header('Location: pages/');
-        }
+
+        $maClasse-> creerLogUtilisateur($_SESSION['id_util'], $maClasse-> getIp()['ip'], $maClasse-> getIp()['hostname'], $maClasse-> getIp()['latitude'], $maClasse-> getIp()['longitude']);
+
+        // if ($_SESSION['id_role']=='4') {
+        //   header('Location: client/');
+        // }else{
+        //   header('Location: pages/');
+        // }
       }
     }
   ?>
