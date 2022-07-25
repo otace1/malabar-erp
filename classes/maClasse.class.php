@@ -1233,7 +1233,7 @@
 			$requete-> execute(array($entree['colonne'], $entree['valeur'], $entree['id_dos'], $entree['id_util']));
 		}
 		
-		public function creerLogUtilisateur($id_util, $ip, $hostname, $latitude, $longitude){
+		public function creerLogUtilisateur($id_util, $ip, $hostname, $latitude, $longitude, $country_name, $region_name, $city){
 			include('connexion.php');
 
 			$entree['id_util'] = $id_util;
@@ -1241,17 +1241,21 @@
 			$entree['hostname'] = $hostname;
 			$entree['latitude'] = $latitude;
 			$entree['longitude'] = $longitude;
+			$entree['country_name'] = $country_name;
+			$entree['region_name'] = $region_name;
+			$entree['city'] = $city;
 			
-			echo '<br>id_util = '.$id_util;
-			echo '<br>ip = '.$ip;
-			echo '<br>hostname = '.$hostname;
-			echo '<br>latitude = '.$latitude;
-			echo '<br>longitude = '.$longitude;
+			// echo '<br>id_util = '.$id_util;
+			// echo '<br>ip = '.$ip;
+			// echo '<br>hostname = '.$hostname;
+			// echo '<br>latitude = '.$latitude;
+			// echo '<br>longitude = '.$longitude;
 
 			$requete = $connexion-> prepare('INSERT INTO log_utilisateur(id_util, ip, 
-															hostname, latitude, longitude)
-												VALUES(?, ?, ?, ?, ?)');
-			$requete-> execute(array($entree['id_util'], $entree['ip'], $entree['hostname'], $entree['latitude'], $entree['longitude']));
+															hostname, latitude, longitude, 
+															country_name, region_name, city)
+												VALUES(?, ?, ?, ?, ?, ?, ?, ?)');
+			$requete-> execute(array($entree['id_util'], $entree['ip'], $entree['hostname'], $entree['latitude'], $entree['longitude'], $entree['country_name'], $entree['region_name'], $entree['city']));
 		}
 		
 		public function creerClient($nom_cli){
@@ -2838,14 +2842,70 @@
 		    $reponse['ip'] = $ip;
 		    $reponse['hostname'] = gethostbyaddr($ip);
 
-		    $geoIP  = json_decode(file_get_contents("http://freegeoip.net/json/$ip"), true);
+		    //$geoIP  = json_decode(file_get_contents("http://freegeoip.net/json/$ip"), true);
+			//$reponse['longitude'] = $geoIP['longitude'];
 
-			$reponse['latitude'] = $geoIP['latitude'];
-			$reponse['longitude'] = $geoIP['longitude'];
+			$reponse['latitude'] = $this-> getGeoLocalisation($ip)['latitude'];
+			$reponse['longitude'] = $this-> getGeoLocalisation($ip)['longitude'];
+			$reponse['country_name'] = $this-> getGeoLocalisation($ip)['country_name'];
+			$reponse['region_name'] = $this-> getGeoLocalisation($ip)['region_name'];
+			$reponse['city'] = $this-> getGeoLocalisation($ip)['city'];
+
+
 		    //$hostname = gethostbyaddr($ip);
 		    return $reponse;
 		}
 
+		public function getGeoLocalisation($userIP){
+
+			// IP address 
+			//$userIP = '162.222.198.75'; 
+			 
+			// API end URL 
+			$apiURL = 'https://freegeoip.app/json/'.$userIP; 
+			 
+			// Create a new cURL resource with URL 
+			$ch = curl_init($apiURL); 
+			 
+			// Return response instead of outputting 
+			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true); 
+			 
+			// Execute API request 
+			$apiResponse = curl_exec($ch); 
+			 
+			// Close cURL resource 
+			curl_close($ch); 
+			 
+			// Retrieve IP data from API response 
+			$ipData = json_decode($apiResponse, true); 
+			 
+			if(!empty($ipData)){ 
+			    $country_code = $ipData['country_code']; 
+			    $country_name = $ipData['country_name']; 
+			    $region_code = $ipData['region_code']; 
+			    $region_name = $ipData['region_name']; 
+			    $city = $ipData['city']; 
+			    $zip_code = $ipData['zip_code']; 
+			    $latitude = $ipData['latitude']; 
+			    $longitude = $ipData['longitude']; 
+			    $time_zone = $ipData['time_zone']; 
+			     
+			    // echo 'Country Name: '.$country_name.'<br/>'; 
+			    // echo 'Country Code: '.$country_code.'<br/>'; 
+			    // echo 'Region Code: '.$region_code.'<br/>'; 
+			    // echo 'Region Name: '.$region_name.'<br/>'; 
+			    // echo 'City: '.$city.'<br/>'; 
+			    // echo 'Zipcode: '.$zip_code.'<br/>'; 
+			    // echo 'Latitude: '.$latitude.'<br/>'; 
+			    // echo 'Longitude: '.$longitude.'<br/>'; 
+			    // echo 'Time Zone: '.$time_zone; 
+			    return $ipData;
+			}else{ 
+			    // echo 'IP data is not found!';
+			    return null; 
+			} 
+			 
+		}
 
 		public function getNbreDossierTransmisFacture($id_trans_fact){
 			include('connexion.php');
