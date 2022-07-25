@@ -13,6 +13,8 @@
 	    <th>SUPPLIER</th>
 	    <th>PO Ref</th>
 	    <th>WEIGHT</th>
+	    <th>LICENCE Num.</th>
+	    <th>CRF Reference</th>
 	    <th>CRF DATE</th>
 	    <th>AD DATE</th>
 	    <th>INSURRANCE</th>
@@ -47,6 +49,8 @@
 	    <th>SUPPLIER</th>
 	    <th>PO Ref</th>
 	    <th>WEIGHT</th>
+	    <th>LICENCE Num.</th>
+	    <th>CRF Reference</th>
 	    <th>CRF DATE</th>
 	    <th>AD DATE</th>
 	    <th>INSURRANCE</th>
@@ -81,6 +85,8 @@
 	    <th>SUPPLIER</th>
 	    <th>PO Ref</th>
 	    <th>WEIGHT</th>
+	    <th>LICENCE Num.</th>
+	    <th>CRF Reference</th>
 	    <th>CRF DATE</th>
 	    <th>AD DATE</th>
 	    <th>INSURRANCE</th>
