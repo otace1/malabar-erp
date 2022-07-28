@@ -35,6 +35,14 @@ if ($maClasse-> nbreDelaiDateKlsa()>0) {
         $mail->addAddress('vijeesh@malabar-group.com');
         $mail->addAddress('rajeev@malabar-group.com');
         $mail->addAddress('jeremy@belej-consulting.com');
+        $mail->addAddress('malabartracking@malabar-group.com');
+        $mail->addAddress('malabartracking1@malabar-group.com');
+        $mail->addAddress('export-tracking@malabar-group.com');
+        $mail->addAddress('import-tracking@malabar-group.com');
+        $mail->addAddress('export-tracking-klesa@malabar-group.com');
+        $mail->addAddress('ops-kasumbalesa@malabar-group.com');
+        $mail->addAddress('john@malabar-group.com');
+        $mail->addAddress('deo@malabar-group.com');
         //$mail->addBCC('bcc@example.com');
 
         //Attachments
@@ -94,6 +102,14 @@ if ($maClasse-> nbreErreurDateKlsa()>0) {
         $mail->addAddress('vijeesh@malabar-group.com');
         $mail->addAddress('rajeev@malabar-group.com');
         $mail->addAddress('jeremy@belej-consulting.com');
+        $mail->addAddress('malabartracking@malabar-group.com');
+        $mail->addAddress('malabartracking1@malabar-group.com');
+        $mail->addAddress('export-tracking@malabar-group.com');
+        $mail->addAddress('import-tracking@malabar-group.com');
+        $mail->addAddress('export-tracking-klesa@malabar-group.com');
+        $mail->addAddress('ops-kasumbalesa@malabar-group.com');
+        $mail->addAddress('john@malabar-group.com');
+        $mail->addAddress('deo@malabar-group.com');
         //$mail->addBCC('bcc@example.com');
 
         //Attachments
@@ -154,6 +170,14 @@ if ($maClasse-> getNombreDossierSansLiquidationApresCotation()>0) {
         $mail->addAddress('vijeesh@malabar-group.com');
          $mail->addCC('rajeev@malabar-group.com');
          $mail->addCC('jeremy@belej-consulting.com');
+        $mail->addAddress('malabartracking@malabar-group.com');
+        $mail->addAddress('malabartracking1@malabar-group.com');
+        $mail->addAddress('export-tracking@malabar-group.com');
+        $mail->addAddress('import-tracking@malabar-group.com');
+        $mail->addAddress('export-tracking-klesa@malabar-group.com');
+        $mail->addAddress('ops-kasumbalesa@malabar-group.com');
+        $mail->addAddress('john@malabar-group.com');
+        $mail->addAddress('deo@malabar-group.com');
         //$mail->addBCC('bcc@example.com');
 
         //Attachments
@@ -210,6 +234,14 @@ if ($maClasse-> getNombreDossierSansQuittanceApresIM4()>0) {
         $mail->addAddress('vijeesh@malabar-group.com');
          $mail->addCC('rajeev@malabar-group.com');
          $mail->addCC('jeremy@belej-consulting.com');
+        $mail->addAddress('malabartracking@malabar-group.com');
+        $mail->addAddress('malabartracking1@malabar-group.com');
+        $mail->addAddress('export-tracking@malabar-group.com');
+        $mail->addAddress('import-tracking@malabar-group.com');
+        $mail->addAddress('export-tracking-klesa@malabar-group.com');
+        $mail->addAddress('ops-kasumbalesa@malabar-group.com');
+        $mail->addAddress('john@malabar-group.com');
+        $mail->addAddress('deo@malabar-group.com');
         //$mail->addBCC('bcc@example.com');
 
         //Attachments
@@ -267,6 +299,14 @@ if ($maClasse-> nbreDelaiDateWiski()>0) {
         $mail->addAddress('vijeesh@malabar-group.com');
         $mail->addAddress('rajeev@malabar-group.com');
         $mail->addAddress('jeremy@belej-consulting.com');
+        $mail->addAddress('malabartracking@malabar-group.com');
+        $mail->addAddress('malabartracking1@malabar-group.com');
+        $mail->addAddress('export-tracking@malabar-group.com');
+        $mail->addAddress('import-tracking@malabar-group.com');
+        $mail->addAddress('export-tracking-klesa@malabar-group.com');
+        $mail->addAddress('ops-kasumbalesa@malabar-group.com');
+        $mail->addAddress('john@malabar-group.com');
+        $mail->addAddress('deo@malabar-group.com');
         //$mail->addBCC('bcc@example.com');
 
         //Attachments
@@ -327,6 +367,14 @@ if ($maClasse-> nbreUnderPreparation()>0) {
         $mail->addAddress('vijeesh@malabar-group.com');
         $mail->addAddress('rajeev@malabar-group.com');
         $mail->addAddress('jeremy@belej-consulting.com');
+        $mail->addAddress('malabartracking@malabar-group.com');
+        $mail->addAddress('malabartracking1@malabar-group.com');
+        $mail->addAddress('export-tracking@malabar-group.com');
+        $mail->addAddress('import-tracking@malabar-group.com');
+        $mail->addAddress('export-tracking-klesa@malabar-group.com');
+        $mail->addAddress('ops-kasumbalesa@malabar-group.com');
+        $mail->addAddress('john@malabar-group.com');
+        $mail->addAddress('deo@malabar-group.com');
         //$mail->addBCC('bcc@example.com');
 
         //Attachments
@@ -387,6 +435,14 @@ if ($maClasse-> nbreDelaiDateClotureSansDeliver()>0) {
         $mail->addAddress('vijeesh@malabar-group.com');
         $mail->addAddress('rajeev@malabar-group.com');
         $mail->addAddress('jeremy@belej-consulting.com');
+        $mail->addAddress('malabartracking@malabar-group.com');
+        $mail->addAddress('malabartracking1@malabar-group.com');
+        $mail->addAddress('export-tracking@malabar-group.com');
+        $mail->addAddress('import-tracking@malabar-group.com');
+        $mail->addAddress('export-tracking-klesa@malabar-group.com');
+        $mail->addAddress('ops-kasumbalesa@malabar-group.com');
+        $mail->addAddress('john@malabar-group.com');
+        $mail->addAddress('deo@malabar-group.com');
         //$mail->addBCC('bcc@example.com');
 
         //Attachments
@@ -444,6 +500,14 @@ if ($maClasse-> nbreArriveKlsa2Jour()>0) {
         $mail->addAddress('vijeesh@malabar-group.com');
         $mail->addAddress('rajeev@malabar-group.com');
         $mail->addAddress('jeremy@belej-consulting.com');
+        $mail->addAddress('malabartracking@malabar-group.com');
+        $mail->addAddress('malabartracking1@malabar-group.com');
+        $mail->addAddress('export-tracking@malabar-group.com');
+        $mail->addAddress('import-tracking@malabar-group.com');
+        $mail->addAddress('export-tracking-klesa@malabar-group.com');
+        $mail->addAddress('ops-kasumbalesa@malabar-group.com');
+        $mail->addAddress('john@malabar-group.com');
+        $mail->addAddress('deo@malabar-group.com');
         //$mail->addBCC('bcc@example.com');
 
         //Attachments
@@ -501,6 +565,14 @@ if ($maClasse-> nbreArriveKlsa2Jour()>0) {
         $mail->addAddress('vijeesh@malabar-group.com');
         $mail->addAddress('rajeev@malabar-group.com');
         $mail->addAddress('jeremy@belej-consulting.com');
+        $mail->addAddress('malabartracking@malabar-group.com');
+        $mail->addAddress('malabartracking1@malabar-group.com');
+        $mail->addAddress('export-tracking@malabar-group.com');
+        $mail->addAddress('import-tracking@malabar-group.com');
+        $mail->addAddress('export-tracking-klesa@malabar-group.com');
+        $mail->addAddress('ops-kasumbalesa@malabar-group.com');
+        $mail->addAddress('john@malabar-group.com');
+        $mail->addAddress('deo@malabar-group.com');
         //$mail->addBCC('bcc@example.com');
 
         //Attachments
