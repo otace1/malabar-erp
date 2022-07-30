@@ -125,7 +125,7 @@
 
                       if ($maClasse-> getUtilisateurClientModeleLicence($_SESSION['id_util'], '2')['id_cli'] == 869 && $_GET['id_mod_trac'] == 2) {
                         ?>
-                    <button class="btn btn-xs btn-success square-btn-adjust" onclick="window.location.replace('../pages/exportExcelMMGImport.php?id_cli=<?php echo $maClasse-> getUtilisateurClientModeleLicence($_SESSION['id_util'], '2')['id_cli']; ?>&id_mod_trans=1&id_mod_trac=<?php echo $_GET['id_mod_trac']; ?>&commodity=&statut=&id_march=','pop1','width=80,height=80');">
+                    <button class="btn btn-xs btn-success square-btn-adjust" onclick="window.location.replace('../pages/exportExcelMMGImport.php?id_cli=<?php echo $maClasse-> getUtilisateurClientModeleLicence($_SESSION['id_util'], '2')['id_cli']; ?>&id_mod_trans=1&id_mod_trac=<?php echo $_GET['id_mod_trac']; ?>&commodity=&statut=&id_march=6','pop1','width=80,height=80');">
                       <i class="fas fa-file-excel"></i> Export All Import Files In Excel File
                     </button>
                         <?php
@@ -346,7 +346,7 @@
 
                       if ($maClasse-> getUtilisateurClientModeleLicence($_SESSION['id_util'], '2')['id_cli'] == 869 && $_GET['id_mod_trac'] == 2) {
                         ?>
-                    <button class="btn btn-xs btn-success square-btn-adjust" onclick="window.location.replace('../pages/exportExcelMMGImport.php?id_cli=<?php echo $maClasse-> getUtilisateurClientModeleLicence($_SESSION['id_util'], '2')['id_cli']; ?>&id_mod_trans=1&id_mod_trac=<?php echo $_GET['id_mod_trac']; ?>&commodity=&statut=&id_march=','pop1','width=80,height=80');">
+                    <button class="btn btn-xs btn-success square-btn-adjust" onclick="window.location.replace('../pages/exportExcelMMGImport.php?id_cli=<?php echo $maClasse-> getUtilisateurClientModeleLicence($_SESSION['id_util'], '2')['id_cli']; ?>&id_mod_trans=1&id_mod_trac=<?php echo $_GET['id_mod_trac']; ?>&commodity=&statut=&id_march=6','pop1','width=80,height=80');">
                       <i class="fas fa-file-excel"></i> Export All Export Files In Excel File
                     </button>
                         <?php
