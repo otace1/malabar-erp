@@ -125,7 +125,7 @@
 
                       if ($maClasse-> getUtilisateurClientModeleLicence($_SESSION['id_util'], '2')['id_cli'] == 869 && $_GET['id_mod_trac'] == 2) {
                         ?>
-                    <button class="btn btn-xs btn-success square-btn-adjust" onclick="window.location.replace('exportExcelMMGImport.php?id_cli=<?php echo $maClasse-> getUtilisateurClientModeleLicence($_SESSION['id_util'], '2')['id_cli']; ?>&id_mod_trans=1&id_mod_trac=<?php echo $_GET['id_mod_trac']; ?>&commodity=&statut=&id_march=','pop1','width=80,height=80');">
+                    <button class="btn btn-xs btn-success square-btn-adjust" onclick="window.location.replace('../pages/exportExcelMMGImport.php?id_cli=<?php echo $maClasse-> getUtilisateurClientModeleLicence($_SESSION['id_util'], '2')['id_cli']; ?>&id_mod_trans=1&id_mod_trac=<?php echo $_GET['id_mod_trac']; ?>&commodity=&statut=&id_march=','pop1','width=80,height=80');">
                       <i class="fas fa-file-excel"></i> Export All Import Files In Excel File
                     </button>
                         <?php
@@ -346,7 +346,7 @@
 
                       if ($maClasse-> getUtilisateurClientModeleLicence($_SESSION['id_util'], '2')['id_cli'] == 869 && $_GET['id_mod_trac'] == 2) {
                         ?>
-                    <button class="btn btn-xs btn-success square-btn-adjust" onclick="window.location.replace('exportExcelMMGImport.php?id_cli=<?php echo $maClasse-> getUtilisateurClientModeleLicence($_SESSION['id_util'], '2')['id_cli']; ?>&id_mod_trans=1&id_mod_trac=<?php echo $_GET['id_mod_trac']; ?>&commodity=&statut=&id_march=','pop1','width=80,height=80');">
+                    <button class="btn btn-xs btn-success square-btn-adjust" onclick="window.location.replace('../pages/exportExcelMMGImport.php?id_cli=<?php echo $maClasse-> getUtilisateurClientModeleLicence($_SESSION['id_util'], '2')['id_cli']; ?>&id_mod_trans=1&id_mod_trac=<?php echo $_GET['id_mod_trac']; ?>&commodity=&statut=&id_march=','pop1','width=80,height=80');">
                       <i class="fas fa-file-excel"></i> Export All Export Files In Excel File
                     </button>
                         <?php
@@ -358,19 +358,19 @@
                     <button type="button" class="btn btn-xs btn-success dropdown-toggle dropdown-icon" data-toggle="dropdown">
                       <i class="fas fa-file-excel"></i> Export All Export Files In Excel File
                       <div class="dropdown-menu" role="menu">
-                        <a class="dropdown-item"onclick="window.location.replace('../pages/exportExcel2.php?id_cli=<?php echo $maClasse-> getUtilisateurClientModeleLicence($_SESSION['id_util'], '2')['id_cli']; ?>&id_mod_trans=1&id_mod_trac=<?php echo $_GET['id_mod_trac']; ?>&commodity=&statut=&id_march=','pop1','width=80,height=80');">
+                        <a class="dropdown-item"onclick="window.location.replace('../pages/exportExcel2.php?id_cli=<?php echo $maClasse-> getUtilisateurClientModeleLicence($_SESSION['id_util'], '1')['id_cli']; ?>&id_mod_trans=1&id_mod_trac=<?php echo $_GET['id_mod_trac']; ?>&commodity=&statut=&id_march=','pop1','width=80,height=80');">
                           Export All Files
                         </a>
                         <a class="dropdown-item" href="#"><hr></a>
-                        <a class="dropdown-item"onclick="window.location.replace('../pages/exportExcel2.php?id_cli=<?php echo $maClasse-> getUtilisateurClientModeleLicence($_SESSION['id_util'], '2')['id_cli']; ?>&id_mod_trans=1&id_mod_trac=<?php echo $_GET['id_mod_trac']; ?>&commodity=&statut=&id_march=&annee=2022','pop1','width=80,height=80');">
+                        <a class="dropdown-item"onclick="window.location.replace('../pages/exportExcel2.php?id_cli=<?php echo $maClasse-> getUtilisateurClientModeleLicence($_SESSION['id_util'], '1')['id_cli']; ?>&id_mod_trans=1&id_mod_trac=<?php echo $_GET['id_mod_trac']; ?>&commodity=&statut=&id_march=&annee=2022','pop1','width=80,height=80');">
                           Export 2022 Files
                         </a>
                         <a class="dropdown-item" href="#"><hr></a>
-                        <a class="dropdown-item"onclick="window.location.replace('../pages/exportExcel2.php?id_cli=<?php echo $maClasse-> getUtilisateurClientModeleLicence($_SESSION['id_util'], '2')['id_cli']; ?>&id_mod_trans=1&id_mod_trac=<?php echo $_GET['id_mod_trac']; ?>&commodity=&statut=&id_march=&annee=2021','pop1','width=80,height=80');">
+                        <a class="dropdown-item"onclick="window.location.replace('../pages/exportExcel2.php?id_cli=<?php echo $maClasse-> getUtilisateurClientModeleLicence($_SESSION['id_util'], '1')['id_cli']; ?>&id_mod_trans=1&id_mod_trac=<?php echo $_GET['id_mod_trac']; ?>&commodity=&statut=&id_march=&annee=2021','pop1','width=80,height=80');">
                           Export 2021 Files
                         </a>
                         <a class="dropdown-item" href="#"><hr></a>
-                        <a class="dropdown-item"onclick="window.location.replace('../pages/exportExcel2.php?id_cli=<?php echo $maClasse-> getUtilisateurClientModeleLicence($_SESSION['id_util'], '2')['id_cli']; ?>&id_mod_trans=1&id_mod_trac=<?php echo $_GET['id_mod_trac']; ?>&commodity=&statut=&id_march=&annee=2020','pop1','width=80,height=80');">
+                        <a class="dropdown-item"onclick="window.location.replace('../pages/exportExcel2.php?id_cli=<?php echo $maClasse-> getUtilisateurClientModeleLicence($_SESSION['id_util'], '1')['id_cli']; ?>&id_mod_trans=1&id_mod_trac=<?php echo $_GET['id_mod_trac']; ?>&commodity=&statut=&id_march=&annee=2020','pop1','width=80,height=80');">
                           Export 2020 Files
                         </a>
                         <a class="dropdown-item" href="#"><hr></a>
