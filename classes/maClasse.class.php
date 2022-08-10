@@ -2415,7 +2415,7 @@
 		                </a>
 		              </li>-->
 
-		              <li class="nav-item has-treeview">
+		              <!-- <li class="nav-item has-treeview">
 			        	<a href="#" class="nav-link" class="nav-link ">
 		                  &nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-certificate nav-icon"></i>
 		                  <p>AV</p>
@@ -2423,7 +2423,7 @@
 		            	<ul class="nav nav-treeview">
 		              		<?php $this-> afficherMenuAvClientModeleLicence($reponse['id_mod_lic']);?>
 		            	</ul>
-		              </li>
+		              </li> -->
 		              <li class="nav-item">
 		                <a href="apurementLicence.php?id_mod_lic=<?php echo $reponse['id_mod_lic'];?>&amp;id_cli=<?php echo $id_cli;?>" class="nav-link">
 		                  &nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-check nav-icon"></i>
@@ -26590,6 +26590,35 @@
 												FROM licence l
 												WHERE l.id_mod_lic = ?
 													AND (l.id_cli = 845 OR l.id_cli = 885)
+													AND (l.fob > ROUND((
+															SELECT SUM(fob) AS fob
+																FROM dossier
+																WHERE num_lic = l.num_lic
+															))+1
+															OR l.num_lic NOT IN(
+																SELECT DISTINCT(num_lic) FROM dossier
+																)
+														)
+													AND DATE(CURRENT_DATE()) <= (
+															SELECT date_exp
+																FROM expiration_licence
+																WHERE num_lic = l.num_lic
+																ORDER BY id_date_exp DESC
+																LIMIT 0, 1
+														)
+												ORDER BY l.num_lic  ASC");
+
+				$requete-> execute(array($entree['id_mod_lic']));
+
+			}else if ($id_cli==918 || $id_cli==903) {
+				
+				$requete = $connexion-> prepare("SELECT l.num_lic AS num_lic, 
+														l.fob AS fob, 
+														DATE(CURRENT_DATE()) AS aujourdhui, 
+														l.date_val
+												FROM licence l
+												WHERE l.id_mod_lic = ?
+													AND (l.id_cli = 918 OR l.id_cli = 903)
 													AND (l.fob > ROUND((
 															SELECT SUM(fob) AS fob
 																FROM dossier
