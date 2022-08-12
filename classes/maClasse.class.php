@@ -13055,7 +13055,11 @@
 
 			$entree['id_cli'] = $id_cli;
 			$entree['id_mod_lic'] = $id_mod_lic;
-			$entree['motCle'] = '%'.$motCle.'%';
+			// $entree['motCle'] = '%'.$motCle.'%';
+			// $entree['motCle'] = "'%$motCle%'";
+			$entree['motCle'] = $motCle;
+
+			// echo '--------------------------------'.$entree['motCle'];
 
 			$compteur=0;
 
@@ -13077,11 +13081,9 @@
 												WHERE cl.id_cli = d.id_cli
 													$sqlClient
 													AND d.id_mod_lic = ?
+													AND (d.ref_dos LIKE ? OR d.num_lic LIKE ?)
 													AND d.id_dos = dt.id_dos
 													AND dt.id_trans_ap = tr.id_trans_ap
-													AND (d.ref_dos LIKE (?)
-														OR d.num_lic LIKE (?)
-														)
 												ORDER BY tr.id_trans_ap DESC");
 			$requete-> execute(array($entree['id_mod_lic'], $entree['motCle'], $entree['motCle']));
 			while ($reponse = $requete-> fetch()) {
