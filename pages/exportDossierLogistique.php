@@ -81,7 +81,7 @@ $indiceSheet = 0;
 		// $objDrawing->setWorksheet($excel->getActiveSheet());
 
 		//Figer colonne
-		$excel->getActiveSheet()->freezePane('K2');
+		$excel->getActiveSheet()->freezePane('G2');
 
 		/*$objDrawing = new PHPExcel_Worksheet_MemoryDrawing();
 		$objDrawing->setName('Sample image');
@@ -113,6 +113,459 @@ $indiceSheet = 0;
 		        'color' => array('rgb' => 'FFFFFF'),
 		        'name' => 'Verdana'
 		    ));
+if ($_GET['id_trans']==3) {//Import Route
+	
+		$excel-> getActiveSheet()
+			-> setCellValue($col.$row, '#');
+		cellColor($col.$row, '000000');
+		alignement($col.$row);
+		$excel->getActiveSheet()
+			->getStyle($col.$row)->applyFromArray($styleHeader);
+		$col++;
+
+		$excel-> getActiveSheet()
+			-> setCellValue($col.$row, 'MCA File No');
+		cellColor($col.$row, '000000');
+		alignement($col.$row);
+		$excel->getActiveSheet()
+			->getStyle($col.$row)->applyFromArray($styleHeader);
+		$col++;
+
+		$excel-> getActiveSheet()
+			-> setCellValue($col.$row, 'PoL');
+		cellColor($col.$row, '000000');
+		alignement($col.$row);
+		$excel->getActiveSheet()
+			->getStyle($col.$row)->applyFromArray($styleHeader);
+		$col++;
+
+		$excel-> getActiveSheet()
+			-> setCellValue($col.$row, 'PoD');
+		cellColor($col.$row, '000000');
+		alignement($col.$row);
+		$excel->getActiveSheet()
+			->getStyle($col.$row)->applyFromArray($styleHeader);
+		$col++;
+
+		$excel-> getActiveSheet()
+			-> setCellValue($col.$row, 'Truck No');
+		cellColor($col.$row, '000000');
+		alignement($col.$row);
+		$excel->getActiveSheet()
+			->getStyle($col.$row)->applyFromArray($styleHeader);
+		$col++;
+
+		$excel-> getActiveSheet()
+			-> setCellValue($col.$row, 'Trailer No');
+		cellColor($col.$row, '000000');
+		alignement($col.$row);
+		$excel->getActiveSheet()
+			->getStyle($col.$row)->applyFromArray($styleHeader);
+		$col++;
+
+		$excel-> getActiveSheet()
+			-> setCellValue($col.$row, 'Driver Name');
+		cellColor($col.$row, '000000');
+		alignement($col.$row);
+		$excel->getActiveSheet()
+			->getStyle($col.$row)->applyFromArray($styleHeader);
+		$col++;
+
+		$excel-> getActiveSheet()
+			-> setCellValue($col.$row, 'Lic Number');
+		cellColor($col.$row, '000000');
+		alignement($col.$row);
+		$excel->getActiveSheet()
+			->getStyle($col.$row)->applyFromArray($styleHeader);
+		$col++;
+
+		$excel-> getActiveSheet()
+			-> setCellValue($col.$row, 'Tel Number');
+		cellColor($col.$row, '000000');
+		alignement($col.$row);
+		$excel->getActiveSheet()
+			->getStyle($col.$row)->applyFromArray($styleHeader);
+		$col++;
+
+		$excel-> getActiveSheet()
+			-> setCellValue($col.$row, 'Date Of Loading');
+		cellColor($col.$row, '000000');
+		alignement($col.$row);
+		$excel->getActiveSheet()
+			->getStyle($col.$row)->applyFromArray($styleHeader);
+		$col++;
+
+		$excel-> getActiveSheet()
+			-> setCellValue($col.$row, 'Date Of Dispatch');
+		cellColor($col.$row, '000000');
+		alignement($col.$row);
+		$excel->getActiveSheet()
+			->getStyle($col.$row)->applyFromArray($styleHeader);
+		$col++;
+
+		$excel-> getActiveSheet()
+			-> setCellValue($col.$row, 'Entry Point');
+		cellColor($col.$row, '000000');
+		alignement($col.$row);
+		$excel->getActiveSheet()
+			->getStyle($col.$row)->applyFromArray($styleHeader);
+		$col++;
+
+		$excel-> getActiveSheet()
+			-> setCellValue($col.$row, 'Border In');
+		cellColor($col.$row, '000000');
+		alignement($col.$row);
+		$excel->getActiveSheet()
+			->getStyle($col.$row)->applyFromArray($styleHeader);
+		$col++;
+
+		$excel-> getActiveSheet()
+			-> setCellValue($col.$row, 'Border Out');
+		cellColor($col.$row, '000000');
+		alignement($col.$row);
+		$excel->getActiveSheet()
+			->getStyle($col.$row)->applyFromArray($styleHeader);
+		$col++;
+
+		$excel-> getActiveSheet()
+			-> setCellValue($col.$row, 'Present Position');
+		cellColor($col.$row, '000000');
+		alignement($col.$row);
+		$excel->getActiveSheet()
+			->getStyle($col.$row)->applyFromArray($styleHeader);
+		$col++;
+
+		$excel-> getActiveSheet()
+			-> setCellValue($col.$row, 'STATUS');
+		cellColor($col.$row, '000000');
+		alignement($col.$row);
+		$excel->getActiveSheet()
+			->getStyle($col.$row)->applyFromArray($styleHeader);
+		$col++;
+
+		$excel-> getActiveSheet()
+			-> setCellValue($col.$row, 'Remarks');
+		cellColor($col.$row, '000000');
+		alignement($col.$row);
+		$excel->getActiveSheet()
+			->getStyle($col.$row)->applyFromArray($styleHeader);
+		$col++;
+
+		$excel-> getActiveSheet()-> getStyle('A1:'.$col.$row)-> applyFromArray(
+					array(
+						'borders' => array(
+							'allborders' => array(
+								'style' => PHPExcel_Style_Border::BORDER_THIN
+							)
+						)
+					)
+				);
+
+
+		$row++;
+		$col = 'A';
+
+		//Fusionner les cellules
+		/*$excel-> getActiveSheet()
+			-> mergeCells('A1:I1');*/
+
+		//Recuperation des en-tête
+		
+		//----------- Récuperation des DOSSIERS ------------
+
+		$requete = $connexion-> prepare("SELECT d.*, 
+												IF(d.id_mod_trans='1', 'ROAD', 'AIR') AS nom_mod_trans
+											FROM dossier_logistique d
+											WHERE d.id_cli = ?
+												AND d.id_trans = ?");
+
+		$requete-> execute(array($_GET['id_cli'], $_GET['id_trans']));
+		while ($reponse = $requete-> fetch()) {
+			$bg = "";
+			$styleHeader = '';
+			$couleur = 'FFFFFF';
+			$apurement = '';
+			$col = 'A';
+			
+			$compteur++;
+
+			$ok_apurement = '';
+			
+			if ($reponse['statut']=='ARRIVED') {
+
+				$style = "style='color: blue;'";
+				$styleHeader = array(
+				    'font'  => array(
+				        'color' => array('rgb' => '0000FF')
+				    ));
+
+			}else if ($reponse['statut']=='CANCELLED'){
+				$style = "style='color: red;'";
+				$styleHeader = array(
+				    'font'  => array(
+				        'color' => array('rgb' => 'FF0000')
+				    ));
+			}else{
+				$style = "";
+				$styleHeader = array(
+				    'font'  => array(
+				        'color' => array('rgb' => '000000')
+				    ));
+			}
+
+			$excel-> getActiveSheet()
+				-> setCellValue($col.$row, $compteur);
+            
+			$excel->getActiveSheet()
+				->getStyle($col.$row)->applyFromArray($styleHeader);
+            alignement($col.$row);
+
+			$excel->getActiveSheet()
+		        ->getColumnDimension($col)
+		        ->setAutoSize(true);
+			$col++;
+			
+			$excel-> getActiveSheet()
+				-> setCellValue($col.$row, $reponse['ref_dos']);
+            
+			$excel->getActiveSheet()
+				->getStyle($col.$row)->applyFromArray($styleHeader);
+            alignement($col.$row);
+
+			$excel->getActiveSheet()
+		        ->getColumnDimension($col)
+		        ->setAutoSize(true);
+			$col++;
+			
+			$excel-> getActiveSheet()
+				-> setCellValue($col.$row, $reponse['point_load']);
+            
+			$excel->getActiveSheet()
+				->getStyle($col.$row)->applyFromArray($styleHeader);
+            alignement($col.$row);
+
+			$excel->getActiveSheet()
+		        ->getColumnDimension($col)
+		        ->setAutoSize(true);
+			$col++;
+			
+			$excel-> getActiveSheet()
+				-> setCellValue($col.$row, $reponse['destination']);
+            
+			$excel->getActiveSheet()
+				->getStyle($col.$row)->applyFromArray($styleHeader);
+            alignement($col.$row);
+
+			$excel->getActiveSheet()
+		        ->getColumnDimension($col)
+		        ->setAutoSize(true);
+			$col++;
+			
+			$excel-> getActiveSheet()
+				-> setCellValue($col.$row, $reponse['horse']);
+            
+			$excel->getActiveSheet()
+				->getStyle($col.$row)->applyFromArray($styleHeader);
+            alignement($col.$row);
+
+			$excel->getActiveSheet()
+		        ->getColumnDimension($col)
+		        ->setAutoSize(true);
+			$col++;
+			
+			$excel-> getActiveSheet()
+				-> setCellValue($col.$row, $reponse['trailer_1']);
+            
+			$excel->getActiveSheet()
+				->getStyle($col.$row)->applyFromArray($styleHeader);
+            alignement($col.$row);
+
+			$excel->getActiveSheet()
+		        ->getColumnDimension($col)
+		        ->setAutoSize(true);
+			$col++;
+			
+			$excel-> getActiveSheet()
+				-> setCellValue($col.$row, $reponse['nom_chauf']);
+            
+			$excel->getActiveSheet()
+				->getStyle($col.$row)->applyFromArray($styleHeader);
+            alignement($col.$row);
+
+			$excel->getActiveSheet()
+		        ->getColumnDimension($col)
+		        ->setAutoSize(true);
+			$col++;
+			
+			$excel-> getActiveSheet()
+				-> setCellValue($col.$row, $reponse['lic_num']);
+            
+			$excel->getActiveSheet()
+				->getStyle($col.$row)->applyFromArray($styleHeader);
+            alignement($col.$row);
+
+			$excel->getActiveSheet()
+		        ->getColumnDimension($col)
+		        ->setAutoSize(true);
+			$col++;
+			
+			$excel-> getActiveSheet()
+				-> setCellValue($col.$row, $reponse['tel_chauf']);
+            
+			$excel->getActiveSheet()
+				->getStyle($col.$row)->applyFromArray($styleHeader);
+            alignement($col.$row);
+
+			$excel->getActiveSheet()
+		        ->getColumnDimension($col)
+		        ->setAutoSize(true);
+			$col++;
+
+			$excel-> getActiveSheet()
+				-> setCellValue($col.$row, $reponse['date_load']);
+            
+			$excel->getActiveSheet()
+				->getStyle($col.$row)->applyFromArray($styleHeader);
+            alignement($col.$row);
+
+			$excel->getActiveSheet()
+		        ->getColumnDimension($col)
+		        ->setAutoSize(true);
+			$col++;
+
+			$excel-> getActiveSheet()
+				-> setCellValue($col.$row, $reponse['date_dispatch']);
+            
+			$excel->getActiveSheet()
+				->getStyle($col.$row)->applyFromArray($styleHeader);
+            alignement($col.$row);
+
+			$excel->getActiveSheet()
+		        ->getColumnDimension($col)
+		        ->setAutoSize(true);
+			$col++;
+
+			$excel-> getActiveSheet()
+				-> setCellValue($col.$row, $reponse['frontiere']);
+            
+			$excel->getActiveSheet()
+				->getStyle($col.$row)->applyFromArray($styleHeader);
+            alignement($col.$row);
+
+			$excel->getActiveSheet()
+		        ->getColumnDimension($col)
+		        ->setAutoSize(true);
+			$col++;
+
+
+			//Format date
+			if ($reponse['front_in']!='') {
+				$excel-> getActiveSheet()
+				->setCellValue($col.$row, PHPExcel_Shared_Date::PHPToExcel(convert_date($reponse['front_in'])));
+				$excel->getActiveSheet()->getStyle($col.$row)->getNumberFormat()
+	             ->setFormatCode('dd/mm/yyyy');
+
+				$excel->getActiveSheet()
+			        ->getColumnDimension($col)
+			        ->setAutoSize(true);
+	
+				$excel->getActiveSheet()
+					->getStyle($col.$row)->applyFromArray($styleHeader);
+	            alignement($col.$row);
+
+
+	             $col++;
+			}else{
+	             $col++;
+			}
+			
+			//Format date
+			if ($reponse['front_out']!='') {
+				$excel-> getActiveSheet()
+				->setCellValue($col.$row, PHPExcel_Shared_Date::PHPToExcel(convert_date($reponse['front_out'])));
+				$excel->getActiveSheet()->getStyle($col.$row)->getNumberFormat()
+	             ->setFormatCode('dd/mm/yyyy');
+
+				$excel->getActiveSheet()
+			        ->getColumnDimension($col)
+			        ->setAutoSize(true);
+	
+				$excel->getActiveSheet()
+					->getStyle($col.$row)->applyFromArray($styleHeader);
+	            alignement($col.$row);
+
+
+	             $col++;
+			}else{
+	             $col++;
+			}
+			
+			$excel-> getActiveSheet()
+				-> setCellValue($col.$row, $reponse['localisation']);
+            
+			$excel->getActiveSheet()
+				->getStyle($col.$row)->applyFromArray($styleHeader);
+            alignement($col.$row);
+
+			$excel->getActiveSheet()
+		        ->getColumnDimension($col)
+		        ->setAutoSize(true);
+			$col++;
+			
+			$excel-> getActiveSheet()
+				-> setCellValue($col.$row, $reponse['statut']);
+            
+			$excel->getActiveSheet()
+				->getStyle($col.$row)->applyFromArray($styleHeader);
+            alignement($col.$row);
+
+			$excel->getActiveSheet()
+		        ->getColumnDimension($col)
+		        ->setAutoSize(true);
+			$col++;
+			
+			$excel-> getActiveSheet()
+				-> setCellValue($col.$row, $reponse['remarque']);
+            
+			$excel->getActiveSheet()
+				->getStyle($col.$row)->applyFromArray($styleHeader);
+            alignement($col.$row);
+
+			$excel->getActiveSheet()
+		        ->getColumnDimension($col)
+		        ->setAutoSize(true);
+			$col++;
+			
+			$row++;
+
+		}$requete-> closeCursor();
+		//----------- FIN Récuperation des DOSSIERS ------------
+
+		//Bordure des Cellules
+		$excel-> getActiveSheet()-> getStyle('A2:'.$col.$row)-> applyFromArray(
+			array(
+				'borders' => array(
+					'allborders' => array(
+						'style' => PHPExcel_Style_Border::BORDER_THIN
+					)
+				)
+			)
+		);
+
+		$nom_transit = $maClasse-> getNomTransit($_GET['id_trans']);
+		$excel->getActiveSheet()->setTitle("LOGISTIC $nom_transit");
+
+
+		// Set active sheet index to the first sheet, so Excel opens this as the first sheet
+		$excel->setActiveSheetIndex($indiceSheet);
+
+
+		$indiceSheet++;
+
+		$excel->createSheet();
+
+
+}else{
 
 		$excel-> getActiveSheet()
 			-> setCellValue($col.$row, '#');
@@ -310,6 +763,8 @@ $indiceSheet = 0;
 			$apurement = '';
 			$col = 'A';
 			
+			$compteur++;
+
 			$ok_apurement = '';
 			
 			if ($reponse['statut']=='ARRIVED') {
@@ -610,8 +1065,6 @@ $indiceSheet = 0;
 		        ->getColumnDimension($col)
 		        ->setAutoSize(true);
 			$col++;
-			
-			$compteur++;
 			$row++;
 
 		}$requete-> closeCursor();
@@ -628,19 +1081,8 @@ $indiceSheet = 0;
 			)
 		);
 
-		//Dimension des Colonnes
-		// $excel-> getActiveSheet()-> getColumnDimension('A')-> setWidth(5);
-		// $excel-> getActiveSheet()-> getColumnDimension('B')-> setWidth(20);
-		// $excel-> getActiveSheet()-> getColumnDimension('C')-> setWidth(20);
-		// $excel-> getActiveSheet()-> getColumnDimension('D')-> setWidth(20);
-		// $excel-> getActiveSheet()-> getColumnDimension('E')-> setWidth(20);
-		// $excel-> getActiveSheet()-> getColumnDimension('F')-> setWidth(20);
-		// $excel-> getActiveSheet()-> getColumnDimension('G')-> setWidth(20);
-		// $excel-> getActiveSheet()-> getColumnDimension('H')-> setWidth(20);
-		//$excel-> getActiveSheet()-> getColumnDimension('')-> setWidth(25);
-		// Rename worksheet
 		$nom_transit = $maClasse-> getNomTransit($_GET['id_trans']);
-		$excel->getActiveSheet()->setTitle("DOSSIERS $nom_transit");
+		$excel->getActiveSheet()->setTitle("LOGISTIC $nom_transit");
 
 
 		// Set active sheet index to the first sheet, so Excel opens this as the first sheet
@@ -652,6 +1094,7 @@ $indiceSheet = 0;
 		$excel->createSheet();
 
 
+}
 //--- FIN Recuperation années -------
 
 

@@ -97,6 +97,43 @@ for ($i=1; $i <= 15 ; $i++) {
       if (isset($_POST['remarque_'.$i]) && ($_POST['remarque_'.$i]!='')) {
         $maClasse-> MAJ_remarque_logistic($_POST['ref_dos_'.$i], $_POST['remarque_'.$i]);
       }
+
+      if (isset($_POST['point_load_'.$i]) && ($_POST['point_load_'.$i]!='')) {
+        $maClasse-> MAJ_point_load_logistic($_POST['ref_dos_'.$i], $_POST['point_load_'.$i]);
+      }
+      if (isset($_POST['horse_'.$i]) && ($_POST['horse_'.$i]!='')) {
+        $maClasse-> MAJ_horse_logistic($_POST['ref_dos_'.$i], $_POST['horse_'.$i]);
+      }
+      if (isset($_POST['trailer_1_'.$i]) && ($_POST['trailer_1_'.$i]!='')) {
+        $maClasse-> MAJ_trailer_1_logistic($_POST['ref_dos_'.$i], $_POST['trailer_1_'.$i]);
+      }
+      if (isset($_POST['nom_chauf_'.$i]) && ($_POST['nom_chauf_'.$i]!='')) {
+        $maClasse-> MAJ_nom_chauf_logistic($_POST['ref_dos_'.$i], $_POST['nom_chauf_'.$i]);
+      }
+      if (isset($_POST['lic_num_'.$i]) && ($_POST['lic_num_'.$i]!='')) {
+        $maClasse-> MAJ_lic_num_logistic($_POST['ref_dos_'.$i], $_POST['lic_num_'.$i]);
+      }
+      if (isset($_POST['tel_chauf_'.$i]) && ($_POST['tel_chauf_'.$i]!='')) {
+        $maClasse-> MAJ_tel_chauf_logistic($_POST['ref_dos_'.$i], $_POST['tel_chauf_'.$i]);
+      }
+      if (isset($_POST['date_load_'.$i]) && ($_POST['date_load_'.$i]!='')) {
+        $maClasse-> MAJ_date_load_logistic($_POST['ref_dos_'.$i], $_POST['date_load_'.$i]);
+      }
+      if (isset($_POST['date_dispatch_'.$i]) && ($_POST['date_dispatch_'.$i]!='')) {
+        $maClasse-> MAJ_date_dispatch_logistic($_POST['ref_dos_'.$i], $_POST['date_dispatch_'.$i]);
+      }
+      if (isset($_POST['frontiere_'.$i]) && ($_POST['frontiere_'.$i]!='')) {
+        $maClasse-> MAJ_frontiere_logistic($_POST['ref_dos_'.$i], $_POST['frontiere_'.$i]);
+      }
+      if (isset($_POST['front_in_'.$i]) && ($_POST['front_in_'.$i]!='')) {
+        $maClasse-> MAJ_front_in_logistic($_POST['ref_dos_'.$i], $_POST['front_in_'.$i]);
+      }
+      if (isset($_POST['front_out_'.$i]) && ($_POST['front_out_'.$i]!='')) {
+        $maClasse-> MAJ_front_out_logistic($_POST['ref_dos_'.$i], $_POST['front_out_'.$i]);
+      }
+      if (isset($_POST['localisation_'.$i]) && ($_POST['localisation_'.$i]!='')) {
+        $maClasse-> MAJ_localisation_logistic($_POST['ref_dos_'.$i], $_POST['localisation_'.$i]);
+      }
     }
 
     ?>
@@ -146,12 +183,22 @@ for ($i=1; $i <= 15 ; $i++) {
                 <h3 class="card-title" style="font-weight: bold;">
                   <?php
                     if(isset($_POST['creerDossierLogistique'])){
+                      if ($_GET['id_trans']==3 && $_GET['id_mod_trans']==1) {
+                        $maClasse-> creerDossierLogistique2($_POST['ref_dos'], $_POST['point_load'], 
+                                                            $_POST['horse'], $_POST['trailer_1'], 
+                                                            $_POST['nom_chauf'], $_POST['lic_num'], 
+                                                            $_POST['tel_chauf'], $_POST['remarque'], $_POST['frontiere'], $_POST['destination'], 
+                                                            NULL, $_GET['id_cli'], 
+                                                            $_GET['id_mod_trans'], $_GET['id_trans'], 
+                                                            $_SESSION['id_util']);
+                      }else{
                         $maClasse-> creerDossierLogistique($_POST['ref_dos'], $_POST['ref_mca'], $_POST['road_manif'], 
                                                           $_POST['ref_fact'], $_POST['ref_batch'], $_POST['poids'], 
                                                           $_POST['ref_po'], 
                                                           $_POST['montant_po'], $_POST['origine'], $_POST['destination'], 
                                                           $_POST['transit'], $_GET['id_cli'], $_GET['id_mod_trans'], 
                                                           $_GET['id_trans'], $_SESSION['id_util']);
+                      }
                     }
                   ?>
                 <!--<button class="btn btn-primary square-btn-adjust" id="add">
@@ -250,6 +297,29 @@ for ($i=1; $i <= 15 ; $i++) {
                 <table id="user_data_2" cellspacing="0" width="100%" class="tableau-de-donnees  table table-hover text-nowrap table-sm">
                   <thead>
                   <tr class="bg bg-dark">
+                    <?php
+                      if ($_GET['id_trans']=='3' && $_GET['id_mod_trans']=='1') {
+                      ?>
+                    <th>S.No</th>
+                    <th>MCA File No</th>
+                    <th>PoL</th>
+                    <th>PoD</th>
+                    <th>Truck No</th>
+                    <th>Trailer No</th>
+                    <th>Driver Name</th>
+                    <th>Lic Number</th>
+                    <th>Tel Number</th>
+                    <th>Date Of Loading</th>
+                    <th>Date Of Dispatch</th>
+                    <th>Entry Point</th>
+                    <th>Border In</th>
+                    <th>Border Out</th>
+                    <th>Present Position</th>
+                    <th>STATUS</th>
+                    <th>Remarks</th>
+                      <?php
+                      }else{
+                      ?>
                     <th>#</th>
                     <th>FILE REF</th>
                     <th>MCA FILE</th>
@@ -270,6 +340,9 @@ for ($i=1; $i <= 15 ; $i++) {
                     <th>POD REF</th>
                     <th>STATUS</th>
                     <th>REMARK</th>
+                      <?php
+                      }
+                    ?>
                   </tr>
                   </thead>
                   <tbody>
@@ -397,7 +470,92 @@ for ($i=1; $i <= 15 ; $i++) {
     <!-- /.content -->
   </div>
 
+<?php
+  if($_GET['id_trans']=='3' && $_GET['id_mod_trans']=='1'){
+    ?>
+<div class="modal fade nouveauDossierLogistique" id="modal-default">
+  <div class="modal-dialog modal-lg">
+    <form id="demo-form2" method="POST" action="" data-parsley-validate enctype="multipart/form-data">
+    <div class="modal-content">
+      <div class="modal-header ">
+        <h4 class="modal-title"><i class="fa fa-plus"></i> Nouveau dossier .</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
 
+          <div class="col-md-3">
+            <label for="x_card_code" class="control-label mb-1">FILE NUMBER</label>
+            <input type="text" name="ref_dos" value="<?php echo $maClasse-> getMcaFileLogistique($_GET['id_cli'], $_GET['id_trans']);?>" class="form-control cc-exp" required>
+          </div>
+    <!-- 
+          <div class="col-md-3">
+            <label for="x_card_code" class="control-label mb-1">MCA FILE Num.</label>
+            <input type="text" name="ref_mca" class="form-control cc-exp" >
+          </div>
+           -->
+          <div class="col-md-3">
+            <label for="x_card_code" class="control-label mb-1">PoL.</label>
+            <input type="text" name="point_load" class="form-control cc-exp" >
+          </div>
+
+          <div class="col-md-3">
+            <label for="x_card_code" class="control-label mb-1">PoD</label>
+            <input type="text" name="destination" class="form-control cc-exp">
+          </div>
+
+          <div class="col-md-3">
+            <label for="x_card_code" class="control-label mb-1">Truck No</label>
+            <input type="text" name="horse" class="form-control cc-exp">
+          </div>
+
+          <div class="col-md-3">
+            <label for="x_card_code" class="control-label mb-1">Trailer No</label>
+            <input type="text" name="trailer_1" class="form-control cc-exp" required>
+          </div>
+
+          <div class="col-md-3">
+            <label for="x_card_code" class="control-label mb-1">Driver Name</label>
+            <input type="text" name="nom_chauf" class="form-control cc-exp" required>
+          </div>
+
+          <div class="col-md-3">
+            <label for="x_card_code" class="control-label mb-1">Lic Number</label>
+            <input type="text" name="lic_num" class="form-control cc-exp" required>
+          </div>
+
+          <div class="col-md-3">
+            <label for="x_card_code" class="control-label mb-1">Tel Number</label>
+            <input type="text" name="tel_chauf" class="form-control cc-exp" required>
+          </div>
+
+          <div class="col-md-3">
+            <label for="x_card_code" class="control-label mb-1">Entry Point</label>
+            <input type="text" name="frontiere" class="form-control cc-exp" required>
+          </div>
+
+          <div class="col-md-3">
+            <label for="x_card_code" class="control-label mb-1">Remarks</label>
+            <textarea name="remarque" class="form-control cc-exp" ></textarea>
+          </div>
+
+      </div>
+    </div>
+      <div class="modal-footer justify-content-between">
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Annuler</button>
+        <button type="submit" name="creerDossierLogistique" class="btn btn-primary">Valider</button>
+      </div>
+    </div>
+    </form>
+    <!-- /.modal-content -->
+  </div>
+  <!-- /.modal-dialog -->
+</div>
+    <?php
+  }else{
+    ?>
 <div class="modal fade nouveauDossierLogistique" id="modal-default">
   <div class="modal-dialog modal-lg">
     <form id="demo-form2" method="POST" action="" data-parsley-validate enctype="multipart/form-data">
@@ -489,7 +647,9 @@ for ($i=1; $i <= 15 ; $i++) {
   </div>
   <!-- /.modal-dialog -->
 </div>
-</div>
+    <?php
+  }
+?>
 
 
   <?php include("pied.php");?>
