@@ -126,6 +126,37 @@
 			
 		}
 
+		public function creerDossierLogistique2($ref_dos, $point_load, $horse, $trailer_1, 
+										$nom_chauf, $lic_num, $tel_chauf, $remarque, $frontiere, 
+										$destination, $transit, $id_cli, 
+										$id_mod_trans, $id_trans, $id_util){
+			include('connexion.php');
+			$entree['ref_dos'] = $ref_dos;
+			$entree['point_load'] = $point_load;
+			$entree['horse'] = $horse;
+			$entree['trailer_1'] = $trailer_1;
+			$entree['nom_chauf'] = $nom_chauf;
+			$entree['lic_num'] = $lic_num;
+			$entree['tel_chauf'] = $tel_chauf;
+			$entree['remarque'] = $remarque;
+			$entree['frontiere'] = $frontiere;
+			$entree['destination'] = $destination;
+			$entree['transit'] = $transit;
+			$entree['id_cli'] = $id_cli;
+			$entree['id_mod_trans'] = $id_mod_trans;
+			$entree['id_trans'] = $id_trans;
+			$entree['id_util'] = $id_util;
+			
+			$requete = $connexion-> prepare('INSERT INTO dossier_logistique(ref_dos, point_load, horse, trailer_1, nom_chauf, lic_num, tel_chauf, remarque, frontiere, destination, transit, id_cli, id_mod_trans, id_trans, id_util, statut) 
+												VALUES(?, ?, ?, 
+													?, ?, ?, 
+													?, ?, ?, 
+													?, ?, ?, 
+													?, ?, ?, \'IN TRANSIT\')');
+			$requete-> execute(array($entree['ref_dos'], $entree['point_load'], $entree['horse'], $entree['trailer_1'], $entree['nom_chauf'], $entree['lic_num'], $entree['tel_chauf'], $entree['remarque'], $entree['frontiere'], $entree['destination'], $entree['transit'], $entree['id_cli'], $entree['id_mod_trans'], $entree['id_trans'], $entree['id_util']));
+			
+		}
+
 		public function creerLicenceIB2($id_banq, $num_lic, $id_cli, $id_post, 
 										$id_mon, $fob, $assurance, $fret, 
 										$autre_frais, $fsi, $aur, 
@@ -6452,7 +6483,8 @@
 			if($_SESSION['id_role'] == '1' || $_SESSION['id_role'] == '6' || $_SESSION['id_role'] == '7' || $_SESSION['id_role'] == '8' || $_SESSION['id_role'] == '9' || $_SESSION['id_role'] == '10' || $_SESSION['id_role'] == '11'){
 				$sql = "SELECT id_trans, 
 							nom_trans
-						FROM transit";
+						FROM transit
+						ORDER BY nom_trans";
 
 			$requete = $connexion-> query($sql);
 			while($reponse = $requete-> fetch()){
@@ -17561,6 +17593,52 @@
 					<td class="<?php echo $class;?> <?php echo $bg;?>" style=" <?php echo $color;?>">
 						<?php echo $reponse['ref_dos'];?>
 					</td>
+				<?php
+
+					if ($id_trans==3 && $id_mod_trans==1) {
+					?>
+					<td style="text-align: center;">
+						<input type="text" name="point_load_<?php echo $compteur;?>" value="<?php echo $reponse['point_load'];?>" style="text-transform:uppercase;">
+					</td>
+					<td style="text-align: center;">
+						<input type="text" name="destination_<?php echo $compteur;?>" value="<?php echo $reponse['destination'];?>" style="text-transform:uppercase;">
+					</td>
+					<td style="text-align: center;">
+						<input type="text" name="horse_<?php echo $compteur;?>" value="<?php echo $reponse['horse'];?>" style="text-transform:uppercase;">
+					</td>
+					<td style="text-align: center;">
+						<input type="text" name="trailer_1_<?php echo $compteur;?>" value="<?php echo $reponse['trailer_1'];?>" style="text-transform:uppercase;">
+					</td>
+					<td style="text-align: center;">
+						<input type="text" name="nom_chauf_<?php echo $compteur;?>" value="<?php echo $reponse['nom_chauf'];?>">
+					</td>
+					<td style="text-align: center;">
+						<input type="text" name="lic_num_<?php echo $compteur;?>" value="<?php echo $reponse['lic_num'];?>" style="text-transform:uppercase;">
+					</td>
+					<td style="text-align: center;">
+						<input type="text" name="tel_chauf_<?php echo $compteur;?>" value="<?php echo $reponse['tel_chauf'];?>" style="text-transform:uppercase;">
+					</td>
+					<td style="text-align: center;">
+						<input type="date" name="date_load_<?php echo $compteur;?>" value="<?php echo $reponse['date_load'];?>" style="text-transform:uppercase;">
+					</td>
+					<td style="text-align: center;">
+						<input type="date" name="date_dispatch_<?php echo $compteur;?>" value="<?php echo $reponse['date_dispatch'];?>" style="text-transform:uppercase;">
+					</td>
+					<td style="text-align: center;">
+						<input type="text" name="frontiere_<?php echo $compteur;?>" value="<?php echo $reponse['frontiere'];?>" style="text-transform:uppercase;">
+					</td>
+					<td style="text-align: center;">
+						<input type="date" name="front_in_<?php echo $compteur;?>" value="<?php echo $reponse['front_in'];?>" style="">
+					</td>
+					<td style="text-align: center;">
+						<input type="date" name="front_out_<?php echo $compteur;?>" value="<?php echo $reponse['front_out'];?>" style="">
+					</td>
+					<td style="text-align: center;">
+						<input type="text" name="localisation_<?php echo $compteur;?>" value="<?php echo $reponse['localisation'];?>" style="text-transform:uppercase;">
+					</td>
+					<?php
+					}else{
+					?>
 					<td style="text-align: center;">
 						<input type="text" name="ref_mca_<?php echo $compteur;?>" value="<?php echo $reponse['ref_mca'];?>" style="text-transform:uppercase;">
 					</td>
@@ -17611,6 +17689,10 @@
 					<td style="text-align: center;">
 						<input type="text" name="ref_pod_<?php echo $compteur;?>" value="<?php echo $reponse['ref_pod'];?>" style="text-transform:uppercase;">
 					</td>
+					<?php
+					}
+
+				?>
 					<td style="text-align: center;" class="<?php echo $bg;?> <?php echo $class;?>">
 						<select name="statut_<?php echo $compteur;?>">
 							<?php
@@ -29925,6 +30007,127 @@
 			$requete = $connexion-> prepare("UPDATE dossier_logistique SET remarque = ?
 												WHERE ref_dos = ?");
 			$requete-> execute(array($entree['remarque'], $entree['ref_dos']));
+
+		} 
+
+		public function MAJ_point_load_logistic($ref_dos, $point_load){
+			
+			include('connexion.php');
+			$entree['ref_dos'] = $ref_dos;
+			$entree['point_load'] = $point_load;
+			$requete = $connexion-> prepare("UPDATE dossier_logistique SET point_load = ?
+												WHERE ref_dos = ?");
+			$requete-> execute(array($entree['point_load'], $entree['ref_dos']));
+
+		} 
+		public function MAJ_horse_logistic($ref_dos, $horse){
+			
+			include('connexion.php');
+			$entree['ref_dos'] = $ref_dos;
+			$entree['horse'] = $horse;
+			$requete = $connexion-> prepare("UPDATE dossier_logistique SET horse = ?
+												WHERE ref_dos = ?");
+			$requete-> execute(array($entree['horse'], $entree['ref_dos']));
+
+		} 
+		public function MAJ_trailer_1_logistic($ref_dos, $trailer_1){
+			
+			include('connexion.php');
+			$entree['ref_dos'] = $ref_dos;
+			$entree['trailer_1'] = $trailer_1;
+			$requete = $connexion-> prepare("UPDATE dossier_logistique SET trailer_1 = ?
+												WHERE ref_dos = ?");
+			$requete-> execute(array($entree['trailer_1'], $entree['ref_dos']));
+
+		} 
+		public function MAJ_nom_chauf_logistic($ref_dos, $nom_chauf){
+			
+			include('connexion.php');
+			$entree['ref_dos'] = $ref_dos;
+			$entree['nom_chauf'] = $nom_chauf;
+			$requete = $connexion-> prepare("UPDATE dossier_logistique SET nom_chauf = ?
+												WHERE ref_dos = ?");
+			$requete-> execute(array($entree['nom_chauf'], $entree['ref_dos']));
+
+		} 
+		public function MAJ_lic_num_logistic($ref_dos, $lic_num){
+			
+			include('connexion.php');
+			$entree['ref_dos'] = $ref_dos;
+			$entree['lic_num'] = $lic_num;
+			$requete = $connexion-> prepare("UPDATE dossier_logistique SET lic_num = ?
+												WHERE ref_dos = ?");
+			$requete-> execute(array($entree['lic_num'], $entree['ref_dos']));
+
+		} 
+		public function MAJ_tel_chauf_logistic($ref_dos, $tel_chauf){
+			
+			include('connexion.php');
+			$entree['ref_dos'] = $ref_dos;
+			$entree['tel_chauf'] = $tel_chauf;
+			$requete = $connexion-> prepare("UPDATE dossier_logistique SET tel_chauf = ?
+												WHERE ref_dos = ?");
+			$requete-> execute(array($entree['tel_chauf'], $entree['ref_dos']));
+
+		} 
+		public function MAJ_date_load_logistic($ref_dos, $date_load){
+			
+			include('connexion.php');
+			$entree['ref_dos'] = $ref_dos;
+			$entree['date_load'] = $date_load;
+			$requete = $connexion-> prepare("UPDATE dossier_logistique SET date_load = ?
+												WHERE ref_dos = ?");
+			$requete-> execute(array($entree['date_load'], $entree['ref_dos']));
+
+		} 
+		public function MAJ_date_dispatch_logistic($ref_dos, $date_dispatch){
+			
+			include('connexion.php');
+			$entree['ref_dos'] = $ref_dos;
+			$entree['date_dispatch'] = $date_dispatch;
+			$requete = $connexion-> prepare("UPDATE dossier_logistique SET date_dispatch = ?
+												WHERE ref_dos = ?");
+			$requete-> execute(array($entree['date_dispatch'], $entree['ref_dos']));
+
+		} 
+		public function MAJ_frontiere_logistic($ref_dos, $frontiere){
+			
+			include('connexion.php');
+			$entree['ref_dos'] = $ref_dos;
+			$entree['frontiere'] = $frontiere;
+			$requete = $connexion-> prepare("UPDATE dossier_logistique SET frontiere = ?
+												WHERE ref_dos = ?");
+			$requete-> execute(array($entree['frontiere'], $entree['ref_dos']));
+
+		} 
+		public function MAJ_front_in_logistic($ref_dos, $front_in){
+			
+			include('connexion.php');
+			$entree['ref_dos'] = $ref_dos;
+			$entree['front_in'] = $front_in;
+			$requete = $connexion-> prepare("UPDATE dossier_logistique SET front_in = ?
+												WHERE ref_dos = ?");
+			$requete-> execute(array($entree['front_in'], $entree['ref_dos']));
+
+		}  
+		public function MAJ_front_out_logistic($ref_dos, $front_out){
+			
+			include('connexion.php');
+			$entree['ref_dos'] = $ref_dos;
+			$entree['front_out'] = $front_out;
+			$requete = $connexion-> prepare("UPDATE dossier_logistique SET front_out = ?
+												WHERE ref_dos = ?");
+			$requete-> execute(array($entree['front_out'], $entree['ref_dos']));
+
+		}  
+		public function MAJ_localisation_logistic($ref_dos, $localisation){
+			
+			include('connexion.php');
+			$entree['ref_dos'] = $ref_dos;
+			$entree['localisation'] = $localisation;
+			$requete = $connexion-> prepare("UPDATE dossier_logistique SET localisation = ?
+												WHERE ref_dos = ?");
+			$requete-> execute(array($entree['localisation'], $entree['ref_dos']));
 
 		} 
 
