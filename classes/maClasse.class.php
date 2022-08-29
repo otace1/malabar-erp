@@ -18119,7 +18119,7 @@
 
 			}else if ($statut == 'AWAITING CRF') {
 
-				$sqlStatus = " AND d.date_crf IS NULL
+				$sqlStatus = " AND d.date_crf IS NULL AND d.date_ad IS NOT NULL AND d.date_assurance IS NOT NULL
 								AND d.ref_dos NOT LIKE '%20-%'
 								AND d.cleared <> '2'";
 
@@ -18133,7 +18133,7 @@
 
 			}else if ($statut == 'AWAITING AD') {
 
-				$sqlStatus = " AND d.date_ad IS NULL
+				$sqlStatus = " AND d.date_ad IS NULL AND d.date_crf IS NOT NULL AND d.date_assurance IS NOT NULL
 								AND d.ref_dos NOT LIKE '%20-%'
 								AND d.cleared <> '2'";
 
@@ -18147,7 +18147,7 @@
 
 			}*/else if ($statut == 'AWAITING INSURANCE') {
 
-				$sqlStatus = " AND d.date_assurance IS NULL
+				$sqlStatus = " AND d.date_assurance IS NULL AND d.date_ad IS NOT NULL AND d.date_crf IS NOT NULL
 												AND d.ref_dos NOT LIKE '%20-%'
 												AND d.cleared <> '2'";
 
@@ -21545,7 +21545,7 @@
 					$requete = $connexion-> prepare("SELECT COUNT(ref_dos) AS nbre
 												FROM dossier
 												WHERE id_mod_lic = ?
-													AND date_crf IS NULL
+													AND date_crf IS NULL AND date_ad IS NOT NULL AND date_assurance IS NOT NULL
 													AND ref_dos NOT LIKE '%20-%'
 													AND cleared <> '2'
 													$sqlClient
@@ -21571,7 +21571,7 @@
 					$requete = $connexion-> prepare("SELECT COUNT(ref_dos) AS nbre
 												FROM dossier
 												WHERE id_mod_lic = ?
-													AND date_ad IS NULL
+													AND date_ad IS NULL AND date_crf IS NOT NULL AND date_assurance IS NOT NULL
 													AND ref_dos NOT LIKE '%20-%'
 													AND cleared <> '2'
 													$sqlClient
@@ -21583,7 +21583,7 @@
 					$requete = $connexion-> prepare("SELECT COUNT(ref_dos) AS nbre
 												FROM dossier
 												WHERE id_mod_lic = ?
-													AND date_assurance IS NULL
+													AND date_assurance IS NULL  AND date_ad IS NOT NULL AND date_crf IS NOT NULL
 													AND ref_dos NOT LIKE '%20-%'
 													AND cleared <> '2'
 													$sqlClient
