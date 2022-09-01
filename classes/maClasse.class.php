@@ -18161,7 +18161,88 @@
 												AND d.ref_dos NOT LIKE '%20-%'
 												AND d.cleared <> '2'";
 
-			}else if ($statut == 'AWAITING LIQUIDATION') {
+			}else if ($statut == 'UNDER PREPARATION-EXCPECTED TO ARRIVE') {
+
+					// $requete = $connexion-> prepare("SELECT COUNT(ref_dos) AS nbre
+					// 							FROM dossier
+					// 							WHERE id_mod_lic = ?
+					// 								AND date_crf IS NOT NULL
+					// 								AND date_ad IS NOT NULL
+					// 								AND date_assurance IS NOT NULL
+					// 								AND date_decl IS NULL 
+					// 								AND ref_decl IS NULL
+					// 								AND ref_dos NOT LIKE '%20-%'
+					// 								AND cleared <> '2'
+					// 								$sqlClient
+					// 								$sqlModeTransport
+					// 								$sqlCommodity");
+
+				$sqlStatus = " AND d.date_crf IS NOT NULL
+												AND d.date_ad IS NOT NULL
+												AND d.date_assurance IS NOT NULL
+												AND d.date_decl IS NULL 
+												AND d.ref_decl IS NULL
+												AND d.klsa_arriv IS NULL 
+												AND d.ref_dos NOT LIKE '%20-%'
+												AND d.cleared <> '2'";
+
+				}else if ($statut == 'UNDER PREPARATION-DISPATCHED') {
+
+					// $requete = $connexion-> prepare("SELECT COUNT(ref_dos) AS nbre
+					// 							FROM dossier
+					// 							WHERE id_mod_lic = ?
+					// 								AND date_crf IS NOT NULL
+					// 								AND date_ad IS NOT NULL
+					// 								AND date_assurance IS NOT NULL
+					// 								AND dispatch_klsa IS NOT NULL 
+					// 								AND wiski_arriv IS NOT NULL
+					// 								AND date_decl IS NULL 
+					// 								AND ref_decl IS NULL
+					// 								AND ref_dos NOT LIKE '%20-%'
+					// 								AND cleared <> '2'
+					// 								$sqlClient
+					// 								$sqlModeTransport
+					// 								$sqlCommodity");
+
+				$sqlStatus = " AND d.date_crf IS NOT NULL
+												AND d.date_ad IS NOT NULL
+												AND d.date_assurance IS NOT NULL
+												AND d.date_decl IS NULL 
+												AND d.ref_decl IS NULL
+												AND d.dispatch_klsa IS NOT NULL 
+												AND d.wiski_arriv IS NOT NULL
+												AND d.ref_dos NOT LIKE '%20-%'
+												AND d.cleared <> '2'";
+
+				}else if ($statut == 'UNDER PREPARATION-AT WISKY') {
+
+					// $requete = $connexion-> prepare("SELECT COUNT(ref_dos) AS nbre
+					// 							FROM dossier
+					// 							WHERE id_mod_lic = ?
+					// 								AND date_crf IS NOT NULL
+					// 								AND date_ad IS NOT NULL
+					// 								AND date_assurance IS NOT NULL
+					// 								AND dispatch_klsa IS NULL 
+					// 								AND wiski_arriv IS NOT NULL
+					// 								AND date_decl IS NULL 
+					// 								AND ref_decl IS NULL
+					// 								AND ref_dos NOT LIKE '%20-%'
+					// 								AND cleared <> '2'
+					// 								$sqlClient
+					// 								$sqlModeTransport
+					// 								$sqlCommodity");
+
+				$sqlStatus = " AND d.date_crf IS NOT NULL
+												AND d.date_ad IS NOT NULL
+												AND d.date_assurance IS NOT NULL
+												AND d.dispatch_klsa IS NULL 
+												AND d.wiski_arriv IS NOT NULL
+												AND d.date_decl IS NULL 
+												AND d.ref_decl IS NULL
+												AND d.ref_dos NOT LIKE '%20-%'
+												AND d.cleared <> '2'";
+
+				}else if ($statut == 'AWAITING LIQUIDATION') {
 
 				$sqlStatus = " AND d.date_decl IS NOT NULL 
 												AND d.ref_decl IS NOT NULL
@@ -21598,6 +21679,59 @@
 													AND date_crf IS NOT NULL
 													AND date_ad IS NOT NULL
 													AND date_assurance IS NOT NULL
+													AND date_decl IS NULL 
+													AND ref_decl IS NULL
+													AND ref_dos NOT LIKE '%20-%'
+													AND cleared <> '2'
+													$sqlClient
+													$sqlModeTransport
+													$sqlCommodity");
+
+				}else if ($statut == 'UNDER PREPARATION-EXCPECTED TO ARRIVE') {
+
+					$requete = $connexion-> prepare("SELECT COUNT(ref_dos) AS nbre
+												FROM dossier
+												WHERE id_mod_lic = ?
+													AND date_crf IS NOT NULL
+													AND date_ad IS NOT NULL
+													AND date_assurance IS NOT NULL
+													AND klsa_arriv IS NULL 
+													AND date_decl IS NULL 
+													AND ref_decl IS NULL
+													AND ref_dos NOT LIKE '%20-%'
+													AND cleared <> '2'
+													$sqlClient
+													$sqlModeTransport
+													$sqlCommodity");
+
+				}else if ($statut == 'UNDER PREPARATION-DISPATCHED') {
+
+					$requete = $connexion-> prepare("SELECT COUNT(ref_dos) AS nbre
+												FROM dossier
+												WHERE id_mod_lic = ?
+													AND date_crf IS NOT NULL
+													AND date_ad IS NOT NULL
+													AND date_assurance IS NOT NULL
+													AND dispatch_klsa IS NOT NULL 
+													AND wiski_arriv IS NOT NULL
+													AND date_decl IS NULL 
+													AND ref_decl IS NULL
+													AND ref_dos NOT LIKE '%20-%'
+													AND cleared <> '2'
+													$sqlClient
+													$sqlModeTransport
+													$sqlCommodity");
+
+				}else if ($statut == 'UNDER PREPARATION-AT WISKY') {
+
+					$requete = $connexion-> prepare("SELECT COUNT(ref_dos) AS nbre
+												FROM dossier
+												WHERE id_mod_lic = ?
+													AND date_crf IS NOT NULL
+													AND date_ad IS NOT NULL
+													AND date_assurance IS NOT NULL
+													AND dispatch_klsa IS NULL 
+													AND wiski_arriv IS NOT NULL
 													AND date_decl IS NULL 
 													AND ref_decl IS NULL
 													AND ref_dos NOT LIKE '%20-%'
