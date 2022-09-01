@@ -14,11 +14,9 @@ $excel = new PHPExcel();
           if ($_GET['id_cli'] == '') {
             $_GET['id_cli'] = 869;
           }
-
 		}
 		else if ($_GET['id_mod_trac'] == '2') {
 			$transit = 'Import';
-
           if ($_GET['id_cli'] == '') {
             $_GET['id_cli'] = 857;
           }
@@ -650,7 +648,91 @@ $statut = str_replace('_', '/', $statut);
 													AND d.ref_dos NOT LIKE "%20-%"
 													AND d.cleared <> "2"';
 
-				}else if (str_replace('_', '/', $_GET['statut']) == 'AWAITING LIQUIDATION') {
+				}
+
+				else if ($_GET['statut'] == 'UNDER PREPARATION-EXCPECTED TO ARRIVE') {
+
+					// $requete = $connexion-> prepare("SELECT COUNT(ref_dos) AS nbre
+					// 							FROM dossier
+					// 							WHERE id_mod_lic = ?
+					// 								AND date_crf IS NOT NULL
+					// 								AND date_ad IS NOT NULL
+					// 								AND date_assurance IS NOT NULL
+					// 								AND date_decl IS NULL 
+					// 								AND ref_decl IS NULL
+					// 								AND ref_dos NOT LIKE '%20-%'
+					// 								AND cleared <> '2'
+					// 								$sqlClient
+					// 								$sqlModeTransport
+					// 								$sqlCommodity");
+
+				$sqlStatus = " AND d.date_crf IS NOT NULL
+												AND d.date_ad IS NOT NULL
+												AND d.date_assurance IS NOT NULL
+												AND d.date_decl IS NULL 
+												AND d.ref_decl IS NULL
+												AND d.klsa_arriv IS NULL 
+												AND d.ref_dos NOT LIKE '%20-%'
+												AND d.cleared <> '2'";
+
+				}else if ($_GET['statut'] == 'UNDER PREPARATION-DISPATCHED') {
+
+					// $requete = $connexion-> prepare("SELECT COUNT(ref_dos) AS nbre
+					// 							FROM dossier
+					// 							WHERE id_mod_lic = ?
+					// 								AND date_crf IS NOT NULL
+					// 								AND date_ad IS NOT NULL
+					// 								AND date_assurance IS NOT NULL
+					// 								AND dispatch_klsa IS NOT NULL 
+					// 								AND wiski_arriv IS NOT NULL
+					// 								AND date_decl IS NULL 
+					// 								AND ref_decl IS NULL
+					// 								AND ref_dos NOT LIKE '%20-%'
+					// 								AND cleared <> '2'
+					// 								$sqlClient
+					// 								$sqlModeTransport
+					// 								$sqlCommodity");
+
+				$sqlStatus = " AND d.date_crf IS NOT NULL
+												AND d.date_ad IS NOT NULL
+												AND d.date_assurance IS NOT NULL
+												AND d.date_decl IS NULL 
+												AND d.ref_decl IS NULL
+												AND d.dispatch_klsa IS NOT NULL 
+												AND d.wiski_arriv IS NOT NULL
+												AND d.ref_dos NOT LIKE '%20-%'
+												AND d.cleared <> '2'";
+
+				}else if ($_GET['statut'] == 'UNDER PREPARATION-AT WISKY') {
+
+					// $requete = $connexion-> prepare("SELECT COUNT(ref_dos) AS nbre
+					// 							FROM dossier
+					// 							WHERE id_mod_lic = ?
+					// 								AND date_crf IS NOT NULL
+					// 								AND date_ad IS NOT NULL
+					// 								AND date_assurance IS NOT NULL
+					// 								AND dispatch_klsa IS NULL 
+					// 								AND wiski_arriv IS NOT NULL
+					// 								AND date_decl IS NULL 
+					// 								AND ref_decl IS NULL
+					// 								AND ref_dos NOT LIKE '%20-%'
+					// 								AND cleared <> '2'
+					// 								$sqlClient
+					// 								$sqlModeTransport
+					// 								$sqlCommodity");
+
+				$sqlStatus = " AND d.date_crf IS NOT NULL
+												AND d.date_ad IS NOT NULL
+												AND d.date_assurance IS NOT NULL
+												AND d.dispatch_klsa IS NULL 
+												AND d.wiski_arriv IS NOT NULL
+												AND d.date_decl IS NULL 
+												AND d.ref_decl IS NULL
+												AND d.ref_dos NOT LIKE '%20-%'
+												AND d.cleared <> '2'";
+				}
+
+				else if (str_replace('_', '/', $_GET['statut']) == 'AWAITING LIQUIDATION') {
 
 					$sqlStatus = ' AND d.date_decl IS NOT NULL 
 													AND d.ref_decl IS NOT NULL
@@ -703,7 +785,6 @@ $statut = str_replace('_', '/', $statut);
 												d.custom_deliv AS custom_deliv_1,
 												d.arrival_date AS arrival_date_1,
 												d.cleared AS cleared,
-
 												IF(d.id_mod_lic='2' AND d.id_mod_trans='1',
 													IF(d.date_crf IS NULL AND d.date_ad IS NULL AND d.date_assurance IS NULL,
 												      'AWAITING CRF/AD/INSURANCE',
@@ -719,7 +800,6 @@ $statut = str_replace('_', '/', $statut);
 												                  'AWAITING AD',
 												                    IF(d.date_crf IS NOT NULL AND d.date_ad IS NOT NULL AND d.date_assurance IS NULL,
 												                      'AWAITING INSURANCE',
-
 												                      IF(d.date_decl IS NULL AND d.ref_decl IS NULL, 'UNDER PREPARATION',
 												                        IF(d.date_liq IS NULL AND d.ref_liq IS NULL, 'AWAITING LIQUIDATION',
 												                          IF(d.date_quit IS NULL AND d.ref_quit IS NULL, 'AWAITING QUITTANCE',
@@ -739,7 +819,6 @@ $statut = str_replace('_', '/', $statut);
 												      )
 													,
 													d.statut) AS statut,
-
 												IF(d.id_mod_trans='1' AND d.id_mod_lic='2', 
 													IF(d.klsa_arriv IS NOT NULL AND d.wiski_arriv IS NULL,'ARRIVED AT K\'LSA', 
 														IF(d.wiski_arriv IS NOT NULL AND d.dispatch_klsa IS NULL, 'AT WISKI',
@@ -761,7 +840,6 @@ $statut = str_replace('_', '/', $statut);
 																)
 															,'')
 														,'') AS kzi_status,
-
 												DATEDIFF(d.dgda_out, d.dgda_in) AS dgda_delay,
 												DATEDIFF(d.custom_deliv, d.arrival_date) AS arrival_deliver_delay
 											FROM dossier d, client cl, site s, mode_transport mt

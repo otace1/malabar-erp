@@ -108,6 +108,15 @@
                                 $_GET['id_mod_trans'], $_GET['commodity'], 'UNDER PREPARATION');
 
     $maClasse-> getSummaryStatus($_GET['id_mod_trac'], $_GET['id_cli'], 
+                                $_GET['id_mod_trans'], $_GET['commodity'], 'UNDER PREPARATION-EXCPECTED TO ARRIVE');
+
+    $maClasse-> getSummaryStatus($_GET['id_mod_trac'], $_GET['id_cli'], 
+                                $_GET['id_mod_trans'], $_GET['commodity'], 'UNDER PREPARATION-DISPATCHED');
+
+    $maClasse-> getSummaryStatus($_GET['id_mod_trac'], $_GET['id_cli'], 
+                                $_GET['id_mod_trans'], $_GET['commodity'], 'UNDER PREPARATION-AT WISKY');
+
+    $maClasse-> getSummaryStatus($_GET['id_mod_trac'], $_GET['id_cli'], 
                                 $_GET['id_mod_trans'], $_GET['commodity'], 'AWAITING LIQUIDATION');
     
     $maClasse-> getSummaryStatus($_GET['id_mod_trac'], $_GET['id_cli'], 
