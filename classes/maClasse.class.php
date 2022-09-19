@@ -2876,11 +2876,11 @@
 		    //$geoIP  = json_decode(file_get_contents("http://freegeoip.net/json/$ip"), true);
 			//$reponse['longitude'] = $geoIP['longitude'];
 
-			$reponse['latitude'] = $this-> getGeoLocalisation($ip)['latitude'];
-			$reponse['longitude'] = $this-> getGeoLocalisation($ip)['longitude'];
-			$reponse['country_name'] = $this-> getGeoLocalisation($ip)['country_name'];
-			$reponse['region_name'] = $this-> getGeoLocalisation($ip)['region_name'];
-			$reponse['city'] = $this-> getGeoLocalisation($ip)['city'];
+			$reponse['latitude'] = NULL;//$this-> getGeoLocalisation($ip)['latitude'];
+			$reponse['longitude'] = NULL;//$this-> getGeoLocalisation($ip)['longitude'];
+			$reponse['country_name'] = NULL;//$this-> getGeoLocalisation($ip)['country_name'];
+			$reponse['region_name'] = NULL;//$this-> getGeoLocalisation($ip)['region_name'];
+			$reponse['city'] = NULL;//$this-> getGeoLocalisation($ip)['city'];
 
 
 		    //$hostname = gethostbyaddr($ip);
