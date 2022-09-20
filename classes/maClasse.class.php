@@ -6689,9 +6689,15 @@
 			                  <p>DILUENT</p>
 			                </a>
 			            </li>
+		              	<li class="nav-item">
+			                <a href="dossier.php?id_cli=<?php echo $reponse['id_cli'];?>&amp;id_mod_trac=<?php echo $id_mod_lic;?>&amp;id_mod_trans=1&commodity=&id_march=11" class="nav-link" <?php echo $style;?>>
+			                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="far fa-circle nav-icon"></i>
+			                  <p>DIVERS</p>
+			                </a>
+			            </li>
 		              	<?php
-		              	
-		              		$this-> afficherMenuModeTransportClient($reponse['id_cli'], $id_mod_lic);
+
+		              		// $this-> afficherMenuModeTransportClient($reponse['id_cli'], $id_mod_lic);
 		              	/*
 		              	?>
 		              	<li class="nav-item">
