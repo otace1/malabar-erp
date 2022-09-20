@@ -6690,6 +6690,8 @@
 			                </a>
 			            </li>
 		              	<?php
+		              	
+		              		$this-> afficherMenuModeTransportClient($reponse['id_cli'], $id_mod_lic);
 		              	/*
 		              	?>
 		              	<li class="nav-item">
