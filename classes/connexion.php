@@ -1,7 +1,7 @@
 <?php
 
-	//$connexion = new PDO('mysql:host=localhost;dbname=admin_malabar;charset=utf8','admin_malabar', 'NKTLmPrVgp_eerjut@kdmkkdiio1m');
-$servername = "db-mysql-sfo2-99144-do-user-4618658-0.b.db.ondigitalocean.com";
+	$connexion = new PDO('mysql:host=localhost;dbname=admin_malabar;charset=utf8','admin_malabar', 'NKTLmPrVgp_eerjut@kdmkkdiio1m');
+/*$servername = "db-mysql-sfo2-99144-do-user-4618658-0.b.db.ondigitalocean.com";
 $username = "mrdc_db_user";
 $password = "AVNS__sws1ImaA17TOAKgSPg";
 $dbname = "admin_malabar";
@@ -22,5 +22,5 @@ try {
 catch(PDOException $e)
     {
     echo "Connection failed: " . $e->getMessage();
-}
+}*/
 ?>
