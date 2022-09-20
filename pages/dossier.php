@@ -1515,7 +1515,7 @@ if(isset($_GET['id_mod_trac']) && ($_GET['id_mod_trac']=='1')){
 
 
 <?php
-if(isset($_GET['id_mod_trac']) && $_GET['id_mod_trac']=='2' && $_GET['id_cli']!='869'){
+if(isset($_GET['id_mod_trac']) && $_GET['id_mod_trac']=='2' && $_GET['id_cli']!='869' && $_GET['id_march']!='11'){
 
   $modele = $maClasse-> getElementModeleLicence($_GET['id_mod_trac']);
 ?>
