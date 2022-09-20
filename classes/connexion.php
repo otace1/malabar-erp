@@ -6,7 +6,7 @@ $username = "mrdc_db_user";
 $password = "AVNS__sws1ImaA17TOAKgSPg";
 $options = array(
 	PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8',
-	PDO::MYSQL_ATTR_SSL_CA => 'classes/ca-certificate (4).crt',
+	PDO::MYSQL_ATTR_SSL_CA => 'ca-certificate (4).crt',
 	PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT => false,
 );
 
