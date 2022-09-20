@@ -1,3 +1,8 @@
 <?php
-	$connexion = new PDO('mysql:host=localhost;dbname=admin_malabar;charset=utf8','admin_malabar', 'NKTLmPrVgp_eerjut@kdmkkdiio1m');
+	$options = array(
+		PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8',
+		PDO::MYSQL_ATTR_SSL_CA => 'classes/ca-certificate (4).crt',
+		PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT => false,
+	);
+	$connexion = new PDO('mysql:host=db-mysql-sfo2-99144-do-user-4618658-0.b.db.ondigitalocean.com:25060;dbname=admin_malabar;charset=utf8','mrdc_db_user', 'AVNS__sws1ImaA17TOAKgSPg', $options);
 ?>
