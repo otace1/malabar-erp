@@ -715,7 +715,7 @@ for ($i=1; $i <= 15 ; $i++) {
                     if(isset($_POST['creerDossier'])){
                         if($_GET['id_mod_trac'] == '2'){
 
-                          if ($_GET['id_cli'] == 869 && $_GET['id_mod_trac'] == 2) {
+                          if ($_GET['id_cli'] == 869 && $_GET['id_mod_trac'] == 2 && $_GET['id_march'] != 11) {
 
                             for ($i=1; $i <= $_POST['nbre'] ; $i++) {
 
