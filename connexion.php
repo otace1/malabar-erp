@@ -16,7 +16,7 @@ $options = array(
 );
 
 try {
-    $connexion = new PDO("mysql:host=$servername;port=25060;dbname=db_name", $username, $password, $options);
+    $connexion = new PDO("mysql:host=$servername;port=25060;dbname=admin_malabar", $username, $password, $options);
 
     $connexion->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     echo "Connected successfully"; 
