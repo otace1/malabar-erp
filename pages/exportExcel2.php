@@ -1,6 +1,6 @@
 <?php
-require_once('../PHPExcel-1.8/Classes/PHPExcel.php');
-require_once('../classes/maClasse.class.php');
+require('../PHPExcel-1.8/Classes/PHPExcel.php');
+require('../classes/maClasse.class.php');
 
 $maClasse = new MaClasse();
 

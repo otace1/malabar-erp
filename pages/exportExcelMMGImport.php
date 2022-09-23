@@ -381,7 +381,6 @@ while ($reponseModeTransport = $requeteModeTransport-> fetch()) {
 }$requeteModeTransport-> closeCursor();
 
 include('excelDiluent.php');
-include('excelExcel2.php');
 //--- FIN Recuperation des mode de transport -------
 
 $titre = $maClasse-> getClient($_GET['id_cli'])['nom_cli'].$marchandise.'_'.$transit.'_'.date('d_m_Y_h_i_s');
