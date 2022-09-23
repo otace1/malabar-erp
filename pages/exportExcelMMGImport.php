@@ -47,11 +47,9 @@ $excel = new PHPExcel();
 
 
 include('../classes/connexion.php');
-//include('afficherRowTableauExcel.php');
-
 include('afficherRowTableauExcel.php');
 //--- Recuperation des mode de transport -------
-$indiceSheet = 0;
+$indiceSheet = 1;
 $requeteModeTransport = $connexion-> prepare('SELECT DISTINCT(id_mod_trans) AS id_mod_trans, 
 													UPPER(nom_mod_trans) AS nom_mod_trans 
 												FROM mode_transport
@@ -67,7 +65,7 @@ while ($reponseModeTransport = $requeteModeTransport-> fetch()) {
 	
 		
 		//--- Recuperation d'années -------
-		for ($annee=date('Y'); $annee >= 2021; $annee--) { 
+		for ($annee=date('Y'); $annee >= 2022; $annee--) { 
 			$entree['annee']='%'.substr($annee, -2).'-%';
 
 		$id_march = $_GET['id_march'];
@@ -184,37 +182,6 @@ while ($reponseModeTransport = $requeteModeTransport-> fetch()) {
 											ORDER BY af.rang ASC");
 			$requete-> execute(array($entree['id_cli'], $entree['id_mod_lic'], $entree['id_mod_trans']));
 			while ($reponse = $requete-> fetch()) {
-				
-			if ($reponse['id_col']=='42' && $entree['id_mod_trans']=='1') {
-				$excel-> getActiveSheet()
-					-> setCellValue($col.$row, 'GENERAL STATUS');
-				cellColor($col.$row, '000000');
-				alignement($col.$row);
-				$excel->getActiveSheet()
-					->getStyle($col.$row)->applyFromArray($styleHeader);
-				$col++;
-				$excel-> getActiveSheet()
-					-> setCellValue($col.$row, 'KLSA STATUS');
-				cellColor($col.$row, '000000');
-				alignement($col.$row);
-				$excel->getActiveSheet()
-					->getStyle($col.$row)->applyFromArray($styleHeader);
-				$col++;
-				$excel-> getActiveSheet()
-					-> setCellValue($col.$row, 'AMICONGO STATUS');
-				cellColor($col.$row, '000000');
-				alignement($col.$row);
-				$excel->getActiveSheet()
-					->getStyle($col.$row)->applyFromArray($styleHeader);
-				$col++;
-				$excel-> getActiveSheet()
-					-> setCellValue($col.$row, 'KZI STATUS');
-				cellColor($col.$row, '000000');
-				alignement($col.$row);
-				$excel->getActiveSheet()
-					->getStyle($col.$row)->applyFromArray($styleHeader);
-				$col++;
-			}else{
 				$excel-> getActiveSheet()
 					-> setCellValue($col.$row, $reponse['titre_col']);
 				cellColor($col.$row, '000000');
@@ -222,14 +189,6 @@ while ($reponseModeTransport = $requeteModeTransport-> fetch()) {
 				$excel->getActiveSheet()
 					->getStyle($col.$row)->applyFromArray($styleHeader);
 				$col++;
-			}
-				/*$excel-> getActiveSheet()
-					-> setCellValue($col.$row, $reponse['titre_col']);
-				cellColor($col.$row, '000000');
-				alignement($col.$row);
-				$excel->getActiveSheet()
-					->getStyle($col.$row)->applyFromArray($styleHeader);
-				$col++;*/
 			}$requete-> closeCursor();
 
 			
@@ -273,63 +232,6 @@ while ($reponseModeTransport = $requeteModeTransport-> fetch()) {
 													d.custom_deliv AS custom_deliv_1,
 													d.arrival_date AS arrival_date_1,
 													d.cleared AS cleared,
-												
-												IF(d.id_mod_lic='2' AND d.id_mod_trans='1',
-													IF(d.date_crf IS NULL AND d.date_ad IS NULL AND d.date_assurance IS NULL,
-												      'AWAITING CRF/AD/INSURRANCE',
-												      IF(d.date_crf IS NULL AND d.date_ad IS NULL AND d.date_assurance IS NOT NULL,
-												        'AWAITING CRF/AD',
-												          IF(d.date_crf IS NULL AND d.date_ad IS NOT NULL AND d.date_assurance IS NULL,
-												            'AWAITING CRF/INSURRANCE',
-												            IF(d.date_crf IS NULL AND d.date_ad IS NOT NULL AND d.date_assurance IS NOT NULL,
-												              'AWAITING CRF', 
-												              IF(d.date_crf IS NOT NULL AND d.date_ad IS NULL AND d.date_assurance IS NULL,
-												                'AWAITING AD/INSURRANCE',
-												                IF(d.date_crf IS NOT NULL AND d.date_ad IS NULL AND d.date_assurance IS NOT NULL,
-												                  'AWAITING AD',
-												                    IF(d.date_crf IS NOT NULL AND d.date_ad IS NOT NULL AND d.date_assurance IS NULL,
-												                      'AWAITING INSURRANCE',
-												                      IF(d.date_decl IS NULL AND d.ref_decl IS NULL, 'UNDER PREPARATION',
-												                        IF(d.date_liq IS NULL AND d.ref_liq IS NULL, 'AWAITING LIQUIDATION',
-												                          IF(d.date_quit IS NULL AND d.ref_quit IS NULL, 'AWAITING QUITTANCE',
-												                            IF(d.date_quit IS NOT NULL AND d.ref_quit IS NOT NULL AND d.dgda_out IS NULL, 'AWAITING BAE/BS', 
-												                              IF(d.dgda_out IS NOT NULL AND d.dispatch_deliv IS NOT NULL, 'CLEARING COMPLETED', '')
-												                              )
-												                            )
-												                          )
-												                        )
-												                      
-												                      )
-												                  )
-												                )
-												              )
-												            )
-												          )
-												      )
-													,
-													d.statut) AS statut,
-												IF(d.id_mod_trans='1' AND d.id_mod_lic='2', 
-													IF(d.klsa_arriv IS NOT NULL AND d.wiski_arriv IS NULL,'ARRIVED AT K\'LSA', 
-														IF(d.wiski_arriv IS NOT NULL AND d.dispatch_klsa IS NULL, 'AT WISKI',
-															IF(d.dispatch_klsa IS NOT NULL, 'DISPATCHED FROM K\'LSA', 'EXCEPTED TO ARRIVE')
-															)
-														)
-													, '') AS klsa_status,
-												IF(d.id_mod_trans='1' AND d.id_mod_lic='2', 
-													IF(d.bond_warehouse='LUBUMBASHI',
-														IF(d.warehouse_arriv IS NOT NULL AND d.warehouse_dep IS NOT NULL, 'DISPATCHED FROM AMICONGO', 
-															IF(d.warehouse_arriv IS NOT NULL, 'ARRIVED AT AMICONGO', '')
-															)
-														,'')
-													,'') AS amicongo_status,
-												IF(d.id_mod_trans='1' AND d.id_mod_lic='2', 
-													IF(d.bond_warehouse='KOLWEZI',
-														IF(d.warehouse_arriv IS NOT NULL AND d.warehouse_dep IS NOT NULL, 'DISPATCHED FROM WAREHOUSE', 
-															IF(d.warehouse_arriv IS NOT NULL, 'ARRIVED AT WAREHOUSE', '')
-															)
-														,'')
-													,'') AS kzi_status,
-
 													DATEDIFF(d.dgda_out, d.dgda_in) AS dgda_delay,
 													DATEDIFF(d.custom_deliv, d.arrival_date) AS arrival_deliver_delay
 												FROM dossier d, client cl, site s, mode_transport mt
@@ -384,9 +286,7 @@ while ($reponseModeTransport = $requeteModeTransport-> fetch()) {
 				alignement('A'.$row);
 				alignement('B'.$row);
 
-				//afficherRowTableauExcel($id_mod_lic, $id_cli, $id_mod_trans, $reponse['id_dos'], $compteur, $col, $excel, $row, $styleHeader);
-				afficherRowTableauExcel($id_mod_lic, $id_cli, $id_mod_trans, $reponse['id_dos'], $compteur, $col, $excel, $row, $styleHeader, $reponse['statut'], $reponse['klsa_status'], $reponse['amicongo_status'], $reponse['kzi_status']);
-
+				afficherRowTableauExcel($id_mod_lic, $id_cli, $id_mod_trans, $reponse['id_dos'], $compteur, $col, $excel, $row, $styleHeader);
 
 				$row++;
 
@@ -481,6 +381,7 @@ while ($reponseModeTransport = $requeteModeTransport-> fetch()) {
 }$requeteModeTransport-> closeCursor();
 
 include('excelDiluent.php');
+include('excelExcel2.php');
 //--- FIN Recuperation des mode de transport -------
 
 $titre = $maClasse-> getClient($_GET['id_cli'])['nom_cli'].$marchandise.'_'.$transit.'_'.date('d_m_Y_h_i_s');

@@ -1,6 +1,6 @@
 <?php
-require('../PHPExcel-1.8/Classes/PHPExcel.php');
-require('../classes/maClasse.class.php');
+require_once('../PHPExcel-1.8/Classes/PHPExcel.php');
+require_once('../classes/maClasse.class.php');
 
 $maClasse = new MaClasse();
 
@@ -61,7 +61,7 @@ $requeteModeTransport-> execute(array($_GET['id_cli']));
 while ($reponseModeTransport = $requeteModeTransport-> fetch()) {
 
 	//Pour EXPORT créer des tableurs par licence et modes de transport
-	if ($_GET['id_mod_trac'] == '1' && $_GET['id_march'] != '18') {
+	if ($_GET['id_mod_trac'] == '1' && $_GET['id_march'] != '18' && $_GET['id_cli'] != '878') {
 		
 		//--- Recuperation d'années -------
 		if(isset($_GET['annee']) && ($_GET['annee']!='')){
