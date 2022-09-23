@@ -936,7 +936,9 @@ while ($reponseModeTransport = $requeteModeTransport-> fetch()) {
 
 		//Get data
 		//$maClasse-> afficherEnTeteTableauExcel2($_GET['id_mod_trac'], $_GET['id_cli'], $_GET['id_mod_trans'], $excel);
-
+		if ($_GET['id_cli'] == 869 && $_GET['id_march'] == 11) {
+			$_GET['id_cli'] = 883;
+		}
 		$entree['id_mod_lic'] = $_GET['id_mod_trac'];
 		$entree['id_cli'] = $_GET['id_cli'];
 		$entree['id_mod_trans'] = $reponseModeTransport['id_mod_trans'];
