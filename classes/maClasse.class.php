@@ -7088,7 +7088,7 @@
 		public function afficherEnTeteTableau($id_mod_lic, $id_cli, $id_mod_trans){
 			include('connexion.php');
 			$entree['id_mod_lic'] = $id_mod_lic;
-			if ($id_cli == 869 && $_GET['id_march'] == 16) {
+			if ($id_cli == 869 && $_GET['id_march'] == 11) {
 				$id_cli = 883;
 			}
 			
@@ -10784,7 +10784,7 @@
 		public function afficherRowTableau($id_mod_lic, $id_cli, $id_mod_trans, $id_dos, $compteur, $statut=NULL, $klsa_status=NULL, $amicongo_status=NULL, $kzi_status=NULL){
 			include('connexion.php');
 			$entree['id_mod_lic'] = $id_mod_lic;
-			if ($id_cli == 869 && $_GET['id_march'] == 16) {
+			if ($id_cli == 869 && $_GET['id_march'] == 11) {
 				$entree['id_cli'] = 883;
 			}else{
 				$entree['id_cli'] = $id_cli;
@@ -17295,7 +17295,12 @@
 			$sqlLicence = "";
 			$sqlCleared = "";
 			$index = 0;
-
+			if ($id_cli == 869 && $_GET['id_march'] == 11) {
+				$entree['id_cli'] = 883;
+			}else{
+				$entree['id_cli'] = $id_cli;
+			}
+			
 			if (isset($commodity) && ($commodity != '')) {
 				$sql1 = ' AND d.commodity = "'.$commodity.'"';
 			}
@@ -23229,6 +23234,8 @@
 			$reponse = $requete-> fetch();
 			if($reponse){
 				return $reponse;
+			}else{
+				return null;
 			}
 		}
 
@@ -23533,7 +23540,13 @@
 			$requete-> execute(array($entree['num_lic']));
 			$reponse = $requete-> fetch();
 
-			return $reponse['date_exp'];
+			if ($reponse) {
+				return $reponse['date_exp'];
+			}else{
+				return null;
+			}
+
+			
 		}
 
 		public function getLastEpirationLicence2($num_lic){
