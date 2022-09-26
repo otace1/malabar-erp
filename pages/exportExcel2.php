@@ -16,6 +16,12 @@ $excel = new PHPExcel();
 			$transit = 'Import';
 		}
 
+if ($_GET['id_cli'] == 869 && $_GET['id_march'] == 11) {
+	$entree['id_cli_col'] == 883;
+}else{
+	$entree['id_cli'] = $_GET['id_cli'];
+}
+
 
 //Background-color
 	function cellColor($cells,$color){
@@ -1029,7 +1035,7 @@ while ($reponseModeTransport = $requeteModeTransport-> fetch()) {
 										    AND af.id_mod_lic = ?
 										    AND af.id_mod_trans = ?
 										ORDER BY af.rang ASC");
-		$requete-> execute(array($entree['id_cli'], $entree['id_mod_lic'], $entree['id_mod_trans']));
+		$requete-> execute(array($entree['id_cli_col'], $entree['id_mod_lic'], $entree['id_mod_trans']));
 		while ($reponse = $requete-> fetch()) {
 
 			if ($reponse['id_col']=='42' && $entree['id_mod_trans']=='1') {
@@ -1281,7 +1287,7 @@ while ($reponseModeTransport = $requeteModeTransport-> fetch()) {
 										    AND af.id_mod_lic = ?
 										    AND af.id_mod_trans = ?
 										ORDER BY af.rang ASC");
-		$requete-> execute(array($entree['id_cli'], $entree['id_mod_lic'], $entree['id_mod_trans']));
+		$requete-> execute(array($entree['id_cli_col'], $entree['id_mod_lic'], $entree['id_mod_trans']));
 		while ($reponse = $requete-> fetch()) {
 
 			if ($reponse['id_col']=='42' && $entree['id_mod_trans']=='1' && $entree['id_mod_lic']=='2') {
