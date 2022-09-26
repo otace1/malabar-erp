@@ -49,7 +49,7 @@ $excel = new PHPExcel();
 include('../classes/connexion.php');
 include('afficherRowTableauExcel.php');
 //--- Recuperation des mode de transport -------
-$indiceSheet = 1;
+// $indiceSheet = 1;
 $requeteModeTransport = $connexion-> prepare('SELECT DISTINCT(id_mod_trans) AS id_mod_trans, 
 													UPPER(nom_mod_trans) AS nom_mod_trans 
 												FROM mode_transport
