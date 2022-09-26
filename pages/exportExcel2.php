@@ -7,7 +7,6 @@ $maClasse = new MaClasse();
 //Create PHPExcel object
 $excel = new PHPExcel();
 
-
 		// Rename worksheet
 		$transit = '';
 		if ($_GET['id_mod_trac'] == '1') {
@@ -62,7 +61,7 @@ $requeteModeTransport-> execute(array($_GET['id_cli']));
 while ($reponseModeTransport = $requeteModeTransport-> fetch()) {
 
 	//Pour EXPORT créer des tableurs par licence et modes de transport
-	if ($_GET['id_mod_trac'] == '1' && $_GET['id_march'] != '18' && $_GET['id_cli'] != '878') {
+	if ($_GET['id_mod_trac'] == '1' && $_GET['id_march'] != '18') {
 		
 		//--- Recuperation d'années -------
 		if(isset($_GET['annee']) && ($_GET['annee']!='')){
@@ -937,15 +936,9 @@ while ($reponseModeTransport = $requeteModeTransport-> fetch()) {
 
 		//Get data
 		//$maClasse-> afficherEnTeteTableauExcel2($_GET['id_mod_trac'], $_GET['id_cli'], $_GET['id_mod_trans'], $excel);
-		if ($_GET['id_cli'] == 869 && $_GET['id_march'] == 11) {
-			// $_GET['id_cli'] = 883;
-			$entree['id_cli_col'] = 883;
-		}else{
-			// $_GET['id_cli'] = 883;
-			$entree['id_cli_col'] = $_GET['id_cli'];
-		}
+
 		$entree['id_mod_lic'] = $_GET['id_mod_trac'];
-		
+		$entree['id_cli'] = $_GET['id_cli'];
 		$entree['id_mod_trans'] = $reponseModeTransport['id_mod_trans'];
 
 		$id_mod_lic = $_GET['id_mod_trac'];
@@ -1036,7 +1029,7 @@ while ($reponseModeTransport = $requeteModeTransport-> fetch()) {
 										    AND af.id_mod_lic = ?
 										    AND af.id_mod_trans = ?
 										ORDER BY af.rang ASC");
-		$requete-> execute(array($entree['id_cli_col'], $entree['id_mod_lic'], $entree['id_mod_trans']));
+		$requete-> execute(array($entree['id_cli'], $entree['id_mod_lic'], $entree['id_mod_trans']));
 		while ($reponse = $requete-> fetch()) {
 
 			if ($reponse['id_col']=='42' && $entree['id_mod_trans']=='1') {
@@ -1288,7 +1281,7 @@ while ($reponseModeTransport = $requeteModeTransport-> fetch()) {
 										    AND af.id_mod_lic = ?
 										    AND af.id_mod_trans = ?
 										ORDER BY af.rang ASC");
-		$requete-> execute(array($entree['id_cli_col'], $entree['id_mod_lic'], $entree['id_mod_trans']));
+		$requete-> execute(array($entree['id_cli'], $entree['id_mod_lic'], $entree['id_mod_trans']));
 		while ($reponse = $requete-> fetch()) {
 
 			if ($reponse['id_col']=='42' && $entree['id_mod_trans']=='1' && $entree['id_mod_lic']=='2') {
@@ -1315,6 +1308,33 @@ while ($reponseModeTransport = $requeteModeTransport-> fetch()) {
 			    $col++;
 			}
 			
+
+			// if ($reponse['id_col'] == '11' || $reponse['id_col'] == '13' || $reponse['id_col'] == '17') {
+			// 	$excel-> getActiveSheet()-> getColumnDimension($col)-> setWidth(25);
+			// 	$col++;
+			// }else if ($reponse['id_col'] == '44') {
+			// 	$excel-> getActiveSheet()-> getColumnDimension($col)-> setWidth(40);
+			// 	$col++;
+			// }else if ($reponse['id_col'] == '42') {
+			// 	$excel-> getActiveSheet()-> getColumnDimension($col)-> setWidth(30);
+			// 	$col++;
+			// }else if ($reponse['id_col'] == '43') {
+			// 	$excel-> getActiveSheet()-> getColumnDimension($col)-> setWidth(55);
+			// 	$col++;
+			// }else if ($reponse['id_col'] == '2') {
+			// 	$excel-> getActiveSheet()-> getColumnDimension($col)-> setWidth(25);
+			// 	$col++;
+			// }else if ($reponse['id_col'] == '12') {
+			// 	$excel-> getActiveSheet()-> getColumnDimension($col)-> setWidth(25);
+			// 	$col++;
+			// }else if ($reponse['id_col'] == '16') {
+			// 	$excel-> getActiveSheet()-> getColumnDimension($col)-> setWidth(30);
+			// 	$col++;
+			// }else{
+			// 	$excel-> getActiveSheet()-> getColumnDimension($col)-> setWidth(15);
+			// 	$col++;
+			// }
+
 		}$requete-> closeCursor();
 
 		     $excel->getActiveSheet()->getStyle('B:'.$col)->getAlignment()->applyFromArray(
