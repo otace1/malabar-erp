@@ -19,7 +19,7 @@ $excel = new PHPExcel();
 if ($_GET['id_cli'] == 869 && $_GET['id_march'] == 11) {
 	$entree['id_cli_col'] == 883;
 }else{
-	$entree['id_cli'] = $_GET['id_cli'];
+	$entree['id_cli_col'] = $_GET['id_cli'];
 }
 
 
