@@ -12206,8 +12206,8 @@
 			$entree['id_mod_trans'] = $id_mod_trans;
 			$bg = '';
 
-			if (isset($_id_cli) && ($_id_cli!='')) {
-				$sqlClient = ' AND cl.id_cli = "'.$_id_cli.'"';
+			if (isset($id_cli) && ($id_cli!='')) {
+				$sqlClient = ' AND cl.id_cli = "'.$id_cli.'"';
 			}else{
 				$sqlClient = '';
 			}
