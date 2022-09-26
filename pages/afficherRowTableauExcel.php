@@ -16,6 +16,10 @@ function afficherRowTableauExcel($id_mod_lic, $id_cli, $id_mod_trans, $id_dos, $
 	$col_debut = '';
 	$col_fin = '';
 
+	if ($_GET['id_cli'] == 869 && $_GET['id_march'] == 11 && isset($_GET['id_cli']) && isset($_GET['id_march'])) {
+		$id_cli = 883;
+	}
+
             if ($id_mod_lic == '1') {
               
 				if (isset($id_cli) && ($id_cli!='')) {
