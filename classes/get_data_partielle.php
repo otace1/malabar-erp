@@ -22,7 +22,7 @@
 		$reponse['balance_poids_licence'] = '<input type="text" value="'.$reponse['poids'].'" class="form-control cc-exp bg bg-dark" disabled>';
 
 
-		$reponse['fob'] = '<input type="number" name="fob" max="'.$reponse['fob'].'" step="0.01" class="form-control cc-exp">';
+		$reponse['fob'] = '<input type="number" name="fob" step="0.01" class="form-control cc-exp">';
 
 		$reponse['poids'] = '<input type="number" name="poids" max="'.$reponse['poids'].'" step="0.01" class="form-control cc-exp">';
 
