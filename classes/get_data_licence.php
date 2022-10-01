@@ -9,6 +9,7 @@
 		$reponse['cod'] = '<input type="text" name="cod" value="" class="form-control cc-exp">';
 
 		$reponse['poids'] = '<input type="text" name="poids" value="" class="form-control cc-exp">';
+		$reponse['id_part'] = '<select name="id_part" class="form-control cc-exp" required></select>';
 
 		//return $reponse;
 		echo json_encode($reponse);
@@ -20,12 +21,29 @@
 		$reponse = $requete-> fetch();
 		$reponse['fob'] = $maClasse-> getLicence($_POST['num_lic'])['fob']-$reponse['fob'];
 		$reponse['poids'] = $maClasse-> getLicence($_POST['num_lic'])['poids_lic']-$reponse['poids'];
+		$reponse['balance_fob_licence'] = '';
+		$reponse['balance_poids_licence'] = '';
 
 		$reponse['fob'] = '<input type="number" name="fob" max="'.$reponse['fob'].'" step="0.01" class="form-control cc-exp">';
 
 		$reponse['poids'] = '<input type="number" name="poids" max="'.$reponse['poids'].'" step="0.01" class="form-control cc-exp">';
 
-		$reponse['cod'] = '<input type="text" name="cod" value="'.$maClasse-> getLicence($_POST['num_lic'])['cod'].'" class="form-control cc-exp">';
+		$reponse['cod'] = '<input type="text" value="'.$maClasse-> getLicence($_POST['num_lic'])['cod'].'" class="form-control bg bg-dark cc-exp" disabled>';
+		$reponse['plus'] = '<span class="btn-primary btn-xs" onclick="window.open(\'partielle_av.php?cod='.$maClasse-> getLicence($_POST['num_lic'])['cod'].'&fob_lic='.$maClasse-> getLicence($_POST['num_lic'])['fob'].'&poids_lic='.$maClasse-> getLicence($_POST['num_lic'])['poids'].'\',\'pop1\',\'width=900,height=600\');"><i class="fa fa-plus"></i></span>';
+		$reponse['id_part'] = '<select name="id_part" class="form-control cc-exp" onchange="getDataPartielle(this.value);" required>
+								<option></option>
+								';
+		$requetePartielle = $connexion-> prepare("SELECT *
+													FROM partielle_av
+													WHERE cod = ?");
+		$requetePartielle-> execute(array($maClasse-> getLicence($_POST['num_lic'])['cod']));
+		while($reponsePartielle = $requetePartielle-> fetch()){
+
+			$reponse['id_part'] .= '<option value="'.$reponsePartielle['id_part'].'">'.$reponsePartielle['num_part'].'</option>';
+
+		}$requetePartielle-> closeCursor();
+
+		$reponse['id_part'] .= '</select>';
 
 		//return $reponse;
 		echo json_encode($reponse);

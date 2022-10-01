@@ -1263,6 +1263,19 @@
 												VALUES(?, ?, ?, ?)');
 			$requete-> execute(array($entree['colonne'], $entree['valeur'], $entree['id_dos'], $entree['id_util']));
 		}
+
+		public function creerPartielle($num_part, $fob, $poids, $cod){
+			include('connexion.php');
+
+			$entree['num_part'] = $num_part;
+			$entree['fob'] = $fob;
+			$entree['poids'] = $poids;
+			$entree['cod'] = $cod;
+			
+			$requete = $connexion-> prepare('INSERT INTO partielle_av(num_part, fob, poids, cod)
+												VALUES(?, ?, ?, ?)');
+			$requete-> execute(array($entree['num_part'], $entree['fob'], $entree['poids'], $entree['cod']));
+		}
 		
 		public function creerLogUtilisateur($id_util, $ip, $hostname, $latitude, $longitude, $country_name, $region_name, $city){
 			include('connexion.php');
@@ -1817,6 +1830,46 @@
 			if($entree['date_crf'] == '' || (!isset($entree['date_crf'])) ){
 				$entree['date_crf'] = NULL;
 			}
+
+			if($entree['id_march'] == '' || (!isset($entree['id_march'])) ){
+				$entree['id_march'] = NULL;
+			}
+
+			if($entree['ref_av'] == '' || (!isset($entree['ref_av'])) ){
+				$entree['ref_av'] = NULL;
+			}
+
+			// echo '<br>--------------------------------------ref_dos = '.$entree['ref_dos'];
+			// echo '<br>--------------------------------------id_cli = '.$entree['id_cli'];
+			// echo '<br>--------------------------------------ref_fact = '.$entree['ref_fact'];
+			// echo '<br>--------------------------------------fob = '.$entree['fob'];
+			// echo '<br>--------------------------------------fret = '.$entree['fret'];
+			// echo '<br>--------------------------------------assurance = '.$entree['assurance'];
+			// echo '<br>--------------------------------------autre_frais = '.$entree['autre_frais'];
+			// echo '<br>--------------------------------------num_lic = '.$entree['num_lic'];
+			// echo '<br>--------------------------------------id_mod_lic = '.$entree['id_mod_lic'];
+			// echo '<br>--------------------------------------id_march = '.$entree['id_march'];
+			// echo '<br>--------------------------------------id_mod_trans = '.$entree['id_mod_trans'];
+			// echo '<br>--------------------------------------ref_av = '.$entree['ref_av'];
+			// echo '<br>--------------------------------------COD = '.$entree['cod'];
+			// echo '<br>--------------------------------------id_util = '.$entree['id_util'];
+			// echo '<br>--------------------------------------road_manif = '.$entree['road_manif'];
+			// echo '<br>--------------------------------------date_preal = '.$entree['date_preal'];
+			// echo '<br>--------------------------------------t1 = '.$entree['t1'];
+			// echo '<br>--------------------------------------poids = '.$entree['poids'];
+			// echo '<br>--------------------------------------po_ref = '.$entree['po_ref'];
+			// echo '<br>--------------------------------------commodity = '.$entree['commodity'];
+			// echo '<br>--------------------------------------horse = '.$entree['horse'];
+			// echo '<br>--------------------------------------trailer_1 = '.$entree['trailer_1'];
+			// echo '<br>--------------------------------------trailer_2 = '.$entree['trailer_2'];
+			// echo '<br>--------------------------------------ref_crf = '.$entree['ref_crf'];
+			// echo '<br>--------------------------------------date_crf = '.$entree['date_crf'];
+			// echo '<br>--------------------------------------bond_warehouse = '.$entree['bond_warehouse'];
+			// echo '<br>--------------------------------------supplier = '.$entree['supplier'];
+			// echo '<br>--------------------------------------statut = '.$entree['statut'];
+			// echo '<br>--------------------------------------temporelle = '.$entree['temporelle'];
+			// echo '<br>--------------------------------------frontiere = '.$entree['frontiere'];
+			// echo '<br>--------------------------------------regime = '.$entree['regime'];
 
 			if (($this-> getDossierRefDos($ref_dos)==NULL)) {
 			
@@ -13405,6 +13458,57 @@
 			}$requete-> closeCursor();
 		}
 
+		public function afficherPartielleCOD($cod){
+			include("connexion.php");
+			$entree['cod'] = $cod;
+			$compteur=0;
+
+			$requete = $connexion-> prepare("SELECT p.num_part AS num_part,
+													p.fob AS fob_part,
+													SUM(dos.fob) AS fob_dos,
+													(p.fob-IF(SUM(dos.fob)>0, SUM(dos.fob), 0)) AS solde_fob,
+													p.poids AS poids_part,
+													SUM(dos.poids) AS poids_dos,
+													(p.poids-IF(SUM(dos.poids)>0, SUM(dos.poids), 0)) AS solde_poids
+												FROM partielle_av p
+													LEFT JOIN dossier dos
+														ON REPLACE(CONCAT(p.cod,p.num_part), ' ', '') = REPLACE(dos.cod, ' ', '')
+												WHERE p.cod = ?
+												GROUP BY p.num_part ASC");
+			$requete-> execute(array($entree['cod']));
+			while ($reponse = $requete-> fetch()) {
+				$compteur++;
+			?>
+			<tr>
+				<td style="text-align: center;">
+					<?php echo $compteur;?>
+				</td>
+				<td style="text-align: center;">
+					<?php echo $reponse['num_part'];?>
+				</td>
+				<td style="text-align: right;">
+					<?php echo number_format($reponse['fob_part'], 2, ',', ' ');?>
+				</td>
+				<td style="text-align: right;">
+					<?php echo number_format($reponse['fob_dos'], 2, ',', ' ');?>
+				</td>
+				<td style="text-align: right;">
+					<?php echo number_format($reponse['solde_fob'], 2, ',', ' ');?>
+				</td>
+				<td style="text-align: right;">
+					<?php echo number_format($reponse['poids_part'], 2, ',', ' ');?>
+				</td>
+				<td style="text-align: right;">
+					<?php echo number_format($reponse['poids_dos'], 2, ',', ' ');?>
+				</td>
+				<td style="text-align: right;">
+					<?php echo number_format($reponse['solde_poids'], 2, ',', ' ');?>
+				</td>
+			</tr>
+			<?php
+			}$requete-> closeCursor();
+		}
+
 		public function afficherDossiersAv($ref_crf, $id_cli){
 			include("connexion.php");
 			$entree['ref_crf'] = $ref_crf;
@@ -17223,6 +17327,48 @@
 
 			if(!empty($reponse)){
 				return $reponse['piece'];
+			}else{
+				return 0;
+			}
+		}
+
+		public function getPartielleCOD($cod){
+			$entree['cod'] = $cod;
+			// $entree['id_doc'] = $id_doc;
+			include('connexion.php');
+
+			$requete = $connexion-> prepare("SELECT SUM(fob) AS fob, SUM(poids) AS poids
+												FROM partielle_av
+												WHERE cod = ?");
+			$requete-> execute(array($entree['cod']));
+
+			$reponse = $requete-> fetch();
+
+			if(!empty($reponse)){
+				return $reponse;
+			}else{
+				return 0;
+			}
+		}
+
+		public function getPartielleID($id_part){
+			$entree['id_part'] = $id_part;
+			// $entree['id_doc'] = $id_doc;
+			include('connexion.php');
+
+			// $requete = $connexion-> prepare("SELECT *
+			// 									FROM partielle_av, licence
+			// 									WHERE partielle_av.id_part = ?
+			// 										AND partielle_av.cod = licence.cod");
+			$requete = $connexion-> prepare("SELECT *
+												FROM partielle_av
+												WHERE partielle_av.id_part = ?");
+			$requete-> execute(array($entree['id_part']));
+
+			$reponse = $requete-> fetch();
+
+			if(!empty($reponse)){
+				return $reponse;
 			}else{
 				return 0;
 			}
