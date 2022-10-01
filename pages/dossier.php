@@ -1587,9 +1587,9 @@ if( isset($_GET['id_mod_trac']) && ($_GET['id_mod_trac']=='2' && $_GET['id_cli']
                             data: 'num_lic='+val,
                             dataType:"json",
                             success:function(data){
-                              //console.log(data.balance_fob_licence);
-                              $('#balance_fob_licence').html(data.balance_fob_licence);
-                              $('#balance_poids_licence').html(data.balance_poids_licence);
+                              // //console.log(data.balance_fob_licence);
+                              // $('#balance_fob_licence').html(data.balance_fob_licence);
+                              // $('#balance_poids_licence').html(data.balance_poids_licence);
                             }
 
                           });
@@ -1602,10 +1602,36 @@ if( isset($_GET['id_mod_trac']) && ($_GET['id_mod_trac']=='2' && $_GET['id_cli']
                             data: 'num_lic='+val,
                             dataType:"json",
                             success:function(data){
-                              //console.log(data.fob);
+                              // //console.log(data.fob);
                               $('#fob').html(data.fob);
                               $('#poids').html(data.poids);
                               $('#cod').html(data.cod);
+                              $('#id_part').html(data.id_part);
+                              $('#plus').html(data.plus);
+                              $('#balance_fob_licence').html(data.balance_fob_licence);
+                              $('#balance_poids_licence').html(data.balance_poids_licence);
+                            }
+
+                          });
+                        }
+
+                        function getDataPartielle(val){
+                          $.ajax({
+                            type: "POST",
+                            url: "../classes/get_data_partielle.php",
+                            data: 'id_part='+val,
+                            dataType:"json",
+                            success:function(data){
+                              console.log(data.fob);
+                              console.log(data.fob_old);
+                              console.log(data.fob_part);
+                              console.log(data.fob_dossier);
+                              console.log(data.cod_hidden);
+                              $('#fob').html(data.fob);
+                              $('#poids').html(data.poids);
+                              $('#balance_fob_licence').html(data.balance_fob_licence);
+                              $('#balance_poids_licence').html(data.balance_poids_licence);
+                              $('#cod_hidden').html(data.cod_hidden);
                             }
 
                           });
@@ -1622,6 +1648,19 @@ if( isset($_GET['id_mod_trac']) && ($_GET['id_mod_trac']=='2' && $_GET['id_cli']
                               $maClasse->selectionnerLicenceEnCoursModeleClient($_GET['id_mod_trac'], $_GET['id_cli']);
                             ?>
                         </select>
+                      </div>
+
+                      <div class="col-md-3">
+                        <label for="x_card_code" class="control-label mb-1">CRF REF</label>
+                        <!-- <input type="text" name="cod" class="form-control cc-exp"> -->
+                        <span id="cod"></span>
+                        <span id="cod_hidden"></span>
+                      </div>
+
+                      <div class="col-md-3">
+                        <label for="x_card_code" class="control-label mb-1">PARTIELLE <span id="plus"></span></label>
+                        <!-- <input type="text" name="cod" class="form-control cc-exp"> -->
+                        <span id="id_part"></span>
                       </div>
 
                       <input type="hidden" name="supplier" value="" class="form-control cc-exp">
@@ -1670,12 +1709,6 @@ if( isset($_GET['id_mod_trac']) && ($_GET['id_mod_trac']=='2' && $_GET['id_cli']
                       </div>
 
                       <!-- <input type="hidden" name="cod" value="" class="form-control cc-exp">  -->
-
-                      <div class="col-md-3">
-                        <label for="x_card_code" class="control-label mb-1">CRF REF</label>
-                        <!-- <input type="text" name="cod" class="form-control cc-exp"> -->
-                        <span id="cod"></span>
-                      </div>
 
                           <?php
                         }else{
