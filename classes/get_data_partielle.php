@@ -17,7 +17,7 @@
 		$reponse['poids'] = $maClasse-> getPartielleID($_POST['id_part'])['poids']-$reponse['poids'];
 
 
-		$reponse['balance_fob_licence'] = '<input type="text" value="'.$reponse['fob'].'" class="form-control cc-exp bg bg-dark" disabled>';
+		$reponse['balance_fob_partielle'] = '<input type="text" value="'.$reponse['fob'].'" class="form-control cc-exp bg bg-dark" disabled>';
 
 		$reponse['balance_poids_licence'] = '<input type="text" value="'.$reponse['poids'].'" class="form-control cc-exp bg bg-dark" disabled>';
 
