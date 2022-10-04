@@ -1271,10 +1271,22 @@
 			$entree['fob'] = $fob;
 			$entree['poids'] = $poids;
 			$entree['cod'] = $cod;
+
+			$requeteVerification = $connexion-> prepare('SELECT *
+															FROM partielle_av
+															WHERE num_part = ?
+																AND cod = ?');
+			$requeteVerification-> execute(array($entree['num_part'], $entree['cod']));
+			$reponseVerification = $requeteVerification-> fetch();
+			if ($reponseVerification) {
+				echo '<script>alert("Impossible de creer la partielle '.$entree['num_part'].', il existe deja une avec ce numero!");</script>';
+			}else{
+				$requete = $connexion-> prepare('INSERT INTO partielle_av(num_part, fob, poids, cod, id_util)
+												VALUES(?, ?, ?, ?, ?)');
+				$requete-> execute(array($entree['num_part'], $entree['fob'], $entree['poids'], $entree['cod'], $_SESSION['id_util']));
+				echo '<script>alert("Partielle '.$entree['num_part'].' cree avec succes!");</script>';
+			}
 			
-			$requete = $connexion-> prepare('INSERT INTO partielle_av(num_part, fob, poids, cod)
-												VALUES(?, ?, ?, ?)');
-			$requete-> execute(array($entree['num_part'], $entree['fob'], $entree['poids'], $entree['cod']));
 		}
 		
 		public function creerLogUtilisateur($id_util, $ip, $hostname, $latitude, $longitude, $country_name, $region_name, $city){

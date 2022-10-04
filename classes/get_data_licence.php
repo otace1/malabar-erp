@@ -29,7 +29,13 @@
 		$reponse['poids'] = '<input type="number" name="poids" max="'.$reponse['poids'].'" step="0.01" class="form-control form-control-sm cc-exp">';
 
 		$reponse['cod'] = '<input type="text" value="'.$maClasse-> getLicence($_POST['num_lic'])['cod'].'" class="form-control bg bg-dark cc-exp" disabled>';
-		$reponse['plus'] = '<span class="btn-primary btn-xs" onclick="window.open(\'partielle_av.php?cod='.$maClasse-> getLicence($_POST['num_lic'])['cod'].'&fob_lic='.$maClasse-> getLicence($_POST['num_lic'])['fob'].'&poids_lic='.$maClasse-> getLicence($_POST['num_lic'])['poids'].'\',\'pop1\',\'width=900,height=600\');"><i class="fa fa-plus"></i></span>';
+
+		if (isset($maClasse-> getLicence($_POST['num_lic'])['cod']) && ($maClasse-> getLicence($_POST['num_lic'])['cod']!='')) {
+			$reponse['plus'] = '<span class="btn-primary btn-xs" onclick="window.open(\'partielle_av.php?cod='.$maClasse-> getLicence($_POST['num_lic'])['cod'].'&fob_lic='.$maClasse-> getLicence($_POST['num_lic'])['fob'].'&poids_lic='.$maClasse-> getLicence($_POST['num_lic'])['poids'].'\',\'pop1\',\'width=900,height=600\');"><i class="fa fa-plus"></i></span>';
+		}else{
+			$reponse['plus'] = '<span class="btn-primary btn-xs" onclick="alert(\'Impossible de creer une partielle, veuillez renseigner le COD de la licence!\');"><i class="fa fa-plus"></i></span>';
+		}
+		
 		$reponse['id_part'] = '<select name="id_part" class="form-control form-control-sm cc-exp" onchange="getDataPartielle(this.value);" required>
 								<option></option>
 								';
