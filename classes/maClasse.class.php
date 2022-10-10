@@ -1264,6 +1264,20 @@
 			$requete-> execute(array($entree['colonne'], $entree['valeur'], $entree['id_dos'], $entree['id_util']));
 		}
 
+		public function editPartielle($id_part, $fob, $poids, $id_util){
+			include('connexion.php');
+
+			$entree['id_part'] = $id_part;
+			$entree['fob'] = $fob;
+			$entree['poids'] = $poids;
+			$entree['id_util'] = $id_util;
+			
+			$requete = $connexion-> prepare('UPDATE partielle_av
+												SET fob = ?, poids = ?, id_util = ?
+												WHERE id_part = ?');
+			$requete-> execute(array($entree['fob'], $entree['poids'], $entree['id_util'], $entree['id_part']));
+		}
+
 		public function creerPartielle($num_part, $fob, $poids, $cod){
 			include('connexion.php');
 
@@ -13477,11 +13491,15 @@
 
 			$requete = $connexion-> prepare("SELECT p.num_part AS num_part,
 													p.fob AS fob_part,
+													p.cod AS cod,
+													REPLACE(CONCAT(p.cod, p.num_part), ' ', '') AS cod_dos,
+													COUNT(dos.id_dos) AS nbre_dos,
 													SUM(dos.fob) AS fob_dos,
 													(p.fob-IF(SUM(dos.fob)>0, SUM(dos.fob), 0)) AS solde_fob,
 													p.poids AS poids_part,
 													SUM(dos.poids) AS poids_dos,
-													(p.poids-IF(SUM(dos.poids)>0, SUM(dos.poids), 0)) AS solde_poids
+													(p.poids-IF(SUM(dos.poids)>0, SUM(dos.poids), 0)) AS solde_poids,
+													p.id_part AS id_part
 												FROM partielle_av p
 													LEFT JOIN dossier dos
 														ON REPLACE(CONCAT(p.cod,p.num_part), ' ', '') = REPLACE(dos.cod, ' ', '')
@@ -13490,31 +13508,104 @@
 			$requete-> execute(array($entree['cod']));
 			while ($reponse = $requete-> fetch()) {
 				$compteur++;
+				include('modalEditPartielle.php');
 			?>
 			<tr>
 				<td style="text-align: center;">
 					<?php echo $compteur;?>
 				</td>
 				<td style="text-align: center;">
+					<?php echo $reponse['cod'];?>
+					<a class=" btn-xs btn-warning text-dark" title="Modifier la partielle" data-toggle="modal" data-target=".editPartielle_<?php echo $reponse['id_part'];?>">
+						<i class="fa fa-edit"></i>
+					</a>
+				</td>
+				<td style="text-align: center;">
 					<?php echo $reponse['num_part'];?>
-				</td>
-				<td style="text-align: right;">
-					<?php echo number_format($reponse['fob_part'], 2, ',', ' ');?>
-				</td>
-				<td style="text-align: right;">
-					<?php echo number_format($reponse['fob_dos'], 2, ',', ' ');?>
-				</td>
-				<td style="text-align: right;">
-					<?php echo number_format($reponse['solde_fob'], 2, ',', ' ');?>
 				</td>
 				<td style="text-align: right;">
 					<?php echo number_format($reponse['poids_part'], 2, ',', ' ');?>
 				</td>
 				<td style="text-align: right;">
+					<?php echo number_format($reponse['fob_part'], 2, ',', ' ');?>
+				</td>
+				<td style="text-align: center;">
+					<?php echo number_format($reponse['nbre_dos'], 0, ',', '');?>
+				</td>
+				<td style="text-align: center;">
+					<a class=" btn-xs bg-purple" title="Partielle" href="#" style="color: black;" onclick="window.open('popUpDossierPartielle.php?cod_dos=<?php echo $reponse['cod_dos'];?>','pop2','width=1000,height=700');">
+						<i class="fa fa-eye"></i>
+					</a>
+				</td>
+				<td style="text-align: right;">
 					<?php echo number_format($reponse['poids_dos'], 2, ',', ' ');?>
 				</td>
 				<td style="text-align: right;">
+					<?php echo number_format($reponse['fob_dos'], 2, ',', ' ');?>
+				</td>
+				<td style="text-align: right;">
 					<?php echo number_format($reponse['solde_poids'], 2, ',', ' ');?>
+				</td>
+				<td style="text-align: right;">
+					<?php echo number_format($reponse['solde_fob'], 2, ',', ' ');?>
+				</td>
+			</tr>
+			<?php
+			}$requete-> closeCursor();
+		}
+
+		public function afficherDossierCOD($cod_dos){
+			include("connexion.php");
+			$entree['cod_dos'] = $cod_dos;
+			$compteur=0;
+
+			$requete = $connexion-> prepare("SELECT ref_dos,
+													ref_decl,
+													DATE_FORMAT(date_decl, '%d/%m/%Y') AS date_decl,
+													ref_liq,
+													DATE_FORMAT(date_liq, '%d/%m/%Y') AS date_liq,
+													ref_quit,
+													DATE_FORMAT(date_quit, '%d/%m/%Y') AS date_quit,
+													fob, poids, ref_crf
+												FROM dossier
+												WHERE REPLACE(ref_crf, ' ', '') = ?");
+			$requete-> execute(array($entree['cod_dos']));
+			while ($reponse = $requete-> fetch()) {
+				$compteur++;
+			?>
+			<tr>
+				<td style="text-align: center;">
+					<?php echo $compteur;?>
+				</td>
+				<td style="text-align: center;">
+					<?php echo $reponse['ref_dos'];?>
+				</td>
+				<td style="text-align: center;">
+					<?php echo $reponse['ref_crf'];?>
+				</td>
+				<td style="text-align: center;">
+					<?php echo $reponse['ref_decl'];?>
+				</td>
+				<td style="text-align: center;">
+					<?php echo $reponse['date_decl'];?>
+				</td>
+				<td style="text-align: center;">
+					<?php echo $reponse['ref_liq'];?>
+				</td>
+				<td style="text-align: center;">
+					<?php echo $reponse['date_liq'];?>
+				</td>
+				<td style="text-align: center;">
+					<?php echo $reponse['ref_quit'];?>
+				</td>
+				<td style="text-align: center;">
+					<?php echo $reponse['date_quit'];?>
+				</td>
+				<td style="text-align: right;">
+					<?php echo number_format($reponse['fob'], 2, ',', ' ');?>
+				</td>
+				<td style="text-align: right;">
+					<?php echo number_format($reponse['poids'], 2, ',', ' ');?>
 				</td>
 			</tr>
 			<?php
@@ -13877,7 +13968,12 @@
 				}
 				if($id_mod_lic == '2'){
 					?>
-					<td style="text-align: left; border: 1px solid black;"><?php echo $reponse['cod'];?></td>
+					<td style="text-align: left; border: 1px solid black;">
+						<?php echo $reponse['cod'];?>
+						<a class="btn btn-xs btn-secondary" title="Partielle" href="#" style="color: black;" onclick="window.open('popUpPartielleLicence.php?num_lic=<?php echo $reponse['num_lic'];?>&cod=<?php echo $reponse['cod'];?>','pop1','width=1300,height=900');">
+							<i class="fa fa-eye"></i>
+						</a>
+					</td>
 					<td style="text-align: left; border: 1px solid black;"><?php echo $reponse['fournisseur'];?></td>
 					<?php
 				}
@@ -19021,6 +19117,48 @@
 					</td>
 				</tr>
 			<?php
+		}
+
+		public function afficherPartielleCODBack($cod){
+			include('connexion.php');
+
+			$entree['cod'] = $cod;
+			$compteur = 0;
+
+			$requete = $connexion-> prepare("SELECT part.cod AS cod,
+													part.num_part AS num_part,
+													part.poids AS poids,
+													part.fob AS fob
+												FROM partielle_av part
+												WHERE part.cod = ?");
+			$requete-> execute(array($entree['cod']));
+			while ($reponse = $requete-> fetch()) {
+				$compteur++;
+
+			?>
+				<tr>
+					<td>
+						<?php echo $compteur;?>
+					</td>
+					<td>
+						<?php echo $reponse['cod'];?>
+					</td>
+					<td>
+						<?php echo $reponse['num_part'];?>
+					</td>
+					<td>
+						<?php 
+							echo $reponse['poids'];
+						?>
+					</td>
+					<td>
+						<?php 
+							echo $reponse['fob'];
+						?>
+					</td>
+				</tr>
+			<?php
+			}$requete-> closeCursor();
 		}
 
 		public function afficherLogDossier($id_dos){
