@@ -21,7 +21,7 @@
 
             <div class="col-md-4">
               <label for="x_card_code" class="control-label mb-1">FOB</label>
-              <input type="number" step="0.01" min="0" max="<?php echo $this-> getLicence($_GET['num_lic'])['fob']-$this-> getPartielleCOD($_GET['cod'])['fob'];?>" name="fob" value="<?php echo $reponse['fob_part'];?>" class="form-control form-control-sm cc-exp" required>
+              <input type="number" step="0.01" min="0" max="<?php echo $this-> getLicence($_GET['num_lic'])['fob']-$this-> getPartielleCOD($_GET['cod'])['fob']+$reponse['fob_part'];?>" name="fob" value="<?php echo $reponse['fob_part'];?>" class="form-control form-control-sm cc-exp" required>
             </div>
 
             <div class="col-md-4">
