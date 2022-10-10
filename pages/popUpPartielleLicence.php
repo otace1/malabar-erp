@@ -133,29 +133,29 @@
 
             <div class="col-md-12">
               <label for="x_card_code" class="control-label mb-1">COD</label>
-              <input type="text" value="<?php echo $_GET['cod'];?>" class="form-control cc-exp bg bg-dark" disabled>
+              <input type="text" value="<?php echo $_GET['cod'];?>" class="form-control form-control-sm cc-exp bg bg-dark" disabled>
             </div>
 
             <div class="col-md-4">
               <label for="x_card_code" class="control-label mb-1">Num.Partielle</label>
-              <input type="text" name="num_part" class="form-control cc-exp" required>
+              <input type="text" name="num_part" class="form-control form-control-sm cc-exp" required>
             </div>
 
             <div class="col-md-4">
               <label for="x_card_code" class="control-label mb-1">FOB</label>
-              <input type="number" step="0.01" min="0" max="<?php echo $licence['fob']-$maClasse-> getPartielleCOD($_GET['cod'])['fob'];?>" name="fob" class="form-control cc-exp" required>
+              <input type="number" step="0.01" min="0" max="<?php echo $licence['fob']-$maClasse-> getPartielleCOD($_GET['cod'])['fob'];?>" name="fob" class="form-control form-control-sm cc-exp" required>
             </div>
 
             <div class="col-md-4">
               <label for="x_card_code" class="control-label mb-1">Poids</label>
-              <input type="number" step="0.01" min="0" name="poids" class="form-control cc-exp" required>
+              <input type="number" step="0.01" min="0" name="poids" class="form-control form-control-sm cc-exp" required>
             </div>
 
           </div>
         </div>
         <div class="modal-footer justify-content-between">
-          <button type="button" class="btn btn-danger" data-dismiss="modal">Annuler</button>
-          <button type="submit" name="creerPartielle" class="btn btn-primary">Valider</button>
+          <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal">Annuler</button>
+          <button type="submit" name="creerPartielle" class="btn btn-primary btn-sm">Valider</button>
         </div>
       </div>
       </form>
