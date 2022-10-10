@@ -25,7 +25,7 @@
                                   <tr>
                                     <th style="text-align: center; ">#</th>
                                     <th style="text-align: center; ">Ref.Dossier</th>
-                                    <th style="text-align: center; ">COD</th>
+                                    <th style="text-align: center; ">Ref.CRF</th>
                                     <th style="text-align: center; ">Ref.Decl.</th>
                                     <th style="text-align: center; ">Date Decl.</th>
                                     <th style="text-align: center; ">Ref.Liq.</th>
