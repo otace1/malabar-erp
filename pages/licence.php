@@ -308,20 +308,28 @@
 
                     }
                   ?>
-                <button class="btn btn-dark square-btn-adjust" data-toggle="modal" data-target=".rechercheClient">
+                <button class="btn btn-dark btn-xs square-btn-adjust" data-toggle="modal" data-target=".rechercheClient">
                     <i class="fa fa-filter"></i> Filtrage Client
                 </button>
                   <?php
                   if((isset($_GET['id_cli']) && ($_GET['id_cli'] != '')) && ($_GET['id_mod_lic']=='1') ){
                     ?>
-                <button class="btn btn-primary square-btn-adjust" data-toggle="modal" data-target=".nouvelleLicenceExport">
+                <button class="btn btn-primary btn-xs square-btn-adjust" data-toggle="modal" data-target=".nouvelleLicenceExport">
                     <i class="fa fa-plus"></i> Nouvelle Licence
                 </button>
                   <?php
                   }else if((isset($_GET['id_cli']) && ($_GET['id_cli'] != '')) && ($_GET['id_mod_lic']=='2') ){
                     ?>
-                <button class="btn btn-primary square-btn-adjust" data-toggle="modal" data-target=".nouvelleLicence">
+                <button class="btn btn-primary btn-xs square-btn-adjust" data-toggle="modal" data-target=".nouvelleLicence">
                     <i class="fa fa-plus"></i> Nouvelle Licence
+                </button>
+                  <?php
+                  }
+
+                  if((isset($_GET['id_cli']) && ($_GET['id_cli'] != '')) && ($_GET['id_mod_lic']=='2') && ($maClasse-> getNbrePartielleSansFob($_GET['id_cli'])>0)){
+                    ?>
+                <button class="clignoteb btn btn-xs bg-dark square-btn-adjust" onclick="window.open('popUpPartielleSansFOB.php?id_cli=<?php echo $_GET['id_cli']; ?>','pop1','width=900,height=950');">
+                    <i class="fa fa-edit"></i> Partielle Sans FOB <sup><span class="badge badge-danger"><?php echo number_format($maClasse-> getNbrePartielleSansFob($_GET['id_cli']), 0, '', '');?></span></sup>
                 </button>
                   <?php
                   }
