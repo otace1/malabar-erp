@@ -13504,7 +13504,7 @@
 													LEFT JOIN dossier dos
 														ON REPLACE(CONCAT(p.cod,p.num_part), ' ', '') = REPLACE(dos.cod, ' ', '')
 												WHERE p.cod = ?
-												GROUP BY p.num_part ASC");
+												GROUP BY REPLACE(CONCAT(p.cod,p.num_part), ' ', '') ASC");
 			$requete-> execute(array($entree['cod']));
 			while ($reponse = $requete-> fetch()) {
 				$compteur++;
@@ -13522,6 +13522,83 @@
 				</td>
 				<td style="text-align: center;">
 					<?php echo $reponse['num_part'];?>
+				</td>
+				<td style="text-align: right;">
+					<?php echo number_format($reponse['poids_part'], 2, ',', ' ');?>
+				</td>
+				<td style="text-align: right;">
+					<?php echo number_format($reponse['fob_part'], 2, ',', ' ');?>
+				</td>
+				<td style="text-align: center;">
+					<?php echo number_format($reponse['nbre_dos'], 0, ',', '');?>
+				</td>
+				<td style="text-align: center;">
+					<a class=" btn-xs bg-purple" title="Partielle" href="#" style="color: black;" onclick="window.open('popUpDossierPartielle.php?cod_dos=<?php echo $reponse['cod_dos'];?>','pop2','width=1000,height=700');">
+						<i class="fa fa-eye"></i>
+					</a>
+				</td>
+				<td style="text-align: right;">
+					<?php echo number_format($reponse['poids_dos'], 2, ',', ' ');?>
+				</td>
+				<td style="text-align: right;">
+					<?php echo number_format($reponse['fob_dos'], 2, ',', ' ');?>
+				</td>
+				<td style="text-align: right;">
+					<?php echo number_format($reponse['solde_poids'], 2, ',', ' ');?>
+				</td>
+				<td style="text-align: right;">
+					<?php echo number_format($reponse['solde_fob'], 2, ',', ' ');?>
+				</td>
+			</tr>
+			<?php
+			}$requete-> closeCursor();
+		}
+
+		public function afficherPartielleSansFOB($id_cli){
+			include("connexion.php");
+			$entree['id_cli'] = $id_cli;
+			$compteur=0;
+
+			$requete = $connexion-> prepare("SELECT p.num_part AS num_part,
+													p.fob AS fob_part,
+													p.cod AS cod,
+													REPLACE(CONCAT(p.cod, p.num_part), ' ', '') AS cod_dos,
+													COUNT(dos.id_dos) AS nbre_dos,
+													SUM(dos.fob) AS fob_dos,
+													(p.fob-IF(SUM(dos.fob)>0, SUM(dos.fob), 0)) AS solde_fob,
+													p.poids AS poids_part,
+													SUM(dos.poids) AS poids_dos,
+													(p.poids-IF(SUM(dos.poids)>0, SUM(dos.poids), 0)) AS solde_poids,
+													p.id_part AS id_part,
+													l.num_lic AS num_lic
+												FROM partielle_av p
+													LEFT JOIN dossier dos
+														ON REPLACE(CONCAT(p.cod,p.num_part), ' ', '') = REPLACE(dos.cod, ' ', '')
+													LEFT JOIN licence l
+														ON l.cod = p.cod
+														AND l.id_cli = ?
+												WHERE (p.fob IS NULL OR p.fob = 0)
+												GROUP BY p.id_part ASC");
+			$requete-> execute(array($entree['id_cli']));
+			while ($reponse = $requete-> fetch()) {
+				$compteur++;
+				include('modalEditPartielle.php');
+			?>
+			<tr>
+				<td style="text-align: center;">
+					<?php echo $compteur;?>
+				</td>
+				<td style="text-align: center;">
+					<?php echo $reponse['cod'];?>
+					<a class=" btn-xs btn-warning text-dark" title="Modifier la partielle" data-toggle="modal" data-target=".editPartielle_<?php echo $reponse['id_part'];?>">
+						<i class="fa fa-edit"></i>
+					</a>
+				</td>
+				<td style="text-align: center;">
+					<?php echo $reponse['num_part'];?>
+				</td>
+				<td style="text-align: center;">
+					<?php echo $reponse['num_lic'];?>
 				</td>
 				<td style="text-align: right;">
 					<?php echo number_format($reponse['poids_part'], 2, ',', ' ');?>
@@ -20326,6 +20403,22 @@
 													AND (fob IS NULL OR fob = '' OR fob = 0)
 													AND (ref_dos NOT LIKE '%21-%' OR ref_dos LIKE ?)");
 			$requete-> execute(array($entree['id_cli'], $entree['id_mod_trans'], $entree['id_mod_lic'], $entree['annee']));
+			$reponse = $requete-> fetch();
+			return $reponse['nbre'];
+		}
+
+		public function getNbrePartielleSansFob($id_cli){
+			include('connexion.php');
+
+			$entree['id_cli'] = $id_cli;
+
+			$compteur = 0;
+			$requete = $connexion-> prepare("SELECT COUNT(part.id_part) AS nbre
+												FROM partielle_av part, licence l
+												WHERE l.id_cli = ?
+													AND l.cod = part.cod
+													AND (part.fob IS NULL OR part.fob<=0)");
+			$requete-> execute(array($entree['id_cli']));
 			$reponse = $requete-> fetch();
 			return $reponse['nbre'];
 		}
