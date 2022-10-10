@@ -1,9 +1,17 @@
 <?php
   include("tete.php");
+  $licence = $maClasse-> getLicence($_GET['num_lic']);
 
   if (isset($_POST['creerPartielle'])) {
 
     $maClasse-> creerPartielle($_POST['num_part'], $_POST['fob'], $_POST['poids'], $_GET['cod']);
+
+  }
+
+  if (isset($_POST['editPartielle'])) {
+
+    $maClasse-> editPartielle($_POST['id_part'], $_POST['fob'], $_POST['poids'], $_SESSION['id_util']);
+    echo '<script>alert("Partielle modifiee avec succes!");</script>';
 
   }
 
@@ -21,34 +29,59 @@
                 </h3>
               </div>
               <!-- /.card-header -->
-                  <div class="card card-<?php echo $couleur;?>">
+                  <div class="card card-<?php echo $_GET['couleur'];?>">
                     <div class="card-header">
                       <h3 class="card-title">
-                        <i class="fa fa-folder-open nav-icon"></i> 
-                        Partielles 
-                        <span class="bg bg-dark" style="padding-left: 5px; padding-right: 5px;">
-                          <?php echo $_GET['cod'];?>
-                          </span> | 
-                          Solde Fob: 
-                          <span class="bg bg-dark" style="padding-left: 5px; padding-right: 5px;">
-                            <?php echo number_format($_GET['fob_lic']-$maClasse-> getPartielleCOD($_GET['cod'])['fob'], 2, ',', ' ');?>
-                          </span> | 
-                          Solde poids: 
-                          <span class="bg bg-dark" style="padding-left: 5px; padding-right: 5px;">
-                            <?php echo number_format($_GET['poids_lic']-$maClasse-> getPartielleCOD($_GET['cod'])['poids'], 2, ',', ' ');?>
-                          </span>  
-                          <sup><button class="btn btn-xs btn-primary square-btn-adjust" data-toggle="modal" data-target=".creerPartielle">
-                            <i class="fa fa-plus"></i>
-                        </button></sup>
-
+                        <i class="fa fa-eye nav-icon"></i> DETAIL PARTIELLES 
+                        <!-- <button class="btn btn-success" onclick="window.location.replace('exportPopPartielleLicence.php?num_lic=<?php echo $_GET['num_lic']; ?>','pop1','width=80,height=80');">
+                          <i class="fa fa-file-excel"></i>
+                        </button> -->
                       </h3>
                     </div>
                     <!-- /.card-header -->
                     <div class="card-body">
                         <div class="row">
                           <div class="col-sm-12">
-                            <div class="card-body table-responsive p-0" style="height: 500px;">
-                              <table class="table table-dark  table-head-fixed table-bordered table-hover text-nowrap table-sm small">
+                            <div class="card-body table-responsive p-0" style="">
+                              <table class="table table-dark table-head-fixed table-bordered table-hover text-nowrap table-sm small">
+                                <thead>
+                                  <tr>
+                                    <th>NUMERO</th>
+                                    <th>COD</th>
+                                    <th>FOB</th>
+                                    <th>POIDS</th>
+                                    <th>BALANCE FOB</th>
+                                    <th>BALANCE POIDS</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  <tr>
+                                    <td>
+                                      <?php echo $licence['num_lic'];?>
+                                    </td>
+                                    <td>
+                                      <?php echo $licence['cod'];?>
+                                    </td>
+                                    <td style="text-align: right;">
+                                      <?php echo number_format($licence['fob'], 2, ',', ' ');?>
+                                    </td>
+                                    <td style="text-align: right;">
+                                      <?php echo number_format($licence['poids_lic'], 2, ',', ' ');?>
+                                    </td>
+                                    <td style="text-align: right;">
+                                      <?php echo number_format($licence['fob']-$maClasse->getSommeFobLicence($licence['num_lic']), 2, ',', ' ');?>
+                                    </td>
+                                    <td style="text-align: right;">
+                                      <?php echo number_format($licence['poids_lic']-$maClasse->getSommePoidsLicence($licence['num_lic']), 2, ',', ' ');?>
+                                    </td>
+                                  </tr>
+                                </tbody>
+                              </table>
+                              <br>
+                              <button class="btn btn-xs btn-primary square-btn-adjust" data-toggle="modal" data-target=".creerPartielle">
+                                  <i class="fa fa-plus"></i> Nouvelle Partielle
+                              </button>
+                              <table class="table  table-dark table-head-fixed table-bordered table-hover text-nowrap table-sm small">
                                 <thead>
                                   <tr>
                                     <th style="text-align: center; ">#</th>
@@ -65,10 +98,11 @@
                                 </thead>
                                 <tbody>
                                   <?php
-                                    $maClasse-> afficherPartielleCOD($_GET['cod']);
+                                    $maClasse-> afficherPartielleCOD($licence['cod']);
                                   ?>
                                 </tbody>
                               </table>
+                              <hr>
                             </div>
                         </div>
                     </div>
@@ -109,12 +143,12 @@
 
             <div class="col-md-4">
               <label for="x_card_code" class="control-label mb-1">FOB</label>
-              <input type="number" step="0.01"  min="0" max="<?php echo $_GET['fob_lic']-$maClasse-> getPartielleCOD($_GET['cod'])['fob'];?>" name="fob" class="form-control cc-exp" required>
+              <input type="number" step="0.01" min="0" max="<?php echo $licence['fob']-$maClasse-> getPartielleCOD($_GET['cod'])['fob'];?>" name="fob" class="form-control cc-exp" required>
             </div>
 
             <div class="col-md-4">
               <label for="x_card_code" class="control-label mb-1">Poids</label>
-              <input type="number" step="0.01"  min="0" name="poids" class="form-control cc-exp" required>
+              <input type="number" step="0.01" min="0" name="poids" class="form-control cc-exp" required>
             </div>
 
           </div>
