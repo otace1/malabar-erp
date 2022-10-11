@@ -38,7 +38,7 @@
                     <div class="card-body">
                         <div class="row">
                           <div class="col-sm-12">
-                            <div class="card-body table-responsive p-0" style="">
+                            <div class="card-body table-responsive p-0" style="height: 600px;">
                               <!-- <button class="btn btn-xs btn-primary square-btn-adjust" data-toggle="modal" data-target=".creerPartielle">
                                   <i class="fa fa-plus"></i> Nouvelle Partielle
                               </button> -->
