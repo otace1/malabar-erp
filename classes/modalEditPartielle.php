@@ -14,17 +14,22 @@
 
             <input type="hidden" name="id_part" value="<?php echo $reponse['id_part'];?>">
 
-            <div class="col-md-4">
+            <div class="col-md-6">
+              <label for="x_card_code" class="control-label mb-1">COD</label>
+              <input type="text" value="<?php echo $reponse['cod'];?>" class="form-control form-control-sm bg-dark cc-exp" disabled>
+            </div>
+
+            <div class="col-md-6">
               <label for="x_card_code" class="control-label mb-1">Num.Partielle</label>
               <input type="text" value="<?php echo $reponse['num_part'];?>" class="form-control form-control-sm bg-dark cc-exp" disabled>
             </div>
 
-            <div class="col-md-4">
+            <div class="col-md-6">
               <label for="x_card_code" class="control-label mb-1">FOB</label>
               <input type="number" step="0.01" min="0" max="<?php echo $this-> getLicence($_GET['num_lic'])['fob']-$this-> getPartielleCOD($_GET['cod'])['fob']+$reponse['fob_part'];?>" name="fob" value="<?php echo $reponse['fob_part'];?>" class="form-control form-control-sm cc-exp" required>
             </div>
 
-            <div class="col-md-4">
+            <div class="col-md-6">
               <label for="x_card_code" class="control-label mb-1">Poids</label>
               <input type="number" step="0.01" min="0" name="poids" value="<?php echo $reponse['poids_part'];?>" class="form-control form-control-sm cc-exp" required>
             </div>
