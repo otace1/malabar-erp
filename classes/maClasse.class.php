@@ -2503,6 +2503,18 @@
 		                  <p>Dashboard</p>
 		                </a>
 		              </li>
+		              <?php
+		              if($reponse['id_mod_lic']=='2'){
+		              	?>
+		              <li class="nav-item">
+		                <a href="dashboardAv.php?id_mod_lic=<?php echo $reponse['id_mod_lic'];?>&amp;id_cli=<?php echo $id_cli;?>" class="nav-link">
+		                  &nbsp;&nbsp;&nbsp;&nbsp;<i class="nav-icon fas fa-tachometer-alt"></i>
+		                  <p>Dashboard AV / Partielle</p>
+		                </a>
+		              </li>
+		              	<?php
+		              }
+		              ?>
 		              <li class="nav-item">
 		                <a href="licence.php?id_mod_lic=<?php echo $reponse['id_mod_lic'];?>&amp;id_cli=<?php echo $id_cli;?>" class="nav-link">
 		                  &nbsp;&nbsp;&nbsp;&nbsp;<i class="far fa-circle nav-icon"></i>
@@ -13496,9 +13508,11 @@
 													COUNT(dos.id_dos) AS nbre_dos,
 													SUM(dos.fob) AS fob_dos,
 													(p.fob-IF(SUM(dos.fob)>0, SUM(dos.fob), 0)) AS solde_fob,
+													IF((p.fob-IF(SUM(dos.fob)>0, SUM(dos.fob), 0)) < 0, 'text-danger', '') AS color_fob,
 													p.poids AS poids_part,
 													SUM(dos.poids) AS poids_dos,
 													(p.poids-IF(SUM(dos.poids)>0, SUM(dos.poids), 0)) AS solde_poids,
+													IF((p.poids-IF(SUM(dos.poids)>0, SUM(dos.poids), 0)) < 0, 'text-danger', '') AS color_poids,
 													p.id_part AS id_part
 												FROM partielle_av p
 													LEFT JOIN dossier dos
@@ -13543,10 +13557,131 @@
 				<td style="text-align: right;">
 					<?php echo number_format($reponse['fob_dos'], 2, ',', ' ');?>
 				</td>
-				<td style="text-align: right;">
+				<td style="text-align: right;" class="<?php echo $reponse['color_poids'];?>">
 					<?php echo number_format($reponse['solde_poids'], 2, ',', ' ');?>
 				</td>
+				<td style="text-align: right;" class="<?php echo $reponse['color_fob'];?>">
+					<?php echo number_format($reponse['solde_fob'], 2, ',', ' ');?>
+				</td>
+			</tr>
+			<?php
+			}$requete-> closeCursor();
+		}
+
+		public function afficherPartielleEtat($id_cli, $etat, $consommable){
+			include("connexion.php");
+
+			$compteur=0;
+
+			$entree['id_cli'] = $id_cli;
+			$entree['consommable'] = $consommable;
+			$sqlClient = '';
+			$sqlEtat = '';
+
+			if (isset($id_cli) && ($id_cli!='')) {
+				$sqlClient = ' AND l.id_cli = '.$id_cli;
+			}
+
+			if ($etat == 'Sans FOB') {
+
+				$sqlEtat = " WHERE  (p.fob IS NULL OR p.fob = 0)";
+
+			}else if ($etat == 'Sans Poids') {
+
+				$sqlEtat = " WHERE  (p.poids IS NULL OR p.poids = 0)";
+
+			}else if ($etat == 'FOB Negatif') {
+
+				$sqlEtat = " WHERE p.fob < (
+									SELECT SUM(fob)
+										FROM dossier 
+										WHERE REPLACE(ref_crf, ' ', '') = REPLACE(CONCAT(p.cod,p.num_part), ' ', '')
+								)
+							";
+
+			}else if ($etat == 'Poids Negatif') {
+
+				$sqlEtat = " WHERE p.poids < (
+									SELECT SUM(poids)
+										FROM dossier 
+										WHERE REPLACE(ref_crf, ' ', '') = REPLACE(CONCAT(p.cod,p.num_part), ' ', '')
+								)
+							";
+
+			}
+
+			$requete = $connexion-> prepare("SELECT p.num_part AS num_part,
+													p.fob AS fob_part,
+													p.cod AS cod,
+													REPLACE(CONCAT(p.cod, p.num_part), ' ', '') AS cod_dos,
+													COUNT(dos.id_dos) AS nbre_dos,
+													SUM(dos.fob) AS fob_dos,
+													(p.fob-IF(SUM(dos.fob)>0, SUM(dos.fob), 0)) AS solde_fob,
+													IF((p.fob-IF(SUM(dos.fob)>0, SUM(dos.fob), 0)) < 0, 'text-danger', '') AS color_fob,
+													p.poids AS poids_part,
+													SUM(dos.poids) AS poids_dos,
+													(p.poids-IF(SUM(dos.poids)>0, SUM(dos.poids), 0)) AS solde_poids,
+													IF((p.poids-IF(SUM(dos.poids)>0, SUM(dos.poids), 0)) < 0, 'text-danger', '') AS color_poids,
+													p.id_part AS id_part,
+													l.num_lic AS num_lic,
+													IF(l.consommable='1', 'Consommable', 'Divers') AS label_consommable
+												FROM partielle_av p
+													LEFT JOIN dossier dos
+														ON REPLACE(CONCAT(p.cod,p.num_part), ' ', '') = REPLACE(dos.cod, ' ', '')
+													LEFT JOIN licence l
+														ON l.cod = p.cod
+															AND l.consommable = ?
+															$sqlClient
+												$sqlEtat
+												GROUP BY REPLACE(CONCAT(p.cod,p.num_part), ' ', '') ASC");
+			$requete-> execute(array($entree['consommable']));
+			while ($reponse = $requete-> fetch()) {
+				$compteur++;
+				include('modalEditPartielle.php');
+			?>
+			<tr>
+				<td style="text-align: center;">
+					<?php echo $compteur;?>
+				</td>
+				<td style="text-align: left;">
+					<?php echo $reponse['num_lic'];?>
+				</td>
+				<td style="text-align: center;">
+					<?php echo $reponse['label_consommable'];?>
+				</td>
+				<td style="text-align: center;">
+					<?php echo $reponse['cod'];?>
+					<a class=" btn-xs btn-warning text-dark" title="Modifier la partielle" data-toggle="modal" data-target=".editPartielle_<?php echo $reponse['id_part'];?>">
+						<i class="fa fa-edit"></i>
+					</a>
+				</td>
+				<td style="text-align: center;">
+					<?php echo $reponse['num_part'];?>
+				</td>
 				<td style="text-align: right;">
+					<?php echo number_format($reponse['poids_part'], 2, ',', ' ');?>
+				</td>
+				<td style="text-align: right;">
+					<?php echo number_format($reponse['fob_part'], 2, ',', ' ');?>
+				</td>
+				<td style="text-align: center;">
+					<?php echo number_format($reponse['nbre_dos'], 0, ',', '');?>
+				</td>
+				<td style="text-align: center;">
+					<a class=" btn-xs bg-purple" title="Partielle" href="#" style="color: black;" onclick="window.open('popUpDossierPartielle.php?cod_dos=<?php echo $reponse['cod_dos'];?>','pop2','width=1000,height=700');">
+						<i class="fa fa-eye"></i>
+					</a>
+				</td>
+				<td style="text-align: right;">
+					<?php echo number_format($reponse['poids_dos'], 2, ',', ' ');?>
+				</td>
+				<td style="text-align: right;">
+					<?php echo number_format($reponse['fob_dos'], 2, ',', ' ');?>
+				</td>
+				<td style="text-align: right;" class="<?php echo $reponse['color_poids'];?>">
+					<?php echo number_format($reponse['solde_poids'], 2, ',', ' ');?>
+				</td>
+				<td style="text-align: right;" class="<?php echo $reponse['color_fob'];?>">
 					<?php echo number_format($reponse['solde_fob'], 2, ',', ' ');?>
 				</td>
 			</tr>
@@ -13636,6 +13771,9 @@
 			$entree['cod_dos'] = $cod_dos;
 			$compteur=0;
 
+			$fob = 0;
+			$poids = 0;
+
 			$requete = $connexion-> prepare("SELECT ref_dos,
 													ref_decl,
 													DATE_FORMAT(date_decl, '%d/%m/%Y') AS date_decl,
@@ -13649,6 +13787,8 @@
 			$requete-> execute(array($entree['cod_dos']));
 			while ($reponse = $requete-> fetch()) {
 				$compteur++;
+				$poids += $reponse['poids'];
+				$fob += $reponse['fob'];
 			?>
 			<tr>
 				<td style="text-align: center;">
@@ -13679,14 +13819,27 @@
 					<?php echo $reponse['date_quit'];?>
 				</td>
 				<td style="text-align: right;">
-					<?php echo number_format($reponse['fob'], 2, ',', ' ');?>
+					<?php echo number_format($reponse['poids'], 2, ',', ' ');?>
 				</td>
 				<td style="text-align: right;">
-					<?php echo number_format($reponse['poids'], 2, ',', ' ');?>
+					<?php echo number_format($reponse['fob'], 2, ',', ' ');?>
 				</td>
 			</tr>
 			<?php
 			}$requete-> closeCursor();
+			?>
+			<tr>
+				<td colspan="9" style="text-align: right;">
+					Total
+				</td>
+				<td style="text-align: right;">
+					<?php echo number_format($poids, 2, ',', ' ');?>
+				</td>
+				<td style="text-align: right;">
+					<?php echo number_format($fob, 2, ',', ' ');?>
+				</td>
+			</tr>
+			<?php
 		}
 
 		public function afficherDossiersAv($ref_crf, $id_cli){
@@ -14418,7 +14571,12 @@
 				}
 				if($id_mod_lic == '2'){
 					?>
-					<td style="text-align: left; border: 1px solid black;"><?php echo $reponse['cod'];?></td>
+					<td style="text-align: left; border: 1px solid black;">
+						<?php echo $reponse['cod'];?>
+						<a class="btn btn-xs btn-secondary" title="Partielle" href="#" style="color: black;" onclick="window.open('popUpPartielleLicence.php?num_lic=<?php echo $reponse['num_lic'];?>&cod=<?php echo $reponse['cod'];?>','pop1','width=1300,height=900');">
+							<i class="fa fa-eye"></i>
+						</a>
+					</td>
 					<td style="text-align: left; border: 1px solid black;"><?php echo $reponse['fournisseur'];?></td>
 					<?php
 				}
@@ -23615,11 +23773,32 @@
 			include('connexion.php');
 			$entree['num_lic'] = $num_lic;
 
-			$requete = $connexion-> prepare("SELECT l.*, cl.*, IF(l.poids IS NULL OR l.poids='', 0, l.poids) AS poids_lic
+			$requete = $connexion-> prepare("SELECT l.*, cl.*, 
+													IF(l.poids IS NULL OR l.poids='', 0, l.poids) AS poids_lic,
+													IF(l.consommable='1', 'Consommable', 'Divers') AS label_consommable
 												FROM licence l, client cl
 												WHERE l.num_lic = ?
 													AND l.id_cli = cl.id_cli");
 			$requete-> execute(array($entree['num_lic']));
+			$reponse = $requete-> fetch();
+			if($reponse){
+				return $reponse;
+			}else{
+				return null;
+			}
+		}
+
+		public function getLicenceCOD($cod){
+			include('connexion.php');
+			$entree['cod'] = $cod;
+
+			$requete = $connexion-> prepare("SELECT l.*, cl.*, 
+													IF(l.poids IS NULL OR l.poids='', 0, l.poids) AS poids_lic,
+													IF(l.consommable='1', 'Consommable', 'Divers') AS label_consommable
+												FROM licence l, client cl
+												WHERE l.cod = ?
+													AND l.id_cli = cl.id_cli");
+			$requete-> execute(array($entree['cod']));
 			$reponse = $requete-> fetch();
 			if($reponse){
 				return $reponse;
@@ -25500,6 +25679,67 @@
 												WHERE id_mod_lic = ?
 													$sql2");
 			$requete-> execute(array($entree['id_mod_lic']));
+			$reponse = $requete-> fetch();
+			return $reponse['nbre'];
+
+		}
+
+		public function getNombrePartielleEtat($id_cli, $consommable, $etat){
+			include('connexion.php');
+
+			$entree['id_cli'] = $id_cli;
+			$entree['consommable'] = $consommable;
+			$sqlClient = '';
+
+			if (isset($id_cli) && ($id_cli!='')) {
+				$sqlClient = ' AND l.id_cli = '.$id_cli;
+			}
+
+			if ($etat == 'Sans FOB') {
+
+				$requete = $connexion-> prepare("SELECT COUNT(part.id_part) AS nbre
+													FROM partielle_av part, licence l
+													WHERE (part.fob IS NULL OR part.fob = 0)
+														AND part.cod = l.cod
+														AND l.consommable = ?
+														$sqlClient");
+			}else if ($etat == 'Sans Poids') {
+
+				$requete = $connexion-> prepare("SELECT COUNT(part.id_part) AS nbre
+													FROM partielle_av part, licence l
+													WHERE (part.poids IS NULL OR part.poids = 0)
+														AND part.cod = l.cod
+														AND l.consommable = ?
+														$sqlClient");
+			}else if ($etat == 'FOB Negatif') {
+
+				$requete = $connexion-> prepare("SELECT COUNT(part.id_part) AS nbre
+													FROM partielle_av part, licence l
+													WHERE part.cod = l.cod
+														AND l.consommable = ?
+														$sqlClient
+														AND part.fob < (
+															SELECT SUM(fob)
+																FROM dossier 
+																WHERE REPLACE(ref_crf, ' ', '') = REPLACE(CONCAT(part.cod,part.num_part), ' ', '')
+														)
+													");
+			}else if ($etat == 'Poids Negatif') {
+
+				$requete = $connexion-> prepare("SELECT COUNT(part.id_part) AS nbre
+													FROM partielle_av part, licence l
+													WHERE part.cod = l.cod
+														AND l.consommable = ?
+														$sqlClient
+														AND part.poids < (
+															SELECT SUM(poids)
+																FROM dossier 
+																WHERE REPLACE(ref_crf, ' ', '') = REPLACE(CONCAT(part.cod,part.num_part), ' ', '')
+														)
+													");
+			}
+
+			$requete-> execute(array($entree['consommable']));
 			$reponse = $requete-> fetch();
 			return $reponse['nbre'];
 
