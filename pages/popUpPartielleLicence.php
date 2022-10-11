@@ -46,12 +46,13 @@
                               <table class="table table-dark table-head-fixed table-bordered table-hover text-nowrap table-sm small">
                                 <thead>
                                   <tr>
-                                    <th>NUMERO</th>
+                                    <th>Licence</th>
                                     <th>COD</th>
-                                    <th>FOB</th>
-                                    <th>POIDS</th>
-                                    <th>BALANCE FOB</th>
-                                    <th>BALANCE POIDS</th>
+                                    <th style="text-align: center;">Type</th>
+                                    <th style="text-align: center;">FOB</th>
+                                    <th style="text-align: center;">POIDS</th>
+                                    <th style="text-align: center;">BALANCE FOB</th>
+                                    <th style="text-align: center;">BALANCE POIDS</th>
                                   </tr>
                                 </thead>
                                 <tbody>
@@ -62,16 +63,19 @@
                                     <td>
                                       <?php echo $licence['cod'];?>
                                     </td>
-                                    <td style="text-align: right;">
+                                    <td style="text-align: center;">
+                                      <?php echo $licence['label_consommable'];?>
+                                    </td>
+                                    <td style="text-align: center;">
                                       <?php echo number_format($licence['fob'], 2, ',', ' ');?>
                                     </td>
-                                    <td style="text-align: right;">
+                                    <td style="text-align: center;">
                                       <?php echo number_format($licence['poids_lic'], 2, ',', ' ');?>
                                     </td>
-                                    <td style="text-align: right;">
+                                    <td style="text-align: center;">
                                       <?php echo number_format($licence['fob']-$maClasse->getSommeFobLicence($licence['num_lic']), 2, ',', ' ');?>
                                     </td>
-                                    <td style="text-align: right;">
+                                    <td style="text-align: center;">
                                       <?php echo number_format($licence['poids_lic']-$maClasse->getSommePoidsLicence($licence['num_lic']), 2, ',', ' ');?>
                                     </td>
                                   </tr>

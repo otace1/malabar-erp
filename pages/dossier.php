@@ -934,7 +934,7 @@ for ($i=1; $i <= 15 ; $i++) {
                         </div>
                     </form>
                     <?php
-                      if($_GET['id_mod_trac'] == '1' && $_SESSION['id_role'] != '7' && $_SESSION['id_role'] != '8' && $_SESSION['id_role'] != '9' && $_SESSION['id_role'] != '10'){
+                      /*if($_GET['id_mod_trac'] == '1' && $_SESSION['id_role'] != '7' && $_SESSION['id_role'] != '8' && $_SESSION['id_role'] != '9' && $_SESSION['id_role'] != '10'){
                         ?>  
                     <button class="btn btn-xs btn-info square-btn-adjust" data-toggle="modal" data-target=".updateExport" <?php echo $maClasse-> getDataUtilisateur($_SESSION['id_util'])['tracking_enab']?>>
                         <i class="fa fa-edit"></i> Update Multiple Files
@@ -947,6 +947,7 @@ for ($i=1; $i <= 15 ; $i++) {
                     </button>
                         <?php
                       }
+                      */
                       //echo date('y');
                     ?>
                     
@@ -1597,7 +1598,7 @@ if( isset($_GET['id_mod_trac']) && ($_GET['id_mod_trac']=='2' && $_GET['id_cli']
                             data: 'num_lic='+val,
                             dataType:"json",
                             success:function(data){
-                              // //console.log(data.fob);
+                              console.log(data.plus);
                               $('#fob').html(data.fob);
                               $('#poids').html(data.poids);
                               $('#cod').html(data.cod);
@@ -2245,7 +2246,7 @@ if( isset($_GET['id_mod_trac']) && ($_GET['id_mod_trac']=='2' && $_GET['id_cli']
 }else{
 
 include('nouveauExport.php');
-include('updateMutipleExport.php');
+// include('updateMutipleExport.php');
 
 }
 ?>
@@ -2254,6 +2255,7 @@ include('updateMutipleExport.php');
 <?php
 
 if(isset($_GET['id_mod_trac']) && isset($_GET['id_mod_trac'])){
+  /*
 
   $modele = $maClasse-> getElementModeleLicence($_GET['id_mod_trac']);
   //$marchandise = $maClasse-> getElementMarchandise($_GET['id_march']);
@@ -2301,101 +2303,6 @@ if(isset($_GET['id_mod_trac']) && isset($_GET['id_mod_trac'])){
           <?php
             $maClasse-> afficherRowUpdate($_GET['id_mod_trac'], $_GET['id_cli'], $_GET['id_mod_trans']);
           ?>
-<!-- 
-          <div class="col-md-3">
-            <label for="x_card_code" class="control-label mb-1">K'lesa arrival date</label>
-            <input type="date"  onchange="is_weekend(this.value);" name="klsa_arriv" class="form-control cc-exp">
-          </div>
-          <div class="col-md-3">
-            <label for="x_card_code" class="control-label mb-1">Crossing Date</label>
-            <input type="date"  onchange="is_weekend(this.value);" max="<?php echo date('Y-m-d');?>" name="crossing_date" class="form-control cc-exp">
-          </div>
-          <div class="col-md-3">
-            <label for="x_card_code" class="control-label mb-1">Wiski arrival date</label>
-            <input type="date"  onchange="is_weekend(this.value);" max="<?php echo date('Y-m-d');?>" name="wiski_arriv" class="form-control cc-exp">
-          </div>
-          <div class="col-md-3">
-            <label for="x_card_code" class="control-label mb-1">Departure date Wiski</label>
-            <input type="date"  onchange="is_weekend(this.value);" max="<?php echo date('Y-m-d');?>" name="wiski_dep" class="form-control cc-exp">
-          </div>
-          <div class="col-md-3">
-            <label for="x_card_code" class="control-label mb-1">AMICONGO ARRIVAL DATE</label>
-            <input type="date"  onchange="is_weekend(this.value);" max="<?php echo date('Y-m-d');?>" name="amicong_arriv" class="form-control cc-exp">
-          </div>
-          <div class="col-md-3">
-            <label for="x_card_code" class="control-label mb-1">INSP REPORT RECEIVED DATE</label>
-            <input type="date"  onchange="is_weekend(this.value);" max="<?php echo date('Y-m-d');?>" name="insp_receiv" class="form-control cc-exp">
-          </div>
-          <div class="col-md-3">
-            <label for="x_card_code" class="control-label mb-1">CLEARED BASED ON IR</label>
-            <select name="ir" class="form-control cc-exp">
-              <option></option>
-              <option value="YES">YES</option>
-              <option value="NO">NO</option>
-            </select>
-          </div>
-          <div class="col-md-3">
-            <label for="x_card_code" class="control-label mb-1">CRF Reference</label>
-            <input type="text" name="ref_crf" class="form-control cc-exp">
-          </div>
-          <div class="col-md-3">
-            <label for="x_card_code" class="control-label mb-1">CRF Received Date</label>
-            <input type="date"  onchange="is_weekend(this.value);" max="<?php echo date('Y-m-d');?>" name="date_crf" class="form-control cc-exp">
-          </div>
-          <div class="col-md-3">
-            <label for="x_card_code" class="control-label mb-1">Declaration Reference</label>
-            <input type="text" name="ref_decl" class="form-control cc-exp">
-          </div>
-          <div class="col-md-3">
-            <label for="x_card_code" class="control-label mb-1">DGDA In</label>
-            <input type="date"  onchange="is_weekend(this.value);" max="<?php echo date('Y-m-d');?>" name="dgda_in" class="form-control cc-exp">
-          </div>
-          <div class="col-md-3">
-            <label for="x_card_code" class="control-label mb-1">Liquidation Reference</label>
-            <input type="text" name="ref_liq" class="form-control cc-exp">
-          </div>
-          <div class="col-md-3">
-            <label for="x_card_code" class="control-label mb-1">Date Liquidation</label>
-            <input type="date"  onchange="is_weekend(this.value);" max="<?php echo date('Y-m-d');?>" name="date_liq" class="form-control cc-exp">
-          </div>
-          <div class="col-md-3">
-            <label for="x_card_code" class="control-label mb-1">Quittance Reference</label>
-            <input type="text" name="ref_quit" class="form-control cc-exp">
-          </div>
-          <div class="col-md-3">
-            <label for="x_card_code" class="control-label mb-1">Date Quittance</label>
-            <input type="date"  onchange="is_weekend(this.value);" max="<?php echo date('Y-m-d');?>" name="date_quit" class="form-control cc-exp">
-          </div>
-          <div class="col-md-3">
-            <label for="x_card_code" class="control-label mb-1">DGDA Out</label>
-            <input type="date"  onchange="is_weekend(this.value);" max="<?php echo date('Y-m-d');?>" name="dgda_out" class="form-control cc-exp">
-          </div>
-          <div class="col-md-3">
-            <label for="x_card_code" class="control-label mb-1">CUSTOM DELIVER DATE</label>
-            <input type="date"  onchange="is_weekend(this.value);" max="<?php echo date('Y-m-d');?>" name="custom_deliv" class="form-control cc-exp">
-          </div>
-          <div class="col-md-3">
-            <label for="x_card_code" class="control-label mb-1">CLEARING STATUS</label>
-            <select name="cleared" class="form-control cc-exp">
-              <option></option>
-              <option value="0">TRANSIT</option>
-              <option value="1">CLEARED</option>
-              <option value="2">CANCELLED</option>
-            </select>
-          </div>
-          <div class="col-md-3">
-            <label for="x_card_code" class="control-label mb-1">DISPACTH/DELIVER DATE</label>
-            <input type="date"  onchange="is_weekend(this.value);" max="<?php echo date('Y-m-d');?>" name="dispatch_deliv" class="form-control cc-exp">
-          </div>
-          <div class="col-md-6">
-            <label for="x_card_code" class="control-label mb-1">STATUS</label>
-            <input type="text" name="statut" class="form-control cc-exp">
-          </div>
-          <div class="col-md-6">
-            <label for="x_card_code" class="control-label mb-1">REMARQUE</label>
-            <input type="text" name="remarque" class="form-control cc-exp">
-          </div>
- -->
         </div>
       </div>
       <div class="modal-footer justify-content-between">
@@ -2410,6 +2317,7 @@ if(isset($_GET['id_mod_trac']) && isset($_GET['id_mod_trac'])){
 </div>
 
 <?php
+*/
 }
 ?>
 <?php

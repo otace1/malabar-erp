@@ -47,7 +47,7 @@
     <section class="content-header">
       <div class="container-fluid">
         <div class="header">
-          <h3><i class="fa fa-tachometer-alt nav-icon"></i> DASHBOARD ATTESTATION VERIFICATION <?php echo $client;?></h3>
+          <h3><i class="fa fa-tachometer-alt nav-icon"></i> Dashboard AV/Partielle <?php echo $client;?></h3>
         </div>
 
       </div><!-- /.container-fluid -->
@@ -58,20 +58,27 @@
       <div class="container-fluid" style="">
         <div class="row">
         
-          <div class="col-md-4 col-sm-6 col-12">
+          <div class="col-md-12 col-sm-6 col-12">
+            <h5>Consommables</h5>
+          </div>
 
-            <div class="small-box bg-primary">
+          <div class="col-md-3 col-sm-6 col-12">
+
+            <div class="small-box bg-dark">
               <div class="inner">
                 <h3 class="<?php //echo $clignote;?>">
-                  <?php echo $maClasse-> getNombreFactureClientModeldeLicence($_GET['id_cli'], $_GET['id_mod_lic']);?>
+                  <?php 
+                    $etat = 'Sans FOB';
+                    echo $maClasse-> getNombrePartielleEtat($_GET['id_cli'], '1', $etat);
+                  ?>
                 </h3>
 
-                <p>Factures enregistrées</p>
+                <p><?php echo $etat;?></p>
               </div>
               <div class="icon">
-                <i class="fas fa-check"></i>
+                <!-- <i class="fas fa-check"></i> -->
               </div>
-              <a href="#" class="small-box-footer" onclick="window.location='facture.php?id_mod_lic=<?php echo $_GET['id_mod_lic'];?>&id_cli=<?php echo $_GET['id_cli'];?>&etat=';">
+              <a href="#" class="small-box-footer" onclick="window.open('popUpPartielleDashboard.php?id_cli=<?php echo $_GET['id_cli'];?>&etat=<?php echo $etat;?>&consommable=1','pop1','width=1300,height=900');">
                 More info <i class="fas fa-arrow-circle-right"></i>
               </a>
             </div>
@@ -79,49 +86,23 @@
             <!-- /.info-box -->
           </div>
 
-          <div class="col-md-4 col-sm-6 col-12">
+          <div class="col-md-3 col-sm-6 col-12">
 
-            <?php
-              if ($maClasse-> getNombreFactureAttenteLicence($_GET['id_mod_lic'], $_GET['id_cli'])>0) {
-                $clignote = 'clignote';
-              }else{
-                $clignote = '';
-              }
-            ?>
-
-            <div class="small-box bg-warning">
-              <div class="inner">
-                <h3 class="<?php echo $clignote;?>">
-                  <?php echo $maClasse-> getNombreFactureAttenteLicence($_GET['id_mod_lic'], $_GET['id_cli']);?>
-                </h3>
-
-                <p>Factures sans licence</p>
-              </div>
-              <div class="icon clignote">
-                <i class="fas fa-bell"></i>
-              </div>
-              <a href="#" class="small-box-footer" onclick="window.location='facture.php?id_mod_lic=<?php echo $_GET['id_mod_lic'];?>&id_cli=<?php echo $_GET['id_cli'];?>&etat=Factures sans licence';">
-                More info <i class="fas fa-arrow-circle-right"></i>
-              </a>
-            </div>
-
-            <!-- /.info-box -->
-          </div>
-
-          <div class="col-md-4 col-sm-6 col-12">
-
-            <div class="small-box bg-success">
+            <div class="small-box bg-dark">
               <div class="inner">
                 <h3 class="<?php //echo $clignote;?>">
-                  <?php echo $maClasse-> getNombreFactureAvecLicence($_GET['id_mod_lic'], $_GET['id_cli']);?>
+                  <?php 
+                  $etat = 'Sans Poids';
+                    echo $maClasse-> getNombrePartielleEtat($_GET['id_cli'], '1', $etat);
+                  ?>
                 </h3>
 
-                <p>Facture ayant licence</p>
+                <p><?php echo $etat;?></p>
               </div>
               <div class="icon">
-                <i class="fas fa-check"></i>
+                <!-- <i class="fas fa-check"></i> -->
               </div>
-              <a href="#" class="small-box-footer" onclick="window.location='facture.php?id_mod_lic=<?php echo $_GET['id_mod_lic'];?>&id_cli=<?php echo $_GET['id_cli'];?>&etat=Facture ayant licence';">
+              <a href="#" class="small-box-footer" onclick="window.open('popUpPartielleDashboard.php?id_cli=<?php echo $_GET['id_cli'];?>&etat=<?php echo $etat;?>&consommable=1','pop1','width=1300,height=900');">
                 More info <i class="fas fa-arrow-circle-right"></i>
               </a>
             </div>
@@ -129,6 +110,203 @@
             <!-- /.info-box -->
           </div>
 
+          <div class="col-md-3 col-sm-6 col-12">
+
+            <div class="small-box bg-dark">
+              <div class="inner">
+                <h3 class="<?php //echo $clignote;?>">
+                  <?php 
+                  $etat = 'FOB Negatif';
+                    echo $maClasse-> getNombrePartielleEtat($_GET['id_cli'], '1', $etat);
+                  ?>
+                </h3>
+
+                <p><?php echo $etat;?></p>
+              </div>
+              <div class="icon">
+                <!-- <i class="fas fa-check"></i> -->
+              </div>
+              <a href="#" class="small-box-footer" onclick="window.open('popUpPartielleDashboard.php?id_cli=<?php echo $_GET['id_cli'];?>&etat=<?php echo $etat;?>&consommable=1','pop1','width=1300,height=900');">
+                More info <i class="fas fa-arrow-circle-right"></i>
+              </a>
+            </div>
+
+            <!-- /.info-box -->
+          </div>
+
+          <div class="col-md-3 col-sm-6 col-12">
+
+            <div class="small-box bg-dark">
+              <div class="inner">
+                <h3 class="<?php //echo $clignote;?>">
+                  <?php 
+                  $etat = 'Poids Negatif';
+                    echo $maClasse-> getNombrePartielleEtat($_GET['id_cli'], '1', $etat);
+                  ?>
+                </h3>
+
+                <p><?php echo $etat;?></p>
+              </div>
+              <div class="icon">
+                <!-- <i class="fas fa-check"></i> -->
+              </div>
+              <a href="#" class="small-box-footer" onclick="window.open('popUpPartielleDashboard.php?id_cli=<?php echo $_GET['id_cli'];?>&etat=<?php echo $etat;?>&consommable=1','pop1','width=1300,height=900');">
+                More info <i class="fas fa-arrow-circle-right"></i>
+              </a>
+            </div>
+
+            <!-- /.info-box -->
+          </div>
+
+<?php /*?>
+          <div class="col-md-3 col-sm-6 col-12">
+
+            <div class="small-box bg-dark">
+              <div class="inner">
+                <h3 class="<?php //echo $clignote;?>">
+                  <?php 
+                  $etat = '';
+                    // echo $maClasse-> getNombrePartielleEtat($_GET['id_cli'], '1', $etat);
+                  ?>
+                </h3>
+
+                <p><?php echo $etat;?></p>
+              </div>
+              <div class="icon">
+                <!-- <i class="fas fa-check"></i> -->
+              </div>
+              <a href="#" class="small-box-footer" onclick="window.open('popUpPartielleDashboard.php?id_cli=<?php echo $_GET['id_cli'];?>&etat=<?php echo $etat;?>&consommable=1','pop1','width=1300,height=900');">
+                More info <i class="fas fa-arrow-circle-right"></i>
+              </a>
+            </div>
+
+            <!-- /.info-box -->
+          </div>
+<?php */?>
+          <div class="col-md-12 col-sm-6 col-12">
+            <h5>Divers</h5>
+          </div>
+
+          <div class="col-md-3 col-sm-6 col-12">
+
+            <div class="small-box bg-dark">
+              <div class="inner">
+                <h3 class="<?php //echo $clignote;?>">
+                  <?php 
+                    $etat = 'Sans FOB';
+                    echo $maClasse-> getNombrePartielleEtat($_GET['id_cli'], '0', $etat);
+                  ?>
+                </h3>
+
+                <p><?php echo $etat;?></p>
+              </div>
+              <div class="icon">
+                <!-- <i class="fas fa-check"></i> -->
+              </div>
+              <a href="#" class="small-box-footer" onclick="window.open('popUpPartielleDashboard.php?id_cli=<?php echo $_GET['id_cli'];?>&etat=<?php echo $etat;?>&consommable=0','pop1','width=1300,height=900');">
+                More info <i class="fas fa-arrow-circle-right"></i>
+              </a>
+            </div>
+
+            <!-- /.info-box -->
+          </div>
+
+          <div class="col-md-3 col-sm-6 col-12">
+
+            <div class="small-box bg-dark">
+              <div class="inner">
+                <h3 class="<?php //echo $clignote;?>">
+                  <?php 
+                  $etat = 'Sans Poids';
+                    echo $maClasse-> getNombrePartielleEtat($_GET['id_cli'], '0', $etat);
+                  ?>
+                </h3>
+
+                <p><?php echo $etat;?></p>
+              </div>
+              <div class="icon">
+                <!-- <i class="fas fa-check"></i> -->
+              </div>
+              <a href="#" class="small-box-footer" onclick="window.open('popUpPartielleDashboard.php?id_cli=<?php echo $_GET['id_cli'];?>&etat=<?php echo $etat;?>&consommable=0','pop1','width=1300,height=900');">
+                More info <i class="fas fa-arrow-circle-right"></i>
+              </a>
+            </div>
+
+            <!-- /.info-box -->
+          </div>
+
+          <div class="col-md-3 col-sm-6 col-12">
+
+            <div class="small-box bg-dark">
+              <div class="inner">
+                <h3 class="<?php //echo $clignote;?>">
+                  <?php 
+                  $etat = 'FOB Negatif';
+                    echo $maClasse-> getNombrePartielleEtat($_GET['id_cli'], '0', $etat);
+                  ?>
+                </h3>
+
+                <p><?php echo $etat;?></p>
+              </div>
+              <div class="icon">
+                <!-- <i class="fas fa-check"></i> -->
+              </div>
+              <a href="#" class="small-box-footer" onclick="window.open('popUpPartielleDashboard.php?id_cli=<?php echo $_GET['id_cli'];?>&etat=<?php echo $etat;?>&consommable=0','pop1','width=1300,height=900');">
+                More info <i class="fas fa-arrow-circle-right"></i>
+              </a>
+            </div>
+
+            <!-- /.info-box -->
+          </div>
+
+          <div class="col-md-3 col-sm-6 col-12">
+
+            <div class="small-box bg-dark">
+              <div class="inner">
+                <h3 class="<?php //echo $clignote;?>">
+                  <?php 
+                  $etat = 'Poids Negatif';
+                    echo $maClasse-> getNombrePartielleEtat($_GET['id_cli'], '0', $etat);
+                  ?>
+                </h3>
+
+                <p><?php echo $etat;?></p>
+              </div>
+              <div class="icon">
+                <!-- <i class="fas fa-check"></i> -->
+              </div>
+              <a href="#" class="small-box-footer" onclick="window.open('popUpPartielleDashboard.php?id_cli=<?php echo $_GET['id_cli'];?>&etat=<?php echo $etat;?>&consommable=0','pop1','width=1300,height=900');">
+                More info <i class="fas fa-arrow-circle-right"></i>
+              </a>
+            </div>
+
+            <!-- /.info-box -->
+          </div>
+<?php /*?>
+          <div class="col-md-3 col-sm-6 col-12">
+
+            <div class="small-box bg-dark">
+              <div class="inner">
+                <h3 class="<?php //echo $clignote;?>">
+                  <?php 
+                  $etat = '';
+                    // echo $maClasse-> getNombrePartielleEtat($_GET['id_cli'], '1', $etat);
+                  ?>
+                </h3>
+
+                <p><?php echo $etat;?></p>
+              </div>
+              <div class="icon">
+                <!-- <i class="fas fa-check"></i> -->
+              </div>
+              <a href="#" class="small-box-footer" onclick="window.open('popUpPartielleDashboard.php?id_cli=<?php echo $_GET['id_cli'];?>&etat=<?php echo $etat;?>&consommable=1','pop1','width=1300,height=900');">
+                More info <i class="fas fa-arrow-circle-right"></i>
+              </a>
+            </div>
+
+            <!-- /.info-box -->
+          </div>
+<?php */?>
             <!-- /.card -->
           
             <!-- /.card -->

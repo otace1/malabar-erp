@@ -32,8 +32,8 @@
                                     <th style="text-align: center; ">Date Liq.</th>
                                     <th style="text-align: center; ">Ref.Quit.</th>
                                     <th style="text-align: center; ">Date Quit.</th>
-                                    <th style="text-align: center; ">FOB</th>
                                     <th style="text-align: center; ">Poids</th>
+                                    <th style="text-align: center; ">FOB</th>
                                   </tr>
                                 </thead>
                                 <tbody>

@@ -1,5 +1,6 @@
 <?php
   include("tete.php");
+  // $licence = $maClasse-> getLicence($_GET['num_lic']);
 
   if (isset($_POST['creerPartielle'])) {
 
@@ -7,11 +8,10 @@
 
   }
 
-  $max_poids = ' min="0" ';
+  if (isset($_POST['editPartielle'])) {
 
-  if ($_GET['consommable'] == '1') {
-    
-    $max_poids = ' min="1" max = "'.($_GET['poids_lic']-$maClasse-> getPartielleCOD($_GET['cod'])['poids']).'"';
+    $maClasse-> editPartielle($_POST['id_part'], $_POST['fob'], $_POST['poids'], $_SESSION['id_util']);
+    echo '<script>alert("Partielle modifiee avec succes!");</script>';
 
   }
 
@@ -24,48 +24,30 @@
         <div class="row">
           <div class="col-12">
 
-              <div class="card-header">
-                <h3 class="card-title" style="font-weight: bold;">
-                </h3>
-              </div>
               <!-- /.card-header -->
-                  <div class="card card-<?php echo $couleur;?>">
+                  <div class="card ">
                     <div class="card-header">
                       <h3 class="card-title">
-                        <i class="fa fa-folder-open nav-icon"></i> 
-                        Partielles 
-                        <span class="bg bg-dark" style="padding-left: 5px; padding-right: 5px;">
-                          <?php echo $_GET['cod'];?>
-                          </span> | 
-                          Solde Fob: 
-                          <span class="bg bg-dark" style="padding-left: 5px; padding-right: 5px;">
-                            <?php echo number_format($_GET['fob_lic']-$maClasse-> getPartielleCOD($_GET['cod'])['fob'], 2, ',', ' ');?>
-                          </span> | 
-                          Solde poids: 
-                          <span class="bg bg-dark" style="padding-left: 5px; padding-right: 5px;">
-                            <?php echo number_format($_GET['poids_lic']-$maClasse-> getPartielleCOD($_GET['cod'])['poids'], 2, ',', ' ');?>
-                          </span>  |
-                          <span class="bg bg-dark" style="padding-left: 5px; padding-right: 5px;">
-                            <?php echo $_GET['label_consommable'];?>
-                          </span>  
-                          <!-- <sup><button class="btn btn-xs btn-primary square-btn-adjust" data-toggle="modal" data-target=".creerPartielle">
-                            <i class="fa fa-plus"></i>
-                        </button></sup> -->
-
+                        <?php echo $_GET['etat'];?>
+                        <!-- <button class="btn btn-success" onclick="window.location.replace('exportPopPartielleLicence.php?num_lic=<?php echo $_GET['num_lic']; ?>','pop1','width=80,height=80');">
+                          <i class="fa fa-file-excel"></i>
+                        </button> -->
                       </h3>
                     </div>
                     <!-- /.card-header -->
                     <div class="card-body">
-                              <button class="btn btn-xs btn-primary square-btn-adjust" data-toggle="modal" data-target=".creerPartielle">
-                                  <i class="fa fa-plus"></i> Nouvelle Partielle
-                              </button>
                         <div class="row">
                           <div class="col-sm-12">
-                            <div class="card-body table-responsive p-0" style="height: 500px;">
-                              <table class="table table-dark  table-head-fixed table-bordered table-hover text-nowrap table-sm small">
+                            <div class="card-body table-responsive p-0" style="">
+                              <!-- <button class="btn btn-xs btn-primary square-btn-adjust" data-toggle="modal" data-target=".creerPartielle">
+                                  <i class="fa fa-plus"></i> Nouvelle Partielle
+                              </button> -->
+                              <table class="table  table-dark table-head-fixed table-bordered table-hover text-nowrap table-sm small">
                                 <thead>
                                   <tr>
                                     <th style="text-align: center; ">#</th>
+                                    <th style="text-align: left; ">Licence</th>
+                                    <th style="text-align: center; ">Type</th>
                                     <th style="text-align: center; ">COD</th>
                                     <th style="text-align: center; ">Partielle</th>
                                     <th style="text-align: center; ">Poids</th>
@@ -79,10 +61,11 @@
                                 </thead>
                                 <tbody>
                                   <?php
-                                    $maClasse-> afficherPartielleCOD($_GET['cod']);
+                                    $maClasse-> afficherPartielleEtat($_GET['id_cli'], $_GET['etat'], '1');
                                   ?>
                                 </tbody>
                               </table>
+                              <hr>
                             </div>
                         </div>
                     </div>
@@ -123,19 +106,19 @@
 
             <div class="col-md-4">
               <label for="x_card_code" class="control-label mb-1">FOB</label>
-              <input type="number" step="0.01"  min="0" max="<?php echo $_GET['fob_lic']-$maClasse-> getPartielleCOD($_GET['cod'])['fob'];?>" name="fob" class="form-control form-control-sm cc-exp" required>
+              <input type="number" step="0.01" min="0" max="<?php echo $licence['fob']-$maClasse-> getPartielleCOD($_GET['cod'])['fob'];?>" name="fob" class="form-control form-control-sm cc-exp" required>
             </div>
 
             <div class="col-md-4">
               <label for="x_card_code" class="control-label mb-1">Poids</label>
-              <input type="number" step="0.01" name="poids" <?php echo $max_poids;?> class="form-control form-control-sm cc-exp" required>
+              <input type="number" step="0.01" min="0" name="poids" class="form-control form-control-sm cc-exp" required>
             </div>
 
           </div>
         </div>
         <div class="modal-footer justify-content-between">
-          <button type="button" class="btn btn-danger" data-dismiss="modal">Annuler</button>
-          <button type="submit" name="creerPartielle" class="btn btn-primary">Valider</button>
+          <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal">Annuler</button>
+          <button type="submit" name="creerPartielle" class="btn btn-primary btn-sm">Valider</button>
         </div>
       </div>
       </form>
