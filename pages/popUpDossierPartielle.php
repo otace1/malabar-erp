@@ -19,7 +19,7 @@
                     <div class="card-body">
                         <div class="row">
                           <div class="col-sm-12">
-                            <div class="card-body table-responsive p-0" style="">
+                            <div class="card-body table-responsive p-0" style="height: 600px;">
                               <table class="table  table-dark table-head-fixed table-bordered table-hover text-nowrap table-sm small">
                                 <thead>
                                   <tr>
