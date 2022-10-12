@@ -61,7 +61,7 @@
                                 </thead>
                                 <tbody>
                                   <?php
-                                    $maClasse-> afficherPartielleEtat($_GET['id_cli'], $_GET['etat'], '1');
+                                    $maClasse-> afficherPartielleEtat($_GET['id_cli'], $_GET['etat'], $_GET['consommable']);
                                   ?>
                                 </tbody>
                               </table>

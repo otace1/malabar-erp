@@ -934,20 +934,20 @@ for ($i=1; $i <= 15 ; $i++) {
                         </div>
                     </form>
                     <?php
-                      /*if($_GET['id_mod_trac'] == '1' && $_SESSION['id_role'] != '7' && $_SESSION['id_role'] != '8' && $_SESSION['id_role'] != '9' && $_SESSION['id_role'] != '10'){
+                     /* if($_GET['id_mod_trac'] == '1' && $_SESSION['id_role'] != '7' && $_SESSION['id_role'] != '8' && $_SESSION['id_role'] != '9' && $_SESSION['id_role'] != '10'){
                         ?>  
                     <button class="btn btn-xs btn-info square-btn-adjust" data-toggle="modal" data-target=".updateExport" <?php echo $maClasse-> getDataUtilisateur($_SESSION['id_util'])['tracking_enab']?>>
                         <i class="fa fa-edit"></i> Update Multiple Files
                     </button>
                         <?php
-                      }else if($_GET['id_mod_trac'] == '2' && $_SESSION['id_role'] != '7' && $_SESSION['id_role'] != '8' && $_SESSION['id_role'] != '9' && $_SESSION['id_role'] != '10'){
+                      }else */if($_GET['id_mod_trac'] == '2' && $_SESSION['id_role'] != '7' && $_SESSION['id_role'] != '8' && $_SESSION['id_role'] != '9' && $_SESSION['id_role'] != '10'){
                         ?>  
                     <button class="btn btn-xs btn-info square-btn-adjust" data-toggle="modal" data-target=".update" <?php echo $maClasse-> getDataUtilisateur($_SESSION['id_util'])['tracking_enab']?>>
                         <i class="fa fa-edit"></i> Update Multiple Files
                     </button>
                         <?php
                       }
-                      */
+                      
                       //echo date('y');
                     ?>
                     
@@ -2255,7 +2255,7 @@ include('nouveauExport.php');
 <?php
 
 if(isset($_GET['id_mod_trac']) && isset($_GET['id_mod_trac'])){
-  /*
+  
 
   $modele = $maClasse-> getElementModeleLicence($_GET['id_mod_trac']);
   //$marchandise = $maClasse-> getElementMarchandise($_GET['id_march']);
@@ -2317,7 +2317,7 @@ if(isset($_GET['id_mod_trac']) && isset($_GET['id_mod_trac'])){
 </div>
 
 <?php
-*/
+
 }
 ?>
 <?php
