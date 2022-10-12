@@ -13630,7 +13630,6 @@
 														ON REPLACE(CONCAT(p.cod,p.num_part), ' ', '') = REPLACE(dos.cod, ' ', '')
 													LEFT JOIN licence l
 														ON l.cod = p.cod
-															$sqlClient
 												$sqlEtat
 												AND p.cod IN (
 													SELECT cod 
