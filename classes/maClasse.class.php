@@ -13579,7 +13579,7 @@
 			$sqlEtat = '';
 
 			if (isset($id_cli) && ($id_cli!='')) {
-				$sqlClient = ' AND l.id_cli = '.$id_cli;
+				$sqlClient = ' AND id_cli = '.$id_cli;
 			}
 
 			if ($etat == 'Sans FOB') {
@@ -13630,9 +13630,14 @@
 														ON REPLACE(CONCAT(p.cod,p.num_part), ' ', '') = REPLACE(dos.cod, ' ', '')
 													LEFT JOIN licence l
 														ON l.cod = p.cod
-															AND l.consommable = ?
 															$sqlClient
 												$sqlEtat
+												AND p.cod IN (
+													SELECT cod 
+														FROM licence
+														WHERE consommable = ?
+															$sqlClient
+												)
 												GROUP BY REPLACE(CONCAT(p.cod,p.num_part), ' ', '') ASC");
 			$requete-> execute(array($entree['consommable']));
 			while ($reponse = $requete-> fetch()) {
