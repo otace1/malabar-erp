@@ -158,6 +158,7 @@
             <!-- /.info-box -->
           </div>
 
+<?php /*?>
           <div class="col-md-3 col-sm-6 col-12">
 
             <div class="small-box bg-dark">
@@ -181,7 +182,7 @@
 
             <!-- /.info-box -->
           </div>
-
+<?php */?>
           <div class="col-md-12 col-sm-6 col-12">
             <h5>Divers</h5>
           </div>
@@ -281,7 +282,7 @@
 
             <!-- /.info-box -->
           </div>
-
+<?php /*?>
           <div class="col-md-3 col-sm-6 col-12">
 
             <div class="small-box bg-dark">
@@ -305,7 +306,7 @@
 
             <!-- /.info-box -->
           </div>
-
+<?php */?>
             <!-- /.card -->
           
             <!-- /.card -->
