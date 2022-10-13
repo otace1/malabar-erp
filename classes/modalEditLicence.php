@@ -192,6 +192,18 @@ if ($_GET['id_mod_lic'] == '1') {
           </div>
           
           <div class="col-md-3">
+            <label for="x_card_code" class="control-label mb-1">TYPE MARCHANDISE</label>
+            <select name="consommable" class="form-control cc-exp" required>
+              <option value="<?php echo $reponse['consommable'];?>">
+                <?php echo $reponse['label_consommable'];?>
+              </option>
+              <option></option>
+              <option value="1">Consommable</option>
+              <option value="0">Divers</option>
+            </select>
+          </div>
+          
+          <div class="col-md-3">
             <label for="x_card_code" class="control-label mb-1">FOURNISSEUR</label>
             <input type="text" name="fournisseur" value="<?php echo $reponse['fournisseur'];?>" class="form-control cc-exp" required>
           </div>
@@ -203,7 +215,7 @@ if ($_GET['id_mod_lic'] == '1') {
           
           <div class="col-md-3">
             <label for="x_card_code" class="control-label mb-1">WEIGHT(KG)</label>
-            <input type="number" step="0.01" name="poids" value="<?php echo $reponse['poids'];?>" class="form-control cc-exp" required>
+            <input type="number" step="0.01" name="poids" value="<?php echo $reponse['poids_lic'];?>" class="form-control cc-exp" required>
           </div>
           
           <div class="col-md-3">

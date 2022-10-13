@@ -164,7 +164,7 @@
 										$date_val, $date_exp, $id_march, $id_mod_lic, 
 										$id_util, $fichier_lic, $tmp, $fichier_fact, $tmp_fact, 
 										$id_type_lic, $id_mod_paie, $id_sous_type_paie,
-										$provenance, $commodity, $tonnage, $poids, $unit_mes, $cod){
+										$provenance, $commodity, $tonnage, $poids, $unit_mes, $cod, $consommable){
 			include('connexion.php');
 			$entree['id_banq'] = $id_banq;$entree['num_lic'] = $num_lic;
 			$entree['id_cli'] = $id_cli;$entree['id_post'] = $id_post;
@@ -181,6 +181,7 @@
 			$entree['tonnage'] = $tonnage; $entree['poids'] = $poids;
 			$entree['unit_mes'] = $unit_mes;
 			$entree['cod'] = $cod;
+			$entree['consommable'] = $consommable;
 
 			if ($entree['date_fact'] == '') {
 				$entree['date_fact'] = NULL;
@@ -233,7 +234,7 @@
 																id_mod_trans, ref_fact, date_fact, 
 																fournisseur, date_val, id_march, 
 																id_mod_lic, id_util, fichier_lic, fichier_fact,
-																id_type_lic, id_mod_paie, id_sous_type_paie, provenance, commodity, tonnage, poids, unit_mes, cod) 
+																id_type_lic, id_mod_paie, id_sous_type_paie, provenance, commodity, tonnage, poids, unit_mes, cod, consommable) 
 												VALUES(?, ?, ?, 
 													?, ?, ?, 
 													?, ?, ?, 
@@ -243,7 +244,7 @@
 													?, ?, ?, 
 													?, ?, ?,
 													?, ?, ?,
-													?, ?, ?)');
+													?, ?, ?, ?)');
 			$requete-> execute(array($entree['id_banq'], $entree['num_lic'], $entree['id_cli'], 
 									$entree['id_post'], $entree['id_mon'], $entree['fob'], 
 									$entree['assurance'], $entree['fret'], $entree['autre_frais'], 
@@ -253,7 +254,8 @@
 									$entree['id_mod_lic'], $entree['id_util'], $entree['fichier_lic'], 
 									$entree['fichier_fact'], $entree['id_type_lic'], $entree['id_mod_paie'], 
 									$entree['id_sous_type_paie'], $entree['provenance'], $entree['commodity'], 
-									$entree['tonnage'], $entree['poids'], $entree['unit_mes'], $entree['cod']));
+									$entree['tonnage'], $entree['poids'], $entree['unit_mes'], $entree['cod'], 
+									$entree['consommable']));
 			if ($date_exp != null) {
 				$this-> creerDateExpirationLicence($num_lic, $date_exp);
 			}
@@ -13627,7 +13629,7 @@
 													IF(l.consommable='1', 'Consommable', 'Divers') AS label_consommable
 												FROM partielle_av p
 													LEFT JOIN dossier dos
-														ON REPLACE(CONCAT(p.cod,p.num_part), ' ', '') = REPLACE(dos.cod, ' ', '')
+														ON REPLACE(CONCAT(p.cod,p.num_part), ' ', '') = REPLACE(dos.ref_crf, ' ', '')
 													LEFT JOIN licence l
 														ON l.cod = p.cod
 												$sqlEtat
@@ -13687,6 +13689,91 @@
 				</td>
 				<td style="text-align: right;" class="<?php echo $reponse['color_fob'];?>">
 					<?php echo number_format($reponse['solde_fob'], 2, ',', ' ');?>
+				</td>
+			</tr>
+			<?php
+			}$requete-> closeCursor();
+		}
+
+		public function afficherCRFSansPartielle($id_cli, $consommable){
+			include("connexion.php");
+
+			$compteur=0;
+
+			$entree['id_cli'] = $id_cli;
+			$entree['consommable'] = $consommable;
+			$sqlClient = '';
+
+			if (isset($id_cli) && ($id_cli!='')) {
+				$sqlClient = ' AND dos.id_cli = '.$id_cli;
+			}
+
+			$requete = $connexion-> prepare("SELECT dos.ref_crf AS ref_crf,
+													COUNT(dos.id_dos) AS nbre_dos,
+													l.num_lic AS num_lic,
+													l.cod AS cod,
+													IF(l.consommable='1', 'Consommable', 'Divers') AS label_consommable,
+													cl.nom_cli AS nom_cli,
+													IF( LENGTH(REPLACE(l.cod, ' ', '')) < 5, 
+														CONCAT('<a class=\" btn-xs btn-info text-dark\" title=\"Ajouter la partielle\" onclick=\"alert(\'Erreur: Veuillez renseigner correctement le COD de la licence ',l.num_lic,' !\')\">
+															<i class=\"fa fa-plus\"></i>
+														</a>'),
+														CONCAT('<a class=\" btn-xs btn-info text-dark\" title=\"Ajouter la partielle\" data-toggle=\"modal\" data-target=\".creerPartielle_',REPLACE(dos.ref_crf, ' ', ''),'\">
+															<i class=\"fa fa-plus\"></i>
+														</a>')
+													) AS bouton_ajout,
+													REPLACE(dos.ref_crf, ' ', '') AS ref_crf_dos
+												FROM dossier dos, licence l, client cl
+												WHERE REPLACE(dos.ref_crf, ' ', '') NOT IN (
+														SELECT REPLACE(CONCAT(cod,num_part), ' ', '')
+															FROM partielle_av
+													)
+													AND REPLACE(dos.ref_crf, ' ', '') <> ''
+													AND REPLACE(dos.ref_crf, ' ', '') <> 'N/A'
+													AND dos.id_cli = cl.id_cli
+													$sqlClient
+													AND dos.num_lic = l.num_lic
+													AND l.consommable = ?
+													AND DATE(l.date_val) >= '2022-08-01'
+												GROUP BY dos.ref_crf
+											");
+			$requete-> execute(array($entree['consommable']));
+			while ($reponse = $requete-> fetch()) {
+				$compteur++;
+				include('modalAjoutPartielle.php');
+			?>
+			<tr>
+				<td style="text-align: center;">
+					<?php echo $compteur;?>
+				</td>
+				<td style="text-align: left;">
+					<?php echo $reponse['ref_crf'];?>
+
+					<?php echo $reponse['bouton_ajout'];?>
+
+					<!-- <a class=" btn-xs btn-info text-dark" title="Modifier la partielle" data-toggle="modal" data-target=".editPartielle_<?php echo $reponse['id_part'];?>">
+						<i class="fa fa-plus"></i>
+					</a> -->
+				</td>
+				<td style="text-align: center;">
+					<?php echo number_format($reponse['nbre_dos'], 0, ',', '');?>
+				</td>
+				<td style="text-align: center;">
+					<a class=" btn-xs bg-purple" title="Partielle" href="#" style="color: black;" onclick="window.open('popUpDossierCRF.php?ref_crf_dos=<?php echo $reponse['ref_crf_dos'];?>','pop2','width=1000,height=700');">
+						<i class="fa fa-eye"></i>
+					</a>
+				</td>
+				<td style="text-align: left;">
+					<?php echo $reponse['num_lic'];?>
+				</td>
+				<td style="text-align: center;">
+					<?php echo $reponse['label_consommable'];?>
+				</td>
+				<td style="text-align: center;">
+					<?php echo $reponse['cod'];?>
+				</td>
+				<td style="text-align: left;">
+					<?php echo $reponse['nom_cli'];?>
 				</td>
 			</tr>
 			<?php
@@ -13789,6 +13876,82 @@
 												FROM dossier
 												WHERE REPLACE(ref_crf, ' ', '') = ?");
 			$requete-> execute(array($entree['cod_dos']));
+			while ($reponse = $requete-> fetch()) {
+				$compteur++;
+				$poids += $reponse['poids'];
+				$fob += $reponse['fob'];
+			?>
+			<tr>
+				<td style="text-align: center;">
+					<?php echo $compteur;?>
+				</td>
+				<td style="text-align: center;">
+					<?php echo $reponse['ref_dos'];?>
+				</td>
+				<td style="text-align: center;">
+					<?php echo $reponse['ref_crf'];?>
+				</td>
+				<td style="text-align: center;">
+					<?php echo $reponse['ref_decl'];?>
+				</td>
+				<td style="text-align: center;">
+					<?php echo $reponse['date_decl'];?>
+				</td>
+				<td style="text-align: center;">
+					<?php echo $reponse['ref_liq'];?>
+				</td>
+				<td style="text-align: center;">
+					<?php echo $reponse['date_liq'];?>
+				</td>
+				<td style="text-align: center;">
+					<?php echo $reponse['ref_quit'];?>
+				</td>
+				<td style="text-align: center;">
+					<?php echo $reponse['date_quit'];?>
+				</td>
+				<td style="text-align: right;">
+					<?php echo number_format($reponse['poids'], 2, ',', ' ');?>
+				</td>
+				<td style="text-align: right;">
+					<?php echo number_format($reponse['fob'], 2, ',', ' ');?>
+				</td>
+			</tr>
+			<?php
+			}$requete-> closeCursor();
+			?>
+			<tr>
+				<td colspan="9" style="text-align: right;">
+					Total
+				</td>
+				<td style="text-align: right;">
+					<?php echo number_format($poids, 2, ',', ' ');?>
+				</td>
+				<td style="text-align: right;">
+					<?php echo number_format($fob, 2, ',', ' ');?>
+				</td>
+			</tr>
+			<?php
+		}
+
+		public function afficherDossierCRF($ref_crf){
+			include("connexion.php");
+			$entree['ref_crf'] = $ref_crf;
+			$compteur=0;
+
+			$fob = 0;
+			$poids = 0;
+
+			$requete = $connexion-> prepare("SELECT ref_dos,
+													ref_decl,
+													DATE_FORMAT(date_decl, '%d/%m/%Y') AS date_decl,
+													ref_liq,
+													DATE_FORMAT(date_liq, '%d/%m/%Y') AS date_liq,
+													ref_quit,
+													DATE_FORMAT(date_quit, '%d/%m/%Y') AS date_quit,
+													fob, poids, ref_crf
+												FROM dossier
+												WHERE REPLACE(ref_crf, ' ', '') = ?");
+			$requete-> execute(array($entree['ref_crf']));
 			while ($reponse = $requete-> fetch()) {
 				$compteur++;
 				$poids += $reponse['poids'];
@@ -14117,6 +14280,8 @@
 							l.qte_decl AS qte_decl,
 							l.fichier_lic AS fichier_lic,
 							l.cod AS cod,
+							l.consommable AS consommable,
+							IF(l.consommable='1', 'Consommable', 'Divers') AS label_consommable,
 							l.fret AS fret,
 							l.autre_frais AS autre_frais,
 							l.acheteur AS acheteur,
@@ -14131,7 +14296,7 @@
 							t.id_type_lic AS id_type_lic,
 							UPPER(t.nom_type_lic) AS nom_type_lic,
 							DATE_FORMAT(l.date_fact, '%d/%m/%Y') AS date_fact,
-							l.poids AS poids,
+							l.poids AS poids_lic,
 							l.id_mod_trans AS id_mod_trans							
 						FROM licence l, monnaie m, client cl, banque b, type_licence t
 						WHERE l.id_mod_lic = ?
@@ -14501,10 +14666,14 @@
 							m.id_mon AS id_mon,
 							l.qte_decl AS qte_decl,
 							l.cod AS cod,
+							l.consommable AS consommable,
+							IF(l.consommable='1', 'Consommable', 'Divers') AS label_consommable,
 							l.fichier_lic AS fichier_lic,
 							l.fret AS fret,
 							l.acheteur AS acheteur,
 							l.assurance AS assurance,
+							l.autre_frais AS autre_frais,
+							l.poids AS poids_lic,
 							UPPER(cl.nom_cli) AS nom_cli,
 							UPPER(l.commodity) AS commodity,
 							l.fournisseur AS fournisseur,
@@ -25749,6 +25918,43 @@
 
 		}
 
+		public function getNombreCRFSansPartielle($id_cli, $consommable){
+			include('connexion.php');
+
+			$entree['consommable'] = $consommable;
+
+			$sqlClient = '';
+
+			if (isset($id_cli) && ($id_cli!='')) {
+				$sqlClient = ' AND l.id_cli = '.$id_cli;
+			}
+
+			$requete = $connexion-> prepare("SELECT COUNT(DISTINCT(d.ref_crf)) AS nbre
+												FROM dossier d, licence l
+												WHERE d.id_mod_lic = 2
+													AND d.ref_crf IS NOT NULL
+													AND REPLACE(d.ref_crf, ' ', '') <> ''
+													AND REPLACE(d.ref_crf, ' ', '') <> 'N/A'
+													AND REPLACE(d.ref_crf, ' ', '') NOT IN (
+														SELECT REPLACE(CONCAT(cod, num_part), ' ', '') AS cod
+															FROM partielle_av
+													)
+													AND d.num_lic = l.num_lic
+													AND l.consommable = ?
+													AND DATE(l.date_val) >= '2022-08-01'
+													$sqlClient
+												--GROUP BY d.ref_crf");
+			$requete-> execute(array($entree['consommable']));
+			$reponse = $requete-> fetch();
+			if ($reponse) {
+				return $reponse['nbre'];
+			}else{
+				return 0;
+			}
+			
+
+		}
+
 		public function getNombreDocumentApurement($id_cli){
 			include('connexion.php');
 
@@ -27624,7 +27830,7 @@
 										$fret, $assurance, $autre_frais, 
 										$num_lic_old, $id_mon, $id_mod_paie, 
 										$id_type_lic, $id_sous_type_paie, $poids, 
-										$id_mod_trans, $cod){
+										$id_mod_trans, $cod, $consommable){
 
 			include('connexion.php');
 			$entree['num_lic'] = $num_lic;
@@ -27646,6 +27852,7 @@
 			$entree['poids'] = $poids;
 			$entree['id_mod_trans'] = $id_mod_trans;
 			$entree['cod'] = $cod;
+			$entree['consommable'] = $consommable;
 
 			/*echo '<br> num_lic = '.$num_lic;
 			echo '<br> num_lic_old = '.$num_lic_old;
@@ -27665,13 +27872,14 @@
 													fret = ?, assurance = ?, autre_frais = ?, 
 													id_mon = ?, id_mod_paie = ?, id_type_lic = ?,
 													id_sous_type_paie = ?, poids = ?, id_mod_trans = ?, 
-													cod = ?
+													cod = ?, consommable = ?
 												WHERE num_lic = ?");
 			$requete-> execute(array($entree['num_lic'], $entree['date_val'], $entree['fournisseur'], 
 									$entree['commodity'], $entree['fob'], $entree['fret'], 
 									$entree['assurance'], $entree['autre_frais'], $entree['id_mon'], 
 									$entree['id_mod_paie'], $entree['id_type_lic'], $entree['id_sous_type_paie'], 
-									$entree['poids'], $entree['id_mod_trans'], $entree['cod'], $entree['num_lic_old']));
+									$entree['poids'], $entree['id_mod_trans'], $entree['cod'], $entree['consommable'], 
+									$entree['num_lic_old']));
 
 			if ($date_exp != $this-> getLastEpirationLicence2($num_lic)) {
 				$this-> annulerDateExpirationLicence($num_lic);
