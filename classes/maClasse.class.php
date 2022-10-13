@@ -13715,10 +13715,10 @@
 													IF(l.consommable='1', 'Consommable', 'Divers') AS label_consommable,
 													cl.nom_cli AS nom_cli,
 													IF( LENGTH(REPLACE(l.cod, ' ', '')) < 5, 
-														CONCAT('<a class=\" btn-xs btn-info text-dark\" title=\"Ajouter la partielle\" onclick=\"alert(\'Erreur: Veuillez renseigner correctement le COD de la licence ',l.num_lic,' !\')\">
+														CONCAT('<a class=\" btn-xs btn-info\" title=\"Ajouter la partielle\" onclick=\"alert(\'Erreur: Veuillez renseigner correctement le COD de la licence ',l.num_lic,' !\')\">
 															<i class=\"fa fa-plus\"></i>
 														</a>'),
-														CONCAT('<a class=\" btn-xs btn-info text-dark\" title=\"Ajouter la partielle\" data-toggle=\"modal\" data-target=\".creerPartielle_',REPLACE(dos.ref_crf, ' ', ''),'\">
+														CONCAT('<a class=\" btn-xs btn-info\" title=\"Ajouter la partielle\" data-toggle=\"modal\" data-target=\".creerPartielle_',REPLACE(dos.ref_crf, ' ', ''),'\">
 															<i class=\"fa fa-plus\"></i>
 														</a>')
 													) AS bouton_ajout,
@@ -25929,21 +25929,19 @@
 				$sqlClient = ' AND l.id_cli = '.$id_cli;
 			}
 
-			$requete = $connexion-> prepare("SELECT COUNT(DISTINCT(d.ref_crf)) AS nbre
-												FROM dossier d, licence l
-												WHERE d.id_mod_lic = 2
-													AND d.ref_crf IS NOT NULL
-													AND REPLACE(d.ref_crf, ' ', '') <> ''
-													AND REPLACE(d.ref_crf, ' ', '') <> 'N/A'
-													AND REPLACE(d.ref_crf, ' ', '') NOT IN (
-														SELECT REPLACE(CONCAT(cod, num_part), ' ', '') AS cod
+			$requete = $connexion-> prepare("SELECT COUNT(DISTINCT(dos.ref_crf)) AS nbre
+												FROM dossier dos, licence l, client cl
+												WHERE REPLACE(dos.ref_crf, ' ', '') NOT IN (
+														SELECT REPLACE(CONCAT(cod,num_part), ' ', '')
 															FROM partielle_av
 													)
-													AND d.num_lic = l.num_lic
-													AND l.consommable = ?
-													AND DATE(l.date_val) >= '2022-08-01'
+													AND REPLACE(dos.ref_crf, ' ', '') <> ''
+													AND REPLACE(dos.ref_crf, ' ', '') <> 'N/A'
+													AND dos.id_cli = cl.id_cli
 													$sqlClient
-												--GROUP BY d.ref_crf");
+													AND dos.num_lic = l.num_lic
+													AND l.consommable = ?
+													AND DATE(l.date_val) >= '2022-08-01'");
 			$requete-> execute(array($entree['consommable']));
 			$reponse = $requete-> fetch();
 			if ($reponse) {

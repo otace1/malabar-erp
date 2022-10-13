@@ -12,10 +12,15 @@
         <div class="modal-body">
           <div class="row">
 
-            <div class="col-md-12">
+            <div class="col-md-6">
               <label for="x_card_code" class="control-label mb-1">COD</label>
               <input type="hidden" name="cod" value="<?php echo $reponse['cod'];?>">
               <input type="text" value="<?php echo $reponse['cod'];?>" class="form-control form-control-sm cc-exp bg bg-dark" disabled>
+            </div>
+
+            <div class="col-md-6">
+              <label for="x_card_code" class="control-label mb-1">CRF</label>
+              <input type="text" value="<?php echo $reponse['ref_crf'];?>" class="form-control form-control-sm cc-exp bg bg-dark" disabled>
             </div>
 
             <div class="col-md-4">
