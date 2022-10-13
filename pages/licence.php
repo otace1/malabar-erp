@@ -171,7 +171,7 @@
                                                   $_POST['fret'], $_POST['assurance'], $_POST['autre_frais'], 
                                                   $_POST['num_lic_old'], $_POST['id_mon'], $_POST['id_mod_paie'], 
                                                   $_POST['id_type_lic'], $_POST['id_sous_type_paie'], $_POST['poids'], 
-                                                  $_POST['id_mod_trans'], $_POST['cod']);
+                                                  $_POST['id_mod_trans'], $_POST['cod'], $_POST['consommable']);
                       }else{
                         $maClasse-> modifierLicenceExport($_POST['num_lic'], $_POST['date_val'], $_POST['date_exp'], 
                                                   $_POST['acheteur'], $_POST['commodity'], $_POST['fob'], 
@@ -241,7 +241,7 @@
                                                       $_POST['id_type_lic'], $_POST['id_mod_paie'], 
                                                       $_POST['id_sous_type_paie'], $_POST['provenance'],
                                                       $_POST['commodity'], $_POST['tonnage'], 
-                                                      $_POST['poids'], $_POST['unit_mes'], $_POST['cod']);
+                                                      $_POST['poids'], $_POST['unit_mes'], $_POST['cod'], $_POST['consommable']);
                             }else{
 
                               echo '<script>alert("Erreur!! Impossible de créer la licence '.$_POST['num_lic'].' car il existe déjà une licence ayant ce numéro.");</script>';
