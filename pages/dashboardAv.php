@@ -281,31 +281,31 @@
 
             <!-- /.info-box -->
           </div>
-<?php /*?>
+
           <div class="col-md-3 col-sm-6 col-12">
 
             <div class="small-box bg-dark">
               <div class="inner">
                 <h3 class="<?php //echo $clignote;?>">
                   <?php 
-                  $etat = '';
-                    // echo $maClasse-> getNombrePartielleEtat($_GET['id_cli'], '1', $etat);
+                  
+                  echo $maClasse-> getNombreCRFSansPartielle($_GET['id_cli'], '0');
                   ?>
                 </h3>
 
-                <p><?php echo $etat;?></p>
+                <p>Partielle(s) Manquante(s)</p>
               </div>
               <div class="icon">
                 <!-- <i class="fas fa-check"></i> -->
               </div>
-              <a href="#" class="small-box-footer" onclick="window.open('popUpPartielleDashboard.php?id_cli=<?php echo $_GET['id_cli'];?>&etat=<?php echo $etat;?>&consommable=1','pop1','width=1300,height=900');">
+              <a href="#" class="small-box-footer" onclick="window.open('popUpCrfSansPartielle.php?id_cli=<?php echo $_GET['id_cli'];?>&consommable=1','pop1','width=1300,height=900');">
                 More info <i class="fas fa-arrow-circle-right"></i>
               </a>
             </div>
 
             <!-- /.info-box -->
           </div>
-<?php */?>
+
             <!-- /.card -->
           
             <!-- /.card -->

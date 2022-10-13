@@ -4,7 +4,7 @@
 
   if (isset($_POST['creerPartielle'])) {
 
-    $maClasse-> creerPartielle($_POST['num_part'], $_POST['fob'], $_POST['poids'], $_GET['cod']);
+    $maClasse-> creerPartielle($_POST['num_part'], $_POST['fob'], $_POST['poids'], $_POST['cod']);
 
   }
 
