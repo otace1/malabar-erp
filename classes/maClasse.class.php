@@ -13584,15 +13584,15 @@
 				$sqlClient = ' AND id_cli = '.$id_cli;
 			}
 
-			if ($etat == 'Sans FOB') {
+			if ($etat == 'Partial Without FOB') {
 
 				$sqlEtat = " WHERE  (p.fob IS NULL OR p.fob = 0)";
 
-			}else if ($etat == 'Sans Poids') {
+			}else if ($etat == 'Partial Without Weight') {
 
 				$sqlEtat = " WHERE  (p.poids IS NULL OR p.poids = 0)";
 
-			}else if ($etat == 'FOB Negatif') {
+			}else if ($etat == 'Partial Having Negative FOB Balance') {
 
 				$sqlEtat = " WHERE p.fob < (
 									SELECT SUM(fob)
@@ -13601,7 +13601,7 @@
 								)
 							";
 
-			}else if ($etat == 'Poids Negatif') {
+			}else if ($etat == 'Partial Having Negative Weight Balance') {
 
 				$sqlEtat = " WHERE p.poids < (
 									SELECT SUM(poids)
@@ -13650,19 +13650,21 @@
 					<?php echo $compteur;?>
 				</td>
 				<td style="text-align: left;">
-					<?php echo $reponse['num_lic'];?>
-				</td>
-				<td style="text-align: center;">
-					<?php echo $reponse['label_consommable'];?>
-				</td>
-				<td style="text-align: center;">
 					<?php echo $reponse['cod'];?>
+				</td>
+				<td style="text-align: center;">
+					<?php echo $reponse['num_part'];?>
+				</td>
+				<td style="text-align: center;">
 					<a class=" btn-xs btn-warning text-dark" title="Modifier la partielle" data-toggle="modal" data-target=".editPartielle_<?php echo $reponse['id_part'];?>">
 						<i class="fa fa-edit"></i>
 					</a>
 				</td>
+				<td style="text-align: left;">
+					<?php echo $reponse['num_lic'];?>
+				</td>
 				<td style="text-align: center;">
-					<?php echo $reponse['num_part'];?>
+					<?php echo $reponse['label_consommable'];?>
 				</td>
 				<td style="text-align: right;">
 					<?php echo number_format($reponse['poids_part'], 2, ',', ' ');?>
@@ -25868,7 +25870,7 @@
 				$sqlClient = ' AND l.id_cli = '.$id_cli;
 			}
 
-			if ($etat == 'Sans FOB') {
+			if ($etat == 'Partial Without FOB') {
 
 				$requete = $connexion-> prepare("SELECT COUNT(part.id_part) AS nbre
 													FROM partielle_av part, licence l
@@ -25876,7 +25878,7 @@
 														AND part.cod = l.cod
 														AND l.consommable = ?
 														$sqlClient");
-			}else if ($etat == 'Sans Poids') {
+			}else if ($etat == 'Partial Without Weight') {
 
 				$requete = $connexion-> prepare("SELECT COUNT(part.id_part) AS nbre
 													FROM partielle_av part, licence l
@@ -25884,7 +25886,7 @@
 														AND part.cod = l.cod
 														AND l.consommable = ?
 														$sqlClient");
-			}else if ($etat == 'FOB Negatif') {
+			}else if ($etat == 'Partial Having Negative FOB Balance') {
 
 				$requete = $connexion-> prepare("SELECT COUNT(part.id_part) AS nbre
 													FROM partielle_av part, licence l
@@ -25895,9 +25897,10 @@
 															SELECT SUM(fob)
 																FROM dossier 
 																WHERE REPLACE(ref_crf, ' ', '') = REPLACE(CONCAT(part.cod,part.num_part), ' ', '')
+																GROUP BY REPLACE(ref_crf, ' ', '')
 														)
 													");
-			}else if ($etat == 'Poids Negatif') {
+			}else if ($etat == 'Partial Having Negative Weight Balance') {
 
 				$requete = $connexion-> prepare("SELECT COUNT(part.id_part) AS nbre
 													FROM partielle_av part, licence l
@@ -25908,6 +25911,7 @@
 															SELECT SUM(poids)
 																FROM dossier 
 																WHERE REPLACE(ref_crf, ' ', '') = REPLACE(CONCAT(part.cod,part.num_part), ' ', '')
+																GROUP BY REPLACE(ref_crf, ' ', '')
 														)
 													");
 			}
