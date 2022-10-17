@@ -68,12 +68,61 @@
               <div class="inner">
                 <h3 class="<?php //echo $clignote;?>">
                   <?php 
-                    $etat = 'Sans FOB';
+                    $etat = 'Partial Without FOB';
                     echo $maClasse-> getNombrePartielleEtat($_GET['id_cli'], '1', $etat);
                   ?>
                 </h3>
 
-                <p><?php echo $etat;?></p>
+                <p class="text-sm"><?php echo $etat;?></p>
+              </div>
+              <div class="icon">
+                <i class="fa fa-money-bill"></i>
+              </div>
+              <a href="#" class="small-box-footer" onclick="window.open('popUpPartielleDashboard.php?id_cli=<?php echo $_GET['id_cli'];?>&etat=<?php echo $etat;?>&consommable=1','pop1','width=1300,height=900');">
+                More info <i class="fas fa-arrow-circle-right"></i>
+              </a>
+            </div>
+
+            <!-- /.info-box -->
+          </div>
+
+          <div class="col-md-3 col-sm-6 col-12">
+
+            <div class="small-box bg-dark">
+              <div class="inner">
+                <h3 class="<?php //echo $clignote;?>">
+                  <?php 
+                  $etat = 'Partial Without Weight';
+                    echo $maClasse-> getNombrePartielleEtat($_GET['id_cli'], '1', $etat);
+                  ?>
+                </h3>
+
+                <p class="text-sm"><?php echo $etat;?></p>
+              </div>
+              <div class="icon">
+                <!-- <i class="fa fa-weight-scale"></i> -->
+                <i class="fa-sharp fa-solid fa-weight-scale"></i>
+              </div>
+              <a href="#" class="small-box-footer" onclick="window.open('popUpPartielleDashboard.php?id_cli=<?php echo $_GET['id_cli'];?>&etat=<?php echo $etat;?>&consommable=1','pop1','width=1300,height=900');">
+                More info <i class="fas fa-arrow-circle-right"></i>
+              </a>
+            </div>
+
+            <!-- /.info-box -->
+          </div>
+
+          <div class="col-md-3 col-sm-6 col-12">
+
+            <div class="small-box bg-dark">
+              <div class="inner">
+                <h3 class="<?php //echo $clignote;?>">
+                  <?php 
+                  $etat = 'Partial Having Negative FOB Balance';
+                    echo $maClasse-> getNombrePartielleEtat($_GET['id_cli'], '1', $etat);
+                  ?>
+                </h3>
+
+                <p class="text-sm"><?php echo $etat;?></p>
               </div>
               <div class="icon">
                 <!-- <i class="fas fa-check"></i> -->
@@ -92,60 +141,12 @@
               <div class="inner">
                 <h3 class="<?php //echo $clignote;?>">
                   <?php 
-                  $etat = 'Sans Poids';
+                  $etat = 'Partial Having Negative Weight Balance';
                     echo $maClasse-> getNombrePartielleEtat($_GET['id_cli'], '1', $etat);
                   ?>
                 </h3>
 
-                <p><?php echo $etat;?></p>
-              </div>
-              <div class="icon">
-                <!-- <i class="fas fa-check"></i> -->
-              </div>
-              <a href="#" class="small-box-footer" onclick="window.open('popUpPartielleDashboard.php?id_cli=<?php echo $_GET['id_cli'];?>&etat=<?php echo $etat;?>&consommable=1','pop1','width=1300,height=900');">
-                More info <i class="fas fa-arrow-circle-right"></i>
-              </a>
-            </div>
-
-            <!-- /.info-box -->
-          </div>
-
-          <div class="col-md-3 col-sm-6 col-12">
-
-            <div class="small-box bg-dark">
-              <div class="inner">
-                <h3 class="<?php //echo $clignote;?>">
-                  <?php 
-                  $etat = 'FOB Negatif';
-                    echo $maClasse-> getNombrePartielleEtat($_GET['id_cli'], '1', $etat);
-                  ?>
-                </h3>
-
-                <p><?php echo $etat;?></p>
-              </div>
-              <div class="icon">
-                <!-- <i class="fas fa-check"></i> -->
-              </div>
-              <a href="#" class="small-box-footer" onclick="window.open('popUpPartielleDashboard.php?id_cli=<?php echo $_GET['id_cli'];?>&etat=<?php echo $etat;?>&consommable=1','pop1','width=1300,height=900');">
-                More info <i class="fas fa-arrow-circle-right"></i>
-              </a>
-            </div>
-
-            <!-- /.info-box -->
-          </div>
-
-          <div class="col-md-3 col-sm-6 col-12">
-
-            <div class="small-box bg-dark">
-              <div class="inner">
-                <h3 class="<?php //echo $clignote;?>">
-                  <?php 
-                  $etat = 'Poids Negatif';
-                    echo $maClasse-> getNombrePartielleEtat($_GET['id_cli'], '1', $etat);
-                  ?>
-                </h3>
-
-                <p><?php echo $etat;?></p>
+                <p class="text-sm"><?php echo $etat;?></p>
               </div>
               <div class="icon">
                 <!-- <i class="fas fa-check"></i> -->
@@ -169,7 +170,7 @@
                   ?>
                 </h3>
 
-                <p>Partielle(s) Manquante(s)</p>
+                <p class="text-sm">Partial Missing</p>
               </div>
               <div class="icon">
                 <!-- <i class="fas fa-check"></i> -->
@@ -192,12 +193,12 @@
               <div class="inner">
                 <h3 class="<?php //echo $clignote;?>">
                   <?php 
-                    $etat = 'Sans FOB';
+                    $etat = 'Partial Without FOB';
                     echo $maClasse-> getNombrePartielleEtat($_GET['id_cli'], '0', $etat);
                   ?>
                 </h3>
 
-                <p><?php echo $etat;?></p>
+                <p class="text-sm"><?php echo $etat;?></p>
               </div>
               <div class="icon">
                 <!-- <i class="fas fa-check"></i> -->
@@ -216,12 +217,12 @@
               <div class="inner">
                 <h3 class="<?php //echo $clignote;?>">
                   <?php 
-                  $etat = 'Sans Poids';
+                  $etat = 'Partial Without Weight';
                     echo $maClasse-> getNombrePartielleEtat($_GET['id_cli'], '0', $etat);
                   ?>
                 </h3>
 
-                <p><?php echo $etat;?></p>
+                <p class="text-sm"><?php echo $etat;?></p>
               </div>
               <div class="icon">
                 <!-- <i class="fas fa-check"></i> -->
@@ -240,12 +241,12 @@
               <div class="inner">
                 <h3 class="<?php //echo $clignote;?>">
                   <?php 
-                  $etat = 'FOB Negatif';
+                  $etat = 'Partial Having Negative FOB Balance';
                     echo $maClasse-> getNombrePartielleEtat($_GET['id_cli'], '0', $etat);
                   ?>
                 </h3>
 
-                <p><?php echo $etat;?></p>
+                <p class="text-sm"><?php echo $etat;?></p>
               </div>
               <div class="icon">
                 <!-- <i class="fas fa-check"></i> -->
@@ -264,12 +265,12 @@
               <div class="inner">
                 <h3 class="<?php //echo $clignote;?>">
                   <?php 
-                  $etat = 'Poids Negatif';
+                  $etat = 'Partial Having Negative Weight Balance';
                     echo $maClasse-> getNombrePartielleEtat($_GET['id_cli'], '0', $etat);
                   ?>
                 </h3>
 
-                <p><?php echo $etat;?></p>
+                <p class="text-sm"><?php echo $etat;?></p>
               </div>
               <div class="icon">
                 <!-- <i class="fas fa-check"></i> -->
@@ -293,7 +294,7 @@
                   ?>
                 </h3>
 
-                <p>Partielle(s) Manquante(s)</p>
+                <p class="text-sm">Partial Missing</p>
               </div>
               <div class="icon">
                 <!-- <i class="fas fa-check"></i> -->

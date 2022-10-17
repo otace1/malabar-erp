@@ -46,16 +46,17 @@
                                 <thead>
                                   <tr>
                                     <th style="text-align: center; ">#</th>
-                                    <th style="text-align: left; ">Licence</th>
-                                    <th style="text-align: center; ">Type</th>
-                                    <th style="text-align: center; ">COD</th>
-                                    <th style="text-align: center; ">Partielle</th>
-                                    <th style="text-align: center; ">Poids</th>
-                                    <th style="text-align: center; ">FOB</th>
-                                    <th style="text-align: center; " colspan="2">Dossiers</th>
-                                    <th style="text-align: center; ">Poids Dossiers</th>
-                                    <th style="text-align: center; ">FOB Dossiers</th>
-                                    <th style="text-align: center; ">Balance Poids</th>
+                                    <th style="text-align: left; ">COD</th>
+                                    <th style="text-align: center; ">Partial</th>
+                                    <th></th>
+                                    <th style="text-align: left; ">License Ref.</th>
+                                    <th style="text-align: center; ">License Type</th>
+                                    <th style="text-align: center; ">Partial Weight</th>
+                                    <th style="text-align: center; ">Partial FOB</th>
+                                    <th style="text-align: center; " colspan="2">Partial Files</th>
+                                    <th style="text-align: center; ">Files Weight</th>
+                                    <th style="text-align: center; ">Files FOB</th>
+                                    <th style="text-align: center; ">Balance Weight</th>
                                     <th style="text-align: center; ">Balance FOB</th>
                                   </tr>
                                 </thead>

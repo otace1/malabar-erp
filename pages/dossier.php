@@ -940,7 +940,7 @@ for ($i=1; $i <= 15 ; $i++) {
                         <i class="fa fa-edit"></i> Update Multiple Files
                     </button>
                         <?php
-                      }else */if($_GET['id_mod_trac'] == '2' && $_SESSION['id_role'] != '7' && $_SESSION['id_role'] != '8' && $_SESSION['id_role'] != '9' && $_SESSION['id_role'] != '10'){
+                      }else */if(/*$_GET['id_mod_trac'] == '2' && */$_SESSION['id_role'] != '7' && $_SESSION['id_role'] != '8' && $_SESSION['id_role'] != '9' && $_SESSION['id_role'] != '10'){
                         ?>  
                     <button class="btn btn-xs btn-info square-btn-adjust" data-toggle="modal" data-target=".update" <?php echo $maClasse-> getDataUtilisateur($_SESSION['id_util'])['tracking_enab']?>>
                         <i class="fa fa-edit"></i> Update Multiple Files
