@@ -194,6 +194,21 @@ $indiceSheet = 0;
 
 		$col++;
 
+
+		$excel-> getActiveSheet()
+			-> setCellValue($col.$row, 'Bank');
+		cellColor($col.$row, '000000');
+		alignement($col.$row);
+		
+		$excel->getActiveSheet()
+			->getStyle($col.$row)->applyFromArray($styleHeader);
+
+		$excel->getActiveSheet()
+	        ->getColumnDimension($col)
+	        ->setAutoSize(true);
+
+		$col++;
+
 		$excel-> getActiveSheet()
 			-> setCellValue($col.$row, 'License Weight');
 		cellColor($col.$row, '000000');
@@ -440,10 +455,12 @@ $indiceSheet = 0;
 												d.num_lot AS num_lot,
 												l.cod AS cod_lic,
 												l.poids AS poids_lic,
+												b.nom_banq AS nom_banq,
 												mon.*
 											FROM licence l
 											LEFT JOIN dossier d ON l.num_lic = d.num_lic
 											LEFT JOIN monnaie mon ON l.id_mon = mon.id_mon
+											LEFT JOIN banque b ON l.id_banq = b.id_banq
 											WHERE l.id_cli = ?
 												AND l.id_mod_lic = ?
 												AND YEAR(l.date_val) = ?
@@ -538,6 +555,17 @@ $indiceSheet = 0;
 
 			$excel-> getActiveSheet()
 				-> setCellValue($col.$row, $reponse['num_lic']);
+			cellColor($col.$row, $couleur);
+			alignement($col.$row);
+			// $excel->getActiveSheet()
+			// 	->getStyle($col.$row)->applyFromArray($styleHeader);
+			$excel->getActiveSheet()
+		        ->getColumnDimension($col)
+		        ->setAutoSize(true);
+			$col++;
+
+			$excel-> getActiveSheet()
+				-> setCellValue($col.$row, $reponse['nom_banq']);
 			cellColor($col.$row, $couleur);
 			alignement($col.$row);
 			// $excel->getActiveSheet()
