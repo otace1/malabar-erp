@@ -275,7 +275,7 @@
 
 		public function creerEBTracking($num_lic, $date_val, $poids, $unit_mes, $id_cli, 
 										$id_march, $date_exp, $id_util, $destination, 
-										$acheteur, $id_mod_trans, $ref_fact=NULL, $fichier_lic=NULL, $tmp=NULL){
+										$acheteur, $id_mod_trans, $id_banq, $ref_fact=NULL, $fichier_lic=NULL, $tmp=NULL){
 			include('connexion.php');
 
 			$entree['num_lic'] = $num_lic;
@@ -288,6 +288,7 @@
 			$entree['destination'] = $destination;
 			$entree['acheteur'] = $acheteur;
 			$entree['id_mod_trans'] = $id_mod_trans;
+			$entree['id_banq'] = $id_banq;
 			$entree['ref_fact'] = $ref_fact;
 			$entree['fichier_lic'] = $fichier_lic;
 
@@ -306,12 +307,12 @@
 																poids, unit_mes, id_cli, id_march, 
 																id_mod_lic, id_util,
 																id_type_lic, id_mon, 
-																destination, acheteur, id_mod_trans, ref_fact, fichier_lic) 
-													VALUES(?, ?, '1', ?, ?, ?, ?, '1', ?, '1', '1', ?, ?, ?, ?, ?)");
+																destination, acheteur, id_mod_trans, ref_fact, fichier_lic, id_banq) 
+													VALUES(?, ?, '1', ?, ?, ?, ?, '1', ?, '1', '1', ?, ?, ?, ?, ?, ?)");
 			$requete-> execute(array($entree['num_lic'], $entree['date_val'], $entree['poids'], 
 								$entree['unit_mes'], $entree['id_cli'], $entree['id_march'], $entree['id_util'], 
 								$entree['destination'], $entree['acheteur'], $entree['id_mod_trans'], 
-								$entree['ref_fact'], $entree['fichier_lic']));
+								$entree['ref_fact'], $entree['fichier_lic'], $entree['id_banq']));
 
 			if ($date_exp != null) {
 				$this-> creerDateExpirationLicence($num_lic, $date_exp);
@@ -14293,6 +14294,7 @@
 							l.fournisseur AS fournisseur,
 							DATE(CURRENT_DATE()) AS aujourdhui,
 							UPPER(b.nom_banq) AS nom_banq,
+							b.id_banq AS id_banq,
 							l.ref_fact AS ref_fact,
 							l.remarque AS remarque,
 							t.id_type_lic AS id_type_lic,
@@ -14515,6 +14517,7 @@
 							l.fournisseur AS fournisseur,
 							DATE(CURRENT_DATE()) AS aujourdhui,
 							UPPER(b.nom_banq) AS nom_banq,
+							b.id_banq AS id_banq,
 							l.ref_fact AS ref_fact,
 							l.remarque AS remarque,
 							t.id_type_lic AS id_type_lic,
@@ -14681,6 +14684,7 @@
 							l.fournisseur AS fournisseur,
 							DATE(CURRENT_DATE()) AS aujourdhui,
 							UPPER(b.nom_banq) AS nom_banq,
+							b.id_banq AS id_banq,
 							l.ref_fact AS ref_fact,
 							l.remarque AS remarque,
 							DATE_FORMAT(l.date_fact, '%d/%m/%Y') AS date_fact							
@@ -14872,6 +14876,7 @@
 							l.fournisseur AS fournisseur,
 							DATE(CURRENT_DATE()) AS aujourdhui,
 							UPPER(b.nom_banq) AS nom_banq,
+							b.id_banq AS id_banq,
 							l.ref_fact AS ref_fact,
 							l.remarque AS remarque,
 							cl.id_cli AS id_cli,
@@ -15062,6 +15067,7 @@
 							l.fournisseur AS fournisseur,
 							DATE(CURRENT_DATE()) AS aujourdhui,
 							UPPER(b.nom_banq) AS nom_banq,
+							b.id_banq AS id_banq,
 							l.ref_fact AS ref_fact,
 							l.remarque AS remarque,
 							DATE_FORMAT(l.date_fact, '%d/%m/%Y') AS date_fact							
@@ -15806,6 +15812,7 @@
 							l.fournisseur AS fournisseur,
 							DATE(CURRENT_DATE()) AS aujourdhui,
 							UPPER(b.nom_banq) AS nom_banq,
+							b.id_banq AS id_banq,
 							l.ref_fact AS ref_fact,
 							l.remarque AS remarque,
 							DATE_FORMAT(l.date_fact, '%d/%m/%Y') AS date_fact,
@@ -16005,6 +16012,7 @@
 							l.fournisseur AS fournisseur,
 							DATE(CURRENT_DATE()) AS aujourdhui,
 							UPPER(b.nom_banq) AS nom_banq,
+							b.id_banq AS id_banq,
 							l.ref_fact AS ref_fact,
 							l.remarque AS remarque,
 							DATE_FORMAT(l.date_fact, '%d/%m/%Y') AS date_fact,
@@ -16150,6 +16158,7 @@
 							l.fournisseur AS fournisseur,
 							DATE(CURRENT_DATE()) AS aujourdhui,
 							UPPER(b.nom_banq) AS nom_banq,
+							b.id_banq AS id_banq,
 							l.ref_fact AS ref_fact,
 							l.remarque AS remarque,
 							DATE_FORMAT(l.date_fact, '%d/%m/%Y') AS date_fact,
@@ -27850,7 +27859,7 @@
 										$fret, $assurance, $autre_frais, 
 										$num_lic_old, $id_mon, $id_mod_paie, 
 										$id_type_lic, $id_sous_type_paie, $poids, 
-										$id_mod_trans, $cod, $consommable){
+										$id_mod_trans, $cod, $consommable, $id_banq){
 
 			include('connexion.php');
 			$entree['num_lic'] = $num_lic;
@@ -27873,6 +27882,7 @@
 			$entree['id_mod_trans'] = $id_mod_trans;
 			$entree['cod'] = $cod;
 			$entree['consommable'] = $consommable;
+			$entree['id_banq'] = $id_banq;
 
 			/*echo '<br> num_lic = '.$num_lic;
 			echo '<br> num_lic_old = '.$num_lic_old;
@@ -27892,13 +27902,13 @@
 													fret = ?, assurance = ?, autre_frais = ?, 
 													id_mon = ?, id_mod_paie = ?, id_type_lic = ?,
 													id_sous_type_paie = ?, poids = ?, id_mod_trans = ?, 
-													cod = ?, consommable = ?
+													cod = ?, consommable = ?, id_banq = ?
 												WHERE num_lic = ?");
 			$requete-> execute(array($entree['num_lic'], $entree['date_val'], $entree['fournisseur'], 
 									$entree['commodity'], $entree['fob'], $entree['fret'], 
 									$entree['assurance'], $entree['autre_frais'], $entree['id_mon'], 
 									$entree['id_mod_paie'], $entree['id_type_lic'], $entree['id_sous_type_paie'], 
-									$entree['poids'], $entree['id_mod_trans'], $entree['cod'], $entree['consommable'], 
+									$entree['poids'], $entree['id_mod_trans'], $entree['cod'], $entree['consommable'], $entree['id_banq'], 
 									$entree['num_lic_old']));
 
 			if ($date_exp != $this-> getLastEpirationLicence2($num_lic)) {
@@ -27914,7 +27924,7 @@
 										$acheteur, $commodity, $fob, 
 										$fret, $assurance, $autre_frais, 
 										$num_lic_old, $id_mon, $id_mod_paie, 
-										$id_type_lic, $id_mod_trans){
+										$id_type_lic, $id_mod_trans, $id_banq){
 
 			include('connexion.php');
 			$entree['num_lic'] = $num_lic;
@@ -27933,6 +27943,7 @@
 			$entree['id_mod_paie'] = $id_mod_paie;
 			$entree['id_type_lic'] = $id_type_lic;
 			$entree['id_mod_trans'] = $id_mod_trans;
+			$entree['id_banq'] = $id_banq;
 
 			/*echo '<br> num_lic = '.$num_lic;
 			echo '<br> num_lic_old = '.$num_lic_old;
@@ -27949,12 +27960,12 @@
 			$requete = $connexion-> prepare("UPDATE licence SET num_lic= ?,  date_val = ?, 
 													acheteur = ?, commodity = ?, fob = ?, 
 													fret = ?, assurance = ?, autre_frais = ?, 
-													id_mon = ?, id_mod_paie = ?, id_type_lic = ?, id_mod_trans = ?
+													id_mon = ?, id_mod_paie = ?, id_type_lic = ?, id_mod_trans = ?, id_banq= ?
 												WHERE num_lic = ?");
 			$requete-> execute(array($entree['num_lic'], $entree['date_val'], $entree['acheteur'], 
 									$entree['commodity'], $entree['fob'], $entree['fret'], 
 									$entree['assurance'], $entree['autre_frais'], $entree['id_mon'], 
-									$entree['id_mod_paie'], $entree['id_type_lic'],  $entree['id_mod_trans'],  
+									$entree['id_mod_paie'], $entree['id_type_lic'],  $entree['id_mod_trans'],  $entree['id_banq'],  
 									$entree['num_lic_old']));
 
 			if ($date_exp != $this-> getLastEpirationLicence2($num_lic)) {

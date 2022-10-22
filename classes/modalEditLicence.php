@@ -118,6 +118,19 @@ if ($_GET['id_mod_lic'] == '1') {
           </div>
 
           <div class="col-md-3">
+            <label for="x_card_code" class="control-label mb-1">BANQUE</label>
+            <select name="id_banq" onchange="" class="form-control cc-exp" required>
+              <option value="<?php echo $reponse['id_banq'];?>">
+                <?php echo $reponse['nom_banq'];?>
+              </option>
+              <option></option>
+                <?php
+                  $this->selectionnerBanque();
+                ?>
+            </select>
+          </div>
+
+          <div class="col-md-3">
             <label for="x_card_code" class="control-label mb-1">FICHIER</label>
             <input type="file" name="fichier_lic" class="form-control cc-exp">
           </div>
@@ -297,6 +310,19 @@ if ($_GET['id_mod_lic'] == '1') {
               <option></option>
                 <?php
                   $this->selectionnerModeTransport();
+                ?>
+            </select>
+          </div>
+
+          <div class="col-md-3">
+            <label for="x_card_code" class="control-label mb-1">BANQUE</label>
+            <select name="id_banq" onchange="" class="form-control cc-exp" required>
+              <option value="<?php echo $reponse['id_banq'];?>">
+                <?php echo $reponse['nom_banq'];?>
+              </option>
+              <option></option>
+                <?php
+                  $this->selectionnerBanque();
                 ?>
             </select>
           </div>
