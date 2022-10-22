@@ -24197,6 +24197,24 @@
 			}
 		}
 
+
+		public function getSommePoidsAppureLicence($num_lic){
+			include('connexion.php');
+			$entree['num_lic'] = $num_lic;
+
+			$requete = $connexion-> prepare("SELECT SUM(d.poids) AS poids
+												FROM dossier d, detail_apurement ap
+												WHERE d.num_lic = ?
+													AND d.id_dos = ap.id_dos
+													AND d.cleared <> '2'
+												");
+			$requete-> execute(array($entree['num_lic']));
+			$reponse = $requete-> fetch();
+			if($reponse){
+				return $reponse['poids'];
+			}
+		}
+
 		public function getSommeQteLicence($num_lic){
 			include('connexion.php');
 			$entree['num_lic'] = $num_lic;
