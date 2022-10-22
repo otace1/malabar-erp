@@ -148,38 +148,6 @@ $indiceSheet = 0;
 		cellColor($col.$row, '000000');
 		alignement($col.$row);
 		
-		$excel->getActiveSheet()
-			->getStyle($col.$row)->applyFromArray($styleHeader);
-		$col++;
-
-		$excel-> getActiveSheet()
-			-> setCellValue($col.$row, 'MCA REF');
-		cellColor($col.$row, '000000');
-		alignement($col.$row);
-		
-		$excel->getActiveSheet()
-			->getStyle($col.$row)->applyFromArray($styleHeader);
-
-		$excel->getActiveSheet()
-	        ->getColumnDimension($col)
-	        ->setAutoSize(true);
-
-		$col++;
-
-		$excel-> getActiveSheet()
-			-> setCellValue($col.$row, 'Lot Num.');
-		cellColor($col.$row, '000000');
-		alignement($col.$row);
-		
-		$excel->getActiveSheet()
-			->getStyle($col.$row)->applyFromArray($styleHeader);
-
-		$excel->getActiveSheet()
-	        ->getColumnDimension($col)
-	        ->setAutoSize(true);
-
-		$col++;
-
 		$excel-> getActiveSheet()
 			-> setCellValue($col.$row, 'Num.LICENSE');
 		cellColor($col.$row, '000000');
@@ -239,6 +207,38 @@ $indiceSheet = 0;
 
 		$excel-> getActiveSheet()
 			-> setCellValue($col.$row, 'EXTREM_VALID.');
+		cellColor($col.$row, '000000');
+		alignement($col.$row);
+		
+		$excel->getActiveSheet()
+			->getStyle($col.$row)->applyFromArray($styleHeader);
+
+		$excel->getActiveSheet()
+	        ->getColumnDimension($col)
+	        ->setAutoSize(true);
+
+		$col++;
+
+		$excel->getActiveSheet()
+			->getStyle($col.$row)->applyFromArray($styleHeader);
+		$col++;
+
+		$excel-> getActiveSheet()
+			-> setCellValue($col.$row, 'MCA REF');
+		cellColor($col.$row, '000000');
+		alignement($col.$row);
+		
+		$excel->getActiveSheet()
+			->getStyle($col.$row)->applyFromArray($styleHeader);
+
+		$excel->getActiveSheet()
+	        ->getColumnDimension($col)
+	        ->setAutoSize(true);
+
+		$col++;
+
+		$excel-> getActiveSheet()
+			-> setCellValue($col.$row, 'Lot Num.');
 		cellColor($col.$row, '000000');
 		alignement($col.$row);
 		
@@ -532,28 +532,6 @@ $indiceSheet = 0;
 			$col++;
 
 			$excel-> getActiveSheet()
-				-> setCellValue($col.$row, $reponse['ref_dos']);
-			cellColor($col.$row, $couleur);
-			alignement($col.$row);
-			// $excel->getActiveSheet()
-			// 	->getStyle($col.$row)->applyFromArray($styleHeader);
-			$excel->getActiveSheet()
-		        ->getColumnDimension($col)
-		        ->setAutoSize(true);
-			$col++;
-
-			$excel-> getActiveSheet()
-				-> setCellValue($col.$row, $reponse['num_lot']);
-			cellColor($col.$row, $couleur);
-			alignement($col.$row);
-			// $excel->getActiveSheet()
-			// 	->getStyle($col.$row)->applyFromArray($styleHeader);
-			$excel->getActiveSheet()
-		        ->getColumnDimension($col)
-		        ->setAutoSize(true);
-			$col++;
-
-			$excel-> getActiveSheet()
 				-> setCellValue($col.$row, $reponse['num_lic']);
 			cellColor($col.$row, $couleur);
 			alignement($col.$row);
@@ -599,6 +577,28 @@ $indiceSheet = 0;
 
 			$excel-> getActiveSheet()
 				-> setCellValue($col.$row, $date_exp);
+			cellColor($col.$row, $couleur);
+			alignement($col.$row);
+			// $excel->getActiveSheet()
+			// 	->getStyle($col.$row)->applyFromArray($styleHeader);
+			$excel->getActiveSheet()
+		        ->getColumnDimension($col)
+		        ->setAutoSize(true);
+			$col++;
+
+			$excel-> getActiveSheet()
+				-> setCellValue($col.$row, $reponse['ref_dos']);
+			cellColor($col.$row, $couleur);
+			alignement($col.$row);
+			// $excel->getActiveSheet()
+			// 	->getStyle($col.$row)->applyFromArray($styleHeader);
+			$excel->getActiveSheet()
+		        ->getColumnDimension($col)
+		        ->setAutoSize(true);
+			$col++;
+
+			$excel-> getActiveSheet()
+				-> setCellValue($col.$row, $reponse['num_lot']);
 			cellColor($col.$row, $couleur);
 			alignement($col.$row);
 			// $excel->getActiveSheet()
