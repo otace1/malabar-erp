@@ -477,7 +477,7 @@ $indiceSheet = 0;
 			$date_exp = $maClasse-> getLastEpirationLicence2($reponse['num_lic']);
 
 			//Licence Apurée
-			if (($reponse['apurement'] == '1') || ( ($maClasse-> verifierApurementDossierLicence($reponse['num_lic']) == $maClasse-> getNombreDossierLicence($reponse['num_lic'])) && ($maClasse-> getNombreDossierLicence($reponse['num_lic']) > 1) ) || (($reponse['fob']-$maClasse-> getSommePoidsAppureLicence($reponse['num_lic']))<1) ) {
+			if (($reponse['apurement'] == '1') || ( ($maClasse-> verifierApurementDossierLicence($reponse['num_lic']) == $maClasse-> getNombreDossierLicence($reponse['num_lic'])) && ($maClasse-> getNombreDossierLicence($reponse['num_lic']) > 1) ) || (($reponse['poids']-$maClasse-> getSommePoidsAppureLicence($reponse['num_lic']))<1) ) {
 
 				$couleur = '00FF7F';
 				$apurement = 'Closed';
@@ -562,7 +562,6 @@ $indiceSheet = 0;
 			$excel->getActiveSheet()
 		        ->getColumnDimension($col)
 		        ->setAutoSize(true);
-		    $tmp_col = $col;
 			$col++;
 
 			$excel-> getActiveSheet()
@@ -618,13 +617,14 @@ $indiceSheet = 0;
 			$excel->getActiveSheet()
 		        ->getColumnDimension($col)
 		        ->setAutoSize(true);
+		    $tmp_col = $col;
 			$col++;
 			if ($tmp_lic==$reponse['num_lic']) {
 				$excel-> getActiveSheet()
 					-> setCellValue($col.$row, '='.$col.($row-1).'-'.$tmp_col.$row);
 			}else if ($tmp_lic!=$reponse['num_lic']) {
 				$excel-> getActiveSheet()
-					-> setCellValue($col.$row, '=H'.$row.'-'.$tmp_col.$row);
+					-> setCellValue($col.$row, '=D'.$row.'-'.$tmp_col.$row);
 					$tmp_lic=$reponse['num_lic'];
 			}
 			cellColor($col.$row, $couleur);
@@ -634,7 +634,6 @@ $indiceSheet = 0;
 			$excel->getActiveSheet()
 		        ->getColumnDimension($col)
 		        ->setAutoSize(true);
-		    $tmp_col = $col;
 			$col++;
 
 			$excel-> getActiveSheet()
@@ -643,11 +642,6 @@ $indiceSheet = 0;
 			alignement($col.$row);
 			// $excel->getActiveSheet()
 			// 	->getStyle($col.$row)->applyFromArray($styleHeader);
-			$excel->getActiveSheet()
-		        ->getColumnDimension($col)
-		        ->setAutoSize(true);
-			$col++;
-
 			$excel->getActiveSheet()
 		        ->getColumnDimension($col)
 		        ->setAutoSize(true);
