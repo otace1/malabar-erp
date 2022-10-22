@@ -365,7 +365,27 @@
                     <!-- <button class="btn btn-success square-btn-adjust" onclick="window.location.replace('exportLicence2.php?id_cli=<?php echo $_GET['id_cli']; ?>&id_mod_lic=<?php echo $_GET['id_mod_lic']; ?>&id_type_lic=<?php echo $_GET['id_type_lic']; ?>','pop1','width=80,height=80');">
                       <i class="fas fa-file-excel"></i> Export
                     </button> -->
-
+                    <?php
+                    if ($_GET['id_mod_lic']=='1') {
+                    ?>
+                    <button type="button" class="btn btn-xs btn-success dropdown-toggle dropdown-icon" data-toggle="dropdown">
+                      <i class="fas fa-file-excel"></i> Export
+                      <div class="dropdown-menu" role="menu">
+                        <?php
+                          for ($annee=date('Y'); $annee >= 2020 ; $annee--) { 
+                          ?>
+                          <a class="dropdown-item"onclick="window.location.replace('exportLicenceExport.php?id_cli=<?php echo $_GET['id_cli']; ?>&id_mod_lic=<?php echo $_GET['id_mod_lic']; ?>&id_type_lic=<?php echo $_GET['id_type_lic']; ?>&annee=<?php echo $annee;?>','pop1','width=80,height=80');">
+                            Export <?php echo $annee;?> Licenses
+                          </a>
+                          <?php
+                          }
+                        ?>
+                      </div>
+                    </button>
+                    <?php
+                    }
+                    else if ($_GET['id_mod_lic']=='2') {
+                    ?>
                     <button type="button" class="btn btn-xs btn-success dropdown-toggle dropdown-icon" data-toggle="dropdown">
                       <i class="fas fa-file-excel"></i> Export
                       <div class="dropdown-menu" role="menu">
@@ -404,6 +424,10 @@
                         </a>
                       </div>
                     </button>
+                    <?php
+                    }
+                    ?>
+                    
 
                     </div>
 
