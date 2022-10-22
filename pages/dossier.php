@@ -673,7 +673,7 @@ for ($i=1; $i <= 15 ; $i++) {
     $maClasse-> creerEBTracking($_POST['num_lic'], $_POST['date_val'], $_POST['poids'], 
                                 $_POST['unit_mes'], $_GET['id_cli'], $_GET['id_march'], 
                                 $_POST['date_exp'], $_SESSION['id_util'], $_POST['destination'], 
-                                $_POST['acheteur'], $_POST['id_mod_trans']);
+                                $_POST['acheteur'], $_POST['id_mod_trans'], $_POST['id_banq']);
 
   }
 
@@ -1444,6 +1444,14 @@ if(isset($_GET['id_mod_trac'])){
             <select name="unit_mes" onchange="" class="form-control cc-exp">
               <option value='T'>T</option>
               <option value='Kg'>Kg</option>
+            </select>
+          </div>
+
+          <div class="col-md-4">
+            <label for="x_card_code" class="control-label mb-1">BANQUE</label>
+            <select name="id_banq" type="text" class="form-control cc-exp" required>
+              <option></option>
+              <?php $maClasse-> selectionnerBanque();?>
             </select>
           </div>
 
