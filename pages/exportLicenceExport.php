@@ -148,6 +148,10 @@ $indiceSheet = 0;
 		cellColor($col.$row, '000000');
 		alignement($col.$row);
 		
+		$excel->getActiveSheet()
+			->getStyle($col.$row)->applyFromArray($styleHeader);
+		$col++;
+
 		$excel-> getActiveSheet()
 			-> setCellValue($col.$row, 'Num.LICENSE');
 		cellColor($col.$row, '000000');
@@ -217,10 +221,6 @@ $indiceSheet = 0;
 	        ->getColumnDimension($col)
 	        ->setAutoSize(true);
 
-		$col++;
-
-		$excel->getActiveSheet()
-			->getStyle($col.$row)->applyFromArray($styleHeader);
 		$col++;
 
 		$excel-> getActiveSheet()
@@ -477,7 +477,7 @@ $indiceSheet = 0;
 			$date_exp = $maClasse-> getLastEpirationLicence2($reponse['num_lic']);
 
 			//Licence Apurée
-			if (($reponse['apurement'] == '1') || ( ($maClasse-> verifierApurementDossierLicence($reponse['num_lic']) == $maClasse-> getNombreDossierLicence($reponse['num_lic'])) && ($maClasse-> getNombreDossierLicence($reponse['num_lic']) > 1) ) || (($reponse['fob']-$maClasse-> getSommeFobAppureLicence($reponse['num_lic']))<1) ) {
+			if (($reponse['apurement'] == '1') || ( ($maClasse-> verifierApurementDossierLicence($reponse['num_lic']) == $maClasse-> getNombreDossierLicence($reponse['num_lic'])) && ($maClasse-> getNombreDossierLicence($reponse['num_lic']) > 1) ) || (($reponse['fob']-$maClasse-> getSommePoidsAppureLicence($reponse['num_lic']))<1) ) {
 
 				$couleur = '00FF7F';
 				$apurement = 'Closed';
@@ -562,6 +562,7 @@ $indiceSheet = 0;
 			$excel->getActiveSheet()
 		        ->getColumnDimension($col)
 		        ->setAutoSize(true);
+		    $tmp_col = $col;
 			$col++;
 
 			$excel-> getActiveSheet()
@@ -617,7 +618,6 @@ $indiceSheet = 0;
 			$excel->getActiveSheet()
 		        ->getColumnDimension($col)
 		        ->setAutoSize(true);
-		    $tmp_col = $col;
 			$col++;
 			if ($tmp_lic==$reponse['num_lic']) {
 				$excel-> getActiveSheet()
