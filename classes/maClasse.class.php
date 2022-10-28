@@ -19849,7 +19849,7 @@
 			return $reponse['nbre'];
 		}
 
-		public function getNbreDossierCancelledAwaitingCRFAtWiski($id_cli, $annee){
+		public function getNbreDossierCancelledAwaitingCRFAtWiski($id_cli, $annee=NULL){
 			include('connexion.php');
 
 			$entree['id_cli'] = $id_cli;
@@ -19891,7 +19891,7 @@
 			return $reponse['nbre'];
 		}
 
-		public function getNbreDossierCancelledAwaitingCRFDispatchFromKlsa($id_cli, $annee){
+		public function getNbreDossierCancelledAwaitingCRFDispatchFromKlsa($id_cli, $annee=NULL){
 			include('connexion.php');
 
 			$entree['id_cli'] = $id_cli;
@@ -19934,7 +19934,7 @@
 			return $reponse['nbre'];
 		}
 
-		public function getNbreDossierClearedAwaitingCRFDispatchFromKlsa($id_cli, $annee){
+		public function getNbreDossierClearedAwaitingCRFDispatchFromKlsa($id_cli, $annee=NULL){
 			include('connexion.php');
 
 			$entree['id_cli'] = $id_cli;
@@ -19977,7 +19977,7 @@
 			return $reponse['nbre'];
 		}
 
-		public function getNbreDossierTransitAwaitingCRFDispatchFromKlsa($id_cli, $annee){
+		public function getNbreDossierTransitAwaitingCRFDispatchFromKlsa($id_cli, $annee=NULL){
 			include('connexion.php');
 
 			$entree['id_cli'] = $id_cli;
@@ -20020,7 +20020,7 @@
 			return $reponse['nbre'];
 		}
 
-		public function getNbreDossierClearedAwaitingBAEDispatchFromKlsa($id_cli, $annee){
+		public function getNbreDossierClearedAwaitingBAEDispatchFromKlsa($id_cli, $annee=NULL){
 			include('connexion.php');
 
 			$entree['id_cli'] = $id_cli;
@@ -20065,7 +20065,7 @@
 			return $reponse['nbre'];
 		}
 
-		public function getNbreDossierTransitAwaitingBAEDispatchFromKlsa($id_cli, $annee){
+		public function getNbreDossierTransitAwaitingBAEDispatchFromKlsa($id_cli, $annee=NULL){
 			include('connexion.php');
 
 			$entree['id_cli'] = $id_cli;
@@ -20110,7 +20110,7 @@
 			return $reponse['nbre'];
 		}
 
-		public function getNbreDossierCancelledAwaitingAssuranceDispatchFromKlsa($id_cli, $annee){
+		public function getNbreDossierCancelledAwaitingAssuranceDispatchFromKlsa($id_cli, $annee=NULL){
 			include('connexion.php');
 
 			$entree['id_cli'] = $id_cli;
@@ -20153,7 +20153,7 @@
 			return $reponse['nbre'];
 		}
 
-		public function getNbreDossierClearedAwaitingAssuranceDispatchFromKlsa($id_cli, $annee){
+		public function getNbreDossierClearedAwaitingAssuranceDispatchFromKlsa($id_cli, $annee=NULL){
 			include('connexion.php');
 
 			$entree['id_cli'] = $id_cli;
@@ -20216,7 +20216,7 @@
 			return $reponse['nbre'];
 		}
 
-		public function getNbreDossierTransitClearedCompletedDispatchFromKlsa($id_cli, $annee){
+		public function getNbreDossierTransitClearedCompletedDispatchFromKlsa($id_cli, $annee=NULL){
 			include('connexion.php');
 
 			$entree['id_cli'] = $id_cli;
@@ -20261,7 +20261,7 @@
 			return $reponse['nbre'];
 		}
 
-		public function getNbreDossierClearedAwaitingQuittanceDispatchFromKlsa($id_cli, $annee){
+		public function getNbreDossierClearedAwaitingQuittanceDispatchFromKlsa($id_cli, $annee=NULL){
 			include('connexion.php');
 
 			$entree['id_cli'] = $id_cli;
@@ -20306,7 +20306,7 @@
 			return $reponse['nbre'];
 		}
 
-		public function getNbreDossierTransitAwaitingAssuranceDispatchFromKlsa($id_cli, $annee){
+		public function getNbreDossierTransitAwaitingAssuranceDispatchFromKlsa($id_cli, $annee=NULL){
 			include('connexion.php');
 
 			$entree['id_cli'] = $id_cli;
@@ -20349,7 +20349,7 @@
 			return $reponse['nbre'];
 		}
 
-		public function getNbreDossierTransitAwaitingAssuranceExceptedToArrive($id_cli, $annee){
+		public function getNbreDossierTransitAwaitingAssuranceExceptedToArrive($id_cli, $annee=NULL){
 			include('connexion.php');
 
 			$entree['id_cli'] = $id_cli;
@@ -20390,7 +20390,7 @@
 			return $reponse['nbre'];
 		}
 
-		public function getNbreDossierTransitAwaitingAssuranceAtWiski($id_cli, $annee){
+		public function getNbreDossierTransitAwaitingAssuranceAtWiski($id_cli, $annee=NULL){
 			include('connexion.php');
 
 			$entree['id_cli'] = $id_cli;
@@ -20433,7 +20433,7 @@
 			return $reponse['nbre'];
 		}
 
-		public function getNbreDossierClearedCompletedDispatchFromKlsa($id_cli, $annee){
+		public function getNbreDossierClearedCompletedDispatchFromKlsa($id_cli, $annee=NULL){
 			include('connexion.php');
 
 			$entree['id_cli'] = $id_cli;
@@ -20478,7 +20478,7 @@
 			return $reponse['nbre'];
 		}
 
-		public function getNbreDossierTransitUnderPreparationDispatchFromKlsa($id_cli, $annee){
+		public function getNbreDossierTransitUnderPreparationDispatchFromKlsa($id_cli, $annee=NULL){
 			include('connexion.php');
 
 			$entree['id_cli'] = $id_cli;
@@ -20525,7 +20525,7 @@
 			return $reponse['nbre'];
 		}
 
-		public function getNbreDossierCancelledAwaitingCRFExceptedToArrival($id_cli, $annee){
+		public function getNbreDossierCancelledAwaitingCRFExceptedToArrival($id_cli, $annee=NULL){
 			include('connexion.php');
 
 			$entree['id_cli'] = $id_cli;
@@ -20565,7 +20565,7 @@
 			return $reponse['nbre'];
 		}
 
-		public function getNbreDossierClearedCompletedCRFExceptedToArrival($id_cli, $annee){
+		public function getNbreDossierClearedCompletedCRFExceptedToArrival($id_cli, $annee=NULL){
 			include('connexion.php');
 
 			$entree['id_cli'] = $id_cli;
@@ -20604,7 +20604,7 @@
 			return $reponse['nbre'];
 		}
 
-		public function getNbreDossierTransitExceptedToArrival($id_cli, $annee){
+		public function getNbreDossierTransitExceptedToArrival($id_cli, $annee=NULL){
 			include('connexion.php');
 
 			$entree['id_cli'] = $id_cli;
@@ -20649,7 +20649,7 @@
 			return $reponse['nbre'];
 		}
 
-		public function getNbreDossierClearedTransitCRFExceptedToArrival($id_cli, $annee){
+		public function getNbreDossierClearedTransitCRFExceptedToArrival($id_cli, $annee=NULL){
 			include('connexion.php');
 
 			$entree['id_cli'] = $id_cli;
@@ -20688,7 +20688,7 @@
 			return $reponse['nbre'];
 		}
 
-		public function getNbreDossierCancelledAwaitingAssuranceExceptedToArrival($id_cli, $annee){
+		public function getNbreDossierCancelledAwaitingAssuranceExceptedToArrival($id_cli, $annee=NULL){
 			include('connexion.php');
 
 			$entree['id_cli'] = $id_cli;
