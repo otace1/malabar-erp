@@ -284,7 +284,7 @@
 			$transit = 'Import';
 		}
 
-		$excel->getActiveSheet()->setTitle('DILUENT');
+		$excel->getActiveSheet()->setTitle('DIVERS');
 
 
 		// Set active sheet index to the first sheet, so Excel opens this as the first sheet
