@@ -382,9 +382,9 @@ while ($reponseModeTransport = $requeteModeTransport-> fetch()) {
 
 include('excelDiluent.php');
 
-$indiceSheet++;
+// $indiceSheet++;
 
-include('excelDivers.php');
+// include('excelDivers.php');
 
 //--- FIN Recuperation des mode de transport -------
 
