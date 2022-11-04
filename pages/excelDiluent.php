@@ -223,7 +223,7 @@
 										    AND af.id_mod_lic = ?
 										    AND af.id_mod_trans = ?
 										ORDER BY af.rang ASC");
-		$requete-> execute(array($entree['id_cli'], $entree['id_mod_lic'], $entree['id_mod_trans']));
+		$requete-> execute(array($entree['id_mod_lic'], $entree['id_mod_trans']));
 		while ($reponse = $requete-> fetch()) {
 
 			if ($reponse['id_col'] == '11' || $reponse['id_col'] == '13' || $reponse['id_col'] == '17') {
@@ -518,7 +518,7 @@
 										    AND af.id_mod_lic = ?
 										    AND af.id_mod_trans = ?
 										ORDER BY af.rang ASC");
-		$requete-> execute(array($entree['id_cli'], $entree['id_mod_lic'], $entree['id_mod_trans']));
+		$requete-> execute(array($entree['id_mod_lic'], $entree['id_mod_trans']));
 		while ($reponse = $requete-> fetch()) {
 
 			if ($reponse['id_col'] == '11' || $reponse['id_col'] == '13' || $reponse['id_col'] == '17') {
