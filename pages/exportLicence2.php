@@ -655,6 +655,7 @@ $indiceSheet = 0;
 											WHERE l.id_cli = ?
 												AND l.id_mod_lic = ?
 												AND YEAR(l.date_val) = ?
+												AND d.cleared <> '2'
 												$sqlTypeLicence
 												ORDER BY l.date_val ASC");
 		$requete-> execute(array($entree['id_cli'], $entree['id_mod_lic'], $entree['annee']));
