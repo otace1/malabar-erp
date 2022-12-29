@@ -43,6 +43,21 @@ if ($maClasse-> nbreDelaiDateKlsa()>0) {
         $mail->addAddress('ops-kasumbalesa@malabar-group.com');
         $mail->addAddress('john@malabar-group.com');
         $mail->addAddress('deo@malabar-group.com');
+        $mail->addAddress('alain@malabar-group.com');
+        $mail->addAddress('gaylord@malabar-group.com');
+        $mail->addAddress('abdulnoor@malabar-group.com');
+        $mail->addAddress('forain@malabar-group.com');
+        $mail->addAddress('collinskapila9@gmail.com');
+        $mail->addAddress('eric@malabar-group.com');
+        $mail->addAddress('mushitutresor@gmail.com');
+
+        $mail->addAddress('alain@malabar-group.com');
+        $mail->addAddress('gaylord@malabar-group.com');
+        $mail->addAddress('abdulnoor@malabar-group.com');
+        $mail->addAddress('forain@malabar-group.com');
+        $mail->addAddress('collinskapila9@gmail.com');
+        $mail->addAddress('eric@malabar-group.com');
+        $mail->addAddress('mushitutresor@gmail.com');
         //$mail->addBCC('bcc@example.com');
 
         //Attachments
@@ -110,6 +125,13 @@ if ($maClasse-> nbreErreurDateKlsa()>0) {
         $mail->addAddress('ops-kasumbalesa@malabar-group.com');
         $mail->addAddress('john@malabar-group.com');
         $mail->addAddress('deo@malabar-group.com');
+        $mail->addAddress('alain@malabar-group.com');
+        $mail->addAddress('gaylord@malabar-group.com');
+        $mail->addAddress('abdulnoor@malabar-group.com');
+        $mail->addAddress('forain@malabar-group.com');
+        $mail->addAddress('collinskapila9@gmail.com');
+        $mail->addAddress('eric@malabar-group.com');
+        $mail->addAddress('mushitutresor@gmail.com');
         //$mail->addBCC('bcc@example.com');
 
         //Attachments
@@ -178,6 +200,13 @@ if ($maClasse-> getNombreDossierSansLiquidationApresCotation()>0) {
         $mail->addAddress('ops-kasumbalesa@malabar-group.com');
         $mail->addAddress('john@malabar-group.com');
         $mail->addAddress('deo@malabar-group.com');
+        $mail->addAddress('alain@malabar-group.com');
+        $mail->addAddress('gaylord@malabar-group.com');
+        $mail->addAddress('abdulnoor@malabar-group.com');
+        $mail->addAddress('forain@malabar-group.com');
+        $mail->addAddress('collinskapila9@gmail.com');
+        $mail->addAddress('eric@malabar-group.com');
+        $mail->addAddress('mushitutresor@gmail.com');
         //$mail->addBCC('bcc@example.com');
 
         //Attachments
@@ -242,6 +271,13 @@ if ($maClasse-> getNombreDossierSansQuittanceApresIM4()>0) {
         $mail->addAddress('ops-kasumbalesa@malabar-group.com');
         $mail->addAddress('john@malabar-group.com');
         $mail->addAddress('deo@malabar-group.com');
+        $mail->addAddress('alain@malabar-group.com');
+        $mail->addAddress('gaylord@malabar-group.com');
+        $mail->addAddress('abdulnoor@malabar-group.com');
+        $mail->addAddress('forain@malabar-group.com');
+        $mail->addAddress('collinskapila9@gmail.com');
+        $mail->addAddress('eric@malabar-group.com');
+        $mail->addAddress('mushitutresor@gmail.com');
         //$mail->addBCC('bcc@example.com');
 
         //Attachments
@@ -307,6 +343,13 @@ if ($maClasse-> nbreDelaiDateWiski()>0) {
         $mail->addAddress('ops-kasumbalesa@malabar-group.com');
         $mail->addAddress('john@malabar-group.com');
         $mail->addAddress('deo@malabar-group.com');
+        $mail->addAddress('alain@malabar-group.com');
+        $mail->addAddress('gaylord@malabar-group.com');
+        $mail->addAddress('abdulnoor@malabar-group.com');
+        $mail->addAddress('forain@malabar-group.com');
+        $mail->addAddress('collinskapila9@gmail.com');
+        $mail->addAddress('eric@malabar-group.com');
+        $mail->addAddress('mushitutresor@gmail.com');
         //$mail->addBCC('bcc@example.com');
 
         //Attachments
@@ -375,6 +418,13 @@ if ($maClasse-> nbreUnderPreparation()>0) {
         $mail->addAddress('ops-kasumbalesa@malabar-group.com');
         $mail->addAddress('john@malabar-group.com');
         $mail->addAddress('deo@malabar-group.com');
+        $mail->addAddress('alain@malabar-group.com');
+        $mail->addAddress('gaylord@malabar-group.com');
+        $mail->addAddress('abdulnoor@malabar-group.com');
+        $mail->addAddress('forain@malabar-group.com');
+        $mail->addAddress('collinskapila9@gmail.com');
+        $mail->addAddress('eric@malabar-group.com');
+        $mail->addAddress('mushitutresor@gmail.com');
         //$mail->addBCC('bcc@example.com');
 
         //Attachments
@@ -443,6 +493,13 @@ if ($maClasse-> nbreDelaiDateClotureSansDeliver()>0) {
         $mail->addAddress('ops-kasumbalesa@malabar-group.com');
         $mail->addAddress('john@malabar-group.com');
         $mail->addAddress('deo@malabar-group.com');
+        $mail->addAddress('alain@malabar-group.com');
+        $mail->addAddress('gaylord@malabar-group.com');
+        $mail->addAddress('abdulnoor@malabar-group.com');
+        $mail->addAddress('forain@malabar-group.com');
+        $mail->addAddress('collinskapila9@gmail.com');
+        $mail->addAddress('eric@malabar-group.com');
+        $mail->addAddress('mushitutresor@gmail.com');
         //$mail->addBCC('bcc@example.com');
 
         //Attachments
@@ -508,6 +565,13 @@ if ($maClasse-> nbreArriveKlsa2Jour()>0) {
         $mail->addAddress('ops-kasumbalesa@malabar-group.com');
         $mail->addAddress('john@malabar-group.com');
         $mail->addAddress('deo@malabar-group.com');
+        $mail->addAddress('alain@malabar-group.com');
+        $mail->addAddress('gaylord@malabar-group.com');
+        $mail->addAddress('abdulnoor@malabar-group.com');
+        $mail->addAddress('forain@malabar-group.com');
+        $mail->addAddress('collinskapila9@gmail.com');
+        $mail->addAddress('eric@malabar-group.com');
+        $mail->addAddress('mushitutresor@gmail.com');
         //$mail->addBCC('bcc@example.com');
 
         //Attachments
@@ -573,6 +637,13 @@ if ($maClasse-> nbreArriveKlsa2Jour()>0) {
         $mail->addAddress('ops-kasumbalesa@malabar-group.com');
         $mail->addAddress('john@malabar-group.com');
         $mail->addAddress('deo@malabar-group.com');
+        $mail->addAddress('alain@malabar-group.com');
+        $mail->addAddress('gaylord@malabar-group.com');
+        $mail->addAddress('abdulnoor@malabar-group.com');
+        $mail->addAddress('forain@malabar-group.com');
+        $mail->addAddress('collinskapila9@gmail.com');
+        $mail->addAddress('eric@malabar-group.com');
+        $mail->addAddress('mushitutresor@gmail.com');
         //$mail->addBCC('bcc@example.com');
 
         //Attachments
