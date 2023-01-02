@@ -32259,6 +32259,18 @@
 
 		} 
 
+		public function MAJ_send_mail_facture_dossier($ref_fact, $id_util_mail){
+
+			include('connexion.php');
+			$entree['ref_fact'] = $ref_fact;
+			$entree['id_util_mail'] = $id_util_mail;
+			
+			$requete = $connexion-> prepare("UPDATE facture_dossier SET id_util_mail = ?, date_mail = NOW()
+												WHERE ref_fact = ?");
+			$requete-> execute(array($entree['id_util_mail'], $entree['ref_fact']));
+
+		}
+
 		public function MAJ_validation_facture_dossier($ref_fact, $validation){
 
 			include('connexion.php');
