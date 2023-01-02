@@ -44,6 +44,9 @@
 
               <div class="col-md-3 col-sm-6 col-12">
               </div>
+              <?php
+              if ($maClasse-> getUtilisateurClientModeleLicence($_SESSION['id_util'], '2')['id_cli']!='') {
+              ?>
               <div class="col-md-2 col-sm-6 col-12">
                 <div class="info-box"  data-toggle="modal" data-target=".rechercheImport">
                   <span class="info-box-icon bg-dark">
@@ -54,11 +57,9 @@
                     <span class="info-box-text">Import Files</span>
                     <span class="info-box-number">
                       <?php 
-                      if ($maClasse-> getUtilisateurClientModeleLicence($_SESSION['id_util'], '2')['id_cli']!='') {
+                      
                         echo number_format($maClasse-> nbreDossierModeleLicence(2, $maClasse-> getUtilisateurClientModeleLicence($_SESSION['id_util'], '2')['id_cli'], NULL, NULL), 0, ',', ' ');
-                      }else{
-                        echo '0';
-                      }
+                      
                         ?>
                       
                     </span>
@@ -67,7 +68,10 @@
                 </div>
                 <!-- /.info-box -->
               </div>
-
+              <?php
+              }
+              if ($maClasse-> getUtilisateurClientModeleLicence($_SESSION['id_util'], '1')['id_cli']!='') {
+              ?>
               <div class="col-md-2 col-sm-6 col-12">
                 <div class="info-box" data-toggle="modal" data-target=".rechercheExport">
                   <span class="info-box-icon bg-dark">
@@ -78,11 +82,9 @@
                     <span class="info-box-text">Export Files</span>
                     <span class="info-box-number">
                       <?php 
-                      if ($maClasse-> getUtilisateurClientModeleLicence($_SESSION['id_util'], '1')['id_cli']!='') {
-                        echo number_format($maClasse-> nbreDossierModeleLicence(1, $maClasse-> getUtilisateurClientModeleLicence($_SESSION['id_util'], '1')['id_cli'], NULL, NULL), 0, ',', ' ');
-                      }else{
-                        echo '0';
-                      }
+                      
+                      echo number_format($maClasse-> nbreDossierModeleLicence(1, $maClasse-> getUtilisateurClientModeleLicence($_SESSION['id_util'], '1')['id_cli'], NULL, NULL), 0, ',', ' ');
+                    
                         ?>
                     </span>
                   </div>
@@ -90,7 +92,9 @@
                 </div>
                 <!-- /.info-box -->
               </div>
-
+            <?php
+            }
+            ?>
               <div class="col-md-2 col-sm-6 col-12">
                 <div class="info-box bg-danger" onclick="window.location='../deconnexion.php';">
                   <span class="info-box-icon bg-light">
@@ -141,16 +145,16 @@
                           Export All Files
                         </a>
                         <a class="dropdown-item" href="#"><hr></a>
+                        <a class="dropdown-item"onclick="window.location.replace('../pages/exportExcel2.php?id_cli=<?php echo $maClasse-> getUtilisateurClientModeleLicence($_SESSION['id_util'], '2')['id_cli']; ?>&id_mod_trans=1&id_mod_trac=<?php echo $_GET['id_mod_trac']; ?>&commodity=&statut=&id_march=&annee=2023','pop1','width=80,height=80');">
+                          Export 2023 Files
+                        </a>
+                        <a class="dropdown-item" href="#"><hr></a>
                         <a class="dropdown-item"onclick="window.location.replace('../pages/exportExcel2.php?id_cli=<?php echo $maClasse-> getUtilisateurClientModeleLicence($_SESSION['id_util'], '2')['id_cli']; ?>&id_mod_trans=1&id_mod_trac=<?php echo $_GET['id_mod_trac']; ?>&commodity=&statut=&id_march=&annee=2022','pop1','width=80,height=80');">
                           Export 2022 Files
                         </a>
                         <a class="dropdown-item" href="#"><hr></a>
                         <a class="dropdown-item"onclick="window.location.replace('../pages/exportExcel2.php?id_cli=<?php echo $maClasse-> getUtilisateurClientModeleLicence($_SESSION['id_util'], '2')['id_cli']; ?>&id_mod_trans=1&id_mod_trac=<?php echo $_GET['id_mod_trac']; ?>&commodity=&statut=&id_march=&annee=2021','pop1','width=80,height=80');">
                           Export 2021 Files
-                        </a>
-                        <a class="dropdown-item" href="#"><hr></a>
-                        <a class="dropdown-item"onclick="window.location.replace('../pages/exportExcel2.php?id_cli=<?php echo $maClasse-> getUtilisateurClientModeleLicence($_SESSION['id_util'], '2')['id_cli']; ?>&id_mod_trans=1&id_mod_trac=<?php echo $_GET['id_mod_trac']; ?>&commodity=&statut=&id_march=&annee=2020','pop1','width=80,height=80');">
-                          Export 2020 Files
                         </a>
                         <a class="dropdown-item" href="#"><hr></a>
                       </div>
@@ -362,16 +366,16 @@
                           Export All Files
                         </a>
                         <a class="dropdown-item" href="#"><hr></a>
+                        <a class="dropdown-item"onclick="window.location.replace('../pages/exportExcel2.php?id_cli=<?php echo $maClasse-> getUtilisateurClientModeleLicence($_SESSION['id_util'], '1')['id_cli']; ?>&id_mod_trans=1&id_mod_trac=<?php echo $_GET['id_mod_trac']; ?>&commodity=&statut=&id_march=&annee=2023','pop1','width=80,height=80');">
+                          Export 2023 Files
+                        </a>
+                        <a class="dropdown-item" href="#"><hr></a>
                         <a class="dropdown-item"onclick="window.location.replace('../pages/exportExcel2.php?id_cli=<?php echo $maClasse-> getUtilisateurClientModeleLicence($_SESSION['id_util'], '1')['id_cli']; ?>&id_mod_trans=1&id_mod_trac=<?php echo $_GET['id_mod_trac']; ?>&commodity=&statut=&id_march=&annee=2022','pop1','width=80,height=80');">
                           Export 2022 Files
                         </a>
                         <a class="dropdown-item" href="#"><hr></a>
                         <a class="dropdown-item"onclick="window.location.replace('../pages/exportExcel2.php?id_cli=<?php echo $maClasse-> getUtilisateurClientModeleLicence($_SESSION['id_util'], '1')['id_cli']; ?>&id_mod_trans=1&id_mod_trac=<?php echo $_GET['id_mod_trac']; ?>&commodity=&statut=&id_march=&annee=2021','pop1','width=80,height=80');">
                           Export 2021 Files
-                        </a>
-                        <a class="dropdown-item" href="#"><hr></a>
-                        <a class="dropdown-item"onclick="window.location.replace('../pages/exportExcel2.php?id_cli=<?php echo $maClasse-> getUtilisateurClientModeleLicence($_SESSION['id_util'], '1')['id_cli']; ?>&id_mod_trans=1&id_mod_trac=<?php echo $_GET['id_mod_trac']; ?>&commodity=&statut=&id_march=&annee=2020','pop1','width=80,height=80');">
-                          Export 2020 Files
                         </a>
                         <a class="dropdown-item" href="#"><hr></a>
                       </div>
