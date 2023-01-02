@@ -23,7 +23,7 @@
       <div class="container-fluid">
         <div class="header">
           <h5>
-            <i class="fa fa-calculator nav-icon"></i> NOUVELLE FACTURE PARTIELLE
+            <i class="fa fa-calculator nav-icon"></i> NEW INVOICE
           </h5>
         </div>
 

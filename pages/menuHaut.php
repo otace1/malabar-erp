@@ -1,5 +1,10 @@
 
 <body class="hold-transition sidebar-mini layout-fixed layout-navbar-fixed hold-transition pace-success">
+
+  <div id="spinner-div" class="pt-5">
+    <!-- <div class="spinner-border text-primary" role="status"></div> -->
+    <img src="../images/86b6e3f28ee33d8104291ba874349e04_w200.gif" width="250px">
+  </div>
   <div id="loading">
     <img id="loading-image" src="ajax-loader.gif" alt="Loading..." />
   </div>
@@ -48,6 +53,12 @@
           var timerID = setInterval(runClock,1000);
         </script>
         <input type="text" style="text-align: center; background-color: black; color: white; font-weight: bold;" disabled id="time" size="30" />
+        <a href="#" role="button">
+          <!--<i class="fa fa-signout"></i>-->
+          <?php
+            //echo $maClasse-> getIp()['ip'].' '.$maClasse-> getIp()['hostname'].' '.$maClasse-> getIp()['latitude'].' '.$maClasse-> getIp()['longitude'];
+          ?>
+        </a>
         <a href="../deconnexion.php" role="button">
           <!--<i class="fa fa-signout"></i>-->
           <button class="btn btn-dark">Se deconnecter</button>

@@ -1,4 +1,8 @@
 <!-- /.content-wrapper -->
+<?php
+  include('modalFacturation.php');
+?>
+
   <footer class="main-footer text-xs">
     <div class="float-right d-none d-sm-block">
       <b>Version</b> 0.5
@@ -42,6 +46,28 @@
             }
         });
     });
+
+    function modal_facture(id_cli, id_mod_lic){
+
+      $.ajax({
+        type: "POST",
+        url: "ajax.php",
+        data: { id_cli: id_cli, id_mod_lic: id_mod_lic, operation: 'modal_facture'},
+        dataType:"json",
+        success:function(data){
+          if (data.logout) {
+            alert(data.logout);
+            window.location="../deconnexion.php";
+          }else{
+            $('#tableau_modele_facture').html(data.tableau_modele_facture);
+            $('#modal_facture').modal("show");
+          }
+        }
+      });
+
+
+    }
+
 </script>
 <script>
   $(window).load(function() {

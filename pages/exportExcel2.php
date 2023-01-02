@@ -75,7 +75,7 @@ while ($reponseModeTransport = $requeteModeTransport-> fetch()) {
 			$valeur_annee_fin = $_GET['annee'];
 		}else{
 			$valeur_annee = date('Y');
-			$valeur_annee_fin = 2020;
+			$valeur_annee_fin = 2021;
 		}
 		for ($annee=$valeur_annee; $annee >= $valeur_annee_fin; $annee--) { 
 			$entree['annee']='%'.substr($annee, -2).'-%';

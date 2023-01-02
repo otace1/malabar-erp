@@ -246,6 +246,89 @@ session_start();
       }
 
 
+      .lds-dual-ring {
+        display: inline-block;
+        width: 80px;
+        height: 80px;
+      }
+      .lds-dual-ring:after {
+        content: " ";
+        display: block;
+        width: 64px;
+        height: 64px;
+        margin: 8px;
+        border-radius: 50%;
+        border: 6px solid #fff;
+        border-color: #fff transparent #fff transparent;
+        animation: lds-dual-ring 1.2s linear infinite;
+      }
+      @keyframes lds-dual-ring {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+
+
+.table-hover tbody tr.expandable-body:hover {
+  background-color: inherit !important;
+}
+
+[data-widget="expandable-table"] {
+  cursor: pointer;
+}
+
+[data-widget="expandable-table"] i.expandable-table-caret {
+  transition: -webkit-transform 0.3s linear;
+  transition: transform 0.3s linear;
+  transition: transform 0.3s linear, -webkit-transform 0.3s linear;
+}
+
+[data-widget="expandable-table"][aria-expanded="true"] td i.expandable-table-caret[class*="right"] {
+  -webkit-transform: rotate(90deg);
+  transform: rotate(90deg);
+}
+
+[data-widget="expandable-table"][aria-expanded="true"] td i.expandable-table-caret[class*="left"] {
+  -webkit-transform: rotate(-90deg);
+  transform: rotate(-90deg);
+}
+
+.expandable-body > td {
+  padding: 0 !important;
+  width: 100%;
+}
+
+.expandable-body > td > div,
+.expandable-body > td > p {
+  padding: 0.75rem;
+}
+
+.expandable-body .table {
+  width: calc(100% - 0.75rem);
+  margin: 0 0 0 0.75rem;
+}
+
+.expandable-body .table tr:first-child td,
+.expandable-body .table tr:first-child th {
+  border-top: none;
+}
+
+
+#spinner-div {
+  position: fixed;
+  display: none;
+  width: 100%;
+  height: 100%;
+  top: auto;
+  left: auto;
+  text-align: center;
+  background-color: rgba(255, 255, 255, 0.8);
+  z-index: 2;
+}
+
     </style>
     <script type="text/javascript">
 
