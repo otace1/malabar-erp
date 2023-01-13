@@ -71,7 +71,7 @@
           <div class="form-group row">
             <label for="inputEmail3" class="col-sm-3 col-form-label">Files Ref.:</label>
             <div class="col-sm-9">  
-              <select class="form-control form-control-sm" name="id_dos" id="id_dos" onchange="getTableauExportInvoiceSingle(id_mod_fact.value, this.value, id_mod_lic.value, id_march.value, id_mod_trans.value)" required>
+              <select class="form-control form-control-sm" name="id_dos" id="id_dos" onchange="getTableauImportInvoiceSingle(id_mod_fact.value, this.value, id_mod_lic.value, id_march.value, id_mod_trans.value)" required>
                 <option></option>
                 <?php
                   $maClasse-> selectionnerDossierClientModeleLicenceMarchandise($_GET['id_cli'], $_GET['id_mod_lic_fact'], $_GET['id_march'], $_GET['id_mod_trans']);
@@ -759,12 +759,8 @@
               <th><input id="roe_decl" name="roe_decl" type="number" step="0.000001" min="1" ></th>
             </tr>
             <tr>
-              <th>Produit</th>
-              <th><input id="commodity" disabled class="bg bg-dark"></th>
-            </tr>
-            <tr>
-              <th>Destination</th>
-              <th><input id="destination" disabled class="bg bg-dark"></th>
+              <th>Poids (kg)</th>
+              <th><input id="poids" disabled class="bg bg-dark"></th>
             </tr>
             <tr>
               <th>Horse</th>
@@ -779,8 +775,48 @@
               <th><input id="trailer_2" disabled class="bg bg-dark"></th>
             </tr>
             <tr>
-              <th>Qty(Mt)</th>
-              <th><input id="poids" disabled class="bg bg-dark"></th>
+              <th>Facture/PFI No.:</th>
+              <th><input id="ref_fact_dos" disabled class="bg bg-dark"></th>
+            </tr>
+            <tr>
+              <th>BIVAC inspection:</th>
+              <th><input id="cod" disabled class="bg bg-dark"></th>
+            </tr>
+            <tr>
+              <th>Produit</th>
+              <th><input id="commodity" disabled class="bg bg-dark"></th>
+            </tr>
+            <tr>
+              <th>Exoneration/Code:</th>
+              <th><input id="num_exo" disabled class="bg bg-dark"></th>
+            </tr>
+            <tr>
+              <th>Tariff Code Client:</th>
+              <th><input id="code_tarif" type="text" class=""></th>
+            </tr>
+            <tr>
+              <th>Declaration No.</th>
+              <th><input id="ref_decl" disabled class="bg bg-dark"></th>
+            </tr>
+            <tr>
+              <th>Declaration Date</th>
+              <th><input id="date_decl" disabled class="bg bg-dark"></th>
+            </tr>
+            <tr>
+              <th>Liquidation No.</th>
+              <th><input id="ref_liq" disabled class="bg bg-dark"></th>
+            </tr>
+            <tr>
+              <th>Liquidation Date</th>
+              <th><input id="date_liq" disabled class="bg bg-dark"></th>
+            </tr>
+            <tr>
+              <th>Quittance No.</th>
+              <th><input id="ref_quit" disabled class="bg bg-dark"></th>
+            </tr>
+            <tr>
+              <th>Quittance Date</th>
+              <th><input id="date_quit" disabled class="bg bg-dark"></th>
             </tr>
           </tbody>
         </table>
@@ -822,12 +858,12 @@
     return new Decimal(num).toDecimalPlaces(decimalPlaces).toNumber();
   }
 
-  function getTableauExportInvoiceSingle(id_mod_fact, id_dos, id_mod_lic, id_march, id_mod_trans){
+  function getTableauImportInvoiceSingle(id_mod_fact, id_dos, id_mod_lic, id_march, id_mod_trans){
     $('#spinner-div').show();
     $.ajax({
       type: "POST",
       url: "ajax.php",
-      data: { id_mod_fact: id_mod_fact, id_dos: id_dos, id_mod_lic: id_mod_lic, id_march:id_march, id_mod_trans:id_mod_trans, operation: 'getTableauExportInvoiceSingle'},
+      data: { id_mod_fact: id_mod_fact, id_dos: id_dos, id_mod_lic: id_mod_lic, id_march:id_march, id_mod_trans:id_mod_trans, operation: 'getTableauImportInvoiceSingle'},
       dataType:"json",
       success:function(data){
         if (data.logout) {
@@ -837,11 +873,24 @@
           // alert('Hello');
           $('#roe_decl').val(data.roe_decl);
           $('#commodity').val(data.commodity);
-          $('#destination').val(data.destination);
           $('#horse').val(data.horse);
           $('#trailer_1').val(data.trailer_1);
           $('#trailer_2').val(data.trailer_2);
+          $('#ref_fact_dos').val(data.ref_fact);
+          $('#cod').val(data.cod);
+          $('#num_exo').val(data.num_exo);
+          $('#code_tarif').val(data.code_tarif);
+          $('#ref_decl').val(data.ref_decl);
+          $('#date_decl').val(data.date_decl_dos);
+          $('#ref_liq').val(data.ref_liq);
+          $('#date_liq').val(data.date_liq_dos);
+          $('#ref_quit').val(data.ref_quit);
+          $('#date_quit').val(data.date_quit_dos);
           $('#poids').val(Math.round((data.poids*1000))/1000);
+          $('#fob').val(Math.round((data.fob*1000))/1000);
+          $('#fret').val(Math.round((data.fret*1000))/1000);
+          $('#assurance').val(Math.round((data.assurance*1000))/1000);
+          $('#autre_frais').val(Math.round((data.autre_frais*1000))/1000);
           //Items ------------
           $('#unite_1').val(Math.round((data.poids*1000))/1000);
           $('#unite_2').val(Math.round((data.poids*1000))/1000);

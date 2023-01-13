@@ -58,7 +58,7 @@
     <section class="content-header">
       <div class="container-fluid">
         <div class="header">
-          <h5><i class="fa fa-folder-open nav-icon"></i> DOSSIERS EN ATTENTE FACTURE <?php echo $modele['nom_mod_lic'].' ('.$modele['sigle_mod_lic'].')'.$client;?></h5>
+          <h5><i class="fa fa-folder-open nav-icon"></i> PENDING FILES INVOICING <?php echo $modele['nom_mod_lic'].' ('.$modele['sigle_mod_lic'].')'.$client;?></h5>
         </div>
 
       </div><!-- /.container-fluid -->
@@ -105,7 +105,7 @@
                     <tr class="bg bg-dark">
                       <th style="border: 1px solid white;">#</th>
                       <th style="border: 1px solid white;">REFERENCE</th>
-                      <th style="border: 1px solid white; text-align: center;">NATURE</th>
+                      <th style="border: 1px solid white; text-align: center;">COMMODITY</th>
                       <th style="border: 1px solid white; text-align: center;">DECL. REF.</th>
                       <th style="border: 1px solid white; text-align: center;">DECL. DATE</th>
                       <th style="border: 1px solid white; text-align: center;">LIQ. REF.</th>
@@ -113,16 +113,7 @@
                       <th style="border: 1px solid white; text-align: center;">QUIT. REF.</th>
                       <th style="border: 1px solid white; text-align: center;">QUIT. DATE</th>
                       <th style="border: 1px solid white; text-align: center;">FOB</th>
-                      <th style="border: 1px solid white; text-align: center;">FREIGHT</th>
-                      <th style="border: 1px solid white; text-align: center;">ASSURANCE</th>
-                      <th style="border: 1px solid white; text-align: center;">AUTRES FRAIS</th>
-                      <th style="border: 1px solid white; text-align: center;">CIF</th>
-                      <th style="border: 1px solid white; text-align: center;">SUPPLIER</th>
-                      <th style="border: 1px solid white; text-align: center;">REF. FACT.</th>
-                      <th style="border: 1px solid white; text-align: center;">PO REF.</th>
-                      <th style="border: 1px solid white; text-align: center;">POIDS</th>
-                      <th style="border: 1px solid white; text-align: center;">CUSTOMS OFFICE</th>
-                      <th style="border: 1px solid white; text-align: center;">INCOTERM</th>
+                      <th style="border: 1px solid white; text-align: center;">WEIGHT</th>
                     </tr>
                   </thead>
                   <tbody>

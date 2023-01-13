@@ -68,12 +68,12 @@ $pdf->setPrintHeader(false);
 $pdf->AddPage('P', 'A4');
 
 $pdf->Image('../images/malabar2.png', 2, 10, 110, '', '', '', '', false, 300);
-
+$sceau='';
 if ( ($maClasse-> getFactureGlobale($_GET['ref_fact'])['validation']) == '0' ) {
 	$pdf->Image('../images/no_valid.jpg', 150, 2, 30, '', '', '', '', false, 300);
 }else{
 	$pdf->Image('../images/sceau_mca.png', 90, 247, 50, '', '', '', '', false, 300);
-	$sceau = '<img src="../images/sceau_mca.png" width="210px">';
+	$sceau = '<img src="../images/sceau_mca.png" width="150px">';
 	// if ($maClasse-> getFactureGlobale($_GET['ref_fact'])['id_cli'] != '906' && $maClasse-> getFactureGlobale($_GET['ref_fact'])['id_cli'] != '902') {
 	// 	$pdf->Image('../images/sceau.png', 50, 200, 105, '', '', '', '', false, 300);
 	// }
@@ -96,13 +96,16 @@ if(isset($_GET['ref_fact'])){
 		</tr>';
 	}
 
+$logo = '<img src="../images/malabar2.png" width="250px">';
 	
 $facture = $maClasse-> getDataFactureGlobale($_GET['ref_fact']);
+$dossiers = $maClasse-> getDossierFactureExportSingle($_GET['ref_fact']);
 
 $ref_fact = $_GET['ref_fact'];//$maClasse-> getNumFactureEnCours($_GET['facture']);
 $date_fact = $maClasse-> getFactureGlobale($_GET['ref_fact'])['date_fact'];//$maClasse-> getDateFactureEnCours($_GET['facture']);
 $code_client = $maClasse-> getClientFacture($_GET['ref_fact'])['code_cli'];
 $nom_client = $maClasse-> getClientFacture($_GET['ref_fact'])['nom_cli'];
+$nom_complet = $maClasse-> getClientFacture($_GET['ref_fact'])['nom_complet'];
 
 if ($maClasse-> getFactureGlobale($_GET['ref_fact'])['note_debit'] == '1') {
 	$note_debit = 'NOTE DE DEBIT';
@@ -198,42 +201,51 @@ $tbl = <<<EOD
 		<br>
 		<br>
 		<tr>
-			<td width="40%" style="text-align: center; border: 0.3px solid black; font-weight: bold; font-size: 12px;">FACTURE</td>
+			<td width="45%" style="text-align: center; border: 0.3px solid black; font-weight: bold; font-size: 12px;">FACTURE</td>
 		</tr>
 		<br>
 		<tr>
-			<td width="40%" rowspan="6" style="text-align: left; border: 0.3px solid black;"><span><u>CLIENT</u></span>
-			<br><b>$nom_client </b>
-			<br>$adresse_client</td>
-			<td width="20%" style="text-align: center;"></td>
+			<td width="45%" rowspan="7" style="text-align: left; border: 0.3px solid black; font-size: 7px;"><span><u>CLIENT</u></span>
+			<br><b><font size="8px">$nom_complet</font> </b>
+			<br>$adresse_client
+			<br>No.RCCM: $rccm_cli
+			<br>No.NIF.: $nif_cli
+			<br>No.IDN.: $id_nat
+			<br>No.IMPORT/EXPORT: $num_imp_exp</td>
+			<td width="15%" style="text-align: center;"></td>
 			<td width="18%" style="text-align: left; border: 0.3px solid black; font-size: 7px;">&nbsp;N.FACTURE</td>
 			<td width="22%" style="text-align: center; border: 0.3px solid black; font-weight: bold; font-size: 7px;">$ref_fact</td>
 		</tr>
 		<tr>
-			<td width="20%" style="text-align: center;"></td>
+			<td width="15%" style="text-align: center;"></td>
 			<td width="18%" style="text-align: left; border: 0.3px solid black; font-size: 7px;">&nbsp;Date</td>
 			<td width="22%" style="text-align: center; border: 0.3px solid black; font-weight: bold; font-size: 7px;">$date_fact</td>
 		</tr>
 
 		<tr>
-			<td width="20%" style="text-align: left; "></td>
+			<td width="15%" style="text-align: left; "></td>
 			<td width="18%" style="text-align: left; border: 0.3px solid black; font-size: 7px;">&nbsp;Du Dossier: </td>
 			<td width="22%" style="text-align: center; border: 0.3px solid black; font-size: 7px; font-weight: bold;">$ref_dos_min</td>
 		</tr>
 		<tr>
-			<td width="20%" style="text-align: left; "></td>
+			<td width="15%" style="text-align: left; "></td>
 			<td width="18%" style="text-align: left; border: 0.3px solid black; font-size: 7px;">&nbsp;Au Dossier: </td>
 			<td width="22%" style="text-align: center; border: 0.3px solid black; font-size: 7px; font-weight: bold;">$ref_dos_max</td>
 		</tr>
 		<tr>
-			<td width="20%" style="text-align: left; "></td>
+			<td width="15%" style="text-align: left; "></td>
 			<td width="18%" style="text-align: left; border: 0.3px solid black; font-size: 7px;">&nbsp;Rate(CDF/USD) BCC: </td>
 			<td width="22%" style="text-align: center; border: 0.3px solid black; font-size: 7px; font-weight: bold;">$taux</td>
 		</tr>
 		<tr>
-			<td width="20%" style="text-align: left; "></td>
+			<td width="15%" style="text-align: left; "></td>
 			<td width="18%" style="text-align: left; border: 0.3px solid black; font-size: 7px;">&nbsp;Nombre de Trucks: </td>
 			<td width="22%" style="text-align: center; border: 0.3px solid black; font-size: 7px; font-weight: bold;">$nbre_dos</td>
+		</tr>
+		<tr>
+			<td width="15%" style="text-align: left; "></td>
+			<td width="18%" style="text-align: left;"></td>
+			<td width="22%" style="text-align: center; font-weight: bold;"></td>
 		</tr>
 
 		<tr>
@@ -344,6 +356,69 @@ $tbl = <<<EOD
         
 EOD;
 $pdf->writeHTML($tbl, true, false, false, false, '');
+
+// add a page
+$pdf->AddPage('L', 'A4');
+
+$tbl = <<<EOD
+    <html>
+    <head>
+        <meta http-equiv = " content-type " content = " text/html; charset=utf-8" />
+    </head>
+    <body style="font-weight: bold;" style="">
+	<table>
+		<br>
+		<br>
+		<br>
+		<tr>
+			<td width="5%" style=""></td>
+			<td width="80%" style="">$logo</td>
+			<td width="5%" style=""></td>
+		</tr>
+		<br>
+		<tr>
+			<td width="5%" style=""></td>
+			<td width="83%" style="">DETAILS - EXPORT CLEARING $marchandise LOADS</td>
+		</tr>
+		<tr>
+			<td width="5%" style=""></td>
+			<td width="3%" style="text-align: center; border: 1 solid black; font-weight: bold;"><span><br>#<br></span></td>
+			<td width="10%" style="text-align: center; border: 1 solid black; font-weight: bold;"><span><br>MCA File No<br></span></td>
+			<td width="9%" style="text-align: center; border: 1 solid black; font-weight: bold;"><span><br>Destination<br></span></td>
+			<td width="9%" style="text-align: center; border: 1 solid black; font-weight: bold;"><span><br>Transporter<br></span></td>
+			<td width="7%" style="text-align: center; border: 1 solid black; font-weight: bold;"><span><br>Horse<br></span></td>
+			<td width="7%" style="text-align: center; border: 1 solid black; font-weight: bold;"><span><br>Trailer 1<br></span></td>
+			<td width="7%" style="text-align: center; border: 1 solid black; font-weight: bold;"><span><br>Trailer 2<br></span></td>
+			<td width="9%" style="text-align: center; border: 1 solid black; font-weight: bold;"><span><br>Lot. No.<br></span></td>
+			<td width="7%" style="text-align: center; border: 1 solid black; font-weight: bold;"><span><br>Qty(Mt)<br></span></td>
+			<td width="7%" style="text-align: center; border: 1 solid black; font-weight: bold;"><span><br>Loading Date</span></td>
+			<td width="10%" style="text-align: center; border: 1 solid black; font-weight: bold;"><span><br>Clearing Completed Date</span></td>
+			<td width="7%" style="text-align: center; border: 1 solid black; font-weight: bold;"><span><br>CLEARED<br></span></td>
+			<td width="5%" style=""></td>
+		</tr>
+		$dossiers
+		<br>
+		<br>
+		<br>
+		<tr>
+			<td width="5%" style=""></td>
+			<td width="90%" style="text-align: right;">Details INV No. $ref_fact du $date_fact</td>
+			<td width="5%" style=""></td>
+		</tr>
+		<br>
+		<br>
+		<tr>
+			<td width="5%" style=""></td>
+			<td width="90%" style="text-align: center;">$sceau</td>
+			<td width="5%" style=""></td>
+		</tr>
+	</table>
+	</bodystyle="font-weight: bold;">
+	</html>
+        
+EOD;
+$pdf->writeHTML($tbl, true, false, false, false, '');
+
 // Clean any content of the output buffer
 ob_end_clean();
 

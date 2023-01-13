@@ -65,7 +65,7 @@ $mail = new PHPMailer(true);
         $mail->Subject = 'INVOICE '.$_POST['ref_fact'];
 
         $message = 'Dear All, <br><br>';
-        $message .= 'Please find attached the documents for the Invoice<br>';
+        $message .= 'Please find attached the documents for the Invoice<br>Also <a href="http://185.98.128.37/malabar-erp/html/pages/plisFacture.php?ref_fact='.$_POST['ref_fact'].'">Click here</a> to get supporting documents';
         $mail->Body    = $message;
         
 

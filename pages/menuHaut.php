@@ -3,7 +3,8 @@
 
   <div id="spinner-div" class="pt-5">
     <!-- <div class="spinner-border text-primary" role="status"></div> -->
-    <img src="../images/86b6e3f28ee33d8104291ba874349e04_w200.gif" width="250px">
+    <!-- <img src="../images/86b6e3f28ee33d8104291ba874349e04_w200.gif" width="250px"> -->
+    <img src="../images/GD.gif" width="250px">
   </div>
   <div id="loading">
     <img id="loading-image" src="ajax-loader.gif" alt="Loading..." />

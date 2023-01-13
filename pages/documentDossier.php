@@ -18,7 +18,7 @@
         $tmp=$_FILES['fichier_'.$i]['tmp_name'];
         $ref_dos = $_POST['ref_dos'];
 
-        $maClasse-> archiver($_POST['id_dos'], $_POST['id_doc_'.$i], $fichier, $tmp, $ref_dos);
+        $maClasse-> archiver($_POST['id_dos'], $_POST['id_doc_'.$i], $fichier, $tmp, $ref_dos, $_SESSION['id_util']);
       }
 
     }

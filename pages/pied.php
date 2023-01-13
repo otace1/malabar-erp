@@ -8,7 +8,7 @@
       <b>Version</b> 0.5
     </div>
     <strong>Copyright &copy; <font style="color: rgb(193, 0, 0) ">MALABAR</font> <font style="color: black;">GROUP</font> <?php date("Y");?> All rights
-    reserved. Build by <a href="http://www.belej-consulting.com"> <font style="color: orange;">BELEJ - </font><font style="color: grey;">CONSULTING</font> </a></strong>
+    reserved. Build by <a href="http://www.belej-consulting.com" onclick="window.open(this.href);return false;"> <font style="color: orange;">BELEJ - </font><font style="color: grey;">CONSULTING</font> </a></strong>
   </footer>
 
   <!-- Control Sidebar -->

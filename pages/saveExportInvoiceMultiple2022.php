@@ -68,12 +68,13 @@ $pdf->setPrintHeader(false);
 $pdf->AddPage('P', 'A4');
 
 $pdf->Image('../images/malabar2.png', 2, 10, 110, '', '', '', '', false, 300);
+$sceau='';
 
 if ( ($maClasse-> getFactureGlobale($_POST['ref_fact'])['validation']) == '0' ) {
 	$pdf->Image('../images/no_valid.jpg', 150, 2, 30, '', '', '', '', false, 300);
 }else{
 	$pdf->Image('../images/sceau_mca.png', 90, 247, 50, '', '', '', '', false, 300);
-	$sceau = '<img src="../images/sceau_mca.png" width="210px">';
+	$sceau = '<img src="../images/sceau_mca.png" width="150px">';
 	// if ($maClasse-> getFactureGlobale($_POST['ref_fact'])['id_cli'] != '906' && $maClasse-> getFactureGlobale($_POST['ref_fact'])['id_cli'] != '902') {
 	// 	$pdf->Image('../images/sceau.png', 50, 200, 105, '', '', '', '', false, 300);
 	// }
@@ -96,8 +97,10 @@ if(isset($_POST['ref_fact'])){
 		</tr>';
 	}
 
+$logo = '<img src="../images/malabar2.png" width="250px">';
 	
 $facture = $maClasse-> getDataFactureGlobale($_POST['ref_fact']);
+$dossiers = $maClasse-> getDossierFactureExportSingle($_POST['ref_fact']);
 
 $ref_fact = $_POST['ref_fact'];//$maClasse-> getNumFactureEnCours($_GET['facture']);
 $date_fact = $maClasse-> getFactureGlobale($_POST['ref_fact'])['date_fact'];//$maClasse-> getDateFactureEnCours($_GET['facture']);
@@ -355,6 +358,69 @@ $tbl = <<<EOD
         
 EOD;
 $pdf->writeHTML($tbl, true, false, false, false, '');
+
+// add a page
+$pdf->AddPage('L', 'A4');
+
+$tbl = <<<EOD
+    <html>
+    <head>
+        <meta http-equiv = " content-type " content = " text/html; charset=utf-8" />
+    </head>
+    <body style="font-weight: bold;" style="">
+	<table>
+		<br>
+		<br>
+		<br>
+		<tr>
+			<td width="5%" style=""></td>
+			<td width="80%" style="">$logo</td>
+			<td width="5%" style=""></td>
+		</tr>
+		<br>
+		<tr>
+			<td width="5%" style=""></td>
+			<td width="83%" style="">DETAILS - EXPORT CLEARING $marchandise LOADS</td>
+		</tr>
+		<tr>
+			<td width="5%" style=""></td>
+			<td width="3%" style="text-align: center; border: 1 solid black; font-weight: bold;"><span><br>#<br></span></td>
+			<td width="10%" style="text-align: center; border: 1 solid black; font-weight: bold;"><span><br>MCA File No<br></span></td>
+			<td width="9%" style="text-align: center; border: 1 solid black; font-weight: bold;"><span><br>Destination<br></span></td>
+			<td width="9%" style="text-align: center; border: 1 solid black; font-weight: bold;"><span><br>Transporter<br></span></td>
+			<td width="7%" style="text-align: center; border: 1 solid black; font-weight: bold;"><span><br>Horse<br></span></td>
+			<td width="7%" style="text-align: center; border: 1 solid black; font-weight: bold;"><span><br>Trailer 1<br></span></td>
+			<td width="7%" style="text-align: center; border: 1 solid black; font-weight: bold;"><span><br>Trailer 2<br></span></td>
+			<td width="9%" style="text-align: center; border: 1 solid black; font-weight: bold;"><span><br>Lot. No.<br></span></td>
+			<td width="7%" style="text-align: center; border: 1 solid black; font-weight: bold;"><span><br>Qty(Mt)<br></span></td>
+			<td width="7%" style="text-align: center; border: 1 solid black; font-weight: bold;"><span><br>Loading Date</span></td>
+			<td width="10%" style="text-align: center; border: 1 solid black; font-weight: bold;"><span><br>Clearing Completed Date</span></td>
+			<td width="7%" style="text-align: center; border: 1 solid black; font-weight: bold;"><span><br>CLEARED<br></span></td>
+			<td width="5%" style=""></td>
+		</tr>
+		$dossiers
+		<br>
+		<br>
+		<br>
+		<tr>
+			<td width="5%" style=""></td>
+			<td width="90%" style="text-align: right;">Details INV No. $ref_fact du $date_fact</td>
+			<td width="5%" style=""></td>
+		</tr>
+		<br>
+		<br>
+		<tr>
+			<td width="5%" style=""></td>
+			<td width="90%" style="text-align: center;">$sceau</td>
+			<td width="5%" style=""></td>
+		</tr>
+	</table>
+	</bodystyle="font-weight: bold;">
+	</html>
+        
+EOD;
+$pdf->writeHTML($tbl, true, false, false, false, '');
+
 // Clean any content of the output buffer
 ob_end_clean();
 

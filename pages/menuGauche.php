@@ -81,7 +81,7 @@
               $maClasse-> afficherMenuTrackingLogistique();
             }
             
-            if($_SESSION['id_role'] == '1'){
+            if($_SESSION['id_role'] == '1' || $_SESSION['id_role'] == '12'){
           ?>
           <hr>
           <li class="nav-item"  style="">

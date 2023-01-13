@@ -823,94 +823,100 @@
   }
 
   function getTableauExportInvoiceSingle(id_mod_fact, id_dos, id_mod_lic, id_march, id_mod_trans){
-    $('#spinner-div').show();
-    $.ajax({
-      type: "POST",
-      url: "ajax.php",
-      data: { id_mod_fact: id_mod_fact, id_dos: id_dos, id_mod_lic: id_mod_lic, id_march:id_march, id_mod_trans:id_mod_trans, operation: 'getTableauExportInvoiceSingle'},
-      dataType:"json",
-      success:function(data){
-        if (data.logout) {
-          alert(data.logout);
-          window.location="../deconnexion.php";
-        }else{
-          // alert('Hello');
-          $('#roe_decl').val(data.roe_decl);
-          $('#num_lot').val(data.num_lot);
-          $('#destination').val(data.destination);
-          $('#horse').val(data.horse);
-          $('#trailer_1').val(data.trailer_1);
-          $('#trailer_2').val(data.trailer_2);
-          $('#poids').val(Math.round((data.poids*1000))/1000);
-          //Items ------------
-          $('#unite_1').val(Math.round((data.poids*1000))/1000);
-          $('#unite_2').val(Math.round((data.poids*1000))/1000);
-          $('#unite_3').val(Math.round((data.poids*1000))/1000);
-          $('#unite_4').val(Math.round((data.poids*1000))/1000);
-          $('#unite_5').val(Math.round((data.poids*1000))/1000);
-          $('#montant_5').val(Math.round((data.poids*3*1000))/1000);
-          $('#unite_6').val(Math.round((data.poids*1000))/1000);
-          $('#montant_6').val(Math.round((data.poids*8*1000))/1000);
-          $('#unite_7').val(Math.round((data.poids*1000))/1000);
-          $('#montant_7').val(Math.round((data.poids*50*1000))/1000);
-          $('#unite_8').val(Math.round((data.poids*1000))/1000);
-          $('#montant_8').val(Math.round((data.poids*100*1000))/1000);
-          $('#unite_9').val(1);
-          $('#montant_9').val(250);
-          $('#unite_10').val(1);
-          $('#montant_10').val(80);
+    if ($('#id_dos').val()===null || $('#id_dos').val()==='' ) {
 
-          if (data.poids<30) {
-            $('#unite_11').val(1);
-            $('#montant_11').val(125);
+      alert('Error !! Please select the file.');
+
+    }else{
+      $('#spinner-div').show();
+      $.ajax({
+        type: "POST",
+        url: "ajax.php",
+        data: { id_mod_fact: id_mod_fact, id_dos: id_dos, id_mod_lic: id_mod_lic, id_march:id_march, id_mod_trans:id_mod_trans, operation: 'getTableauExportInvoiceSingle'},
+        dataType:"json",
+        success:function(data){
+          if (data.logout) {
+            alert(data.logout);
+            window.location="../deconnexion.php";
           }else{
-            $('#unite_11').val(0);
-            $('#montant_11').val(0);
+            // alert('Hello');
+            $('#roe_decl').val(data.roe_decl);
+            $('#num_lot').val(data.num_lot);
+            $('#destination').val(data.destination);
+            $('#horse').val(data.horse);
+            $('#trailer_1').val(data.trailer_1);
+            $('#trailer_2').val(data.trailer_2);
+            $('#poids').val(Math.round((data.poids*1000))/1000);
+            //Items ------------
+            $('#unite_1').val(Math.round((data.poids*1000))/1000);
+            $('#unite_2').val(Math.round((data.poids*1000))/1000);
+            $('#unite_3').val(Math.round((data.poids*1000))/1000);
+            $('#unite_4').val(Math.round((data.poids*1000))/1000);
+            $('#unite_5').val(Math.round((data.poids*1000))/1000);
+            $('#montant_5').val(Math.round((data.poids*3*1000))/1000);
+            $('#unite_6').val(Math.round((data.poids*1000))/1000);
+            $('#montant_6').val(Math.round((data.poids*8*1000))/1000);
+            $('#unite_7').val(Math.round((data.poids*1000))/1000);
+            $('#montant_7').val(Math.round((data.poids*50*1000))/1000);
+            $('#unite_8').val(Math.round((data.poids*1000))/1000);
+            $('#montant_8').val(Math.round((data.poids*100*1000))/1000);
+            $('#unite_9').val(1);
+            $('#montant_9').val(250);
+            $('#unite_10').val(1);
+            $('#montant_10').val(80);
+
+            if (data.poids<30) {
+              $('#unite_11').val(1);
+              $('#montant_11').val(125);
+            }else{
+              $('#unite_11').val(0);
+              $('#montant_11').val(0);
+            }
+            
+            if (data.poids>=30) {
+              $('#unite_12').val(1);
+              $('#montant_12').val(250);
+            }else{
+              $('#unite_12').val(0);
+              $('#montant_12').val(0);
+            }
+            
+            $('#unite_13').val(1);
+            $('#montant_13').val(40);
+
+            $('#unite_14').val(1);
+            $('#montant_14').val(15);
+
+            $('#unite_15').val(1);
+            $('#montant_15').val(110);
+
+            $('#unite_16').val(1);
+            $('#montant_16').val(75);
+
+            $('#unite_17').val(1);
+            $('#montant_17').val(35);
+
+            $('#unite_18').val(1);
+            $('#montant_18').val(20);
+
+            $('#unite_19').val(1);
+            $('#montant_19').val(75);
+
+            $('#unite_20').val(1);
+            $('#montant_20').val(200);
+
+            $('#unite_21').val(1);
+            $('#montant_21').val(150);
+
+            // $('#msg_modalite_fss').html(data.msg_modalite_fss);
+            // $("#updateModaliteFss").modal("hide");
           }
-          
-          if (data.poids>=30) {
-            $('#unite_12').val(1);
-            $('#montant_12').val(250);
-          }else{
-            $('#unite_12').val(0);
-            $('#montant_12').val(0);
-          }
-          
-          $('#unite_13').val(1);
-          $('#montant_13').val(40);
-
-          $('#unite_14').val(1);
-          $('#montant_14').val(15);
-
-          $('#unite_15').val(1);
-          $('#montant_15').val(110);
-
-          $('#unite_16').val(1);
-          $('#montant_16').val(75);
-
-          $('#unite_17').val(1);
-          $('#montant_17').val(35);
-
-          $('#unite_18').val(1);
-          $('#montant_18').val(20);
-
-          $('#unite_19').val(1);
-          $('#montant_19').val(75);
-
-          $('#unite_20').val(1);
-          $('#montant_20').val(200);
-
-          $('#unite_21').val(1);
-          $('#montant_21').val(150);
-
-          // $('#msg_modalite_fss').html(data.msg_modalite_fss);
-          // $("#updateModaliteFss").modal("hide");
+        },
+        complete: function () {
+            $('#spinner-div').hide();//Request is complete so hide spinner
         }
-      },
-      complete: function () {
-          $('#spinner-div').hide();//Request is complete so hide spinner
-      }
-    });
+      });
+    }
 
   }
 
