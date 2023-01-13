@@ -1595,14 +1595,18 @@
 			// echo '<br>montant = '.$montant;
 			// echo '<br>------------------<br>';
 
-			$requete = $connexion-> prepare("INSERT INTO detail_facture_dossier(ref_fact, id_dos,
+			if ($montant>0) {
+				$requete = $connexion-> prepare("INSERT INTO detail_facture_dossier(ref_fact, id_dos,
 																	id_deb, montant, tva, usd, detail, 
 																	unite)
 												VALUES(?, ?, ?, ?, ?, ?, ?, ?)");
-			$requete-> execute(array($entree['ref_fact'], $entree['id_dos'],
+				$requete-> execute(array($entree['ref_fact'], $entree['id_dos'],
 									$entree['id_deb'], $entree['montant'], 
 									$entree['tva'], $entree['usd'], $entree['detail'], 
 									$entree['unite']));
+			}
+
+			
 		}
 
 		public function creerDetailApurement($id_trans_ap, $id_dos){
@@ -2645,7 +2649,7 @@
 			$active = '';
 			$open = '';
 			$reponse['id_cli'] = '';
-			if($_SESSION['id_role'] == '1' || $_SESSION['id_role'] == '8'){
+			if($_SESSION['id_role'] == '1' || $_SESSION['id_role'] == 12){
 				$sql = "SELECT id_mod_lic,
 							nom_mod_lic,
 							sigle_mod_lic
@@ -2724,11 +2728,17 @@
 			        <a href="#" class="nav-link <?php echo $active;?>" class="nav-link  <?php echo $active;?>">
 			          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-user"></i>
 			          <p>
-			            <?php echo $reponse['code_cli'];?>
+			            <?php echo $reponse['nom_cli'];?>
 			            <i class="right fas fa-angle-left"></i>
 			          </p>
 			        </a>
 		            <ul class="nav nav-treeview">
+		              	<li class="nav-item">
+			                <a href="dossierEnAttenteFacture.php?type_fact=globale&id_mod_lic_fact=<?php echo $id_mod_lic;?>&id_cli=<?php echo $reponse['id_cli'];?>" class="nav-link">
+			                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-folder-open nav-icon"></i>
+			                  <p>Pending files <sup><b><span style="color: red;"><?php echo $this-> getNbreDossierEnAttenteFacture($id_mod_lic, $reponse['id_cli']);?></span></b></sup></p>
+			                </a>
+			            </li>
 					    <li class="nav-item">
 			                <a href="#" onclick="modal_facture(<?php echo $reponse['id_cli'];?>, <?php echo $id_mod_lic;?>);" class="nav-link">
 			                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-plus nav-icon"></i>
@@ -2753,6 +2763,46 @@
 			}$requete-> closeCursor();
 		}
 
+		public function getDossierPourFacturationClientModeleLicence($id_cli, $id_mod_lic, $id_mod_trans, $id_march){
+			include('connexion.php');
+			$entree['id_cli'] = $id_cli;
+			$entree['id_mod_lic'] = $id_mod_lic;
+			$entree['id_mod_trans'] = $id_mod_trans;
+			$entree['id_march'] = $id_march;
+			$compteur = '0';
+			$active = '';
+			$dossiers_a_facturer = '<select onchange="getDataDossier(this.value); total()" id="id_dos" class="form-control float-right"><option></option>';
+			$requete = $connexion-> prepare("SELECT id_dos, ref_dos, ref_decl, 
+													DATE_FORMAT(date_decl, '%d/%m/%Y') AS date_decl, horse, commodity, id_mod_lic,
+													principal, roe_decl, id_march
+												FROM dossier
+												WHERE id_cli = ?
+													AND id_mod_lic = ?
+													AND ref_dos NOT IN(
+														SELECT d.ref_dos AS ref_dos
+															FROM detail_facture_dossier det, dossier d
+															WHERE d.id_dos = det.id_dos
+													)
+													AND ref_quit IS NOT NULL
+													AND date_quit IS NOT NULL
+													AND id_mod_trans = ?
+													AND id_march = ?
+													AND not_fact = '0'");
+			$requete-> execute(array($entree['id_cli'], $entree['id_mod_lic'], $entree['id_mod_trans'], $entree['id_march']));
+			while ($reponse = $requete-> fetch()) {
+				$compteur++;
+				$dossiers_a_facturer .= '<option value="'.$reponse['id_dos'].'">'.$reponse['ref_dos'].'</option>';
+			}$requete-> closeCursor();
+
+			$dossiers_a_facturer .='</select>
+									<div class="input-group-append">
+		                              <span onclick="creerDetailFactureDossier(ref_fact.value, id_dos.value);" class="btn btn-info">Add</span>
+		                            </div>';
+
+			return $dossiers_a_facturer;
+
+		}
+
 		public function getModeleFacturation($id_cli, $id_mod_lic){
 			include('connexion.php');
 			$entree['id_cli'] = $id_cli;
@@ -2770,9 +2820,9 @@
     															marchandise, modele_facture, mode_transport
     														WHERE aff.id_cli = ?
     															AND aff.id_march = marchandise.id_march
+    															AND aff.id_mod_trans = mode_transport.id_mod_trans
     															AND aff.id_mod_fact = modele_facture.id_mod_fact
-    															AND modele_facture.id_mod_lic = ?
-    															AND modele_facture.id_mod_trans = mode_transport.id_mod_trans");
+    															AND modele_facture.id_mod_lic = ?");
     		$requeteMarchandise-> execute(array($entree['id_cli'], $entree['id_mod_lic']));
     		while ($reponseMarchandise = $requeteMarchandise-> fetch()) {
     			$tableau .= '
@@ -3075,6 +3125,58 @@
 			}$requete-> closeCursor();
 		}
 
+		public function getDocumentDossierFacture($ref_fact){
+			include('connexion.php');
+			$entree['ref_fact'] = $ref_fact;
+			$compteur=0;
+
+			$requeteDossier = $connexion-> prepare("SELECT dos.ref_dos AS ref_dos, dos.id_dos AS id_dos
+														FROM dossier dos, detail_facture_dossier det
+														WHERE det.id_dos = dos.id_dos
+															AND det.ref_fact = ?
+															GROUP BY dos.id_dos
+															ORDER BY dos.ref_dos");
+			$requeteDossier-> execute(array($entree['ref_fact']));
+			while($reponseDossier=$requeteDossier-> fetch()){
+				$compteur++;
+				?>
+				<tr>
+					<td><?php echo $compteur;?></td>
+					<td><?php echo $reponseDossier['ref_dos'];?></td>
+					<td>
+					<?php
+
+						$requete = $connexion-> prepare("SELECT doc.nom_doc AS nom_doc,
+																dd.piece AS piece,
+																dos.ref_dos AS ref_dos
+															FROM document doc, dossier_document dd,
+																dossier dos
+															WHERE doc.id_doc = dd.id_doc
+																AND dd.id_dos = dos.id_dos
+																AND dos.id_dos = ?");
+						$requete-> execute(array($reponseDossier['id_dos']));
+
+
+						while($reponse = $requete-> fetch()){
+							$compteur++;
+							if(stristr($reponse['ref_dos'], '/') == true) {
+								$reponse['ref_dos'] = str_replace("/", "_", $reponse['ref_dos']);
+							}
+							?>
+			                    &nbsp&nbsp<button class="btn btn-xs btn-dark" onclick="window.open('../documents/<?php echo $reponse['ref_dos'];?>/<?php echo $reponse['piece'];?>','pop1','width=1000,height=800');">
+			                      <i class="fas fa-file"></i> <?php echo $reponse['nom_doc'];?>
+			                    </button>
+							<?php
+						}$requete-> closeCursor();
+
+					?>
+					</td>
+				</tr>
+				<?php
+			}$requeteDossier-> closeCursor();
+
+		}
+
 		public function getFactureGlobale($ref_fact){
 			include('connexion.php');
 			$entree['ref_fact'] = $ref_fact;
@@ -3083,6 +3185,18 @@
 												FROM facture_dossier
 												WHERE ref_fact = ?");
 			$requete-> execute(array($entree['ref_fact']));
+			$reponse = $requete-> fetch();
+			return $reponse;
+		}
+
+		public function getFactureModeleFacture($id_mod_fact){
+			include('connexion.php');
+			$entree['id_mod_fact'] = $id_mod_fact;
+
+			$requete = $connexion-> prepare("SELECT *
+												FROM modele_facture
+												WHERE id_mod_fact = ?");
+			$requete-> execute(array($entree['id_mod_fact']));
 			$reponse = $requete-> fetch();
 			return $reponse;
 		}
@@ -3319,7 +3433,12 @@
 														AND df.id_dos = dos.id_dos");
 				$requete-> execute(array($entree['ref_fact']));
 				$reponse = $requete-> fetch();
-				return $reponse;
+				if ($reponse) {
+					return $reponse;
+				}else{
+					$reponse['nom_march']=NULL;
+					return $reponse;
+				}
 			}
 			
 		}
@@ -3717,6 +3836,72 @@
 			return $tbl;
 		}
 
+		public function getDossierFactureExportSingle($ref_fact){
+			include('connexion.php');
+			$entree['ref_fact'] = $ref_fact;
+
+			$tbl = '';
+			$compteur=0;
+			$total_poids = 0;
+			$requete = $connexion-> prepare('SELECT dos.ref_dos AS ref_dos,
+													dos.destination AS destination,
+													dos.transporter AS transporter,
+													dos.horse AS horse,
+													dos.trailer_1 AS trailer_1,
+													dos.trailer_2 AS trailer_2,
+													dos.num_lot AS num_lot,
+													dos.poids AS poids,
+													DATE_FORMAT(dos.load_date, "%d/%m/%Y") AS load_date,
+													DATE_FORMAT(dos.exit_drc, "%d/%m/%Y") AS exit_drc,
+													IF(dos.cleared="1",
+														"CLEARED",
+														"TRANSIT") AS cleared
+												FROM debours d, detail_facture_dossier det, dossier dos
+												WHERE det.ref_fact = ?
+													AND det.id_deb = d.id_deb
+													AND det.id_dos = dos.id_dos
+												GROUP BY dos.id_dos');
+			$requete-> execute(array($entree['ref_fact']));
+			while($reponse = $requete-> fetch()){
+				$compteur++;
+				$total_poids+=$reponse['poids'];
+
+				$tbl .= '
+						<tr>				
+							<td width="5%" style=""></td>
+							<td width="3%" style="text-align: center; border: 1 solid black;">'.$compteur.'</td>
+							<td width="10%" style="text-align: center; border: 1 solid black;">'.$reponse['ref_dos'].'</td>
+							<td width="9%" style="text-align: center; border: 1 solid black;">'.$reponse['destination'].'</td>
+							<td width="9%" style="text-align: center; border: 1 solid black;">'.$reponse['transporter'].'</td>
+							<td width="7%" style="text-align: center; border: 1 solid black;">'.$reponse['horse'].'</td>
+							<td width="7%" style="text-align: center; border: 1 solid black;">'.$reponse['trailer_1'].'</td>
+							<td width="7%" style="text-align: center; border: 1 solid black;">'.$reponse['trailer_2'].'</td>
+							<td width="9%" style="text-align: center; border: 1 solid black;">'.$reponse['num_lot'].'</td>
+							<td width="7%" style="text-align: center; border: 1 solid black;">'.$reponse['poids'].'</td>
+							<td width="7%" style="text-align: center; border: 1 solid black;">'.$reponse['load_date'].'</td>
+							<td width="10%" style="text-align: center; border: 1 solid black;">'.$reponse['exit_drc'].'</td>
+							<td width="7%" style="text-align: center; border: 1 solid black;">'.$reponse['cleared'].'</td>
+							<td width="5%" style=""></td>
+						</tr>
+					';
+
+			}$requete-> closeCursor();
+
+			$tbl .= '
+					<tr>				
+						<td width="5%" style=""></td>
+						<td width="61%" style="text-align: center; border: 1 solid black;"></td>
+						<td width="7%" style="text-align: center; border: 1 solid black;">'.$total_poids.'</td>
+						<td width="7%" style="text-align: center; border: 1 solid black;"></td>
+						<td width="10%" style="text-align: center; border: 1 solid black;"></td>
+						<td width="7%" style="text-align: center; border: 1 solid black;"></td>
+						<td width="5%" style=""></td>
+					</tr>
+				';
+
+			return $tbl;
+		}
+
 		public function getDetailFactureExportMultiple($ref_fact, $id_t_deb){
 			include('connexion.php');
 			$entree['ref_fact'] = $ref_fact;
@@ -3836,14 +4021,21 @@
 					$unite = number_format($reponse['nbre_poids'], 2, ',', ' ');
 
 				}else if($reponse['id_deb']=='11'){
-					$unite = $reponse['nbre_poids'];
+					$unite = $reponse['nbre_dos'];
 				}else if($reponse['id_deb']=='12'){
-					$unite = $reponse['nbre_poids'];
+					$unite = $reponse['nbre_dos'];
 				}else{
 					$unite = $reponse['nbre_dos'];
 				}
 
 				$cost = $reponse['ht_usd']/$unite;
+				$cost_2 = number_format($cost, 2, ',', '.');
+				
+				if($reponse['id_deb']=='54'){
+					$unite = number_format($this-> getMontantFactureTypeDebours($ref_fact, '1'), 2, ',', '.');
+					$cost = '1,50%';
+					$cost_2 = $cost;
+				}
 
 				$total_cost += $cost;
 				$sub_total += $reponse['ht_usd'];
@@ -3861,7 +4053,7 @@
 							'
 							</td>
 							<td style="text-align: right; border-right: 0.5px solid black; font-size: 6.5px;" width="11%">'
-								.number_format($cost, 2, ',', '.').
+								.$cost_2.
 							'&nbsp;&nbsp;</td>
 							<td style="text-align: right; border-right: 0.5px solid black; font-size: 6.5px;" width="11%">'
 								.number_format($reponse['ht_usd'], 2, ',', '.').
@@ -4257,6 +4449,74 @@
 			return $reponse['nbre'];
 		}
 
+		public function getNombreFactureDossierEnAttenteEnvoie($id_cli, $id_mod_lic){
+			include("connexion.php");
+			$entree['id_cli'] = $id_cli;
+			$entree['id_mod_lic'] = $id_mod_lic;
+			//$entree['type_fact'] = $type_fact;
+			$compteur=0;
+
+			if (isset($id_cli) && ($id_cli!='')) {
+				$sqlClient = ' AND cl.id_cli = "'.$id_cli.'"';
+			}else{
+				$sqlClient = '';
+			}
+
+			$bg = "";
+			$badge = '';
+			$btn = '';
+			$etat ='';
+
+			$debut = $compteur;
+
+			$requete = $connexion-> prepare("SELECT COUNT(fd.ref_fact) AS nbre
+ 												FROM facture_dossier fd, client cl, utilisateur u
+												WHERE fd.id_mod_lic = ?
+													AND fd.id_util = u.id_util
+													AND fd.id_cli = cl.id_cli
+													AND fd.date_mail IS NULL
+													AND fd.validation = '1'
+													$sqlClient");
+			$requete-> execute(array($entree['id_mod_lic']));
+			$reponse = $requete-> fetch();
+
+			return $reponse['nbre'];
+		}
+
+		public function getNombreFactureDossierEnvoyee($id_cli, $id_mod_lic){
+			include("connexion.php");
+			$entree['id_cli'] = $id_cli;
+			$entree['id_mod_lic'] = $id_mod_lic;
+			//$entree['type_fact'] = $type_fact;
+			$compteur=0;
+
+			if (isset($id_cli) && ($id_cli!='')) {
+				$sqlClient = ' AND cl.id_cli = "'.$id_cli.'"';
+			}else{
+				$sqlClient = '';
+			}
+
+			$bg = "";
+			$badge = '';
+			$btn = '';
+			$etat ='';
+
+			$debut = $compteur;
+
+			$requete = $connexion-> prepare("SELECT COUNT(fd.ref_fact) AS nbre
+ 												FROM facture_dossier fd, client cl, utilisateur u
+												WHERE fd.id_mod_lic = ?
+													AND fd.id_util = u.id_util
+													AND fd.id_cli = cl.id_cli
+													AND fd.date_mail IS NOT NULL
+													AND fd.validation = '1'
+													$sqlClient");
+			$requete-> execute(array($entree['id_mod_lic']));
+			$reponse = $requete-> fetch();
+
+			return $reponse['nbre'];
+		}
+
 		public function afficherFactureDossierEnAttenteValidation($id_cli, $id_mod_lic, $premiere_entree, $nombre_dossier_par_page){
 			include("connexion.php");
 			$entree['id_cli'] = $id_cli;
@@ -4384,6 +4644,395 @@
 			</tr>
 			<?php
 			}$requete-> closeCursor();
+
+		}
+
+		public function getInvoicePendingValidation($id_cli, $id_mod_lic){
+			include("connexion.php");
+			$entree['id_cli'] = $id_cli;
+			$entree['id_mod_lic'] = $id_mod_lic;
+			//$entree['type_fact'] = $type_fact;
+			$compteur=0;
+
+			$bg = "";
+			$badge = '';
+			$btn = '';
+			$etat ='';
+			$tableau = '';
+
+			$debut = $compteur;
+
+			$requete = $connexion-> prepare("SELECT fd.ref_fact AS ref_fact,
+													DATE_FORMAT(fd.date_fact, '%d/%m/%Y') AS date_fact,
+													fd.validation AS validation,
+													fd.id_march AS id_march,
+													fd.type_fact AS type_fact,
+													cl.nom_cli AS nom_cli,
+													cl.id_cli AS id_cli,
+													u.nom_util AS nom_util,
+													u.validation_facture AS validation_facture,
+													fd.transmission AS transmission,
+													fd.type_fact AS type_fact,
+													fd.id_mod_lic AS id_mod_lic,
+													mf.edit_page AS edit_pag,
+													mf.view_page AS view_page,
+													mf.excel AS excel
+ 												FROM facture_dossier fd, client cl, utilisateur u, modele_facture mf
+												WHERE fd.id_mod_lic = ?
+													AND fd.id_util = u.id_util
+													AND fd.id_cli = cl.id_cli
+													AND fd.id_mod_fact = mf.id_mod_fact
+													AND fd.validation = '0'
+													AND fd.id_cli = ?
+												ORDER BY fd.date_fact ASC");
+			$requete-> execute(array($entree['id_mod_lic'], $entree['id_cli']));
+			while ($reponse = $requete-> fetch()) {
+				$compteur++;
+
+				$tableau .='<tr style="">
+								<td class="" style="text-align: center;" class="bg bg-dark">
+									'.$compteur.'
+								</td>
+								<td class="" style="text-align: center;" class="bg bg-dark">
+									'.$reponse['ref_fact'].'
+								</td>
+								<td class="" style="text-align: center;" class="bg bg-dark">
+									'.$reponse['date_fact'].'
+								</td>
+								<td class="" style="text-align: center;" class="bg bg-dark">
+									'.$this-> getMarchandiseFacture($reponse['ref_fact'])['nom_march'].'
+								</td>
+								<td class="" style="text-align: right;" class="bg bg-dark">
+									'.number_format($this-> getMontantFactureGlobale($reponse['ref_fact'])+(( ($this-> getMontantFactureDebours($reponse['ref_fact'], 27)*$this-> getFactureGlobale($reponse['ref_fact'])['taux_commission']) - $this-> getMontantFactureDebours($reponse['ref_fact'], 27))), 2, ',', ' ').'
+								</td>
+								<td class="" style="text-align: center;" class="bg bg-dark">
+									'.$reponse['nom_util'].'
+								</td>
+								<td style="text-align: center;">
+									<button class="btn btn-xs bg-info square-btn-adjust" onclick="window.open(\''.$reponse['view_page'].'?ref_fact='.$reponse['ref_fact'].'\',\'pop1\',\'width=1000,height=800\');" title="View invoice">
+					                    <i class="fas fa-eye"></i> 
+					                </button>
+									<button class="btn btn-xs bg-success square-btn-adjust" onclick="window.location.replace(\''.$reponse['excel'].'?ref_fact='.$reponse['ref_fact'].'\',\'pop1\',\'width=1000,height=800\');" title="Export Excel File">
+					                    <i class="fas fa-file-excel"></i> 
+					                </button>
+									<button class="btn btn-xs bg-primary square-btn-adjust" onclick="validerFacture(\''.$reponse['ref_fact'].'\');" title="Validate">
+					                    <i class="fas fa-check"></i> 
+					                </button>
+									<button class="btn btn-xs bg-danger square-btn-adjust" onclick="supprimerFacture(\''.$reponse['ref_fact'].'\');" title="Delete">
+					                    <i class="fas fa-times"></i> 
+					                </button>
+								</td>
+							</tr>';
+			}$requete-> closeCursor();
+			return $tableau;
+
+		}
+
+		public function getInvoiceSearched($id_cli, $id_mod_lic, $ref_fact){
+			include("connexion.php");
+			$entree['id_cli'] = $id_cli;
+			$entree['id_mod_lic'] = $id_mod_lic;
+			if (!empty($ref_fact) && ($ref_fact=='') ) {
+				$entree['ref_fact'] = '%'.$ref_fact.'%';
+			}else{
+				$entree['ref_fact'] = $ref_fact;
+			}
+			
+			//$entree['type_fact'] = $type_fact;
+			$compteur=0;
+
+			$bg = "";
+			$badge = '';
+			$btn = '';
+			$etat ='';
+			$tableau = '';
+
+			$debut = $compteur;
+
+			$requete = $connexion-> prepare("SELECT fd.ref_fact AS ref_fact,
+													DATE_FORMAT(fd.date_fact, '%d/%m/%Y') AS date_fact,
+													fd.validation AS validation,
+													fd.id_march AS id_march,
+													fd.type_fact AS type_fact,
+													cl.nom_cli AS nom_cli,
+													cl.id_cli AS id_cli,
+													u.nom_util AS nom_util,
+													u.validation_facture AS validation_facture,
+													fd.transmission AS transmission,
+													fd.type_fact AS type_fact,
+													fd.id_mod_lic AS id_mod_lic,
+													mf.edit_page AS edit_pag,
+													mf.view_page AS view_page,
+													mf.excel AS excel,
+													IF(fd.validation='0',
+														'PENDING VALIDATION',
+														IF(fd.date_mail IS NULL,
+															'AWAITING TO SEND',
+															'SENDED'
+															)
+														) AS statut
+ 												FROM facture_dossier fd, detail_facture_dossier det, dossier dos, client cl, utilisateur u, modele_facture mf
+												WHERE fd.id_mod_lic = ?
+													AND fd.id_util = u.id_util
+													AND fd.id_cli = cl.id_cli
+													AND fd.id_mod_fact = mf.id_mod_fact
+													AND fd.id_cli = ?
+													AND fd.ref_fact = det.ref_fact
+													AND det.id_dos = dos.id_dos
+													AND (
+															fd.ref_fact LIKE ?
+															OR dos.num_lot = ?
+															OR dos.ref_dos = ?
+														)
+												GROUP BY fd.ref_fact
+												ORDER BY fd.date_fact ASC");
+			$requete-> execute(array($entree['id_mod_lic'], $entree['id_cli'], $entree['ref_fact'], $entree['ref_fact'], $entree['ref_fact']));
+			while ($reponse = $requete-> fetch()) {
+				$compteur++;
+
+				$tableau .='<tr style="">
+								<td class="" style="text-align: center;" class="bg bg-dark">
+									'.$compteur.'
+								</td>
+								<td class="" style="text-align: center;" class="bg bg-dark">
+									'.$reponse['ref_fact'].'
+								</td>
+								<td class="" style="text-align: center;" class="bg bg-dark">
+									'.$reponse['date_fact'].'
+								</td>
+								<td class="" style="text-align: center;" class="bg bg-dark">
+									'.$this-> getMarchandiseFacture($reponse['ref_fact'])['nom_march'].'
+								</td>
+								<td class="" style="text-align: right;" class="bg bg-dark">
+									'.number_format($this-> getMontantFactureGlobale($reponse['ref_fact'])+(( ($this-> getMontantFactureDebours($reponse['ref_fact'], 27)*$this-> getFactureGlobale($reponse['ref_fact'])['taux_commission']) - $this-> getMontantFactureDebours($reponse['ref_fact'], 27))), 2, ',', ' ').'
+								</td>
+								<td class="" style="text-align: center;" class="bg bg-dark">
+									'.$reponse['nom_util'].'
+								</td>
+								<td class="" style="text-align: center;" class="bg bg-dark">
+									'.$reponse['statut'].'
+								</td>
+								<td style="text-align: center;">
+									<button class="btn btn-xs bg-info square-btn-adjust" onclick="window.open(\''.$reponse['view_page'].'?ref_fact='.$reponse['ref_fact'].'\',\'pop1\',\'width=1000,height=800\');" title="View invoice">
+					                    <i class="fas fa-eye"></i> 
+					                </button>
+									<button class="btn btn-xs bg-success square-btn-adjust" onclick="window.location.replace(\''.$reponse['excel'].'?ref_fact='.$reponse['ref_fact'].'\',\'pop1\',\'width=1000,height=800\');" title="Export Excel File">
+					                    <i class="fas fa-file-excel"></i> 
+					                </button>
+								</td>
+							</tr>';
+			}$requete-> closeCursor();
+			return $tableau;
+
+		}
+
+		public function getNbreInvoiceSearched($id_cli, $id_mod_lic, $ref_fact){
+			include("connexion.php");
+			$entree['id_cli'] = $id_cli;
+			$entree['id_mod_lic'] = $id_mod_lic;
+			if (!empty($ref_fact) && ($ref_fact=='') ) {
+				$entree['ref_fact'] = '%'.$ref_fact.'%';
+			}else{
+				$entree['ref_fact'] = $ref_fact;
+			}
+			
+			//$entree['type_fact'] = $type_fact;
+			$compteur=0;
+
+			$bg = "";
+			$badge = '';
+			$btn = '';
+			$etat ='';
+			$tableau = '';
+
+			$debut = $compteur;
+
+			$requete = $connexion-> prepare("SELECT COUNT(DISTINCT(fd.ref_fact)) AS nbre
+ 												FROM facture_dossier fd, detail_facture_dossier det, dossier dos, client cl, utilisateur u, modele_facture mf
+												WHERE fd.id_mod_lic = ?
+													AND fd.id_util = u.id_util
+													AND fd.id_cli = cl.id_cli
+													AND fd.id_mod_fact = mf.id_mod_fact
+													AND fd.id_cli = ?
+													AND fd.ref_fact = det.ref_fact
+													AND det.id_dos = dos.id_dos
+													AND (
+															fd.ref_fact LIKE ?
+															OR dos.num_lot = ?
+															OR dos.ref_dos = ?
+														)
+												GROUP BY fd.ref_fact
+												ORDER BY fd.date_fact ASC");
+			$requete-> execute(array($entree['id_mod_lic'], $entree['id_cli'], $entree['ref_fact'], $entree['ref_fact'], $entree['ref_fact']));
+			$reponse = $requete-> fetch();
+			if ($reponse) {
+				return $reponse['nbre'];
+			}else{
+				return 0;
+			}
+			
+
+		}
+
+		public function getInvoiceAwaitingToSend($id_cli, $id_mod_lic){
+			include("connexion.php");
+			$entree['id_cli'] = $id_cli;
+			$entree['id_mod_lic'] = $id_mod_lic;
+			//$entree['type_fact'] = $type_fact;
+			$compteur=0;
+
+			$bg = "";
+			$badge = '';
+			$btn = '';
+			$etat ='';
+			$tableau = '';
+
+			$debut = $compteur;
+
+			$requete = $connexion-> prepare("SELECT fd.ref_fact AS ref_fact,
+													DATE_FORMAT(fd.date_fact, '%d/%m/%Y') AS date_fact,
+													fd.validation AS validation,
+													fd.id_march AS id_march,
+													fd.type_fact AS type_fact,
+													cl.nom_cli AS nom_cli,
+													cl.id_cli AS id_cli,
+													u.nom_util AS nom_util,
+													u.validation_facture AS validation_facture,
+													fd.transmission AS transmission,
+													fd.type_fact AS type_fact,
+													fd.id_mod_lic AS id_mod_lic,
+													mf.edit_page AS edit_pag,
+													mf.view_page AS view_page,
+													mf.excel AS excel
+ 												FROM facture_dossier fd, client cl, utilisateur u, modele_facture mf
+												WHERE fd.id_mod_lic = ?
+													AND fd.id_util = u.id_util
+													AND fd.id_cli = cl.id_cli
+													AND fd.id_mod_fact = mf.id_mod_fact
+													AND fd.validation = '1'
+													AND fd.date_mail IS NULL
+													AND fd.id_cli = ?
+												ORDER BY fd.date_fact ASC");
+			$requete-> execute(array($entree['id_mod_lic'], $entree['id_cli']));
+			while ($reponse = $requete-> fetch()) {
+				$compteur++;
+
+				$tableau .='<tr style="">
+								<td class="" style="text-align: center;" class="bg bg-dark">
+									'.$compteur.'
+								</td>
+								<td class="" style="text-align: center;" class="bg bg-dark">
+									'.$reponse['ref_fact'].'
+								</td>
+								<td class="" style="text-align: center;" class="bg bg-dark">
+									'.$reponse['date_fact'].'
+								</td>
+								<td class="" style="text-align: center;" class="bg bg-dark">
+									'.$this-> getMarchandiseFacture($reponse['ref_fact'])['nom_march'].'
+								</td>
+								<td class="" style="text-align: right;" class="bg bg-dark">
+									'.number_format($this-> getMontantFactureGlobale($reponse['ref_fact'])+(( ($this-> getMontantFactureDebours($reponse['ref_fact'], 27)*$this-> getFactureGlobale($reponse['ref_fact'])['taux_commission']) - $this-> getMontantFactureDebours($reponse['ref_fact'], 27))), 2, ',', ' ').'
+								</td>
+								<td class="" style="text-align: center;" class="bg bg-dark">
+									'.$reponse['nom_util'].'
+								</td>
+								<td style="text-align: center;">
+									<button class="btn btn-xs bg-info square-btn-adjust" onclick="window.open(\''.$reponse['view_page'].'?ref_fact='.$reponse['ref_fact'].'\',\'pop1\',\'width=1000,height=800\');" title="View invoice">
+					                    <i class="fas fa-eye"></i> 
+					                </button>
+									<button class="btn btn-xs bg-success square-btn-adjust" onclick="window.location.replace(\''.$reponse['excel'].'?ref_fact='.$reponse['ref_fact'].'\',\'pop1\',\'width=1000,height=800\');" title="Export Excel File">
+					                    <i class="fas fa-file-excel"></i> 
+					                </button>
+									<button class="btn btn-xs bg-purple square-btn-adjust" onclick="modal_send_invoice(\''.$reponse['ref_fact'].'\');" title="Send Email">
+					                    <i class="fas fa-envelope"></i> 
+					                </button>
+								</td>
+							</tr>';
+			}$requete-> closeCursor();
+			return $tableau;
+
+		}
+
+		public function getInvoiceSended($id_cli, $id_mod_lic){
+			include("connexion.php");
+			$entree['id_cli'] = $id_cli;
+			$entree['id_mod_lic'] = $id_mod_lic;
+			//$entree['type_fact'] = $type_fact;
+			$compteur=0;
+
+			$bg = "";
+			$badge = '';
+			$btn = '';
+			$etat ='';
+			$tableau = '';
+
+			$debut = $compteur;
+
+			$requete = $connexion-> prepare("SELECT fd.ref_fact AS ref_fact,
+													DATE_FORMAT(fd.date_fact, '%d/%m/%Y') AS date_fact,
+													DATE_FORMAT(fd.date_mail, '%d/%m/%Y') AS date_mail,
+													fd.validation AS validation,
+													fd.id_march AS id_march,
+													fd.type_fact AS type_fact,
+													cl.nom_cli AS nom_cli,
+													cl.id_cli AS id_cli,
+													u.nom_util AS nom_util,
+													u.validation_facture AS validation_facture,
+													fd.transmission AS transmission,
+													fd.type_fact AS type_fact,
+													fd.id_mod_lic AS id_mod_lic,
+													mf.edit_page AS edit_pag,
+													mf.view_page AS view_page,
+													mf.excel AS excel
+ 												FROM facture_dossier fd, client cl, utilisateur u, modele_facture mf
+												WHERE fd.id_mod_lic = ?
+													AND fd.id_util = u.id_util
+													AND fd.id_cli = cl.id_cli
+													AND fd.id_mod_fact = mf.id_mod_fact
+													AND fd.validation = '1'
+													AND fd.date_mail IS NOT NULL
+													AND fd.id_cli = ?
+												ORDER BY fd.date_fact ASC");
+			$requete-> execute(array($entree['id_mod_lic'], $entree['id_cli']));
+			while ($reponse = $requete-> fetch()) {
+				$compteur++;
+
+				$tableau .='<tr style="">
+								<td class="" style="text-align: center;" class="bg bg-dark">
+									'.$compteur.'
+								</td>
+								<td class="" style="text-align: center;" class="bg bg-dark">
+									'.$reponse['ref_fact'].'
+								</td>
+								<td class="" style="text-align: center;" class="bg bg-dark">
+									'.$reponse['date_fact'].'
+								</td>
+								<td class="" style="text-align: center;" class="bg bg-dark">
+									'.$this-> getMarchandiseFacture($reponse['ref_fact'])['nom_march'].'
+								</td>
+								<td class="" style="text-align: right;" class="bg bg-dark">
+									'.number_format($this-> getMontantFactureGlobale($reponse['ref_fact'])+(( ($this-> getMontantFactureDebours($reponse['ref_fact'], 27)*$this-> getFactureGlobale($reponse['ref_fact'])['taux_commission']) - $this-> getMontantFactureDebours($reponse['ref_fact'], 27))), 2, ',', ' ').'
+								</td>
+								<td class="" style="text-align: center;" class="bg bg-dark">
+									'.$reponse['nom_util'].'
+								</td>
+								<td class="" style="text-align: center;" class="bg bg-dark">
+									'.$reponse['date_mail'].'
+								</td>
+								<td style="text-align: center;">
+									<button class="btn btn-xs bg-info square-btn-adjust" onclick="window.open(\''.$reponse['view_page'].'?ref_fact='.$reponse['ref_fact'].'\',\'pop1\',\'width=1000,height=800\');" title="View invoice">
+					                    <i class="fas fa-eye"></i> 
+					                </button>
+									<button class="btn btn-xs bg-success square-btn-adjust" onclick="window.location.replace(\''.$reponse['excel'].'?ref_fact='.$reponse['ref_fact'].'\',\'pop1\',\'width=1000,height=800\');" title="Export Excel File">
+					                    <i class="fas fa-file-excel"></i> 
+					                </button>
+									<button class="btn btn-xs bg-purple square-btn-adjust" onclick="modal_send_invoice(\''.$reponse['ref_fact'].'\');" title="Send Email">
+					                    <i class="fas fa-envelope"></i> 
+					                </button>
+								</td>
+							</tr>';
+			}$requete-> closeCursor();
+			return $tableau;
 
 		}
 
@@ -5748,6 +6397,70 @@
 			return $reponse['montant'];
 		}
 
+		public function getMontantDeboursClientModeleLicenceMarchandiseModeTransport($id_deb, $id_mod_lic, $id_cli, $id_march, $id_mod_trans, $id_dos=NULL){
+			include('connexion.php');
+			$entree['id_deb'] = $id_deb;
+			$entree['id_mod_lic'] = $id_mod_lic;
+			$entree['id_cli'] = $id_cli;
+			$entree['id_march'] = $id_march;
+			$entree['id_mod_trans'] = $id_mod_trans;
+			$tbl = '';
+
+			$sommeTVA = 0;
+			$sommeHT = 0;
+			$sommeTTC = 0;
+
+			if ($id_deb == 7) {
+				$reponse['montant'] = $this-> getDossier($id_dos)['poids']*50;
+				$reponse['tva'] = '0';
+				return $reponse;
+			}else if ($id_deb == 5) {
+				$reponse['montant'] = $this-> getDossier($id_dos)['poids']*3;
+				$reponse['tva'] = '0';
+				return $reponse;
+			}else if ($id_deb == 6) {
+				$reponse['montant'] = $this-> getDossier($id_dos)['poids']*5;
+				$reponse['tva'] = '0';
+				return $reponse;
+			}else if ($id_deb == 11) {
+				if ($this-> getDossier($id_dos)['poids']<30) {
+					$reponse['montant'] = 125;
+				}else{
+					$reponse['montant'] = 0;
+				}
+				$reponse['tva'] = '0';
+				return $reponse;
+			}else if ($id_deb == 12) {
+				if ($this-> getDossier($id_dos)['poids']>=30) {
+					$reponse['montant'] = 250;
+				}else{
+					$reponse['montant'] = 0;
+				}
+				$reponse['tva'] = '0';
+				return $reponse;
+			}else{
+				$requete = $connexion-> prepare("SELECT *
+													FROM affectation_debours_client_modele_licence
+													WHERE id_deb = ?
+														AND id_mod_lic = ?
+														AND id_cli = ?
+														AND id_march = ?
+														AND id_mod_trans = ?");
+				$requete-> execute(array($entree['id_deb'], $entree['id_mod_lic'], $entree['id_cli'], $entree['id_march'], $entree['id_mod_trans']));
+				$reponse = $requete-> fetch();
+				
+				if ($reponse) {
+					return $reponse;
+				}else{
+					$reponse['montant'] = NULL;
+					$reponse['tva'] = '0';
+					$reponse['id_deb'] = '0';
+					return $reponse;
+				}
+			}
+
+		}
+
 		public function getDataAffectationDeboursClientModeleLicence($id_deb, $id_cli, $id_mod_lic, $id_march, $id_mod_trans){
 			include('connexion.php');
 			$entree['id_deb'] = $id_deb;
@@ -5903,7 +6616,12 @@
 												FROM dossier
 												WHERE id_mod_lic = ?
 													AND id_cli = ?
-													AND cleared = '1'
+													AND ref_decl IS NOT NULL
+													AND date_decl IS NOT NULL
+													AND ref_liq IS NOT NULL
+													AND date_liq IS NOT NULL
+													AND ref_quit IS NOT NULL
+													AND date_quit IS NOT NULL
 													AND not_fact = '0'
 													AND id_dos NOT IN (SELECT id_dos FROM detail_facture_dossier)");
 			$requete-> execute(array($entree['id_mod_lic'], $entree['id_cli']));
@@ -5922,6 +6640,8 @@
 			$entree['id_mod_trans'] = $id_mod_trans;
 
 			if($id_mod_lic==1){
+				$sqlIdMarch = ' AND id_march = '.$id_march;
+			}else if($id_march==16 || $id_march=6){
 				$sqlIdMarch = ' AND id_march = '.$id_march;
 			}else{
 				$sqlIdMarch = '';
@@ -6304,6 +7024,140 @@
 													AND det.id_deb = ?
 												GROUP BY d.id_deb');
 			$requete-> execute(array($entree['ref_fact'], $entree['id_deb']));
+			while($reponse = $requete-> fetch()){
+
+				$sommeHT += $reponse['ht_usd'];
+
+				if($reponse['tva'] == '0'){
+					$sommeTVA += 0;
+					$sommeTTC += $reponse['ht_usd'];
+				}else{
+					$tva = round(($reponse['ht_usd'] * 0.16), 2);
+					$sommeTVA += $tva;
+					$ttc = $reponse['ht_usd'] + round(($reponse['ht_usd'] * 0.16), 2);
+					$sommeTTC += $ttc;
+				}
+
+				// $sommeHT += $reponse['ht'];
+
+				// if($reponse['tva'] == '0'){
+				// 	$sommeTVA += 0;
+				// 	$sommeTTC += $reponse['ht'];
+				// }else{
+				// 	$tva = round(($reponse['ht'] * 0.16), 2);
+				// 	$sommeTVA += $tva;
+				// 	$ttc = $reponse['ht'] + round(($reponse['ht'] * 0.16), 2);
+				// 	$sommeTTC += $ttc;
+				// }
+
+			}
+
+			return $sommeTTC;
+		}
+
+		public function getMontantFactureTypeDeboursDossier($ref_fact, $id_t_deb, $id_dos){
+			include('connexion.php');
+			$entree['ref_fact'] = $ref_fact;
+			$entree['id_t_deb'] = $id_t_deb;
+			$entree['id_dos'] = $id_dos;
+
+
+			$sommeTVA = 0;
+			$sommeHT = 0;
+			$sommeTTC = 0;
+
+
+			$requete = $connexion-> prepare('SELECT d.nom_deb AS nom_deb,
+													det.tva AS tva,
+													d.abr_deb AS abr_deb,
+													SUM(det.montant) AS ht,
+													SUM( 
+														IF(det.usd="1", 
+															0,
+															det.montant
+														) 
+													) AS ht_cdf,
+													SUM( 
+														IF(det.usd="1", 
+															det.montant,
+															(det.montant/dos.roe_decl)
+														) 
+													) AS ht_usd
+												FROM debours d, detail_facture_dossier det, dossier dos, type_debours t
+												WHERE det.ref_fact = ?
+													AND det.id_deb = d.id_deb
+													AND t.id_t_deb = d.id_t_deb
+													AND t.id_t_deb = ?
+													AND det.id_dos = dos.id_dos
+													AND det.id_dos = ?
+												GROUP BY d.id_deb');
+			$requete-> execute(array($entree['ref_fact'], $entree['id_t_deb'], $entree['id_dos']));
+			while($reponse = $requete-> fetch()){
+
+				$sommeHT += $reponse['ht_usd'];
+
+				if($reponse['tva'] == '0'){
+					$sommeTVA += 0;
+					$sommeTTC += $reponse['ht_usd'];
+				}else{
+					$tva = round(($reponse['ht_usd'] * 0.16), 2);
+					$sommeTVA += $tva;
+					$ttc = $reponse['ht_usd'] + round(($reponse['ht_usd'] * 0.16), 2);
+					$sommeTTC += $ttc;
+				}
+
+				// $sommeHT += $reponse['ht'];
+
+				// if($reponse['tva'] == '0'){
+				// 	$sommeTVA += 0;
+				// 	$sommeTTC += $reponse['ht'];
+				// }else{
+				// 	$tva = round(($reponse['ht'] * 0.16), 2);
+				// 	$sommeTVA += $tva;
+				// 	$ttc = $reponse['ht'] + round(($reponse['ht'] * 0.16), 2);
+				// 	$sommeTTC += $ttc;
+				// }
+
+			}
+
+			return $sommeTTC;
+		}
+
+		public function getMontantFactureTypeDebours($ref_fact, $id_t_deb){
+			include('connexion.php');
+			$entree['ref_fact'] = $ref_fact;
+			$entree['id_t_deb'] = $id_t_deb;
+
+
+			$sommeTVA = 0;
+			$sommeHT = 0;
+			$sommeTTC = 0;
+
+
+			$requete = $connexion-> prepare('SELECT d.nom_deb AS nom_deb,
+													det.tva AS tva,
+													d.abr_deb AS abr_deb,
+													SUM(det.montant) AS ht,
+													SUM( 
+														IF(det.usd="1", 
+															0,
+															det.montant
+														) 
+													) AS ht_cdf,
+													SUM( 
+														IF(det.usd="1", 
+															det.montant,
+															(det.montant/dos.roe_decl)
+														) 
+													) AS ht_usd
+												FROM debours d, detail_facture_dossier det, dossier dos, type_debours t
+												WHERE det.ref_fact = ?
+													AND det.id_dos = dos.id_dos
+													AND det.id_deb = d.id_deb
+													AND t.id_t_deb = d.id_t_deb
+													AND t.id_t_deb = ?
+												GROUP BY d.id_deb');
+			$requete-> execute(array($entree['ref_fact'], $entree['id_t_deb']));
 			while($reponse = $requete-> fetch()){
 
 				$sommeHT += $reponse['ht_usd'];
@@ -7198,27 +8052,38 @@
 
 			$debut = $compteur;
 
-			$requete = $connexion-> prepare("SELECT ref_dos AS ref_dos,
-													id_dos,
-													commodity AS commodity,
-													ref_decl AS ref_decl,
-													DATE_FORMAT(date_decl, '%d/%m/%Y') AS date_decl,
-													ref_liq AS ref_liq,
-													DATE_FORMAT(date_liq, '%d/%m/%Y') AS date_liq,
-													ref_quit AS ref_quit,
-													DATE_FORMAT(date_quit, '%d/%m/%Y') AS date_quit,
-													fob, fret, assurance, autre_frais, (fob+fret+assurance+autre_frais) AS cif,
-													supplier, ref_fact, po_ref, poids
+			$requete = $connexion-> prepare("SELECT dossier.ref_dos AS ref_dos,
+													dossier.id_dos,
+													IF(marchandise.nom_march IS NOT NULL,
+														marchandise.nom_march,
+														dossier.commodity
+														)
+													 AS commodity,
+													dossier.ref_decl AS ref_decl,
+													DATE_FORMAT(dossier.date_decl, '%d/%m/%Y') AS date_decl,
+													dossier.ref_liq AS ref_liq,
+													DATE_FORMAT(dossier.date_liq, '%d/%m/%Y') AS date_liq,
+													dossier.ref_quit AS ref_quit,
+													DATE_FORMAT(dossier.date_quit, '%d/%m/%Y') AS date_quit,
+													dossier.fob AS fob, 
+													dossier.poids AS poids
 												FROM dossier
-												WHERE id_mod_lic = ?
-													AND id_cli = ?
-													AND cleared = '1'
-													AND id_dos NOT IN (SELECT id_dos FROM detail_facture_dossier)
-													AND not_fact = '0'");
+												LEFT JOIN marchandise
+													ON marchandise.id_march = dossier.id_march
+												WHERE dossier.id_mod_lic = ?
+													AND dossier.id_cli = ?
+													AND dossier.ref_decl IS NOT NULL
+													AND dossier.date_decl IS NOT NULL
+													AND dossier.ref_liq IS NOT NULL
+													AND dossier.date_liq IS NOT NULL
+													AND dossier.ref_quit IS NOT NULL
+													AND dossier.date_quit IS NOT NULL
+													AND dossier.id_dos NOT IN (SELECT id_dos FROM detail_facture_dossier)
+													AND dossier.not_fact = '0'");
 			$requete-> execute(array($entree['id_mod_lic'], $entree['id_cli']));
 			while ($reponse = $requete-> fetch()) {
 				$compteur++;
-				include("modalFactureDossier.php");
+				// include("modalFactureDossier.php");
 				
 			?>
 			<tr style="<?php echo $bg;?>">
@@ -7230,9 +8095,9 @@
 					<?php echo $reponse['ref_dos'];?>
 					&nbsp;&nbsp;
 					
-					<button data-toggle="modal" data-target=".facture_<?php echo $reponse['id_dos'];?>" class="btn-xs btn btn-secondary">
+					<!-- <button data-toggle="modal" data-target=".facture_<?php echo $reponse['id_dos'];?>" class="btn-xs btn btn-secondary">
 						<i class="fa fa-calculator"></i>
-					</button>
+					</button> -->
 
 				</td>
 				<td class="" style="text-align: center;" class="bg bg-dark">
@@ -7258,27 +8123,6 @@
 				</td>
 				<td class="" style="text-align: right;" class="bg bg-dark">
 					<?php echo number_format($reponse['fob'], 2, ',', ' ');?>
-				</td>
-				<td class="" style="text-align: right;" class="bg bg-dark">
-					<?php echo number_format($reponse['fret'], 2, ',', ' ');?>
-				</td>
-				<td class="" style="text-align: right;" class="bg bg-dark">
-					<?php echo number_format($reponse['assurance'], 2, ',', ' ');?>
-				</td>
-				<td class="" style="text-align: right;" class="bg bg-dark">
-					<?php echo number_format($reponse['autre_frais'], 2, ',', ' ');?>
-				</td>
-				<td class="" style="text-align: right;" class="bg bg-dark">
-					<?php echo number_format($reponse['cif'], 2, ',', ' ');?>
-				</td>
-				<td class="" style="text-align: center;" class="bg bg-dark">
-					<?php echo $reponse['supplier'];?>
-				</td>
-				<td class="" style="text-align: center;" class="bg bg-dark">
-					<?php echo $reponse['ref_fact'];?>
-				</td>
-				<td class="" style="text-align: center;" class="bg bg-dark">
-					<?php echo $reponse['po_ref'];?>
 				</td>
 				<td class="" style="text-align: right;" class="bg bg-dark">
 					<?php echo number_format($reponse['poids'], 2, ',', ' ');?>
@@ -7349,18 +8193,141 @@
 				<td style="text-align: right;">
 					<?php echo number_format($reponse['poids'], 3, ',', '.');?>
 				</td>
-				<td>
-					<input type="number" min="0" style="text-align: center; width: 8em;" onblur="calculDDE(<?php echo $compteur;?>);" id="id_deb_2_<?php echo $compteur;?>" name="id_deb_2_<?php echo $compteur;?>" class="bg bg-dark">
+				<td style="text-align: center;">
+					<input type="checkbox" id="check_<?php echo $compteur;?>" name="check_<?php echo $compteur;?>" class="bg bg-dark">
 				</td>
 				<td>
 					<input type="number" min="0" step="0.000001" style="text-align: center; width: 8em;" onblur="calculDDE(<?php echo $compteur;?>);" id="roe_decl_<?php echo $compteur;?>" name="roe_decl_<?php echo $compteur;?>" value="<?php echo $reponse['roe_decl'];?>" class="bg bg-dark">
 				</td>
+				<td>
+					<input type="number" min="0" style="text-align: center; width: 8em;" onblur="calculDDE(<?php echo $compteur;?>);" id="dde_<?php echo $compteur;?>" name="dde_<?php echo $compteur;?>" class="bg bg-dark">
+					<input type="hidden" style="text-align: center; width: 8em;" name="dde_tva_<?php echo $compteur;?>" id="tva_<?php echo $compteur;?>" value="0" class="bg bg-dark">
+				</td>
 				<td style="text-align: center; font-weight: bold; font-size: 20px;">
 					<span id="dde_usd_<?php echo $compteur;?>"></span>
+				</td>
+				<td style="text-align: center;">
+					<input type="number" step="0.001" min="0" style="text-align: center; width: 8em;" id="rie_<?php echo $compteur;?>" name="rie_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport(1, $id_mod_lic, $id_cli, $id_march, $id_mod_trans)['montant'];?>" class="bg bg-dark">
+					<input type="hidden" style="text-align: center; width: 8em;" name="rie_tva_<?php echo $compteur;?>" id="tva_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport(1, $id_mod_lic, $id_cli, $id_march, $id_mod_trans)['tva'];?>" class="bg bg-dark">
+				</td>
+				<td style="text-align: center;">
+					<input type="number" step="0.001" min="0" style="text-align: center; width: 8em;" id="rls_<?php echo $compteur;?>" name="rls_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport(3, $id_mod_lic, $id_cli, $id_march, $id_mod_trans)['montant'];?>" class="bg bg-dark">
+					<input type="hidden" style="text-align: center; width: 8em;" name="rls_tva_<?php echo $compteur;?>" id="tva_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport(3, $id_mod_lic, $id_cli, $id_march, $id_mod_trans)['tva'];?>" class="bg bg-dark">
+				</td>
+				<td style="text-align: center;">
+					<input type="number" step="0.001" min="0" style="text-align: center; width: 8em;" id="cso_<?php echo $compteur;?>" name="cso_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport(37, $id_mod_lic, $id_cli, $id_march, $id_mod_trans)['montant'];?>" class="bg bg-dark">
+					<input type="hidden" style="text-align: center; width: 8em;" name="cso_tva_<?php echo $compteur;?>" id="tva_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport(37, $id_mod_lic, $id_cli, $id_march, $id_mod_trans)['tva'];?>" class="bg bg-dark">
+				</td>
+				<td style="text-align: center;">
+					<input type="number" step="0.001" min="0" style="text-align: center; width: 8em;" id="fsr_<?php echo $compteur;?>" name="fsr_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport(4, $id_mod_lic, $id_cli, $id_march, $id_mod_trans)['montant'];?>" class="bg bg-dark">
+					<input type="hidden" style="text-align: center; width: 8em;" name="fsr_tva_<?php echo $compteur;?>" id="tva_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport(4, $id_mod_lic, $id_cli, $id_march, $id_mod_trans)['tva'];?>" class="bg bg-dark">
+				</td>
+				<td style="text-align: center;">
+					<input type="number" step="0.001" min="0" style="text-align: center; width: 8em;" id="gov_tax_<?php echo $compteur;?>" name="gov_tax_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport(7, $id_mod_lic, $id_cli, $id_march, $id_mod_trans, $reponse['id_dos'])['montant'];?>" class="bg bg-dark">
+					<input type="hidden" style="text-align: center; width: 8em;" name="gov_tax_tva_<?php echo $compteur;?>" id="tva_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport(7, $id_mod_lic, $id_cli, $id_march, $id_mod_trans, $reponse['id_dos'])['tva'];?>" class="bg bg-dark">
+				</td>
+				<td style="text-align: center;">
+					<input type="number" step="0.001" min="0" style="text-align: center; width: 8em;" id="fere_<?php echo $compteur;?>" name="fere_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport(5, $id_mod_lic, $id_cli, $id_march, $id_mod_trans, $reponse['id_dos'])['montant'];?>" class="bg bg-dark">
+					<input type="hidden" style="text-align: center; width: 8em;" name="fere_tva_<?php echo $compteur;?>" id="tva_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport(5, $id_mod_lic, $id_cli, $id_march, $id_mod_trans, $reponse['id_dos'])['tva'];?>" class="bg bg-dark">
+				</td>
+				<td style="text-align: center;">
+					<input type="number" step="0.001" min="0" style="text-align: center; width: 8em;" id="lmc_<?php echo $compteur;?>" name="lmc_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport(6, $id_mod_lic, $id_cli, $id_march, $id_mod_trans, $reponse['id_dos'])['montant'];?>" class="bg bg-dark">
+					<input type="hidden" style="text-align: center; width: 8em;" name="lmc_tva_<?php echo $compteur;?>" id="tva_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport(6, $id_mod_lic, $id_cli, $id_march, $id_mod_trans, $reponse['id_dos'])['tva'];?>" class="bg bg-dark">
+				</td>
+				<td style="text-align: center;">
+					<input type="number" step="0.001" min="0" style="text-align: center; width: 8em;" id="occ_samp_<?php echo $compteur;?>" name="occ_samp_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport(9, $id_mod_lic, $id_cli, $id_march, $id_mod_trans)['montant'];?>" class="bg bg-dark">
+					<input type="hidden" style="text-align: center; width: 8em;" name="occ_samp_tva_<?php echo $compteur;?>" id="tva_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport(9, $id_mod_lic, $id_cli, $id_march, $id_mod_trans)['tva'];?>" class="bg bg-dark">
+				</td>
+				<td style="text-align: center;">
+					<input type="number" step="0.001" min="0" style="text-align: center; width: 8em;" id="occ_cgea_<?php echo $compteur;?>" name="occ_cgea_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport(10, $id_mod_lic, $id_cli, $id_march, $id_mod_trans)['montant'];?>" class="bg bg-dark">
+					<input type="hidden" style="text-align: center; width: 8em;" name="occ_cgea_tva_<?php echo $compteur;?>" id="tva_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport(10, $id_mod_lic, $id_cli, $id_march, $id_mod_trans)['tva'];?>" class="bg bg-dark">
+				</td>
+				<td style="text-align: center;">
+					<input type="number" step="0.001" min="0" style="text-align: center; width: 8em;" id="ceec_30_<?php echo $compteur;?>" name="ceec_30_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport(11, $id_mod_lic, $id_cli, $id_march, $id_mod_trans, $reponse['id_dos'])['montant'];?>" class="bg bg-dark">
+					<input type="hidden" style="text-align: center; width: 8em;" name="ceec_30_tva_<?php echo $compteur;?>" id="tva_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport(11, $id_mod_lic, $id_cli, $id_march, $id_mod_trans, $reponse['id_dos'])['tva'];?>" class="bg bg-dark">
+				</td>
+				<td style="text-align: center;">
+					<input type="number" step="0.001" min="0" style="text-align: center; width: 8em;" id="ceec_60_<?php echo $compteur;?>" name="ceec_60_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport(12, $id_mod_lic, $id_cli, $id_march, $id_mod_trans, $reponse['id_dos'])['montant'];?>" class="bg bg-dark">
+					<input type="hidden" style="text-align: center; width: 8em;" name="ceec_60_tva_<?php echo $compteur;?>" id="tva_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport(12, $id_mod_lic, $id_cli, $id_march, $id_mod_trans, $reponse['id_dos'])['tva'];?>" class="bg bg-dark">
+				</td>
+				<td style="text-align: center;">
+					<input type="number" step="0.001" min="0" style="text-align: center; width: 8em;" id="dgda_seal_<?php echo $compteur;?>" name="dgda_seal_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport(13, $id_mod_lic, $id_cli, $id_march, $id_mod_trans)['montant'];?>" class="bg bg-dark">
+					<input type="hidden" style="text-align: center; width: 8em;" name="dgda_seal_tva_<?php echo $compteur;?>" id="tva_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport(13, $id_mod_lic, $id_cli, $id_march, $id_mod_trans)['tva'];?>" class="bg bg-dark">
+				</td>
+				<td style="text-align: center;">
+					<input type="number" step="0.001" min="0" style="text-align: center; width: 8em;" id="assay_<?php echo $compteur;?>" name="assay_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport(15, $id_mod_lic, $id_cli, $id_march, $id_mod_trans)['montant'];?>" class="bg bg-dark">
+					<input type="hidden" style="text-align: center; width: 8em;" name="assay_tva_<?php echo $compteur;?>" id="tva_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport(15, $id_mod_lic, $id_cli, $id_march, $id_mod_trans)['tva'];?>" class="bg bg-dark">
+				</td>
+				<td style="text-align: center;">
+					<input type="number" step="0.001" min="0" style="text-align: center; width: 8em;" id="occ_fees_<?php echo $compteur;?>" name="occ_fees_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport(18, $id_mod_lic, $id_cli, $id_march, $id_mod_trans)['montant'];?>" class="bg bg-dark">
+					<input type="hidden" style="text-align: center; width: 8em;" name="occ_fees_tva_<?php echo $compteur;?>" id="tva_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport(18, $id_mod_lic, $id_cli, $id_march, $id_mod_trans)['tva'];?>" class="bg bg-dark">
+				</td>
+				<td style="text-align: center;">
+					<input type="number" step="0.001" min="0" style="text-align: center; width: 8em;" id="ceec_fees_<?php echo $compteur;?>" name="ceec_fees_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport(53, $id_mod_lic, $id_cli, $id_march, $id_mod_trans)['montant'];?>" class="bg bg-dark">
+					<input type="hidden" style="text-align: center; width: 8em;" name="ceec_fees_tva_<?php echo $compteur;?>" id="tva_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport(53, $id_mod_lic, $id_cli, $id_march, $id_mod_trans)['tva'];?>" class="bg bg-dark">
+				</td>
+				<td style="text-align: center;">
+					<input type="number" step="0.001" min="0" style="text-align: center; width: 8em;" id="com_ext_<?php echo $compteur;?>" name="com_ext_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport(17, $id_mod_lic, $id_cli, $id_march, $id_mod_trans)['montant'];?>" class="bg bg-dark">
+					<input type="hidden" style="text-align: center; width: 8em;" name="com_ext_tva_<?php echo $compteur;?>" id="tva_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport(17, $id_mod_lic, $id_cli, $id_march, $id_mod_trans)['tva'];?>" class="bg bg-dark">
+				</td>
+				<td style="text-align: center;">
+					<input type="number" step="0.001" min="0" style="text-align: center; width: 8em;" id="klsa_border_<?php echo $compteur;?>" name="klsa_border_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport(22, $id_mod_lic, $id_cli, $id_march, $id_mod_trans)['montant'];?>" class="bg bg-dark">
+					<input type="hidden" style="text-align: center; width: 8em;" name="klsa_border_tva_<?php echo $compteur;?>" id="tva_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport(22, $id_mod_lic, $id_cli, $id_march, $id_mod_trans)['tva'];?>" class="bg bg-dark">
+				</td>
+				<td style="text-align: center;">
+					<input type="number" step="0.001" min="0" style="text-align: center; width: 8em;" id="sncc_lshi_<?php echo $compteur;?>" name="sncc_lshi_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport(57, $id_mod_lic, $id_cli, $id_march, $id_mod_trans)['montant'];?>" class="bg bg-dark">
+					<input type="hidden" style="text-align: center; width: 8em;" name="sncc_lshi_tva_<?php echo $compteur;?>" id="tva_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport(57, $id_mod_lic, $id_cli, $id_march, $id_mod_trans)['tva'];?>" class="bg bg-dark">
+				</td>
+				<td style="text-align: center;">
+					<input type="number" step="0.001" min="0" style="text-align: center; width: 8em;" id="sakania_border_<?php echo $compteur;?>" name="sakania_border_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport(56, $id_mod_lic, $id_cli, $id_march, $id_mod_trans)['montant'];?>" class="bg bg-dark">
+					<input type="hidden" style="text-align: center; width: 8em;" name="sakania_border_tva_<?php echo $compteur;?>" id="tva_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport(56, $id_mod_lic, $id_cli, $id_march, $id_mod_trans)['tva'];?>" class="bg bg-dark">
+				</td>
+				<td style="text-align: center;">
+					<input type="number" step="0.001" min="0" style="text-align: center; width: 8em;" id="mine_div_<?php echo $compteur;?>" name="mine_div_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport(16, $id_mod_lic, $id_cli, $id_march, $id_mod_trans)['montant'];?>" class="bg bg-dark">
+					<input type="hidden" style="text-align: center; width: 8em;" name="mine_div_tva_<?php echo $compteur;?>" id="tva_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport(16, $id_mod_lic, $id_cli, $id_march, $id_mod_trans)['tva'];?>" class="bg bg-dark">
+				</td>
+				<td style="text-align: center;">
+					<input type="number" step="0.001" min="0" style="text-align: center; width: 8em;" id="mine_police_<?php echo $compteur;?>" name="mine_police_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport(25, $id_mod_lic, $id_cli, $id_march, $id_mod_trans)['montant'];?>" class="bg bg-dark">
+					<input type="hidden" style="text-align: center; width: 8em;" name="mine_police_tva_<?php echo $compteur;?>" id="tva_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport(25, $id_mod_lic, $id_cli, $id_march, $id_mod_trans)['tva'];?>" class="bg bg-dark">
+				</td>
+				<td style="text-align: center;">
+					<input type="number" step="0.001" min="0" style="text-align: center; width: 8em;" id="anr_<?php echo $compteur;?>" name="anr_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport(26, $id_mod_lic, $id_cli, $id_march, $id_mod_trans)['montant'];?>" class="bg bg-dark">
+					<input type="hidden" style="text-align: center; width: 8em;" name="anr_tva_<?php echo $compteur;?>" id="tva_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport(26, $id_mod_lic, $id_cli, $id_march, $id_mod_trans)['tva'];?>" class="bg bg-dark">
+				</td>
+				<td style="text-align: center;">
+					<input type="number" step="0.001" min="0" style="text-align: center; width: 8em;" id="dgda_ops_<?php echo $compteur;?>" name="dgda_ops_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport(27, $id_mod_lic, $id_cli, $id_march, $id_mod_trans)['montant'];?>" class="bg bg-dark">
+					<input type="hidden" style="text-align: center; width: 8em;" name="dgda_ops_tva_<?php echo $compteur;?>" id="tva_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport(27, $id_mod_lic, $id_cli, $id_march, $id_mod_trans)['tva'];?>" class="bg bg-dark">
+				</td>
+				<td style="text-align: center;">
+					<input type="number" step="0.001" min="0" style="text-align: center; width: 8em;" id="print_<?php echo $compteur;?>" name="print_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport(28, $id_mod_lic, $id_cli, $id_march, $id_mod_trans)['montant'];?>" class="bg bg-dark">
+					<input type="hidden" style="text-align: center; width: 8em;" name="print_tva_<?php echo $compteur;?>" id="tva_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport(28, $id_mod_lic, $id_cli, $id_march, $id_mod_trans)['tva'];?>" class="bg bg-dark">
+				</td>
+				<td style="text-align: center;">
+					<input type="number" step="0.001" min="0" style="text-align: center; width: 8em;" id="bank_<?php echo $compteur;?>" name="bank_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport(29, $id_mod_lic, $id_cli, $id_march, $id_mod_trans)['montant'];?>" class="bg bg-dark">
+					<input type="hidden" style="text-align: center; width: 8em;" name="bank_tva_<?php echo $compteur;?>" id="tva_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport(29, $id_mod_lic, $id_cli, $id_march, $id_mod_trans)['tva'];?>" class="bg bg-dark">
+				</td>
+				<td style="text-align: center;">
+					<input type="number" step="0.001" min="0" style="text-align: center; width: 8em;" id="kisanga_<?php echo $compteur;?>" name="kisanga_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport(30, $id_mod_lic, $id_cli, $id_march, $id_mod_trans)['montant'];?>" class="bg bg-dark">
+					<input type="hidden" style="text-align: center; width: 8em;" name="kisanga_tva_<?php echo $compteur;?>" id="tva_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport(30, $id_mod_lic, $id_cli, $id_march, $id_mod_trans)['tva'];?>" class="bg bg-dark">
+				</td>
+				<td style="text-align: center;">
+					<input type="number" step="0.001" min="0" style="text-align: center; width: 8em;" id="transfert_<?php echo $compteur;?>" name="transfert_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport(31, $id_mod_lic, $id_cli, $id_march, $id_mod_trans)['montant'];?>" class="bg bg-dark">
+					<input type="hidden" style="text-align: center; width: 8em;" name="transfert_tva_<?php echo $compteur;?>" id="tva_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport(31, $id_mod_lic, $id_cli, $id_march, $id_mod_trans)['tva'];?>" class="bg bg-dark">
+				</td>
+				<td style="text-align: center;">
+					<input type="number" step="0.001" min="0" style="text-align: center; width: 8em;" id="other_service_<?php echo $compteur;?>" name="other_service_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport(58, $id_mod_lic, $id_cli, $id_march, $id_mod_trans)['montant'];?>" class="bg bg-dark">
+					<input type="hidden" style="text-align: center; width: 8em;" name="other_service_tva_<?php echo $compteur;?>" id="tva_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport(58, $id_mod_lic, $id_cli, $id_march, $id_mod_trans)['tva'];?>" class="bg bg-dark">
+				</td>
+				<td style="text-align: center;">
+					<input type="number" step="0.001" min="0" style="text-align: center; width: 8em;" name="frais_agence_<?php echo $compteur;?>"  id="frais_agence_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport(21, $id_mod_lic, $id_cli, $id_march, $id_mod_trans)['montant'];?>" class="bg bg-dark">
+					<input type="hidden" style="text-align: center; width: 8em;" name="frais_agence_tva_<?php echo $compteur;?>" id="tva_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport(21, $id_mod_lic, $id_cli, $id_march, $id_mod_trans)['tva'];?>" class="bg bg-dark">
 				</td>
 			</tr>
 			<?php
 			}$requete-> closeCursor();
+			?>
+			<input name="nbre" type="hidden" value="<?php echo $compteur;?>">
+			<?php
 		}
 
 		public function getParametreDossiersExportAFactures($id_cli, $id_mod_lic, $id_march){
@@ -18815,7 +19782,7 @@
 			<?php
 		}
 
-		public function afficherDocumentDossier($id_mod_lic, $id_dos){
+		public function afficherDocumentDossierBackUp($id_mod_lic, $id_dos){
 			include('connexion.php');
 			$entree['id_mod_lic'] = $id_mod_lic;
 			$compteur=0;
@@ -18860,6 +19827,57 @@
 					<?php
 				}
 
+			}$requete-> closeCursor();
+			?>
+			<input type="hidden" name="nbre" value="<?php echo $compteur;?>">
+			<?php
+		}
+
+		public function afficherDocumentDossier($id_mod_lic, $id_dos){
+			include('connexion.php');
+			$entree['id_mod_lic'] = $id_mod_lic;
+			$compteur=0;
+			$requete = $connexion-> prepare("SELECT d.*
+											FROM document d, affectation_document_modele_licence af, modele_licence m
+											WHERE d.id_doc = af.id_doc
+												AND af.active = '1'
+												AND af.id_mod_lic = m.id_mod_lic
+												AND m.id_mod_lic = ?
+											ORDER BY af.rang");
+			$requete-> execute(array($entree['id_mod_lic']));
+
+
+			while($reponse = $requete-> fetch()){
+				$compteur++;
+				?>
+				<tr>
+					<td>
+						<?php 
+						echo $compteur;
+						?>
+					</td>
+					<td>
+					<?php 
+						echo $reponse['nom_doc'];
+					?>
+					</td>
+					<td>
+					<?php
+					if($this-> getDocumentForDossier($id_dos, $reponse['id_doc']) != '0'){
+						?>
+			            <span class="bg bg-dark" style="padding: 5px; border-radius: 5px;" onclick="window.open('../documents/<?php echo $this-> getDossier($id_dos)['ref_dos'];?>/<?php echo $this-> getDocumentForDossier($id_dos, $reponse['id_doc']);?>','pop1','width=700,height=900');">
+							<i class="fa fa-file"></i> <?php echo $reponse['nom_doc'];?>
+						</span>
+						<?php
+					}
+					?>
+					</td>
+					<td>
+		            	<input type="hidden" name="id_doc_<?php echo $compteur;?>" value="<?php echo $reponse['id_doc'];?>">
+						<input type="file" name="fichier_<?php echo $compteur;?>" class="form-control form-control-sm cc-exp">
+					</td>
+				</tr>
+				<?php
 			}$requete-> closeCursor();
 			?>
 			<input type="hidden" name="nbre" value="<?php echo $compteur;?>">
@@ -24395,7 +25413,8 @@
 			$entree['id_mod_trans'] = $id_mod_trans;
 			$entree['id_march'] = $id_march;
 			$entree['id_mod_lic'] = $id_mod_lic;
-			$entree['annee'] = '%'.date('y').'-%';
+			$annee = date('Y');
+			$entree['annee'] = "%$annee%";
 
 			$requete = $connexion-> prepare("SELECT COUNT(id_dos) AS nbre 
 												FROM dossier
@@ -24875,7 +25894,10 @@
 			include('connexion.php');
 			$entree['id_dos'] = $id_dos;
 
-			$requete = $connexion-> prepare("SELECT *
+			$requete = $connexion-> prepare("SELECT *,
+													DATE_FORMAT(date_decl, '%d/%m/%Y') AS date_decl_dos,
+													DATE_FORMAT(date_liq, '%d/%m/%Y') AS date_liq_dos,
+													DATE_FORMAT(date_quit, '%d/%m/%Y') AS date_quit_dos
 												FROM dossier
 												WHERE id_dos = ?");
 			$requete-> execute(array($entree['id_dos']));
