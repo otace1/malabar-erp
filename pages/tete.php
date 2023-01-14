@@ -329,6 +329,13 @@ session_start();
   z-index: 2;
 }
 
+.table-hover-color tbody tr:hover {
+        color: black;
+        background-color: #A9A9A9;
+/*        font-size: 12px;*/
+        font-weight: bold;
+      }
+
     </style>
     <script type="text/javascript">
 

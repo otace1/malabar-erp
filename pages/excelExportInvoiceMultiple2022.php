@@ -340,15 +340,20 @@ $indiceSheet = 0;
 												dossier.load_date AS load_date,
 												dossier.klsa_arriv AS klsa_arriv,
 												dossier.end_form AS end_form,
+												IF(dossier.end_form IS NULL,
+													dossier.date_quit,
+													dossier.end_form
+													) AS end_form,
 												dossier.exit_drc AS exit_drc,
 												dossier.id_dos AS id_dos,
-												IF(dossier.cleared = '1',
-													'Cleared',
-													IF(dossier.cleared = '0',
-														'Transit',
-														'Cancelled'
-														)
-													) AS cleared,
+												-- IF(dossier.cleared = '1',
+												-- 	'Cleared',
+												-- 	IF(dossier.cleared = '0',
+												-- 		'Transit',
+												-- 		'Cancelled'
+												-- 		)
+												-- 	) AS cleared,
+												'Cleared' AS cleared,
 												dossier.roe_decl AS roe_decl
 									FROM dossier, detail_facture_dossier
 									WHERE dossier.id_dos = detail_facture_dossier.id_dos

@@ -522,4 +522,9 @@ function searchInvoice(ref_fact){
 
 }
 
+function editerFacture(ref_fact, edit_page){
+  if(confirm('Do really you want to edit this invoice '+ref_fact+'?')) {
+    window.location= edit_page + '?ref_fact='+ref_fact;
+  }
+}
 </script>
