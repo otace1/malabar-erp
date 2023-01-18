@@ -386,6 +386,36 @@
 
   		echo json_encode($response);
 
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='rapportFacturation'){ // On Recupere les data pour rapport facturation
+		$response['nbre_facture'] = $maClasse-> getNbreFacture();
+		$response['nbre_dossier_facture'] = $maClasse-> getNbreDossierFacture();
+		$response['nbre_dossier_non_facture'] = $maClasse-> getNbreDossierNonFacture();
+		echo json_encode($response);
+
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='popUpFacture'){ // On Recupere les data pour rapport facturation Popup
+		echo json_encode($maClasse-> getListeFactures($_POST['statut']));
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='rapportOperations'){ // On Recupere les data pour rapport Operations
+		$response['nbre_dossier_encours'] = $maClasse-> getNbreDossier('Dossiers En Cours');
+		$response['nbre_dossier_non_declare'] = $maClasse-> getNbreDossier('Dossiers non declarés');
+		$response['nbre_dossier_non_liquide'] = $maClasse-> getNbreDossier('Dossiers Declarés Non Liquidés');
+		$response['nbre_dossier_sans_quittance'] = $maClasse-> getNbreDossier('Dossiers En Attente Quittance');
+		echo json_encode($response);
+
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='popUpOperations'){ // On Recupere les data pour rapport Operations Popup
+		echo json_encode($maClasse-> getListeOperation($_POST['statut']));
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='invoice_pending_validation_CDN'){ // On Recupere les factures CDN
+
+		echo json_encode($maClasse-> getInvoicePendingValidationCDN($_POST['id_cli'], $_POST['id_mod_lic']));
+
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='modal_paiement'){ // On Recupere les data pour rapport Operations
+		$response['ref_fact'] = $_POST['ref_fact'];
+		$response['montant'] = round($maClasse-> getMontantFactureGlobale($_POST['ref_fact']), 2);
+		$response['label_montant'] = number_format(round($maClasse-> getMontantFactureGlobale($_POST['ref_fact']), 2), 2, '.', ',');
+		echo json_encode($response);
+
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='paiement_invoice'){ // On Recupere les data pour rapport Operations
+		$maClasse-> creerPaiementFacture($_POST['ref_fact'], $_POST['ref_paie'], $_POST['date_paie'], $_POST['montant_paie'], $_POST['libelle_paie']);
+
 	}
 
 ?>

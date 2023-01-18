@@ -1,5 +1,6 @@
 <?php
-  include("tete.php");
+  // include("tete.php");
+  include("tetepopCDN.php");
   include("menuHaut.php");
   include("menuGauche.php");
   //include("licenceExcel.php");
@@ -116,6 +117,39 @@
 
               <!-- /.card-header -->
               <div class="card-body table-responsive p-0 small" style="height: 400px;">
+                <table id="invoice_pending_validation_CDN" class=" table table-dark table-bordered table-hover text-nowrap table-head-fixed table-sm">
+                  <thead>
+                    <tr class="">
+                      <th style="border: 1px solid white;">#</th>
+                      <th style="border: 1px solid white;">REFERENCE</th>
+                      <th style="border: 1px solid white; text-align: center;">DATE</th>
+                      <th style="border: 1px solid white; text-align: center;">COMMODITY</th>
+                      <th style="border: 1px solid white; text-align: center;">AMOUNT</th>
+                      <th style="border: 1px solid white; text-align: center;">EDITOR</th>
+                      <th style="border: 1px solid white; text-align: center;">ACTION</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                   
+                  </tbody>
+                </table>
+              </div>
+              <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+          </div>
+
+          <div class="col-6">
+            <div class="card">
+              <div class="card-header">
+                <h5 class="card-title" style="font-weight: bold;">
+                 <span style="color: #CCCC00;" class="badge badge-dark" id="nbre_invoice_pending_validation"></span> PENDING VALIDATION
+                </h5>
+
+              </div>    
+
+              <!-- /.card-header -->
+              <div class="card-body table-responsive p-0 small" style="height: 400px;">
                 <table class=" table table-dark table-bordered table-hover text-nowrap table-head-fixed table-sm">
                   <thead>
                     <tr class="bg bg-dark">
@@ -188,7 +222,7 @@
             <div class="card">
               <div class="card-header">
                 <h5 class="card-title" style="font-weight: bold;">
-                 <span style="color: #CCCC00;" class="badge badge-dark" id="nbre_invoice_send"></span> PENDING PAYMENT
+                 <span style="color: #CCCC00;" class="badge badge-dark" id="nbre_invoice_send"></span> VALIDATED & SENDED
                 </h5>
 
                 <div class="card-tools">
@@ -215,9 +249,9 @@
                       <th style="border: 1px solid white;">REFERENCE</th>
                       <th style="border: 1px solid white; text-align: center;">DATE</th>
                       <th style="border: 1px solid white; text-align: center;">COMMODITY</th>
+                      <th style="border: 1px solid white; text-align: center;">AMOUNT</th>
                       <th style="border: 1px solid white; text-align: center;">EDITOR</th>
                       <th style="border: 1px solid white; text-align: center;">SENDING DATE</th>
-                      <th style="border: 1px solid white; text-align: center;">AMOUNT</th>
                       <th style="border: 1px solid white; text-align: center;">ACTION</th>
                     </tr>
                   </thead>
@@ -235,7 +269,7 @@
             <div class="card">
               <div class="card-header">
                 <h5 class="card-title" style="font-weight: bold;">
-                  PAYMENTS
+                 <span style="color: #CCCC00;" class="badge badge-dark" id="nbre_invoice_send"></span> VALIDATED & SENDED
                 </h5>
 
                 <div class="card-tools">
@@ -254,23 +288,20 @@
               </div>    
 
               <!-- /.card-header -->
-              <div class="card-body table-responsive p-0 small" style="height: 400px;">
-                <table class=" table table-dark table-bordered table-hover text-nowrap table-head-fixed table-sm">
+              <div class="card-body table-responsive p-0 small">
+                <table id="invoice_pending_validation_CDN" class=" table table-dark table-bordered table-hover text-nowrap table-sm">
                   <thead>
                     <tr class="bg bg-dark">
                       <th style="border: 1px solid white;">#</th>
                       <th style="border: 1px solid white;">REFERENCE</th>
                       <th style="border: 1px solid white; text-align: center;">DATE</th>
                       <th style="border: 1px solid white; text-align: center;">COMMODITY</th>
-                      <th style="border: 1px solid white; text-align: center;">EDITOR</th>
-                      <th style="border: 1px solid white; text-align: center;">SENDING DATE</th>
                       <th style="border: 1px solid white; text-align: center;">AMOUNT</th>
-                      <th style="border: 1px solid white; text-align: center;">PAYED</th>
-                      <th style="border: 1px solid white; text-align: center;">BALANCE</th>
+                      <th style="border: 1px solid white; text-align: center;">EDITOR</th>
                       <th style="border: 1px solid white; text-align: center;">ACTION</th>
                     </tr>
                   </thead>
-                  <tbody id="invoice_send">
+                  <tbody id="">
                    
                   </tbody>
                 </table>
@@ -340,66 +371,62 @@
   <!-- /.modal-dialog -->
 </div>
 
-<div class="modal fade" id="modal_paiement">
-  <div class="modal-dialog modal-md small">
-    <form id="modal_paiement_form" method="POST" action="" data-parsley-validate enctype="multipart/form-data">
-      <input type="hidden" name="operation" id="operation" value="paiement_invoice">
-    <div class="modal-content">
-      <div class="modal-header ">
-        <h4 class="modal-title"><i class="fa fa-calculator"></i> Payment</h4>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <div class="row">
-
-          <div class="col-md-6">
-            <label for="x_card_code" class="control-label mb-1">Invoice Ref.</label>
-            <input id="label_ref_fact_payment" class="form-control form-control-sm cc-exp bg-dark" disabled>
-            <input type="hidden" style="text-align: center;" name="ref_fact" id="ref_fact_payment">
-          </div>
-
-          <div class="col-md-6">
-            <label for="x_card_code" class="control-label mb-1">Invoice Amount</label>
-            <input id="label_montant" style="text-align: center;" class="form-control form-control-sm cc-exp bg-dark" disabled>
-          </div>
-
-          <div class="col-md-4">
-            <label for="x_card_code" class="control-label mb-1">Payment Ref.</label>
-            <input id="ref_paie" name="ref_paie" class="form-control form-control-sm cc-exp">
-          </div>
-
-          <div class="col-md-4">
-            <label for="x_card_code" class="control-label mb-1">Date</label>
-            <input type="date" id="date_paie" name="date_paie" class="form-control form-control-sm cc-exp">
-          </div>
-
-          <div class="col-md-4">
-            <label for="x_card_code" class="control-label mb-1">Amount</label>
-            <input id="montant_paie" name="montant_paie" type="number" step="0.001" class="form-control form-control-sm cc-exp">
-          </div>
-
-          <div class="col-md-12">
-            <label for="x_card_code" class="control-label mb-1">Note / Remark</label>
-            <textarea id="libelle_paie" name="libelle_paie" class="form-control form-control-sm cc-exp"></textarea>
-          </div>
-
-        </div>
-      </div>
-      <div class="modal-footer justify-content-between">
-        <button type="button" class="btn-xs btn-danger" data-dismiss="modal">Cancelled</button>
-        <button type="submit" name="rechercheClient" class="btn-xs btn-primary">Submit</button>
-      </div>
-    </div>
-    </form>
-    <!-- /.modal-content -->
-  </div>
-  <!-- /.modal-dialog -->
-</div>
-
 <script type="text/javascript">
   
+function getInvoicePending(){
+  var today   = new Date();
+      // document.title = "Dossiers En Cours_" + today.getDay() + "_" + today.getMonth() + "_" + today.getYear() + "_" + today.getHours() + "_" + today.getMinutes() + "_" + today.getSeconds();
+    $('#spinner-div').show();
+      $('#invoice_pending_validation_CDN').DataTable({
+         lengthMenu: [
+            [10, 100, 500, -1],
+            [10, 100, 500, 'All'],
+        ],
+        dom: 'Bfrtip',
+        buttons: [
+            'excel',
+            'pageLength'
+        ],
+        
+      "paging": true,
+      "lengthChange": true,
+      "searching": true,
+      "ordering": true,
+      "info": true,
+      "autoWidth": true,
+      "responsive": true,
+        "ajax":{
+          "type": "GET",
+          "url":"ajax.php",
+          "method":"post",
+          "dataSrc":{
+              "id_cli": ""
+          },
+          "data": {
+              "id_cli": "<?php echo $_GET['id_cli'];?>",
+              "id_mod_lic": "<?php echo $_GET['id_mod_lic_fact'];?>",
+              "statut": "Dossiers En Cours",
+              "operation": "invoice_pending_validation_CDN"
+          }
+        },
+        "columns":[
+          {"data":"compteur"},
+          {"data":"ref_fact"},
+          {"data":"date_fact"},
+          {"data":"commodity"},
+          {"data":"montant"},
+          {"data":"nom_util"},
+          {"data":"action"}
+        ] 
+      });
+      $('#spinner-div').hide();
+}
+
+$(document).ready(function(){
+  getInvoicePending();
+});
+
+
   function modal_send_invoice(ref_fact) {
     $('#spinner-div').show();
     $.ajax({
@@ -426,6 +453,7 @@
     });
 
   }
+
   
   $(document).ready(function(){
 
@@ -555,6 +583,7 @@
               $('#nbre_invoice_waiting_to_send').html(data.nbre_invoice_waiting_to_send);
               $('#invoice_send').html(data.invoice_send);
               $('#nbre_invoice_send').html(data.nbre_invoice_send);
+              getInvoicePending();
               alert('Invoice ' + ref_fact + ' has been validated!');
             }
           },
@@ -589,6 +618,7 @@
               $('#nbre_invoice_waiting_to_send').html(data.nbre_invoice_waiting_to_send);
               $('#invoice_send').html(data.invoice_send);
               $('#nbre_invoice_send').html(data.nbre_invoice_send);
+              getInvoicePending();
               alert('Invoice ' + ref_fact + ' has been deleted!');
             }
           },
@@ -633,81 +663,5 @@ function editerFacture(ref_fact, edit_page){
     window.location= edit_page + '?ref_fact='+ref_fact;
   }
 }
-
-
-function modal_paiement(ref_fact) {
-  $('#spinner-div').show();
-  $.ajax({
-    type: "POST",
-    url: "ajax.php",
-    data: { ref_fact: ref_fact, operation: 'modal_paiement'},
-    dataType:"json",
-    success:function(data){
-      if (data.logout) {
-        alert(data.logout);
-        window.location="../deconnexion.php";
-      }else{
-        // alert('Hello');
-        // $("#updateModaliteFss").modal("hide");
-        $('#ref_fact_payment').val(ref_fact);
-        $('#label_ref_fact_payment').val(ref_fact);
-        $('#label_montant').val(data.label_montant);
-        document.getElementById("montant_paie").max = data.montant;
-        // $('#').setAttribute("max", data.montant);
-        $('#modal_paiement').modal('show');
-      }
-    },
-    complete: function () {
-        $('#spinner-div').hide();//Request is complete so hide spinner
-    }
-  });
-
-  }
-
-  $(document).ready(function(){
-
-      $('#modal_paiement_form').submit(function(e){
-
-              e.preventDefault();
-
-        if(confirm('Do really you want to submit ?')) {
-
-          var fd = new FormData(this);
-          $('#modal_paiement').modal('hide');
-          $('#spinner-div').show();
-
-          $.ajax({
-            type: 'post',
-            url: 'ajax.php',
-            processData: false,
-            contentType: false,
-            data: fd,
-            dataType: 'json',
-            success:function(data){
-              if (data.logout) {
-                alert(data.logout);
-                window.location="../deconnexion.php";
-              }else if(data.message){
-                // $('#ref_fact').val(data.ref_fact);
-                // $('#id_dos').html(data.ref_dos);
-                $('#spinner-div').hide();//Request is complete so hide spinner
-                alert(data.message);
-              }else{
-                // $('#ref_fact').val(data.ref_fact);
-                // $('#id_dos').html(data.ref_dos);
-                alert('Payment made');
-              }
-            },
-            complete: function () {
-                alert('Payment made!');
-                $('#spinner-div').hide();//Request is complete so hide spinner
-            }
-          });
-
-        }
-
-      });
-    
-  });
 
 </script>
