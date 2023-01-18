@@ -4734,6 +4734,71 @@
 
 		}
 
+		public function getInvoicePendingValidationCDN($id_cli, $id_mod_lic){
+			include("connexion.php");
+			$entree['id_cli'] = $id_cli;
+			$entree['id_mod_lic'] = $id_mod_lic;
+			//$entree['type_fact'] = $type_fact;
+			$compteur=0;
+
+			$bg = "";
+			$badge = '';
+			$btn = '';
+			$etat ='';
+			$tableau = '';
+
+			$debut = $compteur;
+
+			$requete = $connexion-> prepare("SELECT fd.ref_fact AS ref_fact,
+													DATE_FORMAT(fd.date_fact, '%d/%m/%Y') AS date_fact,
+													fd.validation AS validation,
+													fd.id_march AS id_march,
+													fd.type_fact AS type_fact,
+													cl.nom_cli AS nom_cli,
+													cl.id_cli AS id_cli,
+													u.nom_util AS nom_util,
+													u.validation_facture AS validation_facture,
+													fd.transmission AS transmission,
+													fd.type_fact AS type_fact,
+													fd.id_mod_lic AS id_mod_lic,
+													mf.edit_page AS edit_page,
+													mf.view_page AS view_page,
+													mf.excel AS excel,
+													CONCAT(CONCAT('<button class=\"btn btn-xs bg-info square-btn-adjust\" onclick=\"window.open(\'',mf.view_page,'?ref_fact=',fd.ref_fact,'\',\'pop3\',\'width=1000,height=800\');\" title=\"View invoice\">
+									                    <i class=\"fas fa-eye\"></i> 
+									                </button>'),' ',
+									                CONCAT('<button class=\"btn btn-xs bg-success square-btn-adjust\" onclick=\"window.location.replace(\'',mf.excel,'?ref_fact=',fd.ref_fact,'\',\'pop4\',\'width=1000,height=800\');\" title=\"Export Annex\">
+									                    <i class=\"fas fa-file-excel\"></i> 
+									                </button>'),' ',
+									                CONCAT('<button class=\"btn btn-xs bg-warning square-btn-adjust\" onclick=\"editerFacture(\'',fd.ref_fact,'\', \'',mf.edit_page,'\');\" title=\"Edit\">
+									                    <i class=\"fas fa-edit\"></i> 
+									                </button>'),' ',
+									                CONCAT('<button class=\"btn btn-xs bg-primary square-btn-adjust\" onclick=\"validerFacture(\'',fd.ref_fact,'\');\" title=\"Validate\">
+									                    <i class=\"fas fa-check\"></i> 
+									                </button>'),' ',
+									                CONCAT('<button class=\"btn btn-xs bg-danger square-btn-adjust\" onclick=\"supprimerFacture(\'',fd.ref_fact,'\');\" title=\"Delete\">
+									                    <i class=\"fas fa-times\"></i> 
+									                </button>')) AS action
+ 												FROM facture_dossier fd, client cl, utilisateur u, modele_facture mf
+												WHERE fd.id_mod_lic = ?
+													AND fd.id_util = u.id_util
+													AND fd.id_cli = cl.id_cli
+													AND fd.id_mod_fact = mf.id_mod_fact
+													AND fd.validation = '0'
+													AND fd.id_cli = ?
+												ORDER BY fd.date_fact ASC");
+			$requete-> execute(array($entree['id_mod_lic'], $entree['id_cli']));
+			while ($reponse = $requete-> fetch()) {
+				$compteur++;
+				$reponse['compteur'] = $compteur;
+				$reponse['montant'] = number_format($this-> getMontantFactureGlobale($reponse['ref_fact'])+(( ($this-> getMontantFactureDebours($reponse['ref_fact'], 27)*$this-> getFactureGlobale($reponse['ref_fact'])['taux_commission']) - $this-> getMontantFactureDebours($reponse['ref_fact'], 27))), 2, ',', ' ');
+				$reponse['commodity'] = $this-> getMarchandiseFacture($reponse['ref_fact'])['nom_march'];
+				$rows[] = $reponse;
+			}$requete-> closeCursor();
+			return $rows;
+
+		}
+
 		public function getInvoiceSearched($id_cli, $id_mod_lic, $ref_fact){
 			include("connexion.php");
 			$entree['id_cli'] = $id_cli;
@@ -4959,6 +5024,118 @@
 
 		}
 
+		// public function getInvoiceSended($id_cli, $id_mod_lic){
+		// 	include("connexion.php");
+		// 	$entree['id_cli'] = $id_cli;
+		// 	$entree['id_mod_lic'] = $id_mod_lic;
+		// 	//$entree['type_fact'] = $type_fact;
+		// 	$compteur=0;
+
+		// 	$bg = "";
+		// 	$badge = '';
+		// 	$btn = '';
+		// 	$etat ='';
+		// 	$tableau = '';
+
+		// 	$debut = $compteur;
+
+		// 	$requete = $connexion-> prepare("SELECT DISTINCT(pf.id_paie), fd.ref_fact AS ref_fact,
+		// 											DATE_FORMAT(fd.date_fact, '%d/%m/%Y') AS date_fact,
+		// 											DATE_FORMAT(fd.date_mail, '%d/%m/%Y') AS date_mail,
+		// 											fd.validation AS validation,
+		// 											fd.id_march AS id_march,
+		// 											fd.type_fact AS type_fact,
+		// 											cl.nom_cli AS nom_cli,
+		// 											cl.id_cli AS id_cli,
+		// 											u.nom_util AS nom_util,
+		// 											u.validation_facture AS validation_facture,
+		// 											fd.transmission AS transmission,
+		// 											fd.type_fact AS type_fact,
+		// 											fd.id_mod_lic AS id_mod_lic,
+		// 											mf.edit_page AS edit_pag,
+		// 											mf.view_page AS view_page,
+		// 											mf.excel AS excel,
+		// 											SUM(pf.montant_paie) AS montant_paie,
+		// 											SUM( 
+		// 												IF(det.usd='1', 
+		// 													IF(det.tva='1',
+		// 														det.montant*1.16,
+		// 														det.montant
+		// 													),
+		// 													IF(det.tva='1',
+		// 														(det.montant/dos.roe_decl)*1.16,
+		// 														(det.montant/dos.roe_decl)
+		// 													)
+		// 												) 
+		// 											) AS montant_fact
+		// 										FROM facture_dossier fd
+		// 										LEFT JOIN utilisateur u
+		// 											ON fd.id_util = u.id_util
+		// 										LEFT JOIN client cl
+		// 											ON fd.id_cli = cl.id_cli
+		// 										LEFT JOIN  modele_facture mf
+		// 											ON fd.id_mod_fact = mf.id_mod_fact
+		// 										LEFT JOIN paiement_facture pf
+		// 											ON fd.ref_fact = pf.ref_fact
+		// 										LEFT JOIN detail_facture_dossier det
+		// 											ON det.ref_fact = fd.ref_fact
+		// 										LEFT JOIN dossier dos
+		// 											ON dos.id_dos = det.id_dos
+		// 										WHERE fd.id_mod_lic = ?
+		// 											AND fd.validation = '1'
+		// 											AND fd.date_mail IS NOT NULL
+		// 											AND fd.id_cli = ?
+		// 										GROUP BY fd.ref_fact, pf.id_paie
+		// 										ORDER BY fd.date_fact ASC");
+		// 	$requete-> execute(array($entree['id_mod_lic'], $entree['id_cli']));
+		// 	while ($reponse = $requete-> fetch()) {
+		// 		$compteur++;
+
+		// 		$tableau .='<tr style="">
+		// 						<td class="" style="text-align: center;" class="bg bg-dark">
+		// 							'.$compteur.'
+		// 						</td>
+		// 						<td class="" style="text-align: center;" class="bg bg-dark">
+		// 							'.$reponse['ref_fact'].'
+		// 						</td>
+		// 						<td class="" style="text-align: center;" class="bg bg-dark">
+		// 							'.$reponse['date_fact'].'
+		// 						</td>
+		// 						<td class="" style="text-align: center;" class="bg bg-dark">
+		// 							'.$this-> getMarchandiseFacture($reponse['ref_fact'])['nom_march'].'
+		// 						</td>
+		// 						<td class="" style="text-align: center;" class="bg bg-dark">
+		// 							'.$reponse['nom_util'].'
+		// 						</td>
+		// 						<td class="" style="text-align: center;" class="bg bg-dark">
+		// 							'.$reponse['date_mail'].'
+		// 						</td>
+		// 						<td class="" style="text-align: center;" class="bg bg-dark">
+		// 							'.number_format($reponse['montant_fact'], 2, ',', ' ').'
+		// 						</td>
+		// 						<td class="" style="text-align: center;" class="bg bg-dark">
+		// 							'.number_format($reponse['montant_paie'], 2, ',', ' ').'
+		// 						</td>
+		// 						<td style="text-align: center;">
+		// 							<button class="btn btn-xs bg-info square-btn-adjust" onclick="window.open(\''.$reponse['view_page'].'?ref_fact='.$reponse['ref_fact'].'\',\'pop1\',\'width=1000,height=800\');" title="View invoice">
+		// 			                    <i class="fas fa-eye"></i> 
+		// 			                </button>
+		// 							<button class="btn btn-xs bg-success square-btn-adjust" onclick="window.location.replace(\''.$reponse['excel'].'?ref_fact='.$reponse['ref_fact'].'\',\'pop1\',\'width=1000,height=800\');" title="Export Excel File">
+		// 			                    <i class="fas fa-file-excel"></i> 
+		// 			                </button>
+		// 							<button class="btn btn-xs bg-purple square-btn-adjust" onclick="modal_send_invoice(\''.$reponse['ref_fact'].'\');" title="Send Email">
+		// 			                    <i class="fas fa-envelope"></i> 
+		// 			                </button>
+		// 							<button class="btn btn-xs bg-secondary square-btn-adjust" onclick="modal_paiement(\''.$reponse['ref_fact'].'\');" title="Make Payment">
+		// 			                    <i class="fas fa-calculator"></i> 
+		// 			                </button>
+		// 						</td>
+		// 					</tr>';
+		// 	}$requete-> closeCursor();
+		// 	return $tableau;
+
+		// }
+
 		public function getInvoiceSended($id_cli, $id_mod_lic){
 			include("connexion.php");
 			$entree['id_cli'] = $id_cli;
@@ -5034,6 +5211,9 @@
 					                </button>
 									<button class="btn btn-xs bg-purple square-btn-adjust" onclick="modal_send_invoice(\''.$reponse['ref_fact'].'\');" title="Send Email">
 					                    <i class="fas fa-envelope"></i> 
+					                </button>
+									<button class="btn btn-xs bg-secondary square-btn-adjust" onclick="modal_paiement(\''.$reponse['ref_fact'].'\');" title="Make Payment">
+					                    <i class="fas fa-calculator"></i> 
 					                </button>
 								</td>
 							</tr>';
@@ -6667,6 +6847,71 @@
 			}
 		}
 
+		public function getNbreDossier($statut, $id_mod_lic=NULL, $id_cli=NULL){
+			include('connexion.php');
+
+			if ($statut=='Dossiers En Cours') {
+				$requete = $connexion-> query("SELECT COUNT(id_dos) AS nbre
+												FROM dossier
+												WHERE cleared = '0'
+													AND ref_dos NOT LIKE '%20-%'
+													AND (id_mod_lic = '1' OR id_mod_lic = '2')");
+				$reponse=$requete-> fetch();
+				if($reponse){
+					return $reponse['nbre'];
+				}else{
+					return false;
+				}
+			}else if ($statut=='Dossiers non declarés') {
+				$requete = $connexion-> query("SELECT COUNT(id_dos) AS nbre
+												FROM dossier
+												WHERE cleared = '0'
+													AND ref_dos NOT LIKE '%20-%'
+													AND (id_mod_lic = '1' OR id_mod_lic = '2')
+													AND ref_decl IS NULL
+													AND date_decl IS NULL");
+				$reponse=$requete-> fetch();
+				if($reponse){
+					return $reponse['nbre'];
+				}else{
+					return false;
+				}
+			}else if ($statut=='Dossiers Declarés Non Liquidés') {
+				$requete = $connexion-> query("SELECT COUNT(id_dos) AS nbre
+												FROM dossier
+												WHERE cleared = '0'
+													AND ref_dos NOT LIKE '%20-%'
+													AND (id_mod_lic = '1' OR id_mod_lic = '2')
+													AND ref_decl IS NOT NULL
+													AND date_decl IS NOT NULL
+													AND ref_liq IS NULL
+													AND date_liq IS NULL");
+				$reponse=$requete-> fetch();
+				if($reponse){
+					return $reponse['nbre'];
+				}else{
+					return false;
+				}
+			}else if ($statut=='Dossiers En Attente Quittance') {
+				$requete = $connexion-> query("SELECT COUNT(id_dos) AS nbre
+												FROM dossier
+												WHERE cleared = '0'
+													AND ref_dos NOT LIKE '%20-%'
+													AND (id_mod_lic = '1' OR id_mod_lic = '2')
+													AND ref_liq IS NOT NULL
+													AND date_liq IS NOT NULL
+													AND ref_quit IS NULL
+													AND date_quit IS NULL");
+				$reponse=$requete-> fetch();
+				if($reponse){
+					return $reponse['nbre'];
+				}else{
+					return false;
+				}
+			}
+
+		}
+
 		public function getNbreDossierEnAttenteFactureModeTransportMarchandise($id_mod_lic, $id_cli, $id_mod_trans, $id_march){
 			include('connexion.php');
 			$entree['id_mod_lic'] = $id_mod_lic;
@@ -6943,6 +7188,21 @@
 			$requete = $connexion-> prepare('INSERT INTO detail_transmis_facture_dossier(id_trans_fact, ref_fact)
 												VALUES(?, ?)');
 			$requete-> execute(array($entree['id_trans_fact'], $entree['ref_fact']));
+
+		}
+
+		public function creerPaiementFacture($ref_fact, $ref_paie, $date_paie, $montant_paie, $libelle_paie){
+			include('connexion.php');
+
+			$entree['ref_fact'] = $ref_fact;
+			$entree['ref_paie'] = $ref_paie;
+			$entree['date_paie'] = $date_paie;
+			$entree['montant_paie'] = $montant_paie;
+			$entree['libelle_paie'] = $libelle_paie;
+
+			$requete = $connexion-> prepare('INSERT INTO paiement_facture(ref_fact, ref_paie, date_paie, montant_paie, libelle_paie)
+												VALUES(?, ?, ?, ?, ?)');
+			$requete-> execute(array($entree['ref_fact'], $entree['ref_paie'], $entree['date_paie'], $entree['montant_paie'], $entree['libelle_paie']));
 
 		}
 
@@ -8181,7 +8441,8 @@
 													poids, roe_decl,
 													CONCAT(ref_decl, ' ', DATE_FORMAT(date_decl, '%d/%m/%Y')) AS declaration,
 													CONCAT(ref_liq, ' ', DATE_FORMAT(date_liq, '%d/%m/%Y')) AS liquidation,
-													CONCAT(ref_quit, ' ', DATE_FORMAT(date_quit, '%d/%m/%Y')) AS quittance
+													CONCAT(ref_quit, ' ', DATE_FORMAT(date_quit, '%d/%m/%Y')) AS quittance,
+													horse, trailer_1, trailer_2
 											FROM dossier
 											WHERE id_cli = ?
 												AND id_mod_lic = ?
@@ -8223,6 +8484,9 @@
 				</td>
 				<td style="text-align: center;">
 					<?php echo $reponse['quittance'];?>
+				</td>
+				<td style="text-align: center;">
+					<?php echo $reponse['horse'].' / '.$reponse['trailer_1'].' / '.$reponse['trailer_2'];?>
 				</td>
 				<td style="text-align: right;">
 					<?php echo number_format($reponse['poids'], 3, ',', '.');?>
@@ -27236,6 +27500,422 @@
 			}$requete-> closeCursor();
 			
 			return $compteur;
+		}
+
+		public function getNbreFacture(){
+			include('connexion.php');
+			// $entree['id_mod_lic'] = $id_mod_lic;
+
+			$sqlClient = "";
+			if (isset($id_cli) && ($id_cli != '')) {
+				$sqlClient = ' AND id_cli = "'.$id_cli.'" ';
+			}
+
+			$compteur = 0;
+
+			$requete = $connexion-> query("SELECT COUNT(ref_fact) AS nbre
+												FROM facture_dossier
+												WHERE YEAR(date_fact) = YEAR(CURRENT_DATE())
+													$sqlClient");
+			// $requete-> execute(array($entree['id_mod_lic']));
+			$reponse = $requete-> fetch();
+			
+			return $reponse['nbre'];
+		}
+
+		public function getListeFactures($statut){
+			include('connexion.php');
+			// $entree['id_mod_lic'] = $id_mod_lic;
+
+			$sqlClient = "";
+			if (isset($id_cli) && ($id_cli != '')) {
+				$sqlClient = ' AND dos.id_cli = "'.$id_cli.'" ';
+			}
+
+			$compteur = 0;
+
+			if($statut=='Factures'){
+
+				$requete = $connexion-> query("SELECT fd.ref_fact AS ref_fact, 
+													DATE_FORMAT(fd.date_fact, '%d/%m/%Y') AS date_fact,
+													cl.nom_cli AS nom_cli,
+													IF(fd.validation='0',
+														'Pending Validation',
+														IF(fd.date_mail IS NULL,
+															'Awaiting to send',
+															'Sended'
+															)
+														) AS statut,
+													CONCAT(CONCAT('<button class=\"btn btn-xs bg-primary square-btn-adjust\" onclick=\"window.open(\'',mf.view_page,'?ref_fact=',fd.ref_fact,'\',\'pop3\',\'width=1000,height=800\');\" title=\"View invoice\">
+									                    <i class=\"fas fa-eye\"></i> 
+									                </button>'),' ',
+									                CONCAT('<button class=\"btn btn-xs bg-success square-btn-adjust\" onclick=\"window.location.replace(\'',mf.excel,'?ref_fact=',fd.ref_fact,'\',\'pop4\',\'width=1000,height=800\');\" title=\"Export Annex\">
+									                    <i class=\"fas fa-file-excel\"></i> 
+									                </button>')) AS view_page
+												FROM facture_dossier fd, modele_facture mf, client cl
+												WHERE YEAR(fd.date_fact) = YEAR(CURRENT_DATE())
+													AND fd.id_mod_fact = mf.id_mod_fact
+													AND fd.id_cli = cl.id_cli
+													$sqlClient
+												ORDER BY fd.date_fact DESC");
+				// $requete-> execute(array($entree['id_mod_lic']));
+				while($reponse = $requete-> fetch()){
+					$compteur++;
+
+					$reponse['compteur'] = $compteur;
+					$reponse['montant'] = number_format($this-> getMontantFactureGlobale($reponse['ref_fact'])+(( ($this-> getMontantFactureDebours($reponse['ref_fact'], 27)*$this-> getFactureGlobale($reponse['ref_fact'])['taux_commission']) - $this-> getMontantFactureDebours($reponse['ref_fact'], 27))), 2, ',', ' ');
+					$reponse['commodity'] = $this-> getMarchandiseFacture($reponse['ref_fact'])['nom_march'];
+					$rows[] = $reponse;
+				}$requete-> closeCursor();
+				
+				return $rows;
+
+			}else if($statut=='Dossiers Facturés'){
+
+				$requete = $connexion-> query("SELECT dos.ref_dos AS ref_dos, 
+													fd.ref_fact AS ref_fact, 
+													DATE_FORMAT(fd.date_fact, '%d/%m/%Y') AS date_fact,
+													cl.nom_cli AS nom_cli,
+													IF(fd.validation='0',
+														'Pending Validation',
+														IF(fd.date_mail IS NULL,
+															'Awaiting to send',
+															'Sended'
+															)
+														) AS statut,
+													CONCAT(CONCAT('<button class=\"btn btn-xs bg-primary square-btn-adjust\" onclick=\"window.open(\'',mf.view_page,'?ref_fact=',fd.ref_fact,'\',\'pop3\',\'width=1000,height=800\');\" title=\"View invoice\">
+									                    <i class=\"fas fa-eye\"></i> 
+									                </button>'),' ',
+									                CONCAT('<button class=\"btn btn-xs bg-success square-btn-adjust\" onclick=\"window.location.replace(\'',mf.excel,'?ref_fact=',fd.ref_fact,'\',\'pop4\',\'width=1000,height=800\');\" title=\"Export Annex\">
+									                    <i class=\"fas fa-file-excel\"></i> 
+									                </button>')) AS view_page
+												FROM facture_dossier fd, modele_facture mf, client cl, dossier dos, detail_facture_dossier det
+												WHERE YEAR(fd.date_fact) = YEAR(CURRENT_DATE())
+													AND fd.id_mod_fact = mf.id_mod_fact
+													AND fd.ref_fact = det.ref_fact
+													AND det.id_dos = dos.id_dos
+													AND fd.id_cli = cl.id_cli
+													$sqlClient
+												GROUP BY dos.id_dos
+												ORDER BY dos.id_dos DESC");
+				// $requete-> execute(array($entree['id_mod_lic']));
+				while($reponse = $requete-> fetch()){
+					$compteur++;
+
+					$reponse['compteur'] = $compteur;
+					$reponse['montant'] = number_format($this-> getMontantFactureGlobale($reponse['ref_fact'])+(( ($this-> getMontantFactureDebours($reponse['ref_fact'], 27)*$this-> getFactureGlobale($reponse['ref_fact'])['taux_commission']) - $this-> getMontantFactureDebours($reponse['ref_fact'], 27))), 2, ',', ' ');
+					$reponse['commodity'] = $this-> getMarchandiseFacture($reponse['ref_fact'])['nom_march'];
+					$rows[] = $reponse;
+				}$requete-> closeCursor();
+				
+				return $rows;
+				
+			}else if($statut=='Dossiers Non Facturés'){
+
+				$requete = $connexion-> query("SELECT dos.ref_dos AS ref_dos,
+													cl.nom_cli AS nom_cli,
+													dos.horse AS horse,
+													dos.trailer_1 AS trailer_1,
+													dos.trailer_2 AS trailer_2,
+													IF(dos.num_lot IS NOT NULL,
+														dos.num_lot,
+														dos.ref_fact
+													) AS num_lot,
+													IF(march.nom_march IS NOT NULL,
+														march.nom_march,
+														dos.commodity
+													) AS commodity,
+													dos.ref_decl AS ref_decl,
+													DATE_FORMAT(dos.date_decl, '%d/%m/%Y') AS date_decl,
+													dos.ref_liq AS ref_liq,
+													DATE_FORMAT(dos.date_liq, '%d/%m/%Y') AS date_liq,
+													dos.ref_quit AS ref_quit,
+													DATE_FORMAT(dos.date_quit, '%d/%m/%Y') AS date_quit,
+													DATEDIFF(CURRENT_DATE(), dos.date_quit) AS delay
+												FROM dossier dos
+												LEFT JOIN marchandise march
+													ON dos.id_march = march.id_march
+												LEFT JOIN client cl
+													ON dos.id_cli = cl.id_cli
+												WHERE dos.not_fact = '0'
+													AND dos.date_decl IS NOT NULL
+													AND dos.ref_decl IS NOT NULL
+													AND dos.date_liq IS NOT NULL
+													AND dos.ref_liq IS NOT NULL
+													AND dos.date_quit IS NOT NULL
+													AND dos.ref_quit IS NOT NULL
+													AND dos.id_dos NOT IN (
+														SELECT DISTINCT(dos.id_dos) 
+															FROM facture_dossier fd, detail_facture_dossier det, dossier dos
+															WHERE YEAR(fd.date_fact) = YEAR(CURRENT_DATE())
+																AND fd.ref_fact = det.ref_fact
+																AND det.id_dos = dos.id_dos
+													)
+												ORDER BY dos.id_dos
+											");
+				// $requete-> execute(array($entree['id_mod_lic']));
+				while($reponse = $requete-> fetch()){
+					$compteur++;
+
+					$reponse['compteur'] = $compteur;
+					$reponse['truck'] = $reponse['horse'].' / '.$reponse['trailer_1'].' / '.$reponse['trailer_2'];
+					$rows[] = $reponse;
+				}$requete-> closeCursor();
+				
+				return $rows;
+				
+			}
+
+		}
+
+		public function getListeOperation($statut){
+			include('connexion.php');
+			// $entree['id_mod_lic'] = $id_mod_lic;
+
+			$sqlClient = "";
+			if (isset($id_cli) && ($id_cli != '')) {
+				$sqlClient = ' AND dos.id_cli = "'.$id_cli.'" ';
+			}
+
+			$compteur = 0;
+
+			if($statut=='Dossiers En Cours'){
+
+				$requete = $connexion-> query("SELECT dos.ref_dos AS ref_dos,
+													cl.nom_cli AS nom_cli,
+													dos.horse AS horse,
+													dos.trailer_1 AS trailer_1,
+													dos.trailer_2 AS trailer_2,
+													IF(dos.num_lot IS NOT NULL,
+														dos.num_lot,
+														dos.ref_fact
+													) AS num_lot,
+													IF(march.nom_march IS NOT NULL,
+														march.nom_march,
+														dos.commodity
+													) AS commodity,
+													dos.ref_decl AS ref_decl,
+													DATE_FORMAT(dos.date_decl, '%d/%m/%Y') AS date_decl,
+													dos.ref_liq AS ref_liq,
+													DATE_FORMAT(dos.date_liq, '%d/%m/%Y') AS date_liq,
+													dos.ref_quit AS ref_quit,
+													DATE_FORMAT(dos.date_quit, '%d/%m/%Y') AS date_quit,
+													DATEDIFF(CURRENT_DATE(), dos.date_creat_dos) AS delay
+												FROM dossier dos
+												LEFT JOIN marchandise march
+													ON dos.id_march = march.id_march
+												LEFT JOIN client cl
+													ON dos.id_cli = cl.id_cli
+												WHERE dos.cleared = '0'
+													AND dos.ref_dos NOT LIKE '%20-%'
+													AND (dos.id_mod_lic = '1' OR dos.id_mod_lic = '2')
+												ORDER BY dos.id_dos");
+				// $requete-> execute(array($entree['id_mod_lic']));
+				while($reponse = $requete-> fetch()){
+					$compteur++;
+
+					$reponse['compteur'] = $compteur;
+					$reponse['truck'] = $reponse['horse'].' / '.$reponse['trailer_1'].' / '.$reponse['trailer_2'];
+					$rows[] = $reponse;
+				}$requete-> closeCursor();
+				
+				return $rows;
+
+			}else if($statut=='Dossiers non declarés'){
+
+				$requete = $connexion-> query("SELECT dos.ref_dos AS ref_dos,
+													cl.nom_cli AS nom_cli,
+													dos.horse AS horse,
+													dos.trailer_1 AS trailer_1,
+													dos.trailer_2 AS trailer_2,
+													IF(dos.num_lot IS NOT NULL,
+														dos.num_lot,
+														dos.ref_fact
+													) AS num_lot,
+													IF(march.nom_march IS NOT NULL,
+														march.nom_march,
+														dos.commodity
+													) AS commodity,
+													dos.ref_decl AS ref_decl,
+													DATE_FORMAT(dos.date_decl, '%d/%m/%Y') AS date_decl,
+													dos.ref_liq AS ref_liq,
+													DATE_FORMAT(dos.date_liq, '%d/%m/%Y') AS date_liq,
+													dos.ref_quit AS ref_quit,
+													DATE_FORMAT(dos.date_quit, '%d/%m/%Y') AS date_quit,
+													DATEDIFF(CURRENT_DATE(), dos.date_creat_dos) AS delay
+												FROM dossier dos
+												LEFT JOIN marchandise march
+													ON dos.id_march = march.id_march
+												LEFT JOIN client cl
+													ON dos.id_cli = cl.id_cli
+												WHERE dos.cleared = '0'
+													AND dos.ref_dos NOT LIKE '%20-%'
+													AND (dos.id_mod_lic = '1' OR dos.id_mod_lic = '2')
+													AND dos.ref_decl IS NULL
+													AND dos.date_decl IS NULL
+												ORDER BY dos.id_dos");
+				// $requete-> execute(array($entree['id_mod_lic']));
+				while($reponse = $requete-> fetch()){
+					$compteur++;
+
+					$reponse['compteur'] = $compteur;
+					$reponse['truck'] = $reponse['horse'].' / '.$reponse['trailer_1'].' / '.$reponse['trailer_2'];
+					$rows[] = $reponse;
+				}$requete-> closeCursor();
+				
+				return $rows;
+
+			}else if($statut=='Dossiers Declarés Non Liquidés'){
+
+				$requete = $connexion-> query("SELECT dos.ref_dos AS ref_dos,
+													cl.nom_cli AS nom_cli,
+													dos.horse AS horse,
+													dos.trailer_1 AS trailer_1,
+													dos.trailer_2 AS trailer_2,
+													IF(dos.num_lot IS NOT NULL,
+														dos.num_lot,
+														dos.ref_fact
+													) AS num_lot,
+													IF(march.nom_march IS NOT NULL,
+														march.nom_march,
+														dos.commodity
+													) AS commodity,
+													dos.ref_decl AS ref_decl,
+													DATE_FORMAT(dos.date_decl, '%d/%m/%Y') AS date_decl,
+													dos.ref_liq AS ref_liq,
+													DATE_FORMAT(dos.date_liq, '%d/%m/%Y') AS date_liq,
+													dos.ref_quit AS ref_quit,
+													DATE_FORMAT(dos.date_quit, '%d/%m/%Y') AS date_quit,
+													DATEDIFF(CURRENT_DATE(), dos.date_creat_dos) AS delay
+												FROM dossier dos
+												LEFT JOIN marchandise march
+													ON dos.id_march = march.id_march
+												LEFT JOIN client cl
+													ON dos.id_cli = cl.id_cli
+												WHERE dos.cleared = '0'
+													AND dos.ref_dos NOT LIKE '%20-%'
+													AND (dos.id_mod_lic = '1' OR dos.id_mod_lic = '2')
+													AND dos.ref_decl IS NOT NULL
+													AND dos.date_decl IS NOT NULL
+													AND dos.ref_liq IS NULL
+													AND dos.date_liq IS NULL
+												ORDER BY dos.id_dos");
+				// $requete-> execute(array($entree['id_mod_lic']));
+				while($reponse = $requete-> fetch()){
+					$compteur++;
+
+					$reponse['compteur'] = $compteur;
+					$reponse['truck'] = $reponse['horse'].' / '.$reponse['trailer_1'].' / '.$reponse['trailer_2'];
+					$rows[] = $reponse;
+				}$requete-> closeCursor();
+				
+				return $rows;
+
+			}else if($statut=='Dossiers En Attente Quittance'){
+
+				$requete = $connexion-> query("SELECT dos.ref_dos AS ref_dos,
+													cl.nom_cli AS nom_cli,
+													dos.horse AS horse,
+													dos.trailer_1 AS trailer_1,
+													dos.trailer_2 AS trailer_2,
+													IF(dos.num_lot IS NOT NULL,
+														dos.num_lot,
+														dos.ref_fact
+													) AS num_lot,
+													IF(march.nom_march IS NOT NULL,
+														march.nom_march,
+														dos.commodity
+													) AS commodity,
+													dos.ref_decl AS ref_decl,
+													DATE_FORMAT(dos.date_decl, '%d/%m/%Y') AS date_decl,
+													dos.ref_liq AS ref_liq,
+													DATE_FORMAT(dos.date_liq, '%d/%m/%Y') AS date_liq,
+													dos.ref_quit AS ref_quit,
+													DATE_FORMAT(dos.date_quit, '%d/%m/%Y') AS date_quit,
+													DATEDIFF(CURRENT_DATE(), dos.date_creat_dos) AS delay
+												FROM dossier dos
+												LEFT JOIN marchandise march
+													ON dos.id_march = march.id_march
+												LEFT JOIN client cl
+													ON dos.id_cli = cl.id_cli
+												WHERE dos.cleared = '0'
+													AND dos.ref_dos NOT LIKE '%20-%'
+													AND (dos.id_mod_lic = '1' OR dos.id_mod_lic = '2')
+													AND dos.ref_liq IS NOT NULL
+													AND dos.date_liq IS NOT NULL
+													AND dos.ref_quit IS NULL
+													AND dos.date_quit IS NULL
+												ORDER BY dos.id_dos");
+				// $requete-> execute(array($entree['id_mod_lic']));
+				while($reponse = $requete-> fetch()){
+					$compteur++;
+
+					$reponse['compteur'] = $compteur;
+					$reponse['truck'] = $reponse['horse'].' / '.$reponse['trailer_1'].' / '.$reponse['trailer_2'];
+					$rows[] = $reponse;
+				}$requete-> closeCursor();
+				
+				return $rows;
+
+			}
+		}
+
+		public function getNbreDossierFacture(){
+			include('connexion.php');
+			// $entree['id_mod_lic'] = $id_mod_lic;
+
+			$sqlClient = "";
+			if (isset($id_cli) && ($id_cli != '')) {
+				$sqlClient = ' AND fd.id_cli = "'.$id_cli.'" ';
+			}
+
+			$compteur = 0;
+
+			$requete = $connexion-> query("SELECT COUNT(DISTINCT(dos.id_dos)) AS nbre
+												FROM facture_dossier fd, detail_facture_dossier det, dossier dos
+												WHERE YEAR(fd.date_fact) = YEAR(CURRENT_DATE())
+													AND fd.ref_fact = det.ref_fact
+													AND det.id_dos = dos.id_dos
+													$sqlClient");
+			// $requete-> execute(array($entree['id_mod_lic']));
+			$reponse = $requete-> fetch();
+			
+			return $reponse['nbre'];
+		}
+
+		public function getNbreDossierNonFacture(){
+			include('connexion.php');
+			// $entree['id_mod_lic'] = $id_mod_lic;
+
+			$sqlClient = "";
+			if (isset($id_cli) && ($id_cli != '')) {
+				$sqlClient = ' AND id_cli = "'.$id_cli.'" ';
+			}
+
+			$compteur = 0;
+
+			$requete = $connexion-> query("SELECT COUNT(id_dos) AS nbre
+											FROM dossier
+											WHERE not_fact = '0'
+												AND date_decl IS NOT NULL
+												AND ref_decl IS NOT NULL
+												AND date_liq IS NOT NULL
+												AND ref_liq IS NOT NULL
+												AND date_quit IS NOT NULL
+												AND ref_quit IS NOT NULL
+												AND id_dos NOT IN (
+													SELECT DISTINCT(dos.id_dos) 
+														FROM facture_dossier fd, detail_facture_dossier det, dossier dos
+														WHERE YEAR(fd.date_fact) = YEAR(CURRENT_DATE())
+															AND fd.ref_fact = det.ref_fact
+															AND det.id_dos = dos.id_dos
+												)
+												$sqlClient
+										");
+			// $requete-> execute(array($entree['id_mod_lic']));
+			$reponse = $requete-> fetch();
+			
+			return $reponse['nbre'];
 		}
 
 		public function getNombreFactureAvecLicence($id_mod_lic, $id_cli){
