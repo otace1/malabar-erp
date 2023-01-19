@@ -234,7 +234,7 @@ $indiceSheet = 0;
 	$col++;
 
 	$excel-> getActiveSheet()
-		-> setCellValue($col.$row, 'RIE');
+		-> setCellValue($col.$row, 'RIE in CDF');
 	cellColor($col.$row, '000000');
 	alignement($col.$row);
 	$excel->getActiveSheet()
@@ -242,7 +242,7 @@ $indiceSheet = 0;
 	$col++;
 
 	$excel-> getActiveSheet()
-		-> setCellValue($col.$row, 'DDE');
+		-> setCellValue($col.$row, 'DDE in CDF');
 	cellColor($col.$row, '000000');
 	alignement($col.$row);
 	$excel->getActiveSheet()
@@ -250,7 +250,7 @@ $indiceSheet = 0;
 	$col++;
 
 	$excel-> getActiveSheet()
-		-> setCellValue($col.$row, 'RLS');
+		-> setCellValue($col.$row, 'RLS in CDF');
 	cellColor($col.$row, '000000');
 	alignement($col.$row);
 	$excel->getActiveSheet()
@@ -258,7 +258,7 @@ $indiceSheet = 0;
 	$col++;
 
 	$excel-> getActiveSheet()
-		-> setCellValue($col.$row, 'FSR');
+		-> setCellValue($col.$row, 'FSR in CDF');
 	cellColor($col.$row, '000000');
 	alignement($col.$row);
 	$excel->getActiveSheet()
@@ -267,6 +267,38 @@ $indiceSheet = 0;
 
 	$excel-> getActiveSheet()
 		-> setCellValue($col.$row, 'Exchange Rate');
+	cellColor($col.$row, '000000');
+	alignement($col.$row);
+	$excel->getActiveSheet()
+		->getStyle($col.$row)->applyFromArray($styleHeader);
+	$col++;
+
+	$excel-> getActiveSheet()
+		-> setCellValue($col.$row, 'RIE in USD');
+	cellColor($col.$row, '000000');
+	alignement($col.$row);
+	$excel->getActiveSheet()
+		->getStyle($col.$row)->applyFromArray($styleHeader);
+	$col++;
+
+	$excel-> getActiveSheet()
+		-> setCellValue($col.$row, 'DDE in USD');
+	cellColor($col.$row, '000000');
+	alignement($col.$row);
+	$excel->getActiveSheet()
+		->getStyle($col.$row)->applyFromArray($styleHeader);
+	$col++;
+
+	$excel-> getActiveSheet()
+		-> setCellValue($col.$row, 'RLS in USD');
+	cellColor($col.$row, '000000');
+	alignement($col.$row);
+	$excel->getActiveSheet()
+		->getStyle($col.$row)->applyFromArray($styleHeader);
+	$col++;
+
+	$excel-> getActiveSheet()
+		-> setCellValue($col.$row, 'FSR in USD');
 	cellColor($col.$row, '000000');
 	alignement($col.$row);
 	$excel->getActiveSheet()
@@ -540,6 +572,42 @@ $indiceSheet = 0;
 	  $col_roe_decl = $col;
 		$excel-> getActiveSheet()
 			-> setCellValue($col.$row, $reponse['roe_decl']);
+		alignement($col.$row);
+		$excel->getActiveSheet()
+	        ->getColumnDimension($col)
+	        ->setAutoSize(true);
+	   $col++;
+
+	  $col_RIE_USD = $col;
+		$excel-> getActiveSheet()
+			-> setCellValue($col.$row, '='.$col_RIE_CDF.$row.'/'.$col_roe_decl.$row);
+		alignement($col.$row);
+		$excel->getActiveSheet()
+	        ->getColumnDimension($col)
+	        ->setAutoSize(true);
+	   $col++;
+
+	  $col_DDE_USD = $col;
+		$excel-> getActiveSheet()
+			-> setCellValue($col.$row, '='.$col_DDE_CDF.$row.'/'.$col_roe_decl.$row);
+		alignement($col.$row);
+		$excel->getActiveSheet()
+	        ->getColumnDimension($col)
+	        ->setAutoSize(true);
+	   $col++;
+
+	  $col_RLS_USD = $col;
+		$excel-> getActiveSheet()
+			-> setCellValue($col.$row, '='.$col_RLS_CDF.$row.'/'.$col_roe_decl.$row);
+		alignement($col.$row);
+		$excel->getActiveSheet()
+	        ->getColumnDimension($col)
+	        ->setAutoSize(true);
+	   $col++;
+
+	  $col_FSR_USD = $col;
+		$excel-> getActiveSheet()
+			-> setCellValue($col.$row, '='.$col_FSR_CDF.$row.'/'.$col_roe_decl.$row);
 		alignement($col.$row);
 		$excel->getActiveSheet()
 	        ->getColumnDimension($col)
