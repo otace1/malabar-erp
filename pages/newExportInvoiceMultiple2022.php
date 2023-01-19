@@ -93,7 +93,7 @@
                   <th>Declaration</th>
                   <th>Liquidation</th>
                   <th>Quittance</th>
-                  <th style="text-align: center;">Truc / Wagon</th>
+                  <th style="text-align: center;">Truck(Wagon)</th>
                   <th>Qty(Mt)</th>
                   <th>Action</th>
                   <th>Exchange Rate</th>
