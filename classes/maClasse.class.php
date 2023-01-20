@@ -6988,6 +6988,14 @@
 				$reponse['montant'] = $this-> getDossier($id_dos)['poids']*3;
 				$reponse['tva'] = '0';
 				return $reponse;
+			}else if ($id_deb == 6 && $id_march == 13) {
+				$reponse['montant'] = $this-> getDossier($id_dos)['poids']*8;
+				$reponse['tva'] = '0';
+				return $reponse;
+			}else if ($id_deb == 8 && $id_march == 13) {
+				$reponse['montant'] = $this-> getDossier($id_dos)['poids']*100;
+				$reponse['tva'] = '0';
+				return $reponse;
 			}else if ($id_deb == 6) {
 				$reponse['montant'] = $this-> getDossier($id_dos)['poids']*5;
 				$reponse['tva'] = '0';
@@ -7186,9 +7194,12 @@
 			$liste_tmp = '';
 			$last = '';
 			$tmp_last = '';
+			$tmp_last_next = '';
 			$next_last = '';
+			$next_last_2 = '';
+			$dossier_suivant = '';
 
-			$requete = $connexion-> prepare("SELECT dos.ref_dos AS ref_dos
+			$requete = $connexion-> prepare("SELECT dos.ref_dos AS ref_dos, dos.id_dos AS id_dos
 												FROM facture_dossier fd, detail_facture_dossier df, dossier dos
 												WHERE fd.ref_fact = ?
 													AND fd.ref_fact = df.ref_fact
@@ -7207,19 +7218,28 @@
 				}else{
 
 					$tmp_last = $last;
+					// $tmp_last++;
+					$tmp_last_next = $tmp_last;
+					$tmp_last_next++;
+
 					$last = substr($reponse['ref_dos'], strrpos($reponse['ref_dos'],'-')+1);
-					$next_last = $tmp_last;
+					$next_last = $last;
 					$next_last++;
 
-					if ($next_last==$last) {
-						if($tmp_last!=$last){
-							$liste = $liste.', '.$last;
-						}elseif($tmp_last==$last){
-							$liste = $liste.' a '.$last;
-						}
+					$dossier_suivant = $reponse['ref_dos'];
+					$dossier_suivant++;
+
+					if($last!=$tmp_last_next){
+						$liste .= '<br>&nbsp;'.$reponse['ref_dos'];
+					}elseif (empty($this-> verifierDossierFacture($dossier_suivant, $ref_fact))) {
+						$liste .= ' a '.$last;
+					}else if($last==$tmp_last_next){
+						// $liste .= ' a '.$last;
 					}else{
+						// $liste .= ' a '.$tmp_last.'<br>&nbsp;'.$reponse['ref_dos'];
 						$liste .= '<br>&nbsp;'.$reponse['ref_dos'];
 					}
+					
 
 				}
 
@@ -7227,6 +7247,94 @@
 			return $liste;
 			// return $last;
 		}
+
+
+		public function verifierDossierFacture($ref_dos, $ref_fact){
+			include('connexion.php');
+			$entree['ref_dos'] = $ref_dos;
+			$entree['ref_fact'] = $ref_fact;
+
+			$requete = $connexion-> prepare("SELECT dossier.id_dos
+												FROM dossier, detail_facture_dossier
+												WHERE dossier.ref_dos = ?
+													AND dossier.id_dos = detail_facture_dossier.id_dos
+													AND detail_facture_dossier.ref_fact = ?");
+			$requete-> execute(array($entree['ref_dos'], $entree['ref_fact']));
+			$reponse = $requete-> fetch();
+			if($reponse){
+				return $reponse['id_dos'];
+			}
+		}
+
+
+		public function verifierLastDossierFacture($id_dos, $ref_fact){
+			include('connexion.php');
+			$entree['id_dos'] = $id_dos;
+			$entree['ref_fact'] = $ref_fact;
+
+			$requete = $connexion-> prepare("SELECT MAX(dossier.ref_dos) AS ref_dos
+												FROM dossier, detail_facture_dossier
+												WHERE dossier.id_dos = ?
+													AND dossier.id_dos = detail_facture_dossier.id_dos
+													AND detail_facture_dossier.ref_fact = ?");
+			$requete-> execute(array($entree['id_dos'], $entree['ref_fact']));
+			$reponse = $requete-> fetch();
+			if($reponse){
+				return $reponse['ref_dos'];
+			}
+		}
+
+
+		// public function getRangDossierFacture($ref_fact){  
+		// w334, 435, 4354
+		// 	include('connexion.php');
+		// 	$entree['ref_fact'] = $ref_fact;
+
+		// 	$liste = '';
+		// 	$liste_tmp = '';
+		// 	$last = '';
+		// 	$tmp_last = '';
+		// 	$next_last = '';
+
+		// 	$requete = $connexion-> prepare("SELECT dos.ref_dos AS ref_dos
+		// 										FROM facture_dossier fd, detail_facture_dossier df, dossier dos
+		// 										WHERE fd.ref_fact = ?
+		// 											AND fd.ref_fact = df.ref_fact
+		// 											AND df.id_dos = dos.id_dos
+		// 										GROUP BY dos.id_dos
+		// 										ORDER BY dos.id_dos");
+		// 	$requete-> execute(array($entree['ref_fact']));
+		// 	while($reponse = $requete-> fetch()){
+
+		// 		// $next_last = substr($reponse['ref_dos'], strrpos($reponse['ref_dos'],'-')+1);
+
+
+		// 		if($liste==''){
+		// 			$liste = '&nbsp;'.$reponse['ref_dos'];
+		// 			$last = substr($reponse['ref_dos'], strrpos($reponse['ref_dos'],'-')+1);
+		// 		}else{
+
+		// 			$tmp_last = $last;
+		// 			$last = substr($reponse['ref_dos'], strrpos($reponse['ref_dos'],'-')+1);
+		// 			$next_last = $tmp_last;
+		// 			$next_last++;
+
+		// 			if ($next_last==$last) {
+		// 				if($tmp_last!=$last){
+		// 					$liste = $liste.', '.$last;
+		// 				}elseif($tmp_last==$last){
+		// 					$liste = $liste.' a '.$last;
+		// 				}
+		// 			}else{
+		// 				$liste .= '<br>&nbsp;'.$reponse['ref_dos'];
+		// 			}
+
+		// 		}
+
+		// 	}$requete-> closeCursor();
+		// 	return $liste;
+		// 	// return $last;
+		// }
 
 		public function getNbreDossierEnAttenteFacture($id_mod_lic, $id_cli){
 			include('connexion.php');
@@ -8933,6 +9041,10 @@
 					<input type="hidden" style="text-align: center; width: 8em;" name="gov_tax_tva_<?php echo $compteur;?>" id="tva_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport(7, $id_mod_lic, $id_cli, $id_march, $id_mod_trans, $reponse['id_dos'])['tva'];?>" class="bg bg-dark">
 				</td>
 				<td style="text-align: center;">
+					<input type="number" step="0.001" min="0" style="text-align: center; width: 8em;" id="concentrate_tax_<?php echo $compteur;?>" name="concentrate_tax_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport(8, $id_mod_lic, $id_cli, $id_march, $id_mod_trans, $reponse['id_dos'])['montant'];?>" class="bg bg-dark">
+					<input type="hidden" style="text-align: center; width: 8em;" name="concentrate_tax_tva_<?php echo $compteur;?>" id="tva_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport(8, $id_mod_lic, $id_cli, $id_march, $id_mod_trans, $reponse['id_dos'])['tva'];?>" class="bg bg-dark">
+				</td>
+				<td style="text-align: center;">
 					<input type="number" step="0.001" min="0" style="text-align: center; width: 8em;" id="fere_<?php echo $compteur;?>" name="fere_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport(5, $id_mod_lic, $id_cli, $id_march, $id_mod_trans, $reponse['id_dos'])['montant'];?>" class="bg bg-dark">
 					<input type="hidden" style="text-align: center; width: 8em;" name="fere_tva_<?php echo $compteur;?>" id="tva_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport(5, $id_mod_lic, $id_cli, $id_march, $id_mod_trans, $reponse['id_dos'])['tva'];?>" class="bg bg-dark">
 				</td>
@@ -8975,6 +9087,10 @@
 				<td style="text-align: center;">
 					<input type="number" step="0.001" min="0" style="text-align: center; width: 8em;" id="com_ext_<?php echo $compteur;?>" name="com_ext_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport(17, $id_mod_lic, $id_cli, $id_march, $id_mod_trans)['montant'];?>" class="bg bg-dark">
 					<input type="hidden" style="text-align: center; width: 8em;" name="com_ext_tva_<?php echo $compteur;?>" id="tva_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport(17, $id_mod_lic, $id_cli, $id_march, $id_mod_trans)['tva'];?>" class="bg bg-dark">
+				</td>
+				<td style="text-align: center;">
+					<input type="number" step="0.001" min="0" style="text-align: center; width: 8em;" id="nac_<?php echo $compteur;?>" name="nac_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport(14, $id_mod_lic, $id_cli, $id_march, $id_mod_trans)['montant'];?>" class="bg bg-dark">
+					<input type="hidden" style="text-align: center; width: 8em;" name="nac_tva_<?php echo $compteur;?>" id="tva_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport(14, $id_mod_lic, $id_cli, $id_march, $id_mod_trans)['tva'];?>" class="bg bg-dark">
 				</td>
 				<td style="text-align: center;">
 					<input type="number" step="0.001" min="0" style="text-align: center; width: 8em;" id="klsa_border_<?php echo $compteur;?>" name="klsa_border_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport(22, $id_mod_lic, $id_cli, $id_march, $id_mod_trans)['montant'];?>" class="bg bg-dark">
@@ -9129,6 +9245,10 @@
 					<input type="hidden" style="text-align: center; width: 8em;" name="gov_tax_tva_<?php echo $compteur;?>" id="tva_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDataDetailFacture($ref_fact, $reponse['id_dos'], 7)['tva'];?>" class="bg bg-dark">
 				</td>
 				<td style="text-align: center;">
+					<input type="number" step="0.001" min="0" style="text-align: center; width: 8em;" id="concentrate_tax_<?php echo $compteur;?>" name="concentrate_tax_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDataDetailFacture($ref_fact, $reponse['id_dos'], 8)['montant'];?>" class="bg bg-dark">
+					<input type="hidden" style="text-align: center; width: 8em;" name="concentrate_tax_tva_<?php echo $compteur;?>" id="tva_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDataDetailFacture($ref_fact, $reponse['id_dos'], 8)['tva'];?>" class="bg bg-dark">
+				</td>
+				<td style="text-align: center;">
 					<input type="number" step="0.001" min="0" style="text-align: center; width: 8em;" id="fere_<?php echo $compteur;?>" name="fere_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDataDetailFacture($ref_fact, $reponse['id_dos'], 5)['montant'];?>" class="bg bg-dark">
 					<input type="hidden" style="text-align: center; width: 8em;" name="fere_tva_<?php echo $compteur;?>" id="tva_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDataDetailFacture($ref_fact, $reponse['id_dos'], 5)['tva'];?>" class="bg bg-dark">
 				</td>
@@ -9171,6 +9291,10 @@
 				<td style="text-align: center;">
 					<input type="number" step="0.001" min="0" style="text-align: center; width: 8em;" id="com_ext_<?php echo $compteur;?>" name="com_ext_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDataDetailFacture($ref_fact, $reponse['id_dos'], 17)['montant'];?>" class="bg bg-dark">
 					<input type="hidden" style="text-align: center; width: 8em;" name="com_ext_tva_<?php echo $compteur;?>" id="tva_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDataDetailFacture($ref_fact, $reponse['id_dos'], 17)['tva'];?>" class="bg bg-dark">
+				</td>
+				<td style="text-align: center;">
+					<input type="number" step="0.001" min="0" style="text-align: center; width: 8em;" id="nac_<?php echo $compteur;?>" name="nac_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDataDetailFacture($ref_fact, $reponse['id_dos'], 14)['montant'];?>" class="bg bg-dark">
+					<input type="hidden" style="text-align: center; width: 8em;" name="nac_tva_<?php echo $compteur;?>" id="tva_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDataDetailFacture($ref_fact, $reponse['id_dos'], 14)['tva'];?>" class="bg bg-dark">
 				</td>
 				<td style="text-align: center;">
 					<input type="number" step="0.001" min="0" style="text-align: center; width: 8em;" id="klsa_border_<?php echo $compteur;?>" name="klsa_border_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDataDetailFacture($ref_fact, $reponse['id_dos'], 22)['montant'];?>" class="bg bg-dark">
