@@ -104,6 +104,7 @@
                   <th>FSR(CDF)</th>
                   <th>Total Duty(CDF)</th>
                   <th>GOVERNORS TAX($)</th>
+                  <th>CONCENTRATE TAX($)</th>
                   <th>FERE($)</th>
                   <th>LMC($)</th>
                   <th>OCC : SAMPLING($)</th>
@@ -115,6 +116,7 @@
                   <th>OCC FEES($)</th>
                   <th>CEEC FEES($)</th>
                   <th>COMMERCE EXTERIOR($)</th>
+                  <th>PNHF - NAC($)</th>
                   <th>KLSA BORDER CHARGES($)</th>
                   <th>SNCC L'SHI STATION($)</th>
                   <th>SAKANIA BORDER CHARGES($)</th>
