@@ -1254,6 +1254,68 @@
 			$requete-> execute(array($entree['num_lic'], $entree['date_exp']));
 		}
 		
+		public function creerAffectationModeleFacture($id_mod_fact, $id_cli, $id_march, $id_mod_trans){
+			include('connexion.php');
+
+			$entree['id_mod_fact'] = $id_mod_fact;
+			$entree['id_cli'] = $id_cli;
+			$entree['id_march'] = $id_march;
+			$entree['id_mod_trans'] = $id_mod_trans;
+
+			$requete = $connexion-> prepare('INSERT INTO affectation_modele_facture_client_marchandise(id_mod_fact, id_cli, id_march, id_mod_trans)
+												VALUES(?, ?, ?, ?)');
+			$requete-> execute(array($entree['id_mod_fact'], $entree['id_cli'], $entree['id_march'], $entree['id_mod_trans']));
+		}
+		
+		public function supprimerAffectationModeleFacture($id_mod_fact, $id_cli, $id_march, $id_mod_trans){
+			include('connexion.php');
+
+			$entree['id_mod_fact'] = $id_mod_fact;
+			$entree['id_cli'] = $id_cli;
+			$entree['id_march'] = $id_march;
+			$entree['id_mod_trans'] = $id_mod_trans;
+
+			$requete = $connexion-> prepare('DELETE FROM affectation_modele_facture_client_marchandise
+												WHERE id_mod_fact = ? AND id_cli = ? AND id_march = ? AND id_mod_trans= ?');
+			$requete-> execute(array($entree['id_mod_fact'], $entree['id_cli'], $entree['id_march'], $entree['id_mod_trans']));
+		}
+
+		
+		public function creerAffectationDebours($id_deb, $id_cli, $id_march, $id_mod_trans, $id_mod_lic, $montant, $usd, $tva){
+			include('connexion.php');
+
+			$entree['id_deb'] = $id_deb;
+			$entree['id_cli'] = $id_cli;
+			$entree['id_march'] = $id_march;
+			$entree['id_mod_trans'] = $id_mod_trans;
+			$entree['id_mod_lic'] = $id_mod_lic;
+			$entree['montant'] = $montant;
+			$entree['usd'] = $usd;
+			$entree['tva'] = $tva;
+
+			if (empty($montant) || $montant=='') {
+				$entree['montant'] = NULL;
+			}
+
+			$requete = $connexion-> prepare('INSERT INTO affectation_debours_client_modele_licence(id_deb, id_cli, id_march, id_mod_trans, id_mod_lic, montant, usd, tva)
+												VALUES(?, ?, ?, ?, ?, ?, ?, ?)');
+			$requete-> execute(array($entree['id_deb'], $entree['id_cli'], $entree['id_march'], $entree['id_mod_trans'], $entree['id_mod_lic'], $entree['montant'], $entree['usd'], $entree['tva']));
+		}
+
+		public function supprimerAffectationDebours($id_deb, $id_cli, $id_march, $id_mod_trans, $id_mod_lic){
+			include('connexion.php');
+
+			$entree['id_deb'] = $id_deb;
+			$entree['id_cli'] = $id_cli;
+			$entree['id_march'] = $id_march;
+			$entree['id_mod_trans'] = $id_mod_trans;
+			$entree['id_mod_lic'] = $id_mod_lic;
+
+			$requete = $connexion-> prepare('DELETE FROM affectation_debours_client_modele_licence
+												WHERE id_deb = ? and id_cli = ? and id_march = ? and id_mod_trans = ? and id_mod_lic = ?');
+			$requete-> execute(array($entree['id_deb'], $entree['id_cli'], $entree['id_march'], $entree['id_mod_trans'], $entree['id_mod_lic']));
+		}
+		
 		public function creerLogDossier($colonne, $valeur, $id_dos, $id_util){
 			include('connexion.php');
 
@@ -1279,6 +1341,25 @@
 												SET fob = ?, poids = ?, id_util = ?
 												WHERE id_part = ?');
 			$requete-> execute(array($entree['fob'], $entree['poids'], $entree['id_util'], $entree['id_part']));
+		}
+
+		public function editClient($id_cli, $nom_complet, $rccm_cli, $nif_cli, $id_nat, $nom_cli, $code_cli, $num_imp_exp, $adr_cli){
+			include('connexion.php');
+
+			$entree['id_cli'] = $id_cli;
+			$entree['nom_complet'] = $nom_complet;
+			$entree['rccm_cli'] = $rccm_cli;
+			$entree['nif_cli'] = $nif_cli;
+			$entree['id_nat'] = $id_nat;
+			$entree['nom_cli'] = $nom_cli;
+			$entree['code_cli'] = $code_cli;
+			$entree['num_imp_exp'] = $num_imp_exp;
+			$entree['adr_cli'] = $adr_cli;
+			
+			$requete = $connexion-> prepare('UPDATE client
+												SET nom_complet = ?, rccm_cli = ?, nif_cli = ?, id_nat = ?, nom_cli = ?, code_cli = ?, num_imp_exp = ?, adr_cli = ?
+												WHERE id_cli = ?');
+			$requete-> execute(array($entree['nom_complet'], $entree['rccm_cli'], $entree['nif_cli'], $entree['id_nat'], $entree['nom_cli'], $entree['code_cli'], $entree['num_imp_exp'], $entree['adr_cli'], $entree['id_cli']));
 		}
 
 		public function creerPartielle($num_part, $fob, $poids, $cod){
@@ -2838,6 +2919,107 @@
     						</tr>
     			';
     		 }$requeteMarchandise-> closeCursor();
+
+    		 return $tableau;
+		}
+
+		public function getModeleFacturationClient($id_cli){
+			include('connexion.php');
+			$entree['id_cli'] = $id_cli;
+
+			$tableau = '';
+			$compteur=0;
+
+			$requete = $connexion-> prepare("SELECT marchandise.id_march AS id_march,
+    															marchandise.nom_march AS nom_march,
+    															modele_facture.nom_mod_fact AS nom_mod_fact,
+    															modele_facture.id_mod_fact AS id_mod_fact,
+    															modele_facture.create_page AS create_page,
+    															mode_transport.id_mod_trans AS id_mod_trans,
+    															mode_transport.nom_mod_trans AS nom_mod_trans,
+    															ml.nom_mod_lic AS nom_mod_lic,
+    															ml.id_mod_lic AS id_mod_lic
+    														FROM affectation_modele_facture_client_marchandise aff, 
+    															marchandise, modele_facture, mode_transport, modele_licence ml
+    														WHERE aff.id_cli = ?
+    															AND aff.id_march = marchandise.id_march
+    															AND aff.id_mod_trans = mode_transport.id_mod_trans
+    															AND aff.id_mod_fact = modele_facture.id_mod_fact
+    															AND modele_facture.id_mod_lic = ml.id_mod_lic");
+    		$requete-> execute(array($entree['id_cli']));
+    		while ($reponse = $requete-> fetch()) {
+    			$compteur++;
+    			$tableau .= '
+    						<tr>
+    							<td>'.$compteur.'</td>
+    							<td>'.$reponse['nom_mod_fact'].'</td>
+    							<td>'.$reponse['nom_march'].'</td>
+    							<td>'.$reponse['nom_mod_trans'].'</td>
+    							<td>'.$reponse['nom_mod_lic'].'</td>
+    							<td style="text-align: center;">
+    								<a class="btn btn-xs btn-primary" onclick="viewDebours('.$id_cli.', '.$reponse['id_mod_lic'].', '.$reponse['id_march'].', '.$reponse['id_mod_trans'].')">
+    									<i class="fa fa-list"></i>
+    								<a class="btn btn-xs btn-danger" onclick="supprimerAffectationModeleFacture('.$reponse['id_mod_fact'].', '.$id_cli.', '.$reponse['id_march'].', '.$reponse['id_mod_trans'].')">
+    									<i class="fa fa-times"></i>
+    								</a>
+    							</td>
+    						</tr>
+    			';
+    		 }$requete-> closeCursor();
+
+    		 return $tableau;
+		}
+
+		public function getDeboursClientModeleLicence($id_cli, $id_mod_lic, $id_march, $id_mod_trans){
+			include('connexion.php');
+			$entree['id_cli'] = $id_cli;
+			$entree['id_mod_lic'] = $id_mod_lic;
+			$entree['id_march'] = $id_march;
+			$entree['id_mod_trans'] = $id_mod_trans;
+
+			$tableau = '';
+			$compteur=0;
+
+			$requete = $connexion-> prepare("SELECT deb.nom_deb AS nom_deb,
+													deb.id_deb AS id_deb,
+													aff.montant AS montant,
+													IF(aff.usd='1',
+														'USD',
+														'CDF'
+														) AS usd,
+													IF(aff.tva='1',
+														'Yes',
+														'No') AS tva,
+													aff.id_cli AS id_cli,
+													aff.id_march AS id_march,
+													aff.id_mod_trans AS id_mod_trans,
+													aff.id_mod_lic AS id_mod_lic
+												FROM affectation_debours_client_modele_licence aff, debours deb, type_debours td
+												WHERE aff.id_cli = ?
+													AND aff.id_mod_lic = ?
+													AND aff.id_march = ?
+													AND aff.id_mod_trans = ?
+													AND aff.id_deb = deb.id_deb
+													AND deb.id_t_deb = td.id_t_deb
+												ORDER BY td.id_t_deb, deb.nom_deb ASC");
+    		$requete-> execute(array($entree['id_cli'], $entree['id_mod_lic'], $entree['id_march'], $entree['id_mod_trans']));
+    		while ($reponse = $requete-> fetch()) {
+    			$compteur++;
+    			$tableau .= '
+    						<tr>
+    							<td>'.$compteur.'</td>
+    							<td>'.$reponse['nom_deb'].'</td>
+    							<td style="text-align: center;">'.$reponse['montant'].'</td>
+    							<td style="text-align: center;">'.$reponse['usd'].'</td>
+    							<td style="text-align: center;">'.$reponse['tva'].'</td>
+    							<td style="text-align: center;">
+    								<a class="btn btn-xs btn-danger" onclick="supprimerAffectationDebours('.$reponse['id_deb'].', '.$reponse['id_cli'].', '.$reponse['id_march'].', '.$reponse['id_mod_trans'].', '.$reponse['id_mod_lic'].')">
+    									<i class="fa fa-times"></i>
+    								</a>
+    							</td>
+    						</tr>
+    			';
+    		 }$requete-> closeCursor();
 
     		 return $tableau;
 		}
@@ -6980,7 +7162,7 @@
 			$sommeHT = 0;
 			$sommeTTC = 0;
 
-			if ($id_deb == 7) {
+			if ($id_deb == 7 && $id_march!=17) {
 				$reponse['montant'] = $this-> getDossier($id_dos)['poids']*50;
 				$reponse['tva'] = '0';
 				return $reponse;
@@ -7001,7 +7183,7 @@
 				$reponse['tva'] = '0';
 				return $reponse;
 			}else if ($id_deb == 11) {
-				if ($this-> getDossier($id_dos)['poids']<30) {
+				if ($this-> getDossier($id_dos)['poids']<=30) {
 					$reponse['montant'] = 125;
 				}else{
 					$reponse['montant'] = 0;
@@ -7009,7 +7191,7 @@
 				$reponse['tva'] = '0';
 				return $reponse;
 			}else if ($id_deb == 12) {
-				if ($this-> getDossier($id_dos)['poids']>=30) {
+				if ($this-> getDossier($id_dos)['poids']>30) {
 					$reponse['montant'] = 250;
 				}else{
 					$reponse['montant'] = 0;
@@ -8990,16 +9172,10 @@
 					<?php echo $reponse['ref_dos'];?>
 				</td>
 				<td style="text-align: center;">
-					<?php echo $reponse['num_lot'];?>
-				</td>
-				<td style="text-align: center;">
 					<?php echo $reponse['declaration'];?>
 				</td>
 				<td style="text-align: center;">
 					<?php echo $reponse['liquidation'];?>
-				</td>
-				<td style="text-align: center;">
-					<?php echo $reponse['quittance'];?>
 				</td>
 				<td style="text-align: center;">
 					<?php echo $reponse['horse'].' / '.$reponse['trailer_1'].' / '.$reponse['trailer_2'];?>
@@ -9135,6 +9311,14 @@
 				<td style="text-align: center;">
 					<input type="number" step="0.001" min="0" style="text-align: center; width: 8em;" id="transfert_<?php echo $compteur;?>" name="transfert_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport(31, $id_mod_lic, $id_cli, $id_march, $id_mod_trans)['montant'];?>" class="bg bg-dark">
 					<input type="hidden" style="text-align: center; width: 8em;" name="transfert_tva_<?php echo $compteur;?>" id="tva_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport(31, $id_mod_lic, $id_cli, $id_march, $id_mod_trans)['tva'];?>" class="bg bg-dark">
+				</td>
+				<td style="text-align: center;">
+					<input type="number" step="0.001" min="0" style="text-align: center; width: 8em;" id="preclarence_<?php echo $compteur;?>" name="preclarence_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport(19, $id_mod_lic, $id_cli, $id_march, $id_mod_trans)['montant'];?>" class="bg bg-dark">
+					<input type="hidden" style="text-align: center; width: 8em;" name="preclarence_tva_<?php echo $compteur;?>" id="tva_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport(19, $id_mod_lic, $id_cli, $id_march, $id_mod_trans)['tva'];?>" class="bg bg-dark">
+				</td>
+				<td style="text-align: center;">
+					<input type="number" step="0.001" min="0" style="text-align: center; width: 8em;" id="cost_intern_<?php echo $compteur;?>" name="cost_intern_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport(20, $id_mod_lic, $id_cli, $id_march, $id_mod_trans)['montant'];?>" class="bg bg-dark">
+					<input type="hidden" style="text-align: center; width: 8em;" name="cost_intern_tva_<?php echo $compteur;?>" id="tva_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport(20, $id_mod_lic, $id_cli, $id_march, $id_mod_trans)['tva'];?>" class="bg bg-dark">
 				</td>
 				<td style="text-align: center;">
 					<input type="number" step="0.001" min="0" style="text-align: center; width: 8em;" id="other_service_<?php echo $compteur;?>" name="other_service_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport(58, $id_mod_lic, $id_cli, $id_march, $id_mod_trans)['montant'];?>" class="bg bg-dark">
@@ -9339,6 +9523,14 @@
 				<td style="text-align: center;">
 					<input type="number" step="0.001" min="0" style="text-align: center; width: 8em;" id="transfert_<?php echo $compteur;?>" name="transfert_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDataDetailFacture($ref_fact, $reponse['id_dos'], 31)['montant'];?>" class="bg bg-dark">
 					<input type="hidden" style="text-align: center; width: 8em;" name="transfert_tva_<?php echo $compteur;?>" id="tva_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDataDetailFacture($ref_fact, $reponse['id_dos'], 31)['tva'];?>" class="bg bg-dark">
+				</td>
+				<td style="text-align: center;">
+					<input type="number" step="0.001" min="0" style="text-align: center; width: 8em;" id="preclarence_<?php echo $compteur;?>" name="preclarence_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDataDetailFacture($ref_fact, $reponse['id_dos'], 19)['montant'];?>" class="bg bg-dark">
+					<input type="hidden" style="text-align: center; width: 8em;" name="preclarence_tva_<?php echo $compteur;?>" id="tva_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDataDetailFacture($ref_fact, $reponse['id_dos'], 19)['tva'];?>" class="bg bg-dark">
+				</td>
+				<td style="text-align: center;">
+					<input type="number" step="0.001" min="0" style="text-align: center; width: 8em;" id="cost_intern_<?php echo $compteur;?>" name="cost_intern_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDataDetailFacture($ref_fact, $reponse['id_dos'], 20)['montant'];?>" class="bg bg-dark">
+					<input type="hidden" style="text-align: center; width: 8em;" name="cost_intern_tva_<?php echo $compteur;?>" id="tva_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDataDetailFacture($ref_fact, $reponse['id_dos'], 20)['tva'];?>" class="bg bg-dark">
 				</td>
 				<td style="text-align: center;">
 					<input type="number" step="0.001" min="0" style="text-align: center; width: 8em;" id="other_service_<?php echo $compteur;?>" name="other_service_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDataDetailFacture($ref_fact, $reponse['id_dos'], 58)['montant'];?>" class="bg bg-dark">
@@ -28200,6 +28392,32 @@
 
 		}
 
+		public function getListeClient(){
+			include('connexion.php');
+			// $entree['id_mod_lic'] = $id_mod_lic;
+
+			$compteur = 0;
+
+			$requete = $connexion-> query("SELECT *,
+												CONCAT('<button class=\"btn btn-xs bg-primary square-btn-adjust\" onclick=\"window.location.replace(\'detail_client.php?id_cli=',id_cli,'\');\">
+									                    <i class=\"fas fa-eye\"></i> 
+									                </button>') AS btn_action 
+											FROM client 
+											ORDER BY nom_cli
+										");
+			// $requete-> execute(array($entree['id_mod_lic']));
+			while($reponse = $requete-> fetch()){
+				$compteur++;
+
+				$reponse['compteur'] = $compteur;
+				$rows[] = $reponse;
+			}$requete-> closeCursor();
+			
+			return $rows;
+			
+
+		}
+
 		public function getListeOperation($statut){
 			include('connexion.php');
 			// $entree['id_mod_lic'] = $id_mod_lic;
@@ -30262,26 +30480,108 @@
 			$style = '';
 
 			$requete = $connexion-> prepare("SELECT ref_dos, id_dos
-											FROM dossier
-											WHERE id_cli = ?
-												AND id_mod_lic = ?
-												AND ref_quit IS NOT NULL
-												AND ref_quit <> ''
-												AND ref_decl IS NOT NULL
-												AND ref_decl <> ''
-												AND ref_liq IS NOT NULL
-												AND ref_liq <> ''
-												AND id_dos NOT IN (
-														SELECT id_dos FROM detail_facture_dossier
-													)
-												AND not_fact = '0'
-											ORDER BY id_dos  DESC");
+												FROM dossier
+												WHERE id_cli = ?
+													AND id_mod_lic = ?
+													AND ref_quit IS NOT NULL
+													AND ref_quit <> ''
+													AND ref_decl IS NOT NULL
+													AND ref_decl <> ''
+													AND ref_liq IS NOT NULL
+													AND ref_liq <> ''
+													AND id_dos NOT IN (
+															SELECT id_dos FROM detail_facture_dossier
+														)
+													AND not_fact = '0'
+												ORDER BY id_dos  DESC");
 
 			$requete-> execute(array($entree['id_cli'], $entree['id_mod_lic']));
 
 			while($reponse = $requete-> fetch()){
 				echo '<option value="'.$reponse['id_dos'].'">
 								'.$reponse['ref_dos'].'
+							</option>';
+			}$requete-> closeCursor();
+		}
+
+		public function select_debours($id_cli, $id_mod_lic, $id_march, $id_mod_trans){
+			include('connexion.php');
+
+			$entree['id_cli'] = $id_cli;
+			$entree['id_mod_lic'] = $id_mod_lic;
+			$entree['id_march'] = $id_march;
+			$entree['id_mod_trans'] = $id_mod_trans;
+			$option = "<select id='id_deb' class='form-control form-control-sm cc-exp'><option></option>";
+
+			$requete1 = $connexion-> query("SELECT * FROM type_debours");
+			while ($reponse1=$requete1-> fetch()) {
+				$option .= '<optgroup label="'.$reponse1['nom_t_deb'].'">';
+
+				$requete = $connexion-> prepare("SELECT * 
+													FROM debours 
+													WHERE id_t_deb = ? 
+														AND id_deb NOT IN (
+																SELECT id_deb
+																	FROM affectation_debours_client_modele_licence
+																	WHERE id_cli = ?
+																		AND id_mod_lic = ?
+																		AND id_march = ?
+																		AND id_mod_trans = ?
+															)
+													ORDER BY nom_deb");
+
+				$requete-> execute(array($reponse1['id_t_deb'], $entree['id_cli'], $entree['id_mod_lic'], $entree['id_march'], $entree['id_mod_trans']));
+
+				while($reponse = $requete-> fetch()){
+					$option .= '<option value='.$reponse['id_deb'].'>'.$reponse['nom_deb'].'</option>';
+				}$requete-> closeCursor();
+
+				$option .= '</optgroup>';
+
+			}$requete1-> closeCursor();
+
+			$option .= '</select>';
+
+			return $option;
+		}
+
+		public function selectionnerNewModeleFactureClient($id_cli){
+			include('connexion.php');
+
+			$entree['id_cli'] = $id_cli;
+			$requete = $connexion-> prepare("SELECT * 
+												FROM modele_facture mf
+												-- WHERE mf.id_mod_fact NOT IN (
+												-- 	SELECT id_mod_fact
+												-- 		FROM affectation_modele_facture_client_marchandise
+												-- 		WHERE id_cli = ?
+												-- ) 
+											");
+
+			$requete-> execute(array($entree['id_cli']));
+
+			while($reponse = $requete-> fetch()){
+				echo '<option value="'.$reponse['id_mod_fact'].'">
+								'.$reponse['nom_mod_fact'].'
+							</option>';
+			}$requete-> closeCursor();
+		}
+
+		public function selectionnerMarchandiseClient($id_cli){
+			include('connexion.php');
+
+			$entree['id_cli'] = $id_cli;
+			$requete = $connexion-> prepare("SELECT march.nom_march AS nom_march, march.id_march AS id_march 
+												FROM affectation_marchandise_client_modele_licence aff, marchandise march
+												WHERE aff.id_cli = ?
+													AND aff.id_march = march.id_march
+												ORDER BY march.nom_march");
+
+			$requete-> execute(array($entree['id_cli']));
+
+			while($reponse = $requete-> fetch()){
+				echo '<option value="'.$reponse['id_march'].'">
+								'.$reponse['nom_march'].'
 							</option>';
 			}$requete-> closeCursor();
 		}
