@@ -72,7 +72,7 @@ $sceau='';
 if ( ($maClasse-> getFactureGlobale($_GET['ref_fact'])['validation']) == '0' ) {
 	$pdf->Image('../images/no_valid.jpg', 150, 2, 30, '', '', '', '', false, 300);
 }else{
-	$pdf->Image('../images/sceau_mca.png', 90, 247, 50, '', '', '', '', false, 300);
+	$pdf->Image('../images/sceau_mca.png', 120, 235, 50, '', '', '', '', false, 300);
 	$sceau = '<img src="../images/sceau_mca.png" width="150px">';
 	// if ($maClasse-> getFactureGlobale($_GET['ref_fact'])['id_cli'] != '906' && $maClasse-> getFactureGlobale($_GET['ref_fact'])['id_cli'] != '902') {
 	// 	$pdf->Image('../images/sceau.png', 50, 200, 105, '', '', '', '', false, 300);
@@ -322,19 +322,22 @@ $tbl = <<<EOD
 			</td>
 		</tr>
 		<tr>
-			<td width="45%" style="border: 1px solid black; text-align: left;  font-size: 7px;;">
-			&nbsp;INTITULE <br>
-			&nbsp;N.COMPTE <br>
-			&nbsp;SWIFT <br>
-			&nbsp;BANQUE <br>
-			</td>
-			<td width="10%" style=""></td>
-			<td width="45%" style="border: 1px solid black; text-align: left;  font-size: 7px;;">
-			&nbsp;INTITULE <br>
-			&nbsp;N.COMPTE <br>
-			&nbsp;SWIFT <br>
-			&nbsp;BANQUE <br>
-			</td>
+			<td width="10%" style="border-top: 1px solid black; border-left: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;INTITULE</td>
+			<td width="35%" style="border-top: 1px solid black; border-right: 1px solid black;  font-size: 7px;">&nbsp;MALABAR RDC SARL</td>
+		</tr>
+		<tr>
+			<td width="10%" style="border-left: 1px solid black;  font-size: 7px;">&nbsp;N.COMPTE</td>
+			<td width="35%" style="border-right: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;00018 - 00016 - 01231051200 - 54</td>
+		</tr>
+		<tr>
+			<td width="10%" style="border-left: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;SWIFT</td>
+			<td width="35%" style="border-right: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;PRCBCDKI</td>
+		</tr>
+		<tr>
+			<td width="10%" style="border-bottom: 1px solid black; border-left: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;BANQUE</td>
+			<td width="35%" style="border-bottom: 1px solid black; border-right: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;EQUITY BANK CONGO SA		
+			<br>&nbsp;LUBUMBASHI		
+			<br>&nbsp;R.D. CONGO</td>
 		</tr>
 		<tr>
 			<td width="100%"></td>

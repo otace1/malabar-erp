@@ -89,10 +89,8 @@
               <tr>
                   <th>#</th>
                   <th>File Ref.</th>
-                  <th>Lot. No.</th>
                   <th>Declaration</th>
                   <th>Liquidation</th>
-                  <th>Quittance</th>
                   <th style="text-align: center;">Truck(Wagon)</th>
                   <th>Qty(Mt)</th>
                   <th>Action</th>
@@ -128,6 +126,8 @@
                   <th>BANK CHARGES($)</th>
                   <th>KISANGA TOLL GATES($)</th>
                   <th>TRANSFER FEE($)</th>
+                  <th>PRE-CLEARANCE FEES($)</th>
+                  <th>COST INTERNAL($)</th>
                   <th>OTHER SERVICES COST($)</th>
                   <th>CONTRACTOR AGENCY FEE($)</th>
               </tr>

@@ -150,31 +150,56 @@
             }
             ?>
             <hr>
-          <!--<li class="nav-item">
-            <a href="#" class="nav-link">
-              <i class="nav-icon fas fa-boxes"></i>
-              <p>
-                COMPLEMENT DATA
-                  <i class="right fas fa-angle-left"></i>
-              </p>
+          <?php
+          if($_SESSION['id_role'] == '1'){
+          ?>
+          <li class="nav-item"  style="">
+            <a href="#" class="nav-link active bg bg-danger" style=" font-weight: bold;">
+              <!--<i class="nav-icon fas fa-tachometer-alt"></i>-->
+              <span class="">
+              <p style="">
+                <i class="fa fa-cogs"></i>
+                <?php
+                  if ($maClasse-> getUtilisateur($_SESSION['id_util'])['langue']=='ENG') {
+                    echo 'SETTING';
+                  }else if ($maClasse-> getUtilisateur($_SESSION['id_util'])['langue']=='FR') {
+                    echo 'PARAMETRAGE';
+                  }
+                ?>
+                <br>
+              </p></span>
             </a>
+          </li>
+          <li class="nav-item">
+            <a href="client.php" class="nav-link">
+              &nbsp;<img src="../images/poignee-de-main.png" width="25px">
+              <p><?php
+                  if ($maClasse-> getUtilisateur($_SESSION['id_util'])['langue']=='ENG') {
+                    echo 'Clients';
+                  }else if ($maClasse-> getUtilisateur($_SESSION['id_util'])['langue']=='FR') {
+                    echo 'Clients';
+                  }
+                ?></p>
+            </a>
+          </li>
+         <!--  <li class="nav-item">
+            <a href="dashboardOPS.php" class="nav-link">
+              &nbsp;<img src="../images/dossier.png" width="25px" /> 
+              <p><?php
+                  if ($maClasse-> getUtilisateur($_SESSION['id_util'])['langue']=='ENG') {
+                    echo 'User';
+                  }else if ($maClasse-> getUtilisateur($_SESSION['id_util'])['langue']=='FR') {
+                    echo 'Operations';
+                  }
+                ?></p>
+            </a>
+          </li> -->
 
-            <ul class="nav nav-treeview">
-              <li class="nav-item has-treeview">
-                  <a href="complementData.php?id_mod_lic=2&id_cli=" class="nav-link" class="nav-link">
-                        &nbsp;&nbsp;&nbsp;&nbsp;<i class="nav-icon fas fa-download"></i>
-                        <p>Import </p>
-                  </a>
-              </li>
-              <li class="nav-item has-treeview">
-                  <a href="complementData.php?id_mod_lic=1&id_cli=" class="nav-link" class="nav-link">
-                        &nbsp;&nbsp;&nbsp;&nbsp;<i class="nav-icon fas fa-upload"></i>
-                        <p>Export </p>
-                  </a>
-              </li>
-            </ul>
+            <hr>
+            <?php
+            }
 
-          </li>-->
+          ?>
           <hr>
       </nav>
       <!-- /.sidebar-menu -->

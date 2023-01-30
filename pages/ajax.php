@@ -101,6 +101,8 @@
 	  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 29, $_POST['bank_'.$i], $_POST['bank_tva_'.$i], '1');
 	  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 30, $_POST['kisanga_'.$i], $_POST['kisanga_tva_'.$i], '1');
 	  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 31, $_POST['transfert_'.$i], $_POST['transfert_tva_'.$i], '1');
+	  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 19, $_POST['preclarence_'.$i], $_POST['preclarence_tva_'.$i], '1');
+	  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 20, $_POST['cost_intern_'.$i], $_POST['cost_intern_tva_'.$i], '1');
 	  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 58, $_POST['other_service_'.$i], $_POST['other_service_tva_'.$i], '1');
 	  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 21, $_POST['frais_agence_'.$i], $_POST['frais_agence_tva_'.$i], '1');
 
@@ -354,6 +356,8 @@
 	  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 29, $_POST['bank_'.$i], $_POST['bank_tva_'.$i], '1');
 	  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 30, $_POST['kisanga_'.$i], $_POST['kisanga_tva_'.$i], '1');
 	  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 31, $_POST['transfert_'.$i], $_POST['transfert_tva_'.$i], '1');
+	  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 20, $_POST['preclarence_'.$i], $_POST['preclarence_tva_'.$i], '1');
+	  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 20, $_POST['cost_intern_'.$i], $_POST['cost_intern_tva_'.$i], '1');
 	  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 58, $_POST['other_service_'.$i], $_POST['other_service_tva_'.$i], '1');
 	  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 21, $_POST['frais_agence_'.$i], $_POST['frais_agence_tva_'.$i], '1');
 
@@ -419,6 +423,78 @@
 
 	}elseif(isset($_POST['operation']) && $_POST['operation']=='paiement_invoice'){ // On Recupere les data pour rapport Operations
 		$maClasse-> creerPaiementFacture($_POST['ref_fact'], $_POST['ref_paie'], $_POST['date_paie'], $_POST['montant_paie'], $_POST['libelle_paie']);
+
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='liste_client'){
+		echo json_encode($maClasse-> getListeClient());
+
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='modal_facture_client'){
+
+  		$reponse['tableau_modele_facture_detail'] = $maClasse-> getModeleFacturationClient($_POST['id_cli']);
+
+  		echo json_encode($reponse);
+
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='view_debours_modele_facture'){
+
+  		$reponse['tableau_debours_modele_facture'] = $maClasse-> getDeboursClientModeleLicence($_POST['id_cli'], $_POST['id_mod_lic'], $_POST['id_march'], $_POST['id_mod_trans']);
+
+  		$reponse['nom_march'] = $maClasse-> getMarchandise($_POST['id_march']);
+  		$reponse['nom_mod_lic'] = $maClasse-> getNomModeleLicence($_POST['id_mod_lic']);
+  		$reponse['nom_mod_trans'] = $maClasse-> getModeTransport($_POST['id_mod_trans'])['nom_mod_trans'];
+
+  		echo json_encode($reponse);
+
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='creerAffectationModeleFacture'){
+
+  		$maClasse-> creerAffectationModeleFacture($_POST['id_mod_fact'], $_POST['id_cli'], $_POST['id_march'], $_POST['id_mod_trans']);
+  		$reponse['tableau_modele_facture_detail'] = $maClasse-> getModeleFacturationClient($_POST['id_cli']);
+
+  		echo json_encode($reponse);
+
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='modal_affectation_debours'){
+
+  		$reponse['select_debours'] = $maClasse-> select_debours($_POST['id_cli'], $_POST['id_mod_lic'], $_POST['id_march'], $_POST['id_mod_trans']);
+
+  		echo json_encode($reponse);
+
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='creerAffectationDebours'){
+
+  		$maClasse-> creerAffectationDebours($_POST['id_deb'], $_POST['id_cli'], $_POST['id_march'], $_POST['id_mod_trans'], $_POST['id_mod_lic'], $_POST['montant'], $_POST['usd'], $_POST['tva']);
+  		$reponse['tableau_modele_facture_detail'] = $maClasse-> getModeleFacturationClient($_POST['id_cli']);
+
+  		$reponse['tableau_debours_modele_facture'] = $maClasse-> getDeboursClientModeleLicence($_POST['id_cli'], $_POST['id_mod_lic'], $_POST['id_march'], $_POST['id_mod_trans']);
+
+  		$reponse['select_debours'] = $maClasse-> select_debours($_POST['id_cli'], $_POST['id_mod_lic'], $_POST['id_march'], $_POST['id_mod_trans']);
+
+  		echo json_encode($reponse);
+
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='supprimerAffectationDebours'){
+
+  		$maClasse-> supprimerAffectationDebours($_POST['id_deb'], $_POST['id_cli'], $_POST['id_march'], $_POST['id_mod_trans'], $_POST['id_mod_lic']);
+  		// $reponse['tableau_modele_facture_detail'] = $maClasse-> getModeleFacturationClient($_POST['id_cli']);
+
+  		$reponse['tableau_debours_modele_facture'] = $maClasse-> getDeboursClientModeleLicence($_POST['id_cli'], $_POST['id_mod_lic'], $_POST['id_march'], $_POST['id_mod_trans']);
+
+  		echo json_encode($reponse);
+
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='supprimerAffectationModeleFacture'){
+
+  		$maClasse-> supprimerAffectationModeleFacture($_POST['id_mod_fact'], $_POST['id_cli'], $_POST['id_march'], $_POST['id_mod_trans']);
+  		$reponse['tableau_modele_facture_detail'] = $maClasse-> getModeleFacturationClient($_POST['id_cli']);
+
+  		echo json_encode($reponse);
+
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='modal_edit_detail_client'){
+
+  		$reponse = $maClasse-> getClient($_POST['id_cli']);
+
+  		echo json_encode($reponse);
+
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='editClient'){
+
+  		$maClasse-> editClient($_POST['id_cli'], $_POST['nom_complet'], $_POST['rccm_cli'], $_POST['nif_cli'], $_POST['id_nat'], $_POST['nom_cli'], $_POST['code_cli'], $_POST['num_imp_exp'], $_POST['adr_cli']);
+  		$reponse['tableau_modele_facture_detail'] = $maClasse-> getModeleFacturationClient($_POST['id_cli']);
+
+  		echo json_encode($reponse);
 
 	}
 

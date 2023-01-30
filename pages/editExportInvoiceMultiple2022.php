@@ -129,6 +129,7 @@
                   <th>BANK CHARGES($)</th>
                   <th>KISANGA TOLL GATES($)</th>
                   <th>TRANSFER FEE($)</th>
+                  <th>COST INTERNAL($)</th>
                   <th>OTHER SERVICES COST($)</th>
                   <th>CONTRACTOR AGENCY FEE($)</th>
               </tr>

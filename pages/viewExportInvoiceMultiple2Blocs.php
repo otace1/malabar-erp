@@ -280,19 +280,22 @@ $tbl = <<<EOD
 			</td>
 		</tr>
 		<tr>
-			<td width="45%" style="border: 1px solid black; text-align: left;  font-size: 7px;;">
-			&nbsp;INTITULE <br>
-			&nbsp;N.COMPTE <br>
-			&nbsp;SWIFT <br>
-			&nbsp;BANQUE <br>
-			</td>
-			<td width="10%" style=""></td>
-			<td width="45%" style="border: 1px solid black; text-align: left;  font-size: 7px;;">
-			&nbsp;INTITULE <br>
-			&nbsp;N.COMPTE <br>
-			&nbsp;SWIFT <br>
-			&nbsp;BANQUE <br>
-			</td>
+			<td width="10%" style="border-top: 1px solid black; border-left: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;INTITULE</td>
+			<td width="35%" style="border-top: 1px solid black; border-right: 1px solid black;  font-size: 7px;">&nbsp;MALABAR RDC SARL</td>
+		</tr>
+		<tr>
+			<td width="10%" style="border-left: 1px solid black;  font-size: 7px;">&nbsp;N.COMPTE</td>
+			<td width="35%" style="border-right: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;00018 - 00016 - 01231051200 - 54</td>
+		</tr>
+		<tr>
+			<td width="10%" style="border-left: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;SWIFT</td>
+			<td width="35%" style="border-right: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;PRCBCDKI</td>
+		</tr>
+		<tr>
+			<td width="10%" style="border-bottom: 1px solid black; border-left: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;BANQUE</td>
+			<td width="35%" style="border-bottom: 1px solid black; border-right: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;EQUITY BANK CONGO SA		
+			<br>&nbsp;LUBUMBASHI		
+			<br>&nbsp;R.D. CONGO</td>
 		</tr>
 		<tr>
 			<td width="100%"></td>
@@ -449,19 +452,22 @@ $tbl2 = <<<EOD
 			</td>
 		</tr>
 		<tr>
-			<td width="45%" style="border: 1px solid black; text-align: left;  font-size: 7px;;">
-			&nbsp;INTITULE <br>
-			&nbsp;N.COMPTE <br>
-			&nbsp;SWIFT <br>
-			&nbsp;BANQUE <br>
-			</td>
-			<td width="10%" style=""></td>
-			<td width="45%" style="border: 1px solid black; text-align: left;  font-size: 7px;;">
-			&nbsp;INTITULE <br>
-			&nbsp;N.COMPTE <br>
-			&nbsp;SWIFT <br>
-			&nbsp;BANQUE <br>
-			</td>
+			<td width="10%" style="border-top: 1px solid black; border-left: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;INTITULE</td>
+			<td width="35%" style="border-top: 1px solid black; border-right: 1px solid black;  font-size: 7px;">&nbsp;MALABAR RDC SARL</td>
+		</tr>
+		<tr>
+			<td width="10%" style="border-left: 1px solid black;  font-size: 7px;">&nbsp;N.COMPTE</td>
+			<td width="35%" style="border-right: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;00018 - 00016 - 01231051200 - 54</td>
+		</tr>
+		<tr>
+			<td width="10%" style="border-left: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;SWIFT</td>
+			<td width="35%" style="border-right: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;PRCBCDKI</td>
+		</tr>
+		<tr>
+			<td width="10%" style="border-bottom: 1px solid black; border-left: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;BANQUE</td>
+			<td width="35%" style="border-bottom: 1px solid black; border-right: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;EQUITY BANK CONGO SA		
+			<br>&nbsp;LUBUMBASHI		
+			<br>&nbsp;R.D. CONGO</td>
 		</tr>
 		<tr>
 			<td width="100%"></td>
