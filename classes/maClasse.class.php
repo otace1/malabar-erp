@@ -7348,6 +7348,7 @@
 													MAX(dos.ref_dos) AS ref_dos_max,
 													COUNT(DISTINCT(dos.id_dos)) AS nbre_dos,
 													dos.*,
+													fd.num_cmpt AS num_cmpt,
 													DATE_FORMAT(dos.date_decl, '%d/%m/%Y') AS date_decl,
 													DATE_FORMAT(dos.date_liq, '%d/%m/%Y') AS date_liq,
 													DATE_FORMAT(dos.date_quit, '%d/%m/%Y') AS date_quit,
@@ -7364,6 +7365,19 @@
 													AND dos.id_mod_trans = mt.id_mod_trans
 												GROUP BY fd.ref_fact");
 			$requete-> execute(array($entree['ref_fact']));
+			$reponse = $requete-> fetch();
+			return $reponse;
+		}
+
+		public function getDataCompteBancaire($num_cmpt){
+			include('connexion.php');
+			$entree['num_cmpt'] = $num_cmpt;
+
+			$requete = $connexion-> prepare("SELECT *
+												FROM banque, compte_bancaire
+												WHERE compte_bancaire.id_banq = banque.id_banq
+													AND compte_bancaire.num_cmpt = ?");
+			$requete-> execute(array($entree['num_cmpt']));
 			$reponse = $requete-> fetch();
 			return $reponse;
 		}
@@ -7395,7 +7409,8 @@
 
 
 				if($liste==''){
-					$liste = '&nbsp;'.$reponse['ref_dos'];
+					// $liste = '&nbsp;'.$reponse['ref_dos'];
+					$liste = $reponse['ref_dos'];
 					$last = substr($reponse['ref_dos'], strrpos($reponse['ref_dos'],'-')+1);
 				}else{
 
@@ -7412,14 +7427,15 @@
 					$dossier_suivant++;
 
 					if($last!=$tmp_last_next){
-						$liste .= '<br>&nbsp;'.$reponse['ref_dos'];
+						// $liste .= '<br>&nbsp;'.$reponse['ref_dos'];
+						$liste .= ', '.$reponse['ref_dos'];
 					}elseif (empty($this-> verifierDossierFacture($dossier_suivant, $ref_fact))) {
 						$liste .= ' a '.$last;
 					}else if($last==$tmp_last_next){
 						// $liste .= ' a '.$last;
 					}else{
-						// $liste .= ' a '.$tmp_last.'<br>&nbsp;'.$reponse['ref_dos'];
-						$liste .= '<br>&nbsp;'.$reponse['ref_dos'];
+						// $liste .= '<br>&nbsp;'.$reponse['ref_dos'];
+						$liste .= ', '.$reponse['ref_dos'];
 					}
 					
 
