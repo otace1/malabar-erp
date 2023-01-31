@@ -25801,6 +25801,8 @@
 													AND date_quit IS NOT NULL 
 													AND ref_quit IS NOT NULL
 													AND dgda_out IS NULL
+													AND ref_dos NOT LIKE '%20-%'
+													AND d.cleared <> '2'
 													$sqlClient
 													$sqlModeTransport
 													$sqlCommodity");
@@ -25814,6 +25816,7 @@
 													AND ref_quit IS NOT NULL
 													AND dgda_out IS NOT NULL
 													AND dispatch_deliv IS NOT NULL
+													AND ref_dos NOT LIKE '%20-%'
 													$sqlClient
 													$sqlModeTransport
 													$sqlCommodity");
