@@ -26,7 +26,7 @@ require_once('../tcpdf/tcpdf.php');
 $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
 
 // set margins
-$pdf->SetMargins(2,5 ,2);
+$pdf->SetMargins(4,5 ,3);
 
 
 // set document information
@@ -67,12 +67,12 @@ $pdf->setPrintHeader(false);
 // add a page
 $pdf->AddPage('P', 'A4');
 
-$pdf->Image('../images/malabar2.png', 2, 10, 110, '', '', '', '', false, 300);
+$pdf->Image('../images/malabar2.png', 4, 10, 110, '', '', '', '', false, 300);
 $sceau='';
 if ( ($maClasse-> getFactureGlobale($_GET['ref_fact'])['validation']) == '0' ) {
 	$pdf->Image('../images/no_valid.jpg', 150, 2, 30, '', '', '', '', false, 300);
 }else{
-	$pdf->Image('../images/sceau_mca.png', 90, 247, 50, '', '', '', '', false, 300);
+	// $pdf->Image('../images/sceau_mca.png', 90, 247, 50, '', '', '', '', false, 300);
 	$sceau = '<img src="../images/sceau_mca.png" width="150px">';
 	// if ($maClasse-> getFactureGlobale($_GET['ref_fact'])['id_cli'] != '906' && $maClasse-> getFactureGlobale($_GET['ref_fact'])['id_cli'] != '902') {
 	// 	$pdf->Image('../images/sceau.png', 50, 200, 105, '', '', '', '', false, 300);
@@ -182,6 +182,12 @@ $autre_frais = number_format($maClasse-> getDataDossiersMultipleInvoice($_GET['r
 $cif = number_format($maClasse-> getDataDossiersMultipleInvoice($_GET['ref_fact'])['cif'], 2, ',', ' ');
 $cif_cdf = number_format($maClasse-> getDataDossiersMultipleInvoice($_GET['ref_fact'])['cif']*$maClasse-> getDataDossiersMultipleInvoice($_GET['ref_fact'])['roe_decl'], 2, ',', ' ');
 
+$num_cmpt = $maClasse-> getDataDossiersMultipleInvoice($_GET['ref_fact'])['num_cmpt'];
+$nom_banq = $maClasse-> getDataCompteBancaire($num_cmpt)['nom_banq'];
+$adr_banq = $maClasse-> getDataCompteBancaire($num_cmpt)['adr_banq'];
+$intitule_cmpt = $maClasse-> getDataCompteBancaire($num_cmpt)['intitule_cmpt'];
+$swift_banq = $maClasse-> getDataCompteBancaire($num_cmpt)['swift_banq'];
+
 $tbl = <<<EOD
     <html>
     <head>
@@ -275,8 +281,13 @@ $tbl = <<<EOD
 			<td><br></td>
 		</tr>
 		<tr>
-			<td width="100%" style=" font-size: 7px;">
+			<td width="45%" style=" font-size: 6.5px;">
 			VEUILLEZ TROUVER CI-DESSOUS LES DETAILS DE NOTRE COMPTE BANCAIRE
+			</td>
+			<td width="55%" rowspan="8" style="text-align: center;">$sceau</td>
+		</tr>
+		<tr>
+			<td width="45%" style=" font-size: 6.5px;">
 			</td>
 		</tr>
 		<tr>
@@ -285,17 +296,16 @@ $tbl = <<<EOD
 		</tr>
 		<tr>
 			<td width="10%" style="border-left: 1px solid black;  font-size: 7px;">&nbsp;N.COMPTE</td>
-			<td width="35%" style="border-right: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;00018 - 00016 - 01231051200 - 54</td>
+			<td width="35%" style="border-right: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;$num_cmpt</td>
 		</tr>
 		<tr>
 			<td width="10%" style="border-left: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;SWIFT</td>
-			<td width="35%" style="border-right: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;PRCBCDKI</td>
+			<td width="35%" style="border-right: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;$swift_banq</td>
 		</tr>
 		<tr>
 			<td width="10%" style="border-bottom: 1px solid black; border-left: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;BANQUE</td>
-			<td width="35%" style="border-bottom: 1px solid black; border-right: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;EQUITY BANK CONGO SA		
-			<br>&nbsp;LUBUMBASHI		
-			<br>&nbsp;R.D. CONGO</td>
+			<td width="35%" style="border-bottom: 1px solid black; border-right: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;$nom_banq		
+			<br>&nbsp;$adr_banq</td>
 		</tr>
 		<tr>
 			<td width="100%"></td>
@@ -447,8 +457,13 @@ $tbl2 = <<<EOD
 			<td><br></td>
 		</tr>
 		<tr>
-			<td width="100%" style=" font-size: 7px;">
+			<td width="45%" style=" font-size: 6.5px;">
 			VEUILLEZ TROUVER CI-DESSOUS LES DETAILS DE NOTRE COMPTE BANCAIRE
+			</td>
+			<td width="55%" rowspan="8" style="text-align: center;">$sceau</td>
+		</tr>
+		<tr>
+			<td width="45%" style=" font-size: 6.5px;">
 			</td>
 		</tr>
 		<tr>
@@ -457,17 +472,16 @@ $tbl2 = <<<EOD
 		</tr>
 		<tr>
 			<td width="10%" style="border-left: 1px solid black;  font-size: 7px;">&nbsp;N.COMPTE</td>
-			<td width="35%" style="border-right: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;00018 - 00016 - 01231051200 - 54</td>
+			<td width="35%" style="border-right: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;$num_cmpt</td>
 		</tr>
 		<tr>
 			<td width="10%" style="border-left: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;SWIFT</td>
-			<td width="35%" style="border-right: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;PRCBCDKI</td>
+			<td width="35%" style="border-right: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;$swift_banq</td>
 		</tr>
 		<tr>
 			<td width="10%" style="border-bottom: 1px solid black; border-left: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;BANQUE</td>
-			<td width="35%" style="border-bottom: 1px solid black; border-right: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;EQUITY BANK CONGO SA		
-			<br>&nbsp;LUBUMBASHI		
-			<br>&nbsp;R.D. CONGO</td>
+			<td width="35%" style="border-bottom: 1px solid black; border-right: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;$nom_banq		
+			<br>&nbsp;$adr_banq</td>
 		</tr>
 		<tr>
 			<td width="100%"></td>
