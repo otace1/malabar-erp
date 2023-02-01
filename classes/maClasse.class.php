@@ -30763,10 +30763,10 @@
 													)
 												AND ref_quit IS NOT NULL
 												AND ref_quit <> ''
-												AND LENGTH(ref_quit) > 2
+												-- AND LENGTH(ref_quit) > 2
 												AND ref_decl IS NOT NULL
 												AND ref_decl <> ''
-												AND LENGTH(ref_decl) > 2
+												-- AND LENGTH(ref_decl) > 2
 												AND num_lic <> 'N/A'
 												AND num_lic <> 'UNDER VALUE'
 												AND num_lic <> 'UNDERVALUE'
