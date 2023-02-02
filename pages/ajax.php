@@ -496,6 +496,57 @@
 
   		echo json_encode($reponse);
 
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='files_upload'){
+
+  		
+	    if (!empty($_FILES)) {
+	      $file = $_FILES['fichier'];
+	      $filename = $file['name'];
+	      $ext = pathinfo($filename, PATHINFO_EXTENSION);
+	      $allowed = array('php', 'PDF', 'xls', 'xlsx', 'doc', 'docx', 'jpg', 'jpeg', 'png');
+
+	      // if (!in_array($ext, $allowed)) {
+	      //   $response = array('error' => 'Fichier non-autorisé');
+	      //   echo json_encode($response);exit;
+	      // }
+
+	      // $uploadFile = 'licences/'.$maClasse-> getLicence($_POST['num_lic'])['id_lic'].'/'.uniqid().'.'.$ext;
+	      // // $uploadFile = 'licences/'.uniqid().'.'.$ext;
+
+	      // if (move_uploaded_file($file['tmp_name'], $uploadFile)) {
+	      //   $response = array('message' => 'Fichier enregistré');
+	      //   echo json_encode($response);exit;
+	      // }
+	      if ($file['size']>5000000) {
+	        $response = array('error' => 'File too large, maximum 20M. Please Change the file!');
+	       
+	        echo json_encode($response);exit;
+	      }
+	      else{
+
+	        try {
+
+			  $dossier = '../'.$_POST['localisation'];
+
+			  chmod("$dossier", 0777);
+	          
+	          $uploadFile = $dossier.'/'.$filename;
+	          move_uploaded_file($file['tmp_name'], $uploadFile);
+	          $reponse['message'] = 'ok';
+
+	        } catch (Exception $e) {
+
+	            $response['message'] = $e->getMessage();
+
+	        }
+
+	        echo json_encode($response);exit;
+	      }
+
+	    }
+
+  		echo json_encode($reponse);
+
 	}
 
 ?>

@@ -198,7 +198,16 @@
             <hr>
             <?php
             }
-
+            if($_SESSION['id_util'] == '1'){
+              ?>
+            <li class="nav-item">
+            <a href="files.php" class="nav-link">
+              &nbsp;
+              <p>Files</p>
+            </a>
+          </li>
+              <?php
+            }
           ?>
           <hr>
       </nav>
