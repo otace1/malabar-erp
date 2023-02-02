@@ -7879,6 +7879,10 @@
 
 						$a = $this-> getTailleCompteur2($i);
 
+						if ($_GET['id_cli']=='845') {
+							$a = $this-> getTailleCompteur($i);
+						}
+
 						$code = date('Y').'-'.$this-> codePourClient($id_cli).'-EXP'.$code_march.'-'.$a;
 					}
 
@@ -7905,6 +7909,10 @@
 
 					while($this-> verifierExistanceRefFactureDossier($code) == true){
 						$i++;
+
+						if ($_GET['id_cli']=='845') {
+							$a = $this-> getTailleCompteur($i);
+						}
 
 						$a = $this-> getTailleCompteur2($i);
 
