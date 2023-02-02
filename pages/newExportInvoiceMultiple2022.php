@@ -79,6 +79,12 @@
           <input class="form-control form-control-sm bg bg-dark" disabled value="<?php echo $maClasse-> getModeTransport($_GET['id_mod_trans'])['nom_mod_trans'];?>">
         </div>
       </div>
+      <div class="col-md-3">
+        <div class="form-group">
+          <label for="inputEmail3" class="col-form-label">License: </label>
+          <input class="form-control form-control-sm bg bg-dark" disabled value="<?php echo $_GET['num_lic'];?>">
+        </div>
+      </div>
 
       <div class="col-12"></div>
 
@@ -134,7 +140,7 @@
           </thead>
           <tbody>
             <?php
-              $maClasse-> getDossiersExportAFactures($_GET['id_cli'], $_GET['id_mod_lic_fact'], $_GET['id_march'], $_GET['id_mod_trans']);
+              $maClasse-> getDossiersExportAFactures($_GET['id_cli'], $_GET['id_mod_lic_fact'], $_GET['id_march'], $_GET['id_mod_trans'], $_GET['num_lic']);
             ?>
           </tbody>
         </table>

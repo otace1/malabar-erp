@@ -25,7 +25,7 @@ $mail = new PHPMailer(true);
         //$mail->Host       = 'outlook.office365.com';                     //Set the SMTP server to send through
         $mail->SMTPAuth   = true;                                   //Enable SMTP authentication
         $mail->Username   = 'malabar-erp@belej-consulting.com';                     //SMTP username
-        $mail->Password   = 'M@l@b@r-3RP';                               //SMTP password
+        $mail->Password   = 'M@l@b@r-3RP-';                               //SMTP password
         $mail->SMTPSecure = 'tls';            //Enable implicit TLS encryption
         $mail->Port       = 587;                                    //TCP port to connect to; use 587 if you have set `SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS`
 
@@ -65,7 +65,16 @@ $mail = new PHPMailer(true);
         $mail->Subject = 'INVOICE '.$_POST['ref_fact'];
 
         $message = 'Dear All, <br><br>';
-        $message .= 'Please find attached the documents for the Invoice<br>Also <a href="http://185.98.128.37/malabar-erp/html/pages/plisFacture.php?ref_fact='.$_POST['ref_fact'].'">Click here</a> to get supporting documents';
+        $message .= 'Please find attached the documents for the Invoice of this files:<br>
+                    <table style="border: 1px solid black; border-collapse: collapse;">
+                        <tr>
+                            <th style="border: 1px solid black; border-collapse: collapse;">#</th>
+                            <th style="border: 1px solid black; border-collapse: collapse;">Ref.File</th>
+                            <th style="border: 1px solid black; border-collapse: collapse;">Truck(Wagon)</th>
+                        </tr>
+                        '.$maClasse-> getDossiersFacture($_POST['ref_fact']).'
+                    </table>
+                    <br>Also <a href="https://tracking.malabar-group.com/pages/plisFacture.php?ref_fact='.$_POST['ref_fact'].'">Click here</a> to get supporting documents';
         $mail->Body    = $message;
         
 

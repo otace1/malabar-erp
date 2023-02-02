@@ -33,20 +33,20 @@ $pdf->SetMargins(4,5 ,3);
 // set document information
 $pdf->SetCreator(PDF_CREATOR);
 $pdf->SetAuthor('');
-$pdf->SetTitle('Facture '.$_GET['ref_fact']);
+$pdf->SetTitle('Facture '.$_POST['ref_fact']);
 $pdf->SetSubject('act');
 $pdf->SetKeywords('act');
 
 
 //Qrcode de la facture
 //On verifie si le QrCode existe deja
-// $ref_fact = str_replace(' ', '', str_replace('/', '_', $_GET['ref_fact']));
+// $ref_fact = str_replace(' ', '', str_replace('/', '_', $_POST['ref_fact']));
 // if(file_exists('../qrcode/'. $ref_fact.'.png')){
 //     //$qrcode = '../qrcode/'.$ref_mvt.'.png';
 //     $qrcode = '<img src="../qrcode/'.$ref_fact.'.png" width="30px">';
 // }else{
 //     echo '<script>window.location="../qrcode/generateur.php?ref_fact='.$ref_fact.'&type=facturePartielle";</script>';
-//     //header('Location: ../qrcode/generateurBonCaisse.php?id_cais='.$_GET['id_cais'].'&ref_mvt='.$ref_mvt.'&lang='.$_GET['lang']);
+//     //header('Location: ../qrcode/generateurBonCaisse.php?id_cais='.$_POST['id_cais'].'&ref_mvt='.$ref_mvt.'&lang='.$_POST['lang']);
 //     $qrcode = '<img src="../qrcode/'.$ref_fact.'.png" width="20px">';
 // }
  $qrcode = '';
@@ -70,20 +70,20 @@ $pdf->AddPage('P', 'A4');
 
 $pdf->Image('../images/malabar2.png', 4, 10, 110, '', '', '', '', false, 300);
 $sceau='';
-if ( ($maClasse-> getFactureGlobale($_GET['ref_fact'])['validation']) == '0' ) {
+if ( ($maClasse-> getFactureGlobale($_POST['ref_fact'])['validation']) == '0' ) {
 	$pdf->Image('../images/no_valid.jpg', 150, 2, 30, '', '', '', '', false, 300);
 }else{
 	// $pdf->Image('../images/sceau_mca.png', 120, 235, 50, '', '', '', '', false, 300);
 	$sceau = '<img src="../images/sceau_mca.png" width="150px">';
-	// if ($maClasse-> getFactureGlobale($_GET['ref_fact'])['id_cli'] != '906' && $maClasse-> getFactureGlobale($_GET['ref_fact'])['id_cli'] != '902') {
+	// if ($maClasse-> getFactureGlobale($_POST['ref_fact'])['id_cli'] != '906' && $maClasse-> getFactureGlobale($_POST['ref_fact'])['id_cli'] != '902') {
 	// 	$pdf->Image('../images/sceau.png', 50, 200, 105, '', '', '', '', false, 300);
 	// }
 	
 }
 
-if(isset($_GET['ref_fact'])){
+if(isset($_POST['ref_fact'])){
 
-	if ($maClasse-> getFactureGlobale($_GET['ref_fact'])['id_cli'] == '887' || $maClasse-> getFactureGlobale($_GET['ref_fact'])['id_cli'] == '885') {
+	if ($maClasse-> getFactureGlobale($_POST['ref_fact'])['id_cli'] == '887' || $maClasse-> getFactureGlobale($_POST['ref_fact'])['id_cli'] == '885') {
 		$banque = '
 		<tr>
 			<td width="100%" style="text-align: left;border: 1px solid black;">&nbsp;<u>Banque : <b></b></u><br>&nbsp;<u>Numero de Compte : <b></b></u><br>&nbsp;<u>Devise  : <b></b></u><br>&nbsp;<u>Adresse : <b></b></u></td>
@@ -99,90 +99,90 @@ if(isset($_GET['ref_fact'])){
 
 $logo = '<img src="../images/malabar2.png" width="250px">';
 	
-$facture = $maClasse-> getDataFactureGlobale($_GET['ref_fact']);
-$dossiers = $maClasse-> getDossierFactureExportSingle($_GET['ref_fact']);
+$facture = $maClasse-> getDataFactureGlobale($_POST['ref_fact']);
+$dossiers = $maClasse-> getDossierFactureExportSingle($_POST['ref_fact']);
 
-$ref_fact = $_GET['ref_fact'];//$maClasse-> getNumFactureEnCours($_GET['facture']);
-$date_fact = $maClasse-> getFactureGlobale($_GET['ref_fact'])['date_fact'];//$maClasse-> getDateFactureEnCours($_GET['facture']);
-$code_client = $maClasse-> getClientFacture($_GET['ref_fact'])['code_cli'];
-$nom_client = $maClasse-> getClientFacture($_GET['ref_fact'])['nom_cli'];
-$nom_complet = $maClasse-> getClientFacture($_GET['ref_fact'])['nom_complet'];
+$ref_fact = $_POST['ref_fact'];//$maClasse-> getNumFactureEnCours($_POST['facture']);
+$date_fact = $maClasse-> getFactureGlobale($_POST['ref_fact'])['date_fact'];//$maClasse-> getDateFactureEnCours($_POST['facture']);
+$code_client = $maClasse-> getClientFacture($_POST['ref_fact'])['code_cli'];
+$nom_client = $maClasse-> getClientFacture($_POST['ref_fact'])['nom_cli'];
+$nom_complet = $maClasse-> getClientFacture($_POST['ref_fact'])['nom_complet'];
 
-if ($maClasse-> getFactureGlobale($_GET['ref_fact'])['note_debit'] == '1') {
+if ($maClasse-> getFactureGlobale($_POST['ref_fact'])['note_debit'] == '1') {
 	$note_debit = 'NOTE DE DEBIT';
 }else{
 	$note_debit = '';
 }
 
-//$adresse_client = htmlentities($facture['adresse_client'], ENT_QUOTES, "UTF-8");//$maClasse-> getAdresseClientFactureEnCours($_GET['facture']);
-$adresse_client = $maClasse-> getClientFacture($_GET['ref_fact'])['adr_cli'];//$maClasse-> getAdresseClientFactureEnCours($_GET['facture']);
-$transit = '';//$facture['transit'];//$maClasse-> getTransitFactureEnCours($_GET['facture']);
-$voie = '';//$facture['voie'];//$maClasse-> getVoieFactureEnCours($_GET['facture']);
-$marchandise = $maClasse-> getMarchandiseFacture($_GET['ref_fact'])['nom_march'];
-$fournisseur = $maClasse-> getFournisseurFacture($_GET['ref_fact'])['supplier'];
-$info_fact = $maClasse-> getFactureGlobale($_GET['ref_fact'])['information'];
+//$adresse_client = htmlentities($facture['adresse_client'], ENT_QUOTES, "UTF-8");//$maClasse-> getAdresseClientFactureEnCours($_POST['facture']);
+$adresse_client = $maClasse-> getClientFacture($_POST['ref_fact'])['adr_cli'];//$maClasse-> getAdresseClientFactureEnCours($_POST['facture']);
+$transit = '';//$facture['transit'];//$maClasse-> getTransitFactureEnCours($_POST['facture']);
+$voie = '';//$facture['voie'];//$maClasse-> getVoieFactureEnCours($_POST['facture']);
+$marchandise = $maClasse-> getMarchandiseFacture($_POST['ref_fact'])['nom_march'];
+$fournisseur = $maClasse-> getFournisseurFacture($_POST['ref_fact'])['supplier'];
+$info_fact = $maClasse-> getFactureGlobale($_POST['ref_fact'])['information'];
 
-$taxe = $maClasse-> getDetailFactureExportMultiple($_GET['ref_fact'], '1');
+$taxe = $maClasse-> getDetailFactureExportMultiple($_POST['ref_fact'], '1');
 
-$autres_charges = $maClasse-> getDetailFactureExportMultiple($_GET['ref_fact'], '2');
+$autres_charges = $maClasse-> getDetailFactureExportMultiple($_POST['ref_fact'], '2');
 
-$operational_cost = $maClasse-> getDetailFactureExportMultiple($_GET['ref_fact'], '3');
+$operational_cost = $maClasse-> getDetailFactureExportMultiple($_POST['ref_fact'], '3');
 
-$service_fee = $maClasse-> getDetailFactureExportMultiple($_GET['ref_fact'], '4');
+$service_fee = $maClasse-> getDetailFactureExportMultiple($_POST['ref_fact'], '4');
 
-$totalAll = $maClasse-> getTotalFactureExportSingle($_GET['ref_fact']);
+$totalAll = $maClasse-> getTotalFactureExportSingle($_POST['ref_fact']);
 
-$total = $maClasse-> getTotalForFacturePartielle($_GET['ref_fact']);
-$arsp = $maClasse-> getARSPForFacturePartielle($_GET['ref_fact']);
+$total = $maClasse-> getTotalForFacturePartielle($_POST['ref_fact']);
+$arsp = $maClasse-> getARSPForFacturePartielle($_POST['ref_fact']);
 
-$taux =  number_format($maClasse-> getTauxFacture($_GET['ref_fact'])['roe_decl'], 4, ',', '.');
-$totalHT = number_format($maClasse-> getTotalHTFacture($_GET['ref_fact']), 2, ',', ' ');
-$totalTVA = number_format($maClasse-> getTotalTVAFacture($_GET['ref_fact']), 2, ',', ' ');
-$totalTTC = number_format(($maClasse-> getTotalTVAFacture($_GET['ref_fact'])+$maClasse-> getTotalHTFacture($_GET['ref_fact'])), 2, ',', ' ');
+$taux =  number_format($maClasse-> getTauxFacture($_POST['ref_fact'])['roe_decl'], 4, ',', '.');
+$totalHT = number_format($maClasse-> getTotalHTFacture($_POST['ref_fact']), 2, ',', ' ');
+$totalTVA = number_format($maClasse-> getTotalTVAFacture($_POST['ref_fact']), 2, ',', ' ');
+$totalTTC = number_format(($maClasse-> getTotalTVAFacture($_POST['ref_fact'])+$maClasse-> getTotalHTFacture($_POST['ref_fact'])), 2, ',', ' ');
 
-$nom_bur_douane = $maClasse-> getBureauDouane($maClasse-> getDataDossiersMultipleInvoice($_GET['ref_fact'])['bur_douane'])['nom_bur_douane'];
-$nif_cli = $maClasse-> getClient($maClasse-> getDataDossiersMultipleInvoice($_GET['ref_fact'])['id_cli'])['nif_cli'];
-$rccm_cli = $maClasse-> getClient($maClasse-> getDataDossiersMultipleInvoice($_GET['ref_fact'])['id_cli'])['rccm_cli'];
-$adr_cli = $maClasse-> getClient($maClasse-> getDataDossiersMultipleInvoice($_GET['ref_fact'])['id_cli'])['adr_cli'];
-$id_nat = $maClasse-> getClient($maClasse-> getDataDossiersMultipleInvoice($_GET['ref_fact'])['id_cli'])['id_nat'];
-$num_imp_exp = $maClasse-> getClient($maClasse-> getDataDossiersMultipleInvoice($_GET['ref_fact'])['id_cli'])['num_imp_exp'];
+$nom_bur_douane = $maClasse-> getBureauDouane($maClasse-> getDataDossiersMultipleInvoice($_POST['ref_fact'])['bur_douane'])['nom_bur_douane'];
+$nif_cli = $maClasse-> getClient($maClasse-> getDataDossiersMultipleInvoice($_POST['ref_fact'])['id_cli'])['nif_cli'];
+$rccm_cli = $maClasse-> getClient($maClasse-> getDataDossiersMultipleInvoice($_POST['ref_fact'])['id_cli'])['rccm_cli'];
+$adr_cli = $maClasse-> getClient($maClasse-> getDataDossiersMultipleInvoice($_POST['ref_fact'])['id_cli'])['adr_cli'];
+$id_nat = $maClasse-> getClient($maClasse-> getDataDossiersMultipleInvoice($_POST['ref_fact'])['id_cli'])['id_nat'];
+$num_imp_exp = $maClasse-> getClient($maClasse-> getDataDossiersMultipleInvoice($_POST['ref_fact'])['id_cli'])['num_imp_exp'];
 
-$nom_mod_trans = $maClasse-> getModeTransport($maClasse-> getDataDossiersMultipleInvoice($_GET['ref_fact'])['id_mod_trans'])['nom_mod_trans'];
-$reg_dgda = $maClasse-> getDataDossiersMultipleInvoice($_GET['ref_fact'])['reg_dgda'];
-$load_date = $maClasse-> getDataDossiersMultipleInvoice($_GET['ref_fact'])['load_date'];
-$exit_drc = $maClasse-> getDataDossiersMultipleInvoice($_GET['ref_fact'])['exit_drc'];
-$bur_douane = $maClasse-> getDataDossiersMultipleInvoice($_GET['ref_fact'])['bur_douane'];
-$commodity = $maClasse-> getDataDossiersMultipleInvoice($_GET['ref_fact'])['commodity'];
-$ref_dos = $maClasse-> getDataDossiersMultipleInvoice($_GET['ref_fact'])['ref_dos'];
-$supplier = $maClasse-> getDataDossiersMultipleInvoice($_GET['ref_fact'])['supplier'];
-$ref_decl = $maClasse-> getDataDossiersMultipleInvoice($_GET['ref_fact'])['ref_decl'];
-$date_decl = $maClasse-> getDataDossiersMultipleInvoice($_GET['ref_fact'])['date_decl'];
-$ref_liq = $maClasse-> getDataDossiersMultipleInvoice($_GET['ref_fact'])['ref_liq'];
-$date_liq = $maClasse-> getDataDossiersMultipleInvoice($_GET['ref_fact'])['date_liq'];
-$ref_quit = $maClasse-> getDataDossiersMultipleInvoice($_GET['ref_fact'])['ref_quit'];
-$date_quit = $maClasse-> getDataDossiersMultipleInvoice($_GET['ref_fact'])['date_quit'];
-$ref_crf = $maClasse-> getDataDossiersMultipleInvoice($_GET['ref_fact'])['ref_crf'];
-$poids = number_format($maClasse-> getDataDossiersMultipleInvoice($_GET['ref_fact'])['poids'], 2, ',', ' ');
-$road_manif = $maClasse-> getDataDossiersMultipleInvoice($_GET['ref_fact'])['road_manif'];
+$nom_mod_trans = $maClasse-> getModeTransport($maClasse-> getDataDossiersMultipleInvoice($_POST['ref_fact'])['id_mod_trans'])['nom_mod_trans'];
+$reg_dgda = $maClasse-> getDataDossiersMultipleInvoice($_POST['ref_fact'])['reg_dgda'];
+$load_date = $maClasse-> getDataDossiersMultipleInvoice($_POST['ref_fact'])['load_date'];
+$exit_drc = $maClasse-> getDataDossiersMultipleInvoice($_POST['ref_fact'])['exit_drc'];
+$bur_douane = $maClasse-> getDataDossiersMultipleInvoice($_POST['ref_fact'])['bur_douane'];
+$commodity = $maClasse-> getDataDossiersMultipleInvoice($_POST['ref_fact'])['commodity'];
+$ref_dos = $maClasse-> getDataDossiersMultipleInvoice($_POST['ref_fact'])['ref_dos'];
+$supplier = $maClasse-> getDataDossiersMultipleInvoice($_POST['ref_fact'])['supplier'];
+$ref_decl = $maClasse-> getDataDossiersMultipleInvoice($_POST['ref_fact'])['ref_decl'];
+$date_decl = $maClasse-> getDataDossiersMultipleInvoice($_POST['ref_fact'])['date_decl'];
+$ref_liq = $maClasse-> getDataDossiersMultipleInvoice($_POST['ref_fact'])['ref_liq'];
+$date_liq = $maClasse-> getDataDossiersMultipleInvoice($_POST['ref_fact'])['date_liq'];
+$ref_quit = $maClasse-> getDataDossiersMultipleInvoice($_POST['ref_fact'])['ref_quit'];
+$date_quit = $maClasse-> getDataDossiersMultipleInvoice($_POST['ref_fact'])['date_quit'];
+$ref_crf = $maClasse-> getDataDossiersMultipleInvoice($_POST['ref_fact'])['ref_crf'];
+$poids = number_format($maClasse-> getDataDossiersMultipleInvoice($_POST['ref_fact'])['poids'], 2, ',', ' ');
+$road_manif = $maClasse-> getDataDossiersMultipleInvoice($_POST['ref_fact'])['road_manif'];
 
-$liste_dossiers = $maClasse-> getRangDossierFacture($_GET['ref_fact']);
-$ref_dos_min = $maClasse-> getDataDossiersMultipleInvoice($_GET['ref_fact'])['ref_dos_min'];
-$ref_dos_max = $maClasse-> getDataDossiersMultipleInvoice($_GET['ref_fact'])['ref_dos_max'];
-$nbre_dos = $maClasse-> getDataDossiersMultipleInvoice($_GET['ref_fact'])['nbre_dos'];
-$ref_fact_dos = $maClasse-> getDataDossiersMultipleInvoice($_GET['ref_fact'])['ref_fact'];
-$po_ref = $maClasse-> getDataDossiersMultipleInvoice($_GET['ref_fact'])['po_ref'];
-$horse = $maClasse-> getDataDossiersMultipleInvoice($_GET['ref_fact'])['horse'];
-$trailer_1 = $maClasse-> getDataDossiersMultipleInvoice($_GET['ref_fact'])['trailer_1'];
-$trailer_2 = $maClasse-> getDataDossiersMultipleInvoice($_GET['ref_fact'])['trailer_2'];
-$num_lic = $maClasse-> getDataDossiersMultipleInvoice($_GET['ref_fact'])['num_lic'];
-$roe_decl = number_format($maClasse-> getDataDossiersMultipleInvoice($_GET['ref_fact'])['roe_decl'], 4, ',', ' ');
-$fob = number_format($maClasse-> getDataDossiersMultipleInvoice($_GET['ref_fact'])['fob'], 2, ',', ' ');
-$fret = number_format($maClasse-> getDataDossiersMultipleInvoice($_GET['ref_fact'])['fret'], 2, ',', ' ');
-$assurance = number_format($maClasse-> getDataDossiersMultipleInvoice($_GET['ref_fact'])['assurance'], 2, ',', ' ');
-$autre_frais = number_format($maClasse-> getDataDossiersMultipleInvoice($_GET['ref_fact'])['autre_frais'], 2, ',', ' ');
-$cif = number_format($maClasse-> getDataDossiersMultipleInvoice($_GET['ref_fact'])['cif'], 2, ',', ' ');
-$cif_cdf = number_format($maClasse-> getDataDossiersMultipleInvoice($_GET['ref_fact'])['cif']*$maClasse-> getDataDossiersMultipleInvoice($_GET['ref_fact'])['roe_decl'], 2, ',', ' ');
-$num_cmpt = $maClasse-> getDataDossiersMultipleInvoice($_GET['ref_fact'])['num_cmpt'];
+$liste_dossiers = $maClasse-> getRangDossierFacture($_POST['ref_fact']);
+$ref_dos_min = $maClasse-> getDataDossiersMultipleInvoice($_POST['ref_fact'])['ref_dos_min'];
+$ref_dos_max = $maClasse-> getDataDossiersMultipleInvoice($_POST['ref_fact'])['ref_dos_max'];
+$nbre_dos = $maClasse-> getDataDossiersMultipleInvoice($_POST['ref_fact'])['nbre_dos'];
+$ref_fact_dos = $maClasse-> getDataDossiersMultipleInvoice($_POST['ref_fact'])['ref_fact'];
+$po_ref = $maClasse-> getDataDossiersMultipleInvoice($_POST['ref_fact'])['po_ref'];
+$horse = $maClasse-> getDataDossiersMultipleInvoice($_POST['ref_fact'])['horse'];
+$trailer_1 = $maClasse-> getDataDossiersMultipleInvoice($_POST['ref_fact'])['trailer_1'];
+$trailer_2 = $maClasse-> getDataDossiersMultipleInvoice($_POST['ref_fact'])['trailer_2'];
+$num_lic = $maClasse-> getDataDossiersMultipleInvoice($_POST['ref_fact'])['num_lic'];
+$roe_decl = number_format($maClasse-> getDataDossiersMultipleInvoice($_POST['ref_fact'])['roe_decl'], 4, ',', ' ');
+$fob = number_format($maClasse-> getDataDossiersMultipleInvoice($_POST['ref_fact'])['fob'], 2, ',', ' ');
+$fret = number_format($maClasse-> getDataDossiersMultipleInvoice($_POST['ref_fact'])['fret'], 2, ',', ' ');
+$assurance = number_format($maClasse-> getDataDossiersMultipleInvoice($_POST['ref_fact'])['assurance'], 2, ',', ' ');
+$autre_frais = number_format($maClasse-> getDataDossiersMultipleInvoice($_POST['ref_fact'])['autre_frais'], 2, ',', ' ');
+$cif = number_format($maClasse-> getDataDossiersMultipleInvoice($_POST['ref_fact'])['cif'], 2, ',', ' ');
+$cif_cdf = number_format($maClasse-> getDataDossiersMultipleInvoice($_POST['ref_fact'])['cif']*$maClasse-> getDataDossiersMultipleInvoice($_POST['ref_fact'])['roe_decl'], 2, ',', ' ');
+$num_cmpt = $maClasse-> getDataDossiersMultipleInvoice($_POST['ref_fact'])['num_cmpt'];
 $nom_banq = $maClasse-> getDataCompteBancaire($num_cmpt)['nom_banq'];
 $adr_banq = $maClasse-> getDataCompteBancaire($num_cmpt)['adr_banq'];
 $intitule_cmpt = $maClasse-> getDataCompteBancaire($num_cmpt)['intitule_cmpt'];
@@ -328,7 +328,7 @@ $tbl = <<<EOD
         
 EOD;
 $pdf->writeHTML($tbl, true, false, false, false, '');
-if ( ($maClasse-> getFactureGlobale($_GET['ref_fact'])['validation']) == '0' ) {
+if ( ($maClasse-> getFactureGlobale($_POST['ref_fact'])['validation']) == '0' ) {
 	$not_valid = '<img src="../images/no_valid.jpg" style="width: 90px; ">';
 }else{
 	$not_valid = '';

@@ -650,13 +650,13 @@ $indiceSheet = 0;
 	$row++;
 	$row++;
 
-	$objDrawing2 = new PHPExcel_Worksheet_Drawing();
-	$objDrawing2->setName('sceau');
-	$objDrawing2->setDescription('Sceau');
-	$objDrawing2->setPath('../images/sceau_mca.png');
-	$objDrawing2->setWidth(150);
-	$objDrawing2->setCoordinates('K'.$row);
-	$objDrawing2->setWorksheet($excel->getActiveSheet());
+	// $objDrawing2 = new PHPExcel_Worksheet_Drawing();
+	// $objDrawing2->setName('sceau');
+	// $objDrawing2->setDescription('Sceau');
+	// $objDrawing2->setPath('../images/sceau_mca.png');
+	// $objDrawing2->setWidth(150);
+	// $objDrawing2->setCoordinates('K'.$row);
+	// $objDrawing2->setWorksheet($excel->getActiveSheet());
 
 	// Rename worksheet
 	$excel->getActiveSheet()->setTitle($_GET['ref_fact'].' DETAILS');

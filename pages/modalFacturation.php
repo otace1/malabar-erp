@@ -23,6 +23,7 @@
                   <tr>
                       <th>Commodity</th>
                       <th>Transport</th>
+                      <th>License</th>
                       <th>Files</th>
                       <th>Action</th>
                   </tr>
