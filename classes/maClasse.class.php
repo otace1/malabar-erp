@@ -35155,9 +35155,9 @@
 			$entree['ref_fact'] = $ref_fact;
 			$entree['validation'] = $validation;
 			
-			$requete = $connexion-> prepare("UPDATE facture_dossier SET validation = ?
+			$requete = $connexion-> prepare("UPDATE facture_dossier SET validation = ?, id_util_validation = ?, date_validation = NOW()
 												WHERE ref_fact = ?");
-			$requete-> execute(array($entree['validation'], $entree['ref_fact']));
+			$requete-> execute(array($entree['validation'], $_SESSION['id_util'], $entree['ref_fact']));
 
 		}
 
