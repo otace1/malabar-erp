@@ -7857,32 +7857,58 @@
 					
 					
 					$i = 1;
+
+					if (($this-> getCompteurFactureClientModeleLic($id_cli, $_GET['id_mod_lic_fact'], date('Y'), $_GET['id_march'])['compteur_fact'])>0) {
+						$i = $this-> getCompteurFactureClientModeleLic($id_cli, $_GET['id_mod_lic_fact'], date('Y'), $_GET['id_march'])['compteur_fact'];
+					}
+
 					$a = $this-> getTailleCompteur2($i);
 					// 2022-MTS-EXP-HC-037
-					$code = date('y').'-'.$this-> codePourClient($id_cli).'-EXP-'.$this-> getDataMarchandise($_GET['id_march'])['code_march'].'-'.$a;
+
+					if ($_GET['id_cli']=='845') {
+						$a = $this-> getTailleCompteur($i);
+						$code_march = '';
+					}else{
+						$code_march = '-'.$this-> getDataMarchandise($_GET['id_march'])['code_march'];
+					}
+
+					$code = date('y').'-'.$this-> codePourClient($id_cli).'-EXP'.$code_march.'-'.$a;
 
 					while($this-> verifierExistanceRefFactureDossier($code) == true){
 						$i++;
 
 						$a = $this-> getTailleCompteur2($i);
 
-						$code = date('y').'-'.$this-> codePourClient($id_cli).'-EXP-'.$this-> getDataMarchandise($_GET['id_march'])['code_march'].'-'.$a;
+						$code = date('y').'-'.$this-> codePourClient($id_cli).'-EXP'.$code_march.'-'.$a;
 					}
 
 				}else if (isset($_POST['id_mod_lic']) && ($_POST['id_mod_lic']=='1')) {
 					
 					
 					$i = 1;
+
+					if (($this-> getCompteurFactureClientModeleLic($id_cli, $_POST['id_mod_lic'], date('Y'), $_GET['id_march'])['compteur_fact'])>0) {
+						$i = $this-> getCompteurFactureClientModeleLic($id_cli, $_POST['id_mod_lic'], date('Y'), $_GET['id_march'])['compteur_fact'];
+					}
+
 					$a = $this-> getTailleCompteur2($i);
 					// 2022-MTS-EXP-HC-037
-					$code = date('y').'-'.$this-> codePourClient($id_cli).'-EXP-'.$this-> getDataMarchandise($_GET['id_march'])['code_march'].'-'.$a;
+
+					if ($_GET['id_cli']=='845') {
+						$a = $this-> getTailleCompteur($i);
+						$code_march = '';
+					}else{
+						$code_march = '-'.$this-> getDataMarchandise($_GET['id_march'])['code_march'];
+					}
+
+					$code = date('y').'-'.$this-> codePourClient($id_cli).'-EXP'.$code_march.'-'.$a;
 
 					while($this-> verifierExistanceRefFactureDossier($code) == true){
 						$i++;
 
 						$a = $this-> getTailleCompteur2($i);
 
-						$code = date('y').'-'.$this-> codePourClient($id_cli).'-EXP-'.$this-> getDataMarchandise($_GET['id_march'])['code_march'].'-'.$a;
+						$code = date('y').'-'.$this-> codePourClient($id_cli).'-EXP'.$code_march.'-'.$a;
 					}
 
 				}else{
@@ -13985,6 +14011,28 @@
 													AND klsa_arriv IS NOT NULL
 											');
 			$requete-> execute(array($entree['id_mod_lic'], $entree['date_preal']));
+
+			$reponse = $requete-> fetch();
+
+			return $reponse;
+		}
+
+		public function getCompteurFactureClientModeleLic($id_cli, $id_mod_lic, $annee, $id_march){
+			include('connexion.php');
+
+			$entree['id_cli'] = $id_cli;
+			$entree['id_mod_lic'] = $id_mod_lic;
+			$entree['annee'] = $annee;
+			$entree['id_march'] = $id_march;
+
+			$requete = $connexion-> prepare('SELECT compteur_fact
+												FROM affectation_marchandise_client_modele_licence
+												WHERE id_mod_lic = ?
+													AND id_cli = ?
+													AND annee_fact = ?
+													AND id_march = ?
+											');
+			$requete-> execute(array($entree['id_mod_lic'], $entree['id_cli'], $entree['annee'], $entree['id_march']));
 
 			$reponse = $requete-> fetch();
 
