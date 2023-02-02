@@ -2884,7 +2884,44 @@
 
 		}
 
-		public function getModeleFacturation($id_cli, $id_mod_lic){
+		public function getDossiersFacture($ref_fact){
+			include('connexion.php');
+			$entree['ref_fact'] = $ref_fact;
+
+			$compteur = '0';
+			$tableau = '';
+			$requete = $connexion-> prepare("SELECT d.ref_dos AS ref_dos,
+													CONCAT(
+														IF(d.horse IS NOT NULL AND REPLACE(d.horse, ' ', '') NOT LIKE '',
+															d.horse,
+															''),
+														IF(d.trailer_1 IS NOT NULL AND REPLACE(d.trailer_1, ' ', '') NOT LIKE '',
+															CONCAT(' / ', d.trailer_1),
+															''),
+														IF(d.trailer_2 IS NOT NULL AND REPLACE(d.trailer_2, ' ', '') NOT LIKE '',
+															CONCAT(' / ', d.trailer_2),
+															'')
+													) AS truck
+												FROM dossier d, detail_facture_dossier det
+												WHERE d.id_dos = det.id_dos
+													AND det.ref_fact = ?
+												GROUP BY d.id_dos");
+			$requete-> execute(array($entree['ref_fact']));
+			while ($reponse = $requete-> fetch()) {
+				$compteur++;
+				$tableau .= '<tr>
+		                        <td style="border: 1px solid black; border-collapse: collapse;">'.$compteur.'</td>
+		                        <td style="border: 1px solid black; border-collapse: collapse;">'.$reponse['ref_dos'].'</td>
+		                        <td style="border: 1px solid black; border-collapse: collapse;">'.$reponse['truck'].'</td>
+		                    </tr>';
+			}$requete-> closeCursor();
+
+
+			return $tableau;
+
+		}
+
+		public function getModeleFacturationBackUp($id_cli, $id_mod_lic){
 			include('connexion.php');
 			$entree['id_cli'] = $id_cli;
 			$entree['id_mod_lic'] = $id_mod_lic;
@@ -2913,6 +2950,62 @@
     							<td>'.$this-> getNbreDossierEnAttenteFactureModeTransportMarchandise($id_mod_lic, $id_cli, $reponseMarchandise['id_mod_trans'], $reponseMarchandise['id_march']).'</td>
     							<td style="text-align: center;">
     								<a class="btn btn-xs btn-primary" href="'.$reponseMarchandise['create_page'].'?id_mod_lic_fact='.$id_mod_lic.'&id_cli='.$id_cli.'&amp;id_mod_lic_fact='.$id_mod_lic.'&amp;id_mod_fact='.$reponseMarchandise['id_mod_fact'].'&amp;id_march='.$reponseMarchandise['id_march'].'&amp;id_mod_trans='.$reponseMarchandise['id_mod_trans'].'">
+    									<i class="fa fa-calculator"></i>
+    								</a>
+    							</td>
+    						</tr>
+    			';
+    		 }$requeteMarchandise-> closeCursor();
+
+    		 return $tableau;
+		}
+
+		public function getModeleFacturation($id_cli, $id_mod_lic){
+			include('connexion.php');
+			$entree['id_cli'] = $id_cli;
+			$entree['id_mod_lic'] = $id_mod_lic;
+
+			$tableau = '';
+
+			$requeteMarchandise = $connexion-> prepare("SELECT COUNT(dossier.id_dos) AS nbre, 
+																dossier.num_lic aS num_lic, 
+																marchandise.id_march AS id_march,
+    															marchandise.nom_march AS nom_march,
+    															modele_facture.id_mod_fact AS id_mod_fact,
+    															modele_facture.create_page AS create_page,
+    															mode_transport.id_mod_trans AS id_mod_trans,
+    															mode_transport.nom_mod_trans AS nom_mod_trans
+    														FROM affectation_modele_facture_client_marchandise aff, 
+    															marchandise, modele_facture, mode_transport, dossier
+    														WHERE aff.id_cli = ?
+    															AND aff.id_march = marchandise.id_march
+    															AND aff.id_mod_trans = mode_transport.id_mod_trans
+    															AND aff.id_mod_fact = modele_facture.id_mod_fact
+    															AND modele_facture.id_mod_lic = ?
+                                                                AND dossier.id_cli = aff.id_cli
+    															AND dossier.id_march = marchandise.id_march
+    															AND dossier.id_mod_lic = modele_facture.id_mod_lic
+    															AND dossier.id_mod_trans = mode_transport.id_mod_trans
+																AND dossier.ref_quit IS NOT NULL
+																AND dossier.ref_quit <> ''
+																AND dossier.ref_decl IS NOT NULL
+																AND dossier.ref_decl <> ''
+																AND dossier.ref_liq IS NOT NULL
+																AND dossier.ref_liq <> ''
+																AND dossier.not_fact = '0'
+																AND dossier.id_dos NOT IN (SELECT id_dos FROM detail_facture_dossier)
+														GROUP BY dossier.num_lic
+														ORDER BY dossier.num_lic");
+    		$requeteMarchandise-> execute(array($entree['id_cli'], $entree['id_mod_lic']));
+    		while ($reponseMarchandise = $requeteMarchandise-> fetch()) {
+    			$tableau .= '
+    						<tr>
+    							<td>'.$reponseMarchandise['nom_march'].'</td>
+    							<td>'.$reponseMarchandise['nom_mod_trans'].'</td>
+    							<td>'.$reponseMarchandise['num_lic'].'</td>
+    							<td>'.$reponseMarchandise['nbre'].'</td>
+    							<td style="text-align: center;">
+    								<a class="btn btn-xs btn-primary" href="'.$reponseMarchandise['create_page'].'?id_mod_lic_fact='.$id_mod_lic.'&id_cli='.$id_cli.'&amp;id_mod_lic_fact='.$id_mod_lic.'&amp;id_mod_fact='.$reponseMarchandise['id_mod_fact'].'&amp;id_march='.$reponseMarchandise['id_march'].'&amp;id_mod_trans='.$reponseMarchandise['id_mod_trans'].'&amp;num_lic='.$reponseMarchandise['num_lic'].'">
     									<i class="fa fa-calculator"></i>
     								</a>
     							</td>
@@ -9141,13 +9234,14 @@
 
 		}
 
-		public function getDossiersExportAFactures($id_cli, $id_mod_lic, $id_march, $id_mod_trans){
+		public function getDossiersExportAFactures($id_cli, $id_mod_lic, $id_march, $id_mod_trans, $num_lic){
 			include('connexion.php');
 
 			$entree['id_cli'] = $id_cli;
 			$entree['id_mod_lic'] = $id_mod_lic;
 			$entree['id_march'] = $id_march;
 			$entree['id_mod_trans'] = $id_mod_trans;
+			$entree['num_lic'] = $num_lic;
 			$compteur = 0;
 
 			$requete = $connexion-> prepare("SELECT ref_dos, id_dos, num_lot, 
@@ -9162,6 +9256,7 @@
 												AND id_mod_lic = ?
 												AND id_march = ?
 												AND id_mod_trans = ?
+												AND num_lic = ?
 												AND ref_quit IS NOT NULL
 												AND ref_quit <> ''
 												AND ref_decl IS NOT NULL
@@ -9174,7 +9269,7 @@
 												AND not_fact = '0'
 											ORDER BY id_dos  ASC");
 
-			$requete-> execute(array($entree['id_cli'], $entree['id_mod_lic'], $entree['id_march'], $entree['id_mod_trans']));
+			$requete-> execute(array($entree['id_cli'], $entree['id_mod_lic'], $entree['id_march'], $entree['id_mod_trans'], $entree['num_lic']));
 
 			while($reponse = $requete-> fetch()){
 				$compteur++;
