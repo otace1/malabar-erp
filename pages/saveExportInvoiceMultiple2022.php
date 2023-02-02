@@ -74,7 +74,9 @@ if ( ($maClasse-> getFactureGlobale($_POST['ref_fact'])['validation']) == '0' ) 
 	$pdf->Image('../images/no_valid.jpg', 150, 2, 30, '', '', '', '', false, 300);
 }else{
 	// $pdf->Image('../images/sceau_mca.png', 120, 235, 50, '', '', '', '', false, 300);
-	$sceau = '<img src="../images/sceau_mca.png" width="150px">';
+	if (!empty($maClasse-> getDataUtilisateur($maClasse-> getFactureGlobale($_GET['ref_fact'])['id_util_validation'])['signature_facture'])) {
+		$sceau = '<img src="../images/signature_facture/'.$maClasse-> getDataUtilisateur($maClasse-> getFactureGlobale($_GET['ref_fact'])['id_util_validation'])['signature_facture'].'" width="'.$maClasse-> getDataUtilisateur($maClasse-> getFactureGlobale($_GET['ref_fact'])['id_util_validation'])['size_signature_facture'].'">';
+	}
 	// if ($maClasse-> getFactureGlobale($_POST['ref_fact'])['id_cli'] != '906' && $maClasse-> getFactureGlobale($_POST['ref_fact'])['id_cli'] != '902') {
 	// 	$pdf->Image('../images/sceau.png', 50, 200, 105, '', '', '', '', false, 300);
 	// }
