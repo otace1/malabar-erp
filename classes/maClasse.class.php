@@ -7858,7 +7858,7 @@
 					
 					$i = 1;
 
-					if (($this-> getCompteurFactureClientModeleLic($id_cli, $_GET['id_mod_lic_fact'], date('Y'), $_GET['id_march'])['compteur_fact'])>0) {
+					if (!empty($this-> getCompteurFactureClientModeleLic($id_cli, $_GET['id_mod_lic_fact'], date('Y'), $_GET['id_march'])) && ($this-> getCompteurFactureClientModeleLic($id_cli, $_GET['id_mod_lic_fact'], date('Y'), $_GET['id_march'])!='')) {
 						$i = $this-> getCompteurFactureClientModeleLic($id_cli, $_GET['id_mod_lic_fact'], date('Y'), $_GET['id_march'])['compteur_fact'];
 					}
 
@@ -7872,14 +7872,14 @@
 						$code_march = '-'.$this-> getDataMarchandise($_GET['id_march'])['code_march'];
 					}
 
-					$code = date('y').'-'.$this-> codePourClient($id_cli).'-EXP'.$code_march.'-'.$a;
+					$code = date('Y').'-'.$this-> codePourClient($id_cli).'-EXP'.$code_march.'-'.$a;
 
 					while($this-> verifierExistanceRefFactureDossier($code) == true){
 						$i++;
 
 						$a = $this-> getTailleCompteur2($i);
 
-						$code = date('y').'-'.$this-> codePourClient($id_cli).'-EXP'.$code_march.'-'.$a;
+						$code = date('Y').'-'.$this-> codePourClient($id_cli).'-EXP'.$code_march.'-'.$a;
 					}
 
 				}else if (isset($_POST['id_mod_lic']) && ($_POST['id_mod_lic']=='1')) {
@@ -7887,7 +7887,7 @@
 					
 					$i = 1;
 
-					if (($this-> getCompteurFactureClientModeleLic($id_cli, $_POST['id_mod_lic'], date('Y'), $_GET['id_march'])['compteur_fact'])>0) {
+					if (!empty(($this-> getCompteurFactureClientModeleLic($id_cli, $_POST['id_mod_lic'], date('Y'), $_GET['id_march']))) && ($this-> getCompteurFactureClientModeleLic($id_cli, $_GET['id_mod_lic'], date('Y'), $_GET['id_march'])!='')) {
 						$i = $this-> getCompteurFactureClientModeleLic($id_cli, $_POST['id_mod_lic'], date('Y'), $_GET['id_march'])['compteur_fact'];
 					}
 
@@ -7901,28 +7901,28 @@
 						$code_march = '-'.$this-> getDataMarchandise($_GET['id_march'])['code_march'];
 					}
 
-					$code = date('y').'-'.$this-> codePourClient($id_cli).'-EXP'.$code_march.'-'.$a;
+					$code = date('Y').'-'.$this-> codePourClient($id_cli).'-EXP'.$code_march.'-'.$a;
 
 					while($this-> verifierExistanceRefFactureDossier($code) == true){
 						$i++;
 
 						$a = $this-> getTailleCompteur2($i);
 
-						$code = date('y').'-'.$this-> codePourClient($id_cli).'-EXP'.$code_march.'-'.$a;
+						$code = date('Y').'-'.$this-> codePourClient($id_cli).'-EXP'.$code_march.'-'.$a;
 					}
 
 				}else{
 
 					$i = 1;
 					$a = $this-> getTailleCompteur2($i);
-					$code = date('y').'MCA'.$this-> codePourClient($id_cli).$a;
+					$code = date('Y').'MCA'.$this-> codePourClient($id_cli).$a;
 
 					while($this-> verifierExistanceRefFactureDossier($code) == true){
 						$i++;
 
 						$a = $this-> getTailleCompteur2($i);
 
-						$code = date('y').'MCA'.$this-> codePourClient($id_cli).$a;
+						$code = date('Y').'MCA'.$this-> codePourClient($id_cli).$a;
 					}
 				}
 
