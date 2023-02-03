@@ -58,7 +58,7 @@ if (@file_exists(dirname(__FILE__).'/lang/eng.php')) {
 
 
 // set font
-$pdf->SetFont('times', 'N', 8);
+$pdf->SetFont('helvetica', 'N', 8);
 // $pdf->SetFont('courier', 'N', 8);
 $pdf->setPrintHeader(false);
 // add a page
@@ -186,7 +186,7 @@ $tbl = <<<EOD
 			Lubumbashi, DRC<br>
 			RCCM: 13-B-1122, ID NAT. 6-9-N91867E<br>
 			NIF : A 1309334 L<br>
-			VAT Ref # 886/2012<br>
+			VAT Ref # 145/DGI/DGE/INF/BN/TVA/2020<br>
 			Capital Social : 45.000.000 FC
 			</td>
 		</tr>
