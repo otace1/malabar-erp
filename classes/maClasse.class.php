@@ -25961,7 +25961,7 @@
 													AND ref_quit IS NOT NULL
 													AND dgda_out IS NULL
 													AND ref_dos NOT LIKE '%20-%'
-													AND d.cleared <> '2'
+													AND cleared <> '2'
 													$sqlClient
 													$sqlModeTransport
 													$sqlCommodity");
