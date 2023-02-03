@@ -22209,187 +22209,195 @@
 
             }
 
-			if ($statut == 'AWAITING CRF/AD/INSURANCE') {
+            if ($id_mod_lic=='2' && $id_mod_trans=='1') {
+            	
 
-				$sqlStatus = " AND d.date_crf IS NULL
-								AND d.date_ad IS NULL
-								AND d.date_assurance IS NULL
-								AND d.ref_dos NOT LIKE '%20-%'
-								AND d.cleared <> '2'";
+				if ($statut == 'AWAITING CRF/AD/INSURANCE') {
 
-			}else if ($statut == 'AWAITING CRF/AD') {
+					$sqlStatus = " AND d.date_crf IS NULL
+									AND d.date_ad IS NULL
+									AND d.date_assurance IS NULL
+									AND d.ref_dos NOT LIKE '%20-%'
+									AND d.cleared <> '2'";
 
-				$sqlStatus = " AND d.date_crf IS NULL
-								AND d.date_ad IS NULL
-								AND d.date_assurance IS NOT NULL
-								AND d.ref_dos NOT LIKE '%20-%'
-								AND d.cleared <> '2'";
+				}else if ($statut == 'AWAITING CRF/AD') {
 
-			}else if ($statut == 'AWAITING CRF/INSURANCE') {
+					$sqlStatus = " AND d.date_crf IS NULL
+									AND d.date_ad IS NULL
+									AND d.date_assurance IS NOT NULL
+									AND d.ref_dos NOT LIKE '%20-%'
+									AND d.cleared <> '2'";
 
-				$sqlStatus = " AND d.date_crf IS NULL
-								AND d.date_ad IS NOT NULL
-								AND d.date_assurance IS NULL
-								AND d.ref_dos NOT LIKE '%20-%'
-								AND d.cleared <> '2'";
+				}else if ($statut == 'AWAITING CRF/INSURANCE') {
 
-			}else if ($statut == 'AWAITING CRF') {
+					$sqlStatus = " AND d.date_crf IS NULL
+									AND d.date_ad IS NOT NULL
+									AND d.date_assurance IS NULL
+									AND d.ref_dos NOT LIKE '%20-%'
+									AND d.cleared <> '2'";
 
-				$sqlStatus = " AND d.date_crf IS NULL AND d.date_ad IS NOT NULL AND d.date_assurance IS NOT NULL
-								AND d.ref_dos NOT LIKE '%20-%'
-								AND d.cleared <> '2'";
+				}else if ($statut == 'AWAITING CRF') {
 
-			}else if ($statut == 'AWAITING AD/INSURANCE') {
+					$sqlStatus = " AND d.date_crf IS NULL AND d.date_ad IS NOT NULL AND d.date_assurance IS NOT NULL
+									AND d.ref_dos NOT LIKE '%20-%'
+									AND d.cleared <> '2'";
 
-				$sqlStatus = " AND d.date_crf IS NOT NULL
-								AND d.date_ad IS NULL
-								AND d.date_assurance IS NULL
-								AND d.ref_dos NOT LIKE '%20-%'
-								AND d.cleared <> '2'";
+				}else if ($statut == 'AWAITING AD/INSURANCE') {
 
-			}else if ($statut == 'AWAITING AD') {
+					$sqlStatus = " AND d.date_crf IS NOT NULL
+									AND d.date_ad IS NULL
+									AND d.date_assurance IS NULL
+									AND d.ref_dos NOT LIKE '%20-%'
+									AND d.cleared <> '2'";
 
-				$sqlStatus = " AND d.date_ad IS NULL AND d.date_crf IS NOT NULL AND d.date_assurance IS NOT NULL
-								AND d.ref_dos NOT LIKE '%20-%'
-								AND d.cleared <> '2'";
+				}else if ($statut == 'AWAITING AD') {
 
-			}/*else if ($statut == 'AWAITING INSURANCE') {
+					$sqlStatus = " AND d.date_ad IS NULL AND d.date_crf IS NOT NULL AND d.date_assurance IS NOT NULL
+									AND d.ref_dos NOT LIKE '%20-%'
+									AND d.cleared <> '2'";
 
-				$sqlStatus = " AND d.date_crf IS NOT NULL
-								AND d.date_ad IS NOT NULL
-								AND d.date_assurance IS NULL
-								AND d.ref_dos NOT LIKE '%20-%'
-								AND d.cleared <> '2'";
+				}/*else if ($statut == 'AWAITING INSURANCE') {
 
-			}*/else if ($statut == 'AWAITING INSURANCE') {
+					$sqlStatus = " AND d.date_crf IS NOT NULL
+									AND d.date_ad IS NOT NULL
+									AND d.date_assurance IS NULL
+									AND d.ref_dos NOT LIKE '%20-%'
+									AND d.cleared <> '2'";
 
-				$sqlStatus = " AND d.date_assurance IS NULL AND d.date_ad IS NOT NULL AND d.date_crf IS NOT NULL
-												AND d.ref_dos NOT LIKE '%20-%'
-												AND d.cleared <> '2'";
+				}*/else if ($statut == 'AWAITING INSURANCE') {
 
-			}else if ($statut == 'UNDER PREPARATION') {
+					$sqlStatus = " AND d.date_assurance IS NULL AND d.date_ad IS NOT NULL AND d.date_crf IS NOT NULL
+													AND d.ref_dos NOT LIKE '%20-%'
+													AND d.cleared <> '2'";
 
-				$sqlStatus = " AND d.date_crf IS NOT NULL
-												AND d.date_ad IS NOT NULL
-												AND d.date_assurance IS NOT NULL
-												AND d.date_decl IS NULL 
-												AND d.ref_decl IS NULL
-												AND d.ref_dos NOT LIKE '%20-%'
-												AND d.cleared <> '2'";
+				}else if ($statut == 'UNDER PREPARATION') {
 
-			}else if ($statut == 'UNDER PREPARATION-EXCPECTED TO ARRIVE') {
+					$sqlStatus = " AND d.date_crf IS NOT NULL
+													AND d.date_ad IS NOT NULL
+													AND d.date_assurance IS NOT NULL
+													AND d.date_decl IS NULL 
+													AND d.ref_decl IS NULL
+													AND d.ref_dos NOT LIKE '%20-%'
+													AND d.cleared <> '2'";
 
-					// $requete = $connexion-> prepare("SELECT COUNT(ref_dos) AS nbre
-					// 							FROM dossier
-					// 							WHERE id_mod_lic = ?
-					// 								AND date_crf IS NOT NULL
-					// 								AND date_ad IS NOT NULL
-					// 								AND date_assurance IS NOT NULL
-					// 								AND date_decl IS NULL 
-					// 								AND ref_decl IS NULL
-					// 								AND ref_dos NOT LIKE '%20-%'
-					// 								AND cleared <> '2'
-					// 								$sqlClient
-					// 								$sqlModeTransport
-					// 								$sqlCommodity");
+				}else if ($statut == 'UNDER PREPARATION-EXCPECTED TO ARRIVE') {
 
-				$sqlStatus = " AND d.date_crf IS NOT NULL
-												AND d.date_ad IS NOT NULL
-												AND d.date_assurance IS NOT NULL
-												AND d.date_decl IS NULL 
-												AND d.ref_decl IS NULL
-												AND d.klsa_arriv IS NULL 
-												AND d.ref_dos NOT LIKE '%20-%'
-												AND d.cleared <> '2'";
+						// $requete = $connexion-> prepare("SELECT COUNT(ref_dos) AS nbre
+						// 							FROM dossier
+						// 							WHERE id_mod_lic = ?
+						// 								AND date_crf IS NOT NULL
+						// 								AND date_ad IS NOT NULL
+						// 								AND date_assurance IS NOT NULL
+						// 								AND date_decl IS NULL 
+						// 								AND ref_decl IS NULL
+						// 								AND ref_dos NOT LIKE '%20-%'
+						// 								AND cleared <> '2'
+						// 								$sqlClient
+						// 								$sqlModeTransport
+						// 								$sqlCommodity");
 
-				}else if ($statut == 'UNDER PREPARATION-DISPATCHED') {
+					$sqlStatus = " AND d.date_crf IS NOT NULL
+													AND d.date_ad IS NOT NULL
+													AND d.date_assurance IS NOT NULL
+													AND d.date_decl IS NULL 
+													AND d.ref_decl IS NULL
+													AND d.klsa_arriv IS NULL 
+													AND d.ref_dos NOT LIKE '%20-%'
+													AND d.cleared <> '2'";
 
-					// $requete = $connexion-> prepare("SELECT COUNT(ref_dos) AS nbre
-					// 							FROM dossier
-					// 							WHERE id_mod_lic = ?
-					// 								AND date_crf IS NOT NULL
-					// 								AND date_ad IS NOT NULL
-					// 								AND date_assurance IS NOT NULL
-					// 								AND dispatch_klsa IS NOT NULL 
-					// 								AND wiski_arriv IS NOT NULL
-					// 								AND date_decl IS NULL 
-					// 								AND ref_decl IS NULL
-					// 								AND ref_dos NOT LIKE '%20-%'
-					// 								AND cleared <> '2'
-					// 								$sqlClient
-					// 								$sqlModeTransport
-					// 								$sqlCommodity");
+					}else if ($statut == 'UNDER PREPARATION-DISPATCHED') {
 
-				$sqlStatus = " AND d.date_crf IS NOT NULL
-												AND d.date_ad IS NOT NULL
-												AND d.date_assurance IS NOT NULL
-												AND d.date_decl IS NULL 
-												AND d.ref_decl IS NULL
-												AND d.dispatch_klsa IS NOT NULL 
-												AND d.wiski_arriv IS NOT NULL
-												AND d.ref_dos NOT LIKE '%20-%'
-												AND d.cleared <> '2'";
+						// $requete = $connexion-> prepare("SELECT COUNT(ref_dos) AS nbre
+						// 							FROM dossier
+						// 							WHERE id_mod_lic = ?
+						// 								AND date_crf IS NOT NULL
+						// 								AND date_ad IS NOT NULL
+						// 								AND date_assurance IS NOT NULL
+						// 								AND dispatch_klsa IS NOT NULL 
+						// 								AND wiski_arriv IS NOT NULL
+						// 								AND date_decl IS NULL 
+						// 								AND ref_decl IS NULL
+						// 								AND ref_dos NOT LIKE '%20-%'
+						// 								AND cleared <> '2'
+						// 								$sqlClient
+						// 								$sqlModeTransport
+						// 								$sqlCommodity");
 
-				}else if ($statut == 'UNDER PREPARATION-AT WISKY') {
+					$sqlStatus = " AND d.date_crf IS NOT NULL
+													AND d.date_ad IS NOT NULL
+													AND d.date_assurance IS NOT NULL
+													AND d.date_decl IS NULL 
+													AND d.ref_decl IS NULL
+													AND d.dispatch_klsa IS NOT NULL 
+													AND d.wiski_arriv IS NOT NULL
+													AND d.ref_dos NOT LIKE '%20-%'
+													AND d.cleared <> '2'";
 
-					// $requete = $connexion-> prepare("SELECT COUNT(ref_dos) AS nbre
-					// 							FROM dossier
-					// 							WHERE id_mod_lic = ?
-					// 								AND date_crf IS NOT NULL
-					// 								AND date_ad IS NOT NULL
-					// 								AND date_assurance IS NOT NULL
-					// 								AND dispatch_klsa IS NULL 
-					// 								AND wiski_arriv IS NOT NULL
-					// 								AND date_decl IS NULL 
-					// 								AND ref_decl IS NULL
-					// 								AND ref_dos NOT LIKE '%20-%'
-					// 								AND cleared <> '2'
-					// 								$sqlClient
-					// 								$sqlModeTransport
-					// 								$sqlCommodity");
+					}else if ($statut == 'UNDER PREPARATION-AT WISKY') {
 
-				$sqlStatus = " AND d.date_crf IS NOT NULL
-												AND d.date_ad IS NOT NULL
-												AND d.date_assurance IS NOT NULL
-												AND d.dispatch_klsa IS NULL 
-												AND d.wiski_arriv IS NOT NULL
-												AND d.date_decl IS NULL 
-												AND d.ref_decl IS NULL
-												AND d.ref_dos NOT LIKE '%20-%'
-												AND d.cleared <> '2'";
+						// $requete = $connexion-> prepare("SELECT COUNT(ref_dos) AS nbre
+						// 							FROM dossier
+						// 							WHERE id_mod_lic = ?
+						// 								AND date_crf IS NOT NULL
+						// 								AND date_ad IS NOT NULL
+						// 								AND date_assurance IS NOT NULL
+						// 								AND dispatch_klsa IS NULL 
+						// 								AND wiski_arriv IS NOT NULL
+						// 								AND date_decl IS NULL 
+						// 								AND ref_decl IS NULL
+						// 								AND ref_dos NOT LIKE '%20-%'
+						// 								AND cleared <> '2'
+						// 								$sqlClient
+						// 								$sqlModeTransport
+						// 								$sqlCommodity");
 
-				}else if ($statut == 'AWAITING LIQUIDATION') {
+					$sqlStatus = " AND d.date_crf IS NOT NULL
+													AND d.date_ad IS NOT NULL
+													AND d.date_assurance IS NOT NULL
+													AND d.dispatch_klsa IS NULL 
+													AND d.wiski_arriv IS NOT NULL
+													AND d.date_decl IS NULL 
+													AND d.ref_decl IS NULL
+													AND d.ref_dos NOT LIKE '%20-%'
+													AND d.cleared <> '2'";
 
-				$sqlStatus = " AND d.date_decl IS NOT NULL 
-												AND d.ref_decl IS NOT NULL
-												AND d.date_liq IS NULL 
-												AND d.ref_liq IS NULL
-												AND d.ref_dos NOT LIKE '%20-%'
-												AND d.cleared <> '2'";
+					}else if ($statut == 'AWAITING LIQUIDATION') {
 
-			}else if ($statut == 'AWAITING QUITTANCE') {
+					$sqlStatus = " AND d.date_decl IS NOT NULL 
+													AND d.ref_decl IS NOT NULL
+													AND d.date_liq IS NULL 
+													AND d.ref_liq IS NULL
+													AND d.ref_dos NOT LIKE '%20-%'
+													AND d.cleared <> '2'";
 
-				$sqlStatus = " AND d.date_liq IS NOT NULL 
-												AND d.ref_liq IS NOT NULL
-												AND d.date_quit IS NULL 
-												AND d.ref_quit IS NULL
-												AND d.ref_dos NOT LIKE '%20-%'
-												AND d.cleared <> '2'";
+				}else if ($statut == 'AWAITING QUITTANCE') {
 
-			}else if ($statut == 'AWAITING BAE/BS') {
+					$sqlStatus = " AND d.date_liq IS NOT NULL 
+													AND d.ref_liq IS NOT NULL
+													AND d.date_quit IS NULL 
+													AND d.ref_quit IS NULL
+													AND d.ref_dos NOT LIKE '%20-%'
+													AND d.cleared <> '2'";
 
-				$sqlStatus = " AND d.date_quit IS NOT NULL 
-												AND d.ref_quit IS NOT NULL
-												AND dgda_out IS NULL
-												AND d.cleared <> '2'";
+				}else if ($statut == 'AWAITING BAE/BS') {
 
-			}else if ($statut == 'CLEARING COMPLETED') {
+					$sqlStatus = " AND d.date_quit IS NOT NULL 
+													AND d.ref_quit IS NOT NULL
+													AND dgda_out IS NULL
+													AND d.cleared <> '2'";
 
-				$sqlStatus = " AND d.dgda_out IS NOT NULL 
-												AND d.dispatch_deliv IS NOT NULL
-												AND d.cleared <> '2'";
+				}else if ($statut == 'CLEARING COMPLETED') {
 
-			}
+					$sqlStatus = " AND d.dgda_out IS NOT NULL 
+													AND d.dispatch_deliv IS NOT NULL
+													AND d.cleared <> '2'";
+
+				}
+
+            }else{
+            	$sqlStatus = " AND d.statut = '$statut'";
+            }
+
 			$requete = $connexion-> prepare("SELECT d.ref_dos AS ref_dos,
 													UPPER(cl.nom_cli) AS nom_cli,
 													d.ref_fact AS ref_fact,
@@ -25978,6 +25986,7 @@
 												FROM dossier
 												WHERE id_mod_lic = ?
 													AND REPLACE(statut, '\'','') = '$statut'
+													AND cleared <> '2'
 													$sqlClient
 													$sqlModeTransport");
 			}
