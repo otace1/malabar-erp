@@ -62,8 +62,8 @@ if (@file_exists(dirname(__FILE__).'/lang/eng.php')) {
 
 
 // set font
-//$pdf->SetFont('times', 'N', 8);
-$pdf->SetFont('courier', 'N', 8);
+$pdf->SetFont('times', 'N', 8);
+// $pdf->SetFont('courier', 'N', 8);
 $pdf->setPrintHeader(false);
 // add a page
 $pdf->AddPage('P', 'A4');
