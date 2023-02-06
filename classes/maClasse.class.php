@@ -4314,7 +4314,7 @@
 				$cost_2 = number_format($cost, 2, ',', '.');
 				
 				if($reponse['id_deb']=='54'){
-					$unite = number_format($this-> getMontantFactureTypeDebours($ref_fact, '1'), 2, ',', '.');
+					$unite = number_format($this-> getMontantFactureTypeDeboursSansFinancialCost($ref_fact, '1'), 2, ',', '.');
 					$cost = '1,50%';
 					$cost_2 = $cost;
 				}
@@ -8332,6 +8332,73 @@
 			return $sommeTTC;
 		}
 
+		public function getMontantFactureTypeDeboursSansFinancialCost($ref_fact, $id_t_deb){
+			include('connexion.php');
+			$entree['ref_fact'] = $ref_fact;
+			$entree['id_t_deb'] = $id_t_deb;
+
+
+			$sommeTVA = 0;
+			$sommeHT = 0;
+			$sommeTTC = 0;
+
+
+			$requete = $connexion-> prepare('SELECT d.nom_deb AS nom_deb,
+													det.tva AS tva,
+													d.abr_deb AS abr_deb,
+													SUM(det.montant) AS ht,
+													SUM( 
+														IF(det.usd="1", 
+															0,
+															det.montant
+														) 
+													) AS ht_cdf,
+													SUM( 
+														IF(det.usd="1", 
+															det.montant,
+															(det.montant/dos.roe_decl)
+														) 
+													) AS ht_usd
+												FROM debours d, detail_facture_dossier det, dossier dos, type_debours t
+												WHERE det.ref_fact = ?
+													AND det.id_dos = dos.id_dos
+													AND det.id_deb = d.id_deb
+													AND d.id_deb NOT LIKE 54
+													AND t.id_t_deb = d.id_t_deb
+													AND t.id_t_deb = ?
+												GROUP BY d.id_deb');
+			$requete-> execute(array($entree['ref_fact'], $entree['id_t_deb']));
+			while($reponse = $requete-> fetch()){
+
+				$sommeHT += $reponse['ht_usd'];
+
+				if($reponse['tva'] == '0'){
+					$sommeTVA += 0;
+					$sommeTTC += $reponse['ht_usd'];
+				}else{
+					$tva = round(($reponse['ht_usd'] * 0.16), 2);
+					$sommeTVA += $tva;
+					$ttc = $reponse['ht_usd'] + round(($reponse['ht_usd'] * 0.16), 2);
+					$sommeTTC += $ttc;
+				}
+
+				// $sommeHT += $reponse['ht'];
+
+				// if($reponse['tva'] == '0'){
+				// 	$sommeTVA += 0;
+				// 	$sommeTTC += $reponse['ht'];
+				// }else{
+				// 	$tva = round(($reponse['ht'] * 0.16), 2);
+				// 	$sommeTVA += $tva;
+				// 	$ttc = $reponse['ht'] + round(($reponse['ht'] * 0.16), 2);
+				// 	$sommeTTC += $ttc;
+				// }
+
+			}
+
+			return $sommeTTC;
+		}
+
 		public function afficherFormulaireFacturePartielle($id_dos){
 			include('connexion.php');
 			// $entree['ref_dos'] = $this-> getDossier($id_dos)['ref_dos'];
@@ -8792,7 +8859,229 @@
 
 		}
 
-		public function getDeboursPourFactureClientModeleLicence($id_cli, $id_mod_lic, $compteur_dossier, $sous_compteur, $principal='1', $id_dos){
+		public function getDeboursPourFactureClientModeleLicence($id_cli, $id_mod_lic, $id_march, $id_mod_trans, $id_dos=NULL){
+			include('connexion.php');
+			$entree['id_cli'] = $id_cli;
+			$entree['id_mod_lic'] = $id_mod_lic;
+			$compteur = 0;
+			$active = '';
+			$sqlTypeDebours = '';
+
+			$debours = '';
+
+			$requeteTypeDebours = $connexion-> query("SELECT UPPER(nom_t_deb) AS nom_t_deb, id_t_deb
+														FROM type_debours
+														$sqlTypeDebours");
+			while($reponseTypeDebours = $requeteTypeDebours-> fetch()){
+				?>
+				<tr id="headingOne_<?php echo $reponseTypeDebours['id_t_deb']; ?>">
+					<th colspan="6" class="bg bg-secondary">
+						<u><?php echo $reponseTypeDebours['nom_t_deb']; ?></u>
+					</th>
+				</tr>
+				<div>
+				<?php 
+				$requeteDebours = $connexion-> prepare("SELECT deb.abr_deb AS abr_deb, UPPER(REPLACE(deb.nom_deb, '\'', '')) AS nom_deb, 
+														deb.id_deb AS id_deb,
+														af.tva AS tva, af.usd AS usd, af.montant AS montant,
+														af.detail AS detail,
+														af.unite AS unite
+													FROM debours deb, affectation_debours_client_modele_licence af
+													WHERE deb.id_t_deb = ?
+														AND deb.id_deb = af.id_deb
+														AND af.id_mod_lic = ?
+														AND af.id_cli = ?
+													ORDER BY deb.id_deb ASC");
+				$requeteDebours-> execute(array($reponseTypeDebours['id_t_deb'], $entree['id_mod_lic'], $entree['id_cli']));
+				while($reponseDebours = $requeteDebours-> fetch()){
+					$compteur++;
+					
+
+					if ($id_mod_lic == '1' && $reponseDebours['id_deb']=='37' && (($this-> getDossier($id_dos)['poids']/1000)>=30)) {
+
+						$reponseDebours['montant'] = 250;
+						
+					}
+
+					?>
+					<tr>
+						<td width="10%">
+							<input type="hidden" id="id_deb_<?php echo $compteur;?>" name="id_deb_<?php echo $compteur;?>" value="<?php echo $reponseDebours['id_deb']; ?>">
+							<?php echo $reponseDebours['abr_deb']; ?>
+						</td>
+						<td width="50%">
+							<?php 
+								echo $reponseDebours['nom_deb']; 
+								if ($reponseDebours['detail']=='1') {
+								?>
+								: <input type="text" style="width: 20em;" name="detail_<?php echo $compteur;?>">
+								<?php
+								}
+							?>
+						</td>
+						<td style="text-align: center;">
+							<span id="unite_<?php echo $compteur;?>"></span>
+						</td>
+						<td style="text-align: center;">
+							<input type="number" step="0.001" name="montant_<?php echo $compteur;?>" id="montant_<?php echo $compteur;?>" value="<?php echo $reponseDebours['montant']; ?>" onblur="getTotal()">
+
+						</td>
+						<td style="text-align: center;">
+							<select name="usd_<?php echo $sous_compteur.'_'.$compteur_dossier;?>" id="usd_<?php echo $sous_compteur;?>" onchange="getTotal()">
+								<?php
+								if ($reponseDebours['usd'] == '0') {
+								?>
+								<option value="0">CDF</option>
+								<option value="1">USD</option>
+								<?php
+								}else{
+								?>
+								<option value="1">USD</option>
+								<option value="0">CDF</option>
+								<?php
+								}
+								?>
+							</select>
+						</td>
+						<td style="text-align: center;">
+							<select name="tva_<?php echo $sous_compteur.'_'.$compteur_dossier;?>" id="tva_<?php echo $sous_compteur;?>" onchange="getTotal()">
+								<?php
+								if ($reponseDebours['tva'] == '0') {
+								?>
+								<option value="0">NO</option>
+								<option value="1">YES</option>
+								<?php
+								}else{
+								?>
+								<option value="1">YES</option>
+								<option value="0">NO</option>
+								<?php
+								}
+								?>
+							</select>
+						</td>
+					</tr>
+					<?php
+				}$requeteDebours-> closeCursor();
+				?>
+				</div>
+				<?php
+			}$requeteTypeDebours-> closeCursor();
+			?>
+			<input type="hidden" name="compteur" value="<?php echo $compteur;?>">
+			<?php
+		}
+
+		public function getDeboursPourFactureClientModeleLicenceAjax($id_cli, $id_mod_lic, $id_march, $id_mod_trans, $id_dos=NULL){
+			include('connexion.php');
+			$entree['id_cli'] = $id_cli;
+			$entree['id_mod_lic'] = $id_mod_lic;
+			$entree['id_march'] = $id_march;
+			$entree['id_mod_trans'] = $id_mod_trans;
+			$compteur = 0;
+			$active = '';
+			$sqlTypeDebours = '';
+			$detail_input = '';
+			$usd_input = '';
+			$tva_input = '';
+
+			$debours = '';
+
+			$requeteTypeDebours = $connexion-> query("SELECT UPPER(nom_t_deb) AS nom_t_deb, id_t_deb
+														FROM type_debours
+														$sqlTypeDebours");
+			while($reponseTypeDebours = $requeteTypeDebours-> fetch()){
+				$debours .= '
+							<tr id="">
+								<th colspan="6" class="bg bg-secondary">
+									<u>'.$reponseTypeDebours['nom_t_deb'].'</u>
+								</th>
+							</tr>
+							<div>';
+				?>
+				<?php 
+				$requeteDebours = $connexion-> prepare("SELECT deb.abr_deb AS abr_deb, UPPER(REPLACE(deb.nom_deb, '\'', '')) AS nom_deb, 
+														deb.id_deb AS id_deb,
+														af.tva AS tva, af.usd AS usd, af.montant AS montant,
+														af.detail AS detail,
+														af.unite AS unite
+													FROM debours deb, affectation_debours_client_modele_licence af
+													WHERE deb.id_t_deb = ?
+														AND deb.id_deb = af.id_deb
+														AND af.id_mod_lic = ?
+														AND af.id_cli = ?
+														AND af.id_march = ?
+														AND af.id_mod_trans = ?
+													ORDER BY deb.id_deb ASC");
+				$requeteDebours-> execute(array($reponseTypeDebours['id_t_deb'], $entree['id_mod_lic'], $entree['id_cli'], $entree['id_march'], $entree['id_mod_trans']));
+				while($reponseDebours = $requeteDebours-> fetch()){
+					$compteur++;
+					
+
+					if ($id_mod_lic == '1' && $reponseDebours['id_deb']=='37' && (($this-> getDossier($id_dos)['poids']/1000)>=30)) {
+
+						$reponseDebours['montant'] = 250;
+						
+					}
+
+					if ($reponseDebours['detail']=='1') {
+						$detail_input = ' : <input type="text" style="width: 20em;" name="detail_'.$compteur.'">';
+					}else{
+						$detail_input = '';
+					}
+
+					if ($reponseDebours['usd'] == '0') {
+						$usd_input = '<option value="0">CDF</option><option value="1">USD</option>';
+					}else{
+						$usd_input = '<option value="1">USD</option><option value="0">CDF</option>';
+					}
+
+					if ($reponseDebours['tva'] == '0') {
+						$tva_input = '<option value="0">NO</option><option value="1">YES</option>';
+					}else{
+						$tva_input = '<option value="1">YES</option><option value="0">NO</option>';
+					}
+				
+					$debours .= '<tr>
+									<td width="10%">
+										<input type="hidden" id="id_deb_'.$compteur.'" name="id_deb_'.$compteur.'" value="'.$reponseDebours['id_deb'].'">
+										'.$reponseDebours['abr_deb'].'
+									</td>
+									<td width="50%">
+										'.$reponseDebours['nom_deb'].$detail_input.'
+									</td>
+									<td style="text-align: center;">
+										<span id="unite_'.$compteur.'"></span>
+									</td>
+									<td style="text-align: center;">
+										<input type="number" step="0.001" style="text-align: center;" name="montant_'.$compteur.'" id="montant_'.$reponseDebours['id_deb'].'" value="'.$reponseDebours['montant'].'" onblur="getTotal()">
+
+									</td>
+									<td style="text-align: center;">
+										<select name="usd_'.$compteur.'" id="usd_'.$compteur.'" onchange="getTotal()">
+											'.$usd_input.'
+										</select>
+									</td>
+									<td style="text-align: center;">
+										<select name="tva_'.$compteur.'" id="tva_'.$compteur.'" onchange="getTotal()">
+											'.$tva_input.'
+										</select>
+									</td>
+								</tr>';
+
+					?>
+					
+					<?php
+				}$requeteDebours-> closeCursor();
+				$debours .= '</div>';
+
+			}$requeteTypeDebours-> closeCursor();
+			$debours .= '<input type="hidden" name="compteur" value="'.$compteur.'">';
+
+			return $debours;
+		}
+
+		public function getDeboursPourFactureClientModeleLicenceBackUp($id_cli, $id_mod_lic, $compteur_dossier, $sous_compteur, $principal='1', $id_dos){
 			include('connexion.php');
 			$entree['id_cli'] = $id_cli;
 			$entree['id_mod_lic'] = $id_mod_lic;
@@ -27302,7 +27591,17 @@
 			$requete = $connexion-> prepare("SELECT *,
 													DATE_FORMAT(date_decl, '%d/%m/%Y') AS date_decl_dos,
 													DATE_FORMAT(date_liq, '%d/%m/%Y') AS date_liq_dos,
-													DATE_FORMAT(date_quit, '%d/%m/%Y') AS date_quit_dos
+													DATE_FORMAT(date_quit, '%d/%m/%Y') AS date_quit_dos,
+													(
+														IF(montant_decl IS NOT NULL,
+															montant_decl, 0)+
+														IF(fret IS NOT NULL,
+															fret, 0)+
+														IF(assurance IS NOT NULL,
+															assurance, 0)+
+														IF(autre_frais IS NOT NULL,
+															autre_frais, 0)
+														) AS cif
 												FROM dossier
 												WHERE id_dos = ?");
 			$requete-> execute(array($entree['id_dos']));
@@ -33011,6 +33310,89 @@
 			$requete = $connexion-> prepare("UPDATE dossier SET roe_decl = ?
 												WHERE id_dos = ?");
 			$requete-> execute(array($entree['roe_decl'], $entree['id_dos']));
+
+		}
+
+		public function MAJ_montant_liq($id_dos, $montant_liq){
+
+			include('connexion.php');
+			$entree['id_dos'] = $id_dos;
+			$entree['montant_liq'] = $montant_liq;
+
+			//Log
+			if ($this-> getDossier($id_dos)['montant_liq'] != $montant_liq) {
+				
+				if (isset($_GET['id_mod_lic']) && ($_GET['id_mod_lic']!='') && (!isset($_GET['id_mod_trac']) || $_GET['id_mod_trac'] == '' )) {
+					$_GET['id_mod_trac'] = $_GET['id_mod_lic'];
+				}else if (!isset($_GET['id_mod_trac']) || $_GET['id_mod_trac'] == '') {
+					$_GET['id_mod_trac'] = 1;
+				}
+
+
+				if (!isset($_GET['id_cli']) || ($_GET['id_cli']=='')) {
+					$_GET['id_cli'] = 883;
+				}
+
+				if (!isset($_GET['id_mod_trans']) || ($_GET['id_mod_trans']=='')) {
+					$_GET['id_mod_trans'] = 1;
+				}
+				
+				$colonne = $this-> getNomColonneClient('montant_liq', $_GET['id_cli'], $_GET['id_mod_trans'], $_GET['id_mod_trac']);
+				$this-> creerLogDossier($colonne, $montant_liq, $id_dos, $_SESSION['id_util']);
+
+			}
+
+			$requete = $connexion-> prepare("UPDATE dossier SET montant_liq = ?
+												WHERE id_dos = ?");
+			$requete-> execute(array($entree['montant_liq'], $entree['id_dos']));
+
+		}
+
+		public function MAJ_fob_usd($id_dos, $fob_usd){
+
+			include('connexion.php');
+			$entree['id_dos'] = $id_dos;
+			$entree['fob_usd'] = $fob_usd;
+
+			$requete = $connexion-> prepare("UPDATE dossier SET fob_usd = ?
+												WHERE id_dos = ?");
+			$requete-> execute(array($entree['fob_usd'], $entree['id_dos']));
+
+		}
+
+		public function MAJ_fret_usd($id_dos, $fret_usd){
+
+			include('connexion.php');
+			$entree['id_dos'] = $id_dos;
+			$entree['fret_usd'] = $fret_usd;
+
+			$requete = $connexion-> prepare("UPDATE dossier SET fret_usd = ?
+												WHERE id_dos = ?");
+			$requete-> execute(array($entree['fret_usd'], $entree['id_dos']));
+
+		}
+
+		public function MAJ_autre_frais_usd($id_dos, $autre_frais_usd){
+
+			include('connexion.php');
+			$entree['id_dos'] = $id_dos;
+			$entree['autre_frais_usd'] = $autre_frais_usd;
+
+			$requete = $connexion-> prepare("UPDATE dossier SET autre_frais_usd = ?
+												WHERE id_dos = ?");
+			$requete-> execute(array($entree['autre_frais_usd'], $entree['id_dos']));
+
+		}
+
+		public function MAJ_assurance_usd($id_dos, $assurance_usd){
+
+			include('connexion.php');
+			$entree['id_dos'] = $id_dos;
+			$entree['assurance_usd'] = $assurance_usd;
+
+			$requete = $connexion-> prepare("UPDATE dossier SET assurance_usd = ?
+												WHERE id_dos = ?");
+			$requete-> execute(array($entree['assurance_usd'], $entree['id_dos']));
 
 		}
 
