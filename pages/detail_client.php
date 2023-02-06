@@ -223,7 +223,7 @@
         <div class="row">
 
           <div class="col-md-12">
-            <label for="x_card_code" class="control-label mb-1">Template</label>
+            <label for="x_card_code" class="control-label mb-1">Item/Debours</label>
             <span id="select_debours"></span>
           </div>
 
