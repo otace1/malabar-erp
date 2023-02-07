@@ -569,7 +569,7 @@
 
   function supprimerFacture(ref_fact){
 
-    if(confirm('Do really you want to validate this invoice '+ref_fact+'?')) {
+    if(confirm('Do really you want to delete this invoice '+ref_fact+'?')) {
 
       $('#spinner-div').show();
 

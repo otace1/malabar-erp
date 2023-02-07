@@ -264,12 +264,12 @@ $tbl = <<<EOD
 			<td width="100%" style="font-weight: bold; border: 1px solid black;">&nbsp;<u>CUSTOMS CLEARANCE FEES / FRAIS DEDOUANEMENT</u></td>
 		</tr>
 		<tr>
-			<td width="47%" style="font-weight: bold; border: 1px solid black; background-color: rgb(192,192,192); text-align: center;">&nbsp;<u>Description</u></td>
-			<td width="8%" style="font-weight: bold; border: 1px solid black; background-color: rgb(192,192,192);text-align: center;">Unit</td>
-			<td width="11%" style="font-weight: bold; border: 1px solid black; background-color: rgb(192,192,192);text-align: center;">COST /USD</td>
-			<td width="11%" style="font-weight: bold; border: 1px solid black; background-color: rgb(192,192,192);text-align: center;">SUBTOTAL  USD</td>
-			<td width="11.5%" style="font-weight: bold; border: 1px solid black; background-color: rgb(192,192,192);text-align: center;">TVA- 16%</td>
-			<td width="11.5%" style="font-weight: bold; border: 1px solid black; background-color: rgb(192,192,192);text-align: center;">TOTAL  EN USD</td>
+			<td width="47%" style="font-weight: bold; border: 1px solid black; background-color: rgb(220,220,220); text-align: center;">&nbsp;<u>Description</u></td>
+			<td width="8%" style="font-weight: bold; border: 1px solid black; background-color: rgb(220,220,220);text-align: center;">Unit</td>
+			<td width="11%" style="font-weight: bold; border: 1px solid black; background-color: rgb(220,220,220);text-align: center;">COST /USD</td>
+			<td width="11%" style="font-weight: bold; border: 1px solid black; background-color: rgb(220,220,220);text-align: center;">SUBTOTAL  USD</td>
+			<td width="11.5%" style="font-weight: bold; border: 1px solid black; background-color: rgb(220,220,220);text-align: center;">TVA- 16%</td>
+			<td width="11.5%" style="font-weight: bold; border: 1px solid black; background-color: rgb(220,220,220);text-align: center;">TOTAL  EN USD</td>
 		</tr>
 		$taxe
 		<tr>
@@ -413,12 +413,12 @@ $tbl2 = <<<EOD
 			<td width="100%" style="font-weight: bold; border: 1px solid black;">&nbsp;<u>OTHER CHARGES / AUTRES FRAIS </u></td>
 		</tr>
 		<tr>
-			<td width="49%" style="font-weight: bold; border: 1px solid black; background-color: rgb(192,192,192); text-align: center;">&nbsp;<u>Description</u></td>
-			<td width="6%" style="font-weight: bold; border: 1px solid black; background-color: rgb(192,192,192);text-align: center;">Unit</td>
-			<td width="11%" style="font-weight: bold; border: 1px solid black; background-color: rgb(192,192,192);text-align: center;">COST /USD</td>
-			<td width="11%" style="font-weight: bold; border: 1px solid black; background-color: rgb(192,192,192);text-align: center;">SUBTOTAL  USD</td>
-			<td width="11.5%" style="font-weight: bold; border: 1px solid black; background-color: rgb(192,192,192);text-align: center;">TVA- 16%</td>
-			<td width="11.5%" style="font-weight: bold; border: 1px solid black; background-color: rgb(192,192,192);text-align: center;">TOTAL  EN USD</td>
+			<td width="49%" style="font-weight: bold; border: 1px solid black; background-color: rgb(220,220,220); text-align: center;">&nbsp;<u>Description</u></td>
+			<td width="6%" style="font-weight: bold; border: 1px solid black; background-color: rgb(220,220,220);text-align: center;">Unit</td>
+			<td width="11%" style="font-weight: bold; border: 1px solid black; background-color: rgb(220,220,220);text-align: center;">COST /USD</td>
+			<td width="11%" style="font-weight: bold; border: 1px solid black; background-color: rgb(220,220,220);text-align: center;">SUBTOTAL  USD</td>
+			<td width="11.5%" style="font-weight: bold; border: 1px solid black; background-color: rgb(220,220,220);text-align: center;">TVA- 16%</td>
+			<td width="11.5%" style="font-weight: bold; border: 1px solid black; background-color: rgb(220,220,220);text-align: center;">TOTAL  EN USD</td>
 		</tr>
 		$autres_charges
 		<tr>
@@ -428,12 +428,12 @@ $tbl2 = <<<EOD
 			<td width="100%" style="font-weight: bold; border: 1px solid black;">&nbsp;<u>OPERATIONAL COSTS / COUT OPERATIONEL</u></td>
 		</tr>
 		<tr>
-			<td width="49%" style="font-weight: bold; border: 1px solid black; background-color: rgb(192,192,192); text-align: center;">&nbsp;<u>Description</u></td>
-			<td width="6%" style="font-weight: bold; border: 1px solid black; background-color: rgb(192,192,192);text-align: center;">Unit</td>
-			<td width="11%" style="font-weight: bold; border: 1px solid black; background-color: rgb(192,192,192);text-align: center;">COST /USD</td>
-			<td width="11%" style="font-weight: bold; border: 1px solid black; background-color: rgb(192,192,192);text-align: center;">SUBTOTAL  USD</td>
-			<td width="11.5%" style="font-weight: bold; border: 1px solid black; background-color: rgb(192,192,192);text-align: center;">TVA- 16%</td>
-			<td width="11.5%" style="font-weight: bold; border: 1px solid black; background-color: rgb(192,192,192);text-align: center;">TOTAL  EN USD</td>
+			<td width="49%" style="font-weight: bold; border: 1px solid black; background-color: rgb(220,220,220); text-align: center;">&nbsp;<u>Description</u></td>
+			<td width="6%" style="font-weight: bold; border: 1px solid black; background-color: rgb(220,220,220);text-align: center;">Unit</td>
+			<td width="11%" style="font-weight: bold; border: 1px solid black; background-color: rgb(220,220,220);text-align: center;">COST /USD</td>
+			<td width="11%" style="font-weight: bold; border: 1px solid black; background-color: rgb(220,220,220);text-align: center;">SUBTOTAL  USD</td>
+			<td width="11.5%" style="font-weight: bold; border: 1px solid black; background-color: rgb(220,220,220);text-align: center;">TVA- 16%</td>
+			<td width="11.5%" style="font-weight: bold; border: 1px solid black; background-color: rgb(220,220,220);text-align: center;">TOTAL  EN USD</td>
 		</tr>
 		$operational_cost
 		<tr>
@@ -443,12 +443,12 @@ $tbl2 = <<<EOD
 			<td width="100%" style="font-weight: bold; border: 1px solid black;">&nbsp;<u>SERVICE FEE / SERVICES</u></td>
 		</tr>
 		<tr>
-			<td width="49%" style="font-weight: bold; border: 1px solid black; background-color: rgb(192,192,192); text-align: center;">&nbsp;<u>Description</u></td>
-			<td width="6%" style="font-weight: bold; border: 1px solid black; background-color: rgb(192,192,192);text-align: center;">Unit</td>
-			<td width="11%" style="font-weight: bold; border: 1px solid black; background-color: rgb(192,192,192);text-align: center;">COST /USD</td>
-			<td width="11%" style="font-weight: bold; border: 1px solid black; background-color: rgb(192,192,192);text-align: center;">SUBTOTAL  USD</td>
-			<td width="11.5%" style="font-weight: bold; border: 1px solid black; background-color: rgb(192,192,192);text-align: center;">TVA- 16%</td>
-			<td width="11.5%" style="font-weight: bold; border: 1px solid black; background-color: rgb(192,192,192);text-align: center;">TOTAL  EN USD</td>
+			<td width="49%" style="font-weight: bold; border: 1px solid black; background-color: rgb(220,220,220); text-align: center;">&nbsp;<u>Description</u></td>
+			<td width="6%" style="font-weight: bold; border: 1px solid black; background-color: rgb(220,220,220);text-align: center;">Unit</td>
+			<td width="11%" style="font-weight: bold; border: 1px solid black; background-color: rgb(220,220,220);text-align: center;">COST /USD</td>
+			<td width="11%" style="font-weight: bold; border: 1px solid black; background-color: rgb(220,220,220);text-align: center;">SUBTOTAL  USD</td>
+			<td width="11.5%" style="font-weight: bold; border: 1px solid black; background-color: rgb(220,220,220);text-align: center;">TVA- 16%</td>
+			<td width="11.5%" style="font-weight: bold; border: 1px solid black; background-color: rgb(220,220,220);text-align: center;">TOTAL  EN USD</td>
 		</tr>
 		$service_fee
 		<tr>

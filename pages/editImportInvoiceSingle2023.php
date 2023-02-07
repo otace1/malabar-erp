@@ -6,7 +6,7 @@
    if( isset($_POST['creerFactureDossier']) ){
     ?>
     <script type="text/javascript">
-      window.location = 'nouvelleFacturePartielle2.php?id_cli=<?php echo $_GET['id_cli'];?>&id_mod_lic_fact=<?php echo $_GET['id_mod_lic_fact'];?>&id_dos=<?php echo $_POST['id_dos'];?>&ref_fact=<?php echo $_POST['ref_fact'];?>';
+      window.location = 'nouvelleFacturePartielle2.php?id_cli=<?php echo $maClasse-> getDataFactureGlobale($_GET['ref_fact'])['id_cli'];?>&id_mod_lic=<?php echo $maClasse-> getDataFactureGlobale($_GET['ref_fact'])['id_mod_lic'];?>&id_dos=<?php echo $_POST['id_dos'];?>&ref_fact=<?php echo $_POST['ref_fact'];?>';
     </script>
     <?php
   }
@@ -50,16 +50,17 @@
 
     <div class="row">
       
-      <input type="hidden" name="id_cli" value="<?php echo $_GET['id_cli'];?>">
-      <input type="hidden" name="id_mod_lic" value="<?php echo $_GET['id_mod_lic_fact'];?>">
-      <input type="hidden" name="id_march" value="<?php echo $_GET['id_march'];?>">
-      <input type="hidden" name="id_mod_fact" value="<?php echo $_GET['id_mod_fact'];?>">
-      <input type="hidden" name="id_mod_trans" value="<?php echo $_GET['id_mod_trans'];?>">
+      <input type="hidden" name="id_cli" value="<?php echo $maClasse-> getDataFactureGlobale($_GET['ref_fact'])['id_cli'];?>">
+      <input type="hidden" name="id_mod_lic" value="<?php echo $maClasse-> getDataFactureGlobale($_GET['ref_fact'])['id_mod_lic'];?>">
+      <input type="hidden" name="id_march" value="<?php echo $maClasse-> getDataFactureGlobale($_GET['ref_fact'])['id_march'];?>">
+      <input type="hidden" name="id_mod_fact" value="<?php echo $maClasse-> getDataFactureGlobale($_GET['ref_fact'])['id_mod_fact'];?>">
+      <input type="hidden" name="id_mod_trans" value="<?php echo $maClasse-> getDataFactureGlobale($_GET['ref_fact'])['id_mod_trans'];?>">
       <div class="col-md-3">
         
           <div class="form-group">
             <label for="inputEmail3" class="col-form-label">Invoice Ref.: </label>
-            <input class="form-control form-control-sm bg bg-dark" type="text" name="ref_fact" id="ref_fact" value="<?php echo $maClasse-> buildRefFactureGlobale($_GET['id_cli']);?>">
+            <!-- <input class="form-control form-control-sm bg bg-dark" type="text" name="ref_fact" id="ref_fact" value="<?php echo $maClasse-> buildRefFactureGlobale($maClasse-> getDataFactureGlobale($_GET['ref_fact'])['id_cli']);?>"> -->
+            <input class="form-control form-control-sm bg bg-dark" type="text" name="ref_fact" id="ref_fact" value="<?php echo $_GET['ref_fact'];?>">
           </div>
 
       </div>
@@ -69,10 +70,7 @@
           <div class="form-group">
             <label for="inputEmail3" class="col-form-label">Files Ref.:</label>
             <select class="form-control form-control-sm" name="id_dos" id="id_dos" onchange="getTableauImportInvoiceSingle(id_mod_fact.value, this.value, id_mod_lic.value, id_march.value, id_mod_trans.value)" required>
-              <option></option>
-              <?php
-                $maClasse-> selectionnerDossierClientModeleLicenceMarchandise($_GET['id_cli'], $_GET['id_mod_lic_fact'], $_GET['id_march'], $_GET['id_mod_trans']);
-              ?>
+              <option><?php echo $maClasse-> getDataFactureGlobale($_GET['ref_fact'])['ref_dos'];?></option>
             </select>
           </div>
 
@@ -193,7 +191,7 @@
           </thead>
           <tbody id="debours">
             <?php
-              // $maClasse-> getDeboursPourFactureClientModeleLicence($_GET['id_cli'], $_GET['id_mod_lic_fact'], $_GET['id_march'], $_GET['id_mod_trans']);
+              // $maClasse-> getDeboursPourFactureClientModeleLicence($maClasse-> getDataFactureGlobale($_GET['ref_fact'])['id_cli'], $maClasse-> getDataFactureGlobale($_GET['ref_fact'])['id_mod_lic'], $maClasse-> getDataFactureGlobale($_GET['ref_fact'])['id_march'], $maClasse-> getDataFactureGlobale($_GET['ref_fact'])['id_mod_trans']);
             ?>
             </div>
           </tbody>
@@ -237,11 +235,15 @@
   }
 
   function getTableauImportInvoiceSingle(id_mod_fact, id_dos, id_mod_lic, id_march, id_mod_trans){
+    
+  }
+
+  $(document).ready(function(){
     $('#spinner-div').show();
     $.ajax({
       type: "POST",
       url: "ajax.php",
-      data: { id_mod_fact: id_mod_fact, id_dos: id_dos, id_mod_lic: id_mod_lic, id_march:id_march, id_mod_trans:id_mod_trans, operation: 'getTableauImportInvoiceSingle'},
+      data: { id_mod_fact: 3, id_dos: <?php echo $maClasse-> getDataFactureGlobale($_GET['ref_fact'])['id_dos'];?>, id_mod_lic: 2, id_march:<?php echo $maClasse-> getDataFactureGlobale($_GET['ref_fact'])['id_march'];?>, id_mod_trans:<?php echo $maClasse-> getDataFactureGlobale($_GET['ref_fact'])['id_march'];?>, ref_fact:'<?php echo $_GET['ref_fact'];?>', operation: 'getTableauImportInvoiceSingleEdit'},
       dataType:"json",
       success:function(data){
         if (data.logout) {
@@ -281,7 +283,7 @@
       }
     });
 
-  }
+  });
 
   $(document).ready(function(){
 
@@ -320,8 +322,8 @@
                   $('#id_dos').html(data.ref_dos);
                   $('#spinner-div').hide();//Request is complete so hide spinner
                   alert(data.message);
-                  window.open('viewImportInvoiceSingle2023.php?ref_fact='+fd.get('ref_fact'),'pop1','width=1000,height=800');
-                  // window.location="listerFactureDossier.php?id_cli=<?php echo $_GET['id_cli'];?>&id_mod_lic_fact=<?php echo $_GET['id_mod_lic_fact']?>";
+                  window.open('viewExportInvoiceSingle2022.php?ref_fact='+fd.get('ref_fact'),'pop1','width=1000,height=800');
+                  // window.location="listerFactureDossier.php?id_cli=<?php echo $maClasse-> getDataFactureGlobale($_GET['ref_fact'])['id_cli'];?>&id_mod_lic=<?php echo $maClasse-> getDataFactureGlobale($_GET['ref_fact'])['id_mod_lic']?>";
                 }
               },
               complete: function () {
@@ -593,8 +595,8 @@
     $('#unite_frais_bancaire').val(unite_frais_bancaire);
 
     fpi = (cif_cdf+ddi)*0.0184;
-    rri = (cif_cdf*0.0225);
-    cog = (cif_cdf*0.00457);
+    rri = (cif_cdf*0.0225)-4;
+    cog = (cif_cdf*0.00457)-3;
     rls = 85*unite_rls*roe_decl;
 
     autres_taxes = montant_liq-(ddi+fpi+rri+cog+dci+rls);

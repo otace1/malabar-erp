@@ -21,6 +21,13 @@
 
   		echo json_encode($reponse);
 
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='getTableauImportInvoiceSingleEdit'){// On recupere les donnees du dossier a facturer 
+
+  		$reponse = $maClasse-> getDataDossier($_POST['id_dos']);
+  		$reponse['debours'] = $maClasse-> getDeboursPourFactureClientModeleLicenceAjaxEdit($reponse['id_cli'], $reponse['id_mod_lic'], $reponse['id_march'], $reponse['id_mod_trans'], $_POST['id_dos'], $_POST['ref_fact']);
+
+  		echo json_encode($reponse);
+
 	}elseif(isset($_POST['operation']) && $_POST['operation']=='maj_roe_decl'){// MAJ Roe decl
 
   		$reponse = $maClasse-> getDataDossier($_POST['id_dos']);
@@ -60,6 +67,13 @@
 
   		$reponse = $maClasse-> getDataDossier($_POST['id_dos']);
   		$maClasse-> MAJ_autre_frais_usd($_POST['id_dos'], $_POST['autre_frais_usd']);
+
+  		echo json_encode($reponse);
+
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='maj_code_tarif'){// MAJ Montant Decl
+
+  		$reponse = $maClasse-> getDataDossier($_POST['id_dos']);
+  		$maClasse-> MAJ_code_tarif($_POST['id_dos'], $_POST['code_tarif']);
 
   		echo json_encode($reponse);
 
@@ -590,6 +604,32 @@
 
   		echo json_encode($reponse);
 
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='enregistrerFactureImportSingle'){// On enregistre la facture Export Single
+
+  		if(isset($_POST['ref_fact'])){
+  			try {
+  			$maClasse-> creerFactureDossier($_POST['ref_fact'], $_POST['id_mod_fact'], $_POST['id_cli'], $_SESSION['id_util'], $_POST['id_mod_lic'], 'partielle', NULL);
+  			// $maClasse-> MAJ_roe_decl($_POST['id_dos'], $_POST['roe_decl']);
+
+  			for ($i=1; $i <= $_POST['compteur'] ; $i++) { 
+  				if (isset($_POST['montant_'.$i]) && $_POST['montant_'.$i] > 1) {
+  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos'], $_POST['id_deb_'.$i], $_POST['montant_'.$i], $_POST['tva_'.$i], $_POST['usd_'.$i]);
+  				}
+  				
+  			}
+
+  			$response = array('message' => 'Invoice Created');
+  			$response['ref_fact'] = $maClasse-> buildRefFactureGlobale($_POST['id_cli']);
+  			$response['ref_dos'] =$maClasse-> selectionnerDossierClientModeleLicenceMarchandise2($_POST['id_cli'], $_POST['id_mod_lic'], $_POST['id_march']);
+
+  			} catch (Exception $e) {
+
+	            $response = array('error' => $e->getMessage());
+
+	        }
+
+  		}
+	    echo json_encode($response);exit;
 	}
 
 ?>
