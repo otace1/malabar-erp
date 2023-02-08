@@ -630,6 +630,35 @@
 
   		}
 	    echo json_encode($response);exit;
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='editFactureImportSingle'){// On enregistre la facture Export Single
+
+  		if(isset($_POST['ref_fact'])){
+  			try {
+
+  			$maClasse-> supprimerFactureDossier($_POST['ref_fact']);
+
+  			$maClasse-> creerFactureDossier($_POST['ref_fact'], $_POST['id_mod_fact'], $_POST['id_cli'], $_SESSION['id_util'], $_POST['id_mod_lic'], 'partielle', NULL);
+  			// $maClasse-> MAJ_roe_decl($_POST['id_dos'], $_POST['roe_decl']);
+
+  			for ($i=1; $i <= $_POST['compteur'] ; $i++) { 
+  				if (isset($_POST['montant_'.$i]) && $_POST['montant_'.$i] > 1) {
+  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos'], $_POST['id_deb_'.$i], $_POST['montant_'.$i], $_POST['tva_'.$i], $_POST['usd_'.$i]);
+  				}
+  				
+  			}
+
+  			$response = array('message' => 'Invoice Created');
+  			$response['ref_fact'] = $maClasse-> buildRefFactureGlobale($_POST['id_cli']);
+  			$response['ref_dos'] =$maClasse-> selectionnerDossierClientModeleLicenceMarchandise2($_POST['id_cli'], $_POST['id_mod_lic'], $_POST['id_march']);
+
+  			} catch (Exception $e) {
+
+	            $response = array('error' => $e->getMessage());
+
+	        }
+
+  		}
+	    echo json_encode($response);exit;
 	}
 
 ?>

@@ -22,7 +22,7 @@
       <div class="container-fluid">
         <div class="header">
           <h5>
-            <i class="fa fa-calculator nav-icon"></i> NEW INVOICE
+            <i class="fa fa-edit nav-icon"></i> EDIT INVOICE
           </h5>
         </div>
 
@@ -37,14 +37,15 @@
           <div class="col-12">
             <div class="card">
               <div class="card-header">
+                <button class="btn btn-xs btn-danger" onclick="window.location='listerFactureDossier.php?type_fact=globale&id_mod_lic_fact=2&id_cli=<?php echo $maClasse-> getClientFacture($_GET['ref_fact'])['id_cli'];?>'"><< Go Back</button>
               </div>
               <!-- /.card-header -->
 
               <div class="card-body table-responsive p-0">
                 
-<!-- <form id="enregistrerFactureImportSingle_form" method="POST" action="" data-parsley-validate enctype="multipart/form-data"> -->
-<form method="POST" id="enregistrerFactureImportSingle_form" action="" data-parsley-validate enctype="multipart/form-data">
-  <input type="hidden" name="operation" id="operation" value="enregistrerFactureImportSingle">
+<!-- <form id="editFactureImportSingle_form" method="POST" action="" data-parsley-validate enctype="multipart/form-data"> -->
+<form method="POST" id="editFactureImportSingle_form" action="" data-parsley-validate enctype="multipart/form-data">
+  <input type="hidden" name="operation" id="operation" value="editFactureImportSingle">
 
   <div class="card-body">
 
@@ -55,6 +56,7 @@
       <input type="hidden" name="id_march" value="<?php echo $maClasse-> getDataFactureGlobale($_GET['ref_fact'])['id_march'];?>">
       <input type="hidden" name="id_mod_fact" value="<?php echo $maClasse-> getDataFactureGlobale($_GET['ref_fact'])['id_mod_fact'];?>">
       <input type="hidden" name="id_mod_trans" value="<?php echo $maClasse-> getDataFactureGlobale($_GET['ref_fact'])['id_mod_trans'];?>">
+      <input type="hidden" name="id_dos" value="<?php echo $maClasse-> getDataFactureGlobale($_GET['ref_fact'])['id_dos'];?>">
       <div class="col-md-3">
         
           <div class="form-group">
@@ -69,7 +71,7 @@
         
           <div class="form-group">
             <label for="inputEmail3" class="col-form-label">Files Ref.:</label>
-            <select class="form-control form-control-sm" name="id_dos" id="id_dos" onchange="getTableauImportInvoiceSingle(id_mod_fact.value, this.value, id_mod_lic.value, id_march.value, id_mod_trans.value)" required>
+            <select class="form-control form-control-sm" id="id_dos" onchange="getTableauImportInvoiceSingle(id_mod_fact.value, this.value, id_mod_lic.value, id_march.value, id_mod_trans.value)" required>
               <option><?php echo $maClasse-> getDataFactureGlobale($_GET['ref_fact'])['ref_dos'];?></option>
             </select>
           </div>
@@ -206,7 +208,7 @@
 <!-- -------VALIDATION FORMULAIRE------- -->
 
   <div class="modal-footer justify-content-between">
-    <!-- <span  data-toggle="modal" data-target=".validerCotation"class="btn btn-xs btn-primary" onclick="enregistrerFactureImportSingle(roe_decl.value, id_dos.value, ref_fact.value, id_deb_1.value, montant_1.value, usd_1.value, tva_1.value);">Submit</span> -->
+    <!-- <span  data-toggle="modal" data-target=".validerCotation"class="btn btn-xs btn-primary" onclick="editFactureImportSingle(roe_decl.value, id_dos.value, ref_fact.value, id_deb_1.value, montant_1.value, usd_1.value, tva_1.value);">Submit</span> -->
     <button type="submit" class="btn btn-xs btn-primary">Submit</button>
   </div>
 
@@ -287,7 +289,7 @@
 
   $(document).ready(function(){
 
-      $('#enregistrerFactureImportSingle_form').submit(function(e){
+      $('#editFactureImportSingle_form').submit(function(e){
 
               e.preventDefault();
 
@@ -315,15 +317,15 @@
                   alert(data.logout);
                   window.location="../deconnexion.php";
                 }else if(data.message){
-                  $( '#enregistrerFactureImportSingle_form' ).each(function(){
+                  $( '#editFactureImportSingle_form' ).each(function(){
                       this.reset();
                   });
                   $('#ref_fact').val(data.ref_fact);
                   $('#id_dos').html(data.ref_dos);
                   $('#spinner-div').hide();//Request is complete so hide spinner
                   alert(data.message);
-                  window.open('viewExportInvoiceSingle2022.php?ref_fact='+fd.get('ref_fact'),'pop1','width=1000,height=800');
-                  // window.location="listerFactureDossier.php?id_cli=<?php echo $maClasse-> getDataFactureGlobale($_GET['ref_fact'])['id_cli'];?>&id_mod_lic=<?php echo $maClasse-> getDataFactureGlobale($_GET['ref_fact'])['id_mod_lic']?>";
+                  window.open('viewImportInvoiceSingle2023.php?ref_fact='+fd.get('ref_fact'),'pop1','width=1000,height=800');
+                  window.location="listerFactureDossier.php?type_fact=globale&id_cli=<?php echo $maClasse-> getDataFactureGlobale($_GET['ref_fact'])['id_cli'];?>&id_mod_lic_fact=<?php echo $maClasse-> getDataFactureGlobale($_GET['ref_fact'])['id_mod_lic']?>";
                 }
               },
               complete: function () {
