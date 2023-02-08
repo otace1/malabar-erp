@@ -375,7 +375,10 @@ $tbl = <<<EOD
 		</tr>
 		$service_fee
 		<tr>
-			<td width="100%"></td>
+			<td rowspan="9" style="text-align: center; font-weight: bold; font-size: 8px;" width="65.5%">'.$sceau.'
+			</td>
+			<td></td>
+			<td></td>
 		</tr>
 		$totalAll
 		<tr>
@@ -391,7 +394,7 @@ $tbl = <<<EOD
 			<td></td>
 		</tr>
 		<tr>
-			<td width="100%" style=" font-size: 7px; text-align: center;">
+			<td width="100%" style=" font-size: 5.5px; text-align: center;">
 			VEUILLEZ TROUVER CI-DESSOUS LES DETAILS DE NOTRE COMPTE BANCAIRE
 			</td>
 		</tr>
