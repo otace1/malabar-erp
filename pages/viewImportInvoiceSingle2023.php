@@ -216,11 +216,11 @@ $tbl = <<<EOD
 		<tr>
 			<td width="45%" rowspan="7" style="text-align: left; border: 0.3px solid black; font-size: 7px;"><span><u>CLIENT</u></span>
 			<br><b><font size="8px">$nom_complet</font> </b>
-			<br>$adresse_client
+			<span style="font-size: 6px;"><br>$adresse_client
 			<br>No.RCCM: $rccm_cli
 			<br>No.NIF.: $nif_cli
 			<br>No.IDN.: $id_nat
-			<br>No.IMPORT/EXPORT: $num_imp_exp</td>
+			<br>No.IMPORT/EXPORT: $num_imp_exp</span></td>
 			<td width="15%" style="text-align: center;"></td>
 			<td width="18%" style="text-align: left; border: 0.3px solid black; font-size: 7px; font-weight: bold;">&nbsp;FACTURE Nº</td>
 			<td width="22%" style="text-align: center; border: 0.3px solid black; font-weight: bold; font-size: 7px;">$ref_fact</td>
