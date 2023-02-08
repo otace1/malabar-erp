@@ -7854,6 +7854,29 @@
 			return $reponse['montant'];
 		}
 
+		public function getMontantDeboursFactureDossier2($ref_fact, $id_deb, $id_dos){
+			include('connexion.php');
+			$entree['id_deb'] = $id_deb;
+			$entree['ref_fact'] = $ref_fact;
+			$entree['id_dos'] = $id_dos;
+
+			$requete = $connexion-> prepare("SELECT ROUND(det.montant, 3) AS montant
+													FROM debours deb, detail_facture_dossier det, dossier dos
+													WHERE deb.id_deb = det.id_deb
+														AND det.ref_fact = ?
+														AND det.id_deb = ?
+														AND det.id_dos = ?
+														AND dos.id_dos = det.id_dos");
+			$requete-> execute(array($entree['ref_fact'], $entree['id_deb'], $entree['id_dos']));
+			$reponse = $requete-> fetch();
+			if ($reponse) {
+				return $reponse['montant'];
+			}else{
+				return NULL;
+			}
+			
+		}
+
 		public function getBureauDouane($id_bur_douane){
 			include('connexion.php');
 			$entree['id_bur_douane'] = $id_bur_douane;
@@ -8411,7 +8434,32 @@
 
 						$a = $this-> getTailleCompteur($i);
 
-						$code = date('Y').'-'.$this-> codePourClient($id_cli).'-'.$code_march.'-'.$a;
+						$code = date('Y').'-'.$this-> codePourClient($id_cli).$code_march.'-'.$a;
+					}
+
+				}else if (isset($_GET['id_mod_lic_fact']) &&  $_GET['id_mod_lic_fact']=='2') {
+
+					
+					$i = 1;
+
+					if (!empty($this-> getCompteurFactureClientModeleLic($id_cli, $_GET['id_mod_lic_fact'], date('Y'), $_GET['id_march'])) && ($this-> getCompteurFactureClientModeleLic($id_cli, $_GET['id_mod_lic_fact'], date('Y'), $_GET['id_march'])!='')) {
+						$i = $this-> getCompteurFactureClientModeleLic($id_cli, $_GET['id_mod_lic_fact'], date('Y'), $_GET['id_march'])['compteur_fact'];
+					}
+
+					$a = $this-> getTailleCompteur($i);
+					// 2022-MTS-EXP-HC-037
+
+					$code_march = $this-> getDataMarchandise($_GET['id_march'])['code_march_2'];
+					
+
+					$code = date('Y').'-'.$this-> codePourClient($id_cli).$code_march.'-'.$a;
+
+					while($this-> verifierExistanceRefFactureDossier($code) == true){
+						$i++;
+
+						$a = $this-> getTailleCompteur($i);
+
+						$code = date('Y').'-'.$this-> codePourClient($id_cli).$code_march.'-'.$a;
 					}
 
 				}else{
@@ -9716,7 +9764,7 @@
 				while($reponseDebours = $requeteDebours-> fetch()){
 					$compteur++;
 
-					$reponseDebours['montant'] = $this-> getMontantDeboursFactureDossier($ref_fact, $reponseDebours['id_deb'], $id_dos);
+					$reponseDebours['montant'] = $this-> getMontantDeboursFactureDossier2($ref_fact, $reponseDebours['id_deb'], $id_dos);
 					
 
 					if ($reponseDebours['id_deb']=='32') {
