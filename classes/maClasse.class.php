@@ -5059,7 +5059,7 @@
 			return $tbl;
 		}
 
-		public function getTotalFactureImportSingle2023($ref_fact, $sceau){
+		public function getTotalFactureImportSingle2023($ref_fact){
 			include('connexion.php');
 			$entree['ref_fact'] = $ref_fact;
 
@@ -5187,8 +5187,6 @@
 
 			$tbl .= '
 					<tr>
-						<td rowspan="8" style="text-align: center; font-weight: bold; font-size: 8px;" width="65.5%">'.$sceau.'
-						</td>
 						<td style="text-align: right; border: 0.5px solid black; font-weight: bold; font-size: 8px;" width="23%">Total excl. TVA &nbsp;&nbsp;
 						</td>
 						<td style="text-align: center; border: 0.5px solid black; font-weight: bold;" width="11.5%">'
