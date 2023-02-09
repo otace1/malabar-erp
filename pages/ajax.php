@@ -659,6 +659,109 @@
 
   		}
 	    echo json_encode($response);exit;
+
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='enregistrerFactureAcidImportMultiple'){// On enregistre la facture Acid Import Multiple
+
+		if (isset($_POST['nbre'])) {
+			
+			if(isset($_POST['ref_fact'])){
+	  			try {
+	  			$maClasse-> creerFactureDossier($_POST['ref_fact'], $_POST['id_mod_fact'], $_POST['id_cli'], $_SESSION['id_util'], $_POST['id_mod_lic'], 'globale', NULL);
+
+	  			for ($i=1; $i <= $_POST['nbre'] ; $i++) { 
+
+  					if( isset($_POST['check_'.$i]) ){
+
+  						$poids = $maClasse-> getDossier($_POST['id_dos_'.$i])['poids'];
+  							
+						//MAJ ROE
+	  					$maClasse-> MAJ_roe_decl($_POST['id_dos_'.$i], $_POST['roe_decl_'.$i]);
+
+  						if(isset($_POST['ddi_'.$i]) && ($_POST['ddi_'.$i]>1)){
+		  					//Inserer ddi
+		  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 32, $_POST['ddi_'.$i], '0', '0');
+
+  						}
+  						if(isset($_POST['rls_'.$i]) && ($_POST['rls_'.$i]>1)){
+		  					//Inserer rls
+		  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 3, $_POST['rls_'.$i], '0', '0');
+
+  						}
+  						if(isset($_POST['qpt_'.$i]) && ($_POST['qpt_'.$i]>1)){
+		  					//Inserer qpt
+		  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 33, $_POST['qpt_'.$i], '0', '0');
+
+  						}
+  						if(isset($_POST['tpi_'.$i]) && ($_POST['tpi_'.$i]>1)){
+		  					//Inserer tpi
+		  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 34, $_POST['tpi_'.$i], '0', '0');
+
+  						}
+  						if(isset($_POST['cog_'.$i]) && ($_POST['cog_'.$i]>1)){
+		  					//Inserer cog
+		  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 35, $_POST['cog_'.$i], '0', '0');
+
+  						}
+  						if(isset($_POST['rco_'.$i]) && ($_POST['rco_'.$i]>1)){
+		  					//Inserer rco
+		  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 36, $_POST['rco_'.$i], '0', '0');
+
+  						}
+  						if(isset($_POST['cso_'.$i]) && ($_POST['cso_'.$i]>1)){
+		  					//Inserer cso
+		  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 37, $_POST['cso_'.$i], '0', '0');
+
+  						}
+  						if(isset($_POST['rii_'.$i]) && ($_POST['rii_'.$i]>1)){
+		  					//Inserer rii
+		  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 38, $_POST['rii_'.$i], '0', '0');
+
+  						}
+  						if(isset($_POST['ret_'.$i]) && ($_POST['ret_'.$i]>1)){
+		  					//Inserer ret
+		  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 39, $_POST['ret_'.$i], '0', '0');
+
+  						}
+  						if(isset($_POST['ran_'.$i]) && ($_POST['ran_'.$i]>1)){
+		  					//Inserer ran
+		  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 40, $_POST['ran_'.$i], '0', '0');
+
+  						}
+  						if(isset($_POST['ana_'.$i]) && ($_POST['ana_'.$i]>1)){
+		  					//Inserer ana
+		  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 41, $_POST['ana_'.$i], '0', '0');
+
+  						}
+  						if(isset($_POST['lab_'.$i]) && ($_POST['lab_'.$i]>1)){
+		  					//Inserer lab
+		  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 42, $_POST['lab_'.$i], '0', '0');
+
+  						}
+  						if(isset($_POST['roc_'.$i]) && ($_POST['roc_'.$i]>1)){
+		  					//Inserer roc
+		  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 43, $_POST['roc_'.$i], '0', '0');
+
+  						}
+	  					
+	  					$maClasse-> creerDetailFactureWithoutTaxe($_POST['ref_fact'], $_POST['id_dos_'.$i], $_POST['id_cli'], $_POST['id_mod_lic'], $_POST['id_march'], $_POST['id_mod_trans']);
+
+  					}
+
+	  			}
+	  				
+	  			$response['message'] = 'Invoice Created';
+
+	  			} catch (Exception $e) {
+
+		            $response = array('error' => $e->getMessage());
+
+		        }
+
+	  		}
+
+		}
+	    echo json_encode($response);exit;
+
 	}
 
 ?>
