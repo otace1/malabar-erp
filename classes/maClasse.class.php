@@ -6060,7 +6060,7 @@
 													fd.transmission AS transmission,
 													fd.type_fact AS type_fact,
 													fd.id_mod_lic AS id_mod_lic,
-													mf.edit_page AS edit_pag,
+													mf.edit_page AS edit_page,
 													mf.view_page AS view_page,
 													mf.excel AS excel
  												FROM facture_dossier fd, client cl, utilisateur u, modele_facture mf
@@ -6096,6 +6096,9 @@
 									'.$reponse['nom_util'].'
 								</td>
 								<td style="text-align: center;">
+									<button class="btn btn-xs bg-warning square-btn-adjust" onclick="editerFacture(\''.$reponse['ref_fact'].'\', \''.$reponse['edit_page'].'\');" title="Edit">
+					                    <i class="fas fa-edit"></i> 
+					                </button>
 									<button class="btn btn-xs bg-info square-btn-adjust" onclick="window.open(\''.$reponse['view_page'].'?ref_fact='.$reponse['ref_fact'].'\',\'pop1\',\'width=1000,height=800\');" title="View invoice">
 					                    <i class="fas fa-eye"></i> 
 					                </button>
@@ -9651,6 +9654,11 @@
 						$unite_input = '<input type="number" step="0.001" style="text-align: center; width: 5em;" class="" name="" id="unite_frais_bancaire" value="" onblur="calculDroit();">';
 						$montant_input = '<input type="number" step="0.001" style="text-align: center;" class="bg-dark" name="montant_'.$compteur.'" id="frais_bancaire" value="'.$reponseDebours['montant'].'" onblur="calculDroit();">';
 						
+					}else if ($reponseDebours['id_deb']=='94') {
+
+						$unite_input = '';
+						$montant_input = '<input type="number" step="0.001" style="text-align: center;" class="bg-dark" name="montant_'.$compteur.'" id="tresco" value="'.$reponseDebours['montant'].'" onblur="calculDroit();">';
+						
 					}else{
 
 						$unite_input = '<span id="unite_'.$compteur.'"></span>';
@@ -10637,52 +10645,28 @@
 					<input type="hidden" style="text-align: center; width: 8em;" name="ddi_tva_<?php echo $compteur;?>" id="tva_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport(32, $id_mod_lic, $id_cli, $id_march, $id_mod_trans)['tva'];?>" class="bg bg-dark">
 				</td>
 				<td style="text-align: center;">
-					<input type="number" step="0.001" min="0" style="text-align: center; width: 8em;" onblur="calculDuty(<?php echo $compteur;?>);" id="rls_<?php echo $compteur;?>" name="rls_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport(3, $id_mod_lic, $id_cli, $id_march, $id_mod_trans)['montant'];?>" class="bg bg-dark">
-					<input type="hidden" style="text-align: center; width: 8em;" name="rls_tva_<?php echo $compteur;?>" id="tva_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport(3, $id_mod_lic, $id_cli, $id_march, $id_mod_trans)['tva'];?>" class="bg bg-dark">
-				</td>
-				<td style="text-align: center;">
-					<input type="number" step="0.001" min="0" style="text-align: center; width: 8em;" onblur="calculDuty(<?php echo $compteur;?>);" id="qpt_<?php echo $compteur;?>" name="qpt_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport(33, $id_mod_lic, $id_cli, $id_march, $id_mod_trans)['montant'];?>" class="bg bg-dark">
-					<input type="hidden" style="text-align: center; width: 8em;" name="qpt_tva_<?php echo $compteur;?>" id="tva_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport(33, $id_mod_lic, $id_cli, $id_march, $id_mod_trans)['tva'];?>" class="bg bg-dark">
-				</td>
-				<td style="text-align: center;">
-					<input type="number" step="0.001" min="0" style="text-align: center; width: 8em;" onblur="calculDuty(<?php echo $compteur;?>);" id="tpi_<?php echo $compteur;?>" name="tpi_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport(34, $id_mod_lic, $id_cli, $id_march, $id_mod_trans)['montant'];?>" class="bg bg-dark">
-					<input type="hidden" style="text-align: center; width: 8em;" name="tpi_tva_<?php echo $compteur;?>" id="tva_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport(34, $id_mod_lic, $id_cli, $id_march, $id_mod_trans)['tva'];?>" class="bg bg-dark">
-				</td>
-				<td style="text-align: center;">
-					<input type="number" step="0.001" min="0" style="text-align: center; width: 8em;" onblur="calculDuty(<?php echo $compteur;?>);" id="cog_<?php echo $compteur;?>" name="cog_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport(35, $id_mod_lic, $id_cli, $id_march, $id_mod_trans)['montant'];?>" class="bg bg-dark">
-					<input type="hidden" style="text-align: center; width: 8em;" name="cog_tva_<?php echo $compteur;?>" id="tva_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport(35, $id_mod_lic, $id_cli, $id_march, $id_mod_trans)['tva'];?>" class="bg bg-dark">
-				</td>
-				<td style="text-align: center;">
-					<input type="number" step="0.001" min="0" style="text-align: center; width: 8em;" onblur="calculDuty(<?php echo $compteur;?>);" id="rco_<?php echo $compteur;?>" name="rco_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport(36, $id_mod_lic, $id_cli, $id_march, $id_mod_trans)['montant'];?>" class="bg bg-dark">
-					<input type="hidden" style="text-align: center; width: 8em;" name="rco_tva_<?php echo $compteur;?>" id="tva_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport(36, $id_mod_lic, $id_cli, $id_march, $id_mod_trans)['tva'];?>" class="bg bg-dark">
-				</td>
-				<td style="text-align: center;">
-					<input type="number" step="0.001" min="0" style="text-align: center; width: 8em;" onblur="calculDuty(<?php echo $compteur;?>);" id="cso_<?php echo $compteur;?>" name="cso_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport(37, $id_mod_lic, $id_cli, $id_march, $id_mod_trans)['montant'];?>" class="bg bg-dark">
-					<input type="hidden" style="text-align: center; width: 8em;" name="cso_tva_<?php echo $compteur;?>" id="tva_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport(37, $id_mod_lic, $id_cli, $id_march, $id_mod_trans)['tva'];?>" class="bg bg-dark">
+					<input type="number" step="0.001" min="0" style="text-align: center; width: 8em;" onblur="calculDuty(<?php echo $compteur;?>);" id="fpi_<?php echo $compteur;?>" name="fpi_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport(95, $id_mod_lic, $id_cli, $id_march, $id_mod_trans)['montant'];?>" class="bg bg-dark">
+					<input type="hidden" style="text-align: center; width: 8em;" name="fpi_tva_<?php echo $compteur;?>" id="tva_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport(95, $id_mod_lic, $id_cli, $id_march, $id_mod_trans)['tva'];?>" class="bg bg-dark">
 				</td>
 				<td style="text-align: center;">
 					<input type="number" step="0.001" min="0" style="text-align: center; width: 8em;" onblur="calculDuty(<?php echo $compteur;?>);" id="rii_<?php echo $compteur;?>" name="rii_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport(38, $id_mod_lic, $id_cli, $id_march, $id_mod_trans)['montant'];?>" class="bg bg-dark">
 					<input type="hidden" style="text-align: center; width: 8em;" name="rii_tva_<?php echo $compteur;?>" id="tva_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport(38, $id_mod_lic, $id_cli, $id_march, $id_mod_trans)['tva'];?>" class="bg bg-dark">
 				</td>
 				<td style="text-align: center;">
-					<input type="number" step="0.001" min="0" style="text-align: center; width: 8em;" onblur="calculDuty(<?php echo $compteur;?>);" id="ret_<?php echo $compteur;?>" name="ret_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport(39, $id_mod_lic, $id_cli, $id_march, $id_mod_trans)['montant'];?>" class="bg bg-dark">
-					<input type="hidden" style="text-align: center; width: 8em;" name="ret_tva_<?php echo $compteur;?>" id="tva_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport(39, $id_mod_lic, $id_cli, $id_march, $id_mod_trans)['tva'];?>" class="bg bg-dark">
+					<input type="number" step="0.001" min="0" style="text-align: center; width: 8em;" onblur="calculDuty(<?php echo $compteur;?>);" id="cog_<?php echo $compteur;?>" name="cog_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport(35, $id_mod_lic, $id_cli, $id_march, $id_mod_trans)['montant'];?>" class="bg bg-dark">
+					<input type="hidden" style="text-align: center; width: 8em;" name="cog_tva_<?php echo $compteur;?>" id="tva_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport(35, $id_mod_lic, $id_cli, $id_march, $id_mod_trans)['tva'];?>" class="bg bg-dark">
 				</td>
 				<td style="text-align: center;">
-					<input type="number" step="0.001" min="0" style="text-align: center; width: 8em;" onblur="calculDuty(<?php echo $compteur;?>);" id="ran_<?php echo $compteur;?>" name="ran_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport(40, $id_mod_lic, $id_cli, $id_march, $id_mod_trans)['montant'];?>" class="bg bg-dark">
-					<input type="hidden" style="text-align: center; width: 8em;" name="ran_tva_<?php echo $compteur;?>" id="tva_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport(40, $id_mod_lic, $id_cli, $id_march, $id_mod_trans)['tva'];?>" class="bg bg-dark">
+					<input type="number" step="0.001" min="0" style="text-align: center; width: 8em;" onblur="calculDuty(<?php echo $compteur;?>);" id="dci_<?php echo $compteur;?>" name="dci_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport(96, $id_mod_lic, $id_cli, $id_march, $id_mod_trans)['montant'];?>" class="bg bg-dark">
+					<input type="hidden" style="text-align: center; width: 8em;" name="dci_tva_<?php echo $compteur;?>" id="tva_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport(96, $id_mod_lic, $id_cli, $id_march, $id_mod_trans)['tva'];?>" class="bg bg-dark">
 				</td>
 				<td style="text-align: center;">
-					<input type="number" step="0.001" min="0" style="text-align: center; width: 8em;" onblur="calculDuty(<?php echo $compteur;?>);" id="ana_<?php echo $compteur;?>" name="ana_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport(41, $id_mod_lic, $id_cli, $id_march, $id_mod_trans)['montant'];?>" class="bg bg-dark">
-					<input type="hidden" style="text-align: center; width: 8em;" name="ana_tva_<?php echo $compteur;?>" id="tva_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport(41, $id_mod_lic, $id_cli, $id_march, $id_mod_trans)['tva'];?>" class="bg bg-dark">
+					<input type="number" step="0.001" min="0" style="text-align: center; width: 8em;" onblur="calculDuty(<?php echo $compteur;?>);" id="rls_<?php echo $compteur;?>" name="rls_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport(3, $id_mod_lic, $id_cli, $id_march, $id_mod_trans)['montant'];?>" class="bg bg-dark">
+					<input type="hidden" style="text-align: center; width: 8em;" name="rls_tva_<?php echo $compteur;?>" id="tva_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport(3, $id_mod_lic, $id_cli, $id_march, $id_mod_trans)['tva'];?>" class="bg bg-dark">
 				</td>
 				<td style="text-align: center;">
-					<input type="number" step="0.001" min="0" style="text-align: center; width: 8em;" onblur="calculDuty(<?php echo $compteur;?>);" id="lab_<?php echo $compteur;?>" name="lab_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport(42, $id_mod_lic, $id_cli, $id_march, $id_mod_trans)['montant'];?>" class="bg bg-dark">
-					<input type="hidden" style="text-align: center; width: 8em;" name="lab_tva_<?php echo $compteur;?>" id="tva_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport(42, $id_mod_lic, $id_cli, $id_march, $id_mod_trans)['tva'];?>" class="bg bg-dark">
-				</td>
-				<td style="text-align: center;">
-					<input type="number" step="0.001" min="0" style="text-align: center; width: 8em;" onblur="calculDuty(<?php echo $compteur;?>);" id="roc_<?php echo $compteur;?>" name="roc_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport(43, $id_mod_lic, $id_cli, $id_march, $id_mod_trans)['montant'];?>" class="bg bg-dark">
-					<input type="hidden" style="text-align: center; width: 8em;" name="roc_tva_<?php echo $compteur;?>" id="tva_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport(43, $id_mod_lic, $id_cli, $id_march, $id_mod_trans)['tva'];?>" class="bg bg-dark">
+					<input type="number" step="0.001" min="0" style="text-align: center; width: 8em;" onblur="calculDuty(<?php echo $compteur;?>);" id="autre_taxe_<?php echo $compteur;?>" name="autre_taxe_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport(97, $id_mod_lic, $id_cli, $id_march, $id_mod_trans)['montant'];?>" class="bg bg-dark">
+					<input type="hidden" style="text-align: center; width: 8em;" name="autre_taxe_tva_<?php echo $compteur;?>" id="tva_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport(97, $id_mod_lic, $id_cli, $id_march, $id_mod_trans)['tva'];?>" class="bg bg-dark">
 				</td>
 				<td style="text-align: center; font-weight: bold; font-size: 20px;">
 					<span id="total_duty_<?php echo $compteur;?>"></span>
@@ -10713,7 +10697,7 @@
 													AND aff.id_march = ?
 													AND aff.id_mod_trans = ?
 													AND aff.id_deb = deb.id_deb
-													AND deb.id_t_deb <> 1");
+													AND aff.usd = '1'");
 			$requeteDebours-> execute(array($entree['id_cli'], $entree['id_mod_lic'], $entree['id_march'], $entree['id_mod_trans']));
 			while ($reponseDebours = $requeteDebours-> fetch()) {
 				
@@ -28557,7 +28541,18 @@
 															assurance, 0)+
 														IF(autre_frais IS NOT NULL,
 															autre_frais, 0)
-														) AS cif
+														) AS cif,
+													CONCAT(
+														IF(horse IS NOT NULL AND REPLACE(horse, ' ', '') NOT LIKE '',
+															horse,
+															''),
+														IF(trailer_1 IS NOT NULL AND REPLACE(trailer_1, ' ', '') NOT LIKE '',
+															CONCAT(' / ', trailer_1),
+															''),
+														IF(trailer_2 IS NOT NULL AND REPLACE(trailer_2, ' ', '') NOT LIKE '',
+															CONCAT(' / ', trailer_2),
+															'')
+													) AS truck
 												FROM dossier
 												WHERE id_dos = ?");
 			$requete-> execute(array($entree['id_dos']));
@@ -32773,6 +32768,20 @@
 			  </option>
 			<?php
 			}$requete-> closeCursor();
+		} 
+
+		public function selectionnerMonnaie2(){
+			include('connexion.php');
+			$monnaie = '<option></option>';
+			$requete = $connexion-> query("SELECT id_mon, UPPER(sig_mon) AS nom_mon
+											FROM monnaie");
+			while($reponse = $requete-> fetch()){
+				$monnaie.='<option value="'.$reponse['id_mon'].'">
+							'.$reponse['nom_mon'].'
+						  </option>';
+			}$requete-> closeCursor();
+
+			return $monnaie;
 		} 
 
 		public function selectionnerModeTransport(){
