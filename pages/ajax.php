@@ -17,6 +17,10 @@
 	}elseif(isset($_POST['operation']) && $_POST['operation']=='getTableauImportInvoiceSingle'){// On recupere les donnees du dossier a facturer 
 
   		$reponse = $maClasse-> getDataDossier($_POST['id_dos']);
+  		$reponse['id_mon'] = '<select disabled class="bg bg-dark" name="id_mon" required>
+  								<option>'.$maClasse-> getDataLicence($reponse['num_lic'])['sig_mon'].'</option>
+  								'.$maClasse-> selectionnerMonnaie2().'
+  							</select>';
   		$reponse['debours'] = $maClasse-> getDeboursPourFactureClientModeleLicenceAjax($reponse['id_cli'], $reponse['id_mod_lic'], $reponse['id_march'], $reponse['id_mod_trans']);
 
   		echo json_encode($reponse);
@@ -682,29 +686,24 @@
 		  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 32, $_POST['ddi_'.$i], '0', '0');
 
   						}
+  						if(isset($_POST['fpi_'.$i]) && ($_POST['fpi_'.$i]>1)){
+		  					//Inserer fpi
+		  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 95, $_POST['fpi_'.$i], '0', '0');
+
+  						}
   						if(isset($_POST['rls_'.$i]) && ($_POST['rls_'.$i]>1)){
 		  					//Inserer rls
 		  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 3, $_POST['rls_'.$i], '0', '0');
 
   						}
-  						if(isset($_POST['qpt_'.$i]) && ($_POST['qpt_'.$i]>1)){
-		  					//Inserer qpt
-		  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 33, $_POST['qpt_'.$i], '0', '0');
-
-  						}
-  						if(isset($_POST['tpi_'.$i]) && ($_POST['tpi_'.$i]>1)){
-		  					//Inserer tpi
-		  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 34, $_POST['tpi_'.$i], '0', '0');
+  						if(isset($_POST['rii_'.$i]) && ($_POST['rii_'.$i]>1)){
+		  					//Inserer rii
+		  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 38, $_POST['rii_'.$i], '0', '0');
 
   						}
   						if(isset($_POST['cog_'.$i]) && ($_POST['cog_'.$i]>1)){
 		  					//Inserer cog
 		  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 35, $_POST['cog_'.$i], '0', '0');
-
-  						}
-  						if(isset($_POST['rco_'.$i]) && ($_POST['rco_'.$i]>1)){
-		  					//Inserer rco
-		  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 36, $_POST['rco_'.$i], '0', '0');
 
   						}
   						if(isset($_POST['cso_'.$i]) && ($_POST['cso_'.$i]>1)){
@@ -717,32 +716,17 @@
 		  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 38, $_POST['rii_'.$i], '0', '0');
 
   						}
-  						if(isset($_POST['ret_'.$i]) && ($_POST['ret_'.$i]>1)){
-		  					//Inserer ret
-		  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 39, $_POST['ret_'.$i], '0', '0');
+  						if(isset($_POST['dci_'.$i]) && ($_POST['dci_'.$i]>1)){
+		  					//Inserer dci
+		  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 96, $_POST['dci_'.$i], '0', '0');
 
   						}
-  						if(isset($_POST['ran_'.$i]) && ($_POST['ran_'.$i]>1)){
-		  					//Inserer ran
-		  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 40, $_POST['ran_'.$i], '0', '0');
+  						if(isset($_POST['autre_taxe_'.$i]) && ($_POST['autre_taxe_'.$i]>1)){
+		  					//Inserer autre_taxe
+		  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 97, $_POST['autre_taxe_'.$i], '0', '0');
 
   						}
-  						if(isset($_POST['ana_'.$i]) && ($_POST['ana_'.$i]>1)){
-		  					//Inserer ana
-		  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 41, $_POST['ana_'.$i], '0', '0');
-
-  						}
-  						if(isset($_POST['lab_'.$i]) && ($_POST['lab_'.$i]>1)){
-		  					//Inserer lab
-		  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 42, $_POST['lab_'.$i], '0', '0');
-
-  						}
-  						if(isset($_POST['roc_'.$i]) && ($_POST['roc_'.$i]>1)){
-		  					//Inserer roc
-		  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 43, $_POST['roc_'.$i], '0', '0');
-
-  						}
-	  					
+  						
 	  					$maClasse-> creerDetailFactureWithoutTaxe($_POST['ref_fact'], $_POST['id_dos_'.$i], $_POST['id_cli'], $_POST['id_mod_lic'], $_POST['id_march'], $_POST['id_mod_trans']);
 
   					}

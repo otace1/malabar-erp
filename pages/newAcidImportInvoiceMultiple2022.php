@@ -102,18 +102,12 @@
                   <th>Action</th>
                   <th>Exchange Rate</th>
                   <th>DDI(CDF)</th>
-                  <th>RLS(CDF)</th>
-                  <th>QPT(CDF)</th>
-                  <th>TPI(CDF)</th>
+                  <th>FPI(CDF)</th>
+                  <th>RRI(CDF)</th>
                   <th>COG(CDF)</th>
-                  <th>RCO(CDF)</th>
-                  <th>CSO(CDF)</th>
-                  <th>RII(CDF)</th>
-                  <th>RET(CDF)</th>
-                  <th>RAN(CDF)</th>
-                  <th>ANA(CDF)</th>
-                  <th>LAB(CDF)</th>
-                  <th>ROC(CDF)</th>
+                  <th>DCI(CDF)</th>
+                  <th>RLS(CDF)</th>
+                  <th>Autres Taxes(CDF)</th>
                   <th>Total Duty(CDF)</th>
               </tr>
           </thead>
