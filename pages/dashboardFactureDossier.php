@@ -3,66 +3,6 @@
   include("menuHaut.php");
   include("menuGauche.php");
 
-  $modele = $maClasse-> getElementModeleLicence($_GET['id_mod_lic_fact']);
-  $client = '';
-
-  if(isset($_POST['rechercheClient'])){
-    $id_mod_lic_fact = $_GET['id_mod_lic_fact'];
-    $id_mod_trans = $_GET['id_mod_trans'];
-    $id_cli = $_POST['id_cli'];
-    $commodity = $_POST['commodity'];
-    echo "<script>window.location='dashboardFactureDossier.php?id_mod_lic_fact=$id_mod_lic_fact&id_cli=$id_cli&commodity=$commodity&id_mod_trans=$id_mod_trans';</script>";
-    if( $id_cli > 0){
-      $client = ' | <span class="bg bg-dark" style="padding-left: 5px; padding-right: 5px;">'.$maClasse-> getNomClient($id_cli).'</span>';
-    }else{
-      $client = '';
-    }
-
-    if( isset($_GET['id_mod_trans']) && ($_GET['id_mod_trans'] != '')){
-      $mode_transport = ' | <span class="bg bg-dark" style="padding-left: 5px; padding-right: 5px;">'.$maClasse-> getNomModeTransport($_GET['id_mod_trans']).'</span>';
-    }else{
-      $mode_transport = '';
-    }
-
-    if( isset($_GET['commodity']) && ($_GET['commodity'] != '')){
-      $commodity = ' | <span class="bg bg-dark" style="padding-left: 5px; padding-right: 5px;">'.$_GET['commodity'].'</span>';
-    }else{
-      $commodity = '';
-    }
-
-  }
-
-  if( isset($_GET['commodity']) && ($_GET['commodity'] != '')){
-    $commodity = ' | <span class="bg bg-dark" style="padding-left: 5px; padding-right: 5px;">'.$_GET['commodity'].'</span>';
-  }else{
-    $commodity = '';
-  }
-
-  if( isset($_GET['id_cli']) && ($_GET['id_cli'] != '')){
-    $client = ' | <span class="bg bg-dark" style="padding-left: 5px; padding-right: 5px;">'.$maClasse-> getNomClient($_GET['id_cli']).'</span>';
-  }else{
-    $client = '';
-  }
-
-  if( isset($_GET['id_type_lic']) && ($_GET['id_type_lic'] != '')){
-    $type_licence = ' | <span class="bg bg-dark" style="padding-left: 5px; padding-right: 5px;">'.$maClasse-> getNomTypeLicence($_GET['id_type_lic']).'</span>';
-  }else{
-    $type_licence = '';
-  }
-
-  if(!isset($_GET['id_cli'])){
-    $_GET['id_cli'] = null;
-  }
-  if(!isset($_GET['id_type_lic'])){
-    $_GET['id_type_lic'] = null;
-  }
-
-  if( isset($_GET['id_mod_trans']) && ($_GET['id_mod_trans'] != '')){
-    $mode_transport = ' | <span class="bg bg-dark" style="padding-left: 5px; padding-right: 5px;">'.$maClasse-> getNomModeTransport($_GET['id_mod_trans']).'</span>';
-  }else{
-    $mode_transport = '';
-  }
-
 ?>
   <!-- /.navbar -->
 
@@ -73,11 +13,21 @@
     <section class="content-header">
       <div class="container-fluid">
         <div class="header">
-          <h5><i class="nav-icon fas fa-tachometer-alt"></i> DASHBOARD FACTURES <?php echo $modele['nom_mod_lic'].' ('.$modele['sigle_mod_lic'].')'.$mode_transport.$client.$type_licence.$commodity;?></h5>
+          <h5>
+            <!-- <img src="../images/calculator.png" width="25px" /> -->
+            <i class="nav-icon fas fa-tachometer-alt"></i>
+            <?php
+              if ($maClasse-> getUtilisateur($_SESSION['id_util'])['langue']=='ENG') {
+                echo $maClasse-> getNomModeleLicence($_GET['id_mod_lic_fact']).' INVOICES DASHBOARD ';
+              }else if ($maClasse-> getUtilisateur($_SESSION['id_util'])['langue']=='FR') {
+                echo 'TABLEAU DE BORD FACTURE '.$maClasse-> getNomModeleLicence($_GET['id_mod_lic_fact']);
+              }
+            ?>
+          </h5>
           <div class="pull-right">
-            <button class="btn btn-xs btn-dark square-btn-adjust" data-toggle="modal" data-target=".rechercheClient">
+            <!-- <button class="btn btn-xs btn-dark square-btn-adjust" data-toggle="modal" data-target=".rechercheClient">
                 <i class="fa fa-filter"></i> Filtrage
-            </button>
+            </button> -->
           </div>
         </div>
 
@@ -91,61 +41,27 @@
         
           <div class="col-md-3 col-sm-6 col-12">
 
-            <div class="small-box bg-dark">
-              <div class="inner">
-                <h5>
-                  <?php echo $maClasse-> nbreFactureModeleLicence($_GET['id_mod_lic_fact'], $_GET['id_cli'], 'globale');?>
-                </h5>
-
-                <p> Factures Globales </p>
-              </div>
-              <div class="icon">
-                <i class="fas fa-copy"></i>
-              </div>
-              <a href="#" class="small-box-footer" onclick="window.open('popUpDashboardFactureDossier.php?type_fact=globale&id_mod_lic_fact=<?php echo $_GET['id_mod_lic_fact'];?>&id_cli=<?php echo $_GET['id_cli'];?>','pop1','width=1500,height=900');">
-                More info <i class="fas fa-arrow-circle-right"></i>
-              </a>
-            </div>
-
-            <!-- /.info-box -->
-          </div>
-        
-          <div class="col-md-3 col-sm-6 col-12">
-
-            <div class="small-box bg-teal">
-              <div class="inner">
-                <h5>
-                  <?php echo '$ '.number_format($maClasse-> getMontantTotalTypeFacture($_GET['id_mod_lic_fact'], $_GET['id_cli'], 'globale'), 2, ',', ' ');?>
-                </h5>
-
-                <p> Valeurs Factures Globales </p>
-              </div>
-              <div class="icon">
-                <i class="fas fa-money-bill"></i>
-              </div>
-              <!-- <a href="#" class="small-box-footer" onclick="window.open('popUpDashboardFactureDossier.php?type_fact=partielle&id_mod_lic_fact=<?php echo $_GET['id_mod_lic_fact'];?>&id_cli=<?php echo $_GET['id_cli'];?>','pop1','width=1500,height=900');">
-                More info <i class="fas fa-arrow-circle-right"></i>
-              </a> -->
-            </div>
-
-            <!-- /.info-box -->
-          </div>
-        
-          <div class="col-md-3 col-sm-6 col-12">
-
             <div class="small-box bg-primary">
               <div class="inner">
                 <h5>
-                  <?php echo $maClasse-> nbreFactureModeleLicence($_GET['id_mod_lic_fact'], $_GET['id_cli'], 'partielle');?>
+                  <span id="nbre_facture"></span>
                 </h5>
 
-                <p> Factures Partielles </p>
+                <p> 
+                  <?php
+                  if ($maClasse-> getUtilisateur($_SESSION['id_util'])['langue']=='ENG') {
+                    echo 'Invoices';
+                  }else if ($maClasse-> getUtilisateur($_SESSION['id_util'])['langue']=='FR') {
+                    echo 'Factures';
+                  }
+                  ?> 
+                </p>
               </div>
               <div class="icon">
                 <i class="fas fa-copy"></i>
               </div>
-              <a href="#" class="small-box-footer" onclick="window.open('popUpDashboardFactureDossier.php?type_fact=partielle&id_mod_lic_fact=<?php echo $_GET['id_mod_lic_fact'];?>&id_cli=<?php echo $_GET['id_cli'];?>','pop1','width=1500,height=900');">
-                More info <i class="fas fa-arrow-circle-right"></i>
+              <a href="#" class="small-box-footer" onclick="window.open('popUpDashboardFacturation.php?statut=Factures&amp;id_mod_lic=<?php echo $_GET['id_mod_lic_fact'];?>','pop1','width=950,height=700');">
+                Details <i class="fas fa-arrow-circle-right"></i>
               </a>
             </div>
 
@@ -154,40 +70,27 @@
         
           <div class="col-md-3 col-sm-6 col-12">
 
-            <div class="small-box bg-info">
+            <div class="small-box bg-success">
               <div class="inner">
                 <h5>
-                  <?php echo '$ '.number_format($maClasse-> getMontantTotalTypeFacture($_GET['id_mod_lic_fact'], $_GET['id_cli'], 'partielle'), 2, ',', ' ');?>
+                  <span id="nbre_dossier_facture"></span>
                 </h5>
 
-                <p> Valeurs Factures Partielle </p>
+                <p> 
+                  <?php
+                  if ($maClasse-> getUtilisateur($_SESSION['id_util'])['langue']=='ENG') {
+                    echo 'Invoiced Files';
+                  }else if ($maClasse-> getUtilisateur($_SESSION['id_util'])['langue']=='FR') {
+                    echo 'Dossiers Facturés';
+                  }
+                  ?> 
+                </p>
               </div>
               <div class="icon">
-                <i class="fas fa-money-bill"></i>
+                <i class="fas fa-check"></i>
               </div>
-              <!-- <a href="#" class="small-box-footer" onclick="window.open('popUpDashboardFactureDossier.php?type_fact=partielle&id_mod_lic_fact=<?php echo $_GET['id_mod_lic_fact'];?>&id_cli=<?php echo $_GET['id_cli'];?>','pop1','width=1500,height=900');">
-                More info <i class="fas fa-arrow-circle-right"></i>
-              </a> -->
-            </div>
-
-            <!-- /.info-box -->
-          </div>
-        
-          <div class="col-md-3 col-sm-6 col-12">
-
-            <div class="small-box bg-warning">
-              <div class="inner">
-                <h5>
-                  <?php echo $maClasse-> nbreDossierFacturesModeleLicence($_GET['id_mod_lic_fact'], $_GET['id_cli'], 'globale');?>
-                </h5>
-
-                <p> Dossiers Facturés </p>
-              </div>
-              <div class="icon">
-                <i class="fas fa-calculator"></i>
-              </div>
-              <a href="#" class="small-box-footer" onclick="window.open('popUpDashboardDossierFactureDossier.php?id_mod_lic_fact=<?php echo $_GET['id_mod_lic_fact'];?>&id_cli=<?php echo $_GET['id_cli'];?>','pop1','width=1500,height=900');">
-                More info <i class="fas fa-arrow-circle-right"></i>
+              <a href="#" class="small-box-footer" onclick="window.open('popUpDashboardFacturation.php?statut=Dossiers Facturés&amp;id_mod_lic=<?php echo $_GET['id_mod_lic_fact'];?>','pop1','width=950,height=700');">
+                Details <i class="fas fa-arrow-circle-right"></i>
               </a>
             </div>
 
@@ -199,25 +102,34 @@
             <div class="small-box bg-danger">
               <div class="inner">
                 <h5>
-                  <?php echo $maClasse-> nbreDossierNonFacturesModeleLicence($_GET['id_mod_lic_fact'], $_GET['id_cli']);?>
+                  <span id="nbre_dossier_non_facture"></span>
                 </h5>
 
-                <p> Dossiers Non Facturés </p>
+                <p> 
+                  <?php
+                  if ($maClasse-> getUtilisateur($_SESSION['id_util'])['langue']=='ENG') {
+                    echo 'Pending Files';
+                  }else if ($maClasse-> getUtilisateur($_SESSION['id_util'])['langue']=='FR') {
+                    echo 'Dossiers Non Facturés';
+                  }
+                  ?> 
+                </p>
               </div>
               <div class="icon">
-                <i class="fas fa-times"></i>
+                <i class="fas fa-bell"></i>
               </div>
-              <a href="#" class="small-box-footer" onclick="window.open('popDashboardDossierNonFacture.php?id_mod_lic_fact=<?php echo $_GET['id_mod_lic_fact'];?>&id_cli=<?php echo $_GET['id_cli'];?>','pop1','width=1500,height=900');">
-                More info <i class="fas fa-arrow-circle-right"></i>
+              <a href="#" class="small-box-footer" onclick="window.open('popUpDashboardFacturation.php?statut=Dossiers Non Facturés&amp;id_mod_lic=<?php echo $_GET['id_mod_lic_fact'];?>','pop1','width=1200,height=700');">
+                Details <i class="fas fa-arrow-circle-right"></i>
               </a>
             </div>
 
             <!-- /.info-box -->
           </div>
-        
+        <!-- 
           <div class="col-md-12 col-sm-6 col-12">
-            <?php //include('graphiques/dashboardLicence.php');?>
+            <h5>Invoices Status</h5>
           </div>
+ -->
         </div>
       </div><!-- /.container-fluid -->
     </section>
@@ -271,3 +183,32 @@ if(isset($_GET['id_mod_lic_fact']) && isset($_GET['id_mod_lic_fact'])){
 <?php
 }
 ?>
+
+<script type="text/javascript">
+  
+  $(document).ready(function(){
+    $('#spinner-div').show();
+    $.ajax({
+      type: 'post',
+      url: 'ajax.php',
+      data: {operation: 'rapportFacturation', id_mod_lic: <?php echo $_GET['id_mod_lic_fact'];?>},
+      dataType: 'json',
+      success:function(data){
+        if (data.logout) {
+          alert(data.logout);
+          window.location="../deconnexion.php";
+        }else{
+          $('#nbre_facture').html(data.nbre_facture);
+          $('#nbre_dossier_facture').html(data.nbre_dossier_facture);
+          $('#nbre_dossier_non_facture').html(data.nbre_dossier_non_facture);
+        }
+      },
+      complete: function () {
+          $('#spinner-div').hide();//Request is complete so hide spinner
+      }
+    });
+
+  });
+
+
+</script>

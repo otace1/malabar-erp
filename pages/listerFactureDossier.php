@@ -215,9 +215,9 @@
                       <th style="border: 1px solid white;">REFERENCE</th>
                       <th style="border: 1px solid white; text-align: center;">DATE</th>
                       <th style="border: 1px solid white; text-align: center;">COMMODITY</th>
+                      <th style="border: 1px solid white; text-align: center;">AMOUNT</th>
                       <th style="border: 1px solid white; text-align: center;">EDITOR</th>
                       <th style="border: 1px solid white; text-align: center;">SENDING DATE</th>
-                      <th style="border: 1px solid white; text-align: center;">AMOUNT</th>
                       <th style="border: 1px solid white; text-align: center;">ACTION</th>
                     </tr>
                   </thead>
@@ -262,15 +262,12 @@
                       <th style="border: 1px solid white;">REFERENCE</th>
                       <th style="border: 1px solid white; text-align: center;">DATE</th>
                       <th style="border: 1px solid white; text-align: center;">COMMODITY</th>
-                      <th style="border: 1px solid white; text-align: center;">EDITOR</th>
-                      <th style="border: 1px solid white; text-align: center;">SENDING DATE</th>
+                      <th style="border: 1px solid white; text-align: center;">PAYMENT DATE</th>
                       <th style="border: 1px solid white; text-align: center;">AMOUNT</th>
-                      <th style="border: 1px solid white; text-align: center;">PAYED</th>
-                      <th style="border: 1px solid white; text-align: center;">BALANCE</th>
                       <th style="border: 1px solid white; text-align: center;">ACTION</th>
                     </tr>
                   </thead>
-                  <tbody id="invoice_send">
+                  <tbody id="invoice_payed">
                    
                   </tbody>
                 </table>
@@ -344,6 +341,8 @@
   <div class="modal-dialog modal-md small">
     <form id="modal_paiement_form" method="POST" action="" data-parsley-validate enctype="multipart/form-data">
       <input type="hidden" name="operation" id="operation" value="paiement_invoice">
+      <input type="hidden" name="id_cli" id="id_cli" value="<?php echo $_GET['id_cli'];?>">
+      <input type="hidden" name="id_mod_lic" id="id_mod_lic" value="<?php echo $_GET['id_mod_lic_fact'];?>">
     <div class="modal-content">
       <div class="modal-header ">
         <h4 class="modal-title"><i class="fa fa-calculator"></i> Payment</h4>
@@ -365,24 +364,24 @@
             <input id="label_montant" style="text-align: center;" class="form-control form-control-sm cc-exp bg-dark" disabled>
           </div>
 
-          <div class="col-md-4">
+          <div class="col-md-6">
             <label for="x_card_code" class="control-label mb-1">Payment Ref.</label>
-            <input id="ref_paie" name="ref_paie" class="form-control form-control-sm cc-exp">
+            <input id="ref_paie" name="ref_paie" class="form-control form-control-sm cc-exp" required>
           </div>
 
-          <div class="col-md-4">
+          <div class="col-md-6">
             <label for="x_card_code" class="control-label mb-1">Date</label>
-            <input type="date" id="date_paie" name="date_paie" class="form-control form-control-sm cc-exp">
+            <input type="date" id="date_paie" name="date_paie" class="form-control form-control-sm cc-exp" required>
           </div>
 
-          <div class="col-md-4">
-            <label for="x_card_code" class="control-label mb-1">Amount</label>
-            <input id="montant_paie" name="montant_paie" type="number" step="0.001" class="form-control form-control-sm cc-exp">
+          <div class="col-md-6">
+            <label for="x_card_code" class="control-label mb-1">Account</label>
+            <span id="compte_bancaire"></span>
           </div>
 
-          <div class="col-md-12">
-            <label for="x_card_code" class="control-label mb-1">Note / Remark</label>
-            <textarea id="libelle_paie" name="libelle_paie" class="form-control form-control-sm cc-exp"></textarea>
+          <div class="col-md-6">
+            <label for="x_card_code" class="control-label mb-1">Bank</label>
+            <input type="text" id="nom_banq" class="form-control form-control-sm cc-exp" disabled>
           </div>
 
         </div>
@@ -399,6 +398,28 @@
 </div>
 
 <script type="text/javascript">
+  
+  function getDataCompteBancaire(num_cmpt) {
+    $('#spinner-div').show();
+    $.ajax({
+      type: "POST",
+      url: "ajax.php",
+      data: { num_cmpt: num_cmpt, operation: 'getDataCompteBancaire'},
+      dataType:"json",
+      success:function(data){
+        if (data.logout) {
+          alert(data.logout);
+          window.location="../deconnexion.php";
+        }else{
+          $('#nom_banq').val(data.nom_banq);
+        }
+      },
+      complete: function () {
+          $('#spinner-div').hide();//Request is complete so hide spinner
+      }
+    });
+
+  }
   
   function modal_send_invoice(ref_fact) {
     $('#spinner-div').show();
@@ -495,6 +516,7 @@
           $('#invoice_waiting_to_send').html(data.invoice_waiting_to_send);
           $('#nbre_invoice_waiting_to_send').html(data.nbre_invoice_waiting_to_send);
           $('#invoice_send').html(data.invoice_send);
+          $('#invoice_payed').html(data.invoice_payed);
           $('#nbre_invoice_send').html(data.nbre_invoice_send);
         }
       },
@@ -523,6 +545,7 @@
         $('#invoice_waiting_to_send').html(data.invoice_waiting_to_send);
         $('#nbre_invoice_waiting_to_send').html(data.nbre_invoice_waiting_to_send);
         $('#invoice_send').html(data.invoice_send);
+        $('#invoice_payed').html(data.invoice_payed);
         $('#nbre_invoice_send').html(data.nbre_invoice_send);
       }
     },
@@ -554,6 +577,7 @@
               $('#invoice_waiting_to_send').html(data.invoice_waiting_to_send);
               $('#nbre_invoice_waiting_to_send').html(data.nbre_invoice_waiting_to_send);
               $('#invoice_send').html(data.invoice_send);
+              $('#invoice_payed').html(data.invoice_payed);
               $('#nbre_invoice_send').html(data.nbre_invoice_send);
               alert('Invoice ' + ref_fact + ' has been validated!');
             }
@@ -588,6 +612,7 @@
               $('#invoice_waiting_to_send').html(data.invoice_waiting_to_send);
               $('#nbre_invoice_waiting_to_send').html(data.nbre_invoice_waiting_to_send);
               $('#invoice_send').html(data.invoice_send);
+              $('#invoice_payed').html(data.invoice_payed);
               $('#nbre_invoice_send').html(data.nbre_invoice_send);
               alert('Invoice ' + ref_fact + ' has been deleted!');
             }
@@ -652,7 +677,10 @@ function modal_paiement(ref_fact) {
         $('#ref_fact_payment').val(ref_fact);
         $('#label_ref_fact_payment').val(ref_fact);
         $('#label_montant').val(data.label_montant);
-        document.getElementById("montant_paie").max = data.montant;
+        $('#nom_banq').val(data.nom_banq);
+        $('#compte_bancaire').html(data.compte_bancaire);
+
+        // document.getElementById("montant_paie").max = data.montant;
         // $('#').setAttribute("max", data.montant);
         $('#modal_paiement').modal('show');
       }
@@ -695,11 +723,14 @@ function modal_paiement(ref_fact) {
               }else{
                 // $('#ref_fact').val(data.ref_fact);
                 // $('#id_dos').html(data.ref_dos);
+                $('#invoice_send').html(data.invoice_send);
+                $('#invoice_payed').html(data.invoice_payed);
+                $('#nbre_invoice_send').html(data.nbre_invoice_send);
                 alert('Payment made');
               }
             },
             complete: function () {
-                alert('Payment made!');
+                // alert('Payment made!');
                 $('#spinner-div').hide();//Request is complete so hide spinner
             }
           });

@@ -33,10 +33,10 @@
             var annee = today.getYear();
             annee = today.getFullYear();
             moi = today.getMonth();
-            mois = new Array('Janvier', 'F&eacute;vrier', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Ao&ucirc;t', 'Septembre', 'Octobre', 'Novembre', 'D&eacute;cembre');
+            mois = new Array('January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December');
             j = today.getDate();
             jour = today.getDay();
-            jours = new Array('Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi');
+            jours = new Array('Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday');
             var hours   = today.getHours();
             var minutes = today.getMinutes();
             var seconds = today.getSeconds();

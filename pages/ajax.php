@@ -21,7 +21,7 @@
   								<option>'.$maClasse-> getDataLicence($reponse['num_lic'])['sig_mon'].'</option>
   								'.$maClasse-> selectionnerMonnaie2().'
   							</select>';
-  		$reponse['debours'] = $maClasse-> getDeboursPourFactureClientModeleLicenceAjax($reponse['id_cli'], $reponse['id_mod_lic'], $reponse['id_march'], $reponse['id_mod_trans']);
+  		$reponse['debours'] = $maClasse-> getDeboursPourFactureClientModeleLicenceAjax($reponse['id_cli'], $reponse['id_mod_lic'], $reponse['id_march'], $reponse['id_mod_trans'], $_POST['id_dos']);
 
   		echo json_encode($reponse);
 
@@ -234,6 +234,7 @@
   		$reponse['nbre_invoice_waiting_to_send'] = $maClasse-> getNombreFactureDossierEnAttenteEnvoie($_POST['id_cli'], $_POST['id_mod_lic']);
   		$reponse['invoice_send'] = $maClasse-> getInvoiceSended($_POST['id_cli'], $_POST['id_mod_lic']);
   		$reponse['nbre_invoice_send'] = $maClasse-> getNombreFactureDossierEnvoyee($_POST['id_cli'], $_POST['id_mod_lic']);
+  		$reponse['invoice_payed'] = $maClasse-> getInvoicePayed($_POST['id_cli'], $_POST['id_mod_lic']);
 
   		echo json_encode($reponse);
 
@@ -456,13 +457,22 @@
   		echo json_encode($response);
 
 	}elseif(isset($_POST['operation']) && $_POST['operation']=='rapportFacturation'){ // On Recupere les data pour rapport facturation
-		$response['nbre_facture'] = $maClasse-> getNbreFacture();
-		$response['nbre_dossier_facture'] = $maClasse-> getNbreDossierFacture();
-		$response['nbre_dossier_non_facture'] = $maClasse-> getNbreDossierNonFacture();
+		$id_mod_lic = NULL;
+		if (isset($_POST['id_mod_lic'])&&($_POST['id_mod_lic']!='')) {
+			$id_mod_lic = $_POST['id_mod_lic'];
+		}
+		$response['nbre_facture'] = $maClasse-> getNbreFacture($id_mod_lic);
+		$response['nbre_dossier_facture'] = $maClasse-> getNbreDossierFacture($id_mod_lic);
+		$response['nbre_dossier_non_facture'] = $maClasse-> getNbreDossierNonFacture($id_mod_lic);
 		echo json_encode($response);
 
 	}elseif(isset($_POST['operation']) && $_POST['operation']=='popUpFacture'){ // On Recupere les data pour rapport facturation Popup
-		echo json_encode($maClasse-> getListeFactures($_POST['statut']));
+		$id_mod_lic = NULL;
+		if (isset($_POST['id_mod_lic'])&&($_POST['id_mod_lic']!='')) {
+			$id_mod_lic = $_POST['id_mod_lic'];
+		}
+		echo json_encode($maClasse-> getListeFactures($_POST['statut'], $id_mod_lic));
+		
 	}elseif(isset($_POST['operation']) && $_POST['operation']=='rapportOperations'){ // On Recupere les data pour rapport Operations
 		$response['nbre_dossier_encours'] = $maClasse-> getNbreDossier('Dossiers En Cours');
 		$response['nbre_dossier_non_declare'] = $maClasse-> getNbreDossier('Dossiers non declarés');
@@ -480,10 +490,18 @@
 		$response['ref_fact'] = $_POST['ref_fact'];
 		$response['montant'] = round($maClasse-> getMontantFactureGlobale($_POST['ref_fact']), 2);
 		$response['label_montant'] = number_format(round($maClasse-> getMontantFactureGlobale($_POST['ref_fact']), 2), 2, '.', ',');
+		$response['nom_banq'] = $maClasse-> getDataFactureGlobale($_POST['ref_fact'])['nom_banq'];
+		$response['compte_bancaire'] = '<select id="num_cmpt_paie" class="form-control form-control-sm cc-exp" onchange="getDataCompteBancaire(this.value)" name="num_cmpt_paie" required><option value="'.$maClasse-> getDataFactureGlobale($_POST['ref_fact'])['num_cmpt'].'">'.$maClasse-> getDataFactureGlobale($_POST['ref_fact'])['num_cmpt'].'</option>'.$maClasse-> selectionnerCompteBancaireAjax().'</select>';
 		echo json_encode($response);
 
-	}elseif(isset($_POST['operation']) && $_POST['operation']=='paiement_invoice'){ // On Recupere les data pour rapport Operations
-		$maClasse-> creerPaiementFacture($_POST['ref_fact'], $_POST['ref_paie'], $_POST['date_paie'], $_POST['montant_paie'], $_POST['libelle_paie']);
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='paiement_invoice'){ // On effectue le paiement de la facture
+
+		$maClasse-> creerPaiementFacture($_POST['ref_fact'], $_POST['ref_paie'], $_POST['date_paie'], $_POST['num_cmpt_paie'], $_SESSION['id_util']);
+  		$reponse['invoice_send'] = $maClasse-> getInvoiceSended($_POST['id_cli'], $_POST['id_mod_lic']);
+  		$reponse['nbre_invoice_send'] = $maClasse-> getNombreFactureDossierEnvoyee($_POST['id_cli'], $_POST['id_mod_lic']);
+  		$reponse['invoice_payed'] = $maClasse-> getInvoicePayed($_POST['id_cli'], $_POST['id_mod_lic']);
+  		$reponse['nbre_invoice_payed'] = $maClasse-> getNombreFactureDossierPayees($_POST['id_cli'], $_POST['id_mod_lic']);
+		echo json_encode($reponse);
 
 	}elseif(isset($_POST['operation']) && $_POST['operation']=='liste_client'){
 		echo json_encode($maClasse-> getListeClient());
@@ -726,7 +744,7 @@
 		  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 97, $_POST['autre_taxe_'.$i], '0', '0');
 
   						}
-  						
+
 	  					$maClasse-> creerDetailFactureWithoutTaxe($_POST['ref_fact'], $_POST['id_dos_'.$i], $_POST['id_cli'], $_POST['id_mod_lic'], $_POST['id_march'], $_POST['id_mod_trans']);
 
   					}
@@ -745,6 +763,12 @@
 
 		}
 	    echo json_encode($response);exit;
+
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='getDataCompteBancaire'){
+
+  		$reponse = $maClasse-> getDataCompteBancaire($_POST['num_cmpt']);
+
+  		echo json_encode($reponse);
 
 	}
 

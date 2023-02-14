@@ -52,7 +52,7 @@ $mail = new PHPMailer(true);
 
         //Attachments
         $mail->addAttachment('../facture_dossier/'.$_POST['ref_fact'].'.pdf');         //Add attachments
-        $mail->addAttachment('../facture_dossier/'.$_POST['ref_fact'].'.xls');         //Add attachments
+        // $mail->addAttachment('../facture_dossier/'.$_POST['ref_fact'].'.xls');         //Add attachments
         //$mail->addAttachment('/tmp/image.jpg', 'new.jpg');    //Optional name
 
         //Signature
