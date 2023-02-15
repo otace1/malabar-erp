@@ -4436,8 +4436,15 @@
 															1,
 															0)
 													)*250) AS ceec_60,
-													d.nom_deb AS nom_deb, 
-													CONCAT(UPPER(SUBSTRING(d.nom_deb,1,1)),LOWER(SUBSTRING(d.nom_deb,2))) AS nom_deb,
+													IF(d.id_deb=3,
+														"Redevance Logistique Terrestre SNCC (RLS)",
+															IF(d.id_deb=21,
+																"Frais d`Agence",
+																d.nom_deb
+																)
+														) AS nom_deb,
+													-- d.nom_deb AS nom_deb, 
+													-- CONCAT(UPPER(SUBSTRING(d.nom_deb,1,1)),LOWER(SUBSTRING(d.nom_deb,2))) AS nom_deb,
 													d.id_deb AS id_deb,
 													det.tva AS tva,
 													d.abr_deb AS abr_deb,
