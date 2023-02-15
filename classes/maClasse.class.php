@@ -18440,12 +18440,15 @@
 													IF((p.poids-IF(SUM(dos.poids)>0, SUM(dos.poids), 0)) < 0, 'text-danger', '') AS color_poids,
 													p.id_part AS id_part,
 													l.num_lic AS num_lic,
-													IF(l.consommable='1', 'Consommable', 'Divers') AS label_consommable
+													IF(l.consommable='1', 'Consommable', 'Divers') AS label_consommable,
+													cl.code_cli AS code_cli
 												FROM partielle_av p
 													LEFT JOIN dossier dos
 														ON REPLACE(CONCAT(p.cod,p.num_part), ' ', '') = REPLACE(dos.ref_crf, ' ', '')
 													LEFT JOIN licence l
 														ON l.cod = p.cod
+													LEFT JOIN client cl
+														ON l.id_cli = cl.id_cli
 												$sqlEtat
 												AND p.cod IN (
 													SELECT cod 
@@ -18473,6 +18476,9 @@
 					<a class=" btn-xs btn-warning text-dark" title="Modifier la partielle" data-toggle="modal" data-target=".editPartielle_<?php echo $reponse['id_part'];?>">
 						<i class="fa fa-edit"></i>
 					</a>
+				</td>
+				<td style="text-align: left;">
+					<?php echo $reponse['code_cli'];?>
 				</td>
 				<td style="text-align: left;">
 					<?php echo $reponse['num_lic'];?>
@@ -18530,6 +18536,7 @@
 													l.cod AS cod,
 													IF(l.consommable='1', 'Consommable', 'Divers') AS label_consommable,
 													cl.nom_cli AS nom_cli,
+													cl.code_cli AS code_cli,
 													IF( LENGTH(REPLACE(l.cod, ' ', '')) < 5, 
 														CONCAT('<a class=\" btn-xs btn-info\" title=\"Ajouter la partielle\" onclick=\"alert(\'Erreur: Veuillez renseigner correctement le COD de la licence ',l.num_lic,' !\')\">
 															<i class=\"fa fa-plus\"></i>
@@ -18570,6 +18577,9 @@
 					<!-- <a class=" btn-xs btn-info text-dark" title="Modifier la partielle" data-toggle="modal" data-target=".editPartielle_<?php echo $reponse['id_part'];?>">
 						<i class="fa fa-plus"></i>
 					</a> -->
+				</td>
+				<td style="text-align: left;">
+					<?php echo $reponse['code_cli'];?>
 				</td>
 				<td style="text-align: center;">
 					<?php echo number_format($reponse['nbre_dos'], 0, ',', '');?>
