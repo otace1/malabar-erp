@@ -47,6 +47,7 @@
                                   <tr>
                                     <th style="text-align: center; ">#</th>
                                     <th style="text-align: left; ">CRF</th>
+                                    <th style="text-align: left; ">Client</th>
                                     <th style="text-align: center; " colspan="2">Dossiers</th>
                                     <th style="text-align: left; ">Licence</th>
                                     <th style="text-align: center; ">Type</th>

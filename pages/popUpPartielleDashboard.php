@@ -49,6 +49,7 @@
                                     <th style="text-align: left; ">COD</th>
                                     <th style="text-align: center; ">Partial</th>
                                     <th></th>
+                                    <th style="text-align: center; ">Client</th>
                                     <th style="text-align: left; ">License Ref.</th>
                                     <th style="text-align: center; ">License Type</th>
                                     <th style="text-align: center; ">Partial Weight</th>
