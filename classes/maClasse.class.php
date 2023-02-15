@@ -4482,7 +4482,12 @@
 													) AS detail,
 													det.unite AS unite,
 													COUNT(DISTINCT(dos.ref_decl)) AS qte,
-													dos.poids AS poids
+													dos.poids AS poids,
+													IF(d.id_deb=3,
+														round(det.montant/(dos.roe_decl*85)),
+														0
+														) AS rls,
+													dos.id_dos AS id_dos
 												FROM debours d, detail_facture_dossier det, dossier dos
 												WHERE det.ref_fact = ?
 													AND det.id_deb = d.id_deb
@@ -4528,6 +4533,7 @@
 				}else if ($reponse['id_deb']=='3') {
 					
 					$unite = 'CIF+Duty';
+					$cost_2 = $reponse['rls'];
 					$unite_2 = $reponse['nbre_poids'];
 
 				}else if ($reponse['id_deb']=='29') {
@@ -4540,6 +4546,13 @@
 				}else if($id_t_deb=='1'){
 					$unite = 'CIF';
 					$unite_2 = $reponse['nbre_dos'];
+				}else if ($reponse['id_deb']=='45') {
+					
+					$unite = 'Par declaration';
+					$data_dossier = $this-> getDossier($reponse['id_dos']);
+					$cost_2 = $reponse['ht_usd']/$this-> getDataAffectationDeboursClientModeleLicence($reponse['id_deb'], $data_dossier['id_cli'], $data_dossier['id_mod_lic'], $data_dossier['id_march'], $data_dossier['id_mod_trans'])['montant'];
+					$unite_2 = $reponse['nbre_poids'];
+
 				}else{
 					$unite = 'par declaration';
 					$cost_2 = '1';
@@ -4575,6 +4588,30 @@
 							'&nbsp;&nbsp;</td>
 							<td style="text-align: center; border-right: 1px solid black; font-size: 6.5px;" width="11.5%">'
 								.number_format($reponse['ht_cdf'], 0, ',', '.').
+							'&nbsp;&nbsp;</td>
+						</tr>
+					';
+				}else if($reponse['id_deb']==45){//Scelle Electronique
+					$tbl .= '
+						<tr>
+							<td style="text-align: left; border-left: 1px solid black; border-right: 0.5px solid black; font-size: 6.5px;" colspan="2" width="49%">&nbsp;&nbsp;'
+								.$reponse['nom_deb'].
+							'</td>
+							<td style="text-align: center; border-right: 0.5px solid black; font-size: 6.5px;" width="9%">'
+								.$unite.
+							'
+							</td>
+							<td style="text-align: center; border-right: 0.5px solid black; font-size: 6.5px;" width="8%">'
+								.$cost_2.
+							'&nbsp;&nbsp;</td>
+							<td style="text-align: center; border-right: 0.5px solid black; font-size: 6.5px;" width="11%">'
+								.number_format($this-> getDataAffectationDeboursClientModeleLicence($reponse['id_deb'], $data_dossier['id_cli'], $data_dossier['id_mod_lic'], $data_dossier['id_march'], $data_dossier['id_mod_trans'])['montant'], 2, ',', '.').
+							'&nbsp;&nbsp;</td>
+							<td style="text-align: center; border-right: 0.5px solid black; font-size: 6.5px;" width="11.5%">'
+								.number_format($reponse['tva_usd'], 2, ',', '.').
+							'&nbsp;&nbsp;</td>
+							<td style="text-align: center; border-right: 1px solid black; font-size: 6.5px;" width="11.5%">'
+								.number_format($reponse['ttc_usd'], 2, ',', '.').
 							'&nbsp;&nbsp;</td>
 						</tr>
 					';
@@ -34581,6 +34618,18 @@
 			$requete = $connexion-> prepare("UPDATE dossier SET code_tarif = ?
 												WHERE id_dos = ?");
 			$requete-> execute(array($entree['code_tarif'], $entree['id_dos']));
+
+		}
+
+		public function MAJ_num_exo($id_dos, $num_exo){
+
+			include('connexion.php');
+			$entree['id_dos'] = $id_dos;
+			$entree['num_exo'] = $num_exo;
+
+			$requete = $connexion-> prepare("UPDATE dossier SET num_exo = ?
+												WHERE id_dos = ?");
+			$requete-> execute(array($entree['num_exo'], $entree['id_dos']));
 
 		}
 
