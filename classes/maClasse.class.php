@@ -4436,7 +4436,9 @@
 															1,
 															0)
 													)*250) AS ceec_60,
-													d.nom_deb AS nom_deb, d.id_deb AS id_deb,
+													d.nom_deb AS nom_deb, 
+													CONCAT(UPPER(SUBSTRING(d.nom_deb,1,1)),LOWER(SUBSTRING(d.nom_deb,2))) AS nom_deb,
+													d.id_deb AS id_deb,
 													det.tva AS tva,
 													d.abr_deb AS abr_deb,
 													SUM(det.montant) AS ht,
@@ -4543,6 +4545,9 @@
 					$cost_2 = number_format(($reponse['ht_usd']*100)/$this-> getMontantTotalTypeDeboursFacture($ref_fact, 1)['montant_usd'], 2, ',', '.').'%';
 					$unite_2 = $reponse['nbre_poids'];
 
+				}else if($reponse['id_deb']=='97'){
+					$unite = '';
+					$unite_2 = $reponse['nbre_dos'];
 				}else if($id_t_deb=='1'){
 					$unite = 'CIF';
 					$unite_2 = $reponse['nbre_dos'];
