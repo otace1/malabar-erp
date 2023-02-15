@@ -71,7 +71,7 @@
         
           <div class="form-group">
             <label for="inputEmail3" class="col-form-label">Files Ref.:</label>
-            <select class="form-control form-control-sm" id="id_dos" onchange="getTableauImportInvoiceSingle(id_mod_fact.value, this.value, id_mod_lic.value, id_march.value, id_mod_trans.value)" required>
+            <select class="form-control form-control-sm" onchange="getTableauImportInvoiceSingle(id_mod_fact.value, this.value, id_mod_lic.value, id_march.value, id_mod_trans.value)" required>
               <option><?php echo $maClasse-> getDataFactureGlobale($_GET['ref_fact'])['ref_dos'];?></option>
             </select>
           </div>
@@ -79,107 +79,98 @@
       </div>
 
       <div class="col-md-12"></div>
-      <div class="col-md-4 table-responsive">
+      
+      <div class="col-md-5">
         <label for="x_card_code" class="control-label mb-1"><u>File Data</u></label>
-        <table class="table table-bordered table-striped text-nowrap table-hover table-sm small text-nowrap table-head-fixed table-dark">
+        <table class="table table-bordered table-responsive table-striped text-nowrap table-hover table-sm small table-head-fixed table-dark">
           <tbody>
             <tr>
-              <th>Rate</th>
-              <th><input style="text-align: center;" id="roe_decl" name="roe_decl" onblur="maj_roe_decl(id_dos.value, this.value);calculCIF();" type="number" step="0.000001" min="1" required></th>
+              <th>FOB</th>
+              <th><input style="text-align: center; width: 9em;" id="fob" name="fob" onblur="majjjj(id_dos.value, this.value);calculCIF();" type="number" step="0.000001" min="1" disabled class="bg bg-dark"></th>
+              <th>Fret</th>
+              <th><input style="text-align: center; width: 9em;" id="fret" name="fret" onblur="majjjj(id_dos.value, this.value);calculCIF();" type="number" step="0.000001" min="1" disabled class="bg bg-dark"></th>
             </tr>
             <tr>
-              <th>Total of Duty (CDF)</th>
-              <th><input style="text-align: center;" id="montant_liq" onblur="maj_montant_liq(id_dos.value, this.value);calculCIF();" type="number" step="0.000001" min="0" class="" required></th>
+              <th>Assurance</th>
+              <th><input style="text-align: center; width: 9em;" id="assurance" name="assurance" onblur="majjjj(id_dos.value, this.value);calculCIF();" type="number" step="0.000001" min="1"  disabled class="bg bg-dark"></th>
+              <th>Autres Charges</th>
+              <th><input style="text-align: center; width: 9em;" id="autre_frais" name="autre_frais" onblur="majjjj(id_dos.value, this.value);calculCIF();" type="number" step="0.000001" min="1"  disabled class="bg bg-dark"></th>
+            </tr>
+            <tr>
+              <th>CIF</th>
+              <th><input style="text-align: center; width: 9em;" id="cif" name="cif" onblur="majjjj(id_dos.value, this.value);calculCIF();" type="number" step="0.000001" min="1"  disabled class="bg bg-dark"></th>
+              <th>Currency</th>
+              <th><span id="id_mon"></span></th>
             </tr>
             <tr>
               <th>FOB (USD)</th>
-              <th><input style="text-align: center;" id="fob_usd" name="fob_usd" onblur="maj_fob_usd(id_dos.value, this.value);calculCIF();calculCIF();" type="number" step="0.000001" min="0" class="" required></th>
-            </tr>
-            <tr>
+              <th><input style="text-align: center; width: 9em;" id="fob_usd" name="fob_usd" onblur="maj_fob_usd(id_dos.value, this.value);calculCIF();calculCIF();" type="number" step="0.000001" min="0" class="" required></th>
               <th>Fret (USD)</th>
-              <th><input style="text-align: center;" id="fret_usd" name="fret_usd" onblur="maj_fret_usd(id_dos.value, this.value);calculCIF();" class="" type="number" step="0.000001" min="0" required></th>
+              <th><input style="text-align: center; width: 9em;" id="fret_usd" name="fret_usd" onblur="maj_fret_usd(id_dos.value, this.value);calculCIF();" class="" type="number" step="0.000001" min="0" required></th>
             </tr>
             <tr>
               <th>Autres Charges (USD)</th>
-              <th><input style="text-align: center;" id="autre_frais_usd" name="autre_frais_usd" onblur="maj_autre_frais_usd(id_dos.value, this.value);calculCIF();" class="" type="number" step="0.000001" min="0" required></th>
-            </tr>
-            <tr>
+              <th><input style="text-align: center; width: 9em;" id="autre_frais_usd" name="autre_frais_usd" onblur="maj_autre_frais_usd(id_dos.value, this.value);calculCIF();" class="" type="number" step="0.000001" min="0" required></th>
               <th>Assurance (USD)</th>
-              <th><input style="text-align: center;" id="assurance_usd" name="assurance_usd" onblur="maj_assurance_usd(id_dos.value, this.value);calculCIF();" class="" type="number" step="0.000001" min="0" required></th>
+              <th><input style="text-align: center; width: 9em;" id="assurance_usd" name="assurance_usd" onblur="maj_assurance_usd(id_dos.value, this.value);calculCIF();" class="" type="number" step="0.000001" min="0" required></th>
             </tr>
             <tr>
               <th>CIF (USD)</th>
-              <th><input style="text-align: center; font-weight: bold;" id="cif_usd" class="bg bg-primary" disabled></th>
+              <th><input style="text-align: center; width: 9em; font-weight: bold;" id="cif_usd" class="bg bg-primary" disabled></th>
+              <th>CIF (CDF)</th>
+              <th><input style="text-align: center; width: 9em; font-weight: bold;" id="cif_cdf" onblur="maj_montant_liq(id_dos.value, this.value);" class="bg bg-primary" disabled></th>
             </tr>
             <tr>
-              <th>CIF (CDF)</th>
-              <th><input style="text-align: center; font-weight: bold;" id="cif_cdf" onblur="maj_montant_liq(id_dos.value, this.value);" class="bg bg-primary" disabled></th>
+              <th>Rate</th>
+              <th><input style="text-align: center; width: 9em;" id="roe_decl" name="roe_decl" onblur="maj_roe_decl(id_dos.value, this.value);calculCIF();" type="number" step="0.000001" min="1" required></th>
+              <th>Total of Duty (CDF)</th>
+              <th><input style="text-align: center; width: 9em;" id="montant_liq" onblur="maj_montant_liq(id_dos.value, this.value);calculCIF();" type="number" step="0.000001" min="0" class="" required></th>
             </tr>
             <tr>
               <th>Poids (kg)</th>
-              <th><input style="text-align: center;" id="poids" name="poids" class="" required></th>
-            </tr>
-            <tr>
+              <th><input style="text-align: center; width: 9em;" id="poids" name="poids" onblur="calculTresco();" required></th>
               <th>Tariff Code Client:</th>
-              <th><input style="text-align: center;" id="code_tarif" name="code_tarif" onblur="maj_code_tarif(id_dos.value, this.value);" type="text" class="" required></th>
+              <th><input style="text-align: center; width: 9em;" id="code_tarif" name="code_tarif" onblur="maj_code_tarif(id_dos.value, this.value);" type="text" class="" required></th>
             </tr>
             <tr>
-              <th>Horse (Wagon / AWB)</th>
-              <th><input style="text-align: center;" id="horse" disabled class="bg bg-dark"></th>
-            </tr>
-            <tr>
-              <th>Trailer 1</th>
-              <th><input style="text-align: center;" id="trailer_1" disabled class="bg bg-dark"></th>
-            </tr>
-            <tr>
-              <th>Trailer 2</th>
-              <th><input style="text-align: center;" id="trailer_2" disabled class="bg bg-dark"></th>
+              <th>Truck (Wagon / AWB)</th>
+              <th colspan="3"><input style="text-align: center; width: 30em;" id="truck" disabled class="bg bg-dark"></th>
             </tr>
             <tr>
               <th>Facture/PFI No.:</th>
-              <th><input style="text-align: center;" id="ref_fact_dos" disabled class="bg bg-dark"></th>
-            </tr>
-            <tr>
+              <th><input style="text-align: center; width: 9em;" id="ref_fact_dos" disabled class="bg bg-dark"></th>
               <th>BIVAC inspection:</th>
-              <th><input style="text-align: center;" id="cod" disabled class="bg bg-dark"></th>
+              <th><input style="text-align: center; width: 9em;" id="cod" disabled class="bg bg-dark"></th>
             </tr>
             <tr>
               <th>Produit</th>
-              <th><input style="text-align: center;" id="commodity" disabled class="bg bg-dark"></th>
-            </tr>
-            <tr>
+              <th><input style="text-align: center; width: 9em;" id="commodity" disabled class="bg bg-dark"></th>
               <th>Exoneration/Code:</th>
-              <th><input style="text-align: center;" id="num_exo" disabled class="bg bg-dark"></th>
+              <th><input style="text-align: center; width: 9em;" id="num_exo" onblur="maj_num_exo(id_dos.value, this.value);" class=""></th>
             </tr>
             <tr>
               <th>Declaration No.</th>
-              <th><input style="text-align: center;" id="ref_decl" disabled class="bg bg-dark"></th>
-            </tr>
-            <tr>
+              <th><input style="text-align: center; width: 9em;" id="ref_decl" disabled class="bg bg-dark"></th>
               <th>Declaration Date</th>
-              <th><input style="text-align: center;" id="date_decl" disabled class="bg bg-dark"></th>
+              <th><input style="text-align: center; width: 9em;" id="date_decl" disabled class="bg bg-dark"></th>
             </tr>
             <tr>
               <th>Liquidation No.</th>
-              <th><input style="text-align: center;" id="ref_liq" disabled class="bg bg-dark"></th>
-            </tr>
-            <tr>
+              <th><input style="text-align: center; width: 9em;" id="ref_liq" disabled class="bg bg-dark"></th>
               <th>Liquidation Date</th>
-              <th><input style="text-align: center;" id="date_liq" disabled class="bg bg-dark"></th>
+              <th><input style="text-align: center; width: 9em;" id="date_liq" disabled class="bg bg-dark"></th>
             </tr>
             <tr>
               <th>Quittance No.</th>
-              <th><input style="text-align: center;" id="ref_quit" disabled class="bg bg-dark"></th>
-            </tr>
-            <tr>
+              <th><input style="text-align: center; width: 9em;" id="ref_quit" disabled class="bg bg-dark"></th>
               <th>Quittance Date</th>
-              <th><input style="text-align: center;" id="date_quit" disabled class="bg bg-dark"></th>
+              <th><input style="text-align: center; width: 9em;" id="date_quit" disabled class="bg bg-dark"></th>
             </tr>
           </tbody>
         </table>
       </div>
 
-      <div class="col-md-8 table-responsive">
+      <div class="col-md-7 table-responsive">
         <label for="x_card_code" class="control-label mb-1"><u>Items</u></label>
         <table class="table table-bordered table-striped text-nowrap table-hover table-sm small text-nowrap table-head-fixed table-dark">
           <thead>
@@ -252,6 +243,15 @@
           alert(data.logout);
           window.location="../deconnexion.php";
         }else{
+          $('#id_mon').html(data.id_mon);
+          $('#fob').val(data.fob);
+          $('#fret').val(data.fret);
+          $('#assurance').val(data.assurance);
+          $('#autre_frais').val(data.autre_frais);
+          $('#cif').val(data.cif);
+          $('#roe_decl').val(data.roe_decl);
+          $('#commodity').val(data.commodity);
+          $('#truck').val(data.truck);
           // alert('Hello');
           $('#roe_decl').val(data.roe_decl);
           $('#commodity').val(data.commodity);
@@ -536,6 +536,26 @@
       type: 'post',
       url: 'ajax.php',
       data: {id_dos: id_dos, code_tarif: code_tarif, operation: 'maj_code_tarif'},
+      dataType: 'json',
+      success:function(data){
+        if (data.logout) {
+          alert(data.logout);
+          window.location="../deconnexion.php";
+        }
+      },
+      complete: function () {
+          $('#spinner-div').hide();//Request is complete so hide spinner
+      }
+    });
+
+  }
+
+  function maj_num_exo(id_dos, num_exo){
+    $('#spinner-div').show();
+    $.ajax({
+      type: 'post',
+      url: 'ajax.php',
+      data: {id_dos: id_dos, num_exo: num_exo, operation: 'maj_num_exo'},
       dataType: 'json',
       success:function(data){
         if (data.logout) {

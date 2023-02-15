@@ -79,6 +79,7 @@
       </div>
 
       <div class="col-md-12"></div>
+
       <div class="col-md-5">
         <label for="x_card_code" class="control-label mb-1"><u>File Data</u></label>
         <table class="table table-bordered table-responsive table-striped text-nowrap table-hover table-sm small table-head-fixed table-dark">
@@ -145,7 +146,7 @@
               <th>Produit</th>
               <th><input style="text-align: center; width: 9em;" id="commodity" disabled class="bg bg-dark"></th>
               <th>Exoneration/Code:</th>
-              <th><input style="text-align: center; width: 9em;" id="num_exo" disabled class="bg bg-dark"></th>
+              <th><input style="text-align: center; width: 9em;" id="num_exo" onblur="maj_num_exo(id_dos.value, this.value);" class=""></th>
             </tr>
             <tr>
               <th>Declaration No.</th>
@@ -530,6 +531,26 @@
       type: 'post',
       url: 'ajax.php',
       data: {id_dos: id_dos, code_tarif: code_tarif, operation: 'maj_code_tarif'},
+      dataType: 'json',
+      success:function(data){
+        if (data.logout) {
+          alert(data.logout);
+          window.location="../deconnexion.php";
+        }
+      },
+      complete: function () {
+          $('#spinner-div').hide();//Request is complete so hide spinner
+      }
+    });
+
+  }
+
+  function maj_num_exo(id_dos, num_exo){
+    $('#spinner-div').show();
+    $.ajax({
+      type: 'post',
+      url: 'ajax.php',
+      data: {id_dos: id_dos, num_exo: num_exo, operation: 'maj_num_exo'},
       dataType: 'json',
       success:function(data){
         if (data.logout) {

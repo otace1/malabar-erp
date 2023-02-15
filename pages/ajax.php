@@ -81,6 +81,13 @@
 
   		echo json_encode($reponse);
 
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='maj_num_exo'){// MAJ Montant Decl
+
+  		$reponse = $maClasse-> getDataDossier($_POST['id_dos']);
+  		$maClasse-> MAJ_num_exo($_POST['id_dos'], $_POST['num_exo']);
+
+  		echo json_encode($reponse);
+
 	}elseif(isset($_POST['operation']) && $_POST['operation']=='enregistrerFactureExportSingle'){// On enregistre la facture Export Single
 
   		if(isset($_POST['ref_fact'])){
