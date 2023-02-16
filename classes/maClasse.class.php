@@ -34917,6 +34917,9 @@
 			$requete = $connexion-> prepare("UPDATE dossier SET cod = ?
 												WHERE id_dos = ?");
 			$requete-> execute(array($entree['cod'], $entree['id_dos']));
+			$requete = $connexion-> prepare("UPDATE dossier SET ref_crf = ?
+												WHERE id_dos = ?");
+			$requete-> execute(array($entree['cod'], $entree['id_dos']));
 
 		} 
 
@@ -35231,6 +35234,9 @@
 			$entree['id_dos'] = $id_dos;
 			$entree['ref_crf'] = $ref_crf;
 			$requete = $connexion-> prepare("UPDATE dossier SET ref_crf = ?
+												WHERE id_dos = ?");
+			$requete-> execute(array($entree['ref_crf'], $entree['id_dos']));
+			$requete = $connexion-> prepare("UPDATE dossier SET cod = ?
 												WHERE id_dos = ?");
 			$requete-> execute(array($entree['ref_crf'], $entree['id_dos']));
 
