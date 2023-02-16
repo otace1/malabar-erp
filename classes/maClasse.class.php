@@ -5238,23 +5238,23 @@
 
 			$tbl .= '
 					<tr>
-						<td style="text-align: right; border: 0.5px solid black; font-weight: bold; font-size: 8px;" width="23%">Total excl. TVA en USD &nbsp;&nbsp;
+						<td style="text-align: right; border: 0.5px solid black; font-weight: bold; font-size: 8px;" width="23%">Total excl. TVA &nbsp;&nbsp;
 						</td>
-						<td style="text-align: center; border: 0.5px solid black; font-weight: bold;" width="11.5%">'
+						<td style="text-align: center; border: 0.5px solid black; font-weight: bold;" width="11.5%">$ '
 							.number_format($sub_total, 2, ',', '.').
 						'&nbsp;&nbsp;</td>
 					</tr>
 					<tr>
-						<td style="text-align: right; border: 0.5px solid black; font-weight: bold; font-size: 8px;" width="23%"> TVA 16% en USD &nbsp;&nbsp;
+						<td style="text-align: right; border: 0.5px solid black; font-weight: bold; font-size: 8px;" width="23%"> TVA 16% &nbsp;&nbsp;
 						</td>
-						<td style="text-align: center; border: 0.5px solid black; font-weight: bold;" width="11.5%">'
+						<td style="text-align: center; border: 0.5px solid black; font-weight: bold;" width="11.5%">$ '
 							.number_format($total_tva, 2, ',', '.').
 						'&nbsp;&nbsp;</td>
 					</tr>
 					<tr>
-						<td style="text-align: right; border: 0.5px solid black; font-weight: bold; font-size: 10px; font-weight: bold; background-color: rgb(220,220,220);" width="23%">Grand Total en USD &nbsp;&nbsp;
+						<td style="text-align: right; border: 0.5px solid black; font-weight: bold; font-size: 10px; font-weight: bold; background-color: rgb(220,220,220);" width="23%">Grand Total &nbsp;&nbsp;
 						</td>
-						<td style="text-align: center; border: 0.5px solid black; font-weight: bold; font-size: 10px; background-color: rgb(220,220,220);" width="11.5%">'
+						<td style="text-align: center; border: 0.5px solid black; font-weight: bold; font-size: 10px; background-color: rgb(220,220,220);" width="11.5%">$ '
 							.number_format($total_gen, 2, ',', '.').
 						'&nbsp;&nbsp;</td>
 					</tr>
