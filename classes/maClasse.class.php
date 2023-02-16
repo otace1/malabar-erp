@@ -4854,8 +4854,13 @@
 				$cost = $reponse['ht_usd']/$unite_2;
 				$cost_2 = number_format($cost, 2, ',', '.');
 				
+				// if($reponse['id_deb']=='54'){
+				// 	$unite = number_format($this-> getMontantFactureTypeDebours($ref_fact, '1'), 2, ',', '.');
+				// 	$cost = '1,50%';
+				// 	$cost_2 = $cost;
+				// }
 				if($reponse['id_deb']=='54'){
-					$unite = number_format($this-> getMontantFactureTypeDebours($ref_fact, '1'), 2, ',', '.');
+					$unite = number_format($this-> getMontantFactureTypeDeboursSansFinancialCost($ref_fact, '1'), 2, ',', '.');
 					$cost = '1,50%';
 					$cost_2 = $cost;
 				}
