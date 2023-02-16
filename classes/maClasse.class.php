@@ -4582,23 +4582,23 @@
 				if($entree['id_t_deb']=='1'){
 					$tbl .= '
 						<tr>
-							<td style="text-align: left; border-left: 1px solid black; border-right: 0.5px solid black; font-size: 7px;" colspan="2" width="49%">&nbsp;&nbsp;'
+							<td style="text-align: left; border-left: 1px solid black; border-right: 0.5px solid black; font-size: 7.5px;" colspan="2" width="49%">&nbsp;&nbsp;'
 								.$reponse['nom_deb'].
 							'</td>
-							<td style="text-align: center; border-right: 0.5px solid black; font-size: 7px;" width="9%">'
+							<td style="text-align: center; border-right: 0.5px solid black; font-size: 7.5px;" width="9%">'
 								.$unite.
 							'
 							</td>
-							<td style="text-align: center; border-right: 0.5px solid black; font-size: 7px;" width="8%">'
+							<td style="text-align: center; border-right: 0.5px solid black; font-size: 7.5px;" width="8%">'
 								.$cost_2.
 							'&nbsp;&nbsp;</td>
-							<td style="text-align: center; border-right: 0.5px solid black; font-size: 7px;" width="11%">'
+							<td style="text-align: center; border-right: 0.5px solid black; font-size: 7.5px;" width="11%">'
 								.number_format($reponse['ht_cdf'], 0, ',', '.').
 							'&nbsp;&nbsp;</td>
-							<td style="text-align: center; border-right: 0.5px solid black; font-size: 7px;" width="11.5%">'
+							<td style="text-align: center; border-right: 0.5px solid black; font-size: 7.5px;" width="11.5%">'
 								.number_format($reponse['tva_cdf'], 2, ',', '.').
 							'&nbsp;&nbsp;</td>
-							<td style="text-align: center; border-right: 1px solid black; font-size: 7px;" width="11.5%">'
+							<td style="text-align: center; border-right: 1px solid black; font-size: 7.5px;" width="11.5%">'
 								.number_format($reponse['ht_cdf'], 0, ',', '.').
 							'&nbsp;&nbsp;</td>
 						</tr>
@@ -4606,23 +4606,23 @@
 				}else if($reponse['id_deb']==45){//Scelle Electronique
 					$tbl .= '
 						<tr>
-							<td style="text-align: left; border-left: 1px solid black; border-right: 0.5px solid black; font-size: 7px;" colspan="2" width="49%">&nbsp;&nbsp;'
+							<td style="text-align: left; border-left: 1px solid black; border-right: 0.5px solid black; font-size: 7.5px;" colspan="2" width="49%">&nbsp;&nbsp;'
 								.$reponse['nom_deb'].
 							'</td>
-							<td style="text-align: center; border-right: 0.5px solid black; font-size: 7px;" width="9%">'
+							<td style="text-align: center; border-right: 0.5px solid black; font-size: 7.5px;" width="9%">'
 								.$unite.
 							'
 							</td>
-							<td style="text-align: center; border-right: 0.5px solid black; font-size: 7px;" width="8%">'
+							<td style="text-align: center; border-right: 0.5px solid black; font-size: 7.5px;" width="8%">'
 								.$cost_2.
 							'&nbsp;&nbsp;</td>
-							<td style="text-align: center; border-right: 0.5px solid black; font-size: 7px;" width="11%">'
+							<td style="text-align: center; border-right: 0.5px solid black; font-size: 7.5px;" width="11%">'
 								.number_format($this-> getDataAffectationDeboursClientModeleLicence($reponse['id_deb'], $data_dossier['id_cli'], $data_dossier['id_mod_lic'], $data_dossier['id_march'], $data_dossier['id_mod_trans'])['montant'], 2, ',', '.').
 							'&nbsp;&nbsp;</td>
-							<td style="text-align: center; border-right: 0.5px solid black; font-size: 7px;" width="11.5%">'
+							<td style="text-align: center; border-right: 0.5px solid black; font-size: 7.5px;" width="11.5%">'
 								.number_format($reponse['tva_usd'], 2, ',', '.').
 							'&nbsp;&nbsp;</td>
-							<td style="text-align: center; border-right: 1px solid black; font-size: 7px;" width="11.5%">'
+							<td style="text-align: center; border-right: 1px solid black; font-size: 7.5px;" width="11.5%">'
 								.number_format($reponse['ttc_usd'], 2, ',', '.').
 							'&nbsp;&nbsp;</td>
 						</tr>
@@ -4630,23 +4630,23 @@
 				}else{
 					$tbl .= '
 						<tr>
-							<td style="text-align: left; border-left: 1px solid black; border-right: 0.5px solid black; font-size: 7px;" colspan="2" width="49%">&nbsp;&nbsp;'
+							<td style="text-align: left; border-left: 1px solid black; border-right: 0.5px solid black; font-size: 7.5px;" colspan="2" width="49%">&nbsp;&nbsp;'
 								.$reponse['nom_deb'].
 							'</td>
-							<td style="text-align: center; border-right: 0.5px solid black; font-size: 7px;" width="9%">'
+							<td style="text-align: center; border-right: 0.5px solid black; font-size: 7.5px;" width="9%">'
 								.$unite.
 							'
 							</td>
-							<td style="text-align: center; border-right: 0.5px solid black; font-size: 7px;" width="8%">'
+							<td style="text-align: center; border-right: 0.5px solid black; font-size: 7.5px;" width="8%">'
 								.$cost_2.
 							'&nbsp;&nbsp;</td>
-							<td style="text-align: center; border-right: 0.5px solid black; font-size: 7px;" width="11%">'
+							<td style="text-align: center; border-right: 0.5px solid black; font-size: 7.5px;" width="11%">'
 								.number_format($reponse['ht_usd'], 2, ',', '.').
 							'&nbsp;&nbsp;</td>
-							<td style="text-align: center; border-right: 0.5px solid black; font-size: 7px;" width="11.5%">'
+							<td style="text-align: center; border-right: 0.5px solid black; font-size: 7.5px;" width="11.5%">'
 								.number_format($reponse['tva_usd'], 2, ',', '.').
 							'&nbsp;&nbsp;</td>
-							<td style="text-align: center; border-right: 1px solid black; font-size: 7px;" width="11.5%">'
+							<td style="text-align: center; border-right: 1px solid black; font-size: 7.5px;" width="11.5%">'
 								.number_format($reponse['ttc_usd'], 2, ',', '.').
 							'&nbsp;&nbsp;</td>
 						</tr>
