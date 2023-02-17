@@ -2838,10 +2838,81 @@
 			                  <p>View Invoices</p>
 			                </a>
 			            </li>
+		              	<li class="nav-item">
+			                <!-- <a href="statutDossierFacturation.php?type_fact=globale&id_mod_lic_fact=<?php echo $id_mod_lic;?>&id_cli=<?php echo $reponse['id_cli'];?>" class="nav-link"> -->
+			                <a  onclick="window.open('statutDossierFacturation.php?type_fact=globale&id_mod_lic_fact=<?php echo $id_mod_lic;?>&id_cli=<?php echo $reponse['id_cli'];?>','pop1','width=1000,height=800');" class="nav-link">
+			                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-list nav-icon"></i>
+			                  <p>View Files</p>
+			                </a>
+			            </li>
 		            </ul>
 			    </li>
 			<?php
 			}$requete-> closeCursor();
+		}
+
+		public function afficherStatutDossierFactureAjax($id_cli, $id_mod_lic){
+			include("connexion.php");
+			$entree['id_cli'] = $id_cli;
+			$entree['id_mod_lic'] = $id_mod_lic;
+			//$entree['type_fact'] = $type_fact;
+			$compteur=0;
+
+			$bg = "";
+			$badge = '';
+			$btn = '';
+			$etat ='';
+
+			$debut = $compteur;
+			$rows = array();
+
+			$requete = $connexion-> prepare("SELECT 1 AS compteur,dossier.ref_dos AS ref_dos,
+													IF(dossier.not_fact='1',
+														'Excel',
+														facture_dossier.ref_fact 
+														)
+													AS ref_fact,
+													IF(marchandise.nom_march IS NOT NULL,
+														marchandise.nom_march,
+														dossier.commodity
+													) AS commodity,
+													DATE_FORMAT(facture_dossier.date_fact, '%d/%m/%Y') AS date_fact,
+													IF(dossier.id_mod_lic='2',
+														dossier.ref_fact,
+														dossier.num_lot
+														)
+													 AS ref_fact_dos,
+													dossier.ref_decl AS ref_decl,
+													DATE_FORMAT(dossier.date_decl, '%d/%m/%Y') AS date_decl,
+													dossier.ref_liq AS ref_liq,
+													DATE_FORMAT(dossier.date_liq, '%d/%m/%Y') AS date_liq,
+													dossier.ref_quit AS ref_quit,
+													DATE_FORMAT(dossier.date_quit, '%d/%m/%Y') AS date_quit
+												FROM dossier
+													LEFT JOIN detail_facture_dossier
+														ON detail_facture_dossier.id_dos = dossier.id_dos
+													LEFT JOIN facture_dossier
+														ON facture_dossier.ref_fact = detail_facture_dossier.ref_fact 
+													LEFT JOIN marchandise
+														ON marchandise.id_march = dossier.id_march
+												WHERE dossier.id_mod_lic = ?
+													AND dossier.id_cli = ?
+													AND dossier.ref_dos NOT LIKE 'EXPDEC%'
+													AND dossier.ref_dos NOT LIKE '21EXP%'
+													AND dossier.ref_dos NOT LIKE '21DEC%'
+												GROUP BY dossier.id_dos
+												ORDER BY dossier.id_dos ASC");
+			$requete-> execute(array($entree['id_mod_lic'], $entree['id_cli']));
+			while ($reponse = $requete-> fetch()) {
+				$compteur++;
+
+				$reponse['compteur'] = $compteur;
+				$rows[] = $reponse;
+
+			}$requete-> closeCursor();
+
+			return $rows;
+
 		}
 
 		public function getDossierPourFacturationClientModeleLicence($id_cli, $id_mod_lic, $id_mod_trans, $id_march){
@@ -4318,6 +4389,10 @@
 					$unite = number_format($this-> getMontantFactureTypeDeboursSansFinancialCost($ref_fact, '1'), 2, ',', '.');
 					$cost = '1,50%';
 					$cost_2 = $cost;
+				}elseif($reponse['id_deb']=='101'){
+					$unite = number_format($this-> getMontantFactureTypeDeboursSansFinancialCost($ref_fact, '1'), 2, ',', '.');
+					$cost = '1%';
+					$cost_2 = $cost;
 				}
 
 				$total_cost += $cost;
@@ -4582,23 +4657,23 @@
 				if($entree['id_t_deb']=='1'){
 					$tbl .= '
 						<tr>
-							<td style="text-align: left; border-left: 1px solid black; border-right: 0.5px solid black; font-size: 7.5px;" colspan="2" width="49%">&nbsp;&nbsp;'
+							<td style="text-align: left; border-left: 1px solid black; border-right: 0.5px solid black; font-size: 7px;" colspan="2" width="49%">&nbsp;&nbsp;'
 								.$reponse['nom_deb'].
 							'</td>
-							<td style="text-align: center; border-right: 0.5px solid black; font-size: 7.5px;" width="9%">'
+							<td style="text-align: center; border-right: 0.5px solid black; font-size: 7px;" width="9%">'
 								.$unite.
 							'
 							</td>
-							<td style="text-align: center; border-right: 0.5px solid black; font-size: 7.5px;" width="8%">'
+							<td style="text-align: center; border-right: 0.5px solid black; font-size: 7px;" width="8%">'
 								.$cost_2.
 							'&nbsp;&nbsp;</td>
-							<td style="text-align: center; border-right: 0.5px solid black; font-size: 7.5px;" width="11%">'
+							<td style="text-align: center; border-right: 0.5px solid black; font-size: 7px;" width="11%">'
 								.number_format($reponse['ht_cdf'], 0, ',', '.').
 							'&nbsp;&nbsp;</td>
-							<td style="text-align: center; border-right: 0.5px solid black; font-size: 7.5px;" width="11.5%">'
+							<td style="text-align: center; border-right: 0.5px solid black; font-size: 7px;" width="11.5%">'
 								.number_format($reponse['tva_cdf'], 2, ',', '.').
 							'&nbsp;&nbsp;</td>
-							<td style="text-align: center; border-right: 1px solid black; font-size: 7.5px;" width="11.5%">'
+							<td style="text-align: center; border-right: 1px solid black; font-size: 7px;" width="11.5%">'
 								.number_format($reponse['ht_cdf'], 0, ',', '.').
 							'&nbsp;&nbsp;</td>
 						</tr>
@@ -4606,23 +4681,23 @@
 				}else if($reponse['id_deb']==45){//Scelle Electronique
 					$tbl .= '
 						<tr>
-							<td style="text-align: left; border-left: 1px solid black; border-right: 0.5px solid black; font-size: 7.5px;" colspan="2" width="49%">&nbsp;&nbsp;'
+							<td style="text-align: left; border-left: 1px solid black; border-right: 0.5px solid black; font-size: 7px;" colspan="2" width="49%">&nbsp;&nbsp;'
 								.$reponse['nom_deb'].
 							'</td>
-							<td style="text-align: center; border-right: 0.5px solid black; font-size: 7.5px;" width="9%">'
+							<td style="text-align: center; border-right: 0.5px solid black; font-size: 7px;" width="9%">'
 								.$unite.
 							'
 							</td>
-							<td style="text-align: center; border-right: 0.5px solid black; font-size: 7.5px;" width="8%">'
+							<td style="text-align: center; border-right: 0.5px solid black; font-size: 7px;" width="8%">'
 								.$cost_2.
 							'&nbsp;&nbsp;</td>
-							<td style="text-align: center; border-right: 0.5px solid black; font-size: 7.5px;" width="11%">'
+							<td style="text-align: center; border-right: 0.5px solid black; font-size: 7px;" width="11%">'
 								.number_format($this-> getDataAffectationDeboursClientModeleLicence($reponse['id_deb'], $data_dossier['id_cli'], $data_dossier['id_mod_lic'], $data_dossier['id_march'], $data_dossier['id_mod_trans'])['montant'], 2, ',', '.').
 							'&nbsp;&nbsp;</td>
-							<td style="text-align: center; border-right: 0.5px solid black; font-size: 7.5px;" width="11.5%">'
+							<td style="text-align: center; border-right: 0.5px solid black; font-size: 7px;" width="11.5%">'
 								.number_format($reponse['tva_usd'], 2, ',', '.').
 							'&nbsp;&nbsp;</td>
-							<td style="text-align: center; border-right: 1px solid black; font-size: 7.5px;" width="11.5%">'
+							<td style="text-align: center; border-right: 1px solid black; font-size: 7px;" width="11.5%">'
 								.number_format($reponse['ttc_usd'], 2, ',', '.').
 							'&nbsp;&nbsp;</td>
 						</tr>
@@ -4630,23 +4705,23 @@
 				}else{
 					$tbl .= '
 						<tr>
-							<td style="text-align: left; border-left: 1px solid black; border-right: 0.5px solid black; font-size: 7.5px;" colspan="2" width="49%">&nbsp;&nbsp;'
+							<td style="text-align: left; border-left: 1px solid black; border-right: 0.5px solid black; font-size: 7px;" colspan="2" width="49%">&nbsp;&nbsp;'
 								.$reponse['nom_deb'].
 							'</td>
-							<td style="text-align: center; border-right: 0.5px solid black; font-size: 7.5px;" width="9%">'
+							<td style="text-align: center; border-right: 0.5px solid black; font-size: 7px;" width="9%">'
 								.$unite.
 							'
 							</td>
-							<td style="text-align: center; border-right: 0.5px solid black; font-size: 7.5px;" width="8%">'
+							<td style="text-align: center; border-right: 0.5px solid black; font-size: 7px;" width="8%">'
 								.$cost_2.
 							'&nbsp;&nbsp;</td>
-							<td style="text-align: center; border-right: 0.5px solid black; font-size: 7.5px;" width="11%">'
+							<td style="text-align: center; border-right: 0.5px solid black; font-size: 7px;" width="11%">'
 								.number_format($reponse['ht_usd'], 2, ',', '.').
 							'&nbsp;&nbsp;</td>
-							<td style="text-align: center; border-right: 0.5px solid black; font-size: 7.5px;" width="11.5%">'
+							<td style="text-align: center; border-right: 0.5px solid black; font-size: 7px;" width="11.5%">'
 								.number_format($reponse['tva_usd'], 2, ',', '.').
 							'&nbsp;&nbsp;</td>
-							<td style="text-align: center; border-right: 1px solid black; font-size: 7.5px;" width="11.5%">'
+							<td style="text-align: center; border-right: 1px solid black; font-size: 7px;" width="11.5%">'
 								.number_format($reponse['ttc_usd'], 2, ',', '.').
 							'&nbsp;&nbsp;</td>
 						</tr>
@@ -5107,7 +5182,8 @@
 						<td style="text-align: right; font-size: 8px;" width="11.5%"></td>
 						<td style="text-align: right; font-size: 8px;" width="11.5%"></td>
 						<td style="text-align: right; border: 1px solid black; font-size: 8px; font-weight: bold;" width="23%">CDF &nbsp;&nbsp;'
-							.number_format($total_gen*$reponse['roe_decl'], 2, ',', '.').
+							// .number_format($total_gen*$reponse['roe_decl'], 2, ',', '.').
+							.number_format($total_gen*$this-> getTauxFacture($entree['ref_fact'])['roe_decl'], 2, ',', '.').
 						'&nbsp;&nbsp;</td>
 					</tr>
 					';
@@ -9110,6 +9186,7 @@
 													AND det.id_dos = dos.id_dos
 													AND det.id_deb = d.id_deb
 													AND d.id_deb NOT LIKE 54
+													AND d.id_deb NOT LIKE 101
 													AND t.id_t_deb = d.id_t_deb
 													AND t.id_t_deb = ?
 												GROUP BY d.id_deb');
