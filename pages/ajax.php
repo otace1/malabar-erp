@@ -182,6 +182,14 @@
 	  						// $response['somme_taxe'] = $somme_taxe;
 	  					} 
 
+	  					//1% Finance Cost
+	  					if(!empty(($maClasse-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport(101, $_POST['id_mod_lic'], $_POST['id_cli'], $_POST['id_march'], $_POST['id_mod_trans']))) && ($maClasse-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport(101, $_POST['id_mod_lic'], $_POST['id_cli'], $_POST['id_march'], $_POST['id_mod_trans'])['id_deb']!=0)){
+	  						$somme_taxe = $maClasse-> getMontantFactureTypeDeboursDossier($_POST['ref_fact'], '1', $_POST['id_dos_'.$i])*0.01;
+	  						$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 101, $somme_taxe, '0', '1');
+
+	  						// $response['somme_taxe'] = $somme_taxe;
+	  					} 
+
   					}
 
 	  			}
@@ -434,6 +442,12 @@
 	  					if(!empty(($maClasse-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport(54, $_POST['id_mod_lic'], $_POST['id_cli'], $_POST['id_march'], $_POST['id_mod_trans']))) && ($maClasse-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport(54, $_POST['id_mod_lic'], $_POST['id_cli'], $_POST['id_march'], $_POST['id_mod_trans'])['id_deb']!=0)){
 	  						$somme_taxe = $maClasse-> getMontantFactureTypeDeboursDossier($_POST['ref_fact'], '1', $_POST['id_dos_'.$i])*0.015;
 	  						$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 54, $somme_taxe, '0', '1');
+
+	  						// $response['somme_taxe'] = $somme_taxe;
+	  					} 
+	  					else if(!empty(($maClasse-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport(101, $_POST['id_mod_lic'], $_POST['id_cli'], $_POST['id_march'], $_POST['id_mod_trans']))) && ($maClasse-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport(101, $_POST['id_mod_lic'], $_POST['id_cli'], $_POST['id_march'], $_POST['id_mod_trans'])['id_deb']!=0)){
+	  						$somme_taxe = $maClasse-> getMontantFactureTypeDeboursDossier($_POST['ref_fact'], '1', $_POST['id_dos_'.$i])*0.01;
+	  						$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 101, $somme_taxe, '0', '1');
 
 	  						// $response['somme_taxe'] = $somme_taxe;
 	  					} 
@@ -777,6 +791,29 @@
 
   		echo json_encode($reponse);
 
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='dashboardAV'){
+
+  		$reponse['sans_fob_consommable'] = $maClasse-> getNombrePartielleEtat(NULL, '1', 'Partial Without FOB');
+  		$reponse['btn_sans_fob_consommable'] = '<a href="#" class="btn btn-xs btn-primary" onclick="window.open(\'popUpPartielleDashboard.php?id_cli=&etat=Partial Without FOB&consommable=1\',\'pop1\',\'width=1300,height=900\');">
+                More info <i class="fas fa-arrow-circle-right"></i>
+              </a>';
+  		$reponse['sans_poids_consommable'] = $maClasse-> getNombrePartielleEtat(NULL, '1', 'Partial Without Weight');
+  		$reponse['btn_sans_poids_consommable'] = '<a href="#" class="btn btn-xs btn-primary" onclick="window.open(\'popUpPartielleDashboard.php?id_cli=&etat=Partial Without Weight&consommable=1\',\'pop1\',\'width=1300,height=900\');">
+                More info <i class="fas fa-arrow-circle-right"></i>
+              </a>';
+  		$reponse['fob_negatif_consommable'] = $maClasse-> getNombrePartielleEtat(NULL, '1', 'Partial Having Negative FOB Balance');
+  		$reponse['btn_fob_negatif_consommable'] = '<a href="#" class="btn btn-xs btn-primary" onclick="window.open(\'popUpPartielleDashboard.php?id_cli=&etat=Partial Having Negative FOB Balance&consommable=1\',\'pop1\',\'width=1300,height=900\');">
+                More info <i class="fas fa-arrow-circle-right"></i>
+              </a>';
+
+  		echo json_encode($reponse);
+
+	}else if ($_POST['operation']=="statutDossier") {
+		echo json_encode($maClasse-> afficherStatutDossierFactureAjax($_POST['id_cli'], $_POST['id_mod_lic']));
+	}else if ($_POST['operation']=="statutDossierRisqueDouane") {
+		echo json_encode($maClasse-> afficherStatutDossierRisqueDossierAjax($_POST['id_cli'], $_POST['id_mod_lic'], $_POST['statut']));
+	}else if ($_POST['operation']=="archivage") {
+		echo json_encode($maClasse-> afficherDossierArchivageAjax($_POST['id_mod_lic']));
 	}
 
 ?>
