@@ -362,12 +362,12 @@ $tbl2 = <<<EOD
 		<br>
 		<tr>
 			<td width="45%" rowspan="7" style="text-align: left; border: 0.3px solid black; font-size: 7px;"><span><u>CLIENT</u></span>
-			<br><b><font size="8px">$nom_complet</font> </b>
-			<br>$adresse_client
-			<br>No.RCCM: $rccm_cli
-			<br>No.NIF.: $nif_cli
-			<br>No.IDN.: $id_nat
-			<br>No.IMPORT/EXPORT: $num_imp_exp</td>
+			<br><b><font size="8px">TRAFIGURA PTE LTD</font> </b>
+			<br>10 COLLYER QUAY
+			<br>#29-00 OCEAN FINANCIAL CENTRE
+			<br>SINGAPORE 049315
+			<br>
+			<br></td>
 			<td width="15%" style="text-align: center;"></td>
 			<td width="18%" style="text-align: left; border: 0.3px solid black; font-size: 7px;">&nbsp;N.FACTURE</td>
 			<td width="22%" style="text-align: center; border: 0.3px solid black; font-weight: bold; font-size: 7px;">$ref_fact-B</td>
