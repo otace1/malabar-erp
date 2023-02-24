@@ -318,7 +318,7 @@ $tbl = <<<EOD
 		</tr>
 
 		<tr>
-			<td width="100%" style="font-weight: bold; border: 1px solid black;">&nbsp;<u>CUSTOMS CLEARANCE FEES / FRAIS DEDOUANEMENT</u></td>
+			<td width="100%" style="font-weight: bold; border: 1px solid black; font-size: 7px;">&nbsp;<u>CUSTOMS CLEARANCE FEES / FRAIS DEDOUANEMENT</u></td>
 		</tr>
 		<tr>
 			<td width="49%" style="font-weight: bold; border: 1px solid black; background-color: rgb(220,220,220); text-align: center;">&nbsp;<u>Description</u></td>
@@ -333,7 +333,7 @@ $tbl = <<<EOD
 			<td colspan="4"></td>
 		</tr>
 		<tr>
-			<td width="100%" style="font-weight: bold; border: 1px solid black;">&nbsp;<u>OTHER CHARGES / AUTRES FRAIS </u></td>
+			<td width="100%" style="font-weight: bold; border: 1px solid black; font-size: 7px;">&nbsp;<u>OTHER CHARGES / AUTRES FRAIS </u></td>
 		</tr>
 		<tr>
 			<td width="49%" style="font-weight: bold; border: 1px solid black; background-color: rgb(220,220,220); text-align: center;">&nbsp;<u>Description</u></td>
@@ -348,7 +348,7 @@ $tbl = <<<EOD
 			<td width="100%"></td>
 		</tr>
 		<tr>
-			<td width="100%" style="font-weight: bold; border: 1px solid black;">&nbsp;<u>OPERATIONAL COSTS / COUT OPERATIONEL</u></td>
+			<td width="100%" style="font-weight: bold; border: 1px solid black; font-size: 7px;">&nbsp;<u>OPERATIONAL COSTS / COUT OPERATIONEL</u></td>
 		</tr>
 		<tr>
 			<td width="49%" style="font-weight: bold; border: 1px solid black; background-color: rgb(220,220,220); text-align: center;">&nbsp;<u>Description</u></td>
@@ -363,7 +363,7 @@ $tbl = <<<EOD
 			<td width="100%"></td>
 		</tr>
 		<tr>
-			<td width="100%" style="font-weight: bold; border: 1px solid black;">&nbsp;<u>SERVICE FEE / SERVICES</u></td>
+			<td width="100%" style="font-weight: bold; border: 1px solid black; font-size: 7px;">&nbsp;<u>SERVICE FEE / SERVICES</u></td>
 		</tr>
 		<tr>
 			<td width="49%" style="font-weight: bold; border: 1px solid black; background-color: rgb(220,220,220); text-align: center;">&nbsp;<u>Description</u></td>
