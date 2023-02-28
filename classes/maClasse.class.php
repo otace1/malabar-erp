@@ -2915,6 +2915,100 @@
 
 		}
 
+		public function getAffectationUtilisateurModule($id_util, $id_mod){
+			include('connexion.php');
+			$entree['id_util'] = $id_util;
+			$entree['id_mod'] = $id_mod;
+
+			$requete = $connexion-> prepare("SELECT *
+												FROM affectation_utilisateur_module
+												WHERE id_util = ?
+													AND id_mod = ?");
+			$requete-> execute(array($entree['id_util'], $entree['id_mod']));
+			$reponse = $requete-> fetch();
+			
+			return $reponse;
+			
+		}
+
+		public function getNombreDossierStatus($statut, $id_cli=NULL, $id_mod_lic=NULL){
+			include("connexion.php");
+			$entree['id_mod_lic'] = $id_mod_lic;
+
+			if (isset($id_cli) && ($id_cli!='')) {
+				$sqlClient = ' AND d.id_cli = "'.$id_cli.'"';
+			}else{
+				$sqlClient = '';
+			}
+
+			$sqlStatus= '';
+
+			if (isset($statut) && ($statut != '') && ($statut=='AWAITING AD/AV/INSURANCE')) {
+
+				$sqlStatus = ' AND d.ad_date IS NULL AND d.date_av IS NULL AND d.id_cli <> 888 AND d.date_assurance IS NULL AND d.id_cli <> 883 
+								AND YEAR(d.date_creat_dos) > 2021';
+
+			}/*else if (isset($statut) && ($statut != '') && ($statut=='AWAITING AD/AV')) {
+
+				$sqlStatus = ' AND d.ad_date IS NULL AND d.date_av IS NULL AND d.id_cli <> 888 AND d.date_assurance IS NOT NULL';
+
+			}else if (isset($statut) && ($statut != '') && ($statut=='AWAITING AD/INSURANCE')) {
+
+				$sqlStatus = ' AND d.ad_date IS NULL AND d.date_av IS NOT NULL AND d.date_assurance IS NULL';
+
+			}*/
+			else if (isset($statut) && ($statut != '') && ($statut=='AWAITING AD')) {
+
+				$sqlStatus = ' AND d.ad_date IS NULL 
+								AND YEAR(d.date_creat_dos) > 2021';
+
+			}/*else if (isset($statut) && ($statut != '') && ($statut=='AWAITING AV/INSURANCE')) {
+
+				$sqlStatus = ' AND d.ad_date IS NOT NULL AND d.date_av IS NULL AND d.id_cli <> 888 AND d.date_assurance IS NULL';
+
+			}*/else if (isset($statut) && ($statut != '') && ($statut=='AWAITING AV')) {
+
+				$sqlStatus = ' AND d.date_av IS NULL AND d.id_cli <> 888 
+								AND YEAR(d.date_creat_dos) > 2021';
+
+			}else if (isset($statut) && ($statut != '') && ($statut=='AWAITING INSURANCE')) {
+
+				$sqlStatus = ' AND d.date_assurance IS NULL  AND d.id_cli <> 883 
+								AND YEAR(d.date_creat_dos) > 2021';
+
+			}else if (isset($statut) && ($statut != '') && ($statut=='AWAITING BAE')) {
+
+				$sqlStatus = ' AND d.bae_date IS NULL 
+								AND d.date_quit IS NOT NULL
+								AND YEAR(d.date_creat_dos) > 2021';
+
+			}else if (isset($statut) && ($statut != '') && ($statut=='AWAITING BS')) {
+
+				$sqlStatus = ' AND d.bs_date IS NULL 
+								AND d.date_quit IS NOT NULL
+								AND YEAR(d.date_creat_dos) > 2021';
+
+			}
+
+			//$entree['num_lic'] = $num_lic;
+
+			/*echo '<br> id_cli = '.$id_cli;
+			echo '<br> id_mod_trans = '.$id_mod_trans;
+			echo '<br> id_mod_lic = '.$id_mod_lic;
+			echo '<br> num_lic = '.$num_lic;*/
+
+			$requete = $connexion-> prepare("SELECT COUNT(d.ref_dos) AS nbre
+												FROM dossier d
+												WHERE d.id_mod_lic = ?
+													$sqlClient
+													$sqlStatus");
+			$requete-> execute(array($entree['id_mod_lic']));
+			$reponse = $requete-> fetch();
+			return $reponse['nbre'];
+			//return $statut;
+
+		}
+
 		public function getDossierPourFacturationClientModeleLicence($id_cli, $id_mod_lic, $id_mod_trans, $id_march){
 			include('connexion.php');
 			$entree['id_cli'] = $id_cli;
@@ -3035,6 +3129,7 @@
 			include('connexion.php');
 			$entree['id_cli'] = $id_cli;
 			$entree['id_mod_lic'] = $id_mod_lic;
+			$compteur = 0;
 
 			$tableau = '';
 
@@ -3069,8 +3164,10 @@
 														ORDER BY dossier.num_lic");
     		$requeteMarchandise-> execute(array($entree['id_cli'], $entree['id_mod_lic']));
     		while ($reponseMarchandise = $requeteMarchandise-> fetch()) {
+    			$compteur++;
     			$tableau .= '
     						<tr>
+    							<td>'.$compteur.'</td>
     							<td>'.$reponseMarchandise['nom_march'].'</td>
     							<td>'.$reponseMarchandise['nom_mod_trans'].'</td>
     							<td>'.$reponseMarchandise['num_lic'].'</td>
@@ -4419,7 +4516,7 @@
 							<td style="text-align: center; border-right: 0.5px solid black; font-size: 6.5px;" width="11.5%">'
 								.number_format($reponse['tva_usd'], 2, ',', '.').
 							'&nbsp;&nbsp;</td>
-							<td style="text-align: center; border-right: 1px solid black; font-size: 6.5px;" width="11.5%">'
+							<td style="text-align: right; border-right: 1px solid black; font-size: 6.5px;" width="11.5%">'
 								.number_format($reponse['ttc_usd'], 2, ',', '.').
 							'&nbsp;&nbsp;</td>
 						</tr>
@@ -4451,7 +4548,7 @@
 						<td style="text-align: center; border-right: 0.5px solid black; border-bottom: 0.5px solid black; font-weight: bold; background-color: rgb(220,220,220);" width="11.5%">'
 							.number_format($total_tva, 2, ',', '.').
 						'&nbsp;&nbsp;</td>
-						<td style="text-align: center; border-right: 1px solid black; border-bottom: 0.5px solid black; font-weight: bold;  background-color: rgb(220,220,220);" width="11.5%">'
+						<td style="text-align: right; border-right: 1px solid black; border-bottom: 0.5px solid black; font-weight: bold;  background-color: rgb(220,220,220);" width="11.5%">'
 							.number_format($total_gen, 2, ',', '.').
 						'&nbsp;&nbsp;</td>
 					</tr>';
@@ -4673,7 +4770,7 @@
 							<td style="text-align: center; border-right: 0.5px solid black; font-size: 7px;" width="11.5%">'
 								.number_format($reponse['tva_cdf'], 2, ',', '.').
 							'&nbsp;&nbsp;</td>
-							<td style="text-align: center; border-right: 1px solid black; font-size: 7px;" width="11.5%">'
+							<td style="text-align: right; border-right: 1px solid black; font-size: 7px;" width="11.5%">'
 								.number_format($reponse['ht_cdf'], 0, ',', '.').
 							'&nbsp;&nbsp;</td>
 						</tr>
@@ -4697,7 +4794,7 @@
 							<td style="text-align: center; border-right: 0.5px solid black; font-size: 7px;" width="11.5%">'
 								.number_format($reponse['tva_usd'], 2, ',', '.').
 							'&nbsp;&nbsp;</td>
-							<td style="text-align: center; border-right: 1px solid black; font-size: 7px;" width="11.5%">'
+							<td style="text-align: right; border-right: 1px solid black; font-size: 7px;" width="11.5%">'
 								.number_format($reponse['ttc_usd'], 2, ',', '.').
 							'&nbsp;&nbsp;</td>
 						</tr>
@@ -4721,7 +4818,7 @@
 							<td style="text-align: center; border-right: 0.5px solid black; font-size: 7px;" width="11.5%">'
 								.number_format($reponse['tva_usd'], 2, ',', '.').
 							'&nbsp;&nbsp;</td>
-							<td style="text-align: center; border-right: 1px solid black; font-size: 7px;" width="11.5%">'
+							<td style="text-align: right; border-right: 1px solid black; font-size: 7px;" width="11.5%">'
 								.number_format($reponse['ttc_usd'], 2, ',', '.').
 							'&nbsp;&nbsp;</td>
 						</tr>
@@ -4753,7 +4850,7 @@
 						<td style="text-align: center; border-right: 0.5px solid black; border-bottom: 0.5px solid black; font-weight: bold;" width="11.5%">'
 							.number_format($total_tva, 2, ',', '.').
 						'&nbsp;&nbsp;</td>
-						<td style="text-align: center; border-right: 1px solid black; border-bottom: 0.5px solid black; font-weight: bold; " width="11.5%">'
+						<td style="text-align: right; border-right: 1px solid black; border-bottom: 0.5px solid black; font-weight: bold; " width="11.5%">'
 							.number_format($sub_total_cdf, 0, ',', '.').
 						'&nbsp;&nbsp;</td>
 					</tr>
@@ -4769,14 +4866,14 @@
 						<td style="text-align: center; border-right: 0.5px solid black; border-bottom: 0.5px solid black; font-weight: bold; background-color: rgb(220,220,220);" width="11.5%">'
 							.number_format($total_tva, 2, ',', '.').
 						'&nbsp;&nbsp;</td>
-						<td style="text-align: center; border-right: 1px solid black; border-bottom: 0.5px solid black; font-weight: bold;  background-color: rgb(220,220,220);" width="11.5%">'
+						<td style="text-align: right; border-right: 1px solid black; border-bottom: 0.5px solid black; font-weight: bold;  background-color: rgb(220,220,220);" width="11.5%">'
 							.number_format($total_gen, 2, ',', '.').
 						'&nbsp;&nbsp;</td>
 					</tr>';
 			}else{
 				$tbl .= '
 					<tr>
-						<td style="text-align: right; border-right: 0.5px solid black; border: 0.5px solid black; font-weight: bold; background-color: rgb(220,220,220); font-size: 8px;" width="49%">SUB-TOTAL   / SOUS-TOTAL &nbsp;&nbsp;
+						<td style="text-align: right; border-right: 0.5px solid black; border: 0.5px solid black; font-weight: bold; background-color: rgb(220,220,220); font-size: 7px;" width="49%">SUB-TOTAL / SOUS-TOTAL &nbsp;&nbsp;
 						</td>
 						<td style="text-align: right; border-right: 0.5px solid black; border: 0.5px solid black; font-weight: bold; background-color: rgb(220,220,220); font-size: 8px;" width="9%">
 						</td>
@@ -4787,7 +4884,7 @@
 						<td style="text-align: center; border-right: 0.5px solid black; border-bottom: 0.5px solid black; font-weight: bold; background-color: rgb(220,220,220);" width="11.5%">'
 							.number_format($total_tva, 2, ',', '.').
 						'&nbsp;&nbsp;</td>
-						<td style="text-align: center; border-right: 1px solid black; border-bottom: 0.5px solid black; font-weight: bold;  background-color: rgb(220,220,220);" width="11.5%">'
+						<td style="text-align: right; border-right: 1px solid black; border-bottom: 0.5px solid black; font-weight: bold;  background-color: rgb(220,220,220);" width="11.5%">'
 							.number_format($total_gen, 2, ',', '.').
 						'&nbsp;&nbsp;</td>
 					</tr>';
@@ -4964,7 +5061,7 @@
 							<td style="text-align: center; border-right: 0.5px solid black; font-size: 6.5px;" width="11.5%">'
 								.number_format($reponse['tva_usd'], 2, ',', '.').
 							'&nbsp;&nbsp;</td>
-							<td style="text-align: center; border-right: 1px solid black; font-size: 6.5px;" width="11.5%">'
+							<td style="text-align: right; border-right: 1px solid black; font-size: 6.5px;" width="11.5%">'
 								.number_format($reponse['ttc_usd'], 2, ',', '.').
 							'&nbsp;&nbsp;</td>
 						</tr>
@@ -4996,7 +5093,7 @@
 						<td style="text-align: center; border-right: 0.5px solid black; border-bottom: 0.5px solid black; font-weight: bold;" width="11.5%">'
 							.number_format($total_tva, 2, ',', '.').
 						'&nbsp;&nbsp;</td>
-						<td style="text-align: center; border-right: 1px solid black; border-bottom: 0.5px solid black; font-weight: bold; " width="11.5%">'
+						<td style="text-align: right; border-right: 1px solid black; border-bottom: 0.5px solid black; font-weight: bold; " width="11.5%">'
 							.number_format($total_gen, 2, ',', '.').
 						'&nbsp;&nbsp;</td>
 					</tr>
@@ -5006,7 +5103,7 @@
 						</td>
 						<td style="" width="11%"></td>
 						<td style="" width="11%"></td>
-						<td style="text-align: center; border: 0.5px solid black; font-weight: bold; " width="23%">CDF &nbsp;&nbsp;'
+						<td style="text-align: right; border: 0.5px solid black; font-weight: bold; " width="23%">CDF &nbsp;&nbsp;'
 							.number_format($total_gen*$this-> getTauxFacture($ref_fact)['roe_decl'], 2, ',', '.').
 						'&nbsp;&nbsp;</td>
 					</tr>';
@@ -5164,7 +5261,7 @@
 						<td style="text-align: center; border-right: 0.5px solid black; font-weight: bold;" width="11.5%">'
 							.number_format($total_tva, 2, ',', '.').
 						'&nbsp;&nbsp;</td>
-						<td style="text-align: center; border-right: 1px solid black; font-weight: bold; " width="11.5%">'
+						<td style="text-align: right; border-right: 1px solid black; font-weight: bold; " width="11.5%">'
 							.number_format($total_gen, 2, ',', '.').
 						'&nbsp;&nbsp;</td>
 					</tr>
@@ -5321,28 +5418,28 @@
 					<tr>
 						<td style="text-align: right; border: 0.5px solid black; font-weight: bold; font-size: 8px;" width="23%">Total excl. TVA &nbsp;&nbsp;
 						</td>
-						<td style="text-align: center; border: 0.5px solid black; font-weight: bold;" width="11.5%">$ '
+						<td style="text-align: right; border: 0.5px solid black; font-weight: bold;" width="11.5%">$ '
 							.number_format($sub_total, 2, ',', '.').
 						'&nbsp;&nbsp;</td>
 					</tr>
 					<tr>
 						<td style="text-align: right; border: 0.5px solid black; font-weight: bold; font-size: 8px;" width="23%"> TVA 16% &nbsp;&nbsp;
 						</td>
-						<td style="text-align: center; border: 0.5px solid black; font-weight: bold;" width="11.5%">$ '
+						<td style="text-align: right; border: 0.5px solid black; font-weight: bold;" width="11.5%">$ '
 							.number_format($total_tva, 2, ',', '.').
 						'&nbsp;&nbsp;</td>
 					</tr>
 					<tr>
 						<td style="text-align: right; border: 0.5px solid black; font-weight: bold; font-size: 10px; font-weight: bold; background-color: rgb(220,220,220);" width="23%">Grand Total &nbsp;&nbsp;
 						</td>
-						<td style="text-align: center; border: 0.5px solid black; font-weight: bold; font-size: 10px; background-color: rgb(220,220,220);" width="11.5%">$ '
+						<td style="text-align: right; border: 0.5px solid black; font-weight: bold; font-size: 10px; background-color: rgb(220,220,220);" width="11.5%">$ '
 							.number_format($total_gen, 2, ',', '.').
 						'&nbsp;&nbsp;</td>
 					</tr>
 					<tr>
 						<td style="text-align: right; border: 0.5px solid black; font-weight: bold; font-size: 8px;" width="23%"> Equivalent en CDF &nbsp;&nbsp;
 						</td>
-						<td style="text-align: center; border: 0.5px solid black; font-weight: bold;" width="11.5%">'
+						<td style="text-align: right; border: 0.5px solid black; font-weight: bold;" width="11.5%">'
 							.number_format($total_gen*$reponse['roe_decl'], 2, ',', '.').
 						'&nbsp;&nbsp;</td>
 					</tr>
@@ -5465,13 +5562,13 @@
 						</td>
 						<td style="text-align: right; border-right: 0.5px solid black; border-left: 0.5px solid black; font-weight: bold; font-size: 8px;" width="5%">
 						</td>
-						<td style="text-align: right; border-right: 0.5px solid black; font-weight: bold;" width="11.5%">'
+						<td style="text-align: center; border-right: 0.5px solid black; font-weight: bold;" width="11.5%">'
 							.number_format($total_cost, 2, ',', '.').
 						'&nbsp;&nbsp;</td>
-						<td style="text-align: right; border-right: 0.5px solid black; font-weight: bold;" width="11.5%">'
+						<td style="text-align: center; border-right: 0.5px solid black; font-weight: bold;" width="11.5%">'
 							.number_format($sub_total, 2, ',', '.').
 						'&nbsp;&nbsp;</td>
-						<td style="text-align: right; border-right: 0.5px solid black; font-weight: bold;" width="11.5%">'
+						<td style="text-align: center; border-right: 0.5px solid black; font-weight: bold;" width="11.5%">'
 							.number_format($total_tva, 2, ',', '.').
 						'&nbsp;&nbsp;</td>
 						<td style="text-align: right; border-right: 1px solid black; font-weight: bold; " width="11.5%">'
@@ -5489,7 +5586,7 @@
 					<tr>
 						<td style="text-align: left; font-size: 8px;" width="49%"></td>
 						<td style="text-align: center;" colspan="2" width="5%"></td>
-						<td style="text-align: right; font-size: 8px;" width="11.5%"></td>
+						<td style="text-align: center; font-size: 8px;" width="11.5%"></td>
 						<td style="text-align: right; font-size: 8px;" width="11.5%"></td>
 						<td style="text-align: right; border: 1px solid black; font-size: 8px; font-weight: bold;" width="23%">CDF &nbsp;&nbsp;'
 							.number_format($total_gen*$reponse['roe_decl'], 2, ',', '.').
@@ -5945,7 +6042,7 @@
 													AND fd.id_mod_fact = mf.id_mod_fact
 													AND fd.validation = '0'
 													AND fd.id_cli = ?
-												ORDER BY fd.date_fact ASC");
+												ORDER BY fd.ref_fact ASC");
 			$requete-> execute(array($entree['id_mod_lic'], $entree['id_cli']));
 			while ($reponse = $requete-> fetch()) {
 				$compteur++;
@@ -5988,6 +6085,62 @@
 								</td>
 							</tr>';
 			}$requete-> closeCursor();
+			return $tableau;
+
+		}
+
+		public function table_invoices_check_multiple($id_cli, $id_mod_lic){
+			include("connexion.php");
+			$entree['id_cli'] = $id_cli;
+			$entree['id_mod_lic'] = $id_mod_lic;
+			//$entree['type_fact'] = $type_fact;
+			$compteur=0;
+
+			$bg = "";
+			$badge = '';
+			$btn = '';
+			$etat ='';
+			$tableau = '';
+
+			$debut = $compteur;
+
+			$requete = $connexion-> prepare("SELECT fd.ref_fact AS ref_fact,
+													DATE_FORMAT(fd.date_fact, '%d/%m/%Y') AS date_fact,
+													fd.validation AS validation,
+													fd.id_march AS id_march,
+													fd.type_fact AS type_fact,
+													cl.nom_cli AS nom_cli,
+													cl.id_cli AS id_cli,
+													u.nom_util AS nom_util,
+													u.validation_facture AS validation_facture,
+													fd.transmission AS transmission,
+													fd.type_fact AS type_fact,
+													fd.id_mod_lic AS id_mod_lic,
+													mf.edit_page AS edit_page,
+													mf.view_page AS view_page,
+													mf.excel AS excel
+ 												FROM facture_dossier fd, client cl, utilisateur u, modele_facture mf
+												WHERE fd.id_mod_lic = ?
+													AND fd.id_util = u.id_util
+													AND fd.id_cli = cl.id_cli
+													AND fd.id_mod_fact = mf.id_mod_fact
+													AND fd.validation = '0'
+													AND fd.id_cli = ?
+												ORDER BY fd.ref_fact ASC");
+			$requete-> execute(array($entree['id_mod_lic'], $entree['id_cli']));
+			while ($reponse = $requete-> fetch()) {
+				$compteur++;
+
+				$tableau .='<input type="hidden" id="ref_fact_'.$compteur.'" name="ref_fact_'.$compteur.'" value="'.$reponse['ref_fact'].'">
+    						<tr>
+    							<td>'.$compteur.'</td>
+    							<td>'.$reponse['ref_fact'].'</td>
+    							<td style="text-align: center;"><input class="" type="checkbox" id="check_'.$compteur.'" name="check_'.$compteur.'" ></td>
+    						</tr>';
+			}$requete-> closeCursor();
+
+    		 $tableau .= '<input type="hidden" id="nbre_invoice" name="nbre_invoice" value="'.$compteur.'">';
+
 			return $tableau;
 
 		}
@@ -6244,7 +6397,7 @@
 													AND fd.validation = '1'
 													AND fd.date_mail IS NULL
 													AND fd.id_cli = ?
-												ORDER BY fd.date_fact ASC");
+												ORDER BY fd.ref_fact ASC");
 			$requete-> execute(array($entree['id_mod_lic'], $entree['id_cli']));
 			while ($reponse = $requete-> fetch()) {
 				$compteur++;
@@ -6441,7 +6594,7 @@
 													AND fd.ref_paie IS NULL
 													AND fd.date_paie IS NULL
 													AND fd.id_cli = ?
-												ORDER BY fd.date_fact ASC");
+												ORDER BY fd.ref_fact DESC");
 			$requete-> execute(array($entree['id_mod_lic'], $entree['id_cli']));
 			while ($reponse = $requete-> fetch()) {
 				$compteur++;
@@ -6530,7 +6683,7 @@
 													AND fd.ref_paie IS NOT NULL
 													AND fd.date_paie IS NOT NULL
 													AND fd.id_cli = ?
-												ORDER BY fd.date_fact ASC");
+												ORDER BY fd.ref_fact ASC");
 			$requete-> execute(array($entree['id_mod_lic'], $entree['id_cli']));
 			while ($reponse = $requete-> fetch()) {
 				$compteur++;
