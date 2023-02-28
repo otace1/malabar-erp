@@ -128,7 +128,7 @@
             </tr>
             <tr>
               <th>Poids (kg)</th>
-              <th><input style="text-align: center; width: 9em;" id="poids" name="poids" onblur="calculTresco();" required></th>
+              <th><input style="text-align: center; width: 9em;" id="poids" name="poids" onblur="maj_poids(id_dos.value, this.value);calculTresco();" required></th>
               <th>Tariff Code Client:</th>
               <th><input style="text-align: center; width: 9em;" id="code_tarif" name="code_tarif" onblur="maj_code_tarif(id_dos.value, this.value);" type="text" class="" required></th>
             </tr>
@@ -536,6 +536,26 @@
       type: 'post',
       url: 'ajax.php',
       data: {id_dos: id_dos, code_tarif: code_tarif, operation: 'maj_code_tarif'},
+      dataType: 'json',
+      success:function(data){
+        if (data.logout) {
+          alert(data.logout);
+          window.location="../deconnexion.php";
+        }
+      },
+      complete: function () {
+          $('#spinner-div').hide();//Request is complete so hide spinner
+      }
+    });
+
+  }
+
+  function maj_poids(id_dos, poids){
+    $('#spinner-div').show();
+    $.ajax({
+      type: 'post',
+      url: 'ajax.php',
+      data: {id_dos: id_dos, poids: poids, operation: 'maj_poids'},
       dataType: 'json',
       success:function(data){
         if (data.logout) {

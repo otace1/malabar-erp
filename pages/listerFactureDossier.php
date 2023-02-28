@@ -125,7 +125,11 @@
                       <th style="border: 1px solid white; text-align: center;">COMMODITY</th>
                       <th style="border: 1px solid white; text-align: center;">AMOUNT</th>
                       <th style="border: 1px solid white; text-align: center;">EDITOR</th>
-                      <th style="border: 1px solid white; text-align: center;">ACTION</th>
+                      <th style="border: 1px solid white; text-align: center;">ACTION 
+                        <button class="btn-xs bg-primary square-btn-adjust" onclick="modal_check_multiple();" title="Validate">
+                            <i class="fas fa-check"></i>
+                        </button>
+                      </th>
                     </tr>
                   </thead>
                   <tbody id="invoice_pending_validation">
@@ -389,6 +393,48 @@
       <div class="modal-footer justify-content-between">
         <button type="button" class="btn-xs btn-danger" data-dismiss="modal">Cancelled</button>
         <button type="submit" name="rechercheClient" class="btn-xs btn-primary">Submit</button>
+      </div>
+    </div>
+    </form>
+    <!-- /.modal-content -->
+  </div>
+  <!-- /.modal-dialog -->
+</div>
+
+<div class="modal fade" id="modal_check_multiple">
+  <div class="modal-dialog modal-sm small">
+    <form id="modal_check_multiple_form" method="POST" action="" data-parsley-validate enctype="multipart/form-data">
+      <input type="hidden" name="operation" id="operation" value="check_multiple">
+    <div class="modal-content">
+      <div class="modal-header ">
+        <h4 class="modal-title"><i class="fa fa-check"></i> Multiple Validation</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+
+          <div class="col-md-12">
+            <div class="card-body table-responsive p-0 small" style="height: 400px;">
+            <table class=" table table-dark table-bordered table-hover table-head-fixed  text-nowrap table-sm">
+              <thead>
+                <tr class="bg bg-dark">
+                  <th>#</th>
+                  <th>Reference</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="table_invoices_check_multiple">
+              </tbody>
+            </table>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer justify-content-between">
+        <button type="button" class="btn-xs btn-danger" data-dismiss="modal">Cancelled</button>
+        <button type="submit" name="ok" class="btn-xs btn-primary">Submit</button>
       </div>
     </div>
     </form>
@@ -731,6 +777,78 @@ function modal_paiement(ref_fact) {
             },
             complete: function () {
                 // alert('Payment made!');
+                $('#spinner-div').hide();//Request is complete so hide spinner
+            }
+          });
+
+        }
+
+      });
+    
+  });
+
+  function modal_check_multiple(){
+
+    $('#spinner-div').show();
+    $.ajax({
+      type: "POST",
+      url: "ajax.php",
+      data: {id_cli:<?php echo $_GET['id_cli'];?>, id_mod_lic:<?php echo $_GET['id_mod_lic_fact'];?>, operation: 'modal_check_multiple'},
+      dataType:"json",
+      success:function(data){
+        if (data.logout) {
+          alert(data.logout);
+          window.location="../deconnexion.php";
+        }else{
+          $('#table_invoices_check_multiple').html(data.table_invoices_check_multiple);
+          $('#modal_check_multiple').modal('show');
+        }
+      },
+      complete: function () {
+          $('#spinner-div').hide();//Request is complete so hide spinner
+      }
+    });
+
+  }
+
+  $(document).ready(function(){
+
+      $('#modal_check_multiple_form').submit(function(e){
+
+              e.preventDefault();
+
+        if(confirm('Do really you want to submit ?')) {
+
+          var fd = new FormData(this);
+          $('#modal_check_multiple').modal('hide');
+          $('#spinner-div').show();
+
+          $.ajax({
+            type: 'post',
+            url: 'ajax.php',
+            processData: false,
+            contentType: false,
+            data: fd,
+            dataType: 'json',
+            success:function(data){
+              if (data.logout) {
+                alert(data.logout);
+                window.location="../deconnexion.php";
+              }else if(data.message){
+                // $('#ref_fact').val(data.ref_fact);
+                // $('#id_dos').html(data.ref_dos);
+                $('#spinner-div').hide();//Request is complete so hide spinner
+                alert(data.message);
+              }else{
+                // $('#ref_fact').val(data.ref_fact);
+                // $('#id_dos').html(data.ref_dos);
+                alert(data.compteur+' invoices validated!');
+                // alert('Done!');
+              }
+            },
+            complete: function () {
+                getAllInvoices();
+                // alert(data.compteur+' invoices validated!');
                 $('#spinner-div').hide();//Request is complete so hide spinner
             }
           });

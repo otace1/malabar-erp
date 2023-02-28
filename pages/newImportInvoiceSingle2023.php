@@ -55,6 +55,7 @@
       <input type="hidden" name="id_march" value="<?php echo $_GET['id_march'];?>">
       <input type="hidden" name="id_mod_fact" value="<?php echo $_GET['id_mod_fact'];?>">
       <input type="hidden" name="id_mod_trans" value="<?php echo $_GET['id_mod_trans'];?>">
+      <input type="hidden" name="consommable" value="<?php echo $_GET['consommable'];?>">
       <div class="col-md-3">
         
           <div class="form-group">
@@ -68,7 +69,7 @@
         
           <div class="form-group">
             <label for="inputEmail3" class="col-form-label">Files Ref.:</label>
-            <select class="form-control form-control-sm" name="id_dos" id="id_dos" onchange="getTableauImportInvoiceSingle(id_mod_fact.value, this.value, id_mod_lic.value, id_march.value, id_mod_trans.value)" required>
+            <select class="form-control form-control-sm" name="id_dos" id="id_dos" onchange="getTableauImportInvoiceSingle(id_mod_fact.value, this.value, id_mod_lic.value, id_march.value, id_mod_trans.value, consommable.value)" required>
               <option></option>
               <?php
                 $maClasse-> selectionnerDossierClientModeleLicenceMarchandise($_GET['id_cli'], $_GET['id_mod_lic_fact'], $_GET['id_march'], $_GET['id_mod_trans'], $_GET['num_lic']);
@@ -128,7 +129,7 @@
             </tr>
             <tr>
               <th>Poids (kg)</th>
-              <th><input style="text-align: center; width: 9em;" id="poids" name="poids" onblur="calculTresco();" required></th>
+              <th><input style="text-align: center; width: 9em;" id="poids" name="poids" onblur="maj_poids(id_dos.value, this.value);" onblur="calculTresco();" required></th>
               <th>Tariff Code Client:</th>
               <th><input style="text-align: center; width: 9em;" id="code_tarif" name="code_tarif" onblur="maj_code_tarif(id_dos.value, this.value);" type="text" class="" required></th>
             </tr>
@@ -227,12 +228,12 @@
     return new Decimal(num).toDecimalPlaces(decimalPlaces).toNumber();
   }
 
-  function getTableauImportInvoiceSingle(id_mod_fact, id_dos, id_mod_lic, id_march, id_mod_trans){
+  function getTableauImportInvoiceSingle(id_mod_fact, id_dos, id_mod_lic, id_march, id_mod_trans, consommable){
     $('#spinner-div').show();
     $.ajax({
       type: "POST",
       url: "ajax.php",
-      data: { id_mod_fact: id_mod_fact, id_dos: id_dos, id_mod_lic: id_mod_lic, id_march:id_march, id_mod_trans:id_mod_trans, operation: 'getTableauImportInvoiceSingle'},
+      data: { id_mod_fact: id_mod_fact, id_dos: id_dos, id_mod_lic: id_mod_lic, id_march:id_march, id_mod_trans:id_mod_trans, consommable:consommable, operation: 'getTableauImportInvoiceSingle'},
       dataType:"json",
       success:function(data){
         if (data.logout) {
@@ -531,6 +532,26 @@
       type: 'post',
       url: 'ajax.php',
       data: {id_dos: id_dos, code_tarif: code_tarif, operation: 'maj_code_tarif'},
+      dataType: 'json',
+      success:function(data){
+        if (data.logout) {
+          alert(data.logout);
+          window.location="../deconnexion.php";
+        }
+      },
+      complete: function () {
+          $('#spinner-div').hide();//Request is complete so hide spinner
+      }
+    });
+
+  }
+
+  function maj_poids(id_dos, poids){
+    $('#spinner-div').show();
+    $.ajax({
+      type: 'post',
+      url: 'ajax.php',
+      data: {id_dos: id_dos, poids: poids, operation: 'maj_poids'},
       dataType: 'json',
       success:function(data){
         if (data.logout) {

@@ -21,7 +21,7 @@
   								<option>'.$maClasse-> getDataLicence($reponse['num_lic'])['sig_mon'].'</option>
   								'.$maClasse-> selectionnerMonnaie2().'
   							</select>';
-  		$reponse['debours'] = $maClasse-> getDeboursPourFactureClientModeleLicenceAjax($reponse['id_cli'], $reponse['id_mod_lic'], $reponse['id_march'], $reponse['id_mod_trans'], $_POST['id_dos']);
+  		$reponse['debours'] = $maClasse-> getDeboursPourFactureClientModeleLicenceAjax($reponse['id_cli'], $reponse['id_mod_lic'], $reponse['id_march'], $reponse['id_mod_trans'], $_POST['id_dos'], $_POST['consommable']);
 
   		echo json_encode($reponse);
 
@@ -78,6 +78,13 @@
 
   		$reponse = $maClasse-> getDataDossier($_POST['id_dos']);
   		$maClasse-> MAJ_code_tarif($_POST['id_dos'], $_POST['code_tarif']);
+
+  		echo json_encode($reponse);
+
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='maj_poids'){// MAJ Montant Decl
+
+  		$reponse = $maClasse-> getDataDossier($_POST['id_dos']);
+  		$maClasse-> MAJ_poids($_POST['id_dos'], $_POST['poids']);
 
   		echo json_encode($reponse);
 
@@ -814,6 +821,56 @@
 		echo json_encode($maClasse-> afficherStatutDossierRisqueDossierAjax($_POST['id_cli'], $_POST['id_mod_lic'], $_POST['statut']));
 	}else if ($_POST['operation']=="archivage") {
 		echo json_encode($maClasse-> afficherDossierArchivageAjax($_POST['id_mod_lic']));
+	}else if ($_POST['operation']=='getStatutDossiersImport') {
+		
+		$response['en_attente_av'] = number_format($maClasse-> getNombreDossierStatus('AWAITING AV', NULL, 2), 0, ',', ' ');
+		$response['btn_en_attente_av'] = '<button class="btn btn-xs btn-primary" onclick="window.open(\'popUpStatutDossierRisqueDouane.php?statut=AWAITING AV&id_mod_lic=2&id_cli=\',\'pop1\',\'width=1000,height=800\');"><i class="fa fa-eye"></i>
+		                </button>';
+		$response['en_attente_ad'] = number_format($maClasse-> getNombreDossierStatus('AWAITING AD', NULL, 2), 0, ',', ' ');
+		$response['btn_en_attente_ad'] = '<button class="btn btn-xs btn-primary" onclick="window.open(\'popUpStatutDossierRisqueDouane.php?statut=AWAITING AD&id_mod_lic=2&id_cli=\',\'pop1\',\'width=1000,height=800\');"><i class="fa fa-eye"></i>
+		                </button>';
+		$response['en_attente_ass'] = number_format($maClasse-> getNombreDossierStatus('AWAITING INSURANCE', NULL, 2), 0, ',', ' ');
+		$response['btn_en_attente_ass'] = '<button class="btn btn-xs btn-primary" onclick="window.open(\'popUpStatutDossierRisqueDouane.php?statut=AWAITING INSURANCE&id_mod_lic=2&id_cli=\',\'pop1\',\'width=1000,height=800\');"><i class="fa fa-eye"></i>
+		                </button>';
+		$response['en_attente_liquidation'] = number_format($maClasse-> getNombreDossierSansLiquidationApresCotation( NULL, 2), 0, ',', ' ');
+		$response['btn_en_attente_liquidation'] = '<button class="btn btn-xs btn-primary" onclick="window.open(\'popUpStatutDossierRisqueDouane.php?statut=En attente Liquidation&id_mod_lic=2&id_cli=\',\'pop1\',\'width=1000,height=800\');"><i class="fa fa-eye"></i>
+		                </button>';
+		$response['en_attente_quittance'] = number_format($maClasse-> getNombreDossierSansQuittanceApresIM4( NULL, 2), 0, ',', ' ');
+		$response['btn_en_attente_quittance'] = '<button class="btn btn-xs btn-primary" onclick="window.open(\'popUpStatutDossierRisqueDouane.php?statut=En attente Quittance&id_mod_lic=2&id_cli=\',\'pop1\',\'width=1000,height=800\');"><i class="fa fa-eye"></i>
+		                </button>';
+
+		$response['en_attente_liquidation_export'] = number_format($maClasse-> getNombreDossierSansLiquidationApresCotation( NULL, 1), 0, ',', ' ');
+		$response['btn_en_attente_liquidation_export'] = '<button class="btn btn-xs btn-primary" onclick="window.open(\'popUpStatutDossierRisqueDouane.php?statut=En attente Liquidation&id_mod_lic=1&id_cli=\',\'pop1\',\'width=1000,height=800\');"><i class="fa fa-eye"></i>
+		                </button>';
+		$response['en_attente_quittance_export'] = number_format($maClasse-> getNombreDossierSansQuittanceApresIM4( NULL, 1), 0, ',', ' ');
+		$response['btn_en_attente_quittance_export'] = '<button class="btn btn-xs btn-primary" onclick="window.open(\'popUpStatutDossierRisqueDouane.php?statut=En attente Quittance&id_mod_lic=1&id_cli=\',\'pop1\',\'width=1000,height=800\');"><i class="fa fa-eye"></i>
+		                </button>';
+		echo json_encode($response);
+
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='modal_check_multiple'){
+
+  		$reponse['table_invoices_check_multiple'] = $maClasse-> table_invoices_check_multiple($_POST['id_cli'], $_POST['id_mod_lic']);
+
+  		echo json_encode($reponse);
+
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='check_multiple'){
+
+		$compteur = 0;
+
+        for ($i=1; $i <= $_POST['nbre_invoice'] ; $i++) { 
+            if (isset($_POST['check_'.$i])) {
+                // echo $_POST['adr_mail_'.$i];
+                $compteur++;
+                $maClasse-> MAJ_validation_facture_dossier($_POST['ref_fact_'.$i], '1');
+                // $mail->addAddress($_POST['adr_mail_'.$i]);
+            }
+        }
+
+  		// $reponse['table_invoices_check_multiple'] = $maClasse-> table_invoices_check_multiple($_POST['id_cli'], $_POST['id_mod_lic']);
+  		$reponse['compteur'] = $compteur;
+
+  		echo json_encode($reponse);
+
 	}
 
 ?>

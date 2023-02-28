@@ -21,6 +21,7 @@
             <table class="table table-bordered table-striped text-nowrap table-hover table-sm small text-nowrap table-head-fixed table-dark">
               <thead>
                   <tr>
+                      <th>#</th>
                       <th>Commodity</th>
                       <th>Transport</th>
                       <th>License</th>
