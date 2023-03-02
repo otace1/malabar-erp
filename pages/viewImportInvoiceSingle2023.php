@@ -26,7 +26,7 @@ require_once('../tcpdf/tcpdf.php');
 $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
 
 // set margins
-$pdf->SetMargins(5,5 ,4);
+$pdf->SetMargins(6,5 ,4);
 
 
 // set document information
@@ -67,7 +67,7 @@ $pdf->setPrintHeader(false);
 // add a page
 $pdf->AddPage('P', 'A4');
 
-$pdf->Image('../images/malabar2.png', 4, 10, 110, '', '', '', '', false, 300);
+$pdf->Image('../images/malabar2.png', 5, 10, 110, '', '', '', '', false, 300);
 $sceau='';
 if ( ($maClasse-> getFactureGlobale($_GET['ref_fact'])['validation']) == '0' ) {
 	$pdf->Image('../images/no_valid.jpg', 150, 2, 30, '', '', '', '', false, 300);
