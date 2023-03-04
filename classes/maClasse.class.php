@@ -4674,7 +4674,8 @@
 													AND det.id_deb = d.id_deb
 													AND d.id_t_deb = ?
 													AND det.id_dos = dos.id_dos
-												GROUP BY d.id_deb');
+												GROUP BY d.id_deb
+												ORDER BY d.rang, d.id_deb');
 			$requete-> execute(array($entree['ref_fact'], $entree['id_t_deb']));
 			while($reponse = $requete-> fetch()){
 				$cost_2 = '';
@@ -4687,6 +4688,13 @@
 				}
 
 				if ($reponse['id_deb']=='32') {
+					
+					$unite = 'CIF';
+					$cost_2 = number_format(($reponse['ht_cdf']/$this-> getDataDossiersMultipleInvoice($ref_fact)['cif_cdf'])*100, 2, ',', '.').'%';
+					// $cost_2 = $this-> getDataDossiersMultipleInvoice($ref_fact)['cif_cdf'];
+					$unite_2 = $reponse['nbre_poids'];
+
+				}else if ($reponse['id_deb']=='96') { // DCI
 					
 					$unite = 'CIF';
 					$cost_2 = number_format(($reponse['ht_cdf']/$this-> getDataDossiersMultipleInvoice($ref_fact)['cif_cdf'])*100, 2, ',', '.').'%';
