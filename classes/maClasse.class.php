@@ -10813,6 +10813,139 @@
 
 		}
 
+		public function afficherDossierEnAttenteFactureAjax($id_cli, $id_mod_lic){
+			include("connexion.php");
+			$entree['id_cli'] = $id_cli;
+			$entree['id_mod_lic'] = $id_mod_lic;
+			//$entree['type_fact'] = $type_fact;
+			$compteur=0;
+
+			$tbl = "";
+
+			$debut = $compteur;
+
+			$requete = $connexion-> prepare("SELECT dossier.ref_dos AS ref_dos,
+													dossier.id_dos,
+													IF(marchandise.nom_march IS NOT NULL,
+														marchandise.nom_march,
+														dossier.commodity
+														)
+													 AS commodity,
+													dossier.ref_decl AS ref_decl,
+													DATE_FORMAT(dossier.date_decl, '%d/%m/%Y') AS date_decl,
+													dossier.ref_liq AS ref_liq,
+													DATE_FORMAT(dossier.date_liq, '%d/%m/%Y') AS date_liq,
+													dossier.ref_quit AS ref_quit,
+													DATE_FORMAT(dossier.date_quit, '%d/%m/%Y') AS date_quit,
+													dossier.fob AS fob, 
+													dossier.poids AS poids
+												FROM dossier
+												LEFT JOIN marchandise
+													ON marchandise.id_march = dossier.id_march
+												WHERE dossier.id_mod_lic = ?
+													AND dossier.id_cli = ?
+													AND dossier.ref_decl IS NOT NULL
+													AND dossier.date_decl IS NOT NULL
+													AND dossier.ref_liq IS NOT NULL
+													AND dossier.date_liq IS NOT NULL
+													AND dossier.ref_quit IS NOT NULL
+													AND dossier.date_quit IS NOT NULL
+													AND dossier.id_dos NOT IN (SELECT id_dos FROM detail_facture_dossier)
+													AND dossier.not_fact = '0'");
+			$requete-> execute(array($entree['id_mod_lic'], $entree['id_cli']));
+			while ($reponse = $requete-> fetch()) {
+				$compteur++;
+
+				$tbl .= '<tr>
+							<td class="" style="text-align: center;" class="bg bg-dark">
+								'.$compteur.'
+							</td>
+							<td class="" style="text-align: center;" class="bg bg-dark">
+								'.$reponse['ref_dos'].'
+								&nbsp;&nbsp;
+								<button class="btn-xs btn-danger" onclick="MAJ_not_fact('.$reponse['id_dos'].', \''.$reponse['ref_dos'].'\', '.$id_cli.', '.$id_mod_lic.');"><i class="fa fa-times"></i> Disable</button>
+							</td>
+							<td class="" style="text-align: center;" class="bg bg-dark">
+								'.$reponse['commodity'].'
+							</td>
+							<td class="" style="text-align: center;" class="bg bg-dark">
+								'.$reponse['ref_decl'].'
+							</td>
+							<td class="" style="text-align: center;" class="bg bg-dark">
+								'.$reponse['date_decl'].'
+							</td>
+							<td class="" style="text-align: center;" class="bg bg-dark">
+								'.$reponse['ref_liq'].'
+							</td>
+							<td class="" style="text-align: center;" class="bg bg-dark">
+								'.$reponse['date_liq'].'
+							</td>
+							<td class="" style="text-align: center;" class="bg bg-dark">
+								'.$reponse['ref_quit'].'
+							</td>
+							<td class="" style="text-align: center;" class="bg bg-dark">
+								'.$reponse['date_quit'].'
+							</td>
+							<td class="" style="text-align: right;" class="bg bg-dark">
+								'.number_format($reponse['fob'], 2, ',', ' ').'
+							</td>
+							<td class="" style="text-align: right;" class="bg bg-dark">
+								'.number_format($reponse['poids'], 2, ',', ' ').'
+							</td>
+						</tr>';
+			}$requete-> closeCursor();
+
+			return $tbl;
+
+		}
+
+		public function afficherMonitoringFacturation($id_mod_lic, $debut=null, $fin=null){
+			include("connexion.php");
+			// $entree['id_cli'] = $id_cli;
+			$entree['id_mod_lic'] = $id_mod_lic;
+			//$entree['type_fact'] = $type_fact;
+			$compteur=0;
+
+			$tbl = "";
+
+			$requete = $connexion-> query("SELECT *
+												FROM utilisateur
+												WHERE id_role = 12
+												ORDER BY nom_util");
+			// $requete-> execute(array($entree['id_mod_lic'], $entree['id_cli']));
+			while ($reponse = $requete-> fetch()) {
+				$compteur++;
+
+				$tbl .= '<tr>
+							<td class="" style="text-align: center;" class="">
+								'.$compteur.'
+							</td>
+							<td class="" style="text-align: ;" class="">
+								'.$reponse['nom_util'].'
+							</td>
+							<td class="" style="text-align: center;" class="">
+								'.$this-> getNbreFacture($id_mod_lic, $reponse['id_util'], $debut, $fin).'
+							</td>
+							<td class="" style="text-align: center;" class="">
+								<a href="#" class="btn btn-xs btn-info" onclick="window.open(\'popUpDashboardFacturation.php?statut=Factures&amp;id_mod_lic='.$id_mod_lic.'&amp;id_util='.$reponse['id_util'].'&amp;debut='.$debut.'&amp;fin='.$fin.'\',\'pop1\',\'width=950,height=700\');">
+				                	Details <i class="fas fa-arrow-circle-right"></i>
+				            	</a>
+							</td>
+							<td class="" style="text-align: center;" class="">
+								'.$this-> getNbreDossierFacture($id_mod_lic, $reponse['id_util'], $debut, $fin).'
+							</td>
+							<td class="" style="text-align: center;" class="">
+								<a href="#" class="btn btn-xs btn-info" onclick="window.open(\'popUpDashboardFacturation.php?statut=Dossiers Facturés&amp;id_mod_lic='.$id_mod_lic.'&amp;id_util='.$reponse['id_util'].'&amp;debut='.$debut.'&amp;fin='.$fin.'\',\'pop1\',\'width=950,height=700\');">
+				                	Details <i class="fas fa-arrow-circle-right"></i>
+				            	</a>
+							</td>
+						</tr>';
+			}$requete-> closeCursor();
+
+			return $tbl;
+
+		}
+
 		public function getDossiersExportAFactures($id_cli, $id_mod_lic, $id_march, $id_mod_trans, $num_lic){
 			include('connexion.php');
 
@@ -30125,7 +30258,7 @@
 			return $compteur;
 		}
 
-		public function getNbreFacture($id_mod_lic=NULL){
+		public function getNbreFacture($id_mod_lic=NULL, $id_util=NULL, $debut=NULL, $fin=NULL){
 			include('connexion.php');
 			// $entree['id_mod_lic'] = $id_mod_lic;
 
@@ -30139,20 +30272,32 @@
 				$sqlClient = ' AND id_cli = "'.$id_cli.'" ';
 			}
 
+			$sqlUtilisateur = "";
+			if (isset($id_util) && ($id_util != '')) {
+				$sqlUtilisateur = ' AND id_util = "'.$id_util.'" ';
+			}
+
+			$sqlTime = "";
+			if (isset($debut) && ($debut != '') && isset($fin) && ($fin != '')) {
+				$sqlTime = ' AND DATE(date_fact) BETWEEN "'.$debut.'" AND "'.$fin.'"';
+			}
+
 			$compteur = 0;
 
 			$requete = $connexion-> query("SELECT COUNT(ref_fact) AS nbre
 												FROM facture_dossier
 												WHERE YEAR(date_fact) = YEAR(CURRENT_DATE())
 													$sqlTransit
-													$sqlClient");
+													$sqlClient
+													$sqlUtilisateur
+													$sqlTime");
 			// $requete-> execute(array($entree['id_mod_lic']));
 			$reponse = $requete-> fetch();
 			
 			return $reponse['nbre'];
 		}
 
-		public function getListeFactures($statut, $id_mod_lic){
+		public function getListeFactures($statut, $id_mod_lic, $id_util=NULL, $debut=NULL, $fin=NULL){
 			include('connexion.php');
 			// $entree['id_mod_lic'] = $id_mod_lic;
 
@@ -30168,6 +30313,16 @@
 				$sqlTransit = "";
 				if (isset($id_mod_lic) && ($id_mod_lic != '')) {
 					$sqlTransit = ' AND fd.id_mod_lic = "'.$id_mod_lic.'" ';
+				}
+
+				$sqlUtilisateur = "";
+				if (isset($id_util) && ($id_util != '')) {
+					$sqlUtilisateur = ' AND fd.id_util = "'.$id_util.'" ';
+				}
+
+				$sqlTime = "";
+				if (isset($debut) && ($debut != '') && isset($fin) && ($fin != '')) {
+					$sqlTime = ' AND DATE(fd.date_fact) BETWEEN "'.$debut.'" AND "'.$fin.'"';
 				}
 
 				$requete = $connexion-> query("SELECT fd.ref_fact AS ref_fact, 
@@ -30195,6 +30350,8 @@
 													AND fd.id_cli = cl.id_cli
 													$sqlClient
 													$sqlTransit
+													$sqlUtilisateur
+													$sqlTime
 												ORDER BY fd.date_fact DESC");
 				// $requete-> execute(array($entree['id_mod_lic']));
 				while($reponse = $requete-> fetch()){
@@ -30215,6 +30372,15 @@
 					$sqlTransit = ' AND dos.id_mod_lic = "'.$id_mod_lic.'" ';
 				}
 
+				$sqlUtilisateur = "";
+				if (isset($id_util) && ($id_util != '')) {
+					$sqlUtilisateur = ' AND fd.id_util = "'.$id_util.'" ';
+				}
+
+				$sqlTime = "";
+				if (isset($debut) && ($debut != '') && isset($fin) && ($fin != '')) {
+					$sqlTime = ' AND DATE(fd.date_fact) BETWEEN "'.$debut.'" AND "'.$fin.'"';
+				}
 				$requete = $connexion-> query("SELECT dos.ref_dos AS ref_dos, 
 													fd.ref_fact AS ref_fact, 
 													DATE_FORMAT(fd.date_fact, '%d/%m/%Y') AS date_fact,
@@ -30243,6 +30409,8 @@
 													AND fd.id_cli = cl.id_cli
 													$sqlClient
 													$sqlTransit
+													$sqlUtilisateur
+													$sqlTime
 												GROUP BY dos.id_dos
 												ORDER BY dos.id_dos DESC");
 				// $requete-> execute(array($entree['id_mod_lic']));
@@ -30539,7 +30707,7 @@
 			}
 		}
 
-		public function getNbreDossierFacture($id_mod_lic=NULL){
+		public function getNbreDossierFacture($id_mod_lic=NULL, $id_util=NULL, $debut=NULL, $fin=NULL){
 			include('connexion.php');
 			// $entree['id_mod_lic'] = $id_mod_lic;
 
@@ -30553,6 +30721,16 @@
 				$sqlClient = ' AND fd.id_cli = "'.$id_cli.'" ';
 			}
 
+			$sqlUtilisateur = "";
+			if (isset($id_util) && ($id_util != '')) {
+				$sqlUtilisateur = ' AND fd.id_util = "'.$id_util.'" ';
+			}
+
+			$sqlTime = "";
+			if (isset($debut) && ($debut != '') && isset($fin) && ($fin != '')) {
+				$sqlTime = ' AND DATE(fd.date_fact) BETWEEN "'.$debut.'" AND "'.$fin.'"';
+			}
+
 			$compteur = 0;
 
 			$requete = $connexion-> query("SELECT COUNT(DISTINCT(dos.id_dos)) AS nbre
@@ -30561,7 +30739,9 @@
 													AND fd.ref_fact = det.ref_fact
 													AND det.id_dos = dos.id_dos
 													$sqlClient
-													$sqlTransit");
+													$sqlTransit
+													$sqlUtilisateur
+													$sqlTime");
 			// $requete-> execute(array($entree['id_mod_lic']));
 			$reponse = $requete-> fetch();
 			
@@ -34765,6 +34945,25 @@
 			$requete = $connexion-> prepare("UPDATE dossier SET id_reg = ?
 												WHERE id_dos = ?");
 			$requete-> execute(array($entree['id_reg'], $entree['id_dos']));
+
+		} 
+
+		public function MAJ_not_fact($id_dos, $not_fact){
+
+			//Log
+			if ($this-> getDossier($id_dos)['not_fact'] != $not_fact) {
+				
+				// $colonne = $this-> getNomColonneClient('not_fact', $_GET['id_cli'], $_GET['id_mod_trans'], $_GET['id_mod_trac']);
+				$this-> creerLogDossier('Facturation', $not_fact, $id_dos, $_SESSION['id_util']);
+
+			}
+
+			include('connexion.php');
+			$entree['id_dos'] = $id_dos;
+			$entree['not_fact'] = $not_fact;
+			$requete = $connexion-> prepare("UPDATE dossier SET not_fact = ?
+												WHERE id_dos = ?");
+			$requete-> execute(array($entree['not_fact'], $entree['id_dos']));
 
 		} 
 
