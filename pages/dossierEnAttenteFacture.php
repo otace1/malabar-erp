@@ -99,7 +99,7 @@
                 </div>
               </div>    
               <!-- /.card-header -->
-              <div class="card-body table-responsive p-0">
+              <div class="card-body table-responsive p-0" style="height: 500px;">
                 <table class=" table table-dark table-head-fixed table-bordered table-hover text-nowrap table-sm">
                   <thead>
                     <tr class="bg bg-dark">
@@ -116,9 +116,9 @@
                       <th style="border: 1px solid white; text-align: center;">WEIGHT</th>
                     </tr>
                   </thead>
-                  <tbody>
+                  <tbody id="afficherDossierEnAttenteFactureAjax">
                     <?php
-                    $maClasse-> afficherDossierEnAttenteFacture($_GET['id_cli'], $_GET['id_mod_lic_fact']);
+                    // $maClasse-> afficherDossierEnAttenteFacture($_GET['id_cli'], $_GET['id_mod_lic_fact']);
                     ?>
                   </tbody>
                 </table>
@@ -141,17 +141,10 @@
   // ------------------------------------------------------------------------------------------------------
   ?>
 
-<?php
-if(isset($_GET['id_mod_lic_fact']) && isset($_GET['id_mod_lic_fact'])){
-
-  $modele = $maClasse-> getElementModeleLicence($_GET['id_mod_lic_fact']);
-  //$marchandise = $maClasse-> getElementMarchandise($_GET['id_march']);
-?>
-
-<div class="modal fade rechercheClient" id="modal-default">
+<div class="modal fade rechercheClient" id="modal_desactiver_facturation_dossier">
   <div class="modal-dialog modal-md">
-    <form id="demo-form2" method="POST" action="" data-parsley-validate enctype="multipart/form-data">
-      <input type="hidden" name="id_type_lic" value="">
+    <!-- <form method="POST" action="" data-parsley-validate enctype="multipart/form-data"> -->
+      <input type="hidden" name="ref_fact" id="ref_fact">
     <div class="modal-content">
       <div class="modal-header ">
         <h4 class="modal-title"><i class="fa fa-filter"></i> Filtrage CLIENT <?php echo $modele['sigle_mod_lic'];?>.</h4>
@@ -167,7 +160,7 @@ if(isset($_GET['id_mod_lic_fact']) && isset($_GET['id_mod_lic_fact'])){
             <select name="id_cli" onchange="" class="form-control cc-exp">
               <option value=''>ALL</option>
                 <?php
-                  $maClasse->selectionnerClientModeleLicence($modele['id_mod_lic']);
+                  // $maClasse->selectionnerClientModeleLicence($modele['id_mod_lic']);
                 ?>
             </select>
           </div>
@@ -185,6 +178,100 @@ if(isset($_GET['id_mod_lic_fact']) && isset($_GET['id_mod_lic_fact'])){
   <!-- /.modal-dialog -->
 </div>
 
-<?php
-}
-?>
+<script type="text/javascript">
+  $(document).ready(function(){
+
+      $('#enregistrerFactureExportMultiple_form').submit(function(e){
+
+              e.preventDefault();
+
+        if(confirm('Do really you want to submit ?')) {
+
+            // alert('Hello');
+
+            var fd = new FormData(this);
+            $('#spinner-div').show();
+
+            $.ajax({
+              type: 'post',
+              url: 'ajax.php',
+              processData: false,
+              contentType: false,
+              data: fd,
+              dataType: 'json',
+              success:function(data){
+                if (data.logout) {
+                  alert(data.logout);
+                  window.location="../deconnexion.php";
+                }else if(data.message){
+                  $( '#enregistrerFactureExportMultiple_form' ).each(function(){
+                      this.reset();
+                  });
+                  $('#ref_fact').val(data.ref_fact);
+                  $('#id_dos').html(data.ref_dos);
+                  $('#spinner-div').hide();//Request is complete so hide spinner
+                  alert(data.message);
+                  window.open('viewExportInvoiceMultiple2022.php?ref_fact='+fd.get('ref_fact'),'pop1','width=1000,height=800');
+                  window.location="listerFactureDossier.php?id_cli=<?php echo $_GET['id_cli'];?>&id_mod_lic_fact=<?php echo $_GET['id_mod_lic_fact']?>";
+                }
+              },
+              complete: function () {
+                  $('#spinner-div').hide();//Request is complete so hide spinner
+              }
+            });
+
+
+        }
+
+      });
+    
+  });
+
+  $(document).ready(function(){
+
+    $('#spinner-div').show();
+    $.ajax({
+      type: 'post',
+      url: 'ajax.php',
+      data: {id_cli: <?php echo $_GET['id_cli'];?>, id_mod_lic: <?php echo $_GET['id_mod_lic_fact'];?>, operation: 'afficherDossierEnAttenteFactureAjax'},
+      dataType: 'json',
+      success:function(data){
+        if (data.logout) {
+          alert(data.logout);
+          window.location="../deconnexion.php";
+        }else{
+          $('#afficherDossierEnAttenteFactureAjax').html(data.afficherDossierEnAttenteFactureAjax);
+        }
+      },
+      complete: function () {
+          $('#spinner-div').hide();//Request is complete so hide spinner
+      }
+    });
+
+    
+  });
+
+  function MAJ_not_fact(id_dos, ref_dos, id_cli, id_mod_lic){
+    if(confirm('Do really you want to disable '+ref_dos+' ?')) {
+
+      $.ajax({
+        type: 'post',
+        url: 'ajax.php',
+        data: {id_cli: id_cli, id_mod_lic: id_mod_lic, id_dos: id_dos, operation: 'MAJ_not_fact'},
+        dataType: 'json',
+        success:function(data){
+          if (data.logout) {
+            alert(data.logout);
+            window.location="../deconnexion.php";
+          }else{
+            $('#afficherDossierEnAttenteFactureAjax').html(data.afficherDossierEnAttenteFactureAjax);
+          }
+        },
+        complete: function () {
+            $('#spinner-div').hide();//Request is complete so hide spinner
+        }
+      });
+
+    }
+  }
+</script>

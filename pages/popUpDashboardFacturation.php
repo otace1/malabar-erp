@@ -123,6 +123,18 @@
   if (isset($_GET['id_mod_lic']) && ($_GET['id_mod_lic']!='')) {
     $id_mod_lic = $_GET['id_mod_lic'];
   }
+  $id_util = NULL;
+  if (isset($_GET['id_util']) && ($_GET['id_util']!='')) {
+    $id_util = $_GET['id_util'];
+  }
+  $debut = NULL;
+  if (isset($_GET['debut']) && ($_GET['debut']!='')) {
+    $debut = $_GET['debut'];
+  }
+  $fin = NULL;
+  if (isset($_GET['fin']) && ($_GET['fin']!='')) {
+    $fin = $_GET['fin'];
+  }
   ?>
 
     <script type="text/javascript">
@@ -158,6 +170,9 @@
               "id_cli": "",
               "statut": "<?php echo $_GET['statut'];?>",
               "id_mod_lic": "<?php echo $id_mod_lic;?>",
+              "id_util": "<?php echo $id_util;?>",
+              "debut": "<?php echo $debut;?>",
+              "fin": "<?php echo $fin;?>",
               "operation": "popUpFacture"
           }
         },

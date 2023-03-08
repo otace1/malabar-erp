@@ -499,7 +499,19 @@
 		if (isset($_POST['id_mod_lic'])&&($_POST['id_mod_lic']!='')) {
 			$id_mod_lic = $_POST['id_mod_lic'];
 		}
-		echo json_encode($maClasse-> getListeFactures($_POST['statut'], $id_mod_lic));
+		$id_util = NULL;
+		if (isset($_POST['id_util'])&&($_POST['id_util']!='')) {
+			$id_util = $_POST['id_util'];
+		}
+		$debut = NULL;
+		if (isset($_POST['debut'])&&($_POST['debut']!='')) {
+			$debut = $_POST['debut'];
+		}
+		$fin = NULL;
+		if (isset($_POST['fin'])&&($_POST['fin']!='')) {
+			$fin = $_POST['fin'];
+		}
+		echo json_encode($maClasse-> getListeFactures($_POST['statut'], $id_mod_lic, $id_util, $debut, $fin));
 		
 	}elseif(isset($_POST['operation']) && $_POST['operation']=='rapportOperations'){ // On Recupere les data pour rapport Operations
 		$response['nbre_dossier_encours'] = $maClasse-> getNbreDossier('Dossiers En Cours');
@@ -868,6 +880,25 @@
 
   		// $reponse['table_invoices_check_multiple'] = $maClasse-> table_invoices_check_multiple($_POST['id_cli'], $_POST['id_mod_lic']);
   		$reponse['compteur'] = $compteur;
+
+  		echo json_encode($reponse);
+
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='afficherDossierEnAttenteFactureAjax'){
+
+  		$reponse['afficherDossierEnAttenteFactureAjax'] = $maClasse-> afficherDossierEnAttenteFactureAjax($_POST['id_cli'], $_POST['id_mod_lic']);
+
+  		echo json_encode($reponse);
+
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='MAJ_not_fact'){
+
+  		$maClasse-> MAJ_not_fact($_POST['id_dos'], '1');
+  		$reponse['afficherDossierEnAttenteFactureAjax'] = $maClasse-> afficherDossierEnAttenteFactureAjax($_POST['id_cli'], $_POST['id_mod_lic']);
+
+  		echo json_encode($reponse);
+
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='afficherMonitoringFacturation'){
+
+  		$reponse['afficherMonitoringFacturation'] = $maClasse-> afficherMonitoringFacturation($_POST['id_mod_lic'], $_POST['debut'], $_POST['fin']);
 
   		echo json_encode($reponse);
 

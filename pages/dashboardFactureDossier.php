@@ -125,11 +125,75 @@
 
             <!-- /.info-box -->
           </div>
-        <!-- 
-          <div class="col-md-12 col-sm-6 col-12">
-            <h5>Invoices Status</h5>
+        
+          <div class="col-md-6 col-sm-6 col-12">
+             <section class="content">
+              <div class="container-fluid" style="">
+                <div class="row">
+                  <div class="col-12">
+                    <div class="card">
+                      <div class="card-header">
+                        <!-- <h5 class="card-title" style="font-weight: bold;">
+                          Monitoring
+                        </h5> -->
+                        <div class="row">
+                            <div class="col-md-4">
+                              <label for="x_card_code" class="control-label mb-1">Starting</label>
+                              <input id="debut" type="date" class="form-control form-control-sm cc-exp">
+                            </div>
+
+                            <div class="col-md-4">
+                              <label for="x_card_code" class="control-label mb-1">End</label>
+                              <input id="fin" type="date" class="form-control form-control-sm cc-exp">
+                            </div>
+
+                            <div class="col-md-4">
+                              <label for="x_card_code" class="control-label mb-1">-</label>
+                              <button class="form-control form-control-sm cc-exp btn-xs btn-primary" onclick="afficherMonitoringFacturation(<?php echo $_GET['id_mod_lic_fact'];?>, debut.value, fin.value);">Submit</button>
+                            </div>
+
+                          </div>
+<!-- 
+                        <div class="card-tools">
+                          <div class="row">
+                            <div class="col-md-4">
+                              <label for="x_card_code" class="control-label mb-1">Begin</label>
+                              <input id="debut" type="date" class="form-control cc-exp">
+                            </div>
+
+                          </div>
+                        </div> -->
+                      </div>    
+                      <!-- /.card-header -->
+
+                      <div class="card-body table-responsive p-0">
+                        <span id="label_monitoring"></span>
+                        <table class=" table table-dark table-head-fixed table-bordered table-hover text-nowrap table-sm">
+                          <thead>
+                            <tr class="bg bg-dark">
+                              <th style="border: 1px solid white;">#</th>
+                              <th style="border: 1px solid white;">Users</th>
+                              <th style="border: 1px solid white; text-align: center;" colspan="2">Invoices Created</th>
+                              <th style="border: 1px solid white; text-align: center;" colspan="2">Files Invoiced</th>
+                            </tr>
+                          </thead>
+                          <tbody id="afficherMonitoringFacturation">
+                            <?php
+                            // $maClasse-> afficherDossierEnAttenteFacture($_GET['id_cli'], $_GET['id_mod_lic_fact']);
+                            ?>
+                          </tbody>
+                        </table>
+                      </div>
+                      <!-- /.card-body -->
+                    </div>
+                    <!-- /.card -->
+                  </div>
+
+                </div>
+              </div><!-- /.container-fluid -->
+            </section>
           </div>
- -->
+
         </div>
       </div><!-- /.container-fluid -->
     </section>
@@ -201,6 +265,7 @@ if(isset($_GET['id_mod_lic_fact']) && isset($_GET['id_mod_lic_fact'])){
           $('#nbre_facture').html(data.nbre_facture);
           $('#nbre_dossier_facture').html(data.nbre_dossier_facture);
           $('#nbre_dossier_non_facture').html(data.nbre_dossier_non_facture);
+          afficherMonitoringFacturation(<?php echo $_GET['id_mod_lic_fact'];?>);
         }
       },
       complete: function () {
@@ -209,6 +274,29 @@ if(isset($_GET['id_mod_lic_fact']) && isset($_GET['id_mod_lic_fact'])){
     });
 
   });
+
+  function afficherMonitoringFacturation(id_mod_lic, debut=null, fin=null){
+    $('#spinner-div').show();
+    $.ajax({
+      type: 'post',
+      url: 'ajax.php',
+      data: {operation: 'afficherMonitoringFacturation', id_mod_lic: id_mod_lic, debut: debut, fin: fin},
+      dataType: 'json',
+      success:function(data){
+        if (data.logout) {
+          alert(data.logout);
+          window.location="../deconnexion.php";
+        }else{
+          $('#label_monitoring').html('Report between '+debut+' and '+fin);
+          $('#afficherMonitoringFacturation').html(data.afficherMonitoringFacturation);
+        }
+      },
+      complete: function () {
+          $('#spinner-div').hide();//Request is complete so hide spinner
+      }
+    });
+
+  }
 
 
 </script>
