@@ -271,6 +271,40 @@ if ($facture['id_cli']==864 || $facture['id_cli']==878 || $facture['id_cli']==87
 					&nbsp;LUBUMBASHI, R.D.CONGO</td>
 					<td width="10%"></td>
 				</tr>';
+}else if ($facture['id_cli']==920) {
+	$banque = '<tr>
+					<td width="10%" style="border-top: 1px solid black; border-left: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;INTITULE</td>
+					<td width="35%" style="border-top: 1px solid black; border-right: 1px solid black;  font-size: 7px;">&nbsp;MALABAR RDC SARL</td>
+					<td width="10%"></td>
+				</tr>
+				<tr>
+					<td width="10%" style="border-left: 1px solid black;  font-size: 7px;">&nbsp;N.COMPTE</td>
+					<td width="35%" style="border-right: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;00018 - 00016 - 01231051200 - 54</td>
+					<td width="10%"></td>
+				</tr>
+				<tr>
+					<td width="10%" style="border-left: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;SWIFT</td>
+					<td width="35%" style="border-right: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;PRCBCDKI</td>
+					<td width="10%"></td>
+				</tr>
+				<tr>
+					<td width="10%" style=" border-left: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;BANQUE</td>
+					<td width="35%" style=" border-right: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;EQUITY BANK CONGO SA, <br>LUBUMBASHI, R.D. CONGO</td>
+					<td width="10%"></td>
+				</tr>
+				<tr>
+					<td width="10%" style="border-left: 1px solid black;  font-size: 7px;">&nbsp;N.COMPTE</td>
+					<td width="35%" style="border-right: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;00011-00130-00001020614-41</td>
+					<td width="10%"></td>
+				</tr>
+				<tr>
+					<td width="10%" style="border-bottom: 1px solid black; border-left: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;SWIFT<br>
+					&nbsp;BANQUE</td>
+					<td width="35%" style="border-bottom: 1px solid black; border-right: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;BCDCCDKI<br>
+					&nbsp;EQUITY BCDC CONGO SA<br>
+					&nbsp;LUBUMBASHI, R.D.CONGO</td>
+					<td width="10%"></td>
+				</tr>';
 }
 
 
