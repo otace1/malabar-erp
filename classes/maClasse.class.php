@@ -32590,6 +32590,22 @@
 
 		//Methodes permettant de Selectionner 
 
+		public function selectionnerEtatPV(){
+			include('connexion.php');
+			$requete = $connexion-> query("SELECT *
+											FROM etat_pv");
+
+
+			while($reponse = $requete-> fetch()){
+
+				?>
+				<option value="<?php echo $reponse['id_etat']; ?>">
+					<?php echo $reponse['nom_etat']; ?>
+				</option>
+				<?php
+			}$requete-> closeCursor();
+		}
+
 		public function selectionnerDossierPrincipalEnAttenteFacture($id_cli, $id_mod_lic){
 			include('connexion.php');
 
@@ -32622,6 +32638,319 @@
 				echo '<option value="'.$reponse['id_dos'].'">
 								'.$reponse['ref_dos'].'
 							</option>';
+			}$requete-> closeCursor();
+		}
+
+		public function creerPVContentieux($ref_pv, $date_pv, $date_reception, $id_bur_douane, $annee, $marchandise, $id_cli, $id_mod_lic, $fichier_pv, $id_util){
+			include('connexion.php');
+			$entree['ref_pv']=$ref_pv;
+			$entree['date_pv']=$date_pv;
+			$entree['date_reception']=$date_reception;
+			$entree['id_bur_douane']=$id_bur_douane;
+			$entree['annee']=$annee;
+			$entree['marchandise']=$marchandise;
+			$entree['id_cli']=$id_cli;
+			$entree['id_mod_lic']=$id_mod_lic;
+			$entree['fichier_pv']=$fichier_pv;
+			$entree['id_util']=$id_util;
+
+			$requete = $connexion-> prepare('INSERT INTO pv_contencieux(ref_pv, date_pv, date_reception, 
+																id_bur_douane, annee, marchandise, 
+																id_cli, id_mod_lic, fichier_pv, id_util) 
+												VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
+			$requete-> execute(array($entree['ref_pv'], $entree['date_pv'], $entree['date_reception'], $entree['id_bur_douane'], $entree['annee'], $entree['marchandise'], $entree['id_cli'], $entree['id_mod_lic'], $entree['fichier_pv'], $entree['id_util']));
+
+		}
+
+		public function getPVContentieux(){
+			include("connexion.php");
+			// $entree['id_cli'] = $id_cli;
+			$compteur=0;
+
+			$tableau = '';
+
+			$requete = $connexion-> query("SELECT bur.nom_bur_douane AS nom_bur_douane,
+												pv.ref_pv AS ref_pv,
+												DATE_FORMAT(pv.date_pv, '%d/%m/%Y') AS date_pv,
+												DATE_FORMAT(pv.date_reception, '%d/%m/%Y') AS date_reception,
+												pv.annee AS annee,
+												client.nom_cli AS nom_cli,
+												ml.nom_mod_lic AS nom_mod_lic,
+												pv.marchandise AS marchandise,
+												pv.date_deb_contrad AS date_deb_contrad,
+												pv.date_next_pres AS date_next_pres,
+												pv.delai_grief AS delai_grief,
+												pv.action_en_cours AS action_en_cours,
+												pv.remarque AS remarque,
+												pv.fichier_pv AS fichier_pv,
+												pv.id_pv AS id_pv,
+												etat_pv.nom_etat AS nom_etat,
+												REPLACE(pv.ref_pv, '/', '_') AS ref_pv_2,
+												pv.infraction AS infraction,
+												pv.droit_cdf AS droit_cdf,
+												pv.droit_usd AS droit_usd,
+												pv.amende_cdf AS amende_cdf,
+												pv.amende_usd AS amende_usd,
+												pv.risque_potentiel AS risque_potentiel
+											FROM pv_contencieux pv, bureau_douane bur, client, modele_licence ml, etat_pv
+											WHERE pv.id_bur_douane = bur.id_bur_douane
+												AND pv.id_cli = client.id_cli
+												AND pv.id_mod_lic = ml.id_mod_lic
+												AND pv.id_etat = etat_pv.id_etat");
+			// $requete-> execute(array($entree['id_mod_lic'], $entree['id_cli']));
+			while ($reponse = $requete-> fetch()) {
+				$compteur++;
+
+				$tableau .='<tr>
+								<td>'.$compteur.'</td>
+								<td class="bg bg-dark">
+									'.$reponse['ref_pv'].'
+									<button class="btn btn-xs btn-light" onclick="window.open(\'../pv/'.$reponse['ref_pv_2'].'/'.$reponse['fichier_pv'].'\',\'pop5\',\'width=900,height=500\');">
+										<img src="../images/dossier (1).png" width="20px">
+									</button>
+									<button class="btn btn-xs btn-light" onclick="modalModificationPV('.$reponse['id_pv'].');;">
+										<img src="../images/crayon.png" width="20px">
+									</button>
+								</td>
+								<td>'.$reponse['nom_bur_douane'].'</td>
+								<td>'.$reponse['date_pv'].'</td>
+								<td>'.$reponse['date_reception'].'</td>
+								<td>
+									<a href="#" onclick="modal_actePV('.$reponse['id_pv'].');;">
+										<img src="../images/presse-papiers.png" width="20px">
+									</a>
+									'.$this-> getDernierActePV($reponse['id_pv'])['detail_act'].'</td>
+								<td>'.$reponse['annee'].'</td>
+								<td>'.$reponse['nom_cli'].'</td>
+								<td>'.$reponse['nom_mod_lic'].'</td>
+								<td>'.$reponse['marchandise'].'</td>
+								<td>'.$reponse['infraction'].'</td>
+								<td style="text-align: right;">'.number_format($reponse['droit_cdf'], 2, ',', ' ').'</td>
+								<td style="text-align: right;">'.number_format($reponse['droit_usd'], 2, ',', ' ').'</td>
+								<td style="text-align: right;">'.number_format($reponse['amende_cdf'], 2, ',', ' ').'</td>
+								<td style="text-align: right;">'.number_format($reponse['amende_usd'], 2, ',', ' ').'</td>
+								<td>'.$reponse['risque_potentiel'].'</td>
+								<td>'.$reponse['date_deb_contrad'].'</td>
+								<td>'.$reponse['date_next_pres'].'</td>
+								<td>'.$reponse['delai_grief'].'</td>
+								<td>'.$reponse['remarque'].'</td>
+								<td>'.$reponse['nom_etat'].'</td>
+							</tr>';
+
+			}$requete-> closeCursor();
+
+			return $tableau;
+
+		}
+
+		public function ajouterActePV($date_act, $detail_act, $id_pv){
+			include('connexion.php');
+
+			$entree['date_act'] = $date_act;
+			$entree['detail_act'] = $detail_act;
+			$entree['id_pv'] = $id_pv;
+			// $entree['id_util'] = $id_util;
+
+			// echo '<br>-----------------date_act = '.$date_act;
+			// echo '<br>-----------------detail_act = '.$detail_act;
+			// echo '<br>-----------------id_pv = '.$id_pv;
+			// echo '<br>-----------------id_util = '.$id_util;
+
+			$requete = $connexion-> prepare('INSERT INTO acte_pv(date_act, detail_act, id_pv, id_util)
+												VALUES(?, ?, ?, ?)');
+			$requete-> execute(array($entree['date_act'], $entree['detail_act'], $entree['id_pv'], $_SESSION['id_util']));
+		}
+			
+		public function selectionnerBureauDouaneAjax(){
+			include('connexion.php');
+			$select = "";
+			$requete = $connexion-> query("SELECT *
+											FROM bureau_douane
+											WHERE active = '1'");
+
+
+			while($reponse = $requete-> fetch()){
+				$select .= '<option value="'.$reponse['id_bur_douane'].'">
+								'.$reponse['nom_bur_douane'].'
+							</option>';
+			}$requete-> closeCursor();
+
+			return $select;
+		}
+
+		public function modificationPVContentieux($id_pv, $ref_pv, $date_pv, $date_reception, $id_bur_douane, $annee, $marchandise, $id_cli, $id_mod_lic, $id_etat, $remarque, $date_deb_contrad, $date_next_pres, $delai_grief, $infraction, $droit_cdf, $droit_usd, $amende_cdf, $amende_usd, $risque_potentiel){
+			include('connexion.php');
+			$entree['id_pv']=$id_pv;
+			$entree['ref_pv']=$ref_pv;
+			$entree['date_pv']=$date_pv;
+			$entree['date_reception']=$date_reception;
+			$entree['id_bur_douane']=$id_bur_douane;
+			$entree['annee']=$annee;
+			$entree['marchandise']=$marchandise;
+			$entree['id_cli']=$id_cli;
+			$entree['id_mod_lic']=$id_mod_lic;
+			$entree['id_etat']=$id_etat;
+			$entree['remarque']=$remarque;
+			$entree['date_deb_contrad']=$date_deb_contrad;
+			$entree['date_next_pres']=$date_next_pres;
+			$entree['delai_grief']=$delai_grief;
+			// $entree['action_en_cours']=$action_en_cours;
+			$entree['infraction']=$infraction;
+			$entree['droit_cdf']=$droit_cdf;
+			$entree['droit_usd']=$droit_usd;
+			$entree['amende_cdf']=$amende_cdf;
+			$entree['amende_usd']=$amende_usd;
+			$entree['risque_potentiel']=$risque_potentiel;
+
+			if ($entree['date_deb_contrad'] == '') {
+				$entree['date_deb_contrad'] = NULL;
+			}
+
+			if ($entree['date_next_pres'] == '') {
+				$entree['date_next_pres'] = NULL;
+			}
+
+			if ($entree['droit_cdf'] == '') {
+				$entree['droit_cdf'] = NULL;
+			}
+
+			if ($entree['droit_usd'] == '') {
+				$entree['droit_usd'] = NULL;
+			}
+
+			if ($entree['amende_cdf'] == '') {
+				$entree['amende_cdf'] = NULL;
+			}
+
+			if ($entree['amende_usd'] == '') {
+				$entree['amende_usd'] = NULL;
+			}
+
+			if ($entree['delai_grief'] == '') {
+				$entree['delai_grief'] = NULL;
+			}
+
+			// echo '<br>ref_pv = '.$ref_pv;
+			// echo '<br>date_pv = '.$date_pv;
+			// echo '<br>date_reception = '.$date_reception;
+			// echo '<br>id_bur_douane = '.$id_bur_douane;
+			// echo '<br>annee = '.$annee;
+			// echo '<br>marchandise = '.$marchandise;
+			// echo '<br>id_cli = '.$id_cli;
+			// echo '<br>id_mod_lic = '.$id_mod_lic;
+			// echo '<br> fichier_pv= '.$fichier_pv;
+			// echo '<br>id_util = '.$id_util;
+
+			$requete = $connexion-> prepare('UPDATE pv_contencieux
+												SET ref_pv = ?, date_pv = ?, date_reception = ?, 
+													id_bur_douane = ?, annee = ?, marchandise = ?, 
+													id_cli = ?, id_mod_lic = ?, id_etat = ?, remarque = ?, 
+													date_deb_contrad = ?, date_next_pres = ?, delai_grief = ?, 
+													infraction = ?, droit_cdf = ?, droit_usd = ?, amende_cdf = ?, 
+													amende_usd = ?, risque_potentiel = ?
+												WHERE id_pv = ?');
+			$requete-> execute(array($entree['ref_pv'], $entree['date_pv'], $entree['date_reception'], $entree['id_bur_douane'], $entree['annee'], $entree['marchandise'], $entree['id_cli'], $entree['id_mod_lic'], $entree['id_etat'], $entree['remarque'], $entree['date_deb_contrad'], $entree['date_next_pres'], $entree['delai_grief'], $entree['infraction'], $entree['droit_cdf'], $entree['droit_usd'], $entree['amende_cdf'], $entree['amende_usd'], $entree['risque_potentiel'], $entree['id_pv']));
+
+		}
+
+
+		public function getDataPVContentieux($id_pv){
+			include("connexion.php");
+			$entree['id_pv'] = $id_pv;
+			$select = '';
+
+
+			$requete = $connexion-> prepare("SELECT *,
+												REPLACE(pv.ref_pv, '/', '_') AS ref_pv_2
+											FROM pv_contencieux pv, bureau_douane bur, client, modele_licence ml, etat_pv
+											WHERE pv.id_bur_douane = bur.id_bur_douane
+												AND pv.id_cli = client.id_cli
+												AND pv.id_mod_lic = ml.id_mod_lic
+												AND pv.id_etat = etat_pv.id_etat
+												AND pv.id_pv = ?");
+			$requete-> execute(array($entree['id_pv']));
+			$reponse = $requete-> fetch();
+			$select = '<select name="id_bur_douane_edit" id="id_bur_douane_edit" class="form-control cc-exp" required><option value="'.$reponse['id_bur_douane'].'">'.$reponse['nom_bur_douane'].'</option><option></option>'.$this->selectionnerBureauDouaneAjax().'</select>';
+			$reponse['select_id_bur'] = $select;
+			return $reponse;
+
+		}
+
+		public function tableau_acte_pv($id_pv){
+			include("connexion.php");
+			$entree['id_pv'] = $id_pv;
+			$compteur=0;
+
+			$tableau = '<tr>
+							<td></td>
+							<td><input class="form-control-sm form-control" type="date" id="date_act"></td>
+							<td><input class="form-control-sm form-control" type="text" id="detail_act"></td>
+							<td><button class="btn btn-xs btn-primary" onclick="ajouterActePV(date_act.value, detail_act.value, id_pv_acte.value);"><i class="fa fa-check"></i> Inserer</button></td>
+						</tr>';
+
+			$requete = $connexion-> prepare("SELECT *
+											FROM pv_contencieux pv, acte_pv
+											WHERE pv.id_pv = acte_pv.id_pv
+												AND pv.id_pv = ?
+											ORDER BY acte_pv.id_act DESC");
+			$requete-> execute(array($entree['id_pv']));
+			while ($reponse = $requete-> fetch()) {
+				$compteur++;
+
+				$tableau .='<tr>
+								<td>'.$compteur.'</td>
+								<td>'.$reponse['date_act'].'</td>
+								<td>'.$reponse['detail_act'].'</td>
+								<td>
+									<button class="btn-xs btn-danger" onclick="supprimerActePV('.$reponse['id_act'].');">
+										<span class="fa fa-times"></span>
+									</button>
+								</td>
+							</tr>';
+
+			}$requete-> closeCursor();
+
+			return $tableau;
+
+		}
+
+		public function getDernierActePV($id_pv){
+			include("connexion.php");
+			$entree['id_pv'] = $id_pv;
+			$select = '';
+
+
+			$requete = $connexion-> prepare("SELECT *
+												FROM acte_pv
+												WHERE id_pv = ?
+												ORDER BY id_act DESC
+												LIMIT 0, 1");
+			$requete-> execute(array($entree['id_pv']));
+			$reponse = $requete-> fetch();
+			if ($reponse) {
+				return $reponse;
+			}else{
+				$reponse['detail_act']=null;
+				return $reponse;
+			}
+			
+
+		}
+
+		public function selectionnerBureauDouane3(){
+			include('connexion.php');
+			$requete = $connexion-> query("SELECT *
+											FROM bureau_douane
+											WHERE active = '1'");
+
+
+			while($reponse = $requete-> fetch()){
+
+				?>
+				<option value="<?php echo $reponse['id_bur_douane']; ?>">
+					<?php echo $reponse['nom_bur_douane']; ?>
+				</option>
+				<?php
 			}$requete-> closeCursor();
 		}
 
