@@ -78,6 +78,35 @@
             <?php
             }
 
+            if(!empty($maClasse-> getAffectationUtilisateurModule($_SESSION['id_util'], 11))){
+          ?>
+          <a href="#" class="nav-link active bg-danger">
+              <img src="../images/gestion-des-risques.png" width="25px">
+              <span class="">
+              <p>
+                RISQUE DOUANE<br>
+              </p></span>
+            </a>
+          </li>
+           <!--  <li class="nav-item">
+                <a href="dashboardRisque.php" class="nav-link">
+                  <img src="../images/risque (1).png" width="30px">
+                  <p>Dashboard</p>
+                </a>
+            </li>
+ -->
+            <li class="nav-item">
+                <a href="pv_contentieux.php" class="nav-link">
+                  <img src="../images/conforme.png" width="25px">
+                  <p>PV Contentieux</p>
+                </a>
+            </li>
+
+            <?php
+              // $maClasse-> afficherMenuFinanceOPS();
+              echo '<hr>';
+            }
+
           if($_SESSION['id_role'] == '1' || $_SESSION['id_role'] == '5' || $_SESSION['id_role'] == '11' || $_SESSION['id_role'] == '2'){
           ?>
           <li class="nav-item"  style="">

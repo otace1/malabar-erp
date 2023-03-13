@@ -902,6 +902,77 @@
 
   		echo json_encode($reponse);
 
+	}else if ($_POST['operation']=='tableau_pv_contentieux') {
+			
+		$response['tableau_pv_contentieux'] = $maClasse-> getPVContentieux();
+		echo json_encode($response);
+
+	}else if($_POST['operation']=='creerPVContentieux'){//Creation PV Contentieux
+
+      $file = $_FILES['fichier_pv'];
+      $filename = $file['name'];
+      $ext = pathinfo($filename, PATHINFO_EXTENSION);
+      $allowed = array('pdf', 'PDF', 'xls', 'xlsx', 'doc', 'docx', 'jpg', 'jpeg', 'png');
+
+     try {
+
+        $fichier_pv = uniqid();
+
+        $maClasse-> creerPVContentieux($_POST['ref_pv'], $_POST['date_pv'], $_POST['date_reception'], $_POST['id_bur_douane'], $_POST['annee'], $_POST['marchandise'], $_POST['id_cli'], $_POST['id_mod_lic'], $fichier_pv.'.'.$ext, $_SESSION['id_util']);
+
+        $ref_pv_folder = $_POST['ref_pv'];
+
+        $ref_pv_folder = str_replace("/", "_", "$ref_pv_folder");
+        
+				$dossier = '../pv/'.$ref_pv_folder;
+
+				if(!is_dir($dossier)){
+					mkdir("../pv/$ref_pv_folder", 0777);
+				}
+
+          $uploadFile = $dossier.'/'.$fichier_pv.'.'.$ext;
+          move_uploaded_file($file['tmp_name'], $uploadFile);
+
+          $response = array('message' => 'PV créée avec succès!');
+
+        } catch (Exception $e) {
+
+            $response = array('error' => $e->getMessage());
+
+        }
+        
+		$response['tableau_pv_contentieux'] = $maClasse-> getPVContentieux();
+        echo json_encode($response);exit;
+
+    }else if ($_POST['operation']=='modal_modificationPVContentieux') {
+		  
+		$response = $maClasse-> getDataPVContentieux($_POST['id_pv']);
+		
+		echo json_encode($response);
+
+	}else if ($_POST['operation']=='modificationPVContentieux') {
+		  
+        $maClasse-> modificationPVContentieux($_POST['id_pv_edit'], $_POST['ref_pv'], $_POST['date_pv'], $_POST['date_reception'], $_POST['id_bur_douane_edit'], $_POST['annee'], $_POST['marchandise'], $_POST['id_cli'], $_POST['id_mod_lic'], $_POST['id_etat_edit'], $_POST['remarque'], $_POST['date_deb_contrad'], $_POST['date_next_pres'], $_POST['delai_grief'], $_POST['infraction'], $_POST['droit_cdf'], $_POST['droit_usd'], $_POST['amende_cdf'], $_POST['amende_usd'], $_POST['risque_potentiel']);
+		
+         $response = array('message' => 'PV modifié avec succès!');
+		$response['tableau_pv_contentieux'] = $maClasse-> getPVContentieux();
+		echo json_encode($response);
+
+	}else if ($_POST['operation']=='modal_actePV') {
+	  
+		$response['tableau_acte_pv'] = $maClasse-> tableau_acte_pv($_POST['id_pv']);
+		$response['ref_pv_acte'] = $maClasse-> getDataPVContentieux($_POST['id_pv'])['ref_pv'];
+		$response['id_pv_acte'] = $maClasse-> getDataPVContentieux($_POST['id_pv'])['id_pv'];
+		echo json_encode($response);
+
+	}else if ($_POST['operation']=='ajouterActePV') {
+	  
+		$maClasse-> ajouterActePV($_POST['date_act'], $_POST['detail_act'], $_POST['id_pv']);
+		$response['tableau_acte_pv'] = $maClasse-> tableau_acte_pv($_POST['id_pv']);
+		$response['ref_pv_acte'] = $maClasse-> getDataPVContentieux($_POST['id_pv'])['ref_pv'];
+		$response['tableau_pv_contentieux'] = $maClasse-> getPVContentieux();
+		echo json_encode($response);
+
 	}
 
 ?>
