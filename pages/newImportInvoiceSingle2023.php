@@ -619,6 +619,12 @@
       dci=0;
     }
 
+    if (parseFloat($('#tva').val()) > 0 ) {
+      tva = parseFloat($('#tva').val());
+    }else{
+      tva=0;
+    }
+
     if (parseFloat($('#montant_liq').val()) > 0 ) {
       montant_liq = parseFloat($('#montant_liq').val());
     }else{
@@ -637,7 +643,7 @@
     cog = (cif_cdf*0.00457);
     rls = 85*unite_rls*roe_decl;
 
-    autres_taxes = montant_liq-(ddi+fpi+rri+cog+dci+rls);
+    autres_taxes = montant_liq-(ddi+fpi+rri+cog+dci+rls+tva);
 
     frais_bancaire = (montant_liq/roe_decl)*(unite_frais_bancaire/100);
 
