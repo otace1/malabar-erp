@@ -10055,6 +10055,11 @@
 						$unite_input = '<span id="unite_ddi"></span>';
 						$montant_input = '<input type="number" step="0.001" style="text-align: center;" name="montant_'.$compteur.'" id="ddi" value="'.$reponseDebours['montant'].'" onblur="calculDroit();">';
 						
+					}else if ($reponseDebours['id_deb']=='109') {
+
+						$unite_input = '<span></span>';
+						$montant_input = '<input type="number" step="0.001" style="text-align: center;" name="montant_'.$compteur.'" class="bg-dark" id="tva" value="'.$reponseDebours['montant'].'" onblur="calculDroit();">';
+						
 					}else if ($reponseDebours['id_deb']=='95') {
 
 						$unite_input = '<span id="unite_fpi"></span>';
@@ -10229,6 +10234,11 @@
 
 						$unite_input = '<span id="unite_ddi"></span>';
 						$montant_input = '<input type="number" step="0.001" style="text-align: center;" name="montant_'.$compteur.'" id="ddi" value="'.$reponseDebours['montant'].'" onblur="calculDroit();">';
+						
+					}else if ($reponseDebours['id_deb']=='109') {
+
+						$unite_input = '<span id=""></span>';
+						$montant_input = '<input type="number" step="0.001" style="text-align: center;" class="bg-dark" name="montant_'.$compteur.'" id="tva" value="'.$reponseDebours['montant'].'" onblur="calculDroit();">';
 						
 					}else if ($reponseDebours['id_deb']=='95') {
 
@@ -10897,6 +10907,53 @@
 
 			return $tbl;
 
+		}
+
+		public function afficherMenuRegistreAJAX(){
+			include("connexion.php");
+			// $entree['id_cli'] = $id_cli;
+			// $entree['id_mod_lic'] = $id_mod_lic;
+			//$entree['type_fact'] = $type_fact;
+			$compteur=0;
+
+			$tbl = '<ul class="nav nav-treeview">';
+
+			$debut = $compteur;
+
+			$requete = $connexion-> query("SELECT *
+												FROM journal
+												ORDER BY nom_jour");
+			// $requete-> execute(array($entree['id_mod_lic'], $entree['id_cli']));
+			while ($reponse = $requete-> fetch()) {
+				$compteur++;
+
+				$tbl .= '<li class="nav-item">
+		                    <a href="journal.php?id_jour='.$reponse['id_jour'].'" class="nav-link">
+		                      &nbsp;&nbsp;&nbsp;<i class="fa fa-folder-open nav-icon"></i>
+		                      <p>'.$reponse['nom_jour'].'</p>
+		                    </a>
+		                </li>';
+			}$requete-> closeCursor();
+
+			$tbl .='</ul>';
+
+			return $tbl;
+
+		}
+
+		public function getDataJournal($id_jour){
+			include('connexion.php');
+
+			$entree['id_jour'] = $id_jour;
+
+			$requete = $connexion-> prepare('SELECT *
+												FROM journal
+												WHERE id_jour = ?');
+			$requete-> execute(array($entree['id_jour']));
+
+			$reponse = $requete-> fetch();
+
+			return $reponse;
 		}
 
 		public function afficherMonitoringFacturation($id_mod_lic, $debut=null, $fin=null){
@@ -29236,6 +29293,25 @@
 			}
 		}
 
+		public function getLastTaux(){
+			include('connexion.php');
+			// $entree['id_util'] = $id_util;
+
+			$requete = $connexion-> query("SELECT *
+												FROM taux_echange
+												ORDER BY id_taux DESC
+												LIMIT 0, 1");
+			// $requete-> execute(array($entree['id_util']));
+			$reponse = $requete-> fetch();
+			if($reponse){
+				return $reponse;
+			}else{
+				$reponse['id_taux'] = NULL;
+				$reponse['montant'] = NULL;
+				return $reponse;
+			}
+		}
+
 		public function getLastIdDocumentAppurement($id_util){
 			include('connexion.php');
 			$entree['id_util'] = $id_util;
@@ -32906,6 +32982,57 @@
 										<span class="fa fa-times"></span>
 									</button>
 								</td>
+							</tr>';
+
+			}$requete-> closeCursor();
+
+			return $tableau;
+
+		}
+
+		public function liste_compte_journal(){
+			include("connexion.php");
+			// $entree['id_pv'] = $id_pv;
+			$compteur=0;
+
+			$tableau = '';
+
+			$requete = $connexion-> query("SELECT *
+											FROM compte
+											ORDER BY nom_compte");
+			// $requete-> execute(array($entree['id_pv']));
+			while ($reponse = $requete-> fetch()) {
+				$compteur++;
+
+				$tableau .='<tr>
+								<td>'.$compteur.'</td>
+								<td><a href="#" onclick="select_compte(\''.$reponse['id_compte'].'\', \''.$reponse['nom_compte'].'\',)">'.$reponse['nom_compte'].'</a></td>
+							</tr>';
+
+			}$requete-> closeCursor();
+
+			return $tableau;
+
+		}
+
+		public function nom_compte_search($nom_compte){
+			include("connexion.php");
+			$entree['nom_compte'] = '%'.$nom_compte.'%';
+			$compteur=0;
+
+			$tableau = '';
+
+			$requete = $connexion-> prepare("SELECT *
+											FROM compte
+											WHERE nom_compte LIKE ?
+											ORDER BY nom_compte");
+			$requete-> execute(array($entree['nom_compte']));
+			while ($reponse = $requete-> fetch()) {
+				$compteur++;
+
+				$tableau .='<tr>
+								<td>'.$compteur.'</td>
+								<td><a href="#" onclick="select_compte(\''.$reponse['id_compte'].'\', \''.$reponse['nom_compte'].'\',)">'.$reponse['nom_compte'].'</a></td>
 							</tr>';
 
 			}$requete-> closeCursor();
