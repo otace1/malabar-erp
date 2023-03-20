@@ -4754,12 +4754,12 @@
 				$cost = $reponse['ht_usd']/$unite_2;
 				
 				$total_cost += $cost;
-				$sub_total += $reponse['ht_usd'];
 				$sub_total_cdf += $reponse['ht_cdf'];
 				$total_tva += $reponse['tva_usd'];
 				$total_gen += $reponse['ttc_usd'];
 
 				if($entree['id_t_deb']=='1'){
+				$sub_total += $reponse['ht_usd'];
 					$tbl .= '
 						<tr>
 							<td style="text-align: left; border-left: 1px solid black; border-right: 0.5px solid black; font-size: 7px;" colspan="2" width="49%">&nbsp;&nbsp;'
@@ -4784,6 +4784,7 @@
 						</tr>
 					';
 				}else if($reponse['id_deb']==45){//Scelle Electronique
+					$sub_total += $this-> getDataAffectationDeboursClientModeleLicence($reponse['id_deb'], $data_dossier['id_cli'], $data_dossier['id_mod_lic'], $data_dossier['id_march'], $data_dossier['id_mod_trans'])['montant'];
 					$tbl .= '
 						<tr>
 							<td style="text-align: left; border-left: 1px solid black; border-right: 0.5px solid black; font-size: 7px;" colspan="2" width="49%">&nbsp;&nbsp;'
@@ -4808,6 +4809,7 @@
 						</tr>
 					';
 				}else{
+					$sub_total += $reponse['ht_usd'];
 					$tbl .= '
 						<tr>
 							<td style="text-align: left; border-left: 1px solid black; border-right: 0.5px solid black; font-size: 7px;" colspan="2" width="49%">&nbsp;&nbsp;'
