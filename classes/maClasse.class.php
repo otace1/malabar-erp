@@ -4479,8 +4479,13 @@
 					$unite_2 = $reponse['nbre_dos'];
 				}
 
-				$cost = $reponse['ht_usd']/$unite_2;
-				$cost_2 = number_format($cost, 3, ',', '.');
+				if ($reponse['id_deb']=='5' || $reponse['id_deb']=='6' || $reponse['id_deb']=='7' || $reponse['id_deb']=='8') {
+					$cost = $reponse['ht_usd']/$unite_2;
+					$cost_2 = number_format($cost, 0, ',', '.');
+				}else{
+					$cost = $reponse['ht_usd']/$unite_2;
+					$cost_2 = number_format($cost, 3, ',', '.');
+				}
 				
 				if($reponse['id_deb']=='54'){
 					$unite = number_format($this-> getMontantFactureTypeDeboursSansFinancialCost($ref_fact, '1'), 2, ',', '.');
