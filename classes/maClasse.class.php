@@ -1254,6 +1254,42 @@
 			$requete-> execute(array($entree['num_lic'], $entree['date_exp']));
 		}
 		
+		public function creerClasseCompte($nom_class, $id_cat_cmpte){
+			include('connexion.php');
+
+			$entree['nom_class'] = $nom_class;
+			$entree['id_cat_cmpte'] = $id_cat_cmpte;
+
+			$requete = $connexion-> prepare('INSERT INTO classe_compte(nom_class, id_cat_cmpte)
+												VALUES(?, ?)');
+			$requete-> execute(array($entree['nom_class'], $entree['id_cat_cmpte']));
+		}
+		
+		public function creerCompte($nom_compte, $code_compte, $id_class){
+			include('connexion.php');
+
+			$entree['nom_compte'] = $nom_compte;
+			$entree['code_compte'] = $code_compte;
+			$entree['id_class'] = $id_class;
+
+			$requete = $connexion-> prepare('INSERT INTO compte(nom_compte, code_compte, id_class)
+												VALUES(?, ?, ?)');
+			$requete-> execute(array($entree['nom_compte'], $entree['code_compte'], $entree['id_class']));
+		}
+		
+		public function editClasseCompte($id_class, $nom_class, $id_cat_cmpte){
+			include('connexion.php');
+
+			$entree['id_class'] = $id_class;
+			$entree['nom_class'] = $nom_class;
+			$entree['id_cat_cmpte'] = $id_cat_cmpte;
+
+			$requete = $connexion-> prepare('UPDATE classe_compte
+												SET nom_class = ?, id_cat_cmpte=?
+												WHERE id_class = ?');
+			$requete-> execute(array($entree['nom_class'], $entree['id_cat_cmpte'], $entree['id_class']));
+		}
+		
 		public function creerAffectationModeleFacture($id_mod_fact, $id_cli, $id_march, $id_mod_trans){
 			include('connexion.php');
 
@@ -3834,6 +3870,19 @@
 												FROM modele_facture
 												WHERE id_mod_fact = ?");
 			$requete-> execute(array($entree['id_mod_fact']));
+			$reponse = $requete-> fetch();
+			return $reponse;
+		}
+
+		public function getDataClasse($id_class){
+			include('connexion.php');
+			$entree['id_class'] = $id_class;
+
+			$requete = $connexion-> prepare("SELECT *
+												FROM classe_compte, categorie_compte
+												WHERE classe_compte.id_class = ?
+													AND classe_compte.id_cat_cmpte = categorie_compte.id_cat_cmpte");
+			$requete-> execute(array($entree['id_class']));
 			$reponse = $requete-> fetch();
 			return $reponse;
 		}
@@ -10051,7 +10100,7 @@
 														AND af.id_cli = ?
 														AND af.id_march = ?
 														AND af.id_mod_trans = ?
-													ORDER BY deb.id_deb ASC");
+													ORDER BY deb.rang, deb.id_deb ASC");
 				$requeteDebours-> execute(array($reponseTypeDebours['id_t_deb'], $entree['id_mod_lic'], $entree['id_cli'], $entree['id_march'], $entree['id_mod_trans']));
 				while($reponseDebours = $requeteDebours-> fetch()){
 					$compteur++;
@@ -32997,6 +33046,80 @@
 
 		}
 
+		public function groups_account(){
+			include("connexion.php");
+			// $entree['id_pv'] = $id_pv;
+			$compteur=0;
+
+			$tableau = '';
+
+			$requete = $connexion-> query("SELECT cl.nom_class AS nom_class,
+												cl.id_class AS id_class,
+												cat.nom_cat_cmpte AS nom_cat_cmpte
+											FROM categorie_compte cat, classe_compte cl
+											WHERE cl.id_cat_cmpte = cat.id_cat_cmpte
+											ORDER BY cl.nom_class ASC");
+			// $requete-> execute(array($entree['id_pv']));
+			while ($reponse = $requete-> fetch()) {
+				$compteur++;
+
+				$tableau .='<tr>
+								<td>'.$compteur.'</td>
+								<td>'.$reponse['nom_class'].'</td>
+								<td style="text-align: center;">'.$reponse['nom_cat_cmpte'].'</td>
+								<td style="text-align: center;">
+									<button class="btn-xs btn-warning" onclick="modalEditClasse('.$reponse['id_class'].');">
+										<span class="fa fa-edit"></span>
+									</button>
+								</td>
+							</tr>';
+
+			}$requete-> closeCursor();
+
+			return $tableau;
+
+		}
+
+		public function account(){
+			include("connexion.php");
+			// $entree['id_pv'] = $id_pv;
+			$compteur=0;
+
+			$tableau = '';
+
+			$requete = $connexion-> query("SELECT c.nom_compte AS nom_compte,
+												c.id_compte AS id_compte,
+												c.code_compte AS code_compte,
+												cl.nom_class AS nom_class,
+												cl.id_class AS id_class,
+												cat.nom_cat_cmpte AS nom_cat_cmpte
+											FROM categorie_compte cat, classe_compte cl, compte c
+											WHERE cl.id_cat_cmpte = cat.id_cat_cmpte
+												AND cl.id_class = c.id_class
+											ORDER BY c.nom_compte ASC");
+			// $requete-> execute(array($entree['id_pv']));
+			while ($reponse = $requete-> fetch()) {
+				$compteur++;
+
+				$tableau .='<tr>
+								<td>'.$compteur.'</td>
+								<td>'.$reponse['nom_compte'].'</td>
+								<td style="text-align: center;">'.$reponse['code_compte'].'</td>
+								<td style="text-align: center;">'.$reponse['nom_class'].'</td>
+								<td style="text-align: center;">'.$reponse['nom_cat_cmpte'].'</td>
+								<td style="text-align: center;">
+									<button class="btn-xs btn-warning" onclick="modalEditCompte('.$reponse['id_compte'].');">
+										<span class="fa fa-edit"></span>
+									</button>
+								</td>
+							</tr>';
+
+			}$requete-> closeCursor();
+
+			return $tableau;
+
+		}
+
 		public function liste_compte_journal(){
 			include("connexion.php");
 			// $entree['id_pv'] = $id_pv;
@@ -33423,6 +33546,42 @@
 			?>
 			<option value="<?php echo $reponse['id_cli'];?>">
 				<?php echo $reponse['nom_cli'];?>
+			</option>
+			<?php
+			}$requete-> closeCursor();
+
+		}
+
+		public function selectionnerClasseCompte(){
+			include('connexion.php');
+			// $entree['id_mod_lic'] = $id_mod_lic;
+
+			$requete = $connexion-> query("SELECT *
+											FROM classe_compte");
+			// $requete-> execute(array($entree['id_mod_lic']));
+
+			while($reponse = $requete-> fetch()){
+			?>
+			<option value="<?php echo $reponse['id_class'];?>">
+				<?php echo $reponse['nom_class'];?>
+			</option>
+			<?php
+			}$requete-> closeCursor();
+
+		}
+
+		public function selectionnerCategorieCompte(){
+			include('connexion.php');
+			// $entree['id_mod_lic'] = $id_mod_lic;
+
+			$requete = $connexion-> query("SELECT *
+											FROM categorie_compte");
+			// $requete-> execute(array($entree['id_mod_lic']));
+
+			while($reponse = $requete-> fetch()){
+			?>
+			<option value="<?php echo $reponse['id_cat_cmpte'];?>">
+				<?php echo $reponse['nom_cat_cmpte'];?>
 			</option>
 			<?php
 			}$requete-> closeCursor();
