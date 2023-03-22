@@ -107,6 +107,56 @@
               echo '<hr>';
             }
 
+            if(!empty($maClasse-> getAffectationUtilisateurModule($_SESSION['id_util'], 12))){
+          ?>
+          <a href="#" class="nav-link active bg-danger">
+              <img src="../images/argent.png" width="25px">
+              <span class="">
+              <p>
+                FINANCE<br>
+              </p></span>
+            </a>
+          </li>
+           <li class="nav-item has-treeview">
+              <a href="#" class="nav-link" class="nav-link">
+                <img src="../images/registre.png" width="25px">
+                <p>
+                  Register
+                  <i class="right fas fa-angle-left"></i>
+                </p>
+              </a>
+              <?php
+                echo $maClasse-> afficherMenuRegistreAJAX();
+              ?>
+            </li>
+           <li class="nav-item has-treeview">
+              <a href="#" class="nav-link" class="nav-link">
+                <img src="../images/parametres.png" width="25px">
+                <p>
+                  Settings
+                  <i class="right fas fa-angle-left"></i>
+                </p>
+              </a>
+              <ul class="nav nav-treeview">
+                <li class="nav-item">
+                  <a href="account.php" class="nav-link">
+                    &nbsp;&nbsp;&nbsp;<i class="fa fa-table nav-icon"></i>
+                    <p>Accounts</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="groups_account.php" class="nav-link">
+                    &nbsp;&nbsp;&nbsp;<i class="fa fa-object-group nav-icon"></i>
+                    <p>Groups Of Accounts</p>
+                  </a>
+                </li>
+              </ul>
+            </li>
+            <?php
+              // $maClasse-> afficherMenuFinanceOPS();
+              echo '<hr>';
+            }
+
           if($_SESSION['id_role'] == '1' || $_SESSION['id_role'] == '5' || $_SESSION['id_role'] == '11' || $_SESSION['id_role'] == '2'){
           ?>
           <li class="nav-item"  style="">

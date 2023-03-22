@@ -973,6 +973,55 @@
 		$response['tableau_pv_contentieux'] = $maClasse-> getPVContentieux();
 		echo json_encode($response);
 
+	}else if ($_POST['operation']=='liste_compte_journal') {
+	  
+		$response['liste_compte_journal'] = $maClasse-> liste_compte_journal();
+		echo json_encode($response);
+
+	}else if ($_POST['operation']=='nom_compte_search') {
+	  
+		$response['liste_compte_journal'] = $maClasse-> nom_compte_search($_POST['nom_compte']);
+		echo json_encode($response);
+
+	}else if ($_POST['operation']=='loadPageRegister') {
+	  
+		$response['taux'] = $maClasse-> getLastTaux()['montant'];
+		$response['id_taux'] = $maClasse-> getLastTaux()['id_taux'];
+		echo json_encode($response);
+
+	}else if ($_POST['operation']=='groups_account') {
+	  
+		$response['groups_account'] = $maClasse-> groups_account();
+		echo json_encode($response);
+
+	}else if ($_POST['operation']=='creerClasseCompte') {
+	  
+		$maClasse-> creerClasseCompte($_POST['nom_class'], $_POST['id_cat_cmpte']);
+		$response['ok'] = 'Ok';
+		echo json_encode($response);
+
+	}else if ($_POST['operation']=='modalEditClasse') {
+	  
+		$response = $maClasse-> getDataClasse($_POST['id_class']);
+		echo json_encode($response);
+
+	}else if ($_POST['operation']=='editClasseCompte') {
+	  
+		$maClasse-> editClasseCompte($_POST['id_class'], $_POST['nom_class'], $_POST['id_cat_cmpte']);
+		$response['ok'] = 'Ok';
+		echo json_encode($response);
+
+	}else if ($_POST['operation']=='account') {
+	  
+		$response['account'] = $maClasse-> account();
+		echo json_encode($response);
+
+	}else if ($_POST['operation']=='creerCompte') {
+	  
+		$maClasse-> creerCompte($_POST['nom_compte'], $_POST['code_compte'], $_POST['id_class']);
+		$response['ok'] = 'Ok';
+		echo json_encode($response);
+
 	}
 
 ?>
