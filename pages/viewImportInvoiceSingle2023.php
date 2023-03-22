@@ -67,7 +67,7 @@ $pdf->setPrintHeader(false);
 // add a page
 $pdf->AddPage('P', 'A4');
 
-$pdf->Image('../images/malabar2.png', 5, 10, 110, '', '', '', '', false, 300);
+$pdf->Image('../images/malabar2.png', 5, 4, 110, '', '', '', '', false, 300);
 $sceau='';
 if ( ($maClasse-> getFactureGlobale($_GET['ref_fact'])['validation']) == '0' ) {
 	$pdf->Image('../images/no_valid.jpg', 150, 2, 30, '', '', '', '', false, 300);
@@ -299,8 +299,6 @@ $tbl = <<<EOD
 			Capital Social : 45.000.000 FC
 			</td>
 		</tr>
-		<br>
-		<br>
 		<tr>
 			<td width="45%" style="text-align: center; border: 0.3px solid black; font-weight: bold; font-size: 12px;">FACTURE</td>
 		</tr>
