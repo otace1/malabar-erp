@@ -143,14 +143,14 @@
                       </div>
                     </div>
                     <div class="modal-footer justify-content-between">
-                      <button type="button" class="btn-xs btn-danger" data-dismiss="modal">Annuler</button>
-                      <button type="submit" name="" class="btn-xs btn-primary">Créer</button>
+                      <!-- <button type="button" class="btn-xs btn-danger" data-dismiss="modal">Annuler</button>
+                      <button type="submit" name="" class="btn-xs btn-primary">Créer</button> -->
                     </div>
                   </div>
                   <hr>
                 </div>
 
-                <table class=" table table-dark table-hover table-bordered text-nowrap table-sm">
+                <!-- <table class=" table table-dark table-hover table-bordered text-nowrap table-sm">
                   <thead>
                     <tr>
                       <th style="width: 10px">#</th>
@@ -172,7 +172,7 @@
                     </tr>
                     
                   </tbody>
-                </table>
+                </table> -->
               </div>
 
               <!-- <div class="card-footer clearfix">
