@@ -642,9 +642,9 @@
     }
     $('#unite_frais_bancaire').val(unite_frais_bancaire);
 
-    fpi = (cif_cdf+ddi)*0.0184;
-    rri = (cif_cdf*0.0225)-4;
-    cog = (cif_cdf*0.00457)-3;
+    // fpi = (cif_cdf+ddi)*0.0184;
+    // rri = (cif_cdf*0.0225)-4;
+    // cog = (cif_cdf*0.00457)-3;
     rls = 85*unite_rls*roe_decl;
 
     autres_taxes = montant_liq-(ddi+fpi+rri+cog+dci+rls+tva);
