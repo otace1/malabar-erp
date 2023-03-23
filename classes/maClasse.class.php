@@ -3950,6 +3950,23 @@
 			return $reponse['id_dos'];
 		}
 
+		public function getDossierFacture($id_dos){
+			include('connexion.php');
+			$entree['id_dos'] = $id_dos;
+
+			$requete = $connexion-> prepare("SELECT *
+												FROM detail_facture_dossier
+													WHERE id_dos = ?");
+			$requete-> execute(array($entree['id_dos']));
+			$reponse=$requete-> fetch();
+			if ($reponse) {
+				return $reponse['id_dos'];
+			}else{
+				return false;
+			}
+			
+		}
+
 		public function getFournisseurFacture($ref_fact){
 			include('connexion.php');
 			$entree['ref_fact'] = $ref_fact;
@@ -16342,7 +16359,20 @@
 				//getDataRow($champ_col, $id_dos)
 					$clignoteCleared = false;
 
-				if ($reponse['id_col'] == '40' && $id_mod_lic == '2') {
+				if($this-> getDossierFacture($id_dos)!=false && ($reponse['champ_col']=='poids' || $reponse['champ_col']=='horse' || $reponse['champ_col']=='trailer_1' || $reponse['champ_col']=='trailer_2')){
+					if ( $this-> getDataRow($reponse['champ_col'], $id_dos)!=null) {
+						$textColor = '';
+					}else{
+						$textColor = 'color: rgb(255,215,0); background-color: grey;';
+					}
+
+				?>
+				<td class=" <?php echo $bg;?>" style="border: 1px solid black;">
+					<input  <?php echo $this-> getDataUtilisateur($_SESSION['id_util'])['tracking_enab'];?>  type="<?php echo $reponse['type_col'];?>" <?php echo $reponse['attribut_col'];?> style="text-transform:uppercase; <?php echo $textColor;?>" name="<?php echo $reponse['champ_col'];?>_<?php echo $compteur;?>" value="<?php echo $this-> getDataRow($reponse['champ_col'], $id_dos);?>" disabled>
+				</td>
+				<?php
+
+				}else if ($reponse['id_col'] == '40' && $id_mod_lic == '2') {
 					$getDataRowCalculNetDays = $this-> getDataRowCalculNetDays($reponse['champ_col'], $id_dos);
 					if ( ($getDataRowCalculNetDays >= 0) && ($getDataRowCalculNetDays <= 3) ) {
 						$bg = "badge badge-success";
@@ -17576,7 +17606,15 @@
 			$requete-> execute(array($entree['id_cli'], $entree['id_mod_trans'], $entree['id_mod_lic']));
 			while ($reponse = $requete-> fetch()) {
 				//getDataRow($champ_col, $id_dos)
-				if ($reponse['id_col'] != '18' && $reponse['id_col'] != '50' && $reponse['id_col'] != '54' && $reponse['id_col'] != '71' && $reponse['id_col'] != '74' && $reponse['id_col'] != '36' && $reponse['id_col'] != '88' && $reponse['id_col'] != '80' && $reponse['id_col'] != '38' && $reponse['id_col'] != '42' && $reponse['id_col'] != '40') {
+				if (($reponse['id_col'] != '18' && $reponse['id_col'] != '50' && $reponse['id_col'] != '54' && $reponse['id_col'] != '71' && $reponse['id_col'] != '74' && $reponse['id_col'] != '36' && $reponse['id_col'] != '88' && $reponse['id_col'] != '80' && $reponse['id_col'] != '38' && $reponse['id_col'] != '42' && $reponse['id_col'] != '40') && ($this-> getDossierFacture($id_dos)!=false && ($reponse['champ_col']=='poids' || $reponse['champ_col']=='horse' || $reponse['champ_col']=='trailer_1' || $reponse['champ_col']=='trailer_2'))) {
+					?>
+
+			          <div class="col-md-3">
+			            <label for="x_card_code" class="control-label mb-1"><?php echo $reponse['titre_col'];?></label>
+			            <input type="<?php echo $reponse['type_col'];?>" name="<?php echo $reponse['champ_col'];?>" <?php echo $reponse['attribut_col'];?> class="form-control cc-exp" value="<?php echo $this-> getDataRow($reponse['champ_col'], $id_dos);?>" disabled>
+			          </div>
+			        <?php
+				}else if ($reponse['id_col'] != '18' && $reponse['id_col'] != '50' && $reponse['id_col'] != '54' && $reponse['id_col'] != '71' && $reponse['id_col'] != '74' && $reponse['id_col'] != '36' && $reponse['id_col'] != '88' && $reponse['id_col'] != '80' && $reponse['id_col'] != '38' && $reponse['id_col'] != '42' && $reponse['id_col'] != '40') {
 					?>
 
 			          <div class="col-md-3">
