@@ -37,52 +37,48 @@
           <div class="col-12">
             <div class="card">
               <div class="card-header">
+                <button class="btn btn-xs btn-danger" onclick='window.location="listerFactureDossier.php?id_cli=<?php echo $maClasse-> getFactureGlobale($_GET['ref_fact'])['id_cli'];?>&id_mod_lic_fact=<?php echo $maClasse-> getFactureGlobale($_GET['ref_fact'])['id_mod_lic'];?>"'><< Go back</button>
               </div>
               <!-- /.card-header -->
 
               <div class="card-body table-responsive p-0">
                 
-<!-- <form id="enregistrerFactureAcidImportMultiple_form" method="POST" action="" data-parsley-validate enctype="multipart/form-data"> -->
-<form method="POST" id="enregistrerFactureAcidImportMultiple_form" action="" data-parsley-validate enctype="multipart/form-data">
-  <input type="hidden" name="operation" id="operation" value="enregistrerFactureAcidImportMultiple">
+<!-- <form id="editFactureAcidImportMultiple_form" method="POST" action="" data-parsley-validate enctype="multipart/form-data"> -->
+<form method="POST" id="editFactureAcidImportMultiple_form" action="" data-parsley-validate enctype="multipart/form-data">
+  <input type="hidden" name="operation" id="operation" value="editFactureAcidImportMultiple">
 
   <div class="card-body">
 
     <div class="row">
       
-      <input type="hidden" name="id_cli" value="<?php echo $_GET['id_cli'];?>">
-      <input type="hidden" name="id_mod_lic" value="<?php echo $_GET['id_mod_lic_fact'];?>">
-      <input type="hidden" name="id_march" value="<?php echo $_GET['id_march'];?>">
-      <input type="hidden" name="id_mod_fact" value="<?php echo $_GET['id_mod_fact'];?>">
-      <input type="hidden" name="id_mod_trans" value="<?php echo $_GET['id_mod_trans'];?>">
+      <input type="hidden" name="id_cli" value="<?php echo $maClasse-> getFactureGlobale($_GET['ref_fact'])['id_cli'];?>">
+      <input type="hidden" name="id_mod_lic" value="<?php echo $maClasse-> getFactureGlobale($_GET['ref_fact'])['id_mod_lic'];?>">
+      <input type="hidden" name="id_mod_fact" value="<?php echo $maClasse-> getFactureGlobale($_GET['ref_fact'])['id_mod_fact'];?>">
+      <input type="hidden" name="id_march" value="<?php echo $maClasse-> getMarchandiseFacture($_GET['ref_fact'])['id_march'];?>">
+      <input type="hidden" name="id_mod_trans" value="<?php echo $maClasse-> getDataDossiersMultipleInvoice($_GET['ref_fact'])['id_mod_trans'];?>">
+
       <div class="col-md-2">
         <div class="form-group">
           <label for="inputEmail3" class="col-form-label">Invoice Ref.: </label>
-          <input class="form-control form-control-sm bg bg-dark" type="text" name="ref_fact" id="ref_fact" value="<?php echo $maClasse-> buildRefFactureGlobale($_GET['id_cli']);?>">
+          <input class="form-control form-control-sm bg bg-dark" type="text" name="ref_fact" id="ref_fact" value="<?php echo $_GET['ref_fact'];?>">
         </div>
       </div>
       <div class="col-md-2">
         <div class="form-group">
           <label for="inputEmail3" class="col-form-label">Client: </label>
-          <input class="form-control form-control-sm bg bg-dark" disabled value="<?php echo $maClasse-> getClient($_GET['id_cli'])['nom_cli'];?>">
+          <input class="form-control form-control-sm bg bg-dark" disabled value="<?php echo $maClasse-> getClientFacture($_GET['ref_fact'])['nom_cli'];?>">
         </div>
       </div>
       <div class="col-md-2">
         <div class="form-group">
           <label for="inputEmail3" class="col-form-label">Commodity: </label>
-          <input class="form-control form-control-sm bg bg-dark" disabled value="<?php echo $maClasse-> getMarchandise($_GET['id_march']);?>">
+          <input class="form-control form-control-sm bg bg-dark" disabled value="<?php echo $maClasse-> getMarchandiseFacture($_GET['ref_fact'])['nom_march'];?>">
         </div>
       </div>
       <div class="col-md-2">
         <div class="form-group">
           <label for="inputEmail3" class="col-form-label">Transport Mode: </label>
-          <input class="form-control form-control-sm bg bg-dark" disabled value="<?php echo $maClasse-> getModeTransport($_GET['id_mod_trans'])['nom_mod_trans'];?>">
-        </div>
-      </div>
-      <div class="col-md-3">
-        <div class="form-group">
-          <label for="inputEmail3" class="col-form-label">License: </label>
-          <input class="form-control form-control-sm bg bg-dark" disabled value="<?php echo $_GET['num_lic'];?>">
+          <input class="form-control form-control-sm bg bg-dark" disabled value="<?php echo $maClasse-> getDataDossiersMultipleInvoice($_GET['ref_fact'])['nom_mod_trans'];?>">
         </div>
       </div>
 
@@ -113,7 +109,7 @@
           </thead>
           <tbody>
             <?php
-              $maClasse-> getDossiersImportAcidAFactures($_GET['id_cli'], $_GET['id_mod_lic_fact'], $_GET['id_march'], $_GET['id_mod_trans'], $_GET['num_lic']);
+              $maClasse-> getDossiersImportAcidEditFactures($_GET['ref_fact']);
             ?>
           </tbody>
         </table>
@@ -283,7 +279,7 @@
 
   $(document).ready(function(){
 
-      $('#enregistrerFactureAcidImportMultiple_form').submit(function(e){
+      $('#editFactureAcidImportMultiple_form').submit(function(e){
 
               e.preventDefault();
 
@@ -306,7 +302,7 @@
                   alert(data.logout);
                   window.location="../deconnexion.php";
                 }else if(data.message){
-                  $( '#enregistrerFactureAcidImportMultiple_form' ).each(function(){
+                  $( '#editFactureAcidImportMultiple_form' ).each(function(){
                       this.reset();
                   });
                   $('#ref_fact').val(data.ref_fact);
@@ -314,7 +310,7 @@
                   $('#spinner-div').hide();//Request is complete so hide spinner
                   alert(data.message);
                   window.open('viewAcidImportInvoiceMultiple2022.php?ref_fact='+fd.get('ref_fact'),'pop1','width=1000,height=800');
-                  window.location="listerFactureDossier.php?id_cli=<?php echo $_GET['id_cli'];?>&id_mod_lic_fact=<?php echo $_GET['id_mod_lic_fact']?>";
+                  window.location="listerFactureDossier.php?id_cli=<?php echo $maClasse-> getFactureGlobale($_GET['ref_fact'])['id_cli'];?>&id_mod_lic_fact=<?php echo $maClasse-> getFactureGlobale($_GET['ref_fact'])['id_mod_lic'];?>";
                 }
               },
               complete: function () {

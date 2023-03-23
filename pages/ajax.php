@@ -389,7 +389,7 @@
 			if(isset($_POST['ref_fact'])){
 	  			try {
 
-	  				$maClasse-> supprimerFactureDossier($_POST['ref_fact']);
+	  				$maClasse-> supprimerDetailFactureDossier($_POST['ref_fact']);
 
 	  				$maClasse-> creerFactureDossier($_POST['ref_fact'], $_POST['id_mod_fact'], $_POST['id_cli'], $_SESSION['id_util'], $_POST['id_mod_lic'], 'globale', NULL);
 
@@ -697,7 +697,7 @@
   		if(isset($_POST['ref_fact'])){
   			try {
 
-  			$maClasse-> supprimerFactureDossier($_POST['ref_fact']);
+  			$maClasse-> supprimerDetailFactureDossier($_POST['ref_fact']);
 
   			$maClasse-> creerFactureDossier($_POST['ref_fact'], $_POST['id_mod_fact'], $_POST['id_cli'], $_SESSION['id_util'], $_POST['id_mod_lic'], 'partielle', NULL);
   			// $maClasse-> MAJ_roe_decl($_POST['id_dos'], $_POST['roe_decl']);
@@ -729,6 +729,93 @@
 			if(isset($_POST['ref_fact'])){
 	  			try {
 	  			$maClasse-> creerFactureDossier($_POST['ref_fact'], $_POST['id_mod_fact'], $_POST['id_cli'], $_SESSION['id_util'], $_POST['id_mod_lic'], 'globale', NULL);
+
+	  			for ($i=1; $i <= $_POST['nbre'] ; $i++) { 
+
+  					if( isset($_POST['check_'.$i]) ){
+
+  						$poids = $maClasse-> getDossier($_POST['id_dos_'.$i])['poids'];
+  							
+						//MAJ ROE
+	  					$maClasse-> MAJ_roe_decl($_POST['id_dos_'.$i], $_POST['roe_decl_'.$i]);
+
+  						if(isset($_POST['ddi_'.$i]) && ($_POST['ddi_'.$i]>1)){
+		  					//Inserer ddi
+		  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 32, $_POST['ddi_'.$i], '0', '0');
+
+  						}
+  						if(isset($_POST['fpi_'.$i]) && ($_POST['fpi_'.$i]>1)){
+		  					//Inserer fpi
+		  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 95, $_POST['fpi_'.$i], '0', '0');
+
+  						}
+  						if(isset($_POST['rls_'.$i]) && ($_POST['rls_'.$i]>1)){
+		  					//Inserer rls
+		  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 3, $_POST['rls_'.$i], '0', '0');
+
+  						}
+  						if(isset($_POST['rii_'.$i]) && ($_POST['rii_'.$i]>1)){
+		  					//Inserer rii
+		  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 38, $_POST['rii_'.$i], '0', '0');
+
+  						}
+  						if(isset($_POST['cog_'.$i]) && ($_POST['cog_'.$i]>1)){
+		  					//Inserer cog
+		  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 35, $_POST['cog_'.$i], '0', '0');
+
+  						}
+  						if(isset($_POST['cso_'.$i]) && ($_POST['cso_'.$i]>1)){
+		  					//Inserer cso
+		  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 37, $_POST['cso_'.$i], '0', '0');
+
+  						}
+  						if(isset($_POST['rii_'.$i]) && ($_POST['rii_'.$i]>1)){
+		  					//Inserer rii
+		  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 38, $_POST['rii_'.$i], '0', '0');
+
+  						}
+  						if(isset($_POST['dci_'.$i]) && ($_POST['dci_'.$i]>1)){
+		  					//Inserer dci
+		  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 96, $_POST['dci_'.$i], '0', '0');
+
+  						}
+  						if(isset($_POST['autre_taxe_'.$i]) && ($_POST['autre_taxe_'.$i]>1)){
+		  					//Inserer autre_taxe
+		  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 97, $_POST['autre_taxe_'.$i], '0', '0');
+
+  						}
+
+	  					$maClasse-> creerDetailFactureWithoutTaxe($_POST['ref_fact'], $_POST['id_dos_'.$i], $_POST['id_cli'], $_POST['id_mod_lic'], $_POST['id_march'], $_POST['id_mod_trans']);
+
+  					}
+
+	  			}
+	  				
+	  			$response['message'] = 'Invoice Created';
+
+	  			} catch (Exception $e) {
+
+		            $response = array('error' => $e->getMessage());
+
+		        }
+
+	  		}
+
+		}
+	    echo json_encode($response);exit;
+
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='editFactureAcidImportMultiple'){// On enregistre la facture Acid Import Multiple
+
+		if (isset($_POST['nbre'])) {
+			
+			if(isset($_POST['ref_fact'])){
+	  			try {
+	  				
+	  				$maClasse-> supprimerDetailFactureDossier($_POST['ref_fact']);
+
+	  			// 	$maClasse-> creerFactureDossier($_POST['ref_fact'], $_POST['id_mod_fact'], $_POST['id_cli'], $_SESSION['id_util'], $_POST['id_mod_lic'], 'globale', NULL);
+
+	  			// $maClasse-> creerFactureDossier($_POST['ref_fact'], $_POST['id_mod_fact'], $_POST['id_cli'], $_SESSION['id_util'], $_POST['id_mod_lic'], 'globale', NULL);
 
 	  			for ($i=1; $i <= $_POST['nbre'] ; $i++) { 
 
@@ -1016,9 +1103,9 @@
 		$response['account'] = $maClasse-> account();
 		echo json_encode($response);
 
-	}else if ($_POST['operation']=='creerCompte') {
+	}else if ($_POST['operation']=='creerClasseCompte') {
 	  
-		$maClasse-> creerCompte($_POST['nom_compte'], $_POST['code_compte'], $_POST['id_class']);
+		$maClasse-> creerClasseCompte($_POST['nom_compte'], $_POST['code_compte'], $_POST['id_class']);
 		$response['ok'] = 'Ok';
 		echo json_encode($response);
 
