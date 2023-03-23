@@ -642,6 +642,24 @@
     }
     $('#unite_frais_bancaire').val(unite_frais_bancaire);
 
+    if (parseFloat($('#fpi').val()) > 0 ) {
+      fpi = parseFloat($('#fpi').val());
+    }else{
+      fpi=0;
+    }
+
+    if (parseFloat($('#rri').val()) > 0 ) {
+      rri = parseFloat($('#rri').val());
+    }else{
+      rri=0;
+    }
+
+    if (parseFloat($('#cog').val()) > 0 ) {
+      cog = parseFloat($('#cog').val());
+    }else{
+      cog=0;
+    }
+
     // fpi = (cif_cdf+ddi)*0.0184;
     // rri = (cif_cdf*0.0225)-4;
     // cog = (cif_cdf*0.00457)-3;
