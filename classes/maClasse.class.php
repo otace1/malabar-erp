@@ -4767,8 +4767,8 @@
 
 				}else if ($reponse['id_deb']=='96') { // DCI
 					
-					$unite = 'CIF';
-					$cost_2 = number_format(($reponse['ht_cdf']/$this-> getDataDossiersMultipleInvoice($ref_fact)['cif_cdf'])*100, 2, ',', '.').'%';
+					$unite = 'CIF+Duty';
+					$cost_2 = number_format(floor($reponse['ht_cdf']/(($this-> getDataDossiersMultipleInvoice($ref_fact)['cif_cdf'])+$this-> getMontantFactureDossierDebours2($ref_fact, 32))*100), 2, ',', '.').'%';
 					// $cost_2 = $this-> getDataDossiersMultipleInvoice($ref_fact)['cif_cdf'];
 					$unite_2 = $reponse['nbre_poids'];
 
@@ -7726,6 +7726,20 @@
 														AND id_dos = ?
 														AND id_deb = ?");
 			$requete-> execute(array($entree['ref_fact'], $entree['id_dos'], $entree['id_deb']));
+			$reponse=$requete-> fetch();
+			return $reponse['montant'];
+		}
+
+		public function getMontantFactureDossierDebours2($ref_fact, $id_deb){
+			include('connexion.php');
+			$entree['ref_fact'] = $ref_fact;
+			$entree['id_deb'] = $id_deb;
+
+			$requete = $connexion-> prepare("SELECT SUM(montant) AS montant
+												FROM detail_facture_dossier
+													WHERE ref_fact = ?
+														AND id_deb = ?");
+			$requete-> execute(array($entree['ref_fact'], $entree['id_deb']));
 			$reponse=$requete-> fetch();
 			return $reponse['montant'];
 		}
