@@ -4531,7 +4531,7 @@
 
 				if ($reponse['id_deb']=='1' || $reponse['id_deb']=='2' || $reponse['id_deb']=='3' || $reponse['id_deb']=='4' || $reponse['id_deb']=='5' || $reponse['id_deb']=='6' || $reponse['id_deb']=='7' || $reponse['id_deb']=='8') {
 					
-					$unite = number_format($reponse['nbre_poids'], 3, ',', ' ');
+					$unite = number_format($reponse['nbre_poids'], 2, ',', ' ');
 					$unite_2 = $reponse['nbre_poids'];
 
 				}else if($reponse['id_deb']=='11'){
@@ -4550,7 +4550,7 @@
 					$cost_2 = number_format($cost, 0, ',', '.');
 				}else{
 					$cost = $reponse['ht_usd']/$unite_2;
-					$cost_2 = number_format($cost, 3, ',', '.');
+					$cost_2 = number_format($cost, 2, ',', '.');
 				}
 				
 				if($reponse['id_deb']=='54'){
@@ -4582,13 +4582,13 @@
 								.$cost_2.
 							'&nbsp;&nbsp;</td>
 							<td style="text-align: center; border-right: 0.5px solid black; font-size: 6.5px;" width="11%">'
-								.number_format($reponse['ht_usd'], 3, ',', '.').
+								.number_format($reponse['ht_usd'], 2, ',', '.').
 							'&nbsp;&nbsp;</td>
 							<td style="text-align: center; border-right: 0.5px solid black; font-size: 6.5px;" width="11.5%">'
 								.number_format($reponse['tva_usd'], 2, ',', '.').
 							'&nbsp;&nbsp;</td>
 							<td style="text-align: right; border-right: 1px solid black; font-size: 6.5px;" width="11.5%">'
-								.number_format($reponse['ttc_usd'], 3, ',', '.').
+								.number_format($reponse['ttc_usd'], 2, ',', '.').
 							'&nbsp;&nbsp;</td>
 						</tr>
 					';
@@ -11134,7 +11134,7 @@
 					<?php echo $reponse['horse'].' / '.$reponse['trailer_1'].' / '.$reponse['trailer_2'];?>
 				</td>
 				<td style="text-align: right;">
-					<?php echo number_format($reponse['poids'], 3, ',', '.');?>
+					<?php echo number_format($reponse['poids'], 2, ',', '.');?>
 				</td>
 				<td style="text-align: center;">
 					<input type="checkbox" id="check_<?php echo $compteur;?>" name="check_<?php echo $compteur;?>" class="bg bg-dark">
@@ -11347,7 +11347,7 @@
 					<?php echo $reponse['horse'].' / '.$reponse['trailer_1'].' / '.$reponse['trailer_2'];?>
 				</td>
 				<td style="text-align: right;">
-					<?php echo number_format($reponse['poids'], 3, ',', '.');?>
+					<?php echo number_format($reponse['poids'], 2, ',', '.');?>
 				</td>
 				<td style="text-align: center;">
 					<input type="checkbox" id="check_<?php echo $compteur;?>" name="check_<?php echo $compteur;?>" class="bg bg-dark">
@@ -11452,7 +11452,7 @@
 					<?php echo $reponse['horse'].' / '.$reponse['trailer_1'].' / '.$reponse['trailer_2'];?>
 				</td>
 				<td style="text-align: right;">
-					<?php echo number_format($reponse['poids'], 3, ',', '.');?>
+					<?php echo number_format($reponse['poids'], 2, ',', '.');?>
 				</td>
 				<td style="text-align: center;">
 					<input type="checkbox" id="check_<?php echo $compteur;?>" name="check_<?php echo $compteur;?>" checked class="bg bg-dark">
@@ -11595,7 +11595,7 @@
 					<?php echo $reponse['quittance'];?>
 				</td>
 				<td style="text-align: right;">
-					<?php echo number_format($reponse['poids'], 3, ',', '.');?>
+					<?php echo number_format($reponse['poids'], 2, ',', '.');?>
 				</td>
 				<td style="text-align: center;">
 					<input type="checkbox" id="check_<?php echo $compteur;?>" name="check_<?php echo $compteur;?>" checked class="bg bg-dark">
