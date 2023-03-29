@@ -4768,7 +4768,8 @@
 				}else if ($reponse['id_deb']=='96') { // DCI
 					
 					$unite = 'CIF+Duty';
-					$cost_2 = number_format(floor($reponse['ht_cdf']/(($this-> getDataDossiersMultipleInvoice($ref_fact)['cif_cdf'])+$this-> getMontantFactureDossierDebours2($ref_fact, 32))*100), 2, ',', '.').'%';
+					// $cost_2 = number_format(floor($reponse['ht_cdf']/(($this-> getDataDossiersMultipleInvoice($ref_fact)['cif_cdf'])+$this-> getMontantFactureDossierDebours2($ref_fact, 32))*100), 2, ',', '.').'%';
+					$cost_2 = '10%';
 					// $cost_2 = $this-> getDataDossiersMultipleInvoice($ref_fact)['cif_cdf'];
 					$unite_2 = $reponse['nbre_poids'];
 
@@ -5104,7 +5105,7 @@
 					$unite_2 = $reponse['nbre_dos'];
 				}
 
-				$cost = $reponse['ht_usd']/$unite_2;
+				$cost = round($reponse['ht_usd']/$unite_2, 2);
 				$cost_2 = number_format($cost, 2, ',', '.');
 				
 				// if($reponse['id_deb']=='54'){
@@ -9144,6 +9145,29 @@
 			$requete-> execute(array($entree['ref_fact'], $entree['id_mod_fact'], $entree['id_cli'], $entree['id_util'], 
 									$entree['id_mod_lic'], $entree['type_fact'], $entree['information'], 
 									$entree['note_debit']));
+
+		}
+		
+		public function creerFactureDossierWithDuty($ref_fact, $id_mod_fact, $id_cli, $id_util, $id_mod_lic, $type_fact, $information, $note_debit='0', $with_duty){
+			include('connexion.php');
+
+			$entree['ref_fact'] = $ref_fact;
+			$entree['id_mod_fact'] = $id_mod_fact;
+			$entree['id_cli'] = $id_cli;
+			$entree['id_util'] = $id_util;
+			$entree['id_mod_lic'] = $id_mod_lic;
+			$entree['type_fact'] = $type_fact;
+			$entree['information'] = $information;
+			$entree['note_debit'] = $note_debit;
+			$entree['with_duty'] = $with_duty;
+
+			$requete = $connexion-> prepare('INSERT INTO facture_dossier(ref_fact, id_mod_fact, id_cli, id_util, 
+																			id_mod_lic, type_fact, information, 
+																			note_debit, with_duty)
+												VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)');
+			$requete-> execute(array($entree['ref_fact'], $entree['id_mod_fact'], $entree['id_cli'], $entree['id_util'], 
+									$entree['id_mod_lic'], $entree['type_fact'], $entree['information'], 
+									$entree['note_debit'], $entree['with_duty']));
 
 		}
 		
