@@ -4531,7 +4531,7 @@
 
 				if ($reponse['id_deb']=='1' || $reponse['id_deb']=='2' || $reponse['id_deb']=='3' || $reponse['id_deb']=='4' || $reponse['id_deb']=='5' || $reponse['id_deb']=='6' || $reponse['id_deb']=='7' || $reponse['id_deb']=='8') {
 					
-					$unite = number_format($reponse['nbre_poids'], 2, ',', ' ');
+					$unite = number_format($reponse['nbre_poids'], 3, ',', ' ');
 					$unite_2 = $reponse['nbre_poids'];
 
 				}else if($reponse['id_deb']=='11'){
