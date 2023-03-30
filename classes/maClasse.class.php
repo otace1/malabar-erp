@@ -4619,15 +4619,15 @@
 							<td style="text-align: center; border-right: 0.5px solid black; font-size: 6.5px;" width="11%">'
 								.$cost_2.
 							'&nbsp;&nbsp;</td>
-							<td style="text-align: center; border-right: 0.5px solid black; font-size: 6.5px;" width="11%">'
+							<td style="text-align: right; border-right: 0.5px solid black; font-size: 6.5px;" width="11%">'
 								.number_format($reponse['ht_usd'], 2, ',', '.').
-							'&nbsp;&nbsp;</td>
-							<td style="text-align: center; border-right: 0.5px solid black; font-size: 6.5px;" width="11.5%">'
+							'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+							<td style="text-align: right; border-right: 0.5px solid black; font-size: 6.5px;" width="11.5%">'
 								.number_format($reponse['tva_usd'], 2, ',', '.').
-							'&nbsp;&nbsp;</td>
+							'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
 							<td style="text-align: right; border-right: 1px solid black; font-size: 6.5px;" width="11.5%">'
 								.number_format($reponse['ttc_usd'], 2, ',', '.').
-							'&nbsp;&nbsp;</td>
+							'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
 						</tr>
 					';
 
@@ -4651,15 +4651,15 @@
 						<td style="text-align: center; border-right: 0.5px solid black; border-bottom: 0.5px solid black; font-weight: bold; background-color: rgb(220,220,220);" width="11%">'
 							.number_format($total_cost, 2, ',', '.').
 						'&nbsp;&nbsp;</td>
-						<td style="text-align: center; border-right: 0.5px solid black; border-bottom: 0.5px solid black; font-weight: bold; background-color: rgb(220,220,220);" width="11%">'
+						<td style="text-align: right; border-right: 0.5px solid black; border-bottom: 0.5px solid black; font-weight: bold; background-color: rgb(220,220,220);" width="11%">'
 							.number_format($sub_total, 2, ',', '.').
-						'&nbsp;&nbsp;</td>
-						<td style="text-align: center; border-right: 0.5px solid black; border-bottom: 0.5px solid black; font-weight: bold; background-color: rgb(220,220,220);" width="11.5%">'
+						'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+						<td style="text-align: right; border-right: 0.5px solid black; border-bottom: 0.5px solid black; font-weight: bold; background-color: rgb(220,220,220);" width="11.5%">'
 							.number_format($total_tva, 2, ',', '.').
-						'&nbsp;&nbsp;</td>
+						'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
 						<td style="text-align: right; border-right: 1px solid black; border-bottom: 0.5px solid black; font-weight: bold;  background-color: rgb(220,220,220);" width="11.5%">'
 							.number_format($total_gen, 2, ',', '.').
-						'&nbsp;&nbsp;</td>
+						'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
 					</tr>';
 
 			return $tbl;
