@@ -4799,6 +4799,7 @@
 
 				if (isset($reponse['pourcentage_qte'])) {
 					$cost_2 = number_format($reponse['pourcentage_qte'], 2, ',', '.').'%';
+					$unite = 'CIF';
 				}else if ($reponse['id_deb']=='32') {
 					
 					$unite = 'CIF';
