@@ -675,7 +675,13 @@
 
   			for ($i=1; $i <= $_POST['compteur'] ; $i++) { 
   				if (isset($_POST['montant_'.$i]) && $_POST['montant_'.$i] > 1) {
-  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos'], $_POST['id_deb_'.$i], $_POST['montant_'.$i], $_POST['tva_'.$i], $_POST['usd_'.$i]);
+
+  					if (!isset($_POST['pourcentage_qte_ddi_'.$i]) || empty($_POST['pourcentage_qte_ddi_'.$i]) || ($_POST['pourcentage_qte_ddi_'.$i]=='') || ($_POST['pourcentage_qte_ddi_'.$i]<0)) {
+  						$_POST['pourcentage_qte_ddi_'.$i] = NULL;
+  					}
+
+  					$maClasse-> creerDetailFactureDossier2($_POST['ref_fact'], $_POST['id_dos'], $_POST['id_deb_'.$i], $_POST['montant_'.$i], $_POST['tva_'.$i], $_POST['usd_'.$i], NULL, NULL, $_POST['pourcentage_qte_ddi_'.$i]);
+  					// $maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos'], $_POST['id_deb_'.$i], $_POST['montant_'.$i], $_POST['tva_'.$i], $_POST['usd_'.$i], NULL, NULL);
   				}
   				
   			}
@@ -703,8 +709,15 @@
   			// $maClasse-> MAJ_roe_decl($_POST['id_dos'], $_POST['roe_decl']);
 
   			for ($i=1; $i <= $_POST['compteur'] ; $i++) { 
+
   				if (isset($_POST['montant_'.$i]) && $_POST['montant_'.$i] > 1) {
-  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos'], $_POST['id_deb_'.$i], $_POST['montant_'.$i], $_POST['tva_'.$i], $_POST['usd_'.$i]);
+
+  					if (!isset($_POST['pourcentage_qte_ddi_'.$i]) || empty($_POST['pourcentage_qte_ddi_'.$i]) || ($_POST['pourcentage_qte_ddi_'.$i]=='') || ($_POST['pourcentage_qte_ddi_'.$i]<0)) {
+  						$_POST['pourcentage_qte_ddi_'.$i] = NULL;
+  					}
+
+  					$maClasse-> creerDetailFactureDossier2($_POST['ref_fact'], $_POST['id_dos'], $_POST['id_deb_'.$i], $_POST['montant_'.$i], $_POST['tva_'.$i], $_POST['usd_'.$i], NULL, NULL, $_POST['pourcentage_qte_ddi_'.$i]);
+  					//$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos'], $_POST['id_deb_'.$i], $_POST['montant_'.$i], $_POST['tva_'.$i], $_POST['usd_'.$i]);
   				}
   				
   			}
@@ -1109,6 +1122,32 @@
 		$response['ok'] = 'Ok';
 		echo json_encode($response);
 
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='enregistrerFactureImport2BlocsExclDuty'){// On enregistre la facture Import Exclu Duty
+
+  		if(isset($_POST['ref_fact'])){
+  			try {
+  			$maClasse-> creerFactureDossierWithDuty($_POST['ref_fact'], $_POST['id_mod_fact'], $_POST['id_cli'], $_SESSION['id_util'], $_POST['id_mod_lic'], 'partielle', NULL, NULL, $_POST['with_duty']);
+  			// $maClasse-> MAJ_roe_decl($_POST['id_dos'], $_POST['roe_decl']);
+
+  			for ($i=1; $i <= $_POST['compteur'] ; $i++) { 
+  				if (isset($_POST['montant_'.$i]) && $_POST['montant_'.$i] > 1) {
+  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos'], $_POST['id_deb_'.$i], $_POST['montant_'.$i], $_POST['tva_'.$i], $_POST['usd_'.$i]);
+  				}
+  				
+  			}
+
+  			$response = array('message' => 'Invoice Created');
+  			$response['ref_fact'] = $maClasse-> buildRefFactureGlobale($_POST['id_cli']);
+  			$response['ref_dos'] =$maClasse-> selectionnerDossierClientModeleLicenceMarchandise2($_POST['id_cli'], $_POST['id_mod_lic'], $_POST['id_march']);
+
+  			} catch (Exception $e) {
+
+	            $response = array('error' => $e->getMessage());
+
+	        }
+
+  		}
+	    echo json_encode($response);exit;
 	}
 
 ?>

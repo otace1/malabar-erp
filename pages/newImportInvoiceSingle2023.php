@@ -36,8 +36,6 @@
         <div class="row">
           <div class="col-12">
             <div class="card">
-              <div class="card-header">
-              </div>
               <!-- /.card-header -->
 
               <div class="card-body table-responsive p-0">
@@ -601,6 +599,24 @@
       ddi=1;
     }
 
+    if (parseFloat($('#ddi_2').val()) > 0 ) {
+      ddi_2 = parseFloat($('#ddi_2').val());
+    }else{
+      ddi_2=0;
+    }
+
+    if (parseFloat($('#ddi_3').val()) > 0 ) {
+      ddi_3 = parseFloat($('#ddi_3').val());
+    }else{
+      ddi_3=0;
+    }
+
+    if (parseFloat($('#ddi_4').val()) > 0 ) {
+      ddi_4 = parseFloat($('#ddi_4').val());
+    }else{
+      ddi_4=0;
+    }
+
     if (parseFloat($('#roe_decl').val()) > 0 ) {
       roe_decl = parseFloat($('#roe_decl').val());
     }else{
@@ -662,7 +678,7 @@
     
     rls = 85*unite_rls*roe_decl;
 
-    autres_taxes = montant_liq-(ddi+fpi+rri+cog+dci+rls+tva);
+    autres_taxes = montant_liq-(ddi+fpi+rri+cog+dci+rls+tva+ddi_2+ddi_3+ddi_4);
 
     frais_bancaire = (montant_liq/roe_decl)*(unite_frais_bancaire/100);
 
@@ -694,7 +710,13 @@
       $('#autres_taxes').val('');
     }
     if (Math.round(frais_bancaire*1000)/1000 > 0) {
-      $('#frais_bancaire').val(frais_bancaire.toFixed(2));
+      
+      if (Math.round(frais_bancaire*1000)/1000 < 25) {
+        $('#frais_bancaire').val(25);
+      }else{
+        $('#frais_bancaire').val(frais_bancaire.toFixed(2));
+      }
+      
     }else{
       $('#frais_bancaire').val('');
     }
@@ -714,7 +736,7 @@
 
 
     if (Math.round(tresco*1000)/1000 > 0) {
-      $('#tresco').val(tresco.toFixed(0));
+      $('#tresco').val(tresco.toFixed(2));
     }else{
       $('#tresco').val('');
     }
