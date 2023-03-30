@@ -512,6 +512,7 @@ $pdf->writeHTML($tbl, true, false, false, false, '');
 // add a page
 $pdf->AddPage('L', 'A4');
 
+$pdf->Image('../images/signature_facture/'.$maClasse-> getDataUtilisateur($maClasse-> getFactureGlobale($_GET['ref_fact'])['id_util_validation'])['signature_facture'], 200, 150, 65, '', '', '', '', false, 300);
 $tbl = <<<EOD
     <html>
     <head>
@@ -561,7 +562,7 @@ $tbl = <<<EOD
 		<br>
 		<tr>
 			<td width="5%" style=""></td>
-			<td width="90%" style="text-align: center;">$sceau</td>
+			<td width="90%" style="text-align: center;"></td>
 			<td width="5%" style=""></td>
 		</tr>
 	</table>
