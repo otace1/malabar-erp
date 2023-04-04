@@ -110,6 +110,7 @@
                       <th style="">File Ref.</th>
                       <th style="">Invoice Ref.</th>
                       <th style="">Invoice Date</th>
+                      <th style="">License</th>
                       <th style="">Comm. Inv. / Lot Num.</th>
                       <th style="">Commodity</th>
                       <th style="">Decl. Ref.</th>
@@ -184,6 +185,7 @@
           {"data":"ref_dos"},
           {"data":"ref_fact"},
           {"data":"date_fact"},
+          {"data":"num_lic"},
           {"data":"ref_fact_dos"},
           {"data":"commodity"},
           {"data":"ref_decl"},

@@ -46,12 +46,20 @@
   		$reponse = $maClasse-> getDataDossier($_POST['id_dos']);
   		$reponse['debours'] = $maClasse-> getDeboursPourFactureClientModeleLicenceAjaxEdit($reponse['id_cli'], $reponse['id_mod_lic'], $reponse['id_march'], $reponse['id_mod_trans'], $_POST['id_dos'], $_POST['ref_fact']);
 
+  		$reponse['label_mon_fob'] = $maClasse-> getMonnaie($maClasse-> getDataDossier($_POST['id_dos'])['id_mon_fob'])['sig_mon'];
   		echo json_encode($reponse);
 
 	}elseif(isset($_POST['operation']) && $_POST['operation']=='maj_roe_decl'){// MAJ Roe decl
 
   		$reponse = $maClasse-> getDataDossier($_POST['id_dos']);
   		$maClasse-> maj_roe_decl($_POST['id_dos'], $_POST['roe_decl']);
+
+  		echo json_encode($reponse);
+
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='maj_roe_inv'){// MAJ Roe Inv
+
+  		$reponse = $maClasse-> getDataDossier($_POST['id_dos']);
+  		$maClasse-> maj_roe_inv($_POST['id_dos'], $_POST['roe_inv']);
 
   		echo json_encode($reponse);
 
@@ -115,6 +123,7 @@
 
   		$reponse = $maClasse-> getDataDossier($_POST['id_dos']);
   		$maClasse-> MAJ_id_mon_fob($_POST['id_dos'], $_POST['id_mon_fob']);
+  		$reponse['label_mon_fob'] = $maClasse-> getMonnaie( $_POST['id_mon_fob'])['sig_mon'];
 
   		echo json_encode($reponse);
 

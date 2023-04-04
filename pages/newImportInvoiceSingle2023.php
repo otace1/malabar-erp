@@ -114,14 +114,18 @@
               <th><input style="text-align: center; width: 9em;" id="assurance_usd" name="assurance_usd" onblur="maj_assurance_usd(id_dos.value, this.value);calculCIF();" class="" type="number" step="0.000001" min="0" required></th>
             </tr>
             <tr>
-              <th>CIF (USD)</th>
+              <th>Rate (CDF/<span id="label_mon_fob"></span>) INV.</th>
+              <th><input style="text-align: center; width: 9em;" id="roe_inv" name="roe_inv" onblur="maj_roe_inv(id_dos.value, this.value);calculCIF();" type="number" step="0.000001" min="1" required></th>
+              <th>Rate(CDF/USD) BCC</th>
+              <th><input style="text-align: center; width: 9em;" id="roe_decl" name="roe_decl" onblur="maj_roe_decl(id_dos.value, this.value);calculCIF();" type="number" step="0.000001" min="1" required></th>
+            </tr>
+            <tr>
+              <th>CIF (<span id="label_mon_cif"></span>)</th>
               <th><input style="text-align: center; width: 9em; font-weight: bold;" id="cif_usd" class="bg bg-primary" disabled></th>
               <th>CIF (CDF)</th>
               <th><input style="text-align: center; width: 9em; font-weight: bold;" id="cif_cdf" onblur="maj_montant_liq(id_dos.value, this.value);" class="bg bg-primary" disabled></th>
             </tr>
             <tr>
-              <th>Rate</th>
-              <th><input style="text-align: center; width: 9em;" id="roe_decl" name="roe_decl" onblur="maj_roe_decl(id_dos.value, this.value);calculCIF();" type="number" step="0.000001" min="1" required></th>
               <th>Total of Duty (CDF)</th>
               <th><input style="text-align: center; width: 9em;" id="montant_liq" onblur="maj_montant_liq(id_dos.value, this.value);calculCIF();" type="number" step="0.000001" min="0" class="" required></th>
             </tr>
@@ -251,6 +255,7 @@
           $('#autre_frais').val(data.autre_frais);
           $('#cif').val(data.cif);
           $('#roe_decl').val(data.roe_decl);
+          $('#roe_inv').val(data.roe_inv);
           $('#commodity').val(data.commodity);
           $('#truck').val(data.truck);
           // $('#horse').val(data.horse);
@@ -377,9 +382,15 @@
       roe_decl=1;
     }
 
+    if (parseFloat($('#roe_inv').val()) > 0 ) {
+      roe_inv = parseFloat($('#roe_inv').val());
+    }else{
+      roe_inv=1;
+    }
+
     cif_usd = fob_usd + fret_usd + assurance_usd + autre_frais_usd;
 
-    cif_cdf = cif_usd*roe_decl+1;
+    cif_cdf = cif_usd*roe_inv;
 
 
     if (Math.round(cif_usd*1000)/1000 > 0) {
@@ -415,6 +426,26 @@
       type: 'post',
       url: 'ajax.php',
       data: {id_dos: id_dos, roe_decl: roe_decl, operation: 'maj_roe_decl'},
+      dataType: 'json',
+      success:function(data){
+        if (data.logout) {
+          alert(data.logout);
+          window.location="../deconnexion.php";
+        }
+      },
+      complete: function () {
+          $('#spinner-div').hide();//Request is complete so hide spinner
+      }
+    });
+
+  }
+
+  function maj_roe_inv(id_dos, roe_inv){
+    $('#spinner-div').show();
+    $.ajax({
+      type: 'post',
+      url: 'ajax.php',
+      data: {id_dos: id_dos, roe_inv: roe_inv, operation: 'maj_roe_inv'},
       dataType: 'json',
       success:function(data){
         if (data.logout) {
@@ -600,6 +631,9 @@
         if (data.logout) {
           alert(data.logout);
           window.location="../deconnexion.php";
+        }else{
+          $('#label_mon_fob').html(data.label_mon_fob)
+          $('#label_mon_cif').html(data.label_mon_fob)
         }
       },
       complete: function () {

@@ -103,16 +103,30 @@
               <th><span id="id_mon"></span></th>
             </tr>
             <tr>
-              <th>FOB (USD)</th>
+              <th>FOB <select class="bg bg-dark" name="mon_fob" id="mon_fob" onchange="maj_id_mon_fob(id_dos.value, this.value);" required>
+                  <?php echo $maClasse-> selectionnerMonnaie2(); ?>
+                </select></th>
               <th><input style="text-align: center; width: 9em;" id="fob_usd" name="fob_usd" onblur="maj_fob_usd(id_dos.value, this.value);calculCIF();calculCIF();" type="number" step="0.000001" min="0" class="" required></th>
-              <th>Fret (USD)</th>
+              <th>Fret <select class="bg bg-dark" name="mon_fret" id="mon_fret" onchange="maj_id_mon_fret(id_dos.value, this.value);" required>
+                  <?php echo $maClasse-> selectionnerMonnaie2(); ?>
+                </select></th>
               <th><input style="text-align: center; width: 9em;" id="fret_usd" name="fret_usd" onblur="maj_fret_usd(id_dos.value, this.value);calculCIF();" class="" type="number" step="0.000001" min="0" required></th>
             </tr>
             <tr>
-              <th>Autres Charges (USD)</th>
+              <th>Autres Charges <select class="bg bg-dark" name="mon_autre_frais" id="mon_autre_frais" onchange="maj_id_mon_autre_frais(id_dos.value, this.value);" required>
+                  <?php echo $maClasse-> selectionnerMonnaie2(); ?>
+                </select></th>
               <th><input style="text-align: center; width: 9em;" id="autre_frais_usd" name="autre_frais_usd" onblur="maj_autre_frais_usd(id_dos.value, this.value);calculCIF();" class="" type="number" step="0.000001" min="0" required></th>
-              <th>Assurance (USD)</th>
+              <th>Assurance <select class="bg bg-dark" name="mon_assurance" id="mon_assurance" onchange="maj_id_mon_assurance(id_dos.value, this.value);" required>
+                  <?php echo $maClasse-> selectionnerMonnaie2(); ?>
+                </select></th>
               <th><input style="text-align: center; width: 9em;" id="assurance_usd" name="assurance_usd" onblur="maj_assurance_usd(id_dos.value, this.value);calculCIF();" class="" type="number" step="0.000001" min="0" required></th>
+            </tr>
+            <tr>
+              <th>Rate (CDF/<span id="label_mon_fob"></span>) INV.</th>
+              <th><input style="text-align: center; width: 9em;" id="roe_inv" name="roe_inv" onblur="maj_roe_inv(id_dos.value, this.value);calculCIF();" type="number" step="0.000001" min="1" required></th>
+              <th>Rate(CDF/USD) BCC</th>
+              <th><input style="text-align: center; width: 9em;" id="roe_decl" name="roe_decl" onblur="maj_roe_decl(id_dos.value, this.value);calculCIF();" type="number" step="0.000001" min="1" required></th>
             </tr>
             <tr>
               <th>CIF (USD)</th>
@@ -121,8 +135,6 @@
               <th><input style="text-align: center; width: 9em; font-weight: bold;" id="cif_cdf" onblur="maj_montant_liq(id_dos.value, this.value);" class="bg bg-primary" disabled></th>
             </tr>
             <tr>
-              <th>Rate</th>
-              <th><input style="text-align: center; width: 9em;" id="roe_decl" name="roe_decl" onblur="maj_roe_decl(id_dos.value, this.value);calculCIF();" type="number" step="0.000001" min="1" required></th>
               <th>Total of Duty (CDF)</th>
               <th><input style="text-align: center; width: 9em;" id="montant_liq" onblur="maj_montant_liq(id_dos.value, this.value);calculCIF();" type="number" step="0.000001" min="0" class="" required></th>
             </tr>
@@ -244,12 +256,18 @@
           window.location="../deconnexion.php";
         }else{
           $('#id_mon').html(data.id_mon);
+          $('#mon_fob').val(data.id_mon_fob);
+          $('#mon_fret').val(data.id_mon_fret);
+          $('#mon_assurance').val(data.id_mon_assurance);
+          $('#mon_autre_frais').val(data.id_mon_autre_frais);
+          $('#label_mon_fob').html(data.label_mon_fob);
           $('#fob').val(data.fob);
           $('#fret').val(data.fret);
           $('#assurance').val(data.assurance);
           $('#autre_frais').val(data.autre_frais);
           $('#cif').val(data.cif);
           $('#roe_decl').val(data.roe_decl);
+          $('#roe_inv').val(data.roe_inv);
           $('#commodity').val(data.commodity);
           $('#truck').val(data.truck);
           // alert('Hello');
@@ -378,9 +396,15 @@
       roe_decl=1;
     }
 
+    if (parseFloat($('#roe_inv').val()) > 0 ) {
+      roe_inv = parseFloat($('#roe_inv').val());
+    }else{
+      roe_inv=1;
+    }
+
     cif_usd = fob_usd + fret_usd + assurance_usd + autre_frais_usd;
 
-    cif_cdf = cif_usd*roe_decl+1;
+    cif_cdf = cif_usd*roe_inv;
 
 
     if (Math.round(cif_usd*1000)/1000 > 0) {
@@ -576,6 +600,89 @@
       type: 'post',
       url: 'ajax.php',
       data: {id_dos: id_dos, num_exo: num_exo, operation: 'maj_num_exo'},
+      dataType: 'json',
+      success:function(data){
+        if (data.logout) {
+          alert(data.logout);
+          window.location="../deconnexion.php";
+        }
+      },
+      complete: function () {
+          $('#spinner-div').hide();//Request is complete so hide spinner
+      }
+    });
+
+  }
+
+  function maj_id_mon_fob(id_dos, id_mon_fob){
+    $('#spinner-div').show();
+    $.ajax({
+      type: 'post',
+      url: 'ajax.php',
+      data: {id_dos: id_dos, id_mon_fob: id_mon_fob, operation: 'maj_id_mon_fob'},
+      dataType: 'json',
+      success:function(data){
+        if (data.logout) {
+          alert(data.logout);
+          window.location="../deconnexion.php";
+        }else{
+          $('#label_mon_fob').html(data.label_mon_fob)
+          $('#label_mon_cif').html(data.label_mon_fob)
+        }
+      },
+      complete: function () {
+          $('#spinner-div').hide();//Request is complete so hide spinner
+      }
+    });
+
+  }
+
+  function maj_id_mon_fret(id_dos, id_mon_fret){
+    $('#spinner-div').show();
+    $.ajax({
+      type: 'post',
+      url: 'ajax.php',
+      data: {id_dos: id_dos, id_mon_fret: id_mon_fret, operation: 'maj_id_mon_fret'},
+      dataType: 'json',
+      success:function(data){
+        if (data.logout) {
+          alert(data.logout);
+          window.location="../deconnexion.php";
+        }
+      },
+      complete: function () {
+          $('#spinner-div').hide();//Request is complete so hide spinner
+      }
+    });
+
+  }
+
+  function maj_id_mon_assurance(id_dos, id_mon_assurance){
+    $('#spinner-div').show();
+    $.ajax({
+      type: 'post',
+      url: 'ajax.php',
+      data: {id_dos: id_dos, id_mon_assurance: id_mon_assurance, operation: 'maj_id_mon_assurance'},
+      dataType: 'json',
+      success:function(data){
+        if (data.logout) {
+          alert(data.logout);
+          window.location="../deconnexion.php";
+        }
+      },
+      complete: function () {
+          $('#spinner-div').hide();//Request is complete so hide spinner
+      }
+    });
+
+  }
+
+  function maj_id_mon_autre_frais(id_dos, id_mon_autre_frais){
+    $('#spinner-div').show();
+    $.ajax({
+      type: 'post',
+      url: 'ajax.php',
+      data: {id_dos: id_dos, id_mon_autre_frais: id_mon_autre_frais, operation: 'maj_id_mon_autre_frais'},
       dataType: 'json',
       success:function(data){
         if (data.logout) {
