@@ -8433,6 +8433,31 @@
 			
 		}
 
+		public function getMontantDeboursUnderValue($id_cli, $id_deb, $id_mod_lic, $id_mod_trans, $id_march){
+			include('connexion.php');
+			$entree['id_deb'] = $id_deb;
+			$entree['id_cli'] = $id_cli;
+			$entree['id_mod_lic'] = $id_mod_lic;
+			$entree['id_mod_trans'] = $id_mod_trans;
+			$entree['id_march'] = $id_march;
+
+			$requete = $connexion-> prepare("SELECT montant
+												FROM debours_under_value
+												WHERE id_cli = ?
+													AND id_deb = ?
+													ANd id_mod_lic = ?
+													AND id_mod_trans = ?
+													AND id_march = ?");
+			$requete-> execute(array($entree['id_cli'], $entree['id_deb'], $entree['id_mod_lic'], $entree['id_mod_trans'], $entree['id_march']));
+			$reponse = $requete-> fetch();
+			if ($reponse) {
+				return $reponse['montant'];
+			}else{
+				return NULL;
+			}
+			
+		}
+
 		public function getPourcentageDeboursFactureDossier2($ref_fact, $id_deb, $id_dos){
 			include('connexion.php');
 			$entree['id_deb'] = $id_deb;
@@ -10239,6 +10264,12 @@
 				$requeteDebours-> execute(array($reponseTypeDebours['id_t_deb'], $entree['id_mod_lic'], $entree['id_cli'], $entree['id_march'], $entree['id_mod_trans']));
 				while($reponseDebours = $requeteDebours-> fetch()){
 					$compteur++;
+
+					if ($this-> getDossier($id_dos)['num_lic'] == 'UNDER VALUE' && !empty($this-> getMontantDeboursUnderValue($this-> getDossier($id_dos)['id_cli'], $reponseDebours['id_deb'], $this-> getDossier($id_dos)['id_mod_lic'], $this-> getDossier($id_dos)['id_mod_trans'], $this-> getDossier($id_dos)['id_march']))) {
+
+						$reponseDebours['montant'] = $this-> getMontantDeboursUnderValue($this-> getDossier($id_dos)['id_cli'], $reponseDebours['id_deb'], $this-> getDossier($id_dos)['id_mod_lic'], $this-> getDossier($id_dos)['id_mod_trans'], $this-> getDossier($id_dos)['id_march']);
+
+					}
 					
 
 					if ($reponseDebours['id_deb']=='32') { // DDI
@@ -29482,6 +29513,18 @@
 			}
 		}
 
+		public function getMonnaie($id_mon){
+			include('connexion.php');
+			$entree['id_mon'] = $id_mon;
+
+			$requete = $connexion-> prepare("SELECT *
+												FROM monnaie
+												WHERE id_mon = ?");
+			$requete-> execute(array($entree['id_mon']));
+			$reponse = $requete-> fetch();
+			return $reponse;
+		}
+
 		public function getStructureTracking($id_march){
 			include('connexion.php');
 			$entree['id_march'] = $id_march;
@@ -34403,6 +34446,22 @@
 			return $monnaie;
 		} 
 
+		public function selectionnerMonnaie3($mon){
+			include('connexion.php');
+			$monnaie = '<select id=\''.$mon.'\' class=\'bg bg-purple\'>';
+			$requete = $connexion-> query("SELECT id_mon, UPPER(sig_mon) AS nom_mon
+											FROM monnaie");
+			while($reponse = $requete-> fetch()){
+				$monnaie.='<option value=\''.$reponse['id_mon'].'\'>
+							'.$reponse['nom_mon'].'
+						  </option>';
+			}$requete-> closeCursor();
+
+			$monnaie .= '</select>';
+
+			return $monnaie;
+		} 
+
 		public function selectionnerModeTransport(){
 			include('connexion.php');
 			$requete = $connexion-> query("SELECT id_mod_trans, UPPER(nom_mod_trans) AS nom_mod_trans
@@ -36008,6 +36067,54 @@
 			$requete = $connexion-> prepare("UPDATE dossier SET num_exo = ?
 												WHERE id_dos = ?");
 			$requete-> execute(array($entree['num_exo'], $entree['id_dos']));
+
+		}
+
+		public function MAJ_id_mon_fob($id_dos, $id_mon_fob){
+
+			include('connexion.php');
+			$entree['id_dos'] = $id_dos;
+			$entree['id_mon_fob'] = $id_mon_fob;
+
+			$requete = $connexion-> prepare("UPDATE dossier SET id_mon_fob = ?
+												WHERE id_dos = ?");
+			$requete-> execute(array($entree['id_mon_fob'], $entree['id_dos']));
+
+		}
+
+		public function MAJ_id_mon_fret($id_dos, $id_mon_fret){
+
+			include('connexion.php');
+			$entree['id_dos'] = $id_dos;
+			$entree['id_mon_fret'] = $id_mon_fret;
+
+			$requete = $connexion-> prepare("UPDATE dossier SET id_mon_fret = ?
+												WHERE id_dos = ?");
+			$requete-> execute(array($entree['id_mon_fret'], $entree['id_dos']));
+
+		}
+
+		public function MAJ_id_mon_assurance($id_dos, $id_mon_assurance){
+
+			include('connexion.php');
+			$entree['id_dos'] = $id_dos;
+			$entree['id_mon_assurance'] = $id_mon_assurance;
+
+			$requete = $connexion-> prepare("UPDATE dossier SET id_mon_assurance = ?
+												WHERE id_dos = ?");
+			$requete-> execute(array($entree['id_mon_assurance'], $entree['id_dos']));
+
+		}
+
+		public function MAJ_id_mon_autre_frais($id_dos, $id_mon_autre_frais){
+
+			include('connexion.php');
+			$entree['id_dos'] = $id_dos;
+			$entree['id_mon_autre_frais'] = $id_mon_autre_frais;
+
+			$requete = $connexion-> prepare("UPDATE dossier SET id_mon_autre_frais = ?
+												WHERE id_dos = ?");
+			$requete-> execute(array($entree['id_mon_autre_frais'], $entree['id_dos']));
 
 		}
 
