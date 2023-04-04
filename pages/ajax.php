@@ -21,6 +21,22 @@
   								<option>'.$maClasse-> getDataLicence($reponse['num_lic'])['sig_mon'].'</option>
   								'.$maClasse-> selectionnerMonnaie2().'
   							</select>';
+  		$reponse['mon_fob'] = '<select class="bg bg-dark" name="mon_fob" id="mon_fob" onchange="maj_id_mon_fob(id_dos.value, this.value);" required>
+  								'.$maClasse-> selectionnerMonnaie2().'
+  							</select>';
+  		$reponse['mon_fret'] = '<select class="bg bg-dark" name="mon_fret" id="mon_fret" onchange="maj_id_mon_fret(id_dos.value, this.value);" required>
+  								'.$maClasse-> selectionnerMonnaie2().'
+  							</select>';
+  		$reponse['mon_assurance'] = '<select class="bg bg-dark" name="mon_assurance" id="mon_assurance" onchange="maj_id_mon_assurance(id_dos.value, this.value);" required>
+  								'.$maClasse-> selectionnerMonnaie2().'
+  							</select>';
+  		$reponse['mon_autre_frais'] = '<select class="bg bg-dark" name="mon_autre_frais" id="mon_autre_frais" onchange="maj_id_mon_autre_frais(id_dos.value, this.value);" required>
+  								'.$maClasse-> selectionnerMonnaie2().'
+  							</select>';
+  		// $reponse['mon_fob'] = $maClasse-> selectionnerMonnaie3('id_mon_fob');
+  		// $reponse['mon_fret'] = $maClasse-> selectionnerMonnaie3('id_mon_fret');
+  		// $reponse['mon_assurance'] = $maClasse-> selectionnerMonnaie3('id_mon_assurance');
+  		// $reponse['mon_autre_frais'] = $maClasse-> selectionnerMonnaie3('id_mon_autre_frais');
   		$reponse['debours'] = $maClasse-> getDeboursPourFactureClientModeleLicenceAjax($reponse['id_cli'], $reponse['id_mod_lic'], $reponse['id_march'], $reponse['id_mod_trans'], $_POST['id_dos'], $_POST['consommable']);
 
   		echo json_encode($reponse);
@@ -92,6 +108,34 @@
 
   		$reponse = $maClasse-> getDataDossier($_POST['id_dos']);
   		$maClasse-> MAJ_num_exo($_POST['id_dos'], $_POST['num_exo']);
+
+  		echo json_encode($reponse);
+
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='maj_id_mon_fob'){// MAJ Montant Decl
+
+  		$reponse = $maClasse-> getDataDossier($_POST['id_dos']);
+  		$maClasse-> MAJ_id_mon_fob($_POST['id_dos'], $_POST['id_mon_fob']);
+
+  		echo json_encode($reponse);
+
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='maj_id_mon_fret'){// MAJ Montant Decl
+
+  		$reponse = $maClasse-> getDataDossier($_POST['id_dos']);
+  		$maClasse-> MAJ_id_mon_fret($_POST['id_dos'], $_POST['id_mon_fret']);
+
+  		echo json_encode($reponse);
+
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='maj_id_mon_assurance'){// MAJ Montant Decl
+
+  		$reponse = $maClasse-> getDataDossier($_POST['id_dos']);
+  		$maClasse-> MAJ_id_mon_assurance($_POST['id_dos'], $_POST['id_mon_assurance']);
+
+  		echo json_encode($reponse);
+
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='maj_id_mon_autre_frais'){// MAJ Montant Decl
+
+  		$reponse = $maClasse-> getDataDossier($_POST['id_dos']);
+  		$maClasse-> MAJ_id_mon_autre_frais($_POST['id_dos'], $_POST['id_mon_autre_frais']);
 
   		echo json_encode($reponse);
 

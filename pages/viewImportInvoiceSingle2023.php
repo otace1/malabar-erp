@@ -189,6 +189,10 @@ $cif_usd = number_format($maClasse-> getDataDossiersMultipleInvoice($_GET['ref_f
 $cif_cdf = number_format($maClasse-> getDataDossiersMultipleInvoice($_GET['ref_fact'])['cif_cdf'], 2, ',', '.');
 $cif = number_format($maClasse-> getDataDossiersMultipleInvoice($_GET['ref_fact'])['cif'], 2, ',', '.');
 // $cif_cdf = number_format($maClasse-> getDataDossiersMultipleInvoice($_GET['ref_fact'])['cif']*$maClasse-> getDataDossiersMultipleInvoice($_GET['ref_fact'])['roe_decl'], 2, ',', '.');
+$id_mon_fob = $maClasse-> getMonnaie($maClasse-> getDataDossiersMultipleInvoice($_GET['ref_fact'])['id_mon_fob'])['sig_mon'];
+$id_mon_fret = $maClasse-> getMonnaie($maClasse-> getDataDossiersMultipleInvoice($_GET['ref_fact'])['id_mon_fret'])['sig_mon'];
+$id_mon_assurance = $maClasse-> getMonnaie($maClasse-> getDataDossiersMultipleInvoice($_GET['ref_fact'])['id_mon_assurance'])['sig_mon'];
+$id_mon_autre_frais = $maClasse-> getMonnaie($maClasse-> getDataDossiersMultipleInvoice($_GET['ref_fact'])['id_mon_autre_frais'])['sig_mon'];
 
 $banque = '<tr>
 			<td width="10%" style="border-top: 1px solid black; border-left: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;INTITULE</td>
@@ -362,28 +366,28 @@ $tbl = <<<EOD
 			<td width="25%" style="text-align: center; border: 0.3px solid black; font-size: 7px; font-weight: bold;">$ref_dos</td>
 		</tr>
 		<tr>
-			<td width="23%" style="text-align: left; border: 0.3px solid black; font-size: 7px;">&nbsp;FOB/USD: </td>
+			<td width="23%" style="text-align: left; border: 0.3px solid black; font-size: 7px;">&nbsp;FOB/$id_mon_fob: </td>
 			<td width="22%" style="text-align: center; border: 0.3px solid black; font-size: 7px;">$fob_usd</td>
 			<td width="15%" style="text-align: left; "></td>
 			<td width="15%" style="text-align: left; border: 0.3px solid black; font-size: 7px;">&nbsp;Exoneration/Code: </td>
 			<td width="25%" style="text-align: center; border: 0.3px solid black; font-size: 7px;">$num_exo</td>
 		</tr>
 		<tr>
-			<td width="23%" style="text-align: left; border: 0.3px solid black; font-size: 7px;">&nbsp;Fret/USD: </td>
+			<td width="23%" style="text-align: left; border: 0.3px solid black; font-size: 7px;">&nbsp;Fret/$id_mon_fret: </td>
 			<td width="22%" style="text-align: center; border: 0.3px solid black; font-size: 7px;">$fret_usd</td>
 			<td width="15%" style="text-align: left; "></td>
 			<td width="15%" style="text-align: left; border: 0.3px solid black; font-size: 7px;">&nbsp;Rate(CDF/USD) BCC: </td>
 			<td width="25%" style="text-align: center; border: 0.3px solid black; font-size: 7px;">$taux</td>
 		</tr>
 		<tr>
-			<td width="23%" style="text-align: left; border: 0.3px solid black; font-size: 7px;">&nbsp;Autres Charges/USD: </td>
+			<td width="23%" style="text-align: left; border: 0.3px solid black; font-size: 7px;">&nbsp;Autres Charges/$id_mon_autre_frais: </td>
 			<td width="22%" style="text-align: center; border: 0.3px solid black; font-size: 7px;">$autre_frais_usd</td>
 			<td width="15%" style="text-align: left; "></td>
 			<td width="15%" style="text-align: left; border: 0.3px solid black; font-size: 7px; font-weight: bold;">&nbsp;Declaration No.: </td>
 			<td width="25%" style="text-align: center; border: 0.3px solid black; font-size: 7px; font-weight: bold;">$ref_decl</td>
 		</tr>
 		<tr>
-			<td width="23%" style="text-align: left; border: 0.3px solid black; font-size: 7px;">&nbsp;Assurance/USD: </td>
+			<td width="23%" style="text-align: left; border: 0.3px solid black; font-size: 7px;">&nbsp;Assurance/$id_mon_assurance: </td>
 			<td width="22%" style="text-align: center; border: 0.3px solid black; font-size: 7px;">$assurance_usd</td>
 			<td width="15%" style="text-align: left; "></td>
 			<td width="15%" style="text-align: left; border: 0.3px solid black; font-size: 7px;">&nbsp;Declaration Date: </td>

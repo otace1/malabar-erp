@@ -102,15 +102,15 @@
               <th><span id="id_mon"></span></th>
             </tr>
             <tr>
-              <th>FOB (USD)</th>
+              <th>FOB <span id="mon_fob"></span></th>
               <th><input style="text-align: center; width: 9em;" id="fob_usd" name="fob_usd" onblur="maj_fob_usd(id_dos.value, this.value);calculCIF();calculCIF();" type="number" step="0.000001" min="0" class="" required></th>
-              <th>Fret (USD)</th>
+              <th>Fret <span id="mon_fret"></span></th>
               <th><input style="text-align: center; width: 9em;" id="fret_usd" name="fret_usd" onblur="maj_fret_usd(id_dos.value, this.value);calculCIF();" class="" type="number" step="0.000001" min="0" required></th>
             </tr>
             <tr>
-              <th>Autres Charges (USD)</th>
+              <th>Autres Charges <span id="mon_autre_frais"></span></th>
               <th><input style="text-align: center; width: 9em;" id="autre_frais_usd" name="autre_frais_usd" onblur="maj_autre_frais_usd(id_dos.value, this.value);calculCIF();" class="" type="number" step="0.000001" min="0" required></th>
-              <th>Assurance (USD)</th>
+              <th>Assurance <span id="mon_assurance"></span></th>
               <th><input style="text-align: center; width: 9em;" id="assurance_usd" name="assurance_usd" onblur="maj_assurance_usd(id_dos.value, this.value);calculCIF();" class="" type="number" step="0.000001" min="0" required></th>
             </tr>
             <tr>
@@ -240,6 +240,11 @@
         }else{
           // alert('Hello');
           $('#id_mon').html(data.id_mon);
+          $('#mon_fob').html(data.mon_fob);
+          $('#mon_fret').html(data.mon_fret);
+          $('#mon_assurance').html(data.mon_assurance);
+          $('#mon_autre_frais').html(data.mon_autre_frais);
+          // $('#id_mon').html(data.id_mon);
           $('#fob').val(data.fob);
           $('#fret').val(data.fret);
           $('#assurance').val(data.assurance);
@@ -570,6 +575,86 @@
       type: 'post',
       url: 'ajax.php',
       data: {id_dos: id_dos, num_exo: num_exo, operation: 'maj_num_exo'},
+      dataType: 'json',
+      success:function(data){
+        if (data.logout) {
+          alert(data.logout);
+          window.location="../deconnexion.php";
+        }
+      },
+      complete: function () {
+          $('#spinner-div').hide();//Request is complete so hide spinner
+      }
+    });
+
+  }
+
+  function maj_id_mon_fob(id_dos, id_mon_fob){
+    $('#spinner-div').show();
+    $.ajax({
+      type: 'post',
+      url: 'ajax.php',
+      data: {id_dos: id_dos, id_mon_fob: id_mon_fob, operation: 'maj_id_mon_fob'},
+      dataType: 'json',
+      success:function(data){
+        if (data.logout) {
+          alert(data.logout);
+          window.location="../deconnexion.php";
+        }
+      },
+      complete: function () {
+          $('#spinner-div').hide();//Request is complete so hide spinner
+      }
+    });
+
+  }
+
+  function maj_id_mon_fret(id_dos, id_mon_fret){
+    $('#spinner-div').show();
+    $.ajax({
+      type: 'post',
+      url: 'ajax.php',
+      data: {id_dos: id_dos, id_mon_fret: id_mon_fret, operation: 'maj_id_mon_fret'},
+      dataType: 'json',
+      success:function(data){
+        if (data.logout) {
+          alert(data.logout);
+          window.location="../deconnexion.php";
+        }
+      },
+      complete: function () {
+          $('#spinner-div').hide();//Request is complete so hide spinner
+      }
+    });
+
+  }
+
+  function maj_id_mon_assurance(id_dos, id_mon_assurance){
+    $('#spinner-div').show();
+    $.ajax({
+      type: 'post',
+      url: 'ajax.php',
+      data: {id_dos: id_dos, id_mon_assurance: id_mon_assurance, operation: 'maj_id_mon_assurance'},
+      dataType: 'json',
+      success:function(data){
+        if (data.logout) {
+          alert(data.logout);
+          window.location="../deconnexion.php";
+        }
+      },
+      complete: function () {
+          $('#spinner-div').hide();//Request is complete so hide spinner
+      }
+    });
+
+  }
+
+  function maj_id_mon_autre_frais(id_dos, id_mon_autre_frais){
+    $('#spinner-div').show();
+    $.ajax({
+      type: 'post',
+      url: 'ajax.php',
+      data: {id_dos: id_dos, id_mon_autre_frais: id_mon_autre_frais, operation: 'maj_id_mon_autre_frais'},
       dataType: 'json',
       success:function(data){
         if (data.logout) {
