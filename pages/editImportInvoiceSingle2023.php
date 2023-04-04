@@ -454,6 +454,26 @@
 
   }
 
+  function maj_roe_inv(id_dos, roe_inv){
+    $('#spinner-div').show();
+    $.ajax({
+      type: 'post',
+      url: 'ajax.php',
+      data: {id_dos: id_dos, roe_inv: roe_inv, operation: 'maj_roe_inv'},
+      dataType: 'json',
+      success:function(data){
+        if (data.logout) {
+          alert(data.logout);
+          window.location="../deconnexion.php";
+        }
+      },
+      complete: function () {
+          $('#spinner-div').hide();//Request is complete so hide spinner
+      }
+    });
+
+  }
+
   function maj_montant_liq(id_dos, montant_liq){
     $('#spinner-div').show();
     $.ajax({
