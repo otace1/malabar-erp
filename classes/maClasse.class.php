@@ -2950,6 +2950,7 @@
 														marchandise.nom_march,
 														dossier.commodity
 													) AS commodity,
+													dossier.num_lic AS num_lic,
 													DATE_FORMAT(facture_dossier.date_fact, '%d/%m/%Y') AS date_fact,
 													IF(dossier.id_mod_lic='2',
 														dossier.ref_fact,
@@ -4043,7 +4044,8 @@
 			include('connexion.php');
 			$entree['ref_fact'] = $ref_fact;
 
-			$requete = $connexion-> prepare("SELECT ROUND(AVG(dos.roe_decl) ,4) AS roe_decl
+			$requete = $connexion-> prepare("SELECT ROUND(AVG(dos.roe_decl) ,4) AS roe_decl,
+													ROUND(AVG(dos.roe_inv) ,4) AS roe_inv
 												FROM facture_dossier f, detail_facture_dossier df, dossier dos
 												WHERE f.ref_fact = ?
 													AND f.ref_fact = df.ref_fact
@@ -8544,7 +8546,7 @@
 													DATE_FORMAT(dos.exit_drc, '%d/%m/%Y') AS exit_drc,
 													(IF(dos.fob IS NULL, 0, dos.fob) +IF(dos.fret IS NULL, 0, dos.fret)+IF(dos.assurance IS NULL, 0, dos.assurance)+IF(dos.autre_frais IS NULL, 0, dos.autre_frais)) AS cif,
 													(IF(dos.fob_usd IS NULL, 0, dos.fob_usd) +IF(dos.fret_usd IS NULL, 0, dos.fret_usd)+IF(dos.assurance_usd IS NULL, 0, dos.assurance_usd)+IF(dos.autre_frais_usd IS NULL, 0, dos.autre_frais_usd)) AS cif_usd,
-													((IF(dos.fob_usd IS NULL, 0, dos.fob_usd) +IF(dos.fret_usd IS NULL, 0, dos.fret_usd)+IF(dos.assurance_usd IS NULL, 0, dos.assurance_usd)+IF(dos.autre_frais_usd IS NULL, 0, dos.autre_frais_usd))*dos.roe_decl) AS cif_cdf,
+													((IF(dos.fob_usd IS NULL, 0, dos.fob_usd) +IF(dos.fret_usd IS NULL, 0, dos.fret_usd)+IF(dos.assurance_usd IS NULL, 0, dos.assurance_usd)+IF(dos.autre_frais_usd IS NULL, 0, dos.autre_frais_usd)))*dos.roe_inv AS cif_cdf,
 													IF(dos.id_mod_lic='1', cl.nom_cli, dos.supplier) AS supplier,
 													mt.nom_mod_trans AS nom_mod_trans
 												FROM facture_dossier fd, detail_facture_dossier df, dossier dos, client cl, mode_transport mt
@@ -10329,8 +10331,8 @@
 						
 					}else if ($reponseDebours['id_deb']=='29') {
 
-						$unite_input = '<input type="number" step="0.001" style="text-align: center; width: 5em;" class="" name="" id="unite_frais_bancaire" value="" onblur="calculDroit();">';
-						$montant_input = '<input type="number" step="0.001" style="text-align: center;" name="montant_'.$compteur.'" id="frais_bancaire" value="'.$reponseDebours['montant'].'" onblur="calculDroit();">';
+						$unite_input = '<input type="number" step="0.001" style="text-align: center; width: 5em;" class="" name="" id="unite_frais_bancaire" value="'.$reponseDebours['montant'].'" onblur="calculDroit();">';
+						$montant_input = '<input type="number" step="0.001" style="text-align: center;" name="montant_'.$compteur.'" id="frais_bancaire" value="" onblur="calculDroit();">';
 						
 					}else if ($reponseDebours['id_deb']=='94') {
 
@@ -35949,29 +35951,32 @@
 			//Log
 			if ($this-> getDossier($id_dos)['roe_decl'] != $roe_decl) {
 				
-				if (isset($_GET['id_mod_lic']) && ($_GET['id_mod_lic']!='') && (!isset($_GET['id_mod_trac']) || $_GET['id_mod_trac'] == '' )) {
-					$_GET['id_mod_trac'] = $_GET['id_mod_lic'];
-				}else if (!isset($_GET['id_mod_trac']) || $_GET['id_mod_trac'] == '') {
-					$_GET['id_mod_trac'] = 1;
-				}
-
-
-				if (!isset($_GET['id_cli']) || ($_GET['id_cli']=='')) {
-					$_GET['id_cli'] = 883;
-				}
-
-				if (!isset($_GET['id_mod_trans']) || ($_GET['id_mod_trans']=='')) {
-					$_GET['id_mod_trans'] = 1;
-				}
-				
-				$colonne = $this-> getNomColonneClient('roe_decl', $_GET['id_cli'], $_GET['id_mod_trans'], $_GET['id_mod_trac']);
-				$this-> creerLogDossier($colonne, $roe_decl, $id_dos, $_SESSION['id_util']);
+				$this-> creerLogDossier('ROE Decl', $roe_decl, $id_dos, $_SESSION['id_util']);
 
 			}
 
 			$requete = $connexion-> prepare("UPDATE dossier SET roe_decl = ?
 												WHERE id_dos = ?");
 			$requete-> execute(array($entree['roe_decl'], $entree['id_dos']));
+
+		}
+
+		public function MAJ_roe_inv($id_dos, $roe_inv){
+
+			include('connexion.php');
+			$entree['id_dos'] = $id_dos;
+			$entree['roe_inv'] = $roe_inv;
+
+			//Log
+			if ($this-> getDossier($id_dos)['roe_inv'] != $roe_inv) {
+				
+				$this-> creerLogDossier('ROE INV', $roe_inv, $id_dos, $_SESSION['id_util']);
+
+			}
+
+			$requete = $connexion-> prepare("UPDATE dossier SET roe_inv = ?
+												WHERE id_dos = ?");
+			$requete-> execute(array($entree['roe_inv'], $entree['id_dos']));
 
 		}
 
