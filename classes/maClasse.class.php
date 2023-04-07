@@ -4848,10 +4848,16 @@
 					$unite_2 = $reponse['nbre_poids'];
 
 				}else if ($reponse['id_deb']=='29') {
+					$data_dossier = $this-> getDossier($reponse['id_dos']);
 					
 					$unite = 'par declaration';
 					// $cost_2 = $this-> getMontantTotalTypeDeboursFacture($ref_fact, 1)['montant_usd'];
-					$cost_2 = number_format(($reponse['ht_usd']*100)/$this-> getMontantTotalTypeDeboursFacture($ref_fact, 1)['montant_usd'], 2, ',', '.').'%';
+					if (($reponse['ht_usd']*100)/$this-> getMontantTotalTypeDeboursFacture($ref_fact, 1)['montant_usd']>1) {
+						$cost_2 = number_format(($this-> getDataAffectationDeboursClientModeleLicence($reponse['id_deb'], $data_dossier['id_cli'], $data_dossier['id_mod_lic'], $data_dossier['id_march'], $data_dossier['id_mod_trans'])['montant']), 2, ',', '.').'%';
+					}else{
+						$cost_2 = number_format(($reponse['ht_usd']*100)/$this-> getMontantTotalTypeDeboursFacture($ref_fact, 1)['montant_usd'], 2, ',', '.').'%';
+					}
+					
 					$unite_2 = $reponse['nbre_poids'];
 
 				}else if($reponse['id_deb']=='97'){
@@ -33607,6 +33613,23 @@
 			while($reponse = $requete-> fetch()){
 				echo '<option value="'.$reponse['id_mod_fact'].'">
 								'.$reponse['nom_mod_fact'].'
+							</option>';
+			}$requete-> closeCursor();
+		}
+
+		public function selectionnerFacturationLiquidation(){
+			include('connexion.php');
+
+			// $entree['id_cli'] = $id_cli;
+			$requete = $connexion-> query("SELECT * 
+												FROM type_facture_liquidation
+											");
+
+			$requete-> execute(array($entree['id_cli']));
+
+			while($reponse = $requete-> fetch()){
+				echo '<option value="'.$reponse['id_fact_liq'].'">
+								'.$reponse['nom_fact_liq'].'
 							</option>';
 			}$requete-> closeCursor();
 		}
