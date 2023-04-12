@@ -2990,6 +2990,140 @@
 
 		}
 
+		public function detailRapportEmailAjax($statut){
+			include("connexion.php");
+
+			$compteur=0;
+
+			$debut = $compteur;
+			$rows = array();
+
+			// echo $statut;
+
+			if ($statut=='TRUCK OVERSTAY MORE THAN 2 DAYS AT KASUMBALESA') {
+				
+				$requete = $connexion-> query("SELECT DATE_FORMAT(d.klsa_arriv, '%d/%m/%Y') AS klsa_arriv, 
+														DATE_FORMAT(d.wiski_arriv, '%d/%m/%Y') AS wiski_arriv, 
+														DATE_FORMAT(d.date_preal, '%d/%m/%Y') AS date_preal, 
+														DATE_FORMAT(d.wiski_dep, '%d/%m/%Y') AS wiski_dep, 
+														DATE_FORMAT(d.dispatch_klsa, '%d/%m/%Y') AS dispatch_klsa, 
+														cli.nom_cli AS nom_cli,
+														d.id_dos AS id_dos,
+														d.ref_dos AS ref_dos,
+														d.commodity AS commodity,
+														DATEDIFF(CURRENT_DATE(), d.klsa_arriv) AS duree,
+														d.horse AS horse,
+														d.trailer_1 AS trailer_1,
+														d.trailer_2 AS trailer_2
+													FROM dossier d, client cli
+													WHERE d.id_cli = cli.id_cli
+														AND d.id_mod_lic = 2
+														AND d.id_mod_trans = 1
+														AND d.dispatch_klsa IS NULL
+														AND d.wiski_dep IS NULL
+														AND d.klsa_arriv IS NOT NULL
+														AND DATEDIFF(CURRENT_DATE() , d.klsa_arriv)>2
+														AND d.ref_dos NOT LIKE '%20-%'
+													ORDER BY d.date_creat_dos ASC");
+
+			}else if ($statut=='K\'LSA DATES ERROR') {
+				
+				$requete = $connexion-> query("SELECT DATE_FORMAT(d.klsa_arriv, '%d/%m/%Y') AS klsa_arriv, 
+													DATE_FORMAT(d.wiski_arriv, '%d/%m/%Y') AS wiski_arriv, 
+													DATE_FORMAT(d.date_preal, '%d/%m/%Y') AS date_preal, 
+													DATE_FORMAT(d.wiski_dep, '%d/%m/%Y') AS wiski_dep, 
+													DATE_FORMAT(d.dispatch_klsa, '%d/%m/%Y') AS dispatch_klsa, 
+													cli.nom_cli AS nom_cli,
+													d.id_dos AS id_dos,
+													d.ref_dos AS ref_dos,
+													d.commodity AS commodity,
+													DATEDIFF(CURRENT_DATE(), d.klsa_arriv) AS duree,
+													d.horse AS horse,
+													d.trailer_1 AS trailer_1,
+													d.trailer_2 AS trailer_2
+												FROM dossier d, client cli
+												WHERE d.id_cli = cli.id_cli
+													AND d.id_mod_trans = 1
+													AND ( (d.klsa_arriv IS NULL 
+															AND (d.wiski_arriv IS NOT NULL OR d.dispatch_klsa IS NOT NULL)
+															)
+														OR (d.wiski_arriv IS NULL AND d.dispatch_klsa IS NOT NULL)
+
+														OR (d.klsa_arriv > d.wiski_arriv)
+														OR (d.wiski_arriv > d.wiski_dep)
+														OR (d.wiski_dep > d.dispatch_klsa)
+														OR (d.klsa_arriv > d.wiski_dep)
+														OR (d.klsa_arriv > d.dispatch_klsa)
+														OR (d.wiski_arriv > d.dispatch_klsa)
+														)
+													AND d.ref_dos NOT LIKE '%20-%'
+											ORDER BY d.id_dos DESC");
+				
+			}else if ($statut=='FILES WITHOUT LIQUIDATION BEYOND 2 DAYS') {
+				
+				$requete = $connexion-> query("SELECT DATE_FORMAT(d.date_creat_dos, '%d/%m/%Y') AS date_creat_dos, 
+													DATE_FORMAT(d.date_preal, '%d/%m/%Y') AS date_preal, 
+													d.ref_decl AS ref_decl,
+													DATE_FORMAT(d.date_decl, '%d/%m/%Y') AS date_decl, 
+													d.ref_liq AS ref_liq,
+													DATE_FORMAT(d.date_liq, '%d/%m/%Y') AS date_liq, 
+													cli.nom_cli AS nom_cli,
+													d.id_dos AS id_dos,
+													d.ref_dos AS ref_dos,
+													d.commodity AS commodity,
+													DATEDIFF(CURRENT_DATE(), d.date_decl) AS duree,
+													DATEDIFF(CURRENT_DATE(), d.date_preal) AS duree_preal
+												FROM dossier d, client cli
+												WHERE d.id_cli = cli.id_cli
+													AND d.id_mod_lic = '2'
+													AND (d.ref_decl IS NOT NULL AND TRIM(d.ref_decl)<>'')
+													AND d.date_decl IS NOT NULL
+													AND (d.ref_liq IS NULL OR TRIM(d.ref_liq)='')
+													AND d.date_liq IS NULL
+													AND d.cleared <> '2'
+													AND d.ref_dos NOT LIKE '%20-%'
+													AND d.id_cli <> 874
+													AND DATEDIFF(CURRENT_DATE(), d.date_decl) > 2
+												ORDER BY d.date_creat_dos ASC");
+				
+			}else if ($statut=='FILES WITHOUT QUITTANCE BEYOND 2 DAYS') {
+				
+				$requete = $connexion-> query("SELECT DATE_FORMAT(d.date_preal, '%d/%m/%Y') AS date_preal, 
+													DATE_FORMAT(d.date_decl, '%d/%m/%Y') AS date_decl,
+													DATE_FORMAT(d.date_liq, '%d/%m/%Y') AS date_liq,
+													DATEDIFF(CURRENT_DATE(), d.date_liq) AS duree_liq,
+													cli.nom_cli AS nom_cli,
+													d.id_dos AS id_dos,
+													d.ref_dos AS ref_dos,
+													d.commodity AS commodity,
+													d.ref_decl AS ref_decl,
+													d.ref_liq AS ref_liq,
+													DATEDIFF(CURRENT_DATE(), d.date_preal) AS duree_preal
+												FROM dossier d, client cli
+												WHERE d.id_cli = cli.id_cli
+													AND (d.ref_liq IS NOT NULL AND TRIM(d.ref_liq)<>'')
+													AND d.date_liq IS NOT NULL
+													AND d.date_quit IS NULL
+													AND (d.ref_quit IS NULL OR TRIM(d.ref_quit)='')
+													AND DATEDIFF(CURRENT_DATE(), d.date_liq) > 2
+													AND d.ref_dos NOT LIKE '%20-%'
+													AND d.id_cli <> 874
+												ORDER BY d.date_creat_dos ASC");
+				
+			}
+
+			while ($reponse = $requete-> fetch()) {
+				$compteur++;
+
+				$reponse['compteur'] = $compteur;
+				$rows[] = $reponse;
+
+			}$requete-> closeCursor();
+
+			return $rows;
+
+		}
+
 		public function getAffectationUtilisateurModule($id_util, $id_mod){
 			include('connexion.php');
 			$entree['id_util'] = $id_util;
@@ -16459,6 +16593,21 @@
 			return $reponse['nbre'];
 		}
 
+		public function verifierDoublonCRF($ref_crf){
+			include('connexion.php');
+
+			$entree['ref_crf'] = $ref_crf;
+
+			$requete = $connexion-> prepare('SELECT COUNT(id_dos) AS nbre
+												FROM dossier
+												WHERE ref_crf = ?');
+			$requete-> execute(array($entree['ref_crf']));
+
+			$reponse = $requete-> fetch();
+
+			return $reponse['nbre'];
+		}
+
 		public function getDossiersDoublonFacture($ref_fact){
 			include('connexion.php');
 
@@ -16470,6 +16619,25 @@
 												FROM dossier
 												WHERE ref_fact = ?');
 			$requete-> execute(array($entree['ref_fact']));
+
+			while($reponse = $requete-> fetch()){
+				$liste .= ' | '.$reponse['ref_dos'];
+			}$requete-> closeCursor();
+
+			return $liste;
+		}
+
+		public function getDossiersDoublonCRF($ref_crf){
+			include('connexion.php');
+
+			$entree['ref_crf'] = $ref_crf;
+
+			$liste = '';
+
+			$requete = $connexion-> prepare('SELECT ref_dos
+												FROM dossier
+												WHERE ref_crf = ?');
+			$requete-> execute(array($entree['ref_crf']));
 
 			while($reponse = $requete-> fetch()){
 				$liste .= ' | '.$reponse['ref_dos'];
@@ -17026,6 +17194,18 @@
 
 					?>
 					<td class=" <?php echo $bg;?>" style="border: 1px solid black;" title="<?php echo $this-> getDossiersDoublonHorse($this-> getDataRow($reponse['champ_col'], $id_dos));?>">
+						<input type="<?php echo $reponse['type_col'];?>" <?php echo $reponse['attribut_col'];?> style="text-transform:uppercase; <?php echo $textColor;?>" name="<?php echo $reponse['champ_col'];?>_<?php echo $compteur;?>" value="<?php echo $this-> getDataRow($reponse['champ_col'], $id_dos);?>" <?php echo $this-> getDataUtilisateur($_SESSION['id_util'])['tracking_enab'];?>>
+					</td>
+					<?php
+
+				}//Doublon COD
+				else if ($reponse['champ_col'] == 'ref_crf' && ($this-> verifierDoublonCRF($this-> getDataRow($reponse['champ_col'], $id_dos)) > 1) ) {
+
+					$textColor = 'color: black; background-color: #CC99FF;';
+					
+
+					?>
+					<td class=" <?php echo $bg;?>" style="border: 1px solid black;" title="<?php echo $this-> getDossiersDoublonCRF($this-> getDataRow($reponse['champ_col'], $id_dos));?>">
 						<input type="<?php echo $reponse['type_col'];?>" <?php echo $reponse['attribut_col'];?> style="text-transform:uppercase; <?php echo $textColor;?>" name="<?php echo $reponse['champ_col'];?>_<?php echo $compteur;?>" value="<?php echo $this-> getDataRow($reponse['champ_col'], $id_dos);?>" <?php echo $this-> getDataUtilisateur($_SESSION['id_util'])['tracking_enab'];?>>
 					</td>
 					<?php
@@ -33620,16 +33800,15 @@
 		public function selectionnerFacturationLiquidation(){
 			include('connexion.php');
 
-			// $entree['id_cli'] = $id_cli;
-			$requete = $connexion-> query("SELECT * 
-												FROM type_facture_liquidation
-											");
+			$entree['id_cli'] = $id_cli;
+			$requete = $connexion-> prepare("SELECT with_duty+0 AS with_duty
+												FROM facture_dossier");
 
 			$requete-> execute(array($entree['id_cli']));
 
 			while($reponse = $requete-> fetch()){
-				echo '<option value="'.$reponse['id_fact_liq'].'">
-								'.$reponse['nom_fact_liq'].'
+				echo '<option value="'.$reponse['with_duty'].'">
+								'.$reponse['with_duty'].'
 							</option>';
 			}$requete-> closeCursor();
 		}
