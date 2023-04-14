@@ -101,10 +101,46 @@ $dossiers = $maClasse-> getDossierFactureExportSingle($_GET['ref_fact']);
 
 $ref_fact = $_GET['ref_fact'];//$maClasse-> getNumFactureEnCours($_GET['facture']);
 
-if ($maClasse-> getFactureGlobale($_GET['ref_fact'])['tax_duty_part']=='Exclude') {
-	header("Location: viewImportInvoiceSingle2023ExcluDuty.php?ref_fact=$ref_fact");
-}
+$banque = '<tr>
+			<td width="10%" style="border-top: 1px solid black; border-left: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;INTITULE</td>
+			<td width="35%" style="border-top: 1px solid black; border-right: 1px solid black;  font-size: 7px;">&nbsp;MALABAR RDC SARL</td>
+			<td width="10%"></td>
+			<td width="10%" style="border-top: 1px solid black; border-left: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;INTITULE</td>
+			<td width="35%" style="border-top: 1px solid black; border-right: 1px solid black;  font-size: 7px;">&nbsp;MALABAR CLEARING AGENCY SARL</td>
+		</tr>
+		<tr>
+			<td width="10%" style="border-left: 1px solid black;  font-size: 7px;">&nbsp;N.COMPTE</td>
+			<td width="35%" style="border-right: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;00011-00130-00001020614-41</td>
+			<td width="10%"></td>
+			<td width="10%" style="border-left: 1px solid black;  font-size: 7px;">&nbsp;N.COMPTE</td>
+			<td width="35%" style="border-right: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;05100-05130-01003333601-20</td>
+		</tr>
+		<tr>
+			<td width="10%" style="border-left: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;SWIFT</td>
+			<td width="35%" style="border-right: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;BCDCCDKI</td>
+			<td width="10%"></td>
+			<td width="10%" style="border-left: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;SWIFT</td>
+			<td width="35%" style="border-right: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;RAWBCDKIXXX</td>
+		</tr>
+		<tr>
+			<td width="10%" style="border-bottom: 1px solid black; border-left: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;BANQUE</td>
+			<td width="35%" style="border-bottom: 1px solid black; border-right: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;BCDC		
+			<br>&nbsp;LUBUMBASHI		
+			, R.D. CONGO</td>
+			<td width="10%"></td>
+			<td width="10%" style="border-bottom: 1px solid black; border-left: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;BANQUE</td>
+			<td width="35%" style="border-bottom: 1px solid black; border-right: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;RAWBANK
+			<br>&nbsp;LUBUMBASHI		
+			, R.D. CONGO</td>
+		</tr>';
 
+
+$logo = '<img src="../images/malabar2.png" width="250px">';
+if(isset($_GET['ref_fact'])){
+$facture = $maClasse-> getDataFactureGlobale($_GET['ref_fact']);
+$dossiers = $maClasse-> getDossierFactureExportSingle($_GET['ref_fact']);
+
+$ref_fact = $_GET['ref_fact'];//$maClasse-> getNumFactureEnCours($_GET['facture']);
 $date_fact = $maClasse-> getFactureGlobale($_GET['ref_fact'])['date_fact'];//$maClasse-> getDateFactureEnCours($_GET['facture']);
 $code_client = $maClasse-> getClientFacture($_GET['ref_fact'])['code_cli'];
 $nom_client = $maClasse-> getClientFacture($_GET['ref_fact'])['nom_cli'];
@@ -132,7 +168,8 @@ $operational_cost = $maClasse-> getDetailFactureImportSingle2023($_GET['ref_fact
 
 $service_fee = $maClasse-> getDetailFactureImportSingle2023($_GET['ref_fact'], '4');
 
-$totalAll = $maClasse-> getTotalFactureImportSingle2023($_GET['ref_fact'], $sceau);
+$totalAll1 = $maClasse-> getTotalFactureImportSingleExcluDuty1($_GET['ref_fact'], $sceau);
+$totalAll2 = $maClasse-> getTotalFactureImportSingleExcluDuty2($_GET['ref_fact'], $sceau);
 
 $total = $maClasse-> getTotalForFacturePartielle($_GET['ref_fact']);
 $arsp = $maClasse-> getARSPForFacturePartielle($_GET['ref_fact']);
@@ -439,8 +476,195 @@ $tbl = <<<EOD
 		</tr>
 		$taxe
 		<tr>
-			<td colspan="4"></td>
+			<td rowspan="9" style="text-align: center; font-weight: bold; font-size: 8px;" width="65.5%">$sceau
+			</td>
+			<td></td>
+			<td></td>
 		</tr>
+		$totalAll1
+		<tr>
+			<td></td>
+		</tr>
+		<tr>
+			<td></td>
+		</tr>
+		<tr>
+			<td></td>
+		</tr>
+		<tr>
+			<td></td>
+		</tr>
+		<tr>
+			<td width="100%" style=" font-size: 5.5px; text-align: center;">
+			VEUILLEZ TROUVER CI-DESSOUS LES DETAILS DE NOTRE COMPTE BANCAIRE
+			</td>
+		</tr>
+		<tr>
+			<td width="100%"></td>
+		</tr>
+		$banque
+		<tr>
+			<td width="100%"></td>
+		</tr>
+		<tr>
+			<td width="100%" style="border: 1px solid black; text-align: center; font-size: 7px;">Thank you for you business!</td>
+		</tr>
+	</table>
+	</bodystyle="font-weight: bold;">
+	</html>
+        
+EOD;
+$pdf->writeHTML($tbl, true, false, false, false, '');
+// if ( ($maClasse-> getFactureGlobale($_GET['ref_fact'])['validation']) == '0' ) {
+// 	$not_valid = '<img src="../images/no_valid.jpg" style="width: 90px; ">';
+// }else{
+// 	$not_valid = '';
+// }
+
+// add a page
+$pdf->AddPage('P', 'A4');
+if ( ($maClasse-> getFactureGlobale($_GET['ref_fact'])['validation']) == '0' ) {
+	$pdf->Image('../images/no_valid.jpg', 150, 2, 30, '', '', '', '', false, 300);
+}else{
+	// $pdf->Image('../images/signature_facture/'.$maClasse-> getDataUtilisateur($maClasse-> getFactureGlobale($_GET['ref_fact'])['id_util_validation'])['signature_facture'], 200, 150, 55, '', '', '', '', false, 300);
+	
+}
+
+$tbl2 = <<<EOD
+   <html>
+    <head>
+        <meta http-equiv = " content-type " content = " text/html; charset=utf-8" />
+    </head>
+    <body style="font-weight: bold;" style="">
+	<table>
+		<tr>
+			<td width="45%" style="text-align: center;"><img src="../images/malabar2.png"></td>
+			<td width="20%" style="text-align: right; font-size: 5px;">$not_valid</td>
+			<td width="35%" style="text-align: right; font-size: 5px;">
+			No. 1068, Avenue Ruwe, Quartier Makutano, <br>
+			Lubumbashi, DRC<br>
+			RCCM: 13-B-1122, ID NAT. 6-9-N91867E<br>
+			NIF : A 1309334 L<br>
+			VAT Ref # 145/DGI/DGE/INF/BN/TVA/2020<br>
+			Capital Social : 45.000.000 FC
+			</td>
+		</tr>
+		<tr>
+			<td width="45%" style="text-align: center; border: 0.3px solid black; font-weight: bold; font-size: 12px;">FACTURE</td>
+		</tr>
+		<br>
+		<tr>
+			<td width="45%" rowspan="7" style="text-align: left; border: 0.3px solid black; font-size: 7px;"><span><u>CLIENT</u></span>
+			<br><b><font size="8px">$nom_complet</font> </b>
+			<span style="font-size: 6px;"><br>$adresse_client
+			<br>No.RCCM: $rccm_cli
+			<br>No.NIF.: $nif_cli
+			<br>No.IDN.: $id_nat
+			<br>No.IMPORT/EXPORT: $num_imp_exp
+			<br>No.TVA: $num_tva</span></td>
+			<td width="15%" style="text-align: center;"></td>
+			<td width="15%" style="text-align: left; border: 0.3px solid black; font-size: 7px; font-weight: bold;">&nbsp;FACTURE Nº</td>
+			<td width="25%" style="text-align: center; border: 0.3px solid black; font-weight: bold; font-size: 7px;">$ref_fact</td>
+		</tr>
+		<tr>
+			<td width="15%" style="text-align: center;"></td>
+			<td width="15%" style="text-align: left; border: 0.3px solid black; font-size: 7px;">&nbsp;Date</td>
+			<td width="25%" style="text-align: center; border: 0.3px solid black; font-size: 7px;">$date_fact</td>
+		</tr>
+
+		<tr>
+			<td width="15%" style="text-align: center;"></td>
+			<td width="15%" style="text-align: left; border: 0.3px solid black; font-size: 7px;">&nbsp;Moyen de Transport</td>
+			<td width="25%" style="text-align: center; border: 0.3px solid black; font-size: 7px;">$nom_mod_trans</td>
+		</tr>
+
+		<tr>
+			<td width="15%" style="text-align: center;"></td>
+			<td width="15%" style="text-align: left; border: 0.3px solid black; font-size: 7px;">&nbsp;Truck/Trailer No.</td>
+			<td width="25%" style="text-align: center; border: 0.3px solid black; font-size: 7px;">$truck</td>
+		</tr>
+
+		<tr>
+			<td width="15%" style="text-align: left; "></td>
+			<td width="8%" style="text-align: left; border: 0.3px solid black; font-size: 7px;">&nbsp;Facture/PFI: </td>
+			<td width="13%" style="text-align: center; border: 0.3px solid black; font-size: 6px; font-weight: bold;">$ref_fact_dos</td>
+			<td width="6%" style="text-align: left; border: 0.3px solid black; font-size: 7px;">&nbsp;PO Four.: </td>
+			<td width="13%" style="text-align: center; border: 0.3px solid black; font-size: 6px; font-weight: bold;">$po_ref</td>
+		</tr>
+
+		<tr>
+			<td width="15%" style="text-align: left; "></td>
+			<td width="8%" style="text-align: left; border: 0.3px solid black; font-size: 7px;">&nbsp;Produit: </td>
+			<td width="32%" style="text-align: center; border: 0.3px solid black; font-size: 7px;">$commodity</td>
+		</tr>
+		<tr>
+			<td width="15%" style="text-align: left; "></td>
+			<td width="8%" style="text-align: left; border: 0.3px solid black; font-size: 7px;">&nbsp;BIVAC Insp.: </td>
+			<td width="13%" style="text-align: center; border: 0.3px solid black; font-size: 6px; font-weight: bold;">$ref_crf</td>
+			<td width="6%" style="text-align: left; border: 0.3px solid black; font-size: 7px;">&nbsp;License: </td>
+			<td width="13%" style="text-align: center; border: 0.3px solid black; font-size: 6px; font-weight: bold;">$num_lic</td>
+		</tr>
+		<tr>
+			<td width="60%"></td>
+			<td width="15%" style="text-align: left; border: 0.3px solid black; font-size: 7px;">&nbsp;Tariff Code Client: </td>
+			<td width="25%" style="text-align: center; border: 0.3px solid black; font-size: 7px;">$code_tarif</td>
+		</tr>
+		<tr>
+			<td width="23%" style="text-align: left; border: 0.3px solid black; font-size: 7px;">&nbsp;Poids (Kg): </td>
+			<td width="22%" style="text-align: center; border: 0.3px solid black; font-size: 7px;">$poids</td>
+			<td width="15%" style="text-align: left; "></td>
+			<td width="15%" style="text-align: left; border: 0.3px solid black; font-size: 7px; font-weight: bold;">&nbsp;Notre Nº Ref #: </td>
+			<td width="25%" style="text-align: center; border: 0.3px solid black; font-size: 7px; font-weight: bold;">$ref_dos</td>
+		</tr>
+		<tr>
+			<td width="23%" style="text-align: left; border: 0.3px solid black; font-size: 7px;">&nbsp;FOB/$id_mon_fob: </td>
+			<td width="22%" style="text-align: center; border: 0.3px solid black; font-size: 7px;">$fob_usd</td>
+			<td width="15%" style="text-align: left; "></td>
+			<td width="15%" style="text-align: left; border: 0.3px solid black; font-size: 7px;">&nbsp;Exoneration/Code: </td>
+			<td width="25%" style="text-align: center; border: 0.3px solid black; font-size: 7px;">$num_exo</td>
+		</tr>
+		<tr>
+			<td width="23%" style="text-align: left; border: 0.3px solid black; font-size: 7px;">&nbsp;Fret/$id_mon_fret: </td>
+			<td width="22%" style="text-align: center; border: 0.3px solid black; font-size: 7px;">$fret_usd</td>
+			<td width="15%" style="text-align: left; "></td>
+			<td width="13%" style="text-align: left; border: 0.3px solid black; font-size: 7px;">&nbsp;Rate(CDF/USD) BCC: </td>
+			<td width="8.5%" style="text-align: center; border: 0.3px solid black; font-size: 7px;">$taux</td>
+			<td width="12%" style="text-align: left; border: 0.3px solid black; font-size: 7px;">&nbsp;Rate(CDF/$id_mon_fob) Inv.</td>
+			<td width="6.5%" style="text-align: center; border: 0.3px solid black; font-size: 7px;">$roe_inv</td>
+		</tr>
+		<tr>
+			<td width="23%" style="text-align: left; border: 0.3px solid black; font-size: 7px;">&nbsp;Autres Charges/$id_mon_autre_frais: </td>
+			<td width="22%" style="text-align: center; border: 0.3px solid black; font-size: 7px;">$autre_frais_usd</td>
+			<td width="15%" style="text-align: left; "></td>
+			<td width="15%" style="text-align: left; border: 0.3px solid black; font-size: 7px; font-weight: bold;">&nbsp;Declaration No.: </td>
+			<td width="25%" style="text-align: center; border: 0.3px solid black; font-size: 7px; font-weight: bold;">$ref_decl</td>
+		</tr>
+		<tr>
+			<td width="23%" style="text-align: left; border: 0.3px solid black; font-size: 7px;">&nbsp;Assurance/$id_mon_assurance: </td>
+			<td width="22%" style="text-align: center; border: 0.3px solid black; font-size: 7px;">$assurance_usd</td>
+			<td width="15%" style="text-align: left; "></td>
+			<td width="15%" style="text-align: left; border: 0.3px solid black; font-size: 7px;">&nbsp;Declaration Date: </td>
+			<td width="25%" style="text-align: center; border: 0.3px solid black; font-size: 7px;">$date_decl</td>
+		</tr>
+		<tr>
+			<td width="23%" style="text-align: left; border: 0.3px solid black; font-size: 7px; font-weight: bold;">&nbsp;CIF/$id_mon_fob: </td>
+			<td width="22%" style="text-align: center; border: 0.3px solid black; font-size: 7.5px; font-weight: bold;">$cif_usd</td>
+			<td width="15%" style="text-align: left; "></td>
+			<td width="15%" style="text-align: left; border: 0.3px solid black; font-size: 7px; font-weight: bold;">&nbsp;Liquidation No.: </td>
+			<td width="25%" style="text-align: center; border: 0.3px solid black; font-size: 7px; font-weight: bold;">$ref_liq</td>
+		</tr>
+		<tr>
+			<td width="23%" style="text-align: left; border: 0.3px solid black; font-size: 7px; font-weight: bold;">&nbsp;CIF/CDF: </td>
+			<td width="22%" style="text-align: center; border: 0.3px solid black; font-size: 7.5px; font-weight: bold;">$cif_cdf</td>
+			<td width="15%" style="text-align: left; "></td>
+			<td width="15%" style="text-align: left; border: 0.3px solid black; font-size: 7px;">&nbsp;Liquidation Date: </td>
+			<td width="25%" style="text-align: center; border: 0.3px solid black; font-size: 7px;">$date_liq</td>
+		</tr>
+
+		<tr>
+			<td width="100%"></td>
+		</tr>
+
 		<tr>
 			<td width="100%" style="font-weight: bold; border: 1px solid black; font-size: 7px;">&nbsp;<u>OTHER CHARGES / AUTRES FRAIS </u></td>
 		</tr>
@@ -489,7 +713,7 @@ $tbl = <<<EOD
 			<td></td>
 			<td></td>
 		</tr>
-		$totalAll
+		$totalAll2
 		<tr>
 			<td></td>
 		</tr>
@@ -522,7 +746,7 @@ $tbl = <<<EOD
 	</html>
         
 EOD;
-$pdf->writeHTML($tbl, true, false, false, false, '');
+$pdf->writeHTML($tbl2, true, false, false, false, '');
 
 // Clean any content of the output buffer
 ob_end_clean();
@@ -530,6 +754,7 @@ ob_end_clean();
 $pdf->Output($_GET['ref_fact'].'.pdf', 'I');
 
   
+}
 }
 
 

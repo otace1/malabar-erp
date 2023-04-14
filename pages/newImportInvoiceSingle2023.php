@@ -77,6 +77,18 @@
 
       </div>
 
+      <div class="col-md-2">
+        
+          <div class="form-group">
+            <label for="inputEmail3" class="col-form-label">Tax and Duty Part:</label>
+            <select class="form-control form-control-sm" name="tax_duty_part" id="tax_duty_part" required>
+              <option value="Include">Include</option>
+              <option value="Exclude">Exclude</option>
+            </select>
+          </div>
+
+      </div>
+
       <div class="col-md-12"></div>
 
       <div class="col-md-5">

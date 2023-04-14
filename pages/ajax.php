@@ -724,7 +724,7 @@
   		if(isset($_POST['ref_fact'])){
   			try {
   			$maClasse-> creerFactureDossier($_POST['ref_fact'], $_POST['id_mod_fact'], $_POST['id_cli'], $_SESSION['id_util'], $_POST['id_mod_lic'], 'partielle', NULL);
-  			// $maClasse-> MAJ_roe_decl($_POST['id_dos'], $_POST['roe_decl']);
+  			$maClasse-> MAJ_tax_duty_part_facture_dossier($_POST['ref_fact'], $_POST['tax_duty_part']);
 
   			for ($i=1; $i <= $_POST['compteur'] ; $i++) { 
   				if (isset($_POST['montant_'.$i]) && $_POST['montant_'.$i] > 1) {
@@ -1201,6 +1201,8 @@
 
   		}
 	    echo json_encode($response);exit;
+	}else if ($_POST['operation']=="rapportEmail") {
+		echo json_encode($maClasse-> detailRapportEmailAjax($_POST['statut']));
 	}
 
 ?>
