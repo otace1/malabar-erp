@@ -848,11 +848,13 @@
     // }
     if (Math.round(frais_bancaire*1000)/1000 > 0) {
       
-      if (Math.round(frais_bancaire*1000)/1000 < 25) {
-        $('#frais_bancaire').val(25);
-      }else{
-        $('#frais_bancaire').val(frais_bancaire.toFixed(2));
-      }
+      // if (Math.round(frais_bancaire*1000)/1000 < 25) {
+      //   $('#frais_bancaire').val(25);
+      // }else{
+      //   $('#frais_bancaire').val(frais_bancaire.toFixed(2));
+      // }
+
+      $('#frais_bancaire').val(frais_bancaire.toFixed(2));
       
     }else{
       $('#frais_bancaire').val('');
