@@ -119,9 +119,46 @@
           </li>
            <li class="nav-item has-treeview">
               <a href="#" class="nav-link" class="nav-link">
+                <img src="../images/transaction.png" width="25px">
+                <p>
+                  Tansactions
+                  <i class="right fas fa-angle-left"></i>
+                </p>
+              </a>
+              <ul class="nav nav-treeview">
+                <li class="nav-item">
+                  <a href="approCompte.php" class="nav-link">
+                    &nbsp;&nbsp;&nbsp;<i class="fa fa-arrow-down nav-icon"></i>
+                    <p>
+                    <?php
+                      if ($maClasse-> getUtilisateur($_SESSION['id_util'])['langue']=='ENG') {
+                        echo 'Account Funding';
+                      }else if ($maClasse-> getUtilisateur($_SESSION['id_util'])['langue']=='FR') {
+                        echo 'Appro Compte';
+                      }
+                    ?>
+                    </p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="groups_account.php" class="nav-link">
+                    &nbsp;&nbsp;&nbsp;<i class="fa fa-object-group nav-icon"></i>
+                    <p>Groups Of Accounts</p>
+                  </a>
+                </li>
+              </ul>
+          </li>
+           <li class="nav-item has-treeview">
+              <a href="#" class="nav-link" class="nav-link">
                 <img src="../images/registre.png" width="25px">
                 <p>
-                  Register
+                <?php
+                  if ($maClasse-> getUtilisateur($_SESSION['id_util'])['langue']=='ENG') {
+                    echo 'Register';
+                  }else if ($maClasse-> getUtilisateur($_SESSION['id_util'])['langue']=='FR') {
+                    echo 'Journal';
+                  }
+                ?>
                   <i class="right fas fa-angle-left"></i>
                 </p>
               </a>
@@ -133,7 +170,13 @@
               <a href="#" class="nav-link" class="nav-link">
                 <img src="../images/parametres.png" width="25px">
                 <p>
-                  Settings
+                <?php
+                  if ($maClasse-> getUtilisateur($_SESSION['id_util'])['langue']=='ENG') {
+                    echo 'Settings';
+                  }else if ($maClasse-> getUtilisateur($_SESSION['id_util'])['langue']=='FR') {
+                    echo 'Parametres';
+                  }
+                ?>
                   <i class="right fas fa-angle-left"></i>
                 </p>
               </a>
@@ -141,13 +184,29 @@
                 <li class="nav-item">
                   <a href="account.php" class="nav-link">
                     &nbsp;&nbsp;&nbsp;<i class="fa fa-table nav-icon"></i>
-                    <p>Accounts</p>
+                    <p>
+                <?php
+                  if ($maClasse-> getUtilisateur($_SESSION['id_util'])['langue']=='ENG') {
+                    echo 'Accounts';
+                  }else if ($maClasse-> getUtilisateur($_SESSION['id_util'])['langue']=='FR') {
+                    echo 'Comptes';
+                  }
+                ?>
+                  </p>
                   </a>
                 </li>
                 <li class="nav-item">
                   <a href="groups_account.php" class="nav-link">
                     &nbsp;&nbsp;&nbsp;<i class="fa fa-object-group nav-icon"></i>
-                    <p>Groups Of Accounts</p>
+                    <p>
+                <?php
+                  if ($maClasse-> getUtilisateur($_SESSION['id_util'])['langue']=='ENG') {
+                    echo 'Groups Of Accounts';
+                  }else if ($maClasse-> getUtilisateur($_SESSION['id_util'])['langue']=='FR') {
+                    echo 'Groupe de Comptes';
+                  }
+                ?>
+                    </p>
                   </a>
                 </li>
               </ul>

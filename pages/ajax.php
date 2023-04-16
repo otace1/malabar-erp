@@ -105,6 +105,27 @@
 
   		echo json_encode($reponse);
 
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='maj_horse'){// MAJ Montant Decl
+
+  		$reponse = $maClasse-> getDataDossier($_POST['id_dos']);
+  		$maClasse-> MAJ_horse($_POST['id_dos'], $_POST['horse']);
+
+  		echo json_encode($reponse);
+
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='maj_trailer_1'){// MAJ Montant Decl
+
+  		$reponse = $maClasse-> getDataDossier($_POST['id_dos']);
+  		$maClasse-> MAJ_trailer_1($_POST['id_dos'], $_POST['trailer_1']);
+
+  		echo json_encode($reponse);
+
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='maj_trailer_2'){// MAJ Montant Decl
+
+  		$reponse = $maClasse-> getDataDossier($_POST['id_dos']);
+  		$maClasse-> MAJ_trailer_2($_POST['id_dos'], $_POST['trailer_2']);
+
+  		echo json_encode($reponse);
+
 	}elseif(isset($_POST['operation']) && $_POST['operation']=='maj_poids'){// MAJ Montant Decl
 
   		$reponse = $maClasse-> getDataDossier($_POST['id_dos']);
@@ -1203,6 +1224,16 @@
 	    echo json_encode($response);exit;
 	}else if ($_POST['operation']=="rapportEmail") {
 		echo json_encode($maClasse-> detailRapportEmailAjax($_POST['statut']));
+	}else if ($_POST['operation']=='liste_compte_tresorerie') {
+	  
+		$response['liste_compte_tresorerie'] = $maClasse-> liste_compte_tresorerie();
+		echo json_encode($response);
+
+	}else if ($_POST['operation']=='nom_compte_tresorerie_search') {
+	  
+		$response['liste_compte_tresorerie'] = $maClasse-> nom_compte_tresorerie_search($_POST['nom_compte']);
+		echo json_encode($response);
+
 	}
 
 ?>

@@ -149,7 +149,9 @@
             </tr>
             <tr>
               <th>Truck (Wagon / AWB)</th>
-              <th colspan="3"><input style="text-align: center; width: 30em;" id="truck" disabled class="bg bg-dark"></th>
+              <th><input style="text-align: center; width: 8em;" id="horse" onblur="maj_horse(id_dos.value, this.value);" class=""></th>
+              <th><input style="text-align: center; width: 8em;" id="trailer_1" onblur="maj_trailer_1(id_dos.value, this.value);" class=""></th>
+              <th><input style="text-align: center; width: 8em;" id="trailer_2" onblur="maj_trailer_2(id_dos.value, this.value);" class=""></th>
             </tr>
             <tr>
               <th>Facture/PFI No.:</th>
@@ -269,10 +271,10 @@
           $('#roe_decl').val(data.roe_decl);
           $('#roe_inv').val(data.roe_inv);
           $('#commodity').val(data.commodity);
-          $('#truck').val(data.truck);
-          // $('#horse').val(data.horse);
-          // $('#trailer_1').val(data.trailer_1);
-          // $('#trailer_2').val(data.trailer_2);
+          // $('#truck').val(data.truck);
+          $('#horse').val(data.horse);
+          $('#trailer_1').val(data.trailer_1);
+          $('#trailer_2').val(data.trailer_2);
           $('#ref_fact_dos').val(data.ref_fact);
           $('#cod').val(data.cod);
           $('#num_exo').val(data.num_exo);
@@ -578,6 +580,66 @@
       type: 'post',
       url: 'ajax.php',
       data: {id_dos: id_dos, code_tarif: code_tarif, operation: 'maj_code_tarif'},
+      dataType: 'json',
+      success:function(data){
+        if (data.logout) {
+          alert(data.logout);
+          window.location="../deconnexion.php";
+        }
+      },
+      complete: function () {
+          $('#spinner-div').hide();//Request is complete so hide spinner
+      }
+    });
+
+  }
+
+  function maj_horse(id_dos, horse){
+    $('#spinner-div').show();
+    $.ajax({
+      type: 'post',
+      url: 'ajax.php',
+      data: {id_dos: id_dos, horse: horse, operation: 'maj_horse'},
+      dataType: 'json',
+      success:function(data){
+        if (data.logout) {
+          alert(data.logout);
+          window.location="../deconnexion.php";
+        }
+      },
+      complete: function () {
+          $('#spinner-div').hide();//Request is complete so hide spinner
+      }
+    });
+
+  }
+
+  function maj_trailer_1(id_dos, trailer_1){
+    $('#spinner-div').show();
+    $.ajax({
+      type: 'post',
+      url: 'ajax.php',
+      data: {id_dos: id_dos, trailer_1: trailer_1, operation: 'maj_trailer_1'},
+      dataType: 'json',
+      success:function(data){
+        if (data.logout) {
+          alert(data.logout);
+          window.location="../deconnexion.php";
+        }
+      },
+      complete: function () {
+          $('#spinner-div').hide();//Request is complete so hide spinner
+      }
+    });
+
+  }
+
+  function maj_trailer_2(id_dos, trailer_2){
+    $('#spinner-div').show();
+    $.ajax({
+      type: 'post',
+      url: 'ajax.php',
+      data: {id_dos: id_dos, trailer_2: trailer_2, operation: 'maj_trailer_2'},
       dataType: 'json',
       success:function(data){
         if (data.logout) {
