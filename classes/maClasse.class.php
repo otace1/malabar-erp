@@ -5133,12 +5133,8 @@
 						<td style="text-align: right; border-right: 0.5px solid black; border: 0.5px solid black; font-weight: bold; font-size: 8px;" width="9%">
 						</td>
 						<td style="text-align: center; border-right: 0.5px solid black; border-bottom: 0.5px solid black; font-weight: bold;" width="8%">&nbsp;&nbsp;</td>
-						<td style="text-align: center; border-right: 0.5px solid black; border-bottom: 0.5px solid black; font-weight: bold;" width="11%">'
-							.number_format($sub_total_cdf, 0, ',', '.').
-						'&nbsp;&nbsp;</td>
-						<td style="text-align: center; border-right: 0.5px solid black; border-bottom: 0.5px solid black; font-weight: bold;" width="11.5%">'
-							.number_format($total_tva, 2, ',', '.').
-						'&nbsp;&nbsp;</td>
+						<td style="text-align: center; border-right: 0.5px solid black; border-bottom: 0.5px solid black; font-weight: bold;" width="11%">&nbsp;&nbsp;</td>
+						<td style="text-align: center; border-right: 0.5px solid black; border-bottom: 0.5px solid black; font-weight: bold;" width="11.5%">&nbsp;&nbsp;</td>
 						<td style="text-align: right; border-right: 1px solid black; border-bottom: 0.5px solid black; font-weight: bold; " width="11.5%">'
 							.number_format($sub_total_cdf, 0, ',', '.').
 						'&nbsp;&nbsp;</td>
@@ -34355,6 +34351,32 @@
 
 		}
 
+		public function liste_compte_tresorerie(){
+			include("connexion.php");
+			// $entree['id_pv'] = $id_pv;
+			$compteur=0;
+
+			$tableau = '';
+
+			$requete = $connexion-> query("SELECT *
+											FROM compte
+											WHERE id_class = 3
+											ORDER BY nom_compte");
+			// $requete-> execute(array($entree['id_pv']));
+			while ($reponse = $requete-> fetch()) {
+				$compteur++;
+
+				$tableau .='<tr>
+								<td>'.$compteur.'</td>
+								<td><a href="#" onclick="select_compte(\''.$reponse['id_compte'].'\', \''.$reponse['nom_compte'].'\',)">'.$reponse['nom_compte'].'</a></td>
+							</tr>';
+
+			}$requete-> closeCursor();
+
+			return $tableau;
+
+		}
+
 		public function nom_compte_search($nom_compte){
 			include("connexion.php");
 			$entree['nom_compte'] = '%'.$nom_compte.'%';
@@ -34365,6 +34387,33 @@
 			$requete = $connexion-> prepare("SELECT *
 											FROM compte
 											WHERE nom_compte LIKE ?
+											ORDER BY nom_compte");
+			$requete-> execute(array($entree['nom_compte']));
+			while ($reponse = $requete-> fetch()) {
+				$compteur++;
+
+				$tableau .='<tr>
+								<td>'.$compteur.'</td>
+								<td><a href="#" onclick="select_compte(\''.$reponse['id_compte'].'\', \''.$reponse['nom_compte'].'\',)">'.$reponse['nom_compte'].'</a></td>
+							</tr>';
+
+			}$requete-> closeCursor();
+
+			return $tableau;
+
+		}
+
+		public function nom_compte_tresorerie_search($nom_compte){
+			include("connexion.php");
+			$entree['nom_compte'] = '%'.$nom_compte.'%';
+			$compteur=0;
+
+			$tableau = '';
+
+			$requete = $connexion-> prepare("SELECT *
+											FROM compte
+											WHERE nom_compte LIKE ?
+												AND id_class = 3
 											ORDER BY nom_compte");
 			$requete-> execute(array($entree['nom_compte']));
 			while ($reponse = $requete-> fetch()) {
