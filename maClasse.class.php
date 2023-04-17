@@ -3017,7 +3017,6 @@
 														d.trailer_2 AS trailer_2
 													FROM dossier d, client cli
 													WHERE d.id_cli = cli.id_cli
-														AND d.id_mod_lic = 2
 														AND d.id_mod_trans = 1
 														AND d.dispatch_klsa IS NULL
 														AND d.wiski_dep IS NULL
@@ -3075,7 +3074,6 @@
 													DATEDIFF(CURRENT_DATE(), d.date_preal) AS duree_preal
 												FROM dossier d, client cli
 												WHERE d.id_cli = cli.id_cli
-													AND d.id_mod_lic = '2'
 													AND (d.ref_decl IS NOT NULL AND TRIM(d.ref_decl)<>'')
 													AND d.date_decl IS NOT NULL
 													AND (d.ref_liq IS NULL OR TRIM(d.ref_liq)='')
@@ -3091,6 +3089,7 @@
 				$requete = $connexion-> query("SELECT DATE_FORMAT(d.date_preal, '%d/%m/%Y') AS date_preal, 
 													DATE_FORMAT(d.date_decl, '%d/%m/%Y') AS date_decl,
 													DATE_FORMAT(d.date_liq, '%d/%m/%Y') AS date_liq,
+													DATE_FORMAT(d.date_quit, '%d/%m/%Y') AS date_quit,
 													DATEDIFF(CURRENT_DATE(), d.date_liq) AS duree_liq,
 													cli.nom_cli AS nom_cli,
 													d.id_dos AS id_dos,
@@ -3098,6 +3097,7 @@
 													d.commodity AS commodity,
 													d.ref_decl AS ref_decl,
 													d.ref_liq AS ref_liq,
+													d.ref_quit AS ref_quit,
 													DATEDIFF(CURRENT_DATE(), d.date_preal) AS duree_preal
 												FROM dossier d, client cli
 												WHERE d.id_cli = cli.id_cli
@@ -3110,12 +3110,85 @@
 													AND d.id_cli <> 874
 												ORDER BY d.date_creat_dos ASC");
 				
+			}else if ($statut=='TRUCK OVERSTAY MORE THAN 2 DAYS AT WISKI') {
+				
+				$requete = $connexion-> query("SELECT DATE_FORMAT(d.klsa_arriv, '%d/%m/%Y') AS klsa_arriv, 
+													DATE_FORMAT(d.wiski_arriv, '%d/%m/%Y') AS wiski_arriv, 
+													DATE_FORMAT(d.date_preal, '%d/%m/%Y') AS date_preal, 
+													DATE_FORMAT(d.wiski_dep, '%d/%m/%Y') AS wiski_dep, 
+													DATE_FORMAT(d.dispatch_klsa, '%d/%m/%Y') AS dispatch_klsa, 
+													cli.nom_cli AS nom_cli,
+													d.id_dos AS id_dos,
+													d.ref_dos AS ref_dos,
+													d.commodity AS commodity,
+													DATEDIFF(CURRENT_DATE(), d.klsa_arriv) AS duree,
+													d.horse AS horse,
+													d.trailer_1 AS trailer_1,
+													d.trailer_2 AS trailer_2
+												FROM dossier d, client cli
+												WHERE d.id_cli = cli.id_cli
+													AND d.id_mod_trans = 1
+													AND d.dispatch_klsa IS NULL
+													AND d.wiski_dep IS NULL
+													AND d.klsa_arriv IS NOT NULL
+													AND DATEDIFF(CURRENT_DATE() , d.wiski_arriv)>2
+													AND d.ref_dos NOT LIKE '%20-%'
+												ORDER BY d.date_creat_dos ASC");
+				
+			}else if ($statut=='FILES UNDER PREPARATION OVER 15 DAYS') {
+				
+				$requete = $connexion-> query("SELECT DATE_FORMAT(d.klsa_arriv, '%d/%m/%Y') AS klsa_arriv, 
+													DATE_FORMAT(d.wiski_arriv, '%d/%m/%Y') AS wiski_arriv, 
+													DATE_FORMAT(d.date_preal, '%d/%m/%Y') AS date_preal, 
+													DATE_FORMAT(d.wiski_dep, '%d/%m/%Y') AS wiski_dep, 
+													DATE_FORMAT(d.dispatch_klsa, '%d/%m/%Y') AS dispatch_klsa, 
+													cli.nom_cli AS nom_cli,
+													d.id_dos AS id_dos,
+													d.ref_dos AS ref_dos,
+													d.commodity AS commodity,
+													d.horse AS horse,
+													d.trailer_1 AS trailer_1,
+													d.trailer_2 AS trailer_2,
+													DATEDIFF(CURRENT_DATE(), d.klsa_arriv) AS duree
+												FROM dossier d, client cli
+												WHERE d.id_cli = cli.id_cli
+													AND d.id_mod_trans = 1
+													AND d.klsa_arriv IS NOT NULL
+													AND DATEDIFF(CURRENT_DATE() , d.klsa_arriv)>14
+													AND d.date_crf IS NOT NULL
+													AND d.date_ad IS NOT NULL
+													AND d.date_assurance IS NOT NULL
+													AND d.date_decl IS NULL 
+													AND d.ref_decl IS NULL
+													AND d.ref_dos NOT LIKE '%20-%'
+													AND d.cleared <> '2'
+												ORDER BY d.date_creat_dos ASC");
+				
+			}else if ($statut=='KASUMBALESA TRUCK ARRIVAL') {
+				
+				$requete = $connexion-> query("SELECT DATE_FORMAT(d.date_preal, '%d/%m/%Y') AS date_preal,
+													DATE_FORMAT(d.klsa_arriv, '%d/%m/%Y') AS klsa_arriv, 
+													cli.nom_cli AS nom_cli,
+													d.id_dos AS id_dos,
+													d.ref_dos AS ref_dos,
+													d.commodity AS commodity,
+													d.horse AS horse,
+													d.trailer_1 AS trailer_1,
+													d.trailer_2 AS trailer_2
+												FROM dossier d, client cli
+												WHERE d.id_cli = cli.id_cli
+													AND d.id_mod_trans = '1'
+													AND DATEDIFF(CURRENT_DATE() , d.klsa_arriv)<3
+													AND d.ref_dos NOT LIKE '%20-%'
+												ORDER BY d.date_creat_dos ASC");
+				
 			}
 
 			while ($reponse = $requete-> fetch()) {
 				$compteur++;
 
 				$reponse['compteur'] = $compteur;
+				$reponse['statut'] = $statut;
 				$rows[] = $reponse;
 
 			}$requete-> closeCursor();
@@ -11155,7 +11228,7 @@
 					}else if ($reponseDebours['id_deb']=='29') {
 
 						$unite_input = '<input type="number" step="0.001" style="text-align: center; width: 5em;" class="" name="" id="unite_frais_bancaire" value="'.$reponseDebours['montant'].'" onblur="calculDroit();">';
-						$montant_input = '<input type="number" step="0.001" style="text-align: center;" name="montant_'.$compteur.'" id="frais_bancaire" value="" onblur="calculDroit();">';
+						$montant_input = '<input type="number" step="0.001" style="text-align: center;" name="montant_'.$compteur.'" id="frais_bancaire" value="">';
 						
 					}else if ($reponseDebours['id_deb']=='94') {
 
@@ -34351,6 +34424,32 @@
 
 		}
 
+		public function liste_compte_tresorerie(){
+			include("connexion.php");
+			// $entree['id_pv'] = $id_pv;
+			$compteur=0;
+
+			$tableau = '';
+
+			$requete = $connexion-> query("SELECT *
+											FROM compte
+											WHERE id_class = 3
+											ORDER BY nom_compte");
+			// $requete-> execute(array($entree['id_pv']));
+			while ($reponse = $requete-> fetch()) {
+				$compteur++;
+
+				$tableau .='<tr>
+								<td>'.$compteur.'</td>
+								<td><a href="#" onclick="select_compte(\''.$reponse['id_compte'].'\', \''.$reponse['nom_compte'].'\',)">'.$reponse['nom_compte'].'</a></td>
+							</tr>';
+
+			}$requete-> closeCursor();
+
+			return $tableau;
+
+		}
+
 		public function nom_compte_search($nom_compte){
 			include("connexion.php");
 			$entree['nom_compte'] = '%'.$nom_compte.'%';
@@ -34361,6 +34460,33 @@
 			$requete = $connexion-> prepare("SELECT *
 											FROM compte
 											WHERE nom_compte LIKE ?
+											ORDER BY nom_compte");
+			$requete-> execute(array($entree['nom_compte']));
+			while ($reponse = $requete-> fetch()) {
+				$compteur++;
+
+				$tableau .='<tr>
+								<td>'.$compteur.'</td>
+								<td><a href="#" onclick="select_compte(\''.$reponse['id_compte'].'\', \''.$reponse['nom_compte'].'\',)">'.$reponse['nom_compte'].'</a></td>
+							</tr>';
+
+			}$requete-> closeCursor();
+
+			return $tableau;
+
+		}
+
+		public function nom_compte_tresorerie_search($nom_compte){
+			include("connexion.php");
+			$entree['nom_compte'] = '%'.$nom_compte.'%';
+			$compteur=0;
+
+			$tableau = '';
+
+			$requete = $connexion-> prepare("SELECT *
+											FROM compte
+											WHERE nom_compte LIKE ?
+												AND id_class = 3
 											ORDER BY nom_compte");
 			$requete-> execute(array($entree['nom_compte']));
 			while ($reponse = $requete-> fetch()) {
