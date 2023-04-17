@@ -22,7 +22,7 @@ try {
     $mail->Host       = 'mail11.lwspanel.com';                     //Set the SMTP server to send through
     //$mail->Host       = 'outlook.office365.com';                     //Set the SMTP server to send through
     $mail->SMTPAuth   = true;                                   //Enable SMTP authentication
-    $mail->Username   = 'malabar-erp@belej-consulting.com';                     //SMTP username
+    $mail->Username   = 'malabar.erp@belej-consulting.com';                     //SMTP username
     $mail->Password   = 'M@l@b@r-3RP';                               //SMTP password
     $mail->SMTPSecure = 'tls';            //Enable implicit TLS encryption
     $mail->Port       = 587;                                    //TCP port to connect to; use 587 if you have set `SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS`
