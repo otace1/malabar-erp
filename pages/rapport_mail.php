@@ -31,31 +31,31 @@ try {
     $mail->setFrom('malabar-erp@belej-consulting.com', 'MALABAR-ERP');
 
     $mail->addAddress('vijeesh@malabar-group.com');
-    $mail->addAddress('rajeev@malabar-group.com');
-    $mail->addAddress('jeremy@belej-consulting.com');
-    $mail->addAddress('malabartracking@malabar-group.com');
-    $mail->addAddress('malabartracking1@malabar-group.com');
-    $mail->addAddress('export-tracking@malabar-group.com');
-    $mail->addAddress('import-tracking@malabar-group.com');
-    $mail->addAddress('export-tracking-klesa@malabar-group.com');
-    $mail->addAddress('ops-kasumbalesa@malabar-group.com');
-    $mail->addAddress('john@malabar-group.com');
-    $mail->addAddress('deo@malabar-group.com');
-    $mail->addAddress('alain@malabar-group.com');
-    $mail->addAddress('gaylord@malabar-group.com');
-    $mail->addAddress('abdulnoor@malabar-group.com');
-    $mail->addAddress('forain@malabar-group.com');
-    $mail->addAddress('collinskapila9@gmail.com');
-    $mail->addAddress('eric@malabar-group.com');
-    $mail->addAddress('mushitutresor@gmail.com');
+    $mail->addBCC('rajeev@malabar-group.com');
+    $mail->addBCC('jeremy@belej-consulting.com');
+    $mail->addBCC('malabartracking@malabar-group.com');
+    $mail->addBCC('malabartracking1@malabar-group.com');
+    $mail->addBCC('export-tracking@malabar-group.com');
+    $mail->addBCC('import-tracking@malabar-group.com');
+    $mail->addBCC('export-tracking-klesa@malabar-group.com');
+    $mail->addBCC('ops-kasumbalesa@malabar-group.com');
+    $mail->addBCC('john@malabar-group.com');
+    $mail->addBCC('deo@malabar-group.com');
+    $mail->addBCC('alain@malabar-group.com');
+    $mail->addBCC('gaylord@malabar-group.com');
+    $mail->addBCC('abdulnoor@malabar-group.com');
+    $mail->addBCC('forain@malabar-group.com');
+    $mail->addBCC('collinskapila9@gmail.com');
+    $mail->addBCC('eric@malabar-group.com');
+    $mail->addBCC('mushitutresor@gmail.com');
 
-    $mail->addAddress('alain@malabar-group.com');
-    $mail->addAddress('gaylord@malabar-group.com');
-    $mail->addAddress('abdulnoor@malabar-group.com');
-    $mail->addAddress('forain@malabar-group.com');
-    $mail->addAddress('collinskapila9@gmail.com');
-    $mail->addAddress('eric@malabar-group.com');
-    $mail->addAddress('mushitutresor@gmail.com');
+    $mail->addBCC('alain@malabar-group.com');
+    $mail->addBCC('gaylord@malabar-group.com');
+    $mail->addBCC('abdulnoor@malabar-group.com');
+    $mail->addBCC('forain@malabar-group.com');
+    $mail->addBCC('collinskapila9@gmail.com');
+    $mail->addBCC('eric@malabar-group.com');
+    $mail->addBCC('mushitutresor@gmail.com');
     //$mail->addBCC('bcc@example.com');
 
     //Attachments
