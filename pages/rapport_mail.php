@@ -28,7 +28,7 @@ try {
     $mail->Port       = 587;                                    //TCP port to connect to; use 587 if you have set `SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS`
 
     //Recipients
-    $mail->setFrom('malabar-erp@belej-consulting.com', 'MALABAR-ERP');
+    $mail->setFrom('malabar.erp@belej-consulting.com', 'MALABAR-ERP');
 
     $mail->addAddress('vijeesh@malabar-group.com');
     $mail->addBCC('rajeev@malabar-group.com');
