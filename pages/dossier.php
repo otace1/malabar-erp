@@ -149,6 +149,10 @@ for ($i=1; $i <= 15 ; $i++) {
         $maClasse-> MAJ_mca_b_ref($_POST['id_dos_'.$i], $_POST['mca_b_ref_'.$i]);
       }
 
+      if (isset($_POST['container_'.$i]) && ($_POST['container_'.$i] != '')) {
+        $maClasse-> MAJ_container($_POST['id_dos_'.$i], $_POST['container_'.$i]);
+      }
+
       if (isset($_POST['ref_quit_'.$i]) && ($_POST['ref_quit_'.$i] != '')) {
         $maClasse-> MAJ_ref_quit($_POST['id_dos_'.$i], $_POST['ref_quit_'.$i]);
         if ($_GET['id_mod_trac'] == '2') {
