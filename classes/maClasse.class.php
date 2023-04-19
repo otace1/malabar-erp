@@ -9941,28 +9941,28 @@
 
 				}else if (isset($_GET['id_mod_lic_fact']) &&  $_GET['id_mod_lic_fact']=='2') {
 
+					$code = $this-> getLastFactureDossier($id_cli, $_GET['id_mod_lic_fact'], $_GET['id_mod_trans'], $_GET['id_march']);
 					
-					$i = 1;
+					// $i = 1;
 
-					if (!empty($this-> getCompteurFactureClientModeleLic($id_cli, $_GET['id_mod_lic_fact'], date('Y'), $_GET['id_march'])) && ($this-> getCompteurFactureClientModeleLic($id_cli, $_GET['id_mod_lic_fact'], date('Y'), $_GET['id_march'])!='')) {
-						$i = $this-> getCompteurFactureClientModeleLic($id_cli, $_GET['id_mod_lic_fact'], date('Y'), $_GET['id_march'])['compteur_fact'];
-					}
+					// if (!empty($this-> getCompteurFactureClientModeleLic($id_cli, $_GET['id_mod_lic_fact'], date('Y'), $_GET['id_march'])) && ($this-> getCompteurFactureClientModeleLic($id_cli, $_GET['id_mod_lic_fact'], date('Y'), $_GET['id_march'])!='')) {
+					// 	$i = $this-> getCompteurFactureClientModeleLic($id_cli, $_GET['id_mod_lic_fact'], date('Y'), $_GET['id_march'])['compteur_fact'];
+					// }
 
-					$a = $this-> getTailleCompteur($i);
-					// 2022-MTS-EXP-HC-037
+					// $a = $this-> getTailleCompteur($i);
 
-					$code_march = $this-> getDataMarchandise($_GET['id_march'])['code_march_2'];
+					// $code_march = $this-> getDataMarchandise($_GET['id_march'])['code_march_2'];
 					
 
-					$code = date('Y').'-'.$this-> codePourClient($id_cli).$code_march.'-'.$a;
+					// $code = date('Y').'-'.$this-> codePourClient($id_cli).$code_march.'-'.$a;
 
-					while($this-> verifierExistanceRefFactureDossier($code) == true){
-						$i++;
+					// while($this-> verifierExistanceRefFactureDossier($code) == true){
+					// 	$i++;
 
-						$a = $this-> getTailleCompteur($i);
+					// 	$a = $this-> getTailleCompteur($i);
 
-						$code = date('Y').'-'.$this-> codePourClient($id_cli).$code_march.'-'.$a;
-					}
+					// 	$code = date('Y').'-'.$this-> codePourClient($id_cli).$code_march.'-'.$a;
+					// }
 
 				}else{
 
@@ -30362,6 +30362,32 @@
 			$reponse = $requete-> fetch();
 			if($reponse){
 				return $reponse;
+			}
+		}
+
+		public function getLastFactureDossier($id_cli, $id_mod_lic, $id_mod_trans, $id_march=NULL){
+			include('connexion.php');
+			$entree['id_cli'] = $id_cli;
+			$entree['id_mod_lic'] = $id_mod_lic;
+			$entree['id_march'] = $id_march;
+			$entree['id_mod_trans'] = $id_mod_trans;
+
+			$requete = $connexion-> prepare("SELECT facture_dossier.ref_fact AS ref_fact
+												FROM facture_dossier, dossier, detail_facture_dossier
+												WHERE facture_dossier.id_cli = ?
+													AND facture_dossier.id_mod_lic = ?
+													AND facture_dossier.ref_fact = detail_facture_dossier.ref_fact
+													AND detail_facture_dossier.id_dos = dossier.id_dos
+													AND dossier.id_mod_trans = ?
+													AND dossier.id_march = ?
+												GROUP BY facture_dossier.ref_fact
+												ORDER BY detail_facture_dossier.ref_fact DESC
+												LIMIT 0, 1");
+			$requete-> execute(array($entree['id_cli'], $entree['id_mod_lic'], $entree['id_mod_trans'], $entree['id_march']));
+			$reponse = $requete-> fetch();
+			if($reponse){
+				$reponse['ref_fact']++;
+				return $reponse['ref_fact'];
 			}
 		}
 
