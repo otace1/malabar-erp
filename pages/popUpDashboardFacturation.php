@@ -64,6 +64,7 @@
                       ?>
                       <th style="">#</th>
                       <th style="">MCA File Ref.</th>
+                      <th style="">PO.Ref.</th>
                       <th style="">Inv.Ref.</th>
                       <th style="">Date</th>
                       <th style="">Client</th>
@@ -77,6 +78,7 @@
                       <th style="">#</th>
                       <th style="">MCA File Ref.</th>
                       <th style="">Lot Num. / Inv.No.</th>
+                      <th style="">PO.No.</th>
                       <th style="">Client</th>
                       <th style="">Commodity</th>
                       <th style="">Truck / Wagon / AWB</th>
@@ -195,6 +197,7 @@
         "columns":[
           {"data":"compteur"},
           {"data":"ref_dos"},
+          {"data":"po_ref"},
           {"data":"ref_fact"},
           {"data":"date_fact"},
           {"data":"nom_cli"},
@@ -209,6 +212,7 @@
         "columns":[
           {"data":"compteur"},
           {"data":"ref_dos"},
+          {"data":"po_ref"},
           {"data":"num_lot"},
           {"data":"nom_cli"},
           {"data":"commodity"},
