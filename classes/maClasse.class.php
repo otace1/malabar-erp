@@ -31820,6 +31820,7 @@
 				}
 				$requete = $connexion-> query("SELECT dos.ref_dos AS ref_dos, 
 													fd.ref_fact AS ref_fact, 
+													dos.po_ref AS po_ref,
 													DATE_FORMAT(fd.date_fact, '%d/%m/%Y') AS date_fact,
 													cl.nom_cli AS nom_cli,
 													IF(fd.validation='0',
@@ -31870,7 +31871,8 @@
 				}
 
 				$requete = $connexion-> query("SELECT dos.ref_dos AS ref_dos,
-													cl.nom_cli AS nom_cli,
+													cl.nom_cli AS nom_cli, 
+													dos.po_ref AS po_ref,
 													dos.horse AS horse,
 													dos.trailer_1 AS trailer_1,
 													dos.trailer_2 AS trailer_2,
