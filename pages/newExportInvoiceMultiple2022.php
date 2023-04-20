@@ -95,6 +95,7 @@
               <tr>
                   <th>#</th>
                   <th>File Ref.</th>
+                  <th>Lot Num.</th>
                   <th>Declaration</th>
                   <th>Liquidation</th>
                   <th style="text-align: center;">Truck(Wagon)</th>
