@@ -239,6 +239,7 @@
 	  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 17, $_POST['com_ext_'.$i], $_POST['com_ext_tva_'.$i], '1');
 	  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 14, $_POST['nac_'.$i], $_POST['nac_tva_'.$i], '1');
 	  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 22, $_POST['klsa_border_'.$i], $_POST['klsa_border_tva_'.$i], '1');
+	  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 23, $_POST['occ_ops_'.$i], $_POST['occ_ops_tva_'.$i], '1');
 	  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 57, $_POST['sncc_lshi_'.$i], $_POST['sncc_lshi_tva_'.$i], '1');
 	  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 56, $_POST['sakania_border_'.$i], $_POST['sakania_border_tva_'.$i], '1');
 	  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 53, $_POST['ceec_fees_'.$i], $_POST['ceec_fees_tva_'.$i], '1');
@@ -503,6 +504,7 @@
 	  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 17, $_POST['com_ext_'.$i], $_POST['com_ext_tva_'.$i], '1');
 	  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 14, $_POST['nac_'.$i], $_POST['nac_tva_'.$i], '1');
 	  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 22, $_POST['klsa_border_'.$i], $_POST['klsa_border_tva_'.$i], '1');
+	  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 23, $_POST['occ_ops_'.$i], $_POST['occ_ops_tva_'.$i], '1');
 	  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 57, $_POST['sncc_lshi_'.$i], $_POST['sncc_lshi_tva_'.$i], '1');
 	  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 56, $_POST['sakania_border_'.$i], $_POST['sakania_border_tva_'.$i], '1');
 	  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 53, $_POST['ceec_fees_'.$i], $_POST['ceec_fees_tva_'.$i], '1');
@@ -1147,22 +1149,6 @@
 		$response['tableau_pv_contentieux'] = $maClasse-> getPVContentieux();
 		echo json_encode($response);
 
-	}else if ($_POST['operation']=='liste_compte_journal') {
-	  
-		$response['liste_compte_journal'] = $maClasse-> liste_compte_journal();
-		echo json_encode($response);
-
-	}else if ($_POST['operation']=='nom_compte_search') {
-	  
-		$response['liste_compte_journal'] = $maClasse-> nom_compte_search($_POST['nom_compte']);
-		echo json_encode($response);
-
-	}else if ($_POST['operation']=='loadPageRegister') {
-	  
-		$response['taux'] = $maClasse-> getLastTaux()['montant'];
-		$response['id_taux'] = $maClasse-> getLastTaux()['id_taux'];
-		echo json_encode($response);
-
 	}else if ($_POST['operation']=='groups_account') {
 	  
 		$response['groups_account'] = $maClasse-> groups_account();
@@ -1226,12 +1212,84 @@
 		echo json_encode($maClasse-> detailRapportEmailAjax($_POST['statut']));
 	}else if ($_POST['operation']=='liste_compte_tresorerie') {
 	  
-		$response['liste_compte_tresorerie'] = $maClasse-> liste_compte_tresorerie();
+		$response['liste_compte_tresorerie'] = $maClasse-> liste_compte_tresorerie($_POST['compteur_compte']);
 		echo json_encode($response);
 
 	}else if ($_POST['operation']=='nom_compte_tresorerie_search') {
 	  
-		$response['liste_compte_tresorerie'] = $maClasse-> nom_compte_tresorerie_search($_POST['nom_compte']);
+		$response['liste_compte_tresorerie'] = $maClasse-> nom_compte_tresorerie_search($_POST['nom_compte'], $_POST['compteur_compte']);
+		echo json_encode($response);
+
+	}else if ($_POST['operation']=='creerCompte') {
+	  
+		$maClasse-> creerCompte($_POST['nom_compte'], $_POST['code_compte'], $_POST['id_class']);
+		$response['msg'] = 'Compte Cree';
+		echo json_encode($response);
+
+	}else if ($_POST['operation']=='creerEcritureAppro') {
+	  
+		$maClasse-> creerEcritureAppro($_POST['date_e'], $_POST['libelle_e'], $_POST['id_jour'], $_POST['id_taux'], $_SESSION['id_util'], $_POST['id_mon']);
+
+		$id_e = $maClasse-> getLastEcritureUtilisateur($_SESSION['id_util'])['id_e'];
+
+		for ($i=0; $i <=$_POST['nbre'] ; $i++) { 
+			
+			if (isset($_POST['id_compte_'.$i])&&($_POST['montant_'.$i]>0)) {
+				if ($i==0) {
+					$maClasse-> creerDetailEcriture($id_e, $_POST['id_compte_'.$i], NULL, $_POST['montant_'.$i]);
+				}else{
+					$maClasse-> creerDetailEcriture($id_e, $_POST['id_compte_'.$i], $_POST['montant_'.$i], NULL);
+				}
+			}
+
+		}
+
+		$response['message'] = 'Ecriture Creee';
+
+		echo json_encode($response);
+
+	}else if ($_POST['operation']=='liste_compte_journal') {
+	  
+		$response['liste_compte_journal'] = $maClasse-> liste_compte_journal($_POST['compteur_compte']);
+		echo json_encode($response);
+
+	}else if ($_POST['operation']=='nom_compte_search') {
+	  
+		$response['liste_compte_journal'] = $maClasse-> nom_compte_search($_POST['nom_compte'], $_POST['compteur_compte']);
+		echo json_encode($response);
+
+	}else if ($_POST['operation']=='loadPageRegister') {
+	  
+		$response['taux'] = $maClasse-> getLastTaux()['montant'];
+		$response['id_taux'] = $maClasse-> getLastTaux()['id_taux'];
+		echo json_encode($response);
+
+	}else if ($_POST['operation']=='creerEcriture') {
+	  
+		$maClasse-> creerEcriture($_POST['date_e'], $_POST['libelle_e'], $_POST['id_jour'], $_POST['id_taux'], $_SESSION['id_util'], $_POST['id_mon']);
+
+		$id_e = $maClasse-> getLastEcritureUtilisateur($_SESSION['id_util'])['id_e'];
+
+		for ($i=0; $i <=$_POST['nbre'] ; $i++) { 
+			
+			if (isset($_POST['id_compte_'.$i])&&($_POST['montant_debit_'.$i]>0)) {
+				$maClasse-> creerDetailEcriture($id_e, $_POST['id_compte_'.$i], $_POST['montant_debit_'.$i], NULL);
+				
+			}
+			if (isset($_POST['id_compte_'.$i])&&($_POST['montant_credit_'.$i]>0)) {
+				$maClasse-> creerDetailEcriture($id_e, $_POST['id_compte_'.$i], NULL, $_POST['montant_credit_'.$i]);
+				
+			}
+
+		}
+
+		$response['message'] = 'Ecriture Creee';
+
+		echo json_encode($response);
+
+	}else if ($_POST['operation']=='ecriture_journal') {
+	  
+		$response['ecriture_journal'] = $maClasse-> ecriture_journal();
 		echo json_encode($response);
 
 	}
