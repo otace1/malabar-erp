@@ -1303,6 +1303,51 @@
 			$requete-> execute(array($entree['id_mod_fact'], $entree['id_cli'], $entree['id_march'], $entree['id_mod_trans']));
 		}
 		
+		public function creerDetailEcriture($id_e, $id_compte, $debit, $credit){
+			include('connexion.php');
+
+			$entree['id_e'] = $id_e;
+			$entree['id_compte'] = $id_compte;
+			$entree['debit'] = $debit;
+			$entree['credit'] = $credit;
+
+			// echo '<br> debit = '.$debit;
+
+			$requete = $connexion-> prepare('INSERT INTO detail_ecriture(id_e, id_compte, debit, credit)
+												VALUES(?, ?, ?, ?)');
+			$requete-> execute(array($entree['id_e'], $entree['id_compte'], $entree['debit'], $entree['credit']));
+		}
+		
+		public function creerEcritureAppro($date_e, $libelle_e, $id_jour, $id_taux, $id_util, $id_mon){
+			include('connexion.php');
+
+			$entree['date_e'] = $date_e;
+			$entree['libelle_e'] = $libelle_e;
+			$entree['id_jour'] = $id_jour;
+			$entree['id_taux'] = $id_taux;
+			$entree['id_util'] = $id_util;
+			$entree['id_mon'] = $id_mon;
+
+			$requete = $connexion-> prepare('INSERT INTO ecriture(date_e, libelle_e, id_jour, id_taux, id_util, id_mon)
+												VALUES(?, ?, ?, ?, ?, ?)');
+			$requete-> execute(array($entree['date_e'], $entree['libelle_e'], $entree['id_jour'], $entree['id_taux'], $entree['id_util'], $entree['id_mon']));
+		}
+		
+		public function creerEcriture($date_e, $libelle_e, $id_jour, $id_taux, $id_util, $id_mon){
+			include('connexion.php');
+
+			$entree['date_e'] = $date_e;
+			$entree['libelle_e'] = $libelle_e;
+			$entree['id_jour'] = $id_jour;
+			$entree['id_taux'] = $id_taux;
+			$entree['id_util'] = $id_util;
+			$entree['id_mon'] = $id_mon;
+
+			$requete = $connexion-> prepare('INSERT INTO ecriture(date_e, libelle_e, id_jour, id_taux, id_util, id_mon)
+												VALUES(?, ?, ?, ?, ?, ?)');
+			$requete-> execute(array($entree['date_e'], $entree['libelle_e'], $entree['id_jour'], $entree['id_taux'], $entree['id_util'], $entree['id_mon']));
+		}
+		
 		public function supprimerAffectationModeleFacture($id_mod_fact, $id_cli, $id_march, $id_mod_trans){
 			include('connexion.php');
 
@@ -12203,6 +12248,9 @@
 					<?php echo $reponse['ref_dos'];?>
 				</td>
 				<td style="text-align: center;">
+					<?php echo $reponse['num_lot'];?>
+				</td>
+				<td style="text-align: center;">
 					<?php echo $reponse['declaration'];?>
 				</td>
 				<td style="text-align: center;">
@@ -12302,6 +12350,10 @@
 				<td style="text-align: center;">
 					<input type="number" step="0.001" min="0" style="text-align: center; width: 8em;" id="klsa_border_<?php echo $compteur;?>" name="klsa_border_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport(22, $id_mod_lic, $id_cli, $id_march, $id_mod_trans)['montant'];?>" class="bg bg-dark">
 					<input type="hidden" style="text-align: center; width: 8em;" name="klsa_border_tva_<?php echo $compteur;?>" id="tva_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport(22, $id_mod_lic, $id_cli, $id_march, $id_mod_trans)['tva'];?>" class="bg bg-dark">
+				</td>
+				<td style="text-align: center;">
+					<input type="number" step="0.001" min="0" style="text-align: center; width: 8em;" id="klsa_border_<?php echo $compteur;?>" name="occ_ops_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport(23, $id_mod_lic, $id_cli, $id_march, $id_mod_trans)['montant'];?>" class="bg bg-dark">
+					<input type="hidden" style="text-align: center; width: 8em;" name="occ_ops_tva_<?php echo $compteur;?>" id="tva_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport(23, $id_mod_lic, $id_cli, $id_march, $id_mod_trans)['tva'];?>" class="bg bg-dark">
 				</td>
 				<td style="text-align: center;">
 					<input type="number" step="0.001" min="0" style="text-align: center; width: 8em;" id="sncc_lshi_<?php echo $compteur;?>" name="sncc_lshi_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport(57, $id_mod_lic, $id_cli, $id_march, $id_mod_trans)['montant'];?>" class="bg bg-dark">
@@ -12763,6 +12815,10 @@
 				<td style="text-align: center;">
 					<input type="number" step="0.001" min="0" style="text-align: center; width: 8em;" id="klsa_border_<?php echo $compteur;?>" name="klsa_border_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDataDetailFacture($ref_fact, $reponse['id_dos'], 22)['montant'];?>" class="bg bg-dark">
 					<input type="hidden" style="text-align: center; width: 8em;" name="klsa_border_tva_<?php echo $compteur;?>" id="tva_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDataDetailFacture($ref_fact, $reponse['id_dos'], 22)['tva'];?>" class="bg bg-dark">
+				</td>
+				<td style="text-align: center;">
+					<input type="number" step="0.001" min="0" style="text-align: center; width: 8em;" id="klsa_border_<?php echo $compteur;?>" name="occ_ops_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDataDetailFacture($ref_fact, $reponse['id_dos'], 23)['montant'];?>" class="bg bg-dark">
+					<input type="hidden" style="text-align: center; width: 8em;" name="occ_ops_tva_<?php echo $compteur;?>" id="tva_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDataDetailFacture($ref_fact, $reponse['id_dos'], 23)['tva'];?>" class="bg bg-dark">
 				</td>
 				<td style="text-align: center;">
 					<input type="number" step="0.001" min="0" style="text-align: center; width: 8em;" id="sncc_lshi_<?php echo $compteur;?>" name="sncc_lshi_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDataDetailFacture($ref_fact, $reponse['id_dos'], 57)['montant'];?>" class="bg bg-dark">
@@ -30621,6 +30677,23 @@
 			}
 		}
 
+		public function getSoldeCompte($id_compte){
+			include('connexion.php');
+			$entree['id_compte'] = $id_compte;
+
+			$requete = $connexion-> prepare("SELECT (SUM(IF(debit IS NULL, 0, debit))-SUM(IF(credit IS NULL, 0, credit))) AS solde
+												FROM detail_ecriture
+												WHERE id_compte = ?");
+			$requete-> execute(array($entree['id_compte']));
+			$reponse = $requete-> fetch();
+
+			if($reponse){
+				return $reponse['solde'];
+			}else{
+				return '0';
+			}
+		}
+
 		public function getLicenceApuree($num_lic){
 			include('connexion.php');
 			$entree['num_lic'] = $num_lic;
@@ -30669,6 +30742,22 @@
 			}else{
 				$reponse['id_taux'] = NULL;
 				$reponse['montant'] = NULL;
+				return $reponse;
+			}
+		}
+
+		public function getLastEcritureUtilisateur($id_util){
+			include('connexion.php');
+			$entree['id_util'] = $id_util;
+
+			$requete = $connexion-> prepare("SELECT *
+											FROM ecriture
+											WHERE id_util = ?
+											ORDER BY id_e DESC
+											LIMIT 0, 1");
+			$requete-> execute(array($entree['id_util']));
+			$reponse = $requete-> fetch();
+			if($reponse){
 				return $reponse;
 			}
 		}
@@ -34045,6 +34134,21 @@
 			}$requete-> closeCursor();
 		}
 
+		public function selectionnerMonnaieComptable(){
+			include('connexion.php');
+			$requete = $connexion-> query("SELECT *
+											FROM monnaie
+											WHERE comptabilite = '1'");
+			while($reponse = $requete-> fetch()){
+
+				?>
+				<option value="<?php echo $reponse['id_mon']; ?>">
+					<?php echo $reponse['sig_mon']; ?>
+				</option>
+				<?php
+			}$requete-> closeCursor();
+		}
+
 		public function selectionnerDossierPrincipalEnAttenteFacture($id_cli, $id_mod_lic){
 			include('connexion.php');
 
@@ -34387,6 +34491,37 @@
 
 		}
 
+		public function ecriture_journal($id_jour){
+			include("connexion.php");
+			$entree['id_jour'] = $id_jour;
+			$compteur=0;
+
+			$tableau = '';
+
+			$requete = $connexion-> query("SELECT DISTINCT(date_e) AS date_e
+											FROM ecriture
+											WHERE id_jour = ?");
+			$requete-> execute(array($entree['id_jour']));
+			while ($reponse = $requete-> fetch()) {
+				$compteur++;
+
+				$tableau .='<tr>
+								<td>'.$compteur.'</td>
+								<td>'.$reponse['date_e'].'</td>
+								<td style="text-align: center;">'.$reponse['nom_cat_cmpte'].'</td>
+								<td style="text-align: center;">
+									<button class="btn-xs btn-warning" onclick="modalEditClasse('.$reponse['id_class'].');">
+										<span class="fa fa-edit"></span>
+									</button>
+								</td>
+							</tr>';
+
+			}$requete-> closeCursor();
+
+			return $tableau;
+
+		}
+
 		public function account(){
 			include("connexion.php");
 			// $entree['id_pv'] = $id_pv;
@@ -34427,7 +34562,7 @@
 
 		}
 
-		public function liste_compte_journal(){
+		public function liste_compte_journal($compteur_compte){
 			include("connexion.php");
 			// $entree['id_pv'] = $id_pv;
 			$compteur=0;
@@ -34443,7 +34578,7 @@
 
 				$tableau .='<tr>
 								<td>'.$compteur.'</td>
-								<td><a href="#" onclick="select_compte(\''.$reponse['id_compte'].'\', \''.$reponse['nom_compte'].'\',)">'.$reponse['nom_compte'].'</a></td>
+								<td><a href="#" onclick="select_compte(\''.$reponse['id_compte'].'\', \''.$reponse['nom_compte'].'\',\''.$this-> getSoldeCompte($reponse['id_compte']).'\', '.$compteur_compte.')">'.$reponse['nom_compte'].'</a></td>
 							</tr>';
 
 			}$requete-> closeCursor();
@@ -34452,24 +34587,26 @@
 
 		}
 
-		public function liste_compte_tresorerie(){
+		public function liste_compte_tresorerie($compteur_compte){
 			include("connexion.php");
 			// $entree['id_pv'] = $id_pv;
 			$compteur=0;
 
 			$tableau = '';
 
-			$requete = $connexion-> query("SELECT *
-											FROM compte
-											WHERE id_class = 3
-											ORDER BY nom_compte");
+			$requete = $connexion-> query("SELECT *, monnaie.id_mon AS id_mon
+											FROM compte, monnaie
+											WHERE compte.id_class = 3
+												AND compte.id_mon = monnaie.id_mon
+											ORDER BY compte.nom_compte");
 			// $requete-> execute(array($entree['id_pv']));
 			while ($reponse = $requete-> fetch()) {
 				$compteur++;
 
 				$tableau .='<tr>
 								<td>'.$compteur.'</td>
-								<td><a href="#" onclick="select_compte(\''.$reponse['id_compte'].'\', \''.$reponse['nom_compte'].'\',)">'.$reponse['nom_compte'].'</a></td>
+								<td><a href="#" onclick="select_compte(\''.$reponse['id_compte'].'\', \''.$reponse['nom_compte'].'\',\''.$this-> getSoldeCompte($reponse['id_compte']).'\', \''.$reponse['sig_mon'].'\', \''.$reponse['id_mon'].'\', '.$compteur_compte.')">'.$reponse['nom_compte'].'</a></td>
+								<td style="text-align: right;">'.number_format($this-> getSoldeCompte($reponse['id_compte']), 2, ',', ' ').'</td>
 							</tr>';
 
 			}$requete-> closeCursor();
@@ -34478,7 +34615,7 @@
 
 		}
 
-		public function nom_compte_search($nom_compte){
+		public function nom_compte_search($nom_compte, $compteur_compte){
 			include("connexion.php");
 			$entree['nom_compte'] = '%'.$nom_compte.'%';
 			$compteur=0;
@@ -34495,7 +34632,7 @@
 
 				$tableau .='<tr>
 								<td>'.$compteur.'</td>
-								<td><a href="#" onclick="select_compte(\''.$reponse['id_compte'].'\', \''.$reponse['nom_compte'].'\',)">'.$reponse['nom_compte'].'</a></td>
+								<td><a href="#" onclick="select_compte(\''.$reponse['id_compte'].'\', \''.$reponse['nom_compte'].'\',\''.$this-> getSoldeCompte($reponse['id_compte']).'\', \''.$compteur_compte.'\')">'.$reponse['nom_compte'].'</a></td>
 							</tr>';
 
 			}$requete-> closeCursor();
@@ -34504,25 +34641,28 @@
 
 		}
 
-		public function nom_compte_tresorerie_search($nom_compte){
+		public function nom_compte_tresorerie_search($nom_compte, $compteur_compte){
 			include("connexion.php");
 			$entree['nom_compte'] = '%'.$nom_compte.'%';
 			$compteur=0;
 
 			$tableau = '';
 
-			$requete = $connexion-> prepare("SELECT *
-											FROM compte
-											WHERE nom_compte LIKE ?
-												AND id_class = 3
-											ORDER BY nom_compte");
+			$requete = $connexion-> prepare("SELECT *, monnaie.id_mon AS id_mon
+											FROM compte, monnaie
+											WHERE compte.id_class = 3
+												AND compte.id_mon = monnaie.id_mon
+												AND compte.nom_compte LIKE ?
+												AND compte.id_class = 3
+											ORDER BY compte.nom_compte");
 			$requete-> execute(array($entree['nom_compte']));
 			while ($reponse = $requete-> fetch()) {
 				$compteur++;
 
 				$tableau .='<tr>
 								<td>'.$compteur.'</td>
-								<td><a href="#" onclick="select_compte(\''.$reponse['id_compte'].'\', \''.$reponse['nom_compte'].'\',)">'.$reponse['nom_compte'].'</a></td>
+								<td><a href="#" onclick="select_compte(\''.$reponse['id_compte'].'\', \''.$reponse['nom_compte'].'\',\''.$this-> getSoldeCompte($reponse['id_compte']).'\', \''.$reponse['sig_mon'].'\', \''.$reponse['id_mon'].'\', \''.$compteur_compte.'\')">'.$reponse['nom_compte'].'</a></td>
+								<td style="text-align: right;">'.number_format($this-> getSoldeCompte($reponse['id_compte']), 2, ',', ' ').'</td>
 							</tr>';
 
 			}$requete-> closeCursor();
