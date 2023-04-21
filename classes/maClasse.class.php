@@ -12725,7 +12725,7 @@
 					<?php echo $reponse['quittance'];?>
 				</td>
 				<td style="text-align: right;">
-					<?php echo number_format($reponse['poids'], 2, ',', '.');?>
+					<?php echo number_format($reponse['poids'], 3, ',', '.');?>
 				</td>
 				<td style="text-align: center;">
 					<input type="checkbox" id="check_<?php echo $compteur;?>" name="check_<?php echo $compteur;?>" checked class="bg bg-dark">
