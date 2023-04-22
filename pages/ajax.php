@@ -774,6 +774,37 @@
 
   		}
 	    echo json_encode($response);exit;
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='enregistrerFactureImportMMGAcid'){// On enregistre la facture MMG Acide
+
+  		if(isset($_POST['ref_fact'])){
+  			try {
+  			
+  			for ($i=1; $i <= $_POST['compteur'] ; $i++) { 
+  				if (isset($_POST['montant_'.$i]) && $_POST['montant_'.$i] > 1) {
+
+  					if (!isset($_POST['pourcentage_qte_ddi_'.$i]) || empty($_POST['pourcentage_qte_ddi_'.$i]) || ($_POST['pourcentage_qte_ddi_'.$i]=='') || ($_POST['pourcentage_qte_ddi_'.$i]<0)) {
+  						$_POST['pourcentage_qte_ddi_'.$i] = NULL;
+  					}
+
+  					$maClasse-> creerDetailFactureDossier2($_POST['ref_fact'], $_POST['id_dos'], $_POST['id_deb_'.$i], $_POST['montant_'.$i], $_POST['tva_'.$i], $_POST['usd_'.$i], NULL, NULL, $_POST['pourcentage_qte_ddi_'.$i]);
+  					// $maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos'], $_POST['id_deb_'.$i], $_POST['montant_'.$i], $_POST['tva_'.$i], $_POST['usd_'.$i], NULL, NULL);
+  				}
+  				
+  			}
+
+  			$response = array('message' => 'File Invoiced');
+  			// $response['ref_fact'] = $maClasse-> buildRefFactureGlobale($_POST['id_cli']);
+			$response['ref_dos'] =$maClasse-> selectionnerDossierClientModeleLicenceMarchandise3($_POST['id_cli'], $_POST['id_mod_lic'], $_POST['id_march'], $_POST['id_mod_trans'], $_POST['num_lic']);
+  			// $response['ref_dos'] =$maClasse-> selectionnerDossierClientModeleLicenceMarchandise2($_POST['id_cli'], $_POST['id_mod_lic'], $_POST['id_march']);
+
+  			} catch (Exception $e) {
+
+	            $response = array('error' => $e->getMessage());
+
+	        }
+
+  		}
+	    echo json_encode($response);exit;
 	}elseif(isset($_POST['operation']) && $_POST['operation']=='editFactureImportSingle'){// On enregistre la facture Export Single
 
   		if(isset($_POST['ref_fact'])){
@@ -1290,6 +1321,34 @@
 	}else if ($_POST['operation']=='ecriture_journal') {
 	  
 		$response['ecriture_journal'] = $maClasse-> ecriture_journal();
+		echo json_encode($response);
+
+	}else if ($_POST['operation']=='modal_creer_facture_en_cours') {
+	  
+		$response['ref_fact'] = $maClasse-> buildRefFactureGlobale($_POST['id_cli'], $_POST['id_mod_lic'], $_POST['id_mod_trans'], $_POST['id_march']);
+		echo json_encode($response);
+
+	}else if ($_POST['operation']=='liste_ref_fact_non_validee') {
+	  
+		$response['liste_ref_fact_non_validee'] = $maClasse-> selectionnerFactureNonValideeClient($_POST['id_cli'], $_POST['id_mod_trans'], $_POST['id_mod_lic']);
+		echo json_encode($response);
+
+	}else if ($_POST['operation']=='detail_invoice_acid') {
+	  
+		$response['detail_invoice_acid'] = $maClasse-> detail_invoice_acid($_POST['ref_fact']);
+		echo json_encode($response);
+
+	}else if ($_POST['operation']=='creer_facture_en_cours') {
+	  
+		$maClasse-> creerFactureDossier($_POST['ref_fact'], $_POST['id_mod_fact'], $_POST['id_cli'], $_SESSION['id_util'], $_POST['id_mod_lic'], 'globale', NULL);
+		$response['message'] = 'ok';
+		echo json_encode($response);
+
+	}else if ($_POST['operation']=='supprimerDetailFactureDossier2') {
+	  
+		$maClasse-> supprimerDetailFactureDossier2($_POST['id_dos']);
+		$response['ref_dos'] =$maClasse-> selectionnerDossierClientModeleLicenceMarchandise3($_POST['id_cli'], $_POST['id_mod_lic'], $_POST['id_march'], $_POST['id_mod_trans'], $_POST['num_lic']);
+		$response['message'] = 'ok';
 		echo json_encode($response);
 
 	}

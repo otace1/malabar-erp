@@ -103,7 +103,7 @@ if(isset($_GET['ref_fact'])){
 $logo = '<img src="../images/malabar2.png" width="250px">';
 	
 $facture = $maClasse-> getDataFactureGlobale($_GET['ref_fact']);
-$dossiers = $maClasse-> getDossierFactureExportSingle($_GET['ref_fact']);
+$dossiers = $maClasse-> getDossierFactureImportAcidMMG($_GET['ref_fact']);
 
 $ref_fact = $_GET['ref_fact'];//$maClasse-> getNumFactureEnCours($_GET['facture']);
 $date_fact = $maClasse-> getFactureGlobale($_GET['ref_fact'])['date_fact'];//$maClasse-> getDateFactureEnCours($_GET['facture']);
@@ -125,7 +125,7 @@ $marchandise = $maClasse-> getMarchandiseFacture($_GET['ref_fact'])['nom_march']
 $fournisseur = $maClasse-> getFournisseurFacture($_GET['ref_fact'])['supplier'];
 $info_fact = $maClasse-> getFactureGlobale($_GET['ref_fact'])['information'];
 
-$taxe = $maClasse-> getDetailFactureExportMultiple($_GET['ref_fact'], '1');
+$taxe = $maClasse-> getDetailFactureAcidImport($_GET['ref_fact'], '1');
 
 $autres_charges = $maClasse-> getDetailFactureExportMultiple($_GET['ref_fact'], '2');
 
@@ -394,22 +394,22 @@ $tbl = <<<EOD
 		<br>
 		<tr>
 			<td width="5%" style=""></td>
-			<td width="83%" style="">DETAILS - EXPORT CLEARING $marchandise LOADS</td>
+			<td width="83%" style="">DETAILS - IMPORT CLEARING $marchandise</td>
 		</tr>
 		<tr>
 			<td width="5%" style=""></td>
 			<td width="3%" style="text-align: center; border: 1 solid black; font-weight: bold;"><span><br>#<br></span></td>
 			<td width="10%" style="text-align: center; border: 1 solid black; font-weight: bold;"><span><br>MCA File No<br></span></td>
 			<td width="9%" style="text-align: center; border: 1 solid black; font-weight: bold;"><span><br>Destination<br></span></td>
-			<td width="9%" style="text-align: center; border: 1 solid black; font-weight: bold;"><span><br>Transporter<br></span></td>
+			<td width="9%" style="text-align: center; border: 1 solid black; font-weight: bold;"><span><br>T1<br></span></td>
 			<td width="7%" style="text-align: center; border: 1 solid black; font-weight: bold;"><span><br>Horse/Wagon<br></span></td>
 			<td width="7%" style="text-align: center; border: 1 solid black; font-weight: bold;"><span><br>Trailer 1<br></span></td>
 			<td width="7%" style="text-align: center; border: 1 solid black; font-weight: bold;"><span><br>Trailer 2<br></span></td>
-			<td width="9%" style="text-align: center; border: 1 solid black; font-weight: bold;"><span><br>Lot. No.<br></span></td>
+			<td width="9%" style="text-align: center; border: 1 solid black; font-weight: bold;"><span><br>Invoice No.<br></span></td>
 			<td width="7%" style="text-align: center; border: 1 solid black; font-weight: bold;"><span><br>Qty(Mt)<br></span></td>
-			<td width="7%" style="text-align: center; border: 1 solid black; font-weight: bold;"><span><br>Loading Date</span></td>
-			<td width="10%" style="text-align: center; border: 1 solid black; font-weight: bold;"><span><br>Clearing Completed Date</span></td>
-			<td width="7%" style="text-align: center; border: 1 solid black; font-weight: bold;"><span><br>CLEARED<br></span></td>
+			<td width="7%" style="text-align: center; border: 1 solid black; font-weight: bold;"><span><br>Arrived date K'lesa</span></td>
+			<td width="10%" style="text-align: center; border: 1 solid black; font-weight: bold;"><span><br>Arrived date Wiski</span></td>
+			<td width="7%" style="text-align: center; border: 1 solid black; font-weight: bold;"><span><br>AV received<br></span></td>
 			<td width="5%" style=""></td>
 		</tr>
 		$dossiers
