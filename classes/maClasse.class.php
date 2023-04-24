@@ -11828,6 +11828,181 @@
 			return $debours;
 		}
 
+		public function detail_facture_dossier($id_cli, $id_mod_lic, $id_march, $id_mod_trans, $id_dos, $ref_fact){
+			include('connexion.php');
+			$entree['id_cli'] = $id_cli;
+			$entree['id_mod_lic'] = $id_mod_lic;
+			$entree['id_march'] = $id_march;
+			$entree['id_mod_trans'] = $id_mod_trans;
+			$compteur = 0;
+			$active = '';
+			$sqlTypeDebours = '';
+			$detail_input = '';
+			$usd_input = '';
+			$tva_input = '';
+			$montant_input = '';
+			$unite_input = '';
+
+			$debours = '';
+
+			$requeteTypeDebours = $connexion-> query("SELECT UPPER(nom_t_deb) AS nom_t_deb, id_t_deb
+														FROM type_debours
+														$sqlTypeDebours");
+			while($reponseTypeDebours = $requeteTypeDebours-> fetch()){
+				$debours .= '
+							<tr id="">
+								<th colspan="6" class="bg bg-secondary">
+									<u>'.$reponseTypeDebours['nom_t_deb'].'</u>
+								</th>
+							</tr>
+							<div>';
+				?>
+				<?php 
+				$requeteDebours = $connexion-> prepare("SELECT deb.abr_deb AS abr_deb, UPPER(REPLACE(deb.nom_deb, '\'', '')) AS nom_deb, 
+														deb.id_deb AS id_deb,
+														af.tva AS tva, af.usd AS usd, af.montant AS montant,
+														af.detail AS detail,
+														af.unite AS unite
+													FROM debours deb, affectation_debours_client_modele_licence af
+													WHERE deb.id_t_deb = ?
+														AND deb.id_deb = af.id_deb
+														AND af.id_mod_lic = ?
+														AND af.id_cli = ?
+														AND af.id_march = ?
+														AND af.id_mod_trans = ?
+													ORDER BY deb.rang, deb.id_deb ASC");
+				$requeteDebours-> execute(array($reponseTypeDebours['id_t_deb'], $entree['id_mod_lic'], $entree['id_cli'], $entree['id_march'], $entree['id_mod_trans']));
+				while($reponseDebours = $requeteDebours-> fetch()){
+					$compteur++;
+
+					$reponseDebours['montant'] = $this-> getMontantDeboursFactureDossier2($ref_fact, $reponseDebours['id_deb'], $id_dos);
+					$reponseDebours['pourcentage_qte'] = $this-> getPourcentageDeboursFactureDossier2($ref_fact, $reponseDebours['id_deb'], $id_dos);
+					
+
+					if ($reponseDebours['id_deb']=='32') { // DDI
+
+						$unite_input = '<input type="number" step="0.001" style="text-align: center; width: 5em;" class=""  value="'.$reponseDebours['pourcentage_qte'].'" name="pourcentage_qte_ddi_'.$compteur.'" id="pourcentage_qte_ddi" value="" onblur="calculDroit();">';
+						$montant_input = '<input type="number" step="0.001" style="text-align: center;" name="montant_'.$compteur.'" id="ddi" value="'.$reponseDebours['montant'].'" onblur="calculDroit();">';
+						
+					}else if ($reponseDebours['id_deb']=='118') { // DDI_2
+
+						$unite_input = '<input type="number" step="0.001" style="text-align: center; width: 5em;" class=""  value="'.$reponseDebours['pourcentage_qte'].'" name="pourcentage_qte_ddi_'.$compteur.'" id="pourcentage_qte_ddi_2" value="" onblur="calculDroit();">';
+						$montant_input = '<input type="number" step="0.001" style="text-align: center;" name="montant_'.$compteur.'" id="ddi_2" value="'.$reponseDebours['montant'].'" onblur="calculDroit();">';
+						
+					}else if ($reponseDebours['id_deb']=='119') { // DDI_3
+
+						$unite_input = '<input type="number" step="0.001" style="text-align: center; width: 5em;" class=""  value="'.$reponseDebours['pourcentage_qte'].'" name="pourcentage_qte_ddi_'.$compteur.'" id="pourcentage_qte_ddi_3" value="" onblur="calculDroit();">';
+						$montant_input = '<input type="number" step="0.001" style="text-align: center;" name="montant_'.$compteur.'" id="ddi_3" value="'.$reponseDebours['montant'].'" onblur="calculDroit();">';
+						
+					}else if ($reponseDebours['id_deb']=='120') { // DDI_4
+
+						$unite_input = '<input type="number" step="0.001" style="text-align: center; width: 5em;" class=""  value="'.$reponseDebours['pourcentage_qte'].'" name="pourcentage_qte_ddi_'.$compteur.'" id="pourcentage_qte_ddi_4" value="" onblur="calculDroit();">';
+						$montant_input = '<input type="number" step="0.001" style="text-align: center;" name="montant_'.$compteur.'" id="ddi_4" value="'.$reponseDebours['montant'].'" onblur="calculDroit();">';
+						
+					}else if ($reponseDebours['id_deb']=='109') {
+
+						$unite_input = '<span id=""></span>';
+						$montant_input = '<input type="number" step="0.001" style="text-align: center;" class="bg-dark" name="montant_'.$compteur.'" id="tva" value="'.$reponseDebours['montant'].'" onblur="calculDroit();">';
+						
+					}else if ($reponseDebours['id_deb']=='95') {
+
+						$unite_input = '<span id="unite_fpi"></span>';
+						$montant_input = '<input type="number" step="0.001" style="text-align: center;" class="bg-dark" name="montant_'.$compteur.'" id="fpi" value="'.$reponseDebours['montant'].'" onblur="calculDroit();">';
+						
+					}else if ($reponseDebours['id_deb']=='38') {
+
+						$unite_input = '<span id="unite_rri"></span>';
+						$montant_input = '<input type="number" step="0.001" style="text-align: center;" class="bg-dark" name="montant_'.$compteur.'" id="rri" value="'.$reponseDebours['montant'].'" onblur="calculDroit();">';
+						
+					}else if ($reponseDebours['id_deb']=='35') {
+
+						$unite_input = '<span id="unite_cog"></span>';
+						$montant_input = '<input type="number" step="0.001" style="text-align: center;" class="bg-dark" name="montant_'.$compteur.'" id="cog" value="'.$reponseDebours['montant'].'" onblur="calculDroit();">';
+						
+					}else if ($reponseDebours['id_deb']=='3') {
+
+						$unite_input = '<input type="number" step="0.001" style="text-align: center; width: 5em;" class="" name="" id="unite_rls" value="" onblur="calculDroit();">';
+						$montant_input = '<input type="number" step="0.001" style="text-align: center;" class="bg-dark" name="montant_'.$compteur.'" id="rls" value="'.$reponseDebours['montant'].'" onblur="calculDroit();">';
+						
+					}else if ($reponseDebours['id_deb']=='96') {
+
+						$unite_input = '<span id="unite_dci"></span>';
+						$montant_input = '<input type="number" step="0.001" style="text-align: center;" class="bg-dark" name="montant_'.$compteur.'" id="dci" value="'.$reponseDebours['montant'].'" onblur="calculDroit();">';
+						
+					}else if ($reponseDebours['id_deb']=='97') {
+
+						$unite_input = '<span id="unite_autres_taxes"></span>';
+						$montant_input = '<input type="number" step="0.001" style="text-align: center;" class="bg-dark" name="montant_'.$compteur.'" id="autres_taxes" value="'.$reponseDebours['montant'].'" onblur="calculDroit();">';
+						
+					}else if ($reponseDebours['id_deb']=='29') {
+
+						$unite_input = '<input type="number" step="0.001" style="text-align: center; width: 5em;" class="" name="" id="unite_frais_bancaire" value="" onblur="calculDroit();">';
+						$montant_input = '<input type="number" step="0.001" style="text-align: center;" class="bg-dark" name="montant_'.$compteur.'" id="frais_bancaire" value="'.$reponseDebours['montant'].'">';
+						
+					}else{
+
+						$unite_input = '<span id="unite_'.$compteur.'"></span>';
+						$montant_input = '<input type="number" step="0.001" style="text-align: center;" class="bg-dark" name="montant_'.$compteur.'" id="montant_'.$reponseDebours['id_deb'].'" value="'.$reponseDebours['montant'].'" onblur="getTotal()">';
+						
+					}
+
+					if ($reponseDebours['detail']=='1') {
+						$detail_input = ' : <input type="text" style="width: 20em;" name="detail_'.$compteur.'">';
+					}else{
+						$detail_input = '';
+					}
+
+					if ($reponseDebours['usd'] == '0') {
+						$usd_input = '<option value="0">CDF</option><option value="1">USD</option>';
+					}else{
+						$usd_input = '<option value="1">USD</option><option value="0">CDF</option>';
+					}
+
+					if ($reponseDebours['tva'] == '0') {
+						$tva_input = '<option value="0">NO</option><option value="1">YES</option>';
+					}else{
+						$tva_input = '<option value="1">YES</option><option value="0">NO</option>';
+					}
+				
+					$debours .= '<tr>
+									<td width="10%">
+										<input type="hidden" id="id_deb_'.$compteur.'" name="id_deb_'.$compteur.'" value="'.$reponseDebours['id_deb'].'">
+										'.$reponseDebours['abr_deb'].'
+									</td>
+									<td width="50%">
+										'.$reponseDebours['nom_deb'].$detail_input.'
+									</td>
+									<td style="text-align: center;">
+										'.$unite_input.'
+									</td>
+									<td style="text-align: center;">
+										'.$montant_input.'
+
+									</td>
+									<td style="text-align: center;">
+										<select name="usd_'.$compteur.'" id="usd_'.$compteur.'" onchange="getTotal()">
+											'.$usd_input.'
+										</select>
+									</td>
+									<td style="text-align: center;">
+										<select name="tva_'.$compteur.'" id="tva_'.$compteur.'" onchange="getTotal()">
+											'.$tva_input.'
+										</select>
+									</td>
+								</tr>';
+
+					?>
+					
+					<?php
+				}$requeteDebours-> closeCursor();
+				$debours .= '</div>';
+
+			}$requeteTypeDebours-> closeCursor();
+			$debours .= '<input type="hidden" name="compteur" value="'.$compteur.'">';
+
+			return $debours;
+		}
+
 		public function getDeboursPourFactureClientModeleLicenceBackUp($id_cli, $id_mod_lic, $compteur_dossier, $sous_compteur, $principal='1', $id_dos){
 			include('connexion.php');
 			$entree['id_cli'] = $id_cli;
@@ -34569,6 +34744,9 @@
 							<td style="text-align: right;">'.number_format($reponse['other_usd'], 2, ',', ' ').'</td>
 							<td style="text-align: right;">'.number_format($reponse['total_usd'], 2, ',', ' ').'</td>
 							<td style="text-align: center;">
+								<span class="btn btn-xs btn btn-warning" onclick="modalEditDetailFactureDossier('.$reponse['id_dos'].', \''.$ref_fact.'\', \''.$reponse['ref_dos'].'\', '.$reponse['id_cli'].', '.$reponse['id_mod_lic'].', '.$reponse['id_march'].', '.$reponse['id_mod_trans'].', \''.$reponse['num_lic'].'\', \''.$ref_fact.'\');">
+									<i class="fa fa-edit"></i>
+								</span>
 								<span class="btn btn-xs btn btn-danger" onclick="supprimerDetailFactureDossier2('.$reponse['id_dos'].', \''.$ref_fact.'\', \''.$reponse['ref_dos'].'\', '.$reponse['id_cli'].', '.$reponse['id_mod_lic'].', '.$reponse['id_march'].', '.$reponse['id_mod_trans'].', \''.$reponse['num_lic'].'\');">
 									<i class="fa fa-times"></i>
 								</span>
