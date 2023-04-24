@@ -229,6 +229,62 @@
   <!-- /.modal-dialog -->
 </div>
 
+<div class="modal fade" id="modalEditDetailFactureDossier">
+  <div class="modal-dialog modal-lg">
+    <form id="form_edit_facture_en_cours" method="POST" action="" data-parsley-validate enctype="multipart/form-data">
+      <input type="hidden" name="operation" value="editerDetailFactureDossier">
+
+      <input type="hidden" name="id_cli" value="<?php echo $_GET['id_cli'];?>">
+      <input type="hidden" name="id_mod_lic" value="<?php echo $_GET['id_mod_lic_fact'];?>">
+      <input type="hidden" name="id_march" value="<?php echo $_GET['id_march'];?>">
+      <input type="hidden" name="id_mod_fact" value="<?php echo $_GET['id_mod_fact'];?>">
+      <input type="hidden" name="id_mod_trans" value="<?php echo $_GET['id_mod_trans'];?>">
+      <input type="hidden" name="num_lic" value="<?php echo $_GET['num_lic'];?>">
+      <input type="hidden" name="id_dos_edit" id="id_dos_edit">
+      <input type="hidden" name="ref_fact_edit" id="ref_fact_edit">
+
+    <div class="modal-content">
+      <div class="modal-header ">
+        <h4 class="modal-title"><i class="fa fa-edit"></i> Edit Details <span id="label_ref_dos" class="badge badge-primary"></span> </h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+
+          <div class="col-md-12">
+            <table class="table table-bordered table-responsive table-striped text-nowrap table-hover table-sm small text-nowrap table-head-fixed table-dark">
+              <thead>
+                  <tr>
+                      <th colspan="2">ITEMS</th>
+                      <th>% / Qty</th>
+                      <th>AMOUNT</th>
+                      <th>CURRENCY</th>
+                      <th>TVA</th>
+                  </tr>
+              </thead>
+              <tbody id="detail_facture_dossier">
+                <?php
+                  // $maClasse-> getDeboursPourFactureClientModeleLicence($_GET['id_cli'], $_GET['id_mod_lic_fact'], $_GET['id_march'], $_GET['id_mod_trans']);
+                ?>
+              </tbody>
+            </table>
+          </div>
+
+        </div>
+      </div>
+      <div class="modal-footer justify-content-between">
+        <button type="button" class="btn btn-xs btn-danger" data-dismiss="modal">Cancel</button>
+        <button type="submit" class="btn btn-xs btn-primary">Submit</button>
+      </div>
+    </div>
+    </form>
+    <!-- /.modal-content -->
+  </div>
+  <!-- /.modal-dialog -->
+</div>
+
 
   <?php include("pied.php");?>
 
@@ -354,6 +410,33 @@
     }
   }
 
+  function modalEditDetailFactureDossier(id_dos, ref_fact, ref_dos, id_cli, id_mod_lic, id_march, id_mod_trans, num_lic, ref_fact) {
+    // if(confirm('Do really you want to cancel '+ref_dos+' ?')) {
+      $('#spinner-div').show();
+      $.ajax({
+        type: "POST",
+        url: "ajax.php",
+        data: { id_dos: id_dos, id_cli: id_cli, id_mod_lic: id_mod_lic, id_march: id_march, id_mod_trans: id_mod_trans, num_lic: num_lic, ref_fact: ref_fact, operation: 'modalEditDetailFactureDossier'},
+        dataType:"json",
+        success:function(data){
+          if (data.logout) {
+            alert(data.logout);
+            window.location="../deconnexion.php";
+          }else{
+            $('#detail_facture_dossier').html(data.detail_facture_dossier);
+            $('#id_dos_edit').val(id_dos);
+            $('#ref_fact_edit').val(ref_fact);
+            $('#label_ref_dos').html(ref_dos);
+            $('#modalEditDetailFactureDossier').modal('show');
+          }
+        },
+        complete: function () {
+            $('#spinner-div').hide();//Request is complete so hide spinner
+        }
+      });
+    // }
+  }
+
   function round(num, decimalPlaces = 0) {
     return new Decimal(num).toDecimalPlaces(decimalPlaces).toNumber();
   }
@@ -477,6 +560,64 @@
             $('#spinner-div').hide();//Request is complete so hide spinner
             alert('Error !! Please enter the rate of exchange of this file.');
             $('#roe_decl').addClass("bg bg-danger");
+          }
+
+        }
+
+      });
+    
+  });
+
+  $(document).ready(function(){
+
+      $('#form_edit_facture_en_cours').submit(function(e){
+
+              e.preventDefault();
+
+        if(confirm('Do really you want to submit ?')) {
+
+          if ($('#ref_fact').val()===null || $('#ref_fact').val()==='' ) {
+
+            alert('Error !! Please select the invoice.');
+
+          }else if ($('#id_dos_edit').val()===null || $('#id_dos_edit').val()==='' ) {
+
+            alert('Error !! Please select the file.');
+
+          }else{
+            // alert('Hello');
+
+            var fd = new FormData(this);
+            $('#spinner-div').show();
+
+            $.ajax({
+              type: 'post',
+              url: 'ajax.php',
+              processData: false,
+              contentType: false,
+              data: fd,
+              dataType: 'json',
+              success:function(data){
+                if (data.logout) {
+                  alert(data.logout);
+                  window.location="../deconnexion.php";
+                }else if(data.message){
+                  $('#horse').val('');
+                  $('#roe_decl').val('');
+                  $('#trailer_1').val('');
+                  $('#trailer_1').val('');
+                  $('#id_dos').html(data.ref_dos);
+                  detail_invoice_acid(fd.get('ref_fact_edit'));
+                  $('#spinner-div').hide();//Request is complete so hide spinner
+                  // alert(data.message);
+                  $('#modalEditDetailFactureDossier').modal('hide');
+                }
+              },
+              complete: function () {
+                  $('#spinner-div').hide();//Request is complete so hide spinner
+              }
+            });
+
           }
 
         }

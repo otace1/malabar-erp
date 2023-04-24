@@ -1351,6 +1351,48 @@
 		$response['message'] = 'ok';
 		echo json_encode($response);
 
+	}else if ($_POST['operation']=='modalEditDetailFactureDossier') {
+	  
+		// $response['detail_facture_dossier'] =$maClasse-> detail_facture_dossier($_POST['id_dos']);
+  		$response['detail_facture_dossier'] = $maClasse-> getDeboursPourFactureClientModeleLicenceAjaxEdit($_POST['id_cli'], $_POST['id_mod_lic'], $_POST['id_march'], $_POST['id_mod_trans'], $_POST['id_dos'], $_POST['ref_fact']);
+		// $response['message'] = 'ok';
+		echo json_encode($response);
+
+	}else if ($_POST['operation']=='editerDetailFactureDossier') {
+	  
+		$maClasse-> supprimerDetailFactureDossier2($_POST['id_dos_edit']);
+
+  		if(isset($_POST['ref_fact_edit'])){
+  			try {
+  			
+  			for ($i=1; $i <= $_POST['compteur'] ; $i++) { 
+  				if (isset($_POST['montant_'.$i]) && $_POST['montant_'.$i] > 1) {
+
+  					if (!isset($_POST['pourcentage_qte_ddi_'.$i]) || empty($_POST['pourcentage_qte_ddi_'.$i]) || ($_POST['pourcentage_qte_ddi_'.$i]=='') || ($_POST['pourcentage_qte_ddi_'.$i]<0)) {
+  						$_POST['pourcentage_qte_ddi_'.$i] = NULL;
+  					}
+
+  					$maClasse-> creerDetailFactureDossier2($_POST['ref_fact_edit'], $_POST['id_dos_edit'], $_POST['id_deb_'.$i], $_POST['montant_'.$i], $_POST['tva_'.$i], $_POST['usd_'.$i], NULL, NULL, $_POST['pourcentage_qte_ddi_'.$i]);
+  				}
+  				
+  			}
+
+  			$response = array('message' => 'File Invoiced');
+  			// $response['ref_fact'] = $maClasse-> buildRefFactureGlobale($_POST['id_cli']);
+			$response['ref_dos'] =$maClasse-> selectionnerDossierClientModeleLicenceMarchandise3($_POST['id_cli'], $_POST['id_mod_lic'], $_POST['id_march'], $_POST['id_mod_trans'], $_POST['num_lic']);
+  			// $response['ref_dos'] =$maClasse-> selectionnerDossierClientModeleLicenceMarchandise2($_POST['id_cli'], $_POST['id_mod_lic'], $_POST['id_march']);
+
+  			} catch (Exception $e) {
+
+	            $response = array('error' => $e->getMessage());
+
+	        }
+
+  		}
+		$response['ref_dos'] =$maClasse-> selectionnerDossierClientModeleLicenceMarchandise3($_POST['id_cli'], $_POST['id_mod_lic'], $_POST['id_march'], $_POST['id_mod_trans'], $_POST['num_lic']);
+		// $response['message'] = 'ok';
+		echo json_encode($response);
+
 	}
 
 ?>
