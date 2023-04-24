@@ -10182,36 +10182,38 @@
 
 				if (isset($_GET['id_mod_lic_fact']) &&  $_GET['id_mod_lic_fact']=='1') {
 					
+					$code = $this-> getLastFactureDossier($id_cli, $_GET['id_mod_lic_fact'], $_GET['id_mod_trans'], $_GET['id_march']);
 					
-					$i = 1;
+					
+					// $i = 1;
 
-					if (!empty($this-> getCompteurFactureClientModeleLic($id_cli, $_GET['id_mod_lic_fact'], date('Y'), $_GET['id_march'])) && ($this-> getCompteurFactureClientModeleLic($id_cli, $_GET['id_mod_lic_fact'], date('Y'), $_GET['id_march'])!='')) {
-						$i = $this-> getCompteurFactureClientModeleLic($id_cli, $_GET['id_mod_lic_fact'], date('Y'), $_GET['id_march'])['compteur_fact'];
-					}
+					// if (!empty($this-> getCompteurFactureClientModeleLic($id_cli, $_GET['id_mod_lic_fact'], date('Y'), $_GET['id_march'])) && ($this-> getCompteurFactureClientModeleLic($id_cli, $_GET['id_mod_lic_fact'], date('Y'), $_GET['id_march'])!='')) {
+					// 	$i = $this-> getCompteurFactureClientModeleLic($id_cli, $_GET['id_mod_lic_fact'], date('Y'), $_GET['id_march'])['compteur_fact'];
+					// }
 
-					$a = $this-> getTailleCompteur2($i);
-					// 2022-MTS-EXP-HC-037
+					// $a = $this-> getTailleCompteur2($i);
+					// // 2022-MTS-EXP-HC-037
 
-					if ($_GET['id_cli']=='845') {
-						$a = $this-> getTailleCompteur($i);
-						$code_march = '';
-					}else{
-						$code_march = '-'.$this-> getDataMarchandise($_GET['id_march'])['code_march'];
-					}
+					// if ($_GET['id_cli']=='845') {
+					// 	$a = $this-> getTailleCompteur($i);
+					// 	$code_march = '';
+					// }else{
+					// 	$code_march = '-'.$this-> getDataMarchandise($_GET['id_march'])['code_march'];
+					// }
 
-					$code = date('Y').'-'.$this-> codePourClient($id_cli).'-EXP'.$code_march.'-'.$a;
+					// $code = date('Y').'-'.$this-> codePourClient($id_cli).'-EXP'.$code_march.'-'.$a;
 
-					while($this-> verifierExistanceRefFactureDossier($code) == true){
-						$i++;
+					// while($this-> verifierExistanceRefFactureDossier($code) == true){
+					// 	$i++;
 
-						$a = $this-> getTailleCompteur2($i);
+					// 	$a = $this-> getTailleCompteur2($i);
 
-						if ($_GET['id_cli']=='845') {
-							$a = $this-> getTailleCompteur($i);
-						}
+					// 	if ($_GET['id_cli']=='845') {
+					// 		$a = $this-> getTailleCompteur($i);
+					// 	}
 
-						$code = date('Y').'-'.$this-> codePourClient($id_cli).'-EXP'.$code_march.'-'.$a;
-					}
+					// 	$code = date('Y').'-'.$this-> codePourClient($id_cli).'-EXP'.$code_march.'-'.$a;
+					// }
 
 				}else if (isset($_POST['id_mod_lic']) && ($_POST['id_mod_lic']=='1')) {
 					
