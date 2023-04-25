@@ -7430,7 +7430,7 @@
 													AND fd.id_mod_fact = mf.id_mod_fact
 													AND fd.validation = '0'
 													AND fd.id_cli = ?
-												ORDER BY fd.ref_fact ASC");
+												ORDER BY fd.date_fact ASC");
 			$requete-> execute(array($entree['id_mod_lic'], $entree['id_cli']));
 			while ($reponse = $requete-> fetch()) {
 				$compteur++;
@@ -7785,7 +7785,7 @@
 													AND fd.validation = '1'
 													AND fd.date_mail IS NULL
 													AND fd.id_cli = ?
-												ORDER BY fd.ref_fact ASC");
+												ORDER BY fd.date_fact ASC");
 			$requete-> execute(array($entree['id_mod_lic'], $entree['id_cli']));
 			while ($reponse = $requete-> fetch()) {
 				$compteur++;
