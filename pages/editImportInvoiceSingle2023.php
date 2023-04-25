@@ -788,14 +788,64 @@
       cif_cdf=0;
     }
 
+    // if (parseFloat($('#ddi').val()) > 0 ) {
+    //   ddi = parseFloat($('#ddi').val());
+    // }else{
+    //   ddi=1;
+    // }
+    // if ($('#tva_ddi').val() == '1' ) {
+    //   tva_ddi = ddi*0.16;
+    // }else{
+    //   tva_ddi=0;
+    // }
+
+    // if (parseFloat($('#ddi_2').val()) > 0 ) {
+    //   ddi_2 = parseFloat($('#ddi_2').val());
+    // }else{
+    //   ddi_2=0;
+    // }
+    // if ($('#tva_ddi_2').val() == '1' ) {
+    //   tva_ddi_2 = ddi_2*0.16;
+    // }else{
+    //   tva_ddi_2=0;
+    // }
+
+    // if (parseFloat($('#ddi_3').val()) > 0 ) {
+    //   ddi_3 = parseFloat($('#ddi_3').val());
+    // }else{
+    //   ddi_3=0;
+    // }
+    // if ($('#tva_ddi_3').val() == '1' ) {
+    //   tva_ddi_3 = ddi_3*0.16;
+    // }else{
+    //   tva_ddi_3=0;
+    // }
+
+    // if (parseFloat($('#ddi_4').val()) > 0 ) {
+    //   ddi_4 = parseFloat($('#ddi_4').val());
+    // }else{
+    //   ddi_4=0;
+    // }
+    // if ($('#tva_ddi_4').val() == '1' ) {
+    //   tva_ddi_4 = ddi_4*0.16;
+    // }else{
+    //   tva_ddi_4=0;
+    // }
+
     if (parseFloat($('#ddi').val()) > 0 ) {
       ddi = parseFloat($('#ddi').val());
     }else{
       ddi=1;
     }
-    if ($('#tva_ddi').val() == '1' ) {
-      tva_ddi = ddi*0.16;
+    if (parseFloat($('#pourcentage_qte_ddi').val()) > 0 ) {
+      pourcentage_qte_ddi = parseFloat($('#pourcentage_qte_ddi').val());
+      if ($('#tva_ddi').val() == '1' ) {
+        tva_ddi = (((ddi*100)+(ddi*pourcentage_qte_ddi))/pourcentage_qte_ddi)*0.16;
+      }else{
+        tva_ddi=0;
+      }
     }else{
+      pourcentage_qte_ddi=0;
       tva_ddi=0;
     }
 
@@ -804,9 +854,15 @@
     }else{
       ddi_2=0;
     }
-    if ($('#tva_ddi_2').val() == '1' ) {
-      tva_ddi_2 = ddi_2*0.16;
+    if (parseFloat($('#pourcentage_qte_ddi_2').val()) > 0 ) {
+      pourcentage_qte_ddi_2 = parseFloat($('#pourcentage_qte_ddi_2').val());
+      if ($('#tva_ddi_2').val() == '1' ) {
+        tva_ddi_2 = (((ddi_2*100)+(ddi_2*pourcentage_qte_ddi_2))/pourcentage_qte_ddi_2)*0.16;
+      }else{
+        tva_ddi_2=0;
+      }
     }else{
+      pourcentage_qte_ddi_2=0;
       tva_ddi_2=0;
     }
 
@@ -815,9 +871,15 @@
     }else{
       ddi_3=0;
     }
-    if ($('#tva_ddi_3').val() == '1' ) {
-      tva_ddi_3 = ddi_3*0.16;
+    if (parseFloat($('#pourcentage_qte_ddi_3').val()) > 0 ) {
+      pourcentage_qte_ddi_3 = parseFloat($('#pourcentage_qte_ddi_3').val());
+      if ($('#tva_ddi_3').val() == '1' ) {
+        tva_ddi_3 = (((ddi_3*100)+(ddi_3*pourcentage_qte_ddi_3))/pourcentage_qte_ddi_3)*0.16;
+      }else{
+        tva_ddi_3=0;
+      }
     }else{
+      pourcentage_qte_ddi_3=0;
       tva_ddi_3=0;
     }
 
@@ -826,9 +888,15 @@
     }else{
       ddi_4=0;
     }
-    if ($('#tva_ddi_4').val() == '1' ) {
-      tva_ddi_4 = ddi_4*0.16;
+    if (parseFloat($('#pourcentage_qte_ddi_4').val()) > 0 ) {
+      pourcentage_qte_ddi_4 = parseFloat($('#pourcentage_qte_ddi_4').val());
+      if ($('#tva_ddi_4').val() == '1' ) {
+        tva_ddi_4 = (((ddi_4*100)+(ddi_4*pourcentage_qte_ddi_4))/pourcentage_qte_ddi_4)*0.16;
+      }else{
+        tva_ddi_4=0;
+      }
     }else{
+      pourcentage_qte_ddi_4=0;
       tva_ddi_4=0;
     }
 
