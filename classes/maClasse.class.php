@@ -5653,7 +5653,7 @@
 																det.montant
 															), 
 															IF(det.tva="1",
-																(det.montant/dos.roe_decl)*1.16,
+																ROUND(((((det.montant/dos.roe_decl)*100)+((det.montant/dos.roe_decl)*det.pourcentage_qte))/det.pourcentage_qte)*0.16)+(det.montant/dos.roe_decl),
 																(det.montant/dos.roe_decl)
 															)
 														)
@@ -5661,7 +5661,7 @@
 													SUM(
 														IF(det.usd="0", 
 															IF(det.tva="1",
-																det.montant*1.16,
+																ROUND((((det.montant*100)+(det.montant*det.pourcentage_qte))/det.pourcentage_qte)*0.16)+det.montant,
 																det.montant
 															), 
 															IF(det.tva="1",
@@ -5677,17 +5677,23 @@
 																0
 															), 
 															IF(det.tva="1",
-																(det.montant/dos.roe_decl)*0.16,
+																ROUND(((((det.montant/dos.roe_decl)*100)+((det.montant/dos.roe_decl)*det.pourcentage_qte))/det.pourcentage_qte)*0.16),
 																0
 															)
 														)
 													) AS tva_usd,
 													SUM(
-														IF(det.usd="0", 
-															IF(det.tva="1",
-																det.montant*0.16,
-																0
-															), 
+														IF(d.id_t_deb=1,
+															IF(det.usd="0", 
+																IF(det.tva="1",
+																	ROUND((((det.montant*100)+(det.montant*det.pourcentage_qte))/det.pourcentage_qte)*0.16),
+																	0
+																), 
+																IF(det.tva="1",
+																	(det.montant*dos.roe_decl)*0.16,
+																	0
+																)
+															),
 															IF(det.tva="1",
 																(det.montant*dos.roe_decl)*0.16,
 																0
@@ -5829,13 +5835,13 @@
 								.$cost_2.
 							'&nbsp;&nbsp;</td>
 							<td style="text-align: center; border-right: 0.5px solid black; font-size: 7px;" width="11%">'
-								.number_format($reponse['ht_cdf'], 2, ',', '.').
+								.number_format($reponse['ht_cdf'], 0, ',', '.').
 							'&nbsp;&nbsp;</td>
 							<td style="text-align: center; border-right: 0.5px solid black; font-size: 7px;" width="11.5%">'
-								.number_format($reponse['tva_cdf'], 2, ',', '.').
+								.number_format($reponse['tva_cdf'], 0, ',', '.').
 							'&nbsp;&nbsp;</td>
 							<td style="text-align: right; border-right: 1px solid black; font-size: 7px;" width="11.5%">'
-								.number_format($reponse['ttc_cdf'], 2, ',', '.').
+								.number_format($reponse['ttc_cdf'], 0, ',', '.').
 							'&nbsp;&nbsp;</td>
 						</tr>
 					';
@@ -5911,13 +5917,13 @@
 						</td>
 						<td style="text-align: center; border-right: 0.5px solid black; border-bottom: 0.5px solid black; font-weight: bold;" width="8%">&nbsp;&nbsp;</td>
 						<td style="text-align: center; border-right: 0.5px solid black; border-bottom: 0.5px solid black; font-weight: bold;" width="11%">'
-							.number_format($sub_total_cdf, 2, ',', '.').
+							.number_format($sub_total_cdf, 0, ',', '.').
 						'&nbsp;&nbsp;</td>
 						<td style="text-align: center; border-right: 0.5px solid black; border-bottom: 0.5px solid black; font-weight: bold;" width="11.5%">'
-							.number_format($total_tva_cdf, 2, ',', '.').
+							.number_format($total_tva_cdf, 0, ',', '.').
 						'&nbsp;&nbsp;</td>
 						<td style="text-align: right; border-right: 1px solid black; border-bottom: 0.5px solid black; font-weight: bold; " width="11.5%">'
-							.number_format($sub_total_cdf_2, 2, ',', '.').
+							.number_format($sub_total_cdf_2, 0, ',', '.').
 						'&nbsp;&nbsp;</td>
 					</tr>
 					<tr>
@@ -6416,7 +6422,7 @@
 																det.montant
 															), 
 															IF(det.tva="1",
-																(det.montant/dos.roe_decl)*1.16,
+																ROUND(((((det.montant/dos.roe_decl)*100)+((det.montant/dos.roe_decl)*det.pourcentage_qte))/det.pourcentage_qte)*0.16)+(det.montant/dos.roe_decl),
 																(det.montant/dos.roe_decl)
 															)
 														)
@@ -6428,7 +6434,7 @@
 																0
 															), 
 															IF(det.tva="1",
-																(det.montant/dos.roe_decl)*0.16,
+																ROUND(((((det.montant/dos.roe_decl)*100)+((det.montant/dos.roe_decl)*det.pourcentage_qte))/det.pourcentage_qte)*0.16),
 																0
 															)
 														)
@@ -8122,57 +8128,54 @@
 			$sommeTTC = 0;
 
 
-			$requete = $connexion-> prepare('SELECT d.nom_deb AS nom_deb,
-													det.tva AS tva,
-													d.abr_deb AS abr_deb,
-													SUM(det.montant) AS ht,
-													SUM( 
+			$requete = $connexion-> prepare('SELECT SUM(
 														IF(det.usd="1", 
-															0,
-															det.montant
-														) 
-													) AS ht_cdf,
-													SUM( 
-														IF(det.usd="1", 
-															det.montant,
-															(det.montant/dos.roe_decl)
-														) 
-													) AS ht_usd
+															IF(det.tva="1",
+																det.montant*1.16,
+																det.montant
+															), 
+															IF(det.tva="1",
+																ROUND(((((det.montant/dos.roe_decl)*100)+((det.montant/dos.roe_decl)*det.pourcentage_qte))/det.pourcentage_qte)*0.16)+(det.montant/dos.roe_decl),
+																(det.montant/dos.roe_decl)
+															)
+														)
+													) AS ttc_usd
 												FROM debours d, detail_facture_dossier det, dossier dos
 												WHERE det.ref_fact = ?
 													AND det.id_deb = d.id_deb
 													AND det.id_dos = dos.id_dos
-												GROUP BY d.id_deb');
+												GROUP BY det.ref_fact');
 			$requete-> execute(array($entree['ref_fact']));
-			while($reponse = $requete-> fetch()){
+			// while($reponse = $requete-> fetch()){
 
-				$sommeHT += $reponse['ht_usd'];
+			// 	$sommeHT += $reponse['ht_usd'];
 
-				if($reponse['tva'] == '0'){
-					$sommeTVA += 0;
-					$sommeTTC += $reponse['ht_usd'];
-				}else{
-					$tva = round(($reponse['ht_usd'] * 0.16), 2);
-					$sommeTVA += $tva;
-					$ttc = $reponse['ht_usd'] + round(($reponse['ht_usd'] * 0.16), 2);
-					$sommeTTC += $ttc;
-				}
+			// 	if($reponse['tva'] == '0'){
+			// 		$sommeTVA += 0;
+			// 		$sommeTTC += $reponse['ht_usd'];
+			// 	}else{
+			// 		$tva = round(($reponse['ht_usd'] * 0.16), 2);
+			// 		$sommeTVA += $tva;
+			// 		$ttc = $reponse['ht_usd'] + round(($reponse['ht_usd'] * 0.16), 2);
+			// 		$sommeTTC += $ttc;
+			// 	}
 
-				// $sommeHT += $reponse['ht'];
+			// 	// $sommeHT += $reponse['ht'];
 
-				// if($reponse['tva'] == '0'){
-				// 	$sommeTVA += 0;
-				// 	$sommeTTC += $reponse['ht'];
-				// }else{
-				// 	$tva = round(($reponse['ht'] * 0.16), 2);
-				// 	$sommeTVA += $tva;
-				// 	$ttc = $reponse['ht'] + round(($reponse['ht'] * 0.16), 2);
-				// 	$sommeTTC += $ttc;
-				// }
+			// 	// if($reponse['tva'] == '0'){
+			// 	// 	$sommeTVA += 0;
+			// 	// 	$sommeTTC += $reponse['ht'];
+			// 	// }else{
+			// 	// 	$tva = round(($reponse['ht'] * 0.16), 2);
+			// 	// 	$sommeTVA += $tva;
+			// 	// 	$ttc = $reponse['ht'] + round(($reponse['ht'] * 0.16), 2);
+			// 	// 	$sommeTTC += $ttc;
+			// 	// }
 
-			}
+			// }
+			$reponse = $requete-> fetch();
 
-			return $sommeTTC;
+			return $reponse['ttc_usd'];
 		}
 
 		public function getNombreFactureDossierValideesEnAttenteTransmission($id_cli, $id_mod_lic){
