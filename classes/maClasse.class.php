@@ -5723,6 +5723,7 @@
 			$requete-> execute(array($entree['ref_fact'], $entree['id_t_deb']));
 			while($reponse = $requete-> fetch()){
 				$cost_2 = '';
+				$cif_split = '';
 				if($reponse['tva'] == '0'){
 					$tva = '0';
 					$ttc = $reponse['ht_usd'];
@@ -5734,6 +5735,7 @@
 				if (isset($reponse['pourcentage_qte'])) {
 					$cost_2 = number_format($reponse['pourcentage_qte'], 2, ',', '.').'%';
 					$unite = 'CIF';
+					$cif_split = number_format(($reponse['ht_cdf']*100)/$reponse['pourcentage_qte'], 0, ',', '.');
 				}else if ($reponse['id_deb']=='32') {
 					
 					$unite = 'CIF';
@@ -5824,11 +5826,15 @@
 				$sub_total += $reponse['ht_usd'];
 					$tbl .= '
 						<tr>
-							<td style="text-align: left; border-left: 1px solid black; border-right: 0.5px solid black; font-size: 7px;" colspan="2" width="49%">&nbsp;&nbsp;'
+							<td style="text-align: left; border-left: 1px solid black; border-right: 0.5px solid black; font-size: 7px;" colspan="2" width="40%">&nbsp;&nbsp;'
 								.$reponse['nom_deb'].
 							'</td>
 							<td style="text-align: center; border-right: 0.5px solid black; font-size: 7px;" width="9%">'
 								.$unite.
+							'
+							</td>
+							<td style="text-align: center; border-right: 0.5px solid black; font-size: 7px;" width="9%">'
+								.$cif_split.
 							'
 							</td>
 							<td style="text-align: center; border-right: 0.5px solid black; font-size: 7px;" width="8%">'
