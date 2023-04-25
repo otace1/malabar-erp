@@ -6417,8 +6417,11 @@
 													) AS ht_cdf,
 													SUM( 
 														IF(det.usd="1", 
-															det.montant,
-															(det.montant/dos.roe_decl)
+															det.montant, 
+															IF(det.tva="1",
+																ROUND(((((det.montant/dos.roe_decl)*100)+((det.montant/dos.roe_decl)*det.pourcentage_qte))/det.pourcentage_qte)*0.16)+(det.montant/dos.roe_decl),
+																(det.montant/dos.roe_decl)
+															)
 														) 
 													) AS ht_usd,
 													SUM(
@@ -6439,10 +6442,7 @@
 																det.montant*0.16,
 																0
 															), 
-															IF(det.tva="1",
-																ROUND(((((det.montant/dos.roe_decl)*100)+((det.montant/dos.roe_decl)*det.pourcentage_qte))/det.pourcentage_qte)*0.16),
-																0
-															)
+															0
 														)
 													) AS tva_usd,
 													IF(det.detail IS NOT NULL, 
