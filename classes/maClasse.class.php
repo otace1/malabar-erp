@@ -6924,6 +6924,113 @@
 			return $tbl;
 		}
 
+		public function getTotalFactureMMGExport($ref_fact){
+			include('connexion.php');
+			$entree['ref_fact'] = $ref_fact;
+
+			$total_cost = 0;
+			$sub_total = 0;
+			$total_tva = 0;
+			$total_gen = 0;
+
+			$unite = 0;
+			$cost = 0;
+
+			$tbl = '
+					<tr>
+						<td style="text-align: left; font-weight: bold; border-left: 1px solid black; border-right: 0.5px solid black; border-top: 0.5px solid black;" colspan="2" width="49%"></td>
+						<td style="text-align: center; border-right: 0.5px solid black; border-top: 0.5px solid black;" colspan="2" width="5%"></td>
+						<td style="text-align: right; border-right: 0.5px solid black; border-top: 0.5px solid black;" width="11.5%"></td>
+						<td style="text-align: right; border-right: 0.5px solid black; border-top: 0.5px solid black;" width="11.5%"></td>
+						<td style="text-align: right; border-right: 0.5px solid black; border-top: 0.5px solid black;" width="11.5%"></td>
+						<td style="text-align: right; border-right: 1px solid black; border-top: 0.5px solid black;" width="11.5%"></td>
+					</tr>
+					';
+
+			$requete = $connexion-> prepare('SELECT SUM(
+														IF(det.usd="1", 
+															det.montant, 
+															(det.montant/dos.roe_decl)
+														)
+													) AS ht_usd,
+													SUM(
+														IF(det.usd="1", 
+															IF(det.tva="1",
+																det.montant*1.16,
+																det.montant
+															), 
+															IF(det.tva="1",
+																ROUND(((((det.montant/dos.roe_decl)*100)+((det.montant/dos.roe_decl)*det.pourcentage_qte))/det.pourcentage_qte)*0.16)+(det.montant/dos.roe_decl),
+																(det.montant/dos.roe_decl)
+															)
+														)
+													) AS ttc_usd,
+													SUM(
+														IF(det.usd="1", 
+															IF(det.tva="1",
+																det.montant*0.16,
+																0
+															), 
+															IF(det.tva="1",
+																ROUND(((((det.montant/dos.roe_decl)*100)+((det.montant/dos.roe_decl)*det.pourcentage_qte))/det.pourcentage_qte)*0.16)+(det.montant/dos.roe_decl),
+																0
+															)
+														)
+													) AS tva_usd
+												FROM debours d, detail_facture_dossier det, dossier dos
+												WHERE det.ref_fact = ?
+													AND det.id_deb = d.id_deb
+													AND det.id_dos = dos.id_dos
+												GROUP BY det.ref_fact');
+			$requete-> execute(array($entree['ref_fact']));
+			$reponse = $requete-> fetch();
+				$total_cost = '';//$reponse['total_cost'];
+				$sub_total = $reponse['ht_usd'];
+				$total_tva = $reponse['tva_usd'];
+				$total_gen = $reponse['ttc_usd'];
+
+			$tbl .= '
+					<tr>
+						<td style="text-align: right; border-right: 0.5px solid black; border-left: 0.5px solid black; font-weight: bold; font-size: 8px;" width="49%">TOTAL CLEARING COST IN USD / COUT TOTAL EN USD &nbsp;&nbsp;
+						</td>
+						<td style="text-align: right; border-right: 0.5px solid black; border-left: 0.5px solid black; font-weight: bold; font-size: 8px;" width="5%">
+						</td>
+						<td style="text-align: center; border-right: 0.5px solid black; font-weight: bold;" width="11.5%">'
+							.number_format($total_cost, 2, ',', '.').
+						'&nbsp;&nbsp;</td>
+						<td style="text-align: center; border-right: 0.5px solid black; font-weight: bold;" width="11.5%">'
+							.number_format($sub_total, 2, ',', '.').
+						'&nbsp;&nbsp;</td>
+						<td style="text-align: center; border-right: 0.5px solid black; font-weight: bold;" width="11.5%">'
+							.number_format($total_tva, 2, ',', '.').
+						'&nbsp;&nbsp;</td>
+						<td style="text-align: right; border-right: 1px solid black; font-weight: bold; " width="11.5%">'
+							.number_format($total_gen, 2, ',', '.').
+						'&nbsp;&nbsp;</td>
+					</tr>
+					<tr>
+						<td style="text-align: left; border-left: 1px solid black; border-right: 0.5px solid black; border-bottom: 0.5px solid black; font-size: 8px;" width="49%"></td>
+						<td style="text-align: center; border-bottom: 0.5px solid black; font-size: 7px; border-right: 0.5px solid black;" colspan="2" width="5%"></td>
+						<td style="text-align: right; border-right: 0.5px solid black; border-bottom: 0.5px solid black; font-size: 8px;" width="11.5%"></td>
+						<td style="text-align: right; border-right: 0.5px solid black; border-bottom: 0.5px solid black; font-size: 8px;" width="11.5%"></td>
+						<td style="text-align: right; border-right: 0.5px solid black; border-bottom: 0.5px solid black; font-size: 8px;" width="11.5%"></td>
+						<td style="text-align: right; border-right: 1px solid black; border-bottom: 0.5px solid black; font-size: 7px;" width="11.5%"></td>
+					</tr>
+					<tr>
+						<td style="text-align: left; font-size: 8px;" width="49%"></td>
+						<td style="text-align: center;" colspan="2" width="5%"></td>
+						<td style="text-align: right; font-size: 8px;" width="11.5%"></td>
+						<td style="text-align: right; font-size: 8px;" width="11.5%"></td>
+						<td style="text-align: right; border: 1px solid black; font-size: 8px; font-weight: bold;" width="23%">CDF &nbsp;&nbsp;'
+							// .number_format($total_gen*$reponse['roe_decl'], 2, ',', '.').
+							.number_format($total_gen*$this-> getTauxFacture($entree['ref_fact'])['roe_decl'], 2, ',', '.').
+						'&nbsp;&nbsp;</td>
+					</tr>
+					';
+
+			return $tbl;
+		}
+
 		public function getTotalFactureImportSingle2023($ref_fact){
 			include('connexion.php');
 			$entree['ref_fact'] = $ref_fact;
