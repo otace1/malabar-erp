@@ -1265,6 +1265,17 @@
 			$requete-> execute(array($entree['nom_class'], $entree['id_cat_cmpte']));
 		}
 		
+		public function creerJournal($nom_jour){
+			include('connexion.php');
+
+			$entree['nom_jour'] = $nom_jour;
+			// $entree['id_cat_cmpte'] = $id_cat_cmpte;
+
+			$requete = $connexion-> prepare('INSERT INTO journal(nom_jour)
+												VALUES(?)');
+			$requete-> execute(array($entree['nom_jour']));
+		}
+		
 		public function creerCompte($nom_compte, $code_compte, $id_class){
 			include('connexion.php');
 
@@ -1288,6 +1299,18 @@
 												SET nom_class = ?, id_cat_cmpte=?
 												WHERE id_class = ?');
 			$requete-> execute(array($entree['nom_class'], $entree['id_cat_cmpte'], $entree['id_class']));
+		}
+		
+		public function editJournal($id_jour, $nom_jour){
+			include('connexion.php');
+
+			$entree['id_jour'] = $id_jour;
+			$entree['nom_jour'] = $nom_jour;
+
+			$requete = $connexion-> prepare('UPDATE journal
+												SET nom_jour = ?
+												WHERE id_jour = ?');
+			$requete-> execute(array($entree['nom_jour'], $entree['id_jour']));
 		}
 		
 		public function creerAffectationModeleFacture($id_mod_fact, $id_cli, $id_march, $id_mod_trans){
@@ -7484,6 +7507,90 @@
 					                </button>
 								</td>
 							</tr>';
+			}$requete-> closeCursor();
+			return $tableau;
+
+		}
+
+		public function getEcritureJournal($id_jour){
+			include("connexion.php");
+			$entree['id_jour'] = $id_jour;
+
+			$compteur=0;
+
+			$bg = "";
+			$badge = '';
+			$btn = '';
+			$etat ='';
+			$tableau = '';
+			$tableauDetail = '';
+
+			$debut = $compteur;
+
+			$requete = $connexion-> prepare("SELECT ecriture.*, 
+													monnaie.sig_mon AS sig_mon
+ 												FROM ecriture, monnaie
+												WHERE ecriture.id_jour = ?
+													AND ecriture.id_mon = monnaie.id_mon");
+			$requete-> execute(array($entree['id_jour']));
+			while ($reponse = $requete-> fetch()) {
+				$compteur++;
+
+				$tableau .='<tr style="">
+								<td style="text-align: center;" class="bg bg-secondary">
+									'.$compteur.'
+								</td>
+								<td style="text-align: center;" class="bg bg-secondary">
+									'.$reponse['date_e'].'
+								</td>
+								<td style="text-align: center;" class="bg bg-secondary">
+									
+								</td>
+								<td style="text-align: left;" class="bg bg-secondary">
+									'.$reponse['libelle_e'].'
+								</td>
+								<td style="text-align: center;" class="bg bg-secondary">
+									'.$reponse['sig_mon'].'
+								</td>
+								<td style="text-align: center;" class="bg bg-secondary">
+									
+								</td>
+								<td style="text-align: center;" class="bg bg-secondary">
+									
+								</td>
+							</tr>';
+							$requeteDetail = $connexion-> prepare("SELECT compte.code_compte AS code_compte, 
+																			compte.nom_compte AS nom_compte,
+																			detail_ecriture.debit AS debit,
+																			detail_ecriture.credit AS credit
+				 												FROM detail_ecriture, compte
+																WHERE detail_ecriture.id_e = ?
+																	AND detail_ecriture.id_compte = compte.id_compte
+																	ORDER BY detail_ecriture.credit");
+							$requeteDetail-> execute(array($reponse['id_e']));
+							while ($reponseDetail = $requeteDetail-> fetch()) {
+
+								$tableau .='<tr style="">
+												<td class="" style="text-align: center;" class="">
+												</td>
+												<td class="" style="text-align: center;" class="">
+													'.$reponseDetail['code_compte'].'
+												</td>
+												<td class="" style="text-align: left;" class="">
+													'.$reponseDetail['nom_compte'].'
+												</td>
+												<td class="" style="text-align: center;" class="">
+												</td>
+												<td class="" style="text-align: center;" class="">
+												</td>
+												<td class="" style="text-align: right;" class="">
+													'.$reponseDetail['debit'].'
+												</td>
+												<td class="" style="text-align: right;" class="">
+													'.$reponseDetail['credit'].'
+												</td>
+											</tr>';
+							}$requeteDetail-> closeCursor();
 			}$requete-> closeCursor();
 			return $tableau;
 
@@ -35209,6 +35316,62 @@
 
 		}
 
+		public function journaux(){
+			include("connexion.php");
+			// $entree['id_pv'] = $id_pv;
+			$compteur=0;
+
+			$tableau = '';
+
+			$requete = $connexion-> query("SELECT *
+											FROM journal
+											ORDER BY nom_jour ASC");
+			// $requete-> execute(array($entree['id_pv']));
+			while ($reponse = $requete-> fetch()) {
+				$compteur++;
+
+				$tableau .='<tr>
+								<td>'.$compteur.'</td>
+								<td>'.$reponse['nom_jour'].'</td>
+								<td style="text-align: center;">
+								'.$this-> getNombreCompteJournal($reponse['id_jour']).' | 
+								<button class="btn btn-xs bg-info" onclick="modal_compte_journal('.$reponse['id_jour'].');">
+										<i class="fa fa-eye"></i>
+									</button>
+								</td>
+								<td style="text-align: center;">
+									<button class="btn-xs btn-warning" onclick="modalEditJournal('.$reponse['id_jour'].');">
+										<span class="fa fa-edit"></span>
+									</button>
+								</td>
+							</tr>';
+
+			}$requete-> closeCursor();
+
+			return $tableau;
+
+		}
+
+		public function getNombreCompteJournal($id_jour){
+			include("connexion.php");
+			$entree['id_jour'] = $id_jour;
+			$compteur=0;
+
+			$tableau = '';
+
+			$requete = $connexion-> prepare("SELECT COUNT(id_compte) AS nbre
+											FROM compte_journal
+											WHERE id_jour = ?");
+			$requete-> execute(array($entree['id_jour']));
+			$reponse = $requete-> fetch();
+			if($reponse){
+				return $reponse['nbre'];
+			}else{
+				return '0';
+			}
+
+		}
+
 		public function ecriture_journal($id_jour){
 			include("connexion.php");
 			$entree['id_jour'] = $id_jour;
@@ -35280,23 +35443,86 @@
 
 		}
 
-		public function liste_compte_journal($compteur_compte){
+		public function liste_compte_journal($compteur_compte, $id_jour){
 			include("connexion.php");
-			// $entree['id_pv'] = $id_pv;
+			$entree['id_jour'] = $id_jour;
 			$compteur=0;
 
 			$tableau = '';
 
-			$requete = $connexion-> query("SELECT *
-											FROM compte
-											ORDER BY nom_compte");
-			// $requete-> execute(array($entree['id_pv']));
+			$requete = $connexion-> prepare("SELECT compte.id_compte AS id_compte, 
+													compte.nom_compte AS nom_compte
+											FROM compte, compte_journal
+											WHERE compte.id_compte = compte_journal.id_compte
+												AND compte_journal.id_jour = ?
+											ORDER BY compte.nom_compte");
+			$requete-> execute(array($entree['id_jour']));
 			while ($reponse = $requete-> fetch()) {
 				$compteur++;
 
 				$tableau .='<tr>
 								<td>'.$compteur.'</td>
 								<td><a href="#" onclick="select_compte(\''.$reponse['id_compte'].'\', \''.$reponse['nom_compte'].'\',\''.$this-> getSoldeCompte($reponse['id_compte']).'\', '.$compteur_compte.')">'.$reponse['nom_compte'].'</a></td>
+								<td style="text-align: right;">'.$this-> getSoldeCompte($reponse['id_compte']).'</td>
+							</tr>';
+
+			}$requete-> closeCursor();
+
+			return $tableau;
+
+		}
+
+		public function liste_compte_hors_journal($id_jour){
+			include("connexion.php");
+			$entree['id_jour'] = $id_jour;
+			$compteur=0;
+
+			$tableau = '<select id="id_compte_add" class="form-control form-control-sm rounded-0">
+							<option></option>';
+
+			$requete = $connexion-> prepare("SELECT *
+											FROM compte
+											WHERE id_compte NOT IN (
+													SELECT id_compte
+														FROM compte_journal
+														WHERE id_jour = ?
+												)
+											ORDER BY nom_compte");
+			$requete-> execute(array($entree['id_jour']));
+			while ($reponse = $requete-> fetch()) {
+				$compteur++;
+
+				$tableau .='<option value="'.$reponse['id_compte'].'">'.$reponse['nom_compte'].'</option>';
+
+			}$requete-> closeCursor();
+
+			$tableau .= '</select>';
+
+			return $tableau;
+
+		}
+
+		public function compte_journal($id_jour){
+			include("connexion.php");
+			$entree['id_jour'] = $id_jour;
+			$compteur=0;
+
+			$tableau = '';
+
+			$requete = $connexion-> prepare("SELECT compte.id_compte AS id_compte,
+													compte.nom_compte AS nom_compte
+											FROM compte, compte_journal
+											WHERE compte.id_compte = compte_journal.id_compte
+												AND compte_journal.id_jour = ?
+											ORDER BY compte.nom_compte");
+			$requete-> execute(array($entree['id_jour']));
+			while ($reponse = $requete-> fetch()) {
+				$compteur++;
+
+				$tableau .='<tr>
+								<td>'.$compteur.'</td>
+								<td>'.$reponse['nom_compte'].'</td>
+								<td><i class="fa fa-times text text-danger btn-xs" onclick="select_compte(\''.$reponse['id_compte'].'\', \''.$reponse['nom_compte'].'\')"></i></td>
 							</tr>';
 
 			}$requete-> closeCursor();
@@ -35357,6 +35583,50 @@
 
 			return $tableau;
 
+		}
+
+		public function nom_compte_search_journal($nom_compte, $compteur_compte, $id_jour){
+			include("connexion.php");
+			$entree['nom_compte'] = '%'.$nom_compte.'%';
+			$entree['id_jour'] = $id_jour;
+			$compteur=0;
+
+			$tableau = '';
+
+			$requete = $connexion-> prepare("SELECT compte.id_compte AS id_compte,
+													compte.nom_compte AS nom_compte
+											FROM compte, compte_journal
+											WHERE compte.nom_compte LIKE ?
+												AND compte.id_compte = compte_journal.id_compte
+												AND compte_journal.id_jour = ?
+											ORDER BY compte.nom_compte");
+			$requete-> execute(array($entree['nom_compte'], $entree['id_jour']));
+			while ($reponse = $requete-> fetch()) {
+				$compteur++;
+
+				$tableau .='<tr>
+								<td>'.$compteur.'</td>
+								<td><a href="#" onclick="select_compte(\''.$reponse['id_compte'].'\', \''.$reponse['nom_compte'].'\',\''.$this-> getSoldeCompte($reponse['id_compte']).'\', \''.$compteur_compte.'\')">'.$reponse['nom_compte'].'</a></td>
+								<td style="text-align: right;">'.$this-> getSoldeCompte($reponse['id_compte']).'</td>
+							</tr>';
+
+			}$requete-> closeCursor();
+
+			return $tableau;
+
+		}
+
+		public function creer_compte_journal($id_compte, $id_jour){
+			include("connexion.php");
+			$entree['id_compte'] = $id_compte;
+			$entree['id_jour'] = $id_jour;
+			$compteur=0;
+
+			$tableau = '';
+
+			$requete = $connexion-> prepare("INSERT INTO compte_journal(id_compte, id_jour)
+												VALUES(?, ?)");
+			$requete-> execute(array($entree['id_compte'], $entree['id_jour']));
 		}
 
 		public function nom_compte_tresorerie_search($nom_compte, $compteur_compte){
