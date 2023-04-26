@@ -133,7 +133,7 @@ $operational_cost = $maClasse-> getDetailFactureExportMultiple($_GET['ref_fact']
 
 $service_fee = $maClasse-> getDetailFactureExportMultiple($_GET['ref_fact'], '4');
 
-$totalAll = $maClasse-> getTotalFactureExportSingle($_GET['ref_fact']);
+$totalAll = $maClasse-> getTotalFactureMMGExport($_GET['ref_fact']);
 
 $total = $maClasse-> getTotalForFacturePartielle($_GET['ref_fact']);
 $arsp = $maClasse-> getARSPForFacturePartielle($_GET['ref_fact']);
