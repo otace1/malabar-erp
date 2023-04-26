@@ -182,6 +182,20 @@
               </a>
               <ul class="nav nav-treeview">
                 <li class="nav-item">
+                  <a href="journaux.php" class="nav-link">
+                    &nbsp;&nbsp;&nbsp;<i class="fa fa-folder-open nav-icon"></i>
+                    <p>
+                <?php
+                  if ($maClasse-> getUtilisateur($_SESSION['id_util'])['langue']=='ENG') {
+                    echo 'Registers';
+                  }else if ($maClasse-> getUtilisateur($_SESSION['id_util'])['langue']=='FR') {
+                    echo 'Journaux';
+                  }
+                ?>
+                  </p>
+                  </a>
+                </li>
+                <li class="nav-item">
                   <a href="account.php" class="nav-link">
                     &nbsp;&nbsp;&nbsp;<i class="fa fa-table nav-icon"></i>
                     <p>

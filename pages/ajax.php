@@ -1279,11 +1279,6 @@
 
 		echo json_encode($response);
 
-	}else if ($_POST['operation']=='liste_compte_journal') {
-	  
-		$response['liste_compte_journal'] = $maClasse-> liste_compte_journal($_POST['compteur_compte']);
-		echo json_encode($response);
-
 	}else if ($_POST['operation']=='nom_compte_search') {
 	  
 		$response['liste_compte_journal'] = $maClasse-> nom_compte_search($_POST['nom_compte'], $_POST['compteur_compte']);
@@ -1391,6 +1386,66 @@
   		}
 		$response['ref_dos'] =$maClasse-> selectionnerDossierClientModeleLicenceMarchandise3($_POST['id_cli'], $_POST['id_mod_lic'], $_POST['id_march'], $_POST['id_mod_trans'], $_POST['num_lic']);
 		// $response['message'] = 'ok';
+		echo json_encode($response);
+
+	}else if ($_POST['operation']=='getEcritureJournal') {
+
+  		$response['getEcritureJournal'] = $maClasse-> getEcritureJournal($_POST['id_jour']);
+		echo json_encode($response);
+
+	}else if ($_POST['operation']=='journaux') {
+	  
+		$response['journaux'] = $maClasse-> journaux();
+		echo json_encode($response);
+
+	}else if ($_POST['operation']=='creerJournal') {
+	  
+		$maClasse-> creerJournal($_POST['nom_jour']);
+		$response['message'] = 'Register Created!';
+		echo json_encode($response);
+
+	}else if ($_POST['operation']=='modalEditJournal') {
+	  
+		$response = $maClasse-> getDataJournal($_POST['id_jour']);
+		echo json_encode($response);
+
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='editJournal'){
+
+  		$maClasse-> editJournal($_POST['id_jour'], $_POST['nom_jour']);
+  		$reponse['message'] = 'Register Updated!';
+
+  		echo json_encode($reponse);
+
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='compte_journal'){
+
+  		$reponse['compte_journal'] = $maClasse-> compte_journal($_POST['id_jour']);
+  		$reponse['nom_jour'] = $maClasse-> getDataJournal($_POST['id_jour'])['nom_jour'];
+
+  		echo json_encode($reponse);
+
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='liste_compte_hors_journal'){
+
+  		$reponse['liste_compte_hors_journal'] = $maClasse-> liste_compte_hors_journal($_POST['id_jour']);;
+
+  		echo json_encode($reponse);
+
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='creer_compte_journal'){
+
+  		$maClasse-> creer_compte_journal($_POST['id_compte'], $_POST['id_jour']);;
+  		$reponse['liste_compte_hors_journal'] = $maClasse-> liste_compte_hors_journal($_POST['id_jour']);
+  		$reponse['compte_journal'] = $maClasse-> compte_journal($_POST['id_jour']);
+  		$reponse['message'] = 'Account added!';
+
+  		echo json_encode($reponse);
+
+	}else if ($_POST['operation']=='liste_compte_journal') {
+	  
+		$response['liste_compte_journal'] = $maClasse-> liste_compte_journal($_POST['compteur_compte'], $_POST['id_jour']);
+		echo json_encode($response);
+
+	}else if ($_POST['operation']=='nom_compte_search_journal') {
+	  
+		$response['liste_compte_journal'] = $maClasse-> nom_compte_search_journal($_POST['nom_compte'], $_POST['compteur_compte'], $_POST['id_jour']);
 		echo json_encode($response);
 
 	}

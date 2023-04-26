@@ -27,18 +27,21 @@
                   <div class="card-tools">
 
                       <div class="pull-right">
-                        <button class="btn btn-xs bg-purple square-btn-adjust" onclick="formulaire_ecriture();">
+                        <button class="btn btn-xs bg-purple square-btn-adjust" id="btn_formulaire_ecriture" onclick="reload_formulaire_ecriture();formulaire_ecriture();">
                             <i class="fa fa-plus"></i> New Record
+                        </button>
+                        <button class="btn btn-xs bg-danger square-btn-adjust" id="btn_close_formulaire_ecriture" style="display: none;" onclick="close_formulaire_ecriture();">
+                            <i class="fa fa-plus"></i> Cancel
                         </button>
 <!-- 
                         <button class="btn btn-xs bg-purple square-btn-adjust" data-toggle="modal" data-target=".creerPVContentieux">
                             <i class="fa fa-plus"></i> Nouveau PV
                         </button>
- -->
+
                         <button class="btn btn-xs bg-teal square-btn-adjust" onclick="reload_formulaire_ecriture()">
                             <i class="fa fa-refresh"></i> Actualiser
                         </button>
-
+ -->
                       </div>
 
                   </div>
@@ -48,142 +51,126 @@
               <div class="card-body">
 
                 <div id="formulaire_ecriture" style="display: none;" class="">
-                  <div class="modal-content">
-                    <div class="modal-header ">
-                      <h5 class="modal-title"><i class="fa fa-plus"></i> New Record</h5>
-                      <button type="button" class="close" onclick="close_formulaire_ecriture();">
-                        <span aria-hidden="true">&times;</span>
-                      </button>
-                    </div>
-                    <div class="modal-body" id="formulaire_ecriture_detail">
-                      <div class="row">
+                  <form method="POST" action="" id="creerEcriture_form">
+                  <input type="hidden" name="operation" value="creerEcriture">
+                  <input type="hidden" name="id_jour" value="<?php echo $_GET['id_jour'];?>">
+                  <input type="hidden" name="id_taux" value="<?php echo $maClasse-> getLastTaux()['id_taux'];?>">
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="row">
 
-                        <div class="col-md-2">
-                          <label for="x_card_code" class="control-label mb-1">Record Ref.</label>
-                          <input class="form-control cc-exp form-control-sm" type="text" value="<?php echo uniqid();?>" id="ref_e" name="" required>
-                        </div>
-
-                        <div class="col-md-2">
-                          <label for="x_card_code" class="control-label mb-1">Date</label>
-                          <input class="form-control cc-exp form-control-sm" type="date" id="date_e" name="date_e" value="<?php echo date('Y-m-d');?>" required>
-                        </div>
-
-                        <div class="col-md-1">
-                          <label for="x_card_code" class="control-label mb-1">Currency</label>
-                          <select class="form-control cc-exp form-control-sm" id="usd" name="usd" required>
-                            <option value="1">USD</option>
-                            <option value="0">CDF</option>
-                          </select>
-                        </div>
-
-                        <div class="col-md-1">
-                          <label for="x_card_code" class="control-label mb-1">ROE</label>
-                          <input class="form-control cc-exp form-control-sm bg-dark text-danger" style="text-align: center;" type="text" id="taux" disabled >
-                          <input type="hidden" id="id_taux" >
-                        </div>
-
-                        <div class="col-md-2">
-                          <label for="x_card_code" class="control-label mb-1">Supporting Doc. Ref.</label>
-                          <input class="form-control cc-exp form-control-sm" type="text" id="reference" name="" required>
-                        </div>
-<!-- 
-                        <div class="col-md-2">
-                          <label for="x_card_code" class="control-label mb-1">Supporting Doc. File</label>
-                          <input class="form-control cc-exp form-control-sm" type="file" id="" name="" required>
-                        </div>
- -->
-                        <div class="col-md-3">
-                          <label for="x_card_code" class="control-label mb-1">Naration</label>
-                          <textarea class="form-control cc-exp form-control-sm" id="libelle_e" name="" required></textarea>
-                        </div>
-
-                        <div class="col-md-12">
-                          <hr>
-                        </div>
-
-                        <div class="col-md-12">
-                          <table class=" table table-dark table-hover table-bordered text-nowrap table-sm">
-                            <thead>
-                              <tr>
-                                <th width="5%"></th>
-                                <th width="55%">Account</th>
-                                <th width="20%">Debit</th>
-                                <th width="20%">Credit</th>
-                                <th width="5%"></th>
-                              </tr>
-                            </thead>
-                            <tbody>
-                              <tr>
-                                <td style="text-align: center;">
-                                  <button class="btn btn-xs btn-info" onclick="liste_compte_journal();">
-                                    <i class="fa fa-plus"></i>
-                                  </button>
-                                </td>
-                                <td>
-                                  <input type="hidden" id="id_compte">
-                                  <input type="text" class="form-control form-control-sm" disabled id="nom_compte">
-                                </td>
-                                <td>
-                                  <input type="number" min="0" step="0.01" class="form-control form-control-sm" id="debit" style="text-align: center;">
-                                </td>
-                                <td>
-                                  <input type="number" min="0" step="0.01" class="form-control form-control-sm" id="credit" style="text-align: center;">
-                                </td>
-                                <td style="text-align: center;">
-                                  <button class="btn btn-xs btn-success" onclick="creerDetailEcriture(ref_e.value, date_e.value, libelle_e.value, reference.value, <?php echo $_GET['id_jour'];?>, id_taux.value, usd.value, id_compte.value, debit.value, credit.value);;">
-                                    <i class="fa fa-check"></i>
-                                  </button>
-                                </td>
-                              </tr>
-                              <span id="afficher_detail_ecriture"></span>
-                            </tbody>
-                          </table>
-                        </div>
-                        
+                      <div class="col-md-1">
+                        <label for="x_card_code" class="control-label mb-1">Currency</label>
+                        <select class="form-control cc-exp form-control-sm" type="text" id="id_mon" name="id_mon" required>
+                          <option></option>
+                          <?php
+                            $maClasse-> selectionnerMonnaieComptable();
+                          ?>
+                        </select>
                       </div>
-                    </div>
-                    <div class="modal-footer justify-content-between">
-                      <!-- <button type="button" class="btn-xs btn-danger" data-dismiss="modal">Annuler</button>
-                      <button type="submit" name="" class="btn-xs btn-primary">Créer</button> -->
+
+                      <div class="col-md-6">
+                        <label for="x_card_code" class="control-label mb-1">Naration</label>
+                        <input class="form-control cc-exp form-control-sm" type="text" id="libelle_e" name="libelle_e" required>
+                      </div>
+
+                      <div class="col-md-2">
+                        <label for="x_card_code" class="control-label mb-1">Date</label>
+                        <input class="form-control cc-exp form-control-sm" type="date" id="date_e" name="date_e" value="<?php echo date('Y-m-d');?>" required>
+                      </div>
+
                     </div>
                   </div>
-                  <hr>
+                  <div class="col-md-12">
+                    <hr>
+                  </div>
+                  <div class="col-md-12">
+                    <table class=" table table-dark table-head-fixed table-bordered table-hover text-nowrap table-sm">
+                      <thead>
+                        <tr class="">
+                          <th style="" width="5%">#</th>
+                          <th style="">Account</th>
+                          <th style=" text-align: center;" width="20%">Debit</th>
+                          <th style=" text-align: center;" width="20%">Credit</th>
+                        </tr>
+                      </thead>
+                      <tbody id="">
+                        <?php
+                        for ($i=1; $i <=5 ; $i++) { 
+                          ?>
+                          <tr>
+                            <td style="text-align: center;">
+                              <?php echo $i;?>
+                            </td>
+                            <td>
+                              <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                  <button type="button" class="btn btn-sm btn-info" onclick="liste_compte_journal(<?php echo $i;?>, <?php echo $_GET['id_jour'];?>);"><i class="fa fa-list"></i></button>
+                                </div>
+                              <!-- /btn-group -->
+                                <input type="text" id="nom_compte_<?php echo $i;?>" class="form-control bg-dark form-control-sm" disabled>
+                              </div>
+                              <input type="hidden" id="id_compte_<?php echo $i;?>" name="id_compte_<?php echo $i;?>">
+                            </td>
+                            <td>
+                              <input class="form-control cc-exp form-control-sm text-center" type="number" onblur="getTotal();" id="montant_debit_<?php echo $i;?>" name="montant_debit_<?php echo $i;?>">
+                            </td>
+                            <td>
+                              <input class="form-control cc-exp form-control-sm text-center" type="number" onblur="getTotal();" id="montant_credit_<?php echo $i;?>" name="montant_credit_<?php echo $i;?>">
+                            </td>
+                          </tr>
+                          <?php
+                        }
+                        ?>
+                        <input type="hidden" name="nbre" value="<?php echo $i;?>">
+                          <tr>
+                            <td style="text-align: right;" colspan="2">
+                              TOTAL
+                            </td>
+                            <td>
+                              <input class="form-control cc-exp form-control-sm text-danger bg-dark text-weight text-center" type="number" disabled id="total_debit" name="total_debit">
+                            </td>
+                            <td>
+                              <input class="form-control cc-exp form-control-sm text-danger bg-dark text-weight text-center" type="number" disabled id="total_credit" name="total_credit">
+                            </td>
+                          </tr>
+                      </tbody>
+                    </table>
+                  </div>
+
+                  <div class="modal-footer justify-content-between col-md-12">
+                    <button type="submit" class="btn-xs btn-primary" data-dismiss="modal">Submit</button>
+                  </div>
+
+                </div>
+                </form>
                 </div>
 
-                <!-- <table class=" table table-dark table-hover table-bordered text-nowrap table-sm">
-                  <thead>
-                    <tr>
-                      <th style="width: 10px">#</th>
-                      <th>Task</th>
-                      <th>Progress</th>
-                      <th style="width: 40px">Label</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td>1.</td>
-                      <td>Update software</td>
-                      <td>
-                      <div class="progress progress-xs">
-                      <div class="progress-bar progress-bar-danger" style="width: 55%"></div>
-                      </div>
-                      </td>
-                      <td><span class="badge bg-danger">55%</span></td>
-                    </tr>
-                    
-                  </tbody>
-                </table> -->
+                <hr>
+
+                <div class="card-body table-responsive p-0" style="height: 500px;">
+                  <table class=" table table-head-fixed table-bordered table-hover text-nowrap table-sm">
+                    <thead>
+                      <tr class="bg bg-dark">
+                        <th class="bg bg-dark" style="" width="10px;">#</th>
+                        <th class="bg bg-dark" style="">Date</th>
+                        <th class="bg bg-dark" style="">Intitule Compte</th>
+                        <th class="bg bg-dark" style="">Libelle</th>
+                        <th class="bg bg-dark" style="">Monnaie</th>
+                        <th class="bg bg-dark" style="">Debit</th>
+                        <th class="bg bg-dark" style="">Credit</th>
+                      </tr>
+                    </thead>
+                    <tbody id="getEcritureJournal">
+                      <?php
+                      // $maClasse-> afficherDossierEnAttenteFacture($_GET['id_cli'], $_GET['id_mod_lic_fact']);
+                      ?>
+                    </tbody>
+                  </table>
+                </div>
+                
               </div>
 
-              <!-- <div class="card-footer clearfix">
-                <ul class="pagination pagination-sm m-0 float-right">
-                  <li class="page-item"><a class="page-link" href="#">&laquo;</a></li>
-                  <li class="page-item"><a class="page-link" href="#">1</a></li>
-                  <li class="page-item"><a class="page-link" href="#">2</a></li>
-                  <li class="page-item"><a class="page-link" href="#">3</a></li>
-                  <li class="page-item"><a class="page-link" href="#">&raquo;</a></li>
-                </ul>
-              </div> -->
             </div>
 
           </div>
@@ -214,12 +201,13 @@
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
+        <input type="hidden" id="compteur_compte">
       <div class="modal-body">
         <div class="row">
 
           <div class="col-md-6">
             <label for="x_card_code" class="control-label mb-1">Search</label>
-            <input class="form-control cc-exp bg-dark" type="text" id="nom_compte_search" onkeyup="nom_compte_search(this.value);">
+            <input class="form-control cc-exp bg-dark" type="text" id="nom_compte_search_journal" onkeyup="nom_compte_search_journal(this.value, compteur_compte.value, <?php echo $_GET['id_jour'];?>);">
           </div>
 
           <div class="col-md-12 table-responsive" style="height: 300px;">
@@ -228,6 +216,7 @@
                 <tr class="">
                   <th width="5%">#</th>
                   <th style="">Name</th>
+                  <th style="">Solde</th>
                 </tr>
               </thead>
               <tbody id="liste_compte_journal">
@@ -250,7 +239,11 @@
 <script type="text/javascript">
 
   $(document).ready(function(){
-    
+    loadPageRegister();
+  });
+
+  function loadPageRegister(){
+
     $('#spinner-div').show();
 
      $.ajax({
@@ -272,7 +265,7 @@
       }
     });
 
-  });
+  }
 
   function round(num, decimalPlaces = 0) {
     return new Decimal(num).toDecimalPlaces(decimalPlaces).toNumber();
@@ -287,31 +280,38 @@
   function formulaire_ecriture(){
 
     document.getElementById("formulaire_ecriture").style.display = "block";
+    document.getElementById("btn_formulaire_ecriture").style.display = "none";
+    document.getElementById("btn_close_formulaire_ecriture").style.display = "block";
 
   }
 
   function close_formulaire_ecriture(){
 
     document.getElementById("formulaire_ecriture").style.display = "none";
+    document.getElementById("btn_formulaire_ecriture").style.display = "block";
+    document.getElementById("btn_close_formulaire_ecriture").style.display = "none";
+
 
   }
 
   function reload_formulaire_ecriture(){
 
     $('#spinner-div').show();
+
     $("#formulaire_ecriture_detail").load(window.location.href + " #formulaire_ecriture_detail" );
+    loadPageRegister();
     $('#spinner-div').hide();
 
   }
 
-  function liste_compte_journal(){
+  function liste_compte_journal(compteur_compte, id_jour){
     
     $('#spinner-div').show();
 
      $.ajax({
       type: 'post',
       url: 'ajax.php',
-      data: {operation: 'liste_compte_journal'},
+      data: {operation: 'liste_compte_journal', compteur_compte: compteur_compte, id_jour: id_jour},
       dataType: 'json',
       success:function(data){
         if (data.logout) {
@@ -319,8 +319,9 @@
           window.location="../deconnexion.php";
         }else{
           $('#liste_compte_journal').html(data.liste_compte_journal);
-          $('#nom_compte_search').val('');
+          $('#nom_compte_search_journal').val('');
           $('#modal_compte').modal('show');
+          $('#compteur_compte').val(compteur_compte);
         }
       },
       complete: function () {
@@ -330,12 +331,12 @@
 
   }
 
-  function nom_compte_search(nom_compte){
+  function nom_compte_search_journal(nom_compte, compteur_compte, id_jour){
 
      $.ajax({
       type: 'post',
       url: 'ajax.php',
-      data: {operation: 'nom_compte_search', nom_compte: nom_compte},
+      data: {operation: 'nom_compte_search_journal', nom_compte: nom_compte, compteur_compte: compteur_compte, id_jour: id_jour},
       dataType: 'json',
       success:function(data){
         if (data.logout) {
@@ -349,15 +350,30 @@
 
   }
 
-  function select_compte(id_compte, nom_compte){
+  // function select_compte(id_compte, nom_compte){
     
-    $('#spinner-div').show();
+  //   $('#spinner-div').show();
+  //   $('#modal_compte').modal('hide');
+  //   $('#liste_compte_journal').html('');
+  //   $('#nom_compte').val(nom_compte);
+  //   document.getElementById('nom_compte').classList.remove("is-invalid");
+  //   document.getElementById('nom_compte').classList.remove("text-danger");
+  //   $('#id_compte').val(id_compte);
+  //   $('#spinner-div').hide();
+
+  // }
+
+  function select_compte(id_compte, nom_compte, solde_compte, compteur_compte){
+    
     $('#modal_compte').modal('hide');
+    $('#spinner-div').show();
     $('#liste_compte_journal').html('');
-    $('#nom_compte').val(nom_compte);
-    document.getElementById('nom_compte').classList.remove("is-invalid");
-    document.getElementById('nom_compte').classList.remove("text-danger");
-    $('#id_compte').val(id_compte);
+    $('#nom_compte_'+compteur_compte).val(nom_compte);
+    // document.getElementById('nom_compte').classList.remove("is-invalid");
+    // document.getElementById('nom_compte').classList.remove("text-danger");
+    $('#id_compte_'+compteur_compte).val(id_compte);
+
+
     $('#spinner-div').hide();
 
   }
@@ -415,13 +431,104 @@
 
   }
 
-    // const ref_fact_input = document.getElementById('ref_fact');
-    // ref_fact_input.setAttribute("disabled", "");
-    // const taux_input = document.getElementById('taux');
-    // taux_input.setAttribute("disabled", "");
-    // document.getElementById("creerFacture").style.display = "none";
-    // document.getElementById("dossier").style.display = "block";
-    // document.getElementById("detail_facture").style.display = "block";
-  // if(confirm('Voulez-vous modifier ce PV ?')) {}
+  function getTotal(){
+    total_debit = 0;
+    total_credit = 0;
+    for (var i = 1; i <= 5; i++) {
+       
+      if (parseFloat($('#montant_debit_'+i).val()) > 0 ) {
+        total_debit += parseFloat($('#montant_debit_'+i).val());
+      }
+      if (parseFloat($('#montant_credit_'+i).val()) > 0 ) {
+        total_credit += parseFloat($('#montant_credit_'+i).val());
+      }
+
+    }
+    // console.log(total);
+    $('#total_debit').val(total_debit);
+    $('#total_credit').val(total_credit);
+  }
+
+  $(document).ready(function(){
+
+      $('#creerEcriture_form').submit(function(e){
+
+        e.preventDefault();
+        
+        getTotal();
+
+        if ($('#total_debit').val()!=$('#total_credit').val()) {
+          alert('Error!! Operation is not well balanced.');
+        }else{
+          
+          if(confirm('Do really you want to submit ?')) {
+
+            var fd = new FormData(this);
+            $('#spinner-div').show();
+
+            $.ajax({
+              type: 'post',
+              url: 'ajax.php',
+              processData: false,
+              contentType: false,
+              data: fd,
+              dataType: 'json',
+              success:function(data){
+                if (data.logout) {
+                  alert(data.logout);
+                  window.location="../deconnexion.php";
+                }else if(data.message){
+                  $( '#creerEcriture_form' ).each(function(){
+                      this.reset();
+                  });
+                  getEcritureJournal();
+                  $('#spinner-div').hide();//Request is complete so hide spinner
+                  alert(data.message);
+                }
+              },
+              complete: function () {
+                  $('#spinner-div').hide();//Request is complete so hide spinner
+              }
+            });
+
+          }
+
+        }
+
+      });
+    
+  });
+
+  $(document).ready(function(){
+
+    getEcritureJournal();
+
+  });
+
+  function getEcritureJournal(){
+
+    $('#spinner-div').show();
+
+    $.ajax({
+      type: 'post',
+      url: 'ajax.php',
+      data: {operation: 'getEcritureJournal', id_jour: <?php echo $_GET['id_jour'];?>},
+      dataType: 'json',
+      success:function(data){
+        if (data.logout) {
+          alert(data.logout);
+          window.location="../deconnexion.php";
+        }else{
+          $( '#getEcritureJournal' ).html(data.getEcritureJournal);
+          $('#spinner-div').hide();//Request is complete so hide spinner
+        }
+      },
+      complete: function () {
+          $('#spinner-div').hide();//Request is complete so hide spinner
+      }
+    });
+
+  }
+
 
 </script>
