@@ -193,7 +193,7 @@
                   <th>% / Qty</th>
                   <th>AMOUNT</th>
                   <th>CURRENCY</th>
-                  <th>TVA</th>
+                  <th colspan="2" style="text-align: center;">TVA</th>
               </tr>
           </thead>
           <tbody id="debours">
@@ -788,50 +788,6 @@
       cif_cdf=0;
     }
 
-    // if (parseFloat($('#ddi').val()) > 0 ) {
-    //   ddi = parseFloat($('#ddi').val());
-    // }else{
-    //   ddi=1;
-    // }
-    // if ($('#tva_ddi').val() == '1' ) {
-    //   tva_ddi = ddi*0.16;
-    // }else{
-    //   tva_ddi=0;
-    // }
-
-    // if (parseFloat($('#ddi_2').val()) > 0 ) {
-    //   ddi_2 = parseFloat($('#ddi_2').val());
-    // }else{
-    //   ddi_2=0;
-    // }
-    // if ($('#tva_ddi_2').val() == '1' ) {
-    //   tva_ddi_2 = ddi_2*0.16;
-    // }else{
-    //   tva_ddi_2=0;
-    // }
-
-    // if (parseFloat($('#ddi_3').val()) > 0 ) {
-    //   ddi_3 = parseFloat($('#ddi_3').val());
-    // }else{
-    //   ddi_3=0;
-    // }
-    // if ($('#tva_ddi_3').val() == '1' ) {
-    //   tva_ddi_3 = ddi_3*0.16;
-    // }else{
-    //   tva_ddi_3=0;
-    // }
-
-    // if (parseFloat($('#ddi_4').val()) > 0 ) {
-    //   ddi_4 = parseFloat($('#ddi_4').val());
-    // }else{
-    //   ddi_4=0;
-    // }
-    // if ($('#tva_ddi_4').val() == '1' ) {
-    //   tva_ddi_4 = ddi_4*0.16;
-    // }else{
-    //   tva_ddi_4=0;
-    // }
-
     if (parseFloat($('#ddi').val()) > 0 ) {
       ddi = parseFloat($('#ddi').val());
     }else{
@@ -848,6 +804,7 @@
       pourcentage_qte_ddi=0;
       tva_ddi=0;
     }
+    $('#montant_tva_ddi').val(tva_ddi.toFixed(0));
 
     if (parseFloat($('#ddi_2').val()) > 0 ) {
       ddi_2 = parseFloat($('#ddi_2').val());
@@ -865,6 +822,7 @@
       pourcentage_qte_ddi_2=0;
       tva_ddi_2=0;
     }
+    $('#montant_tva_ddi_2').val(tva_ddi_2.toFixed(0));
 
     if (parseFloat($('#ddi_3').val()) > 0 ) {
       ddi_3 = parseFloat($('#ddi_3').val());
@@ -882,6 +840,7 @@
       pourcentage_qte_ddi_3=0;
       tva_ddi_3=0;
     }
+    $('#montant_tva_ddi_3').val(tva_ddi_3.toFixed(0));
 
     if (parseFloat($('#ddi_4').val()) > 0 ) {
       ddi_4 = parseFloat($('#ddi_4').val());
@@ -899,6 +858,7 @@
       pourcentage_qte_ddi_4=0;
       tva_ddi_4=0;
     }
+    $('#montant_tva_ddi_4').val(tva_ddi_4.toFixed(0));
 
     if (parseFloat($('#roe_decl').val()) > 0 ) {
       roe_decl = parseFloat($('#roe_decl').val());
@@ -976,8 +936,10 @@
     }
 
     // fpi = (cif_cdf+ddi)*0.0184;
-    // rri = (cif_cdf*0.0225)-4;
-    // cog = (cif_cdf*0.00457)-3;
+    // rri = (cif_cdf*0.0225);
+    // cog = (cif_cdf*0.00457);
+    
+    // alert(tva_ddi);
     rls = 85*unite_rls*roe_decl;
     if ($('#tva_rls').val() == '1' ) {
       tva_rls = rls*0.16;
@@ -985,9 +947,9 @@
       tva_rls=0;
     }
 
-    // autres_taxes = montant_liq-(ddi+fpi+rri+cog+dci+rls+tva+ddi_2+ddi_3+ddi_4);
-
     autres_taxes = montant_liq-(ddi+tva_ddi+fpi+tva_fpi+rri+tva_rri+cog+tva_cog+dci+tva_dci+rls+tva_rls+tva+ddi_2+tva_ddi_2+ddi_3+tva_ddi_3+ddi_4+tva_ddi_4);
+
+    // console.log(autres_taxes);
 
     frais_bancaire = (montant_liq/roe_decl)*(unite_frais_bancaire/100);
 
@@ -1018,24 +980,245 @@
     }else{
       $('#autres_taxes').val('');
     }
-    // if (Math.round(frais_bancaire*1000)/1000 > 0) {
-    //   $('#frais_bancaire').val(frais_bancaire.toFixed(2));
-    // }else{
-    //   $('#frais_bancaire').val('');
-    // }
     if (Math.round(frais_bancaire*1000)/1000 > 0) {
       
-      // if (Math.round(frais_bancaire*1000)/1000 < 25) {
-      //   $('#frais_bancaire').val(25);
-      // }else{
-      //   $('#frais_bancaire').val(frais_bancaire.toFixed(2));
-      // }
-
       $('#frais_bancaire').val(frais_bancaire.toFixed(2));
       
     }else{
       $('#frais_bancaire').val('');
     }
+
+
+  }
+
+  function calculDroit2(){
+
+
+    if (parseFloat($('#cif_cdf').val()) > 0 ) {
+      cif_cdf = parseFloat($('#cif_cdf').val());
+    }else{
+      cif_cdf=0;
+    }
+
+    if (parseFloat($('#ddi').val()) > 0 ) {
+      ddi = parseFloat($('#ddi').val());
+    }else{
+      ddi=1;
+    }
+    if (parseFloat($('#pourcentage_qte_ddi').val()) > 0 ) {
+      pourcentage_qte_ddi = parseFloat($('#pourcentage_qte_ddi').val());
+      if ($('#tva_ddi').val() == '1' ) {
+        tva_ddi = (((ddi*100)+(ddi*pourcentage_qte_ddi))/pourcentage_qte_ddi)*0.16;
+      }else{
+        tva_ddi=0;
+      }
+    }else{
+      pourcentage_qte_ddi=0;
+      tva_ddi=0;
+    }
+    // tva_ddi = $('#montant_tva_ddi').val();
+    if (parseFloat($('#montant_tva_ddi').val()) > 0 ) {
+      tva_ddi = parseFloat($('#montant_tva_ddi').val());
+    }else{
+      tva_ddi=0;
+    }
+
+    if (parseFloat($('#ddi_2').val()) > 0 ) {
+      ddi_2 = parseFloat($('#ddi_2').val());
+    }else{
+      ddi_2=0;
+    }
+    if (parseFloat($('#pourcentage_qte_ddi_2').val()) > 0 ) {
+      pourcentage_qte_ddi_2 = parseFloat($('#pourcentage_qte_ddi_2').val());
+      if ($('#tva_ddi_2').val() == '1' ) {
+        tva_ddi_2 = (((ddi_2*100)+(ddi_2*pourcentage_qte_ddi_2))/pourcentage_qte_ddi_2)*0.16;
+      }else{
+        tva_ddi_2=0;
+      }
+    }else{
+      pourcentage_qte_ddi_2=0;
+      tva_ddi_2=0;
+    }
+    if (parseFloat($('#montant_tva_ddi_2').val()) > 0 ) {
+      tva_ddi_2 = parseFloat($('#montant_tva_ddi_2').val());
+    }else{
+      tva_ddi_2=0;
+    }
+
+    if (parseFloat($('#ddi_3').val()) > 0 ) {
+      ddi_3 = parseFloat($('#ddi_3').val());
+    }else{
+      ddi_3=0;
+    }
+    if (parseFloat($('#pourcentage_qte_ddi_3').val()) > 0 ) {
+      pourcentage_qte_ddi_3 = parseFloat($('#pourcentage_qte_ddi_3').val());
+      if ($('#tva_ddi_3').val() == '1' ) {
+        tva_ddi_3 = (((ddi_3*100)+(ddi_3*pourcentage_qte_ddi_3))/pourcentage_qte_ddi_3)*0.16;
+      }else{
+        tva_ddi_3=0;
+      }
+    }else{
+      pourcentage_qte_ddi_3=0;
+      tva_ddi_3=0;
+    }
+    if (parseFloat($('#montant_tva_ddi_3').val()) > 0 ) {
+      tva_ddi_3 = parseFloat($('#montant_tva_ddi_3').val());
+    }else{
+      tva_ddi_3=0;
+    }
+    
+
+    if (parseFloat($('#ddi_4').val()) > 0 ) {
+      ddi_4 = parseFloat($('#ddi_4').val());
+    }else{
+      ddi_4=0;
+    }
+    if (parseFloat($('#pourcentage_qte_ddi_4').val()) > 0 ) {
+      pourcentage_qte_ddi_4 = parseFloat($('#pourcentage_qte_ddi_4').val());
+      if ($('#tva_ddi_4').val() == '1' ) {
+        tva_ddi_4 = (((ddi_4*100)+(ddi_4*pourcentage_qte_ddi_4))/pourcentage_qte_ddi_4)*0.16;
+      }else{
+        tva_ddi_4=0;
+      }
+    }else{
+      pourcentage_qte_ddi_4=0;
+      tva_ddi_4=0;
+    }
+    if (parseFloat($('#montant_tva_ddi_4').val()) > 0 ) {
+      tva_ddi_4 = parseFloat($('#montant_tva_ddi_4').val());
+    }else{
+      tva_ddi_4=0;
+    }
+    
+
+    if (parseFloat($('#roe_decl').val()) > 0 ) {
+      roe_decl = parseFloat($('#roe_decl').val());
+    }else{
+      roe_decl=0;
+    }
+
+    if (parseFloat($('#unite_rls').val()) > 0 ) {
+      unite_rls = parseFloat($('#unite_rls').val());
+    }else{
+      unite_rls=0;
+    }
+
+    if (parseFloat($('#dci').val()) > 0 ) {
+      dci = parseFloat($('#dci').val());
+    }else{
+      dci=0;
+    }
+    if ($('#tva_dci').val() == '1' ) {
+      tva_dci = dci*0.16;
+    }else{
+      tva_dci=0;
+    }
+
+    if (parseFloat($('#tva').val()) > 0 ) {
+      tva = parseFloat($('#tva').val());
+    }else{
+      tva=0;
+    }
+
+    if (parseFloat($('#montant_liq').val()) > 0 ) {
+      montant_liq = parseFloat($('#montant_liq').val());
+    }else{
+      montant_liq=0;
+    }
+
+    if (parseFloat($('#unite_frais_bancaire').val()) > 0 ) {
+      unite_frais_bancaire = parseFloat($('#unite_frais_bancaire').val());
+    }else{
+      unite_frais_bancaire=1;
+    }
+    $('#unite_frais_bancaire').val(unite_frais_bancaire);
+
+    if (parseFloat($('#fpi').val()) > 0 ) {
+      fpi = parseFloat($('#fpi').val());
+    }else{
+      fpi=0;
+    }
+    if ($('#tva_fpi').val() == '1' ) {
+      tva_fpi = fpi*0.16;
+    }else{
+      tva_fpi=0;
+    }
+
+    if (parseFloat($('#rri').val()) > 0 ) {
+      rri = parseFloat($('#rri').val());
+    }else{
+      rri=0;
+    }
+    if ($('#tva_rri').val() == '1' ) {
+      tva_rri = rri*0.16;
+    }else{
+      tva_rri=0;
+    }
+
+    if (parseFloat($('#cog').val()) > 0 ) {
+      cog = parseFloat($('#cog').val());
+    }else{
+      cog=0;
+    }
+    if ($('#tva_cog').val() == '1' ) {
+      tva_cog = cog*0.16;
+    }else{
+      tva_cog=0;
+    }
+
+    // fpi = (cif_cdf+ddi)*0.0184;
+    // rri = (cif_cdf*0.0225);
+    // cog = (cif_cdf*0.00457);
+    
+    // alert(tva_ddi);
+    rls = 85*unite_rls*roe_decl;
+    if ($('#tva_rls').val() == '1' ) {
+      tva_rls = rls*0.16;
+    }else{
+      tva_rls=0;
+    }
+
+    autres_taxes = montant_liq-(ddi+tva_ddi+fpi+tva_fpi+rri+tva_rri+cog+tva_cog+dci+tva_dci+rls+tva_rls+tva+ddi_2+tva_ddi_2+ddi_3+tva_ddi_3+ddi_4+tva_ddi_4);
+
+    // console.log(autres_taxes);
+
+    frais_bancaire = (montant_liq/roe_decl)*(unite_frais_bancaire/100);
+
+
+
+    if (Math.round(fpi*1000)/1000 > 0) {
+      $('#fpi').val(fpi.toFixed(0));
+    }else{
+      $('#fpi').val('');
+    }
+    if (Math.round(rri*1000)/1000 > 0) {
+      $('#rri').val(rri.toFixed(0));
+    }else{
+      $('#rri').val('');
+    }
+    if (Math.round(cog*1000)/1000 > 0) {
+      $('#cog').val(cog.toFixed(0));
+    }else{
+      $('#cog').val('');
+    }
+    if (Math.round(rls*1000)/1000 > 0) {
+      $('#rls').val(rls.toFixed(0));
+    }else{
+      $('#rls').val('');
+    }
+    if (Math.round(autres_taxes*1000)/1000 > 0) {
+      $('#autres_taxes').val(autres_taxes.toFixed(2));
+    }else{
+      $('#autres_taxes').val('');
+    }
+    if (Math.round(frais_bancaire*1000)/1000 > 0) {
+      
+      $('#frais_bancaire').val(frais_bancaire.toFixed(2));
+      
+    }else{
+      $('#frais_bancaire').val('');
+    }
+
 
   }
 
