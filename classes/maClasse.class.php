@@ -6384,27 +6384,27 @@
 				$sub_total += $reponse['ht_usd'];
 					$tbl .= '
 						<tr>
-							<td style="text-align: left; border-left: 1px solid black; border-right: 0.5px solid black; font-size: 7px;" colspan="2" width="40%">&nbsp;&nbsp;'
+							<td style="text-align: left; border-left: 1px solid black; border-right: 0.5px solid black; font-size: 6.5px;" colspan="2" width="40%">&nbsp;&nbsp;'
 								.$reponse['nom_deb'].
 							'</td>
-							<td style="text-align: center; border-right: 0.5px solid black; font-size: 7px;" width="9%">'
+							<td style="text-align: center; border-right: 0.5px solid black; font-size: 6.5px;" width="9%">'
 								.$unite.
 							'
 							</td>
-							<td style="text-align: center; border-right: 0.5px solid black; font-size: 7px;" width="9%">'
+							<td style="text-align: center; border-right: 0.5px solid black; font-size: 6.5px;" width="9%">'
 								.$cif_split.
 							'
 							</td>
-							<td style="text-align: center; border-right: 0.5px solid black; font-size: 7px;" width="8%">'
+							<td style="text-align: center; border-right: 0.5px solid black; font-size: 6.5px;" width="8%">'
 								.$cost_2.
 							'&nbsp;&nbsp;</td>
-							<td style="text-align: center; border-right: 0.5px solid black; font-size: 7px;" width="11%">'
+							<td style="text-align: center; border-right: 0.5px solid black; font-size: 6.5px;" width="11%">'
 								.number_format($reponse['ht_cdf'], 0, ',', '.').
 							'&nbsp;&nbsp;</td>
-							<td style="text-align: center; border-right: 0.5px solid black; font-size: 7px;" width="11.5%">'
+							<td style="text-align: center; border-right: 0.5px solid black; font-size: 6.5px;" width="11.5%">'
 								.number_format($reponse['tva_cdf'], 0, ',', '.').
 							'&nbsp;&nbsp;</td>
-							<td style="text-align: right; border-right: 1px solid black; font-size: 7px;" width="11.5%">'
+							<td style="text-align: right; border-right: 1px solid black; font-size: 6.5px;" width="11.5%">'
 								.number_format($reponse['ttc_cdf'], 0, ',', '.').
 							'&nbsp;&nbsp;</td>
 						</tr>
