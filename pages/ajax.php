@@ -1456,6 +1456,10 @@
 		$response['liste_compte_journal'] = $maClasse-> nom_compte_search_journal($_POST['nom_compte'], $_POST['compteur_compte'], $_POST['id_jour']);
 		echo json_encode($response);
 
+	}else if ($_POST['operation']=="afficherAllCompteAjax") {
+		echo json_encode($maClasse-> afficherAllCompteAjax());
+	}else if ($_POST['operation']=="afficherEcritureCompte") {
+		echo json_encode($maClasse-> afficherEcritureCompte($_POST['id_compte']));
 	}
 
 ?>

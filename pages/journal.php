@@ -149,7 +149,7 @@
                 <hr>
 
                 <div class="card-body table-responsive p-0" style="height: 500px;">
-                  <table class=" table table-head-fixed table-bordered table-hover text-nowrap table-sm">
+                  <table class=" table table-head-fixed table-dark table-bordered table-hover text-nowrap table-sm">
                     <thead>
                       <tr class="bg bg-dark">
                         <th class="bg bg-dark" style="" width="10px;">#</th>

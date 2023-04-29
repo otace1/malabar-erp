@@ -119,6 +119,31 @@
           </li>
            <li class="nav-item has-treeview">
               <a href="#" class="nav-link" class="nav-link">
+                <img src="../images/rapport-dactivite (1).png" width="25px">
+                <p>
+                  Reports
+                  <i class="right fas fa-angle-left"></i>
+                </p>
+              </a>
+              <ul class="nav nav-treeview">
+                <li class="nav-item">
+                  <a href="grandLivre.php" class="nav-link">
+                    &nbsp;&nbsp;&nbsp;<i class="fa fa-folder-open nav-icon"></i>
+                    <p>
+                    <?php
+                      if ($maClasse-> getUtilisateur($_SESSION['id_util'])['langue']=='ENG') {
+                        echo 'Ledger of Accounts';
+                      }else if ($maClasse-> getUtilisateur($_SESSION['id_util'])['langue']=='FR') {
+                        echo 'Grand Livre de Comptes';
+                      }
+                    ?>
+                    </p>
+                  </a>
+                </li>
+              </ul>
+          </li>
+           <li class="nav-item has-treeview">
+              <a href="#" class="nav-link" class="nav-link">
                 <img src="../images/transaction.png" width="25px">
                 <p>
                   Tansactions
@@ -138,12 +163,6 @@
                       }
                     ?>
                     </p>
-                  </a>
-                </li>
-                <li class="nav-item">
-                  <a href="groups_account.php" class="nav-link">
-                    &nbsp;&nbsp;&nbsp;<i class="fa fa-object-group nav-icon"></i>
-                    <p>Groups Of Accounts</p>
                   </a>
                 </li>
               </ul>
