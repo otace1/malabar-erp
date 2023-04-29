@@ -3048,12 +3048,21 @@
 			$debut = $compteur;
 			$rows = array();
 
-			$requete = $connexion-> prepare("SELECT 1 AS compteur,dossier.ref_dos AS ref_dos,
+			$requete = $connexion-> prepare("SELECT 1 AS compteur,
+													CONCAT(dossier.ref_dos,' <button class=\'btn btn-warning btn-xs\' onclick=\'modal_edit_statut_dossier_facturation(',dossier.id_dos,')\'><i class=\'fa fa-edit\'></i></button>') AS ref_dos,
 													IF(dossier.not_fact='1',
-														'Excel',
-														facture_dossier.ref_fact 
+														'<span class=\'badge badge-danger font-weight-bold\'>Disabled</span>',
+															IF(facture_dossier.ref_fact IS NOT NULL,
+																'<span class=\'badge badge-success font-weight-bold\'>Invoiced</span>',
+																IF(dossier.ref_decl IS NULL OR dossier.date_decl IS NULL OR dossier.ref_liq IS NULL OR dossier.date_liq IS NULL OR dossier.ref_quit IS NULL OR dossier.date_quit IS NULL,
+																	'<span class=\'badge badge-warning font-weight-bold\'>Missing E, L or Q</span>',
+																	'<span class=\'badge badge-warning font-weight-bold\'>Waiting to be invoiced</span>'
+																)
+
+															)
 														)
-													AS ref_fact,
+													AS statut,
+													facture_dossier.ref_fact AS ref_fact,
 													IF(marchandise.nom_march IS NOT NULL,
 														marchandise.nom_march,
 														dossier.commodity
