@@ -1833,6 +1833,45 @@
 			
 		}
 
+		public function creerDetailFactureDossier3($ref_fact, $id_dos, $id_deb, $montant, $tva, $usd='1', $detail=NULL, $unite=NULL, $pourcentage_qte){
+			include('connexion.php');
+
+			$entree['id_dos'] = $id_dos;
+			$entree['ref_fact'] = $ref_fact;
+			$entree['id_deb'] = $id_deb;
+			$entree['montant'] = $montant;
+			$entree['tva'] = $tva;
+			$entree['usd'] = $usd;
+			$entree['detail'] = $detail;
+			$entree['unite'] = $unite;
+			$entree['pourcentage_qte'] = $pourcentage_qte;
+			// $entree['montant_tva'] = $montant_tva;
+
+			// echo '<br><br>id_dos = '.$id_dos;
+			// echo '<br>ref_fact = '.$ref_fact;
+			// echo '<br>id_deb = '.$id_deb;
+			// echo '<br>montant = '.$montant;
+			// echo '<br>tva = '.$tva;
+			// echo '<br>usd = '.$usd;
+			// echo '<br>detail = '.$detail;
+			// echo '<br>unite = '.$unite;
+			// echo '<br>pourcentage_qte = '.$pourcentage_qte;
+			// echo '<br>------------------<br>';
+
+			if ($montant>0) {
+				$requete = $connexion-> prepare("INSERT INTO detail_facture_dossier(ref_fact, id_dos,
+																	id_deb, montant, tva, usd, detail, 
+																	unite, pourcentage_qte)
+												VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)");
+				$requete-> execute(array($entree['ref_fact'], $entree['id_dos'],
+									$entree['id_deb'], $entree['montant'], 
+									$entree['tva'], $entree['usd'], $entree['detail'], 
+									$entree['unite'], $entree['pourcentage_qte']));
+			}
+
+			
+		}
+
 		public function creerDetailApurement($id_trans_ap, $id_dos){
 			include('connexion.php');
 
