@@ -103,11 +103,12 @@
               </div>    
               <!-- /.card-header -->
               <div class="card-body table-responsive p-0">
-                <table id="file_data" cellspacing="0" width="100%" class="table table-bordered table-striped table-dark table-sm text-nowrap">
+                <table id="file_data" cellspacing="0" width="100%" class="table text-center hover display compact table-bordered table-striped table-dark table-sm text-nowrap">
                   <thead>
                     <tr>
                       <th style="">#</th>
                       <th style="">File Ref.</th>
+                      <th style="">Status</th>
                       <th style="">Invoice Ref.</th>
                       <th style="">Invoice Date</th>
                       <th style="">License</th>
@@ -138,6 +139,50 @@
     </section>
     <!-- /.content -->
   </div>
+
+
+<div class="modal fade " id="modal_edit_statut_dossier_facturation">
+  <div class="modal-dialog modal-md">
+    <form id="form_edit_statut_dossier_facturation" method="POST" action="" data-parsley-validate enctype="multipart/form-data">
+      <input type="hidden" name="id_dos" id="id_dos">
+      <input type="hidden" name="operation" id="operation" value="edit_statut_dossier_facturation">
+    <div class="modal-content">
+      <div class="modal-header ">
+        <h4 class="modal-title"><i class="fa fa-edit"></i> Edit </h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+
+          <div class="col-md-6">
+            <label for="x_card_code" class="control-label mb-1">Ref.File</label>
+            <input name="ref_dos" id="ref_dos" class="form-control form-control-sm cc-exp" disabled>
+          </div>
+
+          <div class="col-md-6">
+            <label for="x_card_code" class="control-label mb-1">Invoicing</label>
+            <select name="not_fact" id="not_fact" class="form-control form-control-sm cc-exp" required>
+              <option></option>
+              <option value="0">YES</option>
+              <option value="1">NO</option>
+            </select>
+          </div>
+
+        </div>
+      </div>
+      <div class="modal-footer justify-content-between">
+        <button type="button" class="btn btn-xs btn-danger" data-dismiss="modal">Cancel</button>
+        <button type="submit" name="" class="btn btn-xs btn-primary">Submit</button>
+      </div>
+    </div>
+    </form>
+    <!-- /.modal-content -->
+  </div>
+  <!-- /.modal-dialog -->
+</div>
+
   <?php 
 
   include("pied.php");
@@ -146,54 +191,123 @@
   // ------------------------------------------------------------------------------------------------------
   ?>
 
-    <script type="text/javascript">
-      var today   = new Date();
-      document.title = "Files_<?php echo $maClasse-> getNomClient($_GET['id_cli']);?>_" + today.getDay() + "_" + today.getMonth() + "_" + today.getYear() + "_" + today.getHours() + "_" + today.getMinutes() + "_" + today.getSeconds();
-      $('#file_data').DataTable({
-         lengthMenu: [
-            [10, 100, 500, -1],
-            [10, 100, 500, 'All'],
-        ],
-        dom: 'Bfrtip',
-        buttons: [
-            'excel',
-            'pageLength'
-        ],
-        
-      "paging": true,
-      "lengthChange": true,
-      "searching": true,
-      "ordering": true,
-      "info": true,
-      "autoWidth": true,
-      "responsive": true,
-        "ajax":{
-          "type": "GET",
-          "url":"ajax.php",
-          "method":"post",
-          "dataSrc":{
-              "id_cli": "<?php echo $_GET['id_cli']?>"
-          },
-          "data": {
-              "id_cli": "<?php echo $_GET['id_cli']?>",
-              "id_mod_lic": "<?php echo $_GET['id_mod_lic_fact']?>",
-              "operation": "statutDossier"
-          }
-        },
-        "columns":[
-          {"data":"compteur"},
-          {"data":"ref_dos"},
-          {"data":"ref_fact"},
-          {"data":"date_fact"},
-          {"data":"num_lic"},
-          {"data":"ref_fact_dos"},
-          {"data":"commodity"},
-          {"data":"ref_decl"},
-          {"data":"date_decl"},
-          {"data":"ref_liq"},
-          {"data":"date_liq"},
-          {"data":"ref_quit"},
-          {"data":"date_quit"}
-        ] 
+<script type="text/javascript">
+
+  function modal_edit_statut_dossier_facturation(id_dos){
+    $('#spinner-div').show();
+    $.ajax({
+      type: 'post',
+      url: 'ajax.php',
+      data: {id_dos: id_dos, operation: 'modal_edit_statut_dossier_facturation'},
+      dataType: 'json',
+      success:function(data){
+        if (data.logout) {
+          alert(data.logout);
+          window.location="../deconnexion.php";
+        }else{
+          $('#id_dos').val(data.id_dos);
+          $('#ref_dos').val(data.ref_dos);
+          $('#not_fact').val(data.not_fact);
+          $('#modal_edit_statut_dossier_facturation').modal('show');
+        }
+      },
+      complete: function () {
+          $('#spinner-div').hide();//Request is complete so hide spinner
+      }
+    });
+
+  }
+
+  $(document).ready(function(){
+
+      $('#form_edit_statut_dossier_facturation').submit(function(e){
+
+              e.preventDefault();
+
+        if(confirm('Do really you want to submit ?')) {
+
+          var fd = new FormData(this);
+          $('#spinner-div').show();
+
+          $.ajax({
+            type: 'post',
+            url: 'ajax.php',
+            processData: false,
+            contentType: false,
+            data: fd,
+            dataType: 'json',
+            success:function(data){
+              if (data.logout) {
+                alert(data.logout);
+                window.location="../deconnexion.php";
+              }else if(data.message){
+                $('#modal_edit_statut_dossier_facturation').modal('hide');
+                $( '#form_edit_statut_dossier_facturation' ).each(function(){
+                    this.reset();
+                });
+                $('#file_data').DataTable().ajax.reload();
+                alert(data.message);
+              }
+            },
+            complete: function () {
+                $('#spinner-div').hide();//Request is complete so hide spinner
+            }
+          });
+
+        }
+
       });
-    </script>
+    
+  });
+
+  var today   = new Date();
+  document.title = "Files_<?php echo $maClasse-> getNomClient($_GET['id_cli']);?>_" + today.getDay() + "_" + today.getMonth() + "_" + today.getYear() + "_" + today.getHours() + "_" + today.getMinutes() + "_" + today.getSeconds();
+  $('#file_data').DataTable({
+     lengthMenu: [
+        [10, 100, 500, -1],
+        [10, 100, 500, 'All'],
+    ],
+    dom: 'Bfrtip',
+    buttons: [
+        'excel',
+        'pageLength'
+    ],
+    
+  "paging": true,
+  "lengthChange": true,
+  "searching": true,
+  "ordering": true,
+  "info": true,
+  "autoWidth": true,
+  "responsive": true,
+    "ajax":{
+      "type": "GET",
+      "url":"ajax.php",
+      "method":"post",
+      "dataSrc":{
+          "id_cli": "<?php echo $_GET['id_cli']?>"
+      },
+      "data": {
+          "id_cli": "<?php echo $_GET['id_cli']?>",
+          "id_mod_lic": "<?php echo $_GET['id_mod_lic_fact']?>",
+          "operation": "statutDossier"
+      }
+    },
+    "columns":[
+      {"data":"compteur"},
+      {"data":"ref_dos"},
+      {"data":"statut"},
+      {"data":"ref_fact"},
+      {"data":"date_fact"},
+      {"data":"num_lic"},
+      {"data":"ref_fact_dos"},
+      {"data":"commodity"},
+      {"data":"ref_decl"},
+      {"data":"date_decl"},
+      {"data":"ref_liq"},
+      {"data":"date_liq"},
+      {"data":"ref_quit"},
+      {"data":"date_quit"}
+    ] 
+  });
+</script>

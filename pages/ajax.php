@@ -1460,6 +1460,22 @@
 		echo json_encode($maClasse-> afficherAllCompteAjax());
 	}else if ($_POST['operation']=="afficherEcritureCompte") {
 		echo json_encode($maClasse-> afficherEcritureCompte($_POST['id_compte']));
+	}else if ($_POST['operation']=='modal_edit_statut_dossier_facturation') {
+	  
+		$response = $maClasse-> getDossier($_POST['id_dos']);
+		echo json_encode($response);
+
+	}else if ($_POST['operation']=='modal_edit_statut_dossier_facturation') {
+	  
+		$response = $maClasse-> getDossier($_POST['id_dos']);
+		echo json_encode($response);
+
+	}else if ($_POST['operation']=='edit_statut_dossier_facturation') {
+	  
+		$maClasse-> MAJ_not_fact($_POST['id_dos'], $_POST['not_fact']);
+		$response['message'] = 'File Updated!';
+		echo json_encode($response);
+
 	}
 
 ?>
