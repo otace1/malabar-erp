@@ -3059,6 +3059,99 @@
 
 		}
 
+		public function afficherAllCompteAjax(){
+			include("connexion.php");
+
+			//$entree['type_fact'] = $type_fact;
+			$compteur=0;
+
+			$bg = "";
+			$badge = '';
+			$btn = '';
+			$etat ='';
+
+			$debut = $compteur;
+			$rows = array();
+
+			$requete = $connexion-> query("SELECT compte.id_compte AS id_compte,
+													compte.code_compte AS code_compte,
+													compte.nom_compte AS nom_compte,
+													classe_compte.nom_class AS nom_class,
+													SUM(det.debit) AS debit,
+													SUM(det.credit) AS credit,
+													IF(SUM(det.debit)>SUM(det.credit),
+														FORMAT(SUM(det.debit)-SUM(det.credit),2),
+														NULL
+													) AS solde_debit,
+													IF(SUM(det.debit)<SUM(det.credit),
+														FORMAT(SUM(det.credit)-SUM(det.debit),2),
+														NULL
+													) AS solde_credit,
+													CONCAT('<span class=\"btn btn-xs btn-primary\"\" onclick=\"afficherEcritureCompte(',compte.id_compte,', \'',compte.nom_compte,'\', \'',IF(FORMAT(SUM(det.debit),2) IS NULL, 0, FORMAT(SUM(det.debit),2)),'\', \'',IF(FORMAT(SUM(det.credit),2) IS NULL, 0, FORMAT(SUM(det.credit),2)),'\')\">
+																<i class=\"fa fa-eye\"></i>
+															</span>') AS btn_action
+												-- FROM compte, classe_compte, detail_ecriture det
+												-- WHERE compte.id_class = classe_compte.id_class
+												-- 	AND compte.id_compte = det.id_compte
+												FROM compte
+													LEFT JOIN detail_ecriture det
+														ON compte.id_compte = det.id_compte
+													LEFT JOIN classe_compte
+														ON compte.id_class = classe_compte.id_class
+												GROUP BY compte.id_compte
+												ORDER BY classe_compte.id_class, compte.nom_compte");
+			// $requete-> execute(array($entree['id_mod_lic'], $entree['id_cli']));
+			while ($reponse = $requete-> fetch()) {
+				$compteur++;
+
+				$reponse['compteur'] = $compteur;
+				$rows[] = $reponse;
+
+			}$requete-> closeCursor();
+
+			return $rows;
+
+		}
+
+		public function afficherEcritureCompte($id_compte){
+			include("connexion.php");
+
+			$entree['id_compte'] = $id_compte;
+			$compteur=0;
+
+			$bg = "";
+			$badge = '';
+			$btn = '';
+			$etat ='';
+
+			$debut = $compteur;
+			$rows = array();
+
+			$requete = $connexion-> prepare("SELECT ecriture.libelle_e AS libelle_e,
+													DATE_FORMAT(ecriture.date_e, '%d/%m/%Y') AS date_e,
+													FORMAT(detail_ecriture.debit, 2) AS debit,
+													FORMAT(detail_ecriture.credit, 2) AS credit,
+													compte.id_compte AS id_compte,
+													compte.code_compte AS code_compte,
+													compte.nom_compte AS nom_compte
+												FROM compte, ecriture, detail_ecriture
+												WHERE compte.id_compte = ?
+													AND compte.id_compte = detail_ecriture.id_compte
+													AND detail_ecriture.id_e = ecriture.id_e
+												ORDER BY ecriture.id_e");
+			$requete-> execute(array($entree['id_compte']));
+			while ($reponse = $requete-> fetch()) {
+				$compteur++;
+
+				$reponse['compteur'] = $compteur;
+				$rows[] = $reponse;
+
+			}$requete-> closeCursor();
+
+			return $rows;
+
+		}
+
 		public function detailRapportEmailAjax($statut){
 			include("connexion.php");
 
