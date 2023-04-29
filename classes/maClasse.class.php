@@ -8756,6 +8756,14 @@
 			while ($reponse = $requete-> fetch()) {
 				$compteur++;
 
+				$btn_delete = '';
+				IF($this-> getUtilisateur($_SESSION['id_util'])['suppression_facture']=='1'){
+					$btn_delete = '
+									<button class="btn btn-xs bg-danger square-btn-adjust" onclick="supprimerFacture(\''.$reponse['ref_fact'].'\');" title="Delete">
+					                    <i class="fas fa-times"></i> 
+					                </button>';
+				}
+
 				$tableau .='<tr style="">
 								<td class="" style="text-align: center;" class="bg bg-dark">
 									'.$compteur.'
@@ -8788,6 +8796,7 @@
 									<button class="btn btn-xs bg-purple square-btn-adjust" onclick="modal_send_invoice(\''.$reponse['ref_fact'].'\');" title="Send Email">
 					                    <i class="fas fa-envelope"></i> 
 					                </button>
+					                '.$btn_delete.'
 								</td>
 							</tr>';
 			}$requete-> closeCursor();
