@@ -12699,6 +12699,7 @@
 
 						$unite_input = '<span id="unite_dci"></span>';
 						$montant_input = '<input type="number" step="0.001" style="text-align: center;" name="montant_'.$compteur.'" id="dci" value="'.$reponseDebours['montant'].'" onblur="calculDroit();">';
+						$montant_tva_input = '<input type="number" step="0.001" style="text-align: center;" name="montant_tva_'.$compteur.'" id="montant_tva_dci" onblur="calculDroit2();">';
 						$mask_tva = 'dci';
 						
 					}else if ($reponseDebours['id_deb']=='97') {
@@ -12919,6 +12920,7 @@
 
 						$unite_input = '<span id="unite_dci"></span>';
 						$montant_input = '<input type="number" step="0.001" style="text-align: center;" class="bg-dark" name="montant_'.$compteur.'" id="dci" value="'.$reponseDebours['montant'].'" onblur="calculDroit();">';
+						$montant_tva_input = '<input type="number" step="0.001" style="text-align: center;" name="montant_tva_'.$compteur.'" value="'.$montant_tva.'" id="montant_tva_dci" onblur="calculDroit2();">';
 						$mask_tva = 'dci';
 						
 					}else if ($reponseDebours['id_deb']=='97') {
