@@ -1473,6 +1473,12 @@
 	}else if ($_POST['operation']=='edit_statut_dossier_facturation') {
 	  
 		$maClasse-> MAJ_not_fact($_POST['id_dos'], $_POST['not_fact']);
+		$maClasse-> MAJ_ref_decl($_POST['id_dos'], $_POST['ref_decl']);
+		$maClasse-> MAJ_date_decl($_POST['id_dos'], $_POST['date_decl']);
+		$maClasse-> MAJ_ref_liq($_POST['id_dos'], $_POST['ref_liq']);
+		$maClasse-> MAJ_date_liq($_POST['id_dos'], $_POST['date_liq']);
+		$maClasse-> MAJ_ref_quit($_POST['id_dos'], $_POST['ref_quit']);
+		$maClasse-> MAJ_date_quit($_POST['id_dos'], $_POST['date_quit']);
 		$response['message'] = 'File Updated!';
 		echo json_encode($response);
 

@@ -882,6 +882,7 @@
     }else{
       tva_dci=0;
     }
+    $('#montant_tva_dci').val(tva_dci.toFixed(0));
 
     if (parseFloat($('#tva').val()) > 0 ) {
       tva = parseFloat($('#tva').val());
@@ -1108,8 +1109,8 @@
     }else{
       dci=0;
     }
-    if ($('#tva_dci').val() == '1' ) {
-      tva_dci = dci*0.16;
+    if (parseFloat($('#montant_tva_dci').val()) > 0 ) {
+      tva_dci = parseFloat($('#montant_tva_dci').val());
     }else{
       tva_dci=0;
     }

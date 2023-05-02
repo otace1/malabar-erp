@@ -1,4 +1,12 @@
-
+<?php
+  if ($_SESSION['id_role']=='4') {
+    ?>
+    <script type="text/javascript">
+      window.location.replace('../deconnexion.php');
+    </script>
+    <?php
+  }
+?>
 <body class="hold-transition sidebar-mini layout-fixed layout-navbar-fixed hold-transition pace-success">
 
   <div id="spinner-div" class="pt-5">

@@ -157,7 +157,7 @@
         <div class="row">
 
           <div class="col-md-6">
-            <label for="x_card_code" class="control-label mb-1">Ref.File</label>
+            <label for="x_card_code" class="control-label mb-1">File Ref.</label>
             <input name="ref_dos" id="ref_dos" class="form-control form-control-sm cc-exp" disabled>
           </div>
 
@@ -168,6 +168,36 @@
               <option value="0">YES</option>
               <option value="1">NO</option>
             </select>
+          </div>
+
+          <div class="col-md-6">
+            <label for="x_card_code" class="control-label mb-1">Declaration Ref.</label>
+            <input type="text" name="ref_decl" id="ref_decl" class="form-control form-control-sm cc-exp">
+          </div>
+
+          <div class="col-md-6">
+            <label for="x_card_code" class="control-label mb-1">Declaration Date</label>
+            <input type="date" name="date_decl" id="date_decl" class="form-control form-control-sm cc-exp">
+          </div>
+
+          <div class="col-md-6">
+            <label for="x_card_code" class="control-label mb-1">Liquidation Ref.</label>
+            <input type="text" name="ref_liq" id="ref_liq" class="form-control form-control-sm cc-exp">
+          </div>
+
+          <div class="col-md-6">
+            <label for="x_card_code" class="control-label mb-1">Liquidation Date</label>
+            <input type="date" name="date_liq" id="date_liq" class="form-control form-control-sm cc-exp">
+          </div>
+
+          <div class="col-md-6">
+            <label for="x_card_code" class="control-label mb-1">Quittance Ref.</label>
+            <input type="text" name="ref_quit" id="ref_quit" class="form-control form-control-sm cc-exp">
+          </div>
+
+          <div class="col-md-6">
+            <label for="x_card_code" class="control-label mb-1">Quittance Date</label>
+            <input type="date" name="date_quit" id="date_quit" class="form-control form-control-sm cc-exp">
           </div>
 
         </div>
@@ -208,6 +238,12 @@
           $('#id_dos').val(data.id_dos);
           $('#ref_dos').val(data.ref_dos);
           $('#not_fact').val(data.not_fact);
+          $('#ref_decl').val(data.ref_decl);
+          $('#date_decl').val(data.date_decl);
+          $('#ref_liq').val(data.ref_liq);
+          $('#date_liq').val(data.date_liq);
+          $('#ref_quit').val(data.ref_quit);
+          $('#date_quit').val(data.date_quit);
           $('#modal_edit_statut_dossier_facturation').modal('show');
         }
       },
