@@ -56,7 +56,9 @@
                       <th style="">Date</th>
                       <th style="">Client</th>
                       <th style="">Commodity</th>
-                      <th style="">Montant</th>
+                      <th style="">Amount VAT Excl</th>
+                      <th style="">VAT</th>
+                      <th style="">Amount VAT Incl</th>
                       <th style="">Status</th>
                       <th style="">Action</th>
                       <?php
@@ -187,6 +189,8 @@
           {"data":"date_fact"},
           {"data":"nom_cli"},
           {"data":"commodity"},
+          {"data":"montant_ht"},
+          {"data":"tva_usd"},
           {"data":"montant"},
           {"data":"statut"},
           {"data":"view_page"}

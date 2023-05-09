@@ -568,6 +568,9 @@
 		$response['nbre_facture'] = $maClasse-> getNbreFacture($id_mod_lic);
 		$response['nbre_dossier_facture'] = $maClasse-> getNbreDossierFacture($id_mod_lic);
 		$response['nbre_dossier_non_facture'] = $maClasse-> getNbreDossierNonFacture($id_mod_lic);
+		$response['btn_info_factures'] = '<span onclick="window.open(\'popUpDashboardFacturation.php?statut=Factures&amp;id_mod_lic='.$id_mod_lic.'\',\'pop1\',\'width=950,height=700\');">
+                Details <i class="fas fa-arrow-circle-right"></i>
+              </span>';
 		echo json_encode($response);
 
 	}elseif(isset($_POST['operation']) && $_POST['operation']=='popUpFacture'){ // On Recupere les data pour rapport facturation Popup
@@ -1114,6 +1117,12 @@
 	}elseif(isset($_POST['operation']) && $_POST['operation']=='afficherMonitoringFacturation'){
 
   		$reponse['afficherMonitoringFacturation'] = $maClasse-> afficherMonitoringFacturation($_POST['id_mod_lic'], $_POST['debut'], $_POST['fin']);
+
+		$reponse['nbre_facture'] = $maClasse-> getNbreFacture($_POST['id_mod_lic'], NULL, $_POST['debut'], $_POST['fin']);
+		$reponse['nbre_dossier_facture'] = $maClasse-> getNbreDossierFacture($_POST['id_mod_lic'], NULL, $_POST['debut'], $_POST['fin']);
+		$reponse['btn_info_factures'] = '<span onclick="window.open(\'popUpDashboardFacturation.php?statut=Factures&amp;id_mod_lic='.$_POST['id_mod_lic'].'&amp;debut='.$_POST['debut'].'&amp;fin='.$_POST['fin'].'\',\'pop1\',\'width=950,height=700\');">
+                Details <i class="fas fa-arrow-circle-right"></i>
+              </span>';
 
   		echo json_encode($reponse);
 

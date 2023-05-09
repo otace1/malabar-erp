@@ -60,9 +60,8 @@
               <div class="icon">
                 <i class="fas fa-copy"></i>
               </div>
-              <a href="#" class="small-box-footer" onclick="window.open('popUpDashboardFacturation.php?statut=Factures&amp;id_mod_lic=<?php echo $_GET['id_mod_lic_fact'];?>','pop1','width=950,height=700');">
-                Details <i class="fas fa-arrow-circle-right"></i>
-              </a>
+              <a href="#" class="small-box-footer" id="btn_info_factures"></a>
+              
             </div>
 
             <!-- /.info-box -->
@@ -265,6 +264,7 @@ if(isset($_GET['id_mod_lic_fact']) && isset($_GET['id_mod_lic_fact'])){
           $('#nbre_facture').html(data.nbre_facture);
           $('#nbre_dossier_facture').html(data.nbre_dossier_facture);
           $('#nbre_dossier_non_facture').html(data.nbre_dossier_non_facture);
+          $('#btn_info_factures').html(data.btn_info_factures);
           afficherMonitoringFacturation(<?php echo $_GET['id_mod_lic_fact'];?>);
         }
       },
@@ -288,6 +288,9 @@ if(isset($_GET['id_mod_lic_fact']) && isset($_GET['id_mod_lic_fact'])){
           window.location="../deconnexion.php";
         }else{
           $('#label_monitoring').html('Report between '+debut+' and '+fin);
+          $('#nbre_facture').html(data.nbre_facture);
+          $('#nbre_dossier_facture').html(data.nbre_dossier_facture);
+          $('#btn_info_factures').html(data.btn_info_factures);
           $('#afficherMonitoringFacturation').html(data.afficherMonitoringFacturation);
         }
       },
