@@ -189,9 +189,12 @@
           {"data":"date_fact"},
           {"data":"nom_cli"},
           {"data":"commodity"},
-          {"data":"montant_ht"},
-          {"data":"tva_usd"},
-          {"data":"montant"},
+          {"data":"montant_ht",
+            render: DataTable.render.number( null, null, 2, '$' )},
+          {"data":"tva_usd",
+            render: DataTable.render.number( null, null, 2, '$' )},
+          {"data":"montant",
+            render: DataTable.render.number( null, null, 2, '$' )},
           {"data":"statut"},
           {"data":"view_page"}
         ] 
