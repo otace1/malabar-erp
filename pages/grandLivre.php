@@ -61,7 +61,8 @@
                     <tr>
                       <th style="">#</th>
                       <th style="">Account Name</th>
-                      <th style="">Account Group</th>
+                      <!-- <th style="">Account Group</th> -->
+                      <th style="">Currency</th>
                       <th style="">Debit</th>
                       <th style="">Credit</th>
                       <th style="">Action</th>
@@ -100,6 +101,7 @@
                       <th style="">#</th>
                       <th style="">Date</th>
                       <th style="">Naration</th>
+                      <th style="">Currency</th>
                       <th style="">Debit</th>
                       <th style="">Credit</th>
                     </tr>
@@ -201,7 +203,8 @@
         "columns":[
           {"data":"compteur"},
           {"data":"nom_compte"},
-          {"data":"nom_class"},
+          // {"data":"nom_class"},
+          {"data":"sig_mon"},
           {"data":"solde_debit"},
           {"data":"solde_credit"},
           {"data":"btn_action"}
@@ -264,6 +267,7 @@
             {"data":"compteur"},
             {"data":"date_e"},
             {"data":"libelle_e"},
+            {"data":"sig_mon"},
             {"data":"debit"},
             {"data":"credit"}
           ] 

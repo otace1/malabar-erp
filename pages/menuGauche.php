@@ -121,7 +121,13 @@
               <a href="#" class="nav-link" class="nav-link">
                 <img src="../images/rapport-dactivite (1).png" width="25px">
                 <p>
-                  Reports
+                  <?php
+                    if ($maClasse-> getUtilisateur($_SESSION['id_util'])['langue']=='ENG') {
+                      echo 'Reports';
+                    }else if ($maClasse-> getUtilisateur($_SESSION['id_util'])['langue']=='FR') {
+                      echo 'Rapports / Etat';
+                    }
+                  ?>
                   <i class="right fas fa-angle-left"></i>
                 </p>
               </a>
