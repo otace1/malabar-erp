@@ -3125,19 +3125,20 @@
 													compte.code_compte AS code_compte,
 													compte.nom_compte AS nom_compte,
 													classe_compte.nom_class AS nom_class,
-													SUM(det.debit) AS debit,
-													SUM(det.credit) AS credit,
-													IF(SUM(det.debit)>SUM(det.credit),
-														FORMAT(SUM(det.debit)-SUM(det.credit),2),
+													SUM(IF(det.debit IS NULL, 0, det.debit)) AS debit,
+													SUM(IF(det.credit IS NULL, 0, det.credit)) AS credit,
+													IF(SUM(IF(det.debit IS NULL, 0, det.debit))>SUM(IF(det.credit IS NULL, 0, det.credit)),
+														FORMAT(SUM(IF(det.debit IS NULL, 0, det.debit))-SUM(IF(det.credit IS NULL, 0, det.credit)),2),
 														NULL
 													) AS solde_debit,
-													IF(SUM(det.debit)<SUM(det.credit),
-														FORMAT(SUM(det.credit)-SUM(det.debit),2),
+													IF(SUM(IF(det.debit IS NULL, 0, det.debit))<SUM(IF(det.credit IS NULL, 0, det.credit)),
+														FORMAT(SUM(IF(det.credit IS NULL, 0, det.credit))-SUM(IF(det.debit IS NULL, 0, det.debit)),2),
 														NULL
 													) AS solde_credit,
-													CONCAT('<span class=\"btn btn-xs btn-primary\"\" onclick=\"afficherEcritureCompte(',compte.id_compte,', \'',compte.nom_compte,'\', \'',IF(FORMAT(SUM(det.debit),2) IS NULL, 0, FORMAT(SUM(det.debit),2)),'\', \'',IF(FORMAT(SUM(det.credit),2) IS NULL, 0, FORMAT(SUM(det.credit),2)),'\')\">
+													CONCAT('<span class=\"btn btn-xs btn-primary\"\" onclick=\"afficherEcritureCompte(',compte.id_compte,', \'',compte.nom_compte,'\', \'',IF(FORMAT(SUM(IF(det.debit IS NULL, 0, det.debit)),2) IS NULL, 0, FORMAT(SUM(IF(det.debit IS NULL, 0, det.debit)),2)),'\', \'',IF(FORMAT(SUM(IF(det.credit IS NULL, 0, det.credit)),2) IS NULL, 0, FORMAT(SUM(IF(det.credit IS NULL, 0, det.credit)),2)),'\')\">
 																<i class=\"fa fa-eye\"></i>
-															</span>') AS btn_action
+															</span>') AS btn_action,
+													monnaie.sig_mon AS sig_mon
 												-- FROM compte, classe_compte, detail_ecriture det
 												-- WHERE compte.id_class = classe_compte.id_class
 												-- 	AND compte.id_compte = det.id_compte
@@ -3146,6 +3147,8 @@
 														ON compte.id_compte = det.id_compte
 													LEFT JOIN classe_compte
 														ON compte.id_class = classe_compte.id_class
+													LEFT JOIN monnaie
+														ON monnaie.id_mon = compte.id_mon
 												GROUP BY compte.id_compte
 												ORDER BY classe_compte.id_class, compte.nom_compte");
 			// $requete-> execute(array($entree['id_mod_lic'], $entree['id_cli']));
@@ -3181,11 +3184,13 @@
 													FORMAT(detail_ecriture.credit, 2) AS credit,
 													compte.id_compte AS id_compte,
 													compte.code_compte AS code_compte,
-													compte.nom_compte AS nom_compte
-												FROM compte, ecriture, detail_ecriture
+													compte.nom_compte AS nom_compte,
+													monnaie.sig_mon AS sig_mon
+												FROM compte, ecriture, detail_ecriture, monnaie
 												WHERE compte.id_compte = ?
 													AND compte.id_compte = detail_ecriture.id_compte
 													AND detail_ecriture.id_e = ecriture.id_e
+													AND monnaie.id_mon = ecriture.id_mon
 												ORDER BY ecriture.id_e");
 			$requete-> execute(array($entree['id_compte']));
 			while ($reponse = $requete-> fetch()) {
@@ -8372,6 +8377,9 @@
 			$tableau = '';
 			$tableauDetail = '';
 
+			$credit = 0;
+			$debit = 0;
+
 			$debut = $compteur;
 
 			$requete = $connexion-> prepare("SELECT ecriture.*, 
@@ -8416,6 +8424,8 @@
 																	ORDER BY detail_ecriture.credit");
 							$requeteDetail-> execute(array($reponse['id_e']));
 							while ($reponseDetail = $requeteDetail-> fetch()) {
+								$debit+=$reponseDetail['debit'];
+								$credit+=$reponseDetail['credit'];
 
 								$tableau .='<tr style="">
 												<td class="" style="text-align: center;" class="">
@@ -8438,7 +8448,19 @@
 												</td>
 											</tr>';
 							}$requeteDetail-> closeCursor();
+
+							$tableau .='<tr style="">
+											<td colspan="5" style="text-align: center;" class="">
+											</td>
+											<td style="text-align: right;" class="font-weight-bold bg bg-info">
+												'.number_format($debit, 2, ',', ' ').'
+											</td>
+											<td style="text-align: right;" class="font-weight-bold bg bg-info">
+												'.number_format($credit, 2, ',', ' ').'
+											</td>
+										</tr>';
 			}$requete-> closeCursor();
+
 			return $tableau;
 
 		}
@@ -14974,7 +14996,13 @@
 		              	<li class="nav-item">
 			                <a href="dossier.php?id_cli=<?php echo $reponse['id_cli'];?>&amp;id_mod_trac=<?php echo $id_mod_lic;?>&amp;id_mod_trans=1&commodity=&id_march=11" class="nav-link" <?php echo $style;?>>
 			                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="far fa-circle nav-icon"></i>
-			                  <p>DIVERS</p>
+			                  <p>DIVERS ROUTE</p>
+			                </a>
+			            </li>
+		              	<li class="nav-item">
+			                <a href="dossier.php?id_cli=<?php echo $reponse['id_cli'];?>&amp;id_mod_trac=<?php echo $id_mod_lic;?>&amp;id_mod_trans=3&commodity=&id_march=11" class="nav-link" <?php echo $style;?>>
+			                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="far fa-circle nav-icon"></i>
+			                  <p>DIVERS AIR</p>
 			                </a>
 			            </li>
 		              	<?php
@@ -33528,7 +33556,7 @@
 									                CONCAT('<button class=\"btn btn-xs bg-success square-btn-adjust\" onclick=\"window.location.replace(\'',mf.excel,'?ref_fact=',fd.ref_fact,'\',\'pop4\',\'width=1000,height=800\');\" title=\"Export Annex\">
 									                    <i class=\"fas fa-file-excel\"></i> 
 									                </button>')) AS view_page,
-									                FORMAT(SUM( 
+									                SUM( 
 															IF(det.usd='1', 
 																det.montant, 
 																IF(det.tva='1',
@@ -33539,8 +33567,8 @@
 																	(det.montant/dos.roe_decl)
 																)
 															) 
-														), 2, 'de_DE') AS montant_ht,
-									                FORMAT(SUM(
+														) AS montant_ht,
+									                SUM(
 																IF(det.usd='1', 
 																	IF(det.tva='1',
 																		det.montant*0.16,
@@ -33548,8 +33576,8 @@
 																	), 
 																	0
 																)
-															), 2, 'de_DE') AS tva_usd,
-									                FORMAT(SUM(
+															) AS tva_usd,
+									                SUM(
 														IF(det.usd='0', 
 															IF(det.tva='1',
 																IF(det.montant_tva>0,
@@ -33563,7 +33591,7 @@
 																det.montant
 															)
 														)
-													), 2, 'de_DE') AS montant,
+													) AS montant,
 
 													SUM(
 														IF(det.usd='1', 
