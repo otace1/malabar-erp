@@ -12403,18 +12403,48 @@
 													det.tva AS tva,
 													d.abr_deb AS abr_deb,
 													SUM(det.montant) AS ht,
-													SUM( 
-														IF(det.usd='1', 
-															det.montant*dos.roe_decl,
-															det.montant
-														) 
-													) AS montant_cdf,
-													SUM( 
-														IF(det.usd='1', 
-															det.montant,
-															(det.montant/dos.roe_decl)
-														) 
-													) AS montant_usd
+													-- SUM( 
+													-- 	IF(det.usd='1', 
+													-- 		det.montant*dos.roe_decl,
+													-- 		det.montant
+													-- 	) 
+													-- ) AS montant_cdf,
+													-- SUM( 
+													-- 	IF(det.usd='1', 
+													-- 		det.montant,
+													-- 		(det.montant/dos.roe_decl)
+													-- 	) 
+													-- ) AS montant_usd,
+													SUM(
+														IF(det.usd='0', 
+															IF(det.tva='1',
+																IF(det.montant_tva>0,
+																	(det.montant_tva+det.montant)/dos.roe_decl,
+																	(det.montant*0.16)/dos.roe_decl
+																	),
+																det.montant/dos.roe_decl
+															), 
+															IF(det.tva='1',
+																det.montant*1.16,
+																det.montant
+															)
+														)
+													) AS montant_usd,
+													SUM(
+														IF(det.usd='0', 
+															IF(det.tva='1',
+																IF(det.montant_tva>0,
+																	det.montant_tva+det.montant,
+																	det.montant*0.16
+																	),
+																det.montant
+															), 
+															IF(det.tva='1',
+																(det.montant*dos.roe_decl)*1.16,
+																(det.montant*dos.roe_decl)
+															)
+														)
+													) AS montant_cdf
 												FROM debours d, detail_facture_dossier det, dossier dos, facture_dossier fd
 												WHERE fd.ref_fact = ?
 													$sqlClient
@@ -12953,7 +12983,7 @@
 						
 					}else if ($reponseDebours['id_deb']=='29') {
 
-						$unite_input = '<input type="number" step="0.001" style="text-align: center; width: 5em;" class="" name="" id="unite_frais_bancaire" value="" onblur="calculDroit();">';
+						$unite_input = '<input type="number" step="0.001" style="text-align: center; width: 5em;" class="" name="" id="unite_frais_bancaire" value="" onblur="calculDroit2();">';
 						$montant_input = '<input type="number" step="0.001" style="text-align: center;" class="bg-dark" name="montant_'.$compteur.'" id="frais_bancaire" value="'.$reponseDebours['montant'].'">';
 						
 					}else{
