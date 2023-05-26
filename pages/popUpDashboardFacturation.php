@@ -153,7 +153,7 @@
         dom: 'Bfrtip',
         buttons: [
             'excel',
-            'pageLength'
+            'pageLength', 'colvis'
         ],
         
       "paging": true,

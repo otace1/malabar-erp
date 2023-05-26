@@ -62,11 +62,15 @@
                       <div class="col-md-1">
                         <label for="x_card_code" class="control-label mb-1">Currency</label>
                         <select class="form-control cc-exp form-control-sm" type="text" id="id_mon" name="id_mon" required>
-                          <option></option>
                           <?php
                             $maClasse-> selectionnerMonnaieComptable();
                           ?>
                         </select>
+                      </div>
+
+                      <div class="col-md-3">
+                        <label for="x_card_code" class="control-label mb-1">Reference</label>
+                        <input class="form-control cc-exp form-control-sm" type="text" id="reference" name="reference" required>
                       </div>
 
                       <div class="col-md-6">

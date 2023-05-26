@@ -1126,11 +1126,6 @@
 
   		echo json_encode($reponse);
 
-	}else if ($_POST['operation']=='tableau_pv_contentieux') {
-			
-		$response['tableau_pv_contentieux'] = $maClasse-> getPVContentieux();
-		echo json_encode($response);
-
 	}else if($_POST['operation']=='creerPVContentieux'){//Creation PV Contentieux
 
       $file = $_FILES['fichier_pv'];
@@ -1176,7 +1171,7 @@
 
 	}else if ($_POST['operation']=='modificationPVContentieux') {
 		  
-        $maClasse-> modificationPVContentieux($_POST['id_pv_edit'], $_POST['ref_pv'], $_POST['date_pv'], $_POST['date_reception'], $_POST['id_bur_douane_edit'], $_POST['annee'], $_POST['marchandise'], $_POST['id_cli'], $_POST['id_mod_lic'], $_POST['id_etat_edit'], $_POST['remarque'], $_POST['date_deb_contrad'], $_POST['date_next_pres'], $_POST['delai_grief'], $_POST['infraction'], $_POST['droit_cdf'], $_POST['droit_usd'], $_POST['amende_cdf'], $_POST['amende_usd'], $_POST['risque_potentiel']);
+        $maClasse-> modificationPVContentieux($_POST['id_pv_edit'], $_POST['ref_pv'], $_POST['date_pv'], $_POST['date_reception'], $_POST['id_bur_douane_edit'], $_POST['annee'], $_POST['marchandise'], $_POST['id_cli'], $_POST['id_mod_lic'], $_POST['id_etat_edit'], $_POST['id_sen'], $_POST['remarque'], $_POST['date_deb_contrad'], $_POST['date_next_pres'], $_POST['delai_grief'], $_POST['infraction'], $_POST['droit_cdf'], $_POST['droit_usd'], $_POST['amende_cdf'], $_POST['amende_usd'], $_POST['risque_potentiel']);
 		
          $response = array('message' => 'PV modifié avec succès!');
 		$response['tableau_pv_contentieux'] = $maClasse-> getPVContentieux();
@@ -1309,7 +1304,7 @@
 
 	}else if ($_POST['operation']=='creerEcriture') {
 	  
-		$maClasse-> creerEcriture($_POST['date_e'], $_POST['libelle_e'], $_POST['id_jour'], $_POST['id_taux'], $_SESSION['id_util'], $_POST['id_mon']);
+		$maClasse-> creerEcriture($_POST['date_e'], $_POST['libelle_e'], $_POST['id_jour'], $_POST['id_taux'], $_SESSION['id_util'], $_POST['id_mon'], $_POST['reference']);
 
 		$id_e = $maClasse-> getLastEcritureUtilisateur($_SESSION['id_util'])['id_e'];
 
@@ -1491,6 +1486,10 @@
 		$response['message'] = 'File Updated!';
 		echo json_encode($response);
 
+	}else if ($_POST['operation']=="afficherLicenceAjax") {
+		echo json_encode($maClasse-> afficherLicenceAjax($_POST['id_mod_lic']));
+	}else if ($_POST['operation']=="tableau_pv_contentieux") {
+		echo json_encode($maClasse-> getPVContentieux());
 	}
 
 ?>

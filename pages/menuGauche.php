@@ -138,7 +138,7 @@
                     <p>
                     <?php
                       if ($maClasse-> getUtilisateur($_SESSION['id_util'])['langue']=='ENG') {
-                        echo 'Ledger of Accounts';
+                        echo 'General Ledger Accounts';
                       }else if ($maClasse-> getUtilisateur($_SESSION['id_util'])['langue']=='FR') {
                         echo 'Grand Livre de Comptes';
                       }

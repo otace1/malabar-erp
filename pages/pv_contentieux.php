@@ -1,7 +1,7 @@
 <?php
-  include("tete.php");
+  include("tetePopCDN.php");
   include("menuHaut.php");
-  include("menuGauche.php");
+  // include("menuGauche.php");
   //include("licenceExcel.php");
 
 ?>
@@ -19,9 +19,7 @@
 
       </div><!-- /.container-fluid -->
     </section>
-    <?php
 
-    ?>
     <!-- Main content -->
     <section class="content">
       <div class="container-fluid" style="">
@@ -55,40 +53,42 @@
               
               </div>   
               <!-- /.card-header -->
-              <div class="card-body table-responsive p-0 cadre-tableau-de-donnees" style="height: 500px;">
-                <table class="tableau-de-donnees table table-dark table-hover table-bordered text-nowrap table-sm">
-                  <thead class=" text-nowrap ">
-
-                    <tr class="bg bg-dark">
+              <div class="card-file_data_tableau_pv_contentieux table-responsive p-0">
+                <table id="file_data_tableau_pv_contentieux" cellspacing="0" width="100%" class="table hover display compact table-bordered table-striped table-dark table-sm text-nowrap">
+                  <thead>
+                    <tr>
                       <th style="">#</th>
-                      <th style=" text-align: center;">N° PV</th>
-                      <th style=" text-align: left;">Bureau initiateur du PV</th>
-                      <th style=" text-align: center;">Date PV</th>
-                      <th style=" text-align: center;">Date réception Pv</th>
-                      <th style=" text-align: center;">Dernier acte sur le PV</th>
-                      <th style=" text-align: center;">Année du PV</th>
-                      <th style=" text-align: center;">Client</th>
-                      <th style=" text-align: center;">Procédure</th>
-                      <th style=" text-align: center;">Nature marchandise</th>
-                      <th style=" text-align: center;">Infraction annoncée</th>
-                      <th style=" text-align: center;">Droits éludés CDF</th>
-                      <th style=" text-align: center;">Droits éludés $</th>
-                      <th style=" text-align: center;">Amendes ou penalités CDF</th>
-                      <th style=" text-align: center;">Amendes ou penalités $</th>
-                      <th style=" text-align: center;">Risques potentiels</th>
-                      <th style=" text-align: center;">Date Debat Contradictoirer</th>
-                      <th style=" text-align: center;">Date Prochaine Presentation</th>
-                      <th style=" text-align: center;">Delai Grief Retenu</th>
-                      <th style=" text-align: center;">Remarques</th>
-                      <th style=" text-align: center;">Statut</th>
+                      <th style="">N° PV</th>
+                      <th style=""></th>
+                      <th style="">Bureau initiateur du PV</th>
+                      <th style="">Date PV</th>
+                      <th style="">Date réception Pv</th>
+                      <th style="">Statut</th>
+                      <th style="">Scenario</th>
+                      <th style="">Dernier acte sur le PV</th>
+                      <th style="">Année du PV</th>
+                      <th style="">Client</th>
+                      <th style="">Procédure</th>
+                      <th style="">Nature marchandise</th>
+                      <th style="">Infraction annoncée</th>
+                      <th style="">Droits éludés CDF</th>
+                      <th style="">Droits éludés $</th>
+                      <th style="">Amendes ou penalités CDF</th>
+                      <th style="">Amendes ou penalités $</th>
+                      <th style="">Risques potentiels</th>
+                      <th style="">Date Debat Contradictoire</th>
+                      <th style="">Date Prochaine Presentation</th>
+                      <th style="">Delai Grief Retenu</th>
+                      <th style="">Remarques</th>
                     </tr>
                   </thead>
-                  <tbody id="tableau_pv_contentieux">
-                    
+                  <tbody>
+                    <?php
+                    // $maClasse-> afficherStatutDossierFacture($_GET['id_cli'], $_GET['id_mod_lic_fact']);
+                    ?>
                   </tbody>
                 </table>
               </div>
-
               <!-- /.card-body -->
             </div>
             <!-- /.card -->
@@ -216,13 +216,31 @@
         <div class="row">
 
           <div class="col-md-3">
-            <label for="x_card_code" class="control-label mb-1">Bureau Initiateur</label>
-            <span id="select_id_bur"></span>
+            <label for="x_card_code" class="control-label mb-1">Ref.PV</label>
+            <input class="form-control cc-exp form-control-sm" type="text" id="ref_pv_edit" name="ref_pv" required>
           </div>
 
           <div class="col-md-3">
-            <label for="x_card_code" class="control-label mb-1">Ref.PV</label>
-            <input class="form-control cc-exp form-control-sm" type="text" id="ref_pv_edit" name="ref_pv" required>
+            <label for="x_card_code" class="control-label mb-1">Etat</label>
+            <select class="form-control cc-exp form-control-sm" id="id_etat_edit" name="id_etat_edit" required>
+              <?php
+                $maClasse-> selectionnerEtatPV();
+              ?>
+            </select>
+          </div>
+
+          <div class="col-md-6">
+            <label for="x_card_code" class="control-label mb-1">Scenario</label>
+            <select class="form-control cc-exp form-control-sm" id="id_sen_edit" name="id_sen" required>
+              <?php
+                $maClasse-> selectionnerScenariioPV();
+              ?>
+            </select>
+          </div>
+
+          <div class="col-md-3">
+            <label for="x_card_code" class="control-label mb-1">Bureau Initiateur</label>
+            <span id="select_id_bur"></span>
           </div>
 
           <div class="col-md-3">
@@ -320,15 +338,6 @@
             <input class="form-control cc-exp form-control-sm" type="number" min="0" id="delai_grief_edit" name="delai_grief" >
           </div>
 
-          <div class="col-md-3">
-            <label for="x_card_code" class="control-label mb-1">Etat</label>
-            <select class="form-control cc-exp form-control-sm" id="id_etat_edit" name="id_etat_edit" required>
-              <?php
-                $maClasse-> selectionnerEtatPV();
-              ?>
-            </select>
-          </div>
-
           <div class="col-md-6">
             <label for="x_card_code" class="control-label mb-1">Remarque</label>
             <textarea class="form-control cc-exp form-control-sm" type="text" id="remarque_edit" name="remarque"></textarea>
@@ -397,6 +406,62 @@
 </div>
 
 <script type="text/javascript">
+  $('#file_data_tableau_pv_contentieux').DataTable({
+     lengthMenu: [
+        [10, 100, 500, -1],
+        [10, 100, 500, 'All'],
+    ],
+    dom: 'Bfrtip',
+    buttons: [
+        'excel',
+        'pageLength'
+    ],
+    
+  "paging": true,
+  "lengthChange": true,
+  "searching": true,
+  "ordering": true,
+  "info": true,
+  "autoWidth": true,
+  "responsive": true,
+    "ajax":{
+      "type": "GET",
+      "url":"ajax.php",
+      "method":"post",
+      "dataSrc":{
+          "id_cli": ""
+      },
+      "data": {
+          "operation": "tableau_pv_contentieux"
+      }
+    },
+    "columns":[
+      {"data":"compteur"},
+      {"data":"ref_pv"},
+      {"data":"btn_action"},
+      {"data":"nom_bur_douane"},
+      {"data":"date_pv"},
+      {"data":"date_reception"},
+      {"data":"nom_etat"},
+      {"data":"nom_sen"},
+      {"data":"detail_act"},
+      {"data":"annee"},
+      {"data":"nom_cli"},
+      {"data":"nom_mod_lic"},
+      {"data":"marchandise"},
+      {"data":"infraction"},
+      {"data":"droit_cdf"},
+      {"data":"droit_usd"},
+      {"data":"amende_cdf"},
+      {"data":"amende_usd"},
+      {"data":"risque_potentiel"},
+      {"data":"date_deb_contrad"},
+      {"data":"date_next_pres"},
+      {"data":"delai_grief"},
+      {"data":"remarque"}
+    ] 
+  });
+
   $(document).ready(function(){
 
     $('#form_creerPVContentieux').submit(function(e){
@@ -428,7 +493,7 @@
                     this.reset();
                 });
 
-                $('#tableau_pv_contentieux').html(data.tableau_pv_contentieux);
+                $('#file_data_tableau_pv_contentieux').DataTable().ajax.reload();
                 alert(data.message);
               }
             },
@@ -460,7 +525,7 @@
           alert(data.logout);
           window.location="../deconnexion.php";
         }else{
-          $('#tableau_pv_contentieux').html(data.tableau_pv_contentieux);
+          $('#file_data_tableau_pv_contentieux').DataTable().ajax.reload();
         }
       },
       complete: function () {
@@ -484,7 +549,7 @@
           alert(data.logout);
           window.location="../deconnexion.php";
         }else{
-          $('#tableau_pv_contentieux').html(data.tableau_pv_contentieux);
+          $('#file_data_tableau_pv_contentieux').DataTable().ajax.reload();
         }
       },
       complete: function () {
@@ -523,6 +588,7 @@
           $('#action_en_cours_edit').val(data.action_en_cours);
           $('#remarque_edit').val(data.remarque);
           $('#id_etat_edit').val(data.id_etat);
+          $('#id_sen_edit').val(data.id_sen);
           $('#date_deb_contrad_edit').val(data.date_deb_contrad);
           $('#date_next_pres_edit').val(data.date_next_pres);
           $('#delai_grief_edit').val(data.delai_grief);
@@ -569,7 +635,7 @@
                 alert(data.logout);
                 window.location="../deconnexion.php";
               }else{
-                $('#tableau_pv_contentieux').html(data.tableau_pv_contentieux);
+                $('#file_data_tableau_pv_contentieux').DataTable().ajax.reload();
                 alert(data.message);
               }
             },
@@ -629,7 +695,7 @@
           window.location="../deconnexion.php";
         }else{
           $('#tableau_acte_pv').html(data.tableau_acte_pv);
-          $('#tableau_pv_contentieux').html(data.tableau_pv_contentieux);
+          $('#file_data_tableau_pv_contentieux').DataTable().ajax.reload();
         }
       },
       complete: function () {
