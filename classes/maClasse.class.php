@@ -1356,7 +1356,7 @@
 			$requete-> execute(array($entree['date_e'], $entree['libelle_e'], $entree['id_jour'], $entree['id_taux'], $entree['id_util'], $entree['id_mon']));
 		}
 		
-		public function creerEcriture($date_e, $libelle_e, $id_jour, $id_taux, $id_util, $id_mon){
+		public function creerEcriture($date_e, $libelle_e, $id_jour, $id_taux, $id_util, $id_mon, $reference){
 			include('connexion.php');
 
 			$entree['date_e'] = $date_e;
@@ -1365,10 +1365,11 @@
 			$entree['id_taux'] = $id_taux;
 			$entree['id_util'] = $id_util;
 			$entree['id_mon'] = $id_mon;
+			$entree['reference'] = $reference;
 
-			$requete = $connexion-> prepare('INSERT INTO ecriture(date_e, libelle_e, id_jour, id_taux, id_util, id_mon)
-												VALUES(?, ?, ?, ?, ?, ?)');
-			$requete-> execute(array($entree['date_e'], $entree['libelle_e'], $entree['id_jour'], $entree['id_taux'], $entree['id_util'], $entree['id_mon']));
+			$requete = $connexion-> prepare('INSERT INTO ecriture(date_e, libelle_e, id_jour, id_taux, id_util, id_mon, reference)
+												VALUES(?, ?, ?, ?, ?, ?, ?)');
+			$requete-> execute(array($entree['date_e'], $entree['libelle_e'], $entree['id_jour'], $entree['id_taux'], $entree['id_util'], $entree['id_mon'], $entree['reference']));
 		}
 		
 		public function supprimerAffectationModeleFacture($id_mod_fact, $id_cli, $id_march, $id_mod_trans){
@@ -22827,6 +22828,117 @@
 			}
 		}
 
+		public function afficherLicenceAjax($id_mod_lic){
+			include("connexion.php");
+			$entree['id_mod_lic'] = $id_mod_lic;
+
+			$compteur = 0;
+			$rows = array();
+
+			
+			$requete = $connexion-> prepare("SELECT l.num_lic AS num_lic,
+												DATE_FORMAT(l.date_val, '%d/%m/%Y') AS date_val,
+												l.date_val AS date_val_2,
+												(
+													IF(l.fob IS NOT NULL, l.fob, 0)+
+													IF(l.fret IS NOT NULL, l.fret, 0)+
+													IF(l.assurance IS NOT NULL, l.assurance, 0)+
+													IF(l.autre_frais IS NOT NULL, l.autre_frais, 0)
+												) AS cif,
+												IF(l.id_mod_lic = '1', l.poids, l.fob) AS fob,
+												l.date_val AS date_val2,
+												IF(l.id_mod_lic = '1', l.unit_mes, m.sig_mon) AS sig_mon,
+												m.id_mon AS id_mon,
+												l.qte_decl AS qte_decl,
+												l.fichier_lic AS fichier_lic,
+												l.cod AS cod,
+												l.consommable AS consommable,
+												IF(l.consommable='1', 'Consommable', 'Divers') AS label_consommable,
+												l.fret AS fret,
+												l.autre_frais AS autre_frais,
+												l.acheteur AS acheteur,
+												l.assurance AS assurance,
+												UPPER(cl.nom_cli) AS nom_cli,
+												UPPER(l.commodity) AS commodity,
+												l.fournisseur AS fournisseur,
+												DATE(CURRENT_DATE()) AS aujourdhui,
+												UPPER(b.nom_banq) AS nom_banq,
+												b.id_banq AS id_banq,
+												l.ref_fact AS ref_fact,
+												l.remarque AS remarque,
+												t.id_type_lic AS id_type_lic,
+												UPPER(t.nom_type_lic) AS nom_type_lic,
+												DATE_FORMAT(l.date_fact, '%d/%m/%Y') AS date_fact,
+												l.poids AS poids_lic,
+												l.id_mod_trans AS id_mod_trans,
+												CONCAT(' <button class=\"btn btn-xs btn-info\" title=\"Dossiers affectés\" onclick=\"window.open(\'popUpDossierLicence.php?num_lic=',l.num_lic,'\',\'pop1\',\'width=1100,height=900\');\">
+														<i class=\"fa fa-folder-open\"></i>
+													</button>') AS btn_dossier,
+												CONCAT(' <button class=\"btn btn-xs btn-info\" title=\"Fichier Licence\" onclick=\"window.open(\'../dossiers/',l.num_lic,'/',l.fichier_lic,'\',\'pop1\',\'width=1100,height=900\');\">
+														<i class=\"fa fa-file\"></i> Fichier Licence
+													</button>') AS fichier,
+												IF(l.consommable='1', 'Consommable', 'Autres/Divers') AS type_lic				
+											FROM licence l, monnaie m, client cl, banque b, type_licence t
+											WHERE l.id_mod_lic = ?
+												AND l.id_type_lic = t.id_type_lic
+												AND l.id_cli = cl.id_cli
+												AND l.id_mon = m.id_mon
+												AND l.id_banq = b.id_banq
+											ORDER BY l.date_val DESC");
+			$requete-> execute(array($entree['id_mod_lic']));
+			while($reponse = $requete-> fetch()){
+				$compteur++;
+				$reponse['compteur'] = $compteur;
+				$reponse['nbre_dos'] = $this-> getNbreDossierLicence($reponse['num_lic']);
+				$reponse['nbre_dos'] .= $reponse['btn_dossier'];
+				$reponse['fob_dos'] = $this-> getSommeFobLicence($reponse['num_lic']);
+				$reponse['solde_fob'] = $reponse['fob']-$reponse['fob_dos'];
+
+				if (!empty($this-> getLastEpirationLicence2($reponse['num_lic']))&&($this-> getLastEpirationLicence2($reponse['num_lic']))!=NULL) {
+					$reponse['date_exp'] = $this-> getLastEpirationLicence2($reponse['num_lic']);
+				}else{
+					$reponse['date_exp'] = NULL;
+				}
+
+				$reponse['statut'] = '<span class="text-xs badge badge-light">unused</span>';
+
+				if( ($reponse['fob'] <= $this-> getSommeFobAppureLicence($reponse['num_lic'])) || (($reponse['fob']-$this-> getSommeFobAppureLicence($reponse['num_lic']))<1) ){
+
+					$reponse['statut'] = '<span class="text-xs badge badge-success">Totalement Apurée</span>';
+
+				}else if( ($reponse['fob'] < $this-> getSommeFobLicence($reponse['num_lic'])) && ($reponse['fob'] != $this-> getSommeFobAppureLicence($reponse['num_lic'])) ){
+
+					$reponse['statut'] = '<span class="text-xs badge badge-danger clignoteb">FOB negatif</span>';
+
+				}else if( ($reponse['fob'] == $this-> getSommeFobLicence($reponse['num_lic'])) && ($reponse['fob'] != $this-> getSommeFobAppureLicence($reponse['num_lic'])) ){
+
+					$reponse['statut'] = '<span class="text-xs badge badge-dark">Cloturée en attente transmission Banque</span>';
+
+				}else if($reponse['date_exp'] < $reponse['aujourdhui']){
+
+					$reponse['statut'] = '<span class="text-xs badge badge-danger clignoteb">Expirée</span>';
+
+				}else if( ($this-> getDifferenceDate($reponse['date_exp'], $reponse['aujourdhui']) < 40) && ($this-> getDifferenceDate($reponse['date_exp'], $reponse['aujourdhui']) >= 0) ){
+
+					$reponse['statut'] = '<span class="text-xs badge badge-warning">Expiration -40 Jours</span>';
+
+				}else if( ($this-> getDifferenceDate($reponse['date_exp'], $reponse['aujourdhui']) < 40) && ($this-> getDifferenceDate($reponse['date_exp'], $reponse['aujourdhui']) < 0) ){
+
+					$reponse['statut'] = '<span class="text-xs badge badge-danger clignoteb">Expirée</span>';
+
+				} else if( ($reponse['fob'] >= $this-> getSommeFobLicence($reponse['num_lic'])) && ($this-> getSommeFobLicence($reponse['num_lic'])>0) ){
+
+					$reponse['statut'] = '<span class="text-xs badge badge-info">Partiellement Apurée</span>';
+
+				}
+				$rows[] = $reponse;
+				
+			}$requete-> closeCursor();
+
+			return $rows;
+
+		}
+
 		public function afficherLicenceExport($id_mod_lic, $id_cli, $id_type_lic, $premiere_entree, $nombre_dossier_par_page){
 			include("connexion.php");
 			$entree['id_mod_lic'] = $id_mod_lic;
@@ -32871,7 +32983,12 @@
 			$requete-> execute(array($entree['num_lic']));
 			$reponse = $requete-> fetch();
 
-			return $reponse['date_exp'];
+			if($reponse){
+				return $reponse['date_exp'];
+			}else{
+				return NULL;
+			}
+
 		}
 
 		public function getElementFacture($ref_fact){
@@ -35905,6 +36022,22 @@
 			}$requete-> closeCursor();
 		}
 
+		public function selectionnerScenariioPV(){
+			include('connexion.php');
+			$requete = $connexion-> query("SELECT *
+											FROM senario_pv");
+
+
+			while($reponse = $requete-> fetch()){
+
+				?>
+				<option value="<?php echo $reponse['id_sen']; ?>">
+					<?php echo $reponse['nom_sen']; ?>
+				</option>
+				<?php
+			}$requete-> closeCursor();
+		}
+
 		public function selectionnerFactureEnCoursClient($id_cli, $id_mod_trans, $id_mod_lic){
 			include('connexion.php');
 			$entree['id_cli'] = $id_cli;
@@ -36156,6 +36289,71 @@
 			// $entree['id_cli'] = $id_cli;
 			$compteur=0;
 
+			$row = array();
+
+			$requete = $connexion-> query("SELECT bur.nom_bur_douane AS nom_bur_douane,
+												pv.ref_pv AS ref_pv,
+												DATE_FORMAT(pv.date_pv, '%d/%m/%Y') AS date_pv,
+												DATE_FORMAT(pv.date_reception, '%d/%m/%Y') AS date_reception,
+												pv.annee AS annee,
+												client.nom_cli AS nom_cli,
+												ml.nom_mod_lic AS nom_mod_lic,
+												pv.marchandise AS marchandise,
+												pv.date_deb_contrad AS date_deb_contrad,
+												pv.date_next_pres AS date_next_pres,
+												pv.delai_grief AS delai_grief,
+												pv.action_en_cours AS action_en_cours,
+												pv.remarque AS remarque,
+												pv.fichier_pv AS fichier_pv,
+												pv.id_pv AS id_pv,
+												etat_pv.nom_etat AS nom_etat,
+												REPLACE(pv.ref_pv, '/', '_') AS ref_pv_2,
+												pv.infraction AS infraction,
+												pv.droit_cdf AS droit_cdf,
+												pv.droit_usd AS droit_usd,
+												pv.amende_cdf AS amende_cdf,
+												pv.amende_usd AS amende_usd,
+												pv.risque_potentiel AS risque_potentiel,
+												sen.nom_sen AS nom_sen
+											FROM pv_contencieux pv, bureau_douane bur, client, modele_licence ml, etat_pv, senario_pv sen
+											WHERE pv.id_bur_douane = bur.id_bur_douane
+												AND pv.id_cli = client.id_cli
+												AND pv.id_mod_lic = ml.id_mod_lic
+												AND pv.id_etat = etat_pv.id_etat
+												AND pv.id_sen = sen.id_sen");
+			// $requete-> execute(array($entree['id_mod_lic'], $entree['id_cli']));
+			while ($reponse = $requete-> fetch()) {
+				$compteur++;
+
+				$reponse['compteur'] = $compteur;
+				$reponse['detail_act'] = '<a href="#" onclick="modal_actePV('.$reponse['id_pv'].');;">
+												<img src="../images/presse-papiers.png" width="20px">
+											</a> '.$this-> getDernierActePV($reponse['id_pv'])['detail_act'];
+				$reponse['btn_action'] = '<button class="btn btn-xs btn-light" onclick="window.open(\'../pv/'.$reponse['ref_pv_2'].'/'.$reponse['fichier_pv'].'\',\'pop5\',\'width=900,height=500\');">
+												<img src="../images/dossier (1).png" width="20px">
+										</button>
+										<button class="btn btn-xs btn-light" onclick="modalModificationPV('.$reponse['id_pv'].');;">
+											<img src="../images/crayon.png" width="20px">
+										</button>';
+				$row[] = $reponse;
+
+			}$requete-> closeCursor();
+
+			if ($row) {
+				return $row;
+			}else{
+				return NULL;
+			}
+
+			
+
+		}
+
+		public function getPVContentieuxBackUp(){
+			include("connexion.php");
+			// $entree['id_cli'] = $id_cli;
+			$compteur=0;
+
 			$tableau = '';
 
 			$requete = $connexion-> query("SELECT bur.nom_bur_douane AS nom_bur_douane,
@@ -36267,7 +36465,7 @@
 			return $select;
 		}
 
-		public function modificationPVContentieux($id_pv, $ref_pv, $date_pv, $date_reception, $id_bur_douane, $annee, $marchandise, $id_cli, $id_mod_lic, $id_etat, $remarque, $date_deb_contrad, $date_next_pres, $delai_grief, $infraction, $droit_cdf, $droit_usd, $amende_cdf, $amende_usd, $risque_potentiel){
+		public function modificationPVContentieux($id_pv, $ref_pv, $date_pv, $date_reception, $id_bur_douane, $annee, $marchandise, $id_cli, $id_mod_lic, $id_etat, $id_sen, $remarque, $date_deb_contrad, $date_next_pres, $delai_grief, $infraction, $droit_cdf, $droit_usd, $amende_cdf, $amende_usd, $risque_potentiel){
 			include('connexion.php');
 			$entree['id_pv']=$id_pv;
 			$entree['ref_pv']=$ref_pv;
@@ -36279,6 +36477,7 @@
 			$entree['id_cli']=$id_cli;
 			$entree['id_mod_lic']=$id_mod_lic;
 			$entree['id_etat']=$id_etat;
+			$entree['id_sen']=$id_sen;
 			$entree['remarque']=$remarque;
 			$entree['date_deb_contrad']=$date_deb_contrad;
 			$entree['date_next_pres']=$date_next_pres;
@@ -36333,12 +36532,12 @@
 			$requete = $connexion-> prepare('UPDATE pv_contencieux
 												SET ref_pv = ?, date_pv = ?, date_reception = ?, 
 													id_bur_douane = ?, annee = ?, marchandise = ?, 
-													id_cli = ?, id_mod_lic = ?, id_etat = ?, remarque = ?, 
+													id_cli = ?, id_mod_lic = ?, id_etat = ?, id_sen = ?, remarque = ?, 
 													date_deb_contrad = ?, date_next_pres = ?, delai_grief = ?, 
 													infraction = ?, droit_cdf = ?, droit_usd = ?, amende_cdf = ?, 
 													amende_usd = ?, risque_potentiel = ?
 												WHERE id_pv = ?');
-			$requete-> execute(array($entree['ref_pv'], $entree['date_pv'], $entree['date_reception'], $entree['id_bur_douane'], $entree['annee'], $entree['marchandise'], $entree['id_cli'], $entree['id_mod_lic'], $entree['id_etat'], $entree['remarque'], $entree['date_deb_contrad'], $entree['date_next_pres'], $entree['delai_grief'], $entree['infraction'], $entree['droit_cdf'], $entree['droit_usd'], $entree['amende_cdf'], $entree['amende_usd'], $entree['risque_potentiel'], $entree['id_pv']));
+			$requete-> execute(array($entree['ref_pv'], $entree['date_pv'], $entree['date_reception'], $entree['id_bur_douane'], $entree['annee'], $entree['marchandise'], $entree['id_cli'], $entree['id_mod_lic'], $entree['id_etat'], $entree['id_sen'], $entree['remarque'], $entree['date_deb_contrad'], $entree['date_next_pres'], $entree['delai_grief'], $entree['infraction'], $entree['droit_cdf'], $entree['droit_usd'], $entree['amende_cdf'], $entree['amende_usd'], $entree['risque_potentiel'], $entree['id_pv']));
 
 		}
 
@@ -36351,15 +36550,16 @@
 
 			$requete = $connexion-> prepare("SELECT *,
 												REPLACE(pv.ref_pv, '/', '_') AS ref_pv_2
-											FROM pv_contencieux pv, bureau_douane bur, client, modele_licence ml, etat_pv
+											FROM pv_contencieux pv, bureau_douane bur, client, modele_licence ml, etat_pv, senario_pv
 											WHERE pv.id_bur_douane = bur.id_bur_douane
 												AND pv.id_cli = client.id_cli
 												AND pv.id_mod_lic = ml.id_mod_lic
 												AND pv.id_etat = etat_pv.id_etat
+												AND pv.id_sen = senario_pv.id_sen
 												AND pv.id_pv = ?");
 			$requete-> execute(array($entree['id_pv']));
 			$reponse = $requete-> fetch();
-			$select = '<select name="id_bur_douane_edit" id="id_bur_douane_edit" class="form-control cc-exp" required><option value="'.$reponse['id_bur_douane'].'">'.$reponse['nom_bur_douane'].'</option><option></option>'.$this->selectionnerBureauDouaneAjax().'</select>';
+			$select = '<select name="id_bur_douane_edit" id="id_bur_douane_edit" class="form-control form-control-sm cc-exp" required><option value="'.$reponse['id_bur_douane'].'">'.$reponse['nom_bur_douane'].'</option><option></option>'.$this->selectionnerBureauDouaneAjax().'</select>';
 			$reponse['select_id_bur'] = $select;
 			return $reponse;
 
@@ -37215,6 +37415,31 @@
 			while($reponse = $requete-> fetch()){
 			?>
 			<option value="<?php echo $reponse['id_cli'];?>">
+				<?php echo $reponse['nom_cli'];?>
+			</option>
+			<?php
+			}$requete-> closeCursor();
+
+		}
+
+		public function selectionnerClientModeleLicence2($id_mod_lic){
+			include('connexion.php');
+			$entree['id_mod_lic'] = $id_mod_lic;
+
+			$requete = $connexion-> prepare("SELECT UPPER(c.nom_cli) AS nom_cli,
+													c.id_cli AS id_cli
+												FROM client c, modele_licence ml,
+													affectation_client_modele_licence a
+												WHERE ml.id_mod_lic = ?
+													AND ml.id_mod_lic = a.id_mod_lic
+													AND a.id_cli = c.id_cli
+													AND a.id_etat = 1
+												ORDER BY c.nom_cli ASC");
+			$requete-> execute(array($entree['id_mod_lic']));
+
+			while($reponse = $requete-> fetch()){
+			?>
+			<option value="<?php echo $reponse['nom_cli'];?>">
 				<?php echo $reponse['nom_cli'];?>
 			</option>
 			<?php
