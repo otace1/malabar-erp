@@ -1490,6 +1490,8 @@
 		echo json_encode($maClasse-> afficherLicenceAjax($_POST['id_mod_lic']));
 	}else if ($_POST['operation']=="tableau_pv_contentieux") {
 		echo json_encode($maClasse-> getPVContentieux());
+	}else if ($_POST['operation']=="afficherBalanceSheetAjax") {
+		echo json_encode($maClasse-> afficherAllCompteAjax());
 	}
 
 ?>

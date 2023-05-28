@@ -88,7 +88,7 @@
               <div class="icon">
                 <i class="fas fa-check"></i>
               </div>
-              <a href="#" class="small-box-footer" onclick="window.open('popUpDashboardFacturation.php?statut=Dossiers Facturés&amp;id_mod_lic=<?php echo $_GET['id_mod_lic_fact'];?>','pop1','width=950,height=700');">
+              <a href="#" class="small-box-footer" onclick="window.open('popUpDashboardFacturation.php?statut=Dossiers Facturés&amp;id_mod_lic=<?php echo $_GET['id_mod_lic_fact'];?>','pop1','width=1200,height=700');">
                 Details <i class="fas fa-arrow-circle-right"></i>
               </a>
             </div>

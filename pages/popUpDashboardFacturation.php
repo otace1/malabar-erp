@@ -45,7 +45,7 @@
               </div>    
               <!-- /.card-header -->
               <div class="card-body table-responsive p-0">
-                <table id="file_data" cellspacing="0" width="100%" class="table table-bordered table-striped table-dark table-sm text-nowrap">
+                <table id="file_data" cellspacing="0" width="100%" class="table table-bordered table-striped table-dark table-sm small text-nowrap">
                   <thead>
                     <tr>
                       <?php
@@ -55,10 +55,25 @@
                       <th style="">Inv.Ref.</th>
                       <th style="">Date</th>
                       <th style="">Client</th>
-                      <th style="">Commodity</th>
-                      <th style="">Amount VAT Excl</th>
+                      <th style="">Rate(CDF/USD)</th>
+                      <th style="">Duty VAT Excl(CDF)</th>
+                      <th style="">Duty VAT Excl(USD)</th>
+                      <th style="">VAT Duty(CDF)</th>
+                      <th style="">VAT Duty(USD)</th>
+                      <th style="">Total Duty(CDF)</th>
+                      <th style="">Total Duty(USD)</th>
+                      <th style="">Other Charges VAT Excl</th>
+                      <th style="">VAT Other Charges</th>
+                      <th style="">Total Other Charges</th>
+                      <th style="">OPS Costs VAT Excl</th>
+                      <th style="">VAT OPS Costs</th>
+                      <th style="">Total OPS Costs</th>
+                      <th style="">Service Fees VAT Excl</th>
+                      <th style="">VAT Service Fees</th>
+                      <th style="">Total Service Fees</th>
+                      <th style="">Total VAT Excl</th>
                       <th style="">VAT</th>
-                      <th style="">Amount VAT Incl</th>
+                      <th style="">Grand Total</th>
                       <th style="">Status</th>
                       <th style="">Action</th>
                       <?php
@@ -155,7 +170,6 @@
             'excel',
             'pageLength', 'colvis'
         ],
-        
       "paging": true,
       "lengthChange": true,
       "searching": true,
@@ -188,13 +202,63 @@
           {"data":"ref_fact"},
           {"data":"date_fact"},
           {"data":"nom_cli"},
-          {"data":"commodity"},
+          {"data":"roe_decl",
+            render: DataTable.render.number( null, null, 4, null ),
+            className: 'dt-body-right'},
+          {"data":"duty_vat_excl_cdf",
+            render: DataTable.render.number( null, null, 2, null ),
+            className: 'dt-body-right'},
+          {"data":"duty_vat_excl_usd",
+            render: DataTable.render.number( null, null, 2, null ),
+            className: 'dt-body-right'},
+          {"data":"duty_vat_cdf",
+            render: DataTable.render.number( null, null, 2, null ),
+            className: 'dt-body-right'},
+          {"data":"duty_vat_usd",
+            render: DataTable.render.number( null, null, 2, null ),
+            className: 'dt-body-right'},
+          {"data":"total_duty_cdf",
+            render: DataTable.render.number( null, null, 2, null ),
+            className: 'dt-body-right'},
+          {"data":"total_duty_usd",
+            render: DataTable.render.number( null, null, 2, null ),
+            className: 'dt-body-right'},
+          {"data":"other_charge_vat_excl",
+            render: DataTable.render.number( null, null, 2, '$' ),
+            className: 'dt-body-right'},
+          {"data":"other_charge_vat",
+            render: DataTable.render.number( null, null, 2, '$' ),
+            className: 'dt-body-right'},
+          {"data":"total_other_charge",
+            render: DataTable.render.number( null, null, 2, '$' ),
+            className: 'dt-body-right'},
+          {"data":"ops_vat_excl",
+            render: DataTable.render.number( null, null, 2, '$' ),
+            className: 'dt-body-right'},
+          {"data":"ops_vat",
+            render: DataTable.render.number( null, null, 2, '$' ),
+            className: 'dt-body-right'},
+          {"data":"total_ops",
+            render: DataTable.render.number( null, null, 2, '$' ),
+            className: 'dt-body-right'},
+          {"data":"service_vat_excl",
+            render: DataTable.render.number( null, null, 2, '$' ),
+            className: 'dt-body-right'},
+          {"data":"service_vat",
+            render: DataTable.render.number( null, null, 2, '$' ),
+            className: 'dt-body-right'},
+          {"data":"total_service",
+            render: DataTable.render.number( null, null, 2, '$' ),
+            className: 'dt-body-right'},
           {"data":"montant_ht",
-            render: DataTable.render.number( null, null, 2, '$' )},
+            render: DataTable.render.number( null, null, 2, '$' ),
+            className: 'dt-body-right'},
           {"data":"tva_usd",
-            render: DataTable.render.number( null, null, 2, '$' )},
+            render: DataTable.render.number( null, null, 2, '$' ),
+            className: 'dt-body-right'},
           {"data":"montant",
-            render: DataTable.render.number( null, null, 2, '$' )},
+            render: DataTable.render.number( null, null, 2, '$' ),
+            className: 'dt-body-right'},
           {"data":"statut"},
           {"data":"view_page"}
         ] 

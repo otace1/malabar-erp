@@ -146,6 +146,20 @@
                     </p>
                   </a>
                 </li>
+                <li class="nav-item">
+                  <a href="balanceSheet.php" class="nav-link">
+                    &nbsp;&nbsp;&nbsp;<i class="fa fa-folder-open nav-icon"></i>
+                    <p>
+                    <?php
+                      if ($maClasse-> getUtilisateur($_SESSION['id_util'])['langue']=='ENG') {
+                        echo 'Balance Sheet';
+                      }else if ($maClasse-> getUtilisateur($_SESSION['id_util'])['langue']=='FR') {
+                        echo 'Balance de Comptes';
+                      }
+                    ?>
+                    </p>
+                  </a>
+                </li>
               </ul>
           </li>
            <li class="nav-item has-treeview">
