@@ -3165,6 +3165,63 @@
 
 		}
 
+		public function afficherBalanceSheetAjax(){
+			include("connexion.php");
+
+			//$entree['type_fact'] = $type_fact;
+			$compteur=0;
+
+			$bg = "";
+			$badge = '';
+			$btn = '';
+			$etat ='';
+
+			$debut = $compteur;
+			$rows = array();
+
+			$requete = $connexion-> query("SELECT compte.id_compte AS id_compte,
+													compte.code_compte AS code_compte,
+													compte.nom_compte AS nom_compte,
+													classe_compte.nom_class AS nom_class,
+													SUM(IF(det.debit IS NULL, 0, det.debit)) AS debit,
+													SUM(IF(det.credit IS NULL, 0, det.credit)) AS credit,
+													IF(SUM(IF(det.debit IS NULL, 0, det.debit))>SUM(IF(det.credit IS NULL, 0, det.credit)),
+														FORMAT(SUM(IF(det.debit IS NULL, 0, det.debit))-SUM(IF(det.credit IS NULL, 0, det.credit)),2),
+														NULL
+													) AS solde_debit,
+													IF(SUM(IF(det.debit IS NULL, 0, det.debit))<SUM(IF(det.credit IS NULL, 0, det.credit)),
+														FORMAT(SUM(IF(det.credit IS NULL, 0, det.credit))-SUM(IF(det.debit IS NULL, 0, det.debit)),2),
+														NULL
+													) AS solde_credit,
+													CONCAT('<span class=\"btn btn-xs btn-primary\"\" onclick=\"afficherEcritureCompte(',compte.id_compte,', \'',compte.nom_compte,'\', \'',IF(FORMAT(SUM(IF(det.debit IS NULL, 0, det.debit)),2) IS NULL, 0, FORMAT(SUM(IF(det.debit IS NULL, 0, det.debit)),2)),'\', \'',IF(FORMAT(SUM(IF(det.credit IS NULL, 0, det.credit)),2) IS NULL, 0, FORMAT(SUM(IF(det.credit IS NULL, 0, det.credit)),2)),'\')\">
+																<i class=\"fa fa-eye\"></i>
+															</span>') AS btn_action,
+													monnaie.sig_mon AS sig_mon
+												-- FROM compte, classe_compte, detail_ecriture det
+												-- WHERE compte.id_class = classe_compte.id_class
+												-- 	AND compte.id_compte = det.id_compte
+												FROM compte
+													LEFT JOIN detail_ecriture det
+														ON compte.id_compte = det.id_compte
+													LEFT JOIN classe_compte
+														ON compte.id_class = classe_compte.id_class
+													LEFT JOIN monnaie
+														ON monnaie.id_mon = compte.id_mon
+												GROUP BY compte.id_compte
+												ORDER BY classe_compte.id_class, compte.nom_compte");
+			// $requete-> execute(array($entree['id_mod_lic'], $entree['id_cli']));
+			while ($reponse = $requete-> fetch()) {
+				$compteur++;
+
+				$reponse['compteur'] = $compteur;
+				$rows[] = $reponse;
+
+			}$requete-> closeCursor();
+
+			return $rows;
+
+		}
+
 		public function afficherEcritureCompte($id_compte){
 			include("connexion.php");
 
@@ -13875,7 +13932,7 @@
 								'.$this-> getNbreFacture($id_mod_lic, $reponse['id_util'], $debut, $fin).'
 							</td>
 							<td class="" style="text-align: center;" class="">
-								<a href="#" class="btn btn-xs btn-info" onclick="window.open(\'popUpDashboardFacturation.php?statut=Factures&amp;id_mod_lic='.$id_mod_lic.'&amp;id_util='.$reponse['id_util'].'&amp;debut='.$debut.'&amp;fin='.$fin.'\',\'pop1\',\'width=950,height=700\');">
+								<a href="#" class="btn btn-xs btn-info" onclick="window.open(\'popUpDashboardFacturation.php?statut=Factures&amp;id_mod_lic='.$id_mod_lic.'&amp;id_util='.$reponse['id_util'].'&amp;debut='.$debut.'&amp;fin='.$fin.'\',\'pop1\',\'width=1200,height=700\');">
 				                	Details <i class="fas fa-arrow-circle-right"></i>
 				            	</a>
 							</td>
@@ -13883,7 +13940,7 @@
 								'.$this-> getNbreDossierFacture($id_mod_lic, $reponse['id_util'], $debut, $fin).'
 							</td>
 							<td class="" style="text-align: center;" class="">
-								<a href="#" class="btn btn-xs btn-info" onclick="window.open(\'popUpDashboardFacturation.php?statut=Dossiers Facturés&amp;id_mod_lic='.$id_mod_lic.'&amp;id_util='.$reponse['id_util'].'&amp;debut='.$debut.'&amp;fin='.$fin.'\',\'pop1\',\'width=950,height=700\');">
+								<a href="#" class="btn btn-xs btn-info" onclick="window.open(\'popUpDashboardFacturation.php?statut=Dossiers Facturés&amp;id_mod_lic='.$id_mod_lic.'&amp;id_util='.$reponse['id_util'].'&amp;debut='.$debut.'&amp;fin='.$fin.'\',\'pop1\',\'width=1200,height=700\');">
 				                	Details <i class="fas fa-arrow-circle-right"></i>
 				            	</a>
 							</td>
@@ -33754,12 +33811,125 @@
 																(det.montant/dos.roe_decl)
 															)
 														)
-													) AS ttc_usd
-												FROM facture_dossier fd, modele_facture mf, client cl, detail_facture_dossier det, dossier dos
+													) AS ttc_usd,
+
+													SUM(
+														IF(det.usd='0', 
+															IF(det.tva='1',
+																IF(det.montant_tva>0,
+																	det.montant_tva+det.montant,
+																	det.montant*0.16
+																	),
+																det.montant
+															),
+															0
+														)
+													) AS ttc_cdf_2,
+													SUM(
+														IF(debours.id_t_deb='1',
+															IF(det.tva='1',
+																IF(det.usd='0',
+																	det.montant*1.16,
+																	(det.montant*dos.roe_decl)*1.16),
+																IF(det.usd='0',
+																	det.montant,
+																	det.montant*dos.roe_decl)
+																)
+															, 0)
+														) AS duty_cdf_2,
+													AVG(dos.roe_decl) AS roe_decl,
+													SUM(
+														IF(debours.id_t_deb='1' AND det.usd='0',
+															det.montant,
+															0)
+														) AS duty_vat_excl_cdf,
+													SUM(
+														IF(debours.id_t_deb='1' AND det.usd='0',
+															det.montant/dos.roe_decl,
+															0)
+														) AS duty_vat_excl_usd,
+													SUM(
+														IF(debours.id_t_deb='1' AND det.usd='0' AND det.tva='1',
+															IF(det.montant_tva>0,
+																det.montant_tva,
+																det.montant*0.16
+																),
+															0)
+														) AS duty_vat_cdf,
+													SUM(
+														IF(debours.id_t_deb='1' AND det.usd='0' AND det.tva='1',
+															IF(det.montant_tva>0,
+																det.montant_tva/dos.roe_decl,
+																(det.montant*0.16)/dos.roe_decl
+																),
+															0)
+														) AS duty_vat_usd,
+													SUM(
+														IF(debours.id_t_deb='1' AND det.usd='0',
+															IF(det.tva='1',
+																IF(det.montant_tva>0,
+																	det.montant+det.montant_tva,
+																	det.montant*1.16
+																),
+																det.montant
+															),
+															0
+														)
+													) AS total_duty_cdf,
+													SUM(
+														IF(debours.id_t_deb='1' AND det.usd='0',
+															IF(det.tva='1',
+																IF(det.montant_tva>0,
+																	(det.montant+det.montant_tva)/dos.roe_decl,
+																	(det.montant*1.16)/dos.roe_decl
+																),
+																det.montant/dos.roe_decl
+															),
+															0
+														)
+													) AS total_duty_usd,
+													SUM(
+														IF(debours.id_t_deb='2',
+															det.montant,
+															0
+															)
+														) AS other_charge_vat_excl,
+													SUM(
+														IF(debours.id_t_deb='2' AND det.tva='1',
+															det.montant*0.16,
+															0
+															)
+														) AS other_charge_vat,
+													SUM(
+														IF(debours.id_t_deb='3',
+															det.montant,
+															0
+															)
+														) AS ops_vat_excl,
+													SUM(
+														IF(debours.id_t_deb='3' AND det.tva='1',
+															det.montant*0.16,
+															0
+															)
+														) AS ops_vat,
+													SUM(
+														IF(debours.id_t_deb='4',
+															det.montant,
+															0
+															)
+														) AS service_vat_excl,
+													SUM(
+														IF(debours.id_t_deb='4' AND det.tva='1',
+															det.montant*0.16,
+															0
+															)
+														) AS service_vat
+												FROM facture_dossier fd, modele_facture mf, client cl, detail_facture_dossier det, dossier dos, debours
 												WHERE YEAR(fd.date_fact) = YEAR(CURRENT_DATE())
 													AND fd.id_mod_fact = mf.id_mod_fact
 													AND fd.id_cli = cl.id_cli
 													AND fd.ref_fact = det.ref_fact
+													AND debours.id_deb = det.id_deb
 													AND det.id_dos = dos.id_dos
 													$sqlClient
 													$sqlTransit
@@ -33770,6 +33940,10 @@
 				// $requete-> execute(array($entree['id_mod_lic']));
 				while($reponse = $requete-> fetch()){
 					$compteur++;
+
+					$reponse['total_other_charge'] = $reponse['other_charge_vat_excl']+$reponse['other_charge_vat'];
+					$reponse['total_ops'] = $reponse['ops_vat_excl']+$reponse['ops_vat'];
+					$reponse['total_service'] = $reponse['service_vat_excl']+$reponse['service_vat'];
 
 					$reponse['compteur'] = $compteur;
 					// $reponse['montant'] = number_format($this-> getMontantFactureGlobale($reponse['ref_fact'])+(( ($this-> getMontantFactureDebours($reponse['ref_fact'], 27)*$this-> getFactureGlobale($reponse['ref_fact'])['taux_commission']) - $this-> getMontantFactureDebours($reponse['ref_fact'], 27))), 2, ',', ' ');
