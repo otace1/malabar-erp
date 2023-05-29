@@ -36278,6 +36278,8 @@
 			$duty_usd = 0;
 			$other_usd = 0;
 			$total_usd = 0;
+			$liquidation = 0;
+			$liquidation_usd = 0;
 
 			$requete = $connexion-> prepare("SELECT dossier.ref_dos AS ref_dos,
 													dossier.id_dos AS id_dos,
@@ -36286,6 +36288,7 @@
 													dossier.id_march AS id_march,
 													dossier.id_mod_trans AS id_mod_trans,
 													dossier.num_lic AS num_lic,
+													dossier.roe_decl AS roe_decl,
 													SUM(
 														IF(detail_facture_dossier.usd='0', 
 															IF(detail_facture_dossier.tva='1',
@@ -36298,6 +36301,30 @@
 															0
 														)
 													) AS ttc_cdf,
+													SUM(
+														IF(debours.id_t_deb='1' AND detail_facture_dossier.usd='0',
+															IF(detail_facture_dossier.tva='1',
+																IF(detail_facture_dossier.usd='0',
+																	detail_facture_dossier.montant*1.16,
+																	(detail_facture_dossier.montant*dossier.roe_decl)*1.16),
+																IF(detail_facture_dossier.usd='0',
+																	detail_facture_dossier.montant,
+																	detail_facture_dossier.montant*dossier.roe_decl)
+																)
+															, 0)
+														) AS liquidation,
+													SUM(
+														IF(debours.id_t_deb='1' AND detail_facture_dossier.usd='0',
+															IF(detail_facture_dossier.tva='1',
+																IF(detail_facture_dossier.usd='0',
+																	(detail_facture_dossier.montant*1.16)/dossier.roe_decl,
+																	(detail_facture_dossier.montant*dossier.roe_decl)*1.16),
+																IF(detail_facture_dossier.usd='0',
+																	detail_facture_dossier.montant/dossier.roe_decl,
+																	detail_facture_dossier.montant)
+																)
+															, 0)
+														) AS liquidation_usd,
 													SUM(
 														IF(debours.id_t_deb='1',
 															IF(detail_facture_dossier.tva='1',
@@ -36357,10 +36384,15 @@
 				$duty_usd += $reponse['duty_usd'];
 				$other_usd += $reponse['other_usd'];
 				$total_usd += $reponse['total_usd'];
+				$liquidation += $reponse['liquidation'];
+				$liquidation_usd += $reponse['liquidation_usd'];
 
 				$file .= '<tr>
 							<td>'.$compteur.'</td>
 							<td>'.$reponse['ref_dos'].'</td>
+							<td style="text-align: right;">'.number_format($reponse['roe_decl'], 2, ',', ' ').'</td>
+							<td style="text-align: right;">'.number_format($reponse['liquidation'], 2, ',', ' ').'</td>
+							<td style="text-align: right;">'.number_format($reponse['liquidation_usd'], 2, ',', ' ').'</td>
 							<td style="text-align: right;">'.number_format($reponse['ttc_cdf'], 2, ',', ' ').'</td>
 							<td style="text-align: right;">'.number_format($reponse['duty_usd'], 2, ',', ' ').'</td>
 							<td style="text-align: right;">'.number_format($reponse['other_usd'], 2, ',', ' ').'</td>
@@ -36377,7 +36409,9 @@
 			}$requete-> closeCursor();
 
 			$file .= '<tr>
-						<td colspan="2">TOTAL</td>
+						<td colspan="3">TOTAL</td>
+						<td style="text-align: right;">'.number_format($liquidation, 2, ',', ' ').'</td>
+						<td style="text-align: right;">'.number_format($liquidation_usd, 2, ',', ' ').'</td>
 						<td style="text-align: right;">'.number_format($duty_cdf, 2, ',', ' ').'</td>
 						<td style="text-align: right;">'.number_format($duty_usd, 2, ',', ' ').'</td>
 						<td style="text-align: right;">'.number_format($other_usd, 2, ',', ' ').'</td>
