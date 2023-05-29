@@ -154,6 +154,9 @@
               <tr>
                   <th>#</th>
                   <th>Files</th>
+                  <th>Rate</th>
+                  <th>Liq.(CDF)</th>
+                  <th>Liq.($)</th>
                   <th>Duty(CDF)</th>
                   <th>Duty($)</th>
                   <th>Other Fees($)</th>
@@ -251,6 +254,38 @@
         </button>
       </div>
       <div class="modal-body">
+        <div class="row">
+          <div class="col-md-2">
+            <div class="form-group">
+              <label for="inputEmail3" class="col-form-label">Rate</label>
+              <input type="number" step="0.0001" class="form-control form-control-sm" name="roe_decl" id="roe_decl_edit" onblur="maj_roe_decl(id_dos_edit.value, this.value); detail_invoice_acid(ref_fact_edit.value);">
+            </div>
+          </div>
+          <div class="col-md-2">
+            <div class="form-group">
+              <label for="inputEmail3" class="col-form-label">Horse</label>
+              <input type="text" class="form-control form-control-sm" name="horse" id="horse_edit" onblur="maj_horse(id_dos_edit.value, this.value)">
+            </div>
+          </div>
+          <div class="col-md-2">
+            <div class="form-group">
+              <label for="inputEmail3" class="col-form-label">Trailer 1</label>
+              <input type="text" class="form-control form-control-sm" name="trailer_1" id="trailer_1_edit" onblur="maj_trailer_1(id_dos_edit.value, this.value)">
+            </div>
+          </div>
+          <div class="col-md-2">
+            <div class="form-group">
+              <label for="inputEmail3" class="col-form-label">Trailer 2</label>
+              <input type="text" class="form-control form-control-sm" name="trailer_2" id="trailer_2_edit" onblur="maj_trailer_2(id_dos_edit.value, this.value)">
+            </div>
+          </div>
+          <div class="col-md-2">
+            <div class="form-group">
+              <label for="inputEmail3" class="col-form-label">Weight</label>
+              <input type="number" step="0.0001" class="form-control form-control-sm" name="poids" id="poids_edit" onblur="maj_poids(id_dos_edit.value, this.value)">
+            </div>
+          </div>
+        </div>
         <div class="row">
 
           <div class="col-md-12">
@@ -427,6 +462,11 @@
             $('#id_dos_edit').val(id_dos);
             $('#ref_fact_edit').val(ref_fact);
             $('#label_ref_dos').html(ref_dos);
+            $('#horse_edit').val(data.horse);
+            $('#trailer_1_edit').val(data.trailer_1);
+            $('#trailer_2_edit').val(data.trailer_2);
+            $('#roe_decl_edit').val(data.roe_decl);
+            $('#poids_edit').val(data.poids);
             $('#modalEditDetailFactureDossier').modal('show');
           }
         },
@@ -1140,7 +1180,7 @@
     
     // rls = 85*unite_rls*roe_decl;
 
-    autres_taxes = montant_liq-(ddi+fpi+rri+cog+dci+rls+tva+ddi_2+ddi_3+ddi_4);
+    // autres_taxes = montant_liq-(ddi+fpi+rri+cog+dci+rls+tva+ddi_2+ddi_3+ddi_4);
 
     frais_bancaire = (montant_liq/roe_decl)*(unite_frais_bancaire/100);
 

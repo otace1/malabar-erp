@@ -1360,7 +1360,11 @@
 
 	}else if ($_POST['operation']=='modalEditDetailFactureDossier') {
 	  
-		// $response['detail_facture_dossier'] =$maClasse-> detail_facture_dossier($_POST['id_dos']);
+		$response['horse'] =$maClasse-> getDossier($_POST['id_dos'])['horse'];
+		$response['trailer_1'] =$maClasse-> getDossier($_POST['id_dos'])['trailer_1'];
+		$response['trailer_2'] =$maClasse-> getDossier($_POST['id_dos'])['trailer_2'];
+		$response['roe_decl'] =$maClasse-> getDossier($_POST['id_dos'])['roe_decl'];
+		$response['poids'] =$maClasse-> getDossier($_POST['id_dos'])['poids'];
   		$response['detail_facture_dossier'] = $maClasse-> getDeboursPourFactureClientModeleLicenceAjaxEdit($_POST['id_cli'], $_POST['id_mod_lic'], $_POST['id_march'], $_POST['id_mod_trans'], $_POST['id_dos'], $_POST['ref_fact']);
 		// $response['message'] = 'ok';
 		echo json_encode($response);
@@ -1379,7 +1383,11 @@
   						$_POST['pourcentage_qte_ddi_'.$i] = NULL;
   					}
 
-  					$maClasse-> creerDetailFactureDossier2($_POST['ref_fact_edit'], $_POST['id_dos_edit'], $_POST['id_deb_'.$i], $_POST['montant_'.$i], $_POST['tva_'.$i], $_POST['usd_'.$i], NULL, NULL, $_POST['pourcentage_qte_ddi_'.$i]);
+  					if (!isset($_POST['montant_tva_'.$i]) || empty($_POST['montant_tva_'.$i]) || ($_POST['montant_tva_'.$i]=='') || ($_POST['montant_tva_'.$i]<0)) {
+  						$_POST['montant_tva_'.$i] = 0;
+  					}
+
+  					$maClasse-> creerDetailFactureDossier2($_POST['ref_fact_edit'], $_POST['id_dos_edit'], $_POST['id_deb_'.$i], $_POST['montant_'.$i], $_POST['tva_'.$i], $_POST['usd_'.$i], NULL, NULL, $_POST['pourcentage_qte_ddi_'.$i], $_POST['montant_tva_'.$i]);
   				}
   				
   			}
