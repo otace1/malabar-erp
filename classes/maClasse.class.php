@@ -36390,7 +36390,7 @@
 				$file .= '<tr>
 							<td>'.$compteur.'</td>
 							<td>'.$reponse['ref_dos'].'</td>
-							<td style="text-align: right;">'.number_format($reponse['roe_decl'], 2, ',', ' ').'</td>
+							<td style="text-align: right;">'.number_format($reponse['roe_decl'], 4, ',', ' ').'</td>
 							<td style="text-align: right;">'.number_format($reponse['liquidation'], 2, ',', ' ').'</td>
 							<td style="text-align: right;">'.number_format($reponse['liquidation_usd'], 2, ',', ' ').'</td>
 							<td style="text-align: right;">'.number_format($reponse['ttc_cdf'], 2, ',', ' ').'</td>
