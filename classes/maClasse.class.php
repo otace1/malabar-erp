@@ -4381,6 +4381,20 @@
 			return $reponse;
 		}
 
+		public function getDataFactureDossier($id_dos){
+			include('connexion.php');
+			$entree['id_dos'] = $id_dos;
+
+			$requete = $connexion-> prepare("SELECT fd.*
+												FROM facture_dossier fd, detail_facture_dossier det
+												WHERE fd.ref_fact = det.ref_fact
+													AND det.id_dos = ?
+												GROUP BY det.id_dos");
+			$requete-> execute(array($entree['id_dos']));
+			$reponse = $requete-> fetch();
+			return $reponse;
+		}
+
 		public function getDataModeleFacture($id_mod_fact){
 			include('connexion.php');
 			$entree['id_mod_fact'] = $id_mod_fact;
