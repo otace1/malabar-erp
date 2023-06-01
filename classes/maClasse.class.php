@@ -3165,6 +3165,85 @@
 
 		}
 
+		public function tresorerie_mois($id_tres){
+			include("connexion.php");
+
+			$entree['id_tres'] = $id_tres;
+			$compteur=0;
+
+			$rows = array();
+
+			$requete = $connexion-> prepare("SELECT mvt.*,
+													CONCAT('<span class=\"btn btn-xs btn-warning\"\" onclick=\"modal_edit_mouvement(',mvt.id_mvt,')\">
+																<i class=\"fa fa-edit\"></i>
+															</span> <span class=\"btn btn-xs btn-danger\"\" onclick=\"supprimer_mouvement_tresorerie(',mvt.id_mvt,')\">
+																<i class=\"fa fa-times\"></i>
+															</span>') AS btn_action
+											FROM mouvement_tresorerie mvt
+											WHERE mvt.id_tres = ?
+												AND MONTH(mvt.date_mvt) = MONTH(NOW())
+												AND YEAR(mvt.date_mvt) = YEAR(NOW())
+											ORDER BY mvt.date_mvt, mvt.id_mvt");
+			$requete-> execute(array($entree['id_tres']));
+			while ($reponse = $requete-> fetch()) {
+				$compteur++;
+
+				$reponse['compteur'] = $compteur;
+				$rows[] = $reponse;
+
+			}$requete-> closeCursor();
+
+			return $rows;
+
+		}
+
+		public function getMontantTresorerie($id_tres){
+			include("connexion.php");
+
+			$entree['id_tres'] = $id_tres;
+			$compteur=0;
+
+			$rows = array();
+
+			$requete = $connexion-> prepare("SELECT SUM(IF(mvt.entree IS NULL, 0, mvt.entree)) AS entree, 
+													SUM(IF(mvt.sortie IS NULL, 0, mvt.sortie)) AS sortie,
+													(SUM(IF(mvt.entree IS NULL, 0, mvt.entree))-SUM(IF(mvt.sortie IS NULL, 0, mvt.sortie))) AS balance
+											FROM mouvement_tresorerie mvt
+											WHERE mvt.id_tres = ?
+											GROUP BY mvt.id_tres");
+			$requete-> execute(array($entree['id_tres']));
+			$reponse = $requete-> fetch();
+
+			return $reponse;
+
+		}
+
+		public function tresorerie_all($id_tres){
+			include("connexion.php");
+
+			$entree['id_tres'] = $id_tres;
+			$compteur=0;
+
+			$rows = array();
+
+			$requete = $connexion-> prepare("SELECT mvt.*,
+													DATE_FORMAT(mvt.date_mvt, '%m/%Y') AS mois
+											FROM mouvement_tresorerie mvt
+											WHERE mvt.id_tres = ?
+											ORDER BY mvt.date_mvt, mvt.id_mvt");
+			$requete-> execute(array($entree['id_tres']));
+			while ($reponse = $requete-> fetch()) {
+				$compteur++;
+
+				$reponse['compteur'] = $compteur;
+				$rows[] = $reponse;
+
+			}$requete-> closeCursor();
+
+			return $rows;
+
+		}
+
 		public function afficherBalanceSheetAjax(){
 			include("connexion.php");
 
@@ -11678,6 +11757,73 @@
 
 		}
 
+		public function new_mouvement($date_mvt, $entree, $sortie, $libelle, $reference, $id_tres){
+			include('connexion.php');
+
+			if ($entree=='') {
+				$entree=null;
+			}
+
+			if ($sortie=='') {
+				$sortie=null;
+			}
+
+			// echo '<br>date_mvt = '.$date_mvt;
+			// echo '<br>entree = '.$entree;
+			// echo '<br>sortie = '.$sortie;
+			// echo '<br>libelle = '.$libelle;
+			// echo '<br>reference = '.$reference;
+			// echo '<br>id_tres = '.$id_tres;
+
+			$tab['date_mvt'] = $date_mvt;
+			$tab['entree'] = $entree;
+			$tab['sortie'] = $sortie;
+			$tab['libelle'] = $libelle;
+			$tab['reference'] = $reference;
+			$tab['id_tres'] = $id_tres;
+
+			// $tab['date_mvt'] = $date_mvt;
+
+			$requete = $connexion-> prepare('INSERT INTO mouvement_tresorerie(date_mvt, entree, sortie, libelle, reference, id_tres, id_util)
+												VALUES(?, ?, ?, ?, ?, ?, ?)');
+			$requete-> execute(array($tab['date_mvt'], $tab['entree'], $tab['sortie'], $tab['libelle'], $tab['reference'], $tab['id_tres'], $_SESSION['id_util']));
+
+		}
+
+		public function edit_mouvement($date_mvt, $entree, $sortie, $libelle, $reference, $id_mvt){
+			include('connexion.php');
+
+			if ($entree=='') {
+				$entree=null;
+			}
+
+			if ($sortie=='') {
+				$sortie=null;
+			}
+
+			// echo '<br>date_mvt = '.$date_mvt;
+			// echo '<br>entree = '.$entree;
+			// echo '<br>sortie = '.$sortie;
+			// echo '<br>libelle = '.$libelle;
+			// echo '<br>reference = '.$reference;
+			// echo '<br>id_mvt = '.$id_mvt;
+
+			$tab['date_mvt'] = $date_mvt;
+			$tab['entree'] = $entree;
+			$tab['sortie'] = $sortie;
+			$tab['libelle'] = $libelle;
+			$tab['reference'] = $reference;
+			$tab['id_mvt'] = $id_mvt;
+
+			// $tab['date_mvt'] = $date_mvt;
+
+			$requete = $connexion-> prepare('UPDATE mouvement_tresorerie 
+												SET date_mvt = ?, entree = ?, sortie = ?, libelle = ?, reference = ?
+												WHERE id_mvt = ?');
+			$requete-> execute(array($tab['date_mvt'], $tab['entree'], $tab['sortie'], $tab['libelle'], $tab['reference'], $tab['id_mvt']));
+
+		}
+
 		public function creerFactureDossier($ref_fact, $id_mod_fact, $id_cli, $id_util, $id_mod_lic, $type_fact, $information, $note_debit='0'){
 			include('connexion.php');
 
@@ -13903,6 +14049,38 @@
 
 		}
 
+		public function afficherMenuTresorerieAJAX(){
+			include("connexion.php");
+			// $entree['id_cli'] = $id_cli;
+			// $entree['id_mod_lic'] = $id_mod_lic;
+			//$entree['type_fact'] = $type_fact;
+			$compteur=0;
+
+			$tbl = '<ul class="nav nav-treeview">';
+
+			$debut = $compteur;
+
+			$requete = $connexion-> query("SELECT *
+												FROM tresorerie
+												ORDER BY nom_tres");
+			// $requete-> execute(array($entree['id_mod_lic'], $entree['id_cli']));
+			while ($reponse = $requete-> fetch()) {
+				$compteur++;
+
+				$tbl .= '<li class="nav-item">
+		                    <a href="tresorerie.php?id_tres='.$reponse['id_tres'].'" class="nav-link">
+		                      &nbsp;&nbsp;&nbsp;<i class="fa fa-folder-open nav-icon"></i>
+		                      <p>'.$reponse['nom_tres'].'</p>
+		                    </a>
+		                </li>';
+			}$requete-> closeCursor();
+
+			$tbl .='</ul>';
+
+			return $tbl;
+
+		}
+
 		public function getDataJournal($id_jour){
 			include('connexion.php');
 
@@ -13912,6 +14090,22 @@
 												FROM journal
 												WHERE id_jour = ?');
 			$requete-> execute(array($entree['id_jour']));
+
+			$reponse = $requete-> fetch();
+
+			return $reponse;
+		}
+
+		public function getDataTresorerie($id_tres){
+			include('connexion.php');
+
+			$entree['id_tres'] = $id_tres;
+
+			$requete = $connexion-> prepare('SELECT t.*, m.sig_mon AS sig_mon
+												FROM tresorerie t, monnaie m
+												WHERE t.id_tres = ?
+													AND t.id_mon = m.id_mon');
+			$requete-> execute(array($entree['id_tres']));
 
 			$reponse = $requete-> fetch();
 
@@ -32492,6 +32686,20 @@
 			}
 		}
 
+		public function getDataMouvementTresorerie($id_mvt){
+			include('connexion.php');
+			$entree['id_mvt'] = $id_mvt;
+
+			$requete = $connexion-> prepare("SELECT *
+												FROM mouvement_tresorerie
+												WHERE id_mvt = ?");
+			$requete-> execute(array($entree['id_mvt']));
+			$reponse = $requete-> fetch();
+			if($reponse){
+				return $reponse;
+			}
+		}
+
 		public function getDataDossier($id_dos){
 			include('connexion.php');
 			$entree['id_dos'] = $id_dos;
@@ -42215,6 +42423,20 @@
 			$requete = $connexion-> prepare("DELETE FROM facture_dossier
 												WHERE ref_fact = ?");
 			$requete-> execute(array($entree['ref_fact']));
+
+		}
+
+		public function supprimer_mouvement_tresorerie($id_mvt){
+
+			include('connexion.php');
+			$entree['id_mvt'] = $id_mvt;
+
+			/*echo '<br>  id_mod_lic= '.$id_mod_lic;
+			echo '<br>  id_mvt= '.$id_mvt;*/
+
+			$requete = $connexion-> prepare("DELETE FROM mouvement_tresorerie
+												WHERE id_mvt = ?");
+			$requete-> execute(array($entree['id_mvt']));
 
 		}
 
