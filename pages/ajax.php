@@ -1501,6 +1501,30 @@
 		echo json_encode($maClasse-> getPVContentieux());
 	}else if ($_POST['operation']=="afficherBalanceSheetAjax") {
 		echo json_encode($maClasse-> afficherAllCompteAjax());
+	}else if ($_POST['operation']=="tresorerie_mois") {
+		echo json_encode($maClasse-> tresorerie_mois($_POST['id_tres']));
+	}else if ($_POST['operation']=="new_mouvement") {
+		$maClasse-> new_mouvement($_POST['date_mvt'], $_POST['entree'], $_POST['sortie'], $_POST['libelle'], $_POST['reference'], $_POST['id_tres']);
+		$response['msg'] = 'Done!';
+		echo json_encode($response);
+	}else if ($_POST['operation']=="supprimer_mouvement_tresorerie") {
+		$maClasse-> supprimer_mouvement_tresorerie($_POST['id_mvt']);
+		$response['msg'] = 'Done!';
+		echo json_encode($response);
+	}else if ($_POST['operation']=="modal_edit_mouvement") {
+
+		$response = $maClasse-> getDataMouvementTresorerie($_POST['id_mvt']);
+
+		echo json_encode($response);
+	}else if ($_POST['operation']=="edit_mouvement") {
+		$maClasse-> edit_mouvement($_POST['date_mvt'], $_POST['entree'], $_POST['sortie'], $_POST['libelle'], $_POST['reference'], $_POST['id_mvt']);
+		$response['msg'] = 'Done!';
+		echo json_encode($response);
+	}else if ($_POST['operation']=="tresorerie_all") {
+		echo json_encode($maClasse-> tresorerie_all($_POST['id_tres']));
+	}else if ($_POST['operation']=="getMontantTresorerie") {
+		$response = $maClasse-> getMontantTresorerie($_POST['id_tres']);
+		echo json_encode($response);
 	}
 
 ?>

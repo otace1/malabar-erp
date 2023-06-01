@@ -117,6 +117,42 @@
               </p></span>
             </a>
           </li>
+          <li class="nav-header font-weight-bold">
+            <?php
+              if ($maClasse-> getUtilisateur($_SESSION['id_util'])['langue']=='ENG') {
+                echo 'Transactions';
+              }else if ($maClasse-> getUtilisateur($_SESSION['id_util'])['langue']=='FR') {
+                echo 'Transactions';
+              }
+            ?>
+          </li>
+          <li class="nav-item has-treeview">
+              <a href="#" class="nav-link" class="nav-link">
+                <img src="../images/dollar.png" width="25px">
+                <p>
+                <?php
+                  if ($maClasse-> getUtilisateur($_SESSION['id_util'])['langue']=='ENG') {
+                    echo 'Cash Flow';
+                  }else if ($maClasse-> getUtilisateur($_SESSION['id_util'])['langue']=='FR') {
+                    echo 'Tréorerie';
+                  }
+                ?>
+                  <i class="right fas fa-angle-left"></i>
+                </p>
+              </a>
+              <?php
+                echo $maClasse-> afficherMenuTresorerieAJAX();
+              ?>
+            </li>
+          <li class="nav-header font-weight-bold">
+            <?php
+              if ($maClasse-> getUtilisateur($_SESSION['id_util'])['langue']=='ENG') {
+                echo 'Accounting';
+              }else if ($maClasse-> getUtilisateur($_SESSION['id_util'])['langue']=='FR') {
+                echo 'Comptabilité';
+              }
+            ?>
+          </li>
            <li class="nav-item has-treeview">
               <a href="#" class="nav-link" class="nav-link">
                 <img src="../images/rapport-dactivite (1).png" width="25px">
