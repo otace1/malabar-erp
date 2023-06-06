@@ -3174,11 +3174,12 @@
 			$rows = array();
 
 			$requete = $connexion-> prepare("SELECT mvt.*,
-													CONCAT('<span class=\"btn btn-xs btn-warning\"\" onclick=\"modal_edit_mouvement(',mvt.id_mvt,')\">
-																<i class=\"fa fa-edit\"></i>
-															</span> <span class=\"btn btn-xs btn-danger\"\" onclick=\"supprimer_mouvement_tresorerie(',mvt.id_mvt,')\">
-																<i class=\"fa fa-times\"></i>
-															</span>') AS btn_action
+													CONCAT('<a href=\"#\"  onclick=\"modal_edit_mouvement(',mvt.id_mvt,')\">
+																<img src=\"../images/crayon (1).png\" width=\"15px\">
+															</a>
+															<a href=\"#\"  onclick=\"supprimer_mouvement_tresorerie(',mvt.id_mvt,')\">
+																<img src=\"../images/bouton-supprimer.png\" width=\"15px\">
+															</a>') AS btn_action
 											FROM mouvement_tresorerie mvt
 											WHERE mvt.id_tres = ?
 												AND MONTH(mvt.date_mvt) = MONTH(NOW())
@@ -31801,6 +31802,21 @@
 			$requete = $connexion-> prepare("SELECT *
 												FROM dossier
 												WHERE id_dos = ?");
+			$requete-> execute(array($entree['id_dos']));
+			$reponse=$requete-> fetch();
+			if($reponse){
+				return $reponse;
+			}
+		}
+
+		public function getDossier2($id_dos){
+			include('connexion.php');
+			$entree['id_dos'] = $id_dos;
+
+			$requete = $connexion-> prepare("SELECT dos.*,
+													((IF(dos.fob_usd IS NULL, 0, dos.fob_usd) +IF(dos.fret_usd IS NULL, 0, dos.fret_usd)+IF(dos.assurance_usd IS NULL, 0, dos.assurance_usd)+IF(dos.autre_frais_usd IS NULL, 0, dos.autre_frais_usd)))*dos.roe_inv AS cif_cdf
+												FROM dossier dos
+												WHERE dos.id_dos = ?");
 			$requete-> execute(array($entree['id_dos']));
 			$reponse=$requete-> fetch();
 			if($reponse){
