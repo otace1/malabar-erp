@@ -1525,6 +1525,18 @@
 	}else if ($_POST['operation']=="getMontantTresorerie") {
 		$response = $maClasse-> getMontantTresorerie($_POST['id_tres']);
 		echo json_encode($response);
+	}else if ($_POST['operation']=="modal_ajuster_cif_cdf") {
+		$response = $maClasse-> getDossier2($_POST['id_dos']);
+		echo json_encode($response);
+	}else if ($_POST['operation']=="ajuster_cif_cdf") {
+
+		$assurance_usd = (($_POST['cif_cdf']-$maClasse-> getDossier2($_POST['id_dos'])['cif_cdf'])/$maClasse-> getDossier2($_POST['id_dos'])['roe_decl'])+$maClasse-> getDossier2($_POST['id_dos'])['assurance_usd'];
+
+		$maClasse-> MAJ_assurance_usd($_POST['id_dos'], $assurance_usd);
+
+		$response = $maClasse-> getDossier2($_POST['id_dos']);
+		
+		echo json_encode($response);
 	}
 
 ?>

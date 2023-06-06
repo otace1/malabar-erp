@@ -143,8 +143,8 @@
             <tr>
               <th>CIF (USD)</th>
               <th><input style="text-align: center; width: 9em; font-weight: bold;" id="cif_usd" class="bg bg-primary" disabled></th>
-              <th>CIF (CDF)</th>
-              <th><input style="text-align: center; width: 9em; font-weight: bold;" id="cif_cdf" onblur="maj_montant_liq(id_dos.value, this.value);" class="bg bg-primary" disabled></th>
+              <th>CIF (CDF) <a href="#" onclick="modal_ajuster_cif_cdf(<?php echo $maClasse-> getDataFactureGlobale($_GET['ref_fact'])['id_dos'];?>);" title="Adjust"><i class="fa fa-cogs text-warning"></i></a></th>
+              <th><input style="text-align: center; width: 9em; font-weight: bold;" id="cif_cdf" class="bg bg-primary" disabled></th>
             </tr>
             <tr>
               <th>Total of Duty (CDF)</th>
@@ -247,7 +247,103 @@
   </div>
   <?php include("pied.php");?>
 
+  <div class="modal fade" id="modal_ajuster_cif_cdf">
+    <div class="modal-dialog">
+      <form id="ajuster_cif_cdf_form" method="POST" action="" data-parsley-validate enctype="multipart/form-data">
+        <input type="hidden" name="operation" value="ajuster_cif_cdf">
+        <input type="hidden" name="id_dos" value="<?php echo $maClasse-> getDataFactureGlobale($_GET['ref_fact'])['id_dos'];?>">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title"><i class="fa fa-cogs"></i> Adjust</h4>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+
+            <div class="col-md-12">
+              <label for="x_card_code" class="control-label mb-1">CIF(CDF)</label>
+              <input name="cif_cdf" min="0" id="cif_cdf_adj" onchange="" class="form-control form-control-sm cc-exp" required>
+            </div>
+
+          </div>
+        </div>
+        <div class="modal-footer justify-content-between">
+          <button type="button" class="btn btn-xs btn-danger" data-dismiss="modal">Cancel</button>
+          <button type="submit" name="" class="btn btn-xs btn-primary">Submit</button>
+        </div>
+      </div>
+      </form>
+      <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+  </div>
+
 <script type="text/javascript">
+
+  function modal_ajuster_cif_cdf(id_dos){
+    $('#spinner-div').show();
+    $.ajax({
+      type: 'post',
+      url: 'ajax.php',
+      data: {id_dos: id_dos, operation: 'modal_ajuster_cif_cdf'},
+      dataType: 'json',
+      success:function(data){
+        if (data.logout) {
+          alert(data.logout);
+          window.location="../deconnexion.php";
+        }else{
+          $('#cif_cdf_adj').val(data.cif_cdf);
+          $('#modal_ajuster_cif_cdf').modal('show');
+        }
+      },
+      complete: function () {
+          $('#spinner-div').hide();//Request is complete so hide spinner
+      }
+    });
+
+  }
+
+  $(document).ready(function(){
+
+      $('#ajuster_cif_cdf_form').submit(function(e){
+        if(confirm('Do really you want to submit ?')) {
+          $('#modal_ajuster_cif_cdf').modal('hide');
+          e.preventDefault();
+          var fd = new FormData(this);
+          $('#spinner-div').show();
+
+          $.ajax({
+            type: 'post',
+            url: 'ajax.php',
+            processData: false,
+            contentType: false,
+            data: fd,
+            dataType: 'json',
+            success:function(data){
+              if (data.logout) {
+                alert(data.logout);
+                window.location="../deconnexion.php";
+              }else{
+                $( '#ajuster_cif_cdf_form' ).each(function(){
+                    this.reset();
+                });
+
+                $('#assurance_usd').val(data.assurance_usd);
+                calculCIF();
+                alert('Update complete!');
+              }
+            },
+            complete: function () {
+                $('#spinner-div').hide();//Request is complete so hide spinner
+            }
+          });
+        }
+
+      });
+    
+  });
 
   function round(num, decimalPlaces = 0) {
     return new Decimal(num).toDecimalPlaces(decimalPlaces).toNumber();
