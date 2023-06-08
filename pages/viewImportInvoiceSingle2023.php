@@ -181,6 +181,7 @@ $ref_dos_min = $maClasse-> getDataDossiersMultipleInvoice($_GET['ref_fact'])['re
 $ref_dos_max = $maClasse-> getDataDossiersMultipleInvoice($_GET['ref_fact'])['ref_dos_max'];
 $nbre_dos = $maClasse-> getDataDossiersMultipleInvoice($_GET['ref_fact'])['nbre_dos'];
 $ref_fact_dos = $maClasse-> getDataDossiersMultipleInvoice($_GET['ref_fact'])['ref_fact'];
+$supplier = $maClasse-> getDataDossiersMultipleInvoice($_GET['ref_fact'])['supplier'];
 $po_ref = $maClasse-> getDataDossiersMultipleInvoice($_GET['ref_fact'])['po_ref'];
 $code_tarif = $maClasse-> getDataDossiersMultipleInvoice($_GET['ref_fact'])['code_tarif'];
 $horse = $maClasse-> getDataDossiersMultipleInvoice($_GET['ref_fact'])['horse'];
@@ -329,20 +330,22 @@ $tbl = <<<EOD
 		</tr>
 		<tr>
 			<td width="15%" style="text-align: center;"></td>
-			<td width="15%" style="text-align: left; border: 0.3px solid black; font-size: 7px;">&nbsp;Date</td>
-			<td width="25%" style="text-align: center; border: 0.3px solid black; font-size: 7px;">$date_fact</td>
-		</tr>
-
-		<tr>
-			<td width="15%" style="text-align: center;"></td>
-			<td width="15%" style="text-align: left; border: 0.3px solid black; font-size: 7px;">&nbsp;Moyen de Transport</td>
-			<td width="25%" style="text-align: center; border: 0.3px solid black; font-size: 7px;">$nom_mod_trans</td>
+			<td width="8%" style="text-align: left; border: 0.3px solid black; font-size: 7px;">&nbsp;Date</td>
+			<td width="12%" style="text-align: center; border: 0.3px solid black; font-size: 7px;">$date_fact</td>
+			<td width="8%" style="text-align: left; border: 0.3px solid black; font-size: 6px;">&nbsp;Mode Transport</td>
+			<td width="12%" style="text-align: center; border: 0.3px solid black; font-size: 7px;">$nom_mod_trans</td>
 		</tr>
 
 		<tr>
 			<td width="15%" style="text-align: center;"></td>
 			<td width="15%" style="text-align: left; border: 0.3px solid black; font-size: 7px;">&nbsp;Truck/Trailer No.</td>
 			<td width="25%" style="text-align: center; border: 0.3px solid black; font-size: 7px;">$truck</td>
+		</tr>
+
+		<tr>
+			<td width="15%" style="text-align: center;"></td>
+			<td width="15%" style="text-align: left; border: 0.3px solid black; font-size: 7px;">&nbsp;Fournisseur</td>
+			<td width="25%" style="text-align: center; border: 0.3px solid black; font-size: 7px;">$supplier</td>
 		</tr>
 
 		<tr>
@@ -361,14 +364,14 @@ $tbl = <<<EOD
 		<tr>
 			<td width="15%" style="text-align: left; "></td>
 			<td width="8%" style="text-align: left; border: 0.3px solid black; font-size: 7px;">&nbsp;BIVAC Insp.: </td>
-			<td width="13%" style="text-align: center; border: 0.3px solid black; font-size: 6px; font-weight: bold;">$ref_crf</td>
-			<td width="6%" style="text-align: left; border: 0.3px solid black; font-size: 7px;">&nbsp;License: </td>
-			<td width="13%" style="text-align: center; border: 0.3px solid black; font-size: 6px; font-weight: bold;">$num_lic</td>
+			<td width="12%" style="text-align: center; border: 0.3px solid black; font-size: 6px; font-weight: bold;">$ref_crf</td>
+			<td width="8%" style="text-align: left; border: 0.3px solid black; font-size: 7px;">&nbsp;Tariff Code: </td>
+			<td width="12%" style="text-align: center; border: 0.3px solid black; font-size: 7px; font-weight: bold;">$code_tarif</td>
 		</tr>
 		<tr>
 			<td width="60%"></td>
-			<td width="15%" style="text-align: left; border: 0.3px solid black; font-size: 7px;">&nbsp;Tariff Code Client: </td>
-			<td width="25%" style="text-align: center; border: 0.3px solid black; font-size: 7px;">$code_tarif</td>
+			<td width="15%" style="text-align: left; border: 0.3px solid black; font-size: 7px;">&nbsp;License: </td>
+			<td width="25%" style="text-align: center; border: 0.3px solid black; font-size: 7px;">$num_lic</td>
 		</tr>
 		<tr>
 			<td width="23%" style="text-align: left; border: 0.3px solid black; font-size: 7px;">&nbsp;Poids (Kg): </td>
