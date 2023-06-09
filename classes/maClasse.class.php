@@ -3165,6 +3165,160 @@
 
 		}
 
+		public function client_finance(){
+			include("connexion.php");
+
+			// $entree['id_tres'] = $id_tres;
+			$compteur=0;
+
+			$rows = array();
+
+			$requete = $connexion-> query("SELECT *,
+												CONCAT(' <button class=\"btn btn-xs btn-info\" title=\"Details\" onclick=\"window.open(\'detail_client_finance.php?id_cli=',id_cli,'\',\'pop8\',\'width=1100,height=700\');\">
+														<i class=\"fa fa-eye\"></i>
+													</button>') AS btn_action
+											FROM client
+											WHERE id_cli IN (SELECT DISTINCT(id_cli) FROM dossier WHERE YEAR(date_creat_dos)>=2023)
+											ORDER BY nom_cli ASC");
+			// $requete-> execute(array($entree['id_tres']));
+			while ($reponse = $requete-> fetch()) {
+				$compteur++;
+
+				$reponse['compteur'] = $compteur;
+				$reponse['montant_facture'] = $this-> getMontantClientFinanceClient($reponse['id_cli'])['montant_facture'];
+				$reponse['montant_paie'] = $this-> getMontantClientFinanceClient($reponse['id_cli'])['montant_paie'];
+				$reponse['solde'] = $reponse['montant_facture']-$reponse['montant_paie'];
+				$rows[] = $reponse;
+
+			}$requete-> closeCursor();
+
+			return $rows;
+
+		}
+
+		public function getMontantClientFinanceClient($id_cli){
+			include('connexion.php');
+			$entree['id_cli'] = $id_cli;
+
+			$rows = array();
+
+			$requete = $connexion-> prepare("SELECT SUM(
+														IF(facture.tax_duty_part='Include',
+															IF(detail_facture_dossier.tva = '1',
+																IF(detail_facture_dossier.usd='0',
+																	(detail_facture_dossier.montant/dossier.roe_decl)*1.16,
+																	detail_facture_dossier.montant*1.16
+																),
+																IF(detail_facture_dossier.usd='0',
+																	detail_facture_dossier.montant/dossier.roe_decl,
+																	detail_facture_dossier.montant
+																)
+															),
+															IF(debours.id_t_deb<>1,
+																IF(detail_facture_dossier.tva = '1',
+																	IF(detail_facture_dossier.usd='0',
+																		(detail_facture_dossier.montant/dossier.roe_decl)*1.16,
+																		detail_facture_dossier.montant*1.16
+																	),
+																	IF(detail_facture_dossier.usd='0',
+																		detail_facture_dossier.montant/dossier.roe_decl,
+																		detail_facture_dossier.montant
+																	)
+																),
+																0
+															)
+														)
+													) AS montant
+												FROM detail_facture_dossier, dossier, facture_dossier facture, debours
+													WHERE facture.id_cli = ?
+														AND facture.ref_fact = detail_facture_dossier.ref_fact
+														AND detail_facture_dossier.id_deb = debours.id_deb
+														AND dossier.id_dos = detail_facture_dossier.id_dos");
+			$requete-> execute(array($entree['id_cli']));
+			$reponse=$requete-> fetch();
+			if ($reponse) {
+				$rows['montant_facture'] = $reponse['montant'];
+			}else{
+				$rows['montant_facture'] = 0;
+			}
+
+
+			$requete = $connexion-> prepare("SELECT SUM(paiement_facture.montant_paie) AS montant_paie
+												FROM paiement_facture, facture_dossier
+												WHERE paiement_facture.ref_fact = facture_dossier.ref_fact
+													AND facture_dossier.id_cli = ?");
+			$requete-> execute(array($entree['id_cli']));
+			$reponse=$requete-> fetch();
+			if ($reponse) {
+				$rows['montant_paie'] = $reponse['montant_paie'];
+			}else{
+				$rows['montant_paie'] = 0;
+			}
+
+
+			return $rows;
+		}
+
+		public function getMontantClientFinance(){
+			include('connexion.php');
+
+			$rows = array();
+
+			$requete = $connexion-> query("SELECT SUM(
+														IF(facture.tax_duty_part='Include',
+															IF(detail_facture_dossier.tva = '1',
+																IF(detail_facture_dossier.usd='0',
+																	(detail_facture_dossier.montant/dossier.roe_decl)*1.16,
+																	detail_facture_dossier.montant*1.16
+																),
+																IF(detail_facture_dossier.usd='0',
+																	detail_facture_dossier.montant/dossier.roe_decl,
+																	detail_facture_dossier.montant
+																)
+															),
+															IF(debours.id_t_deb<>1,
+																IF(detail_facture_dossier.tva = '1',
+																	IF(detail_facture_dossier.usd='0',
+																		(detail_facture_dossier.montant/dossier.roe_decl)*1.16,
+																		detail_facture_dossier.montant*1.16
+																	),
+																	IF(detail_facture_dossier.usd='0',
+																		detail_facture_dossier.montant/dossier.roe_decl,
+																		detail_facture_dossier.montant
+																	)
+																),
+																0
+															)
+														)
+													) AS montant
+												FROM detail_facture_dossier, dossier, facture_dossier facture, debours
+													WHERE facture.ref_fact = detail_facture_dossier.ref_fact
+														AND detail_facture_dossier.id_deb = debours.id_deb
+														AND dossier.id_dos = detail_facture_dossier.id_dos");
+			// $requete-> execute(array($entree['ref_fact'], $entree['id_deb']));
+			$reponse=$requete-> fetch();
+			if ($reponse) {
+				$rows['montant_facture'] = $reponse['montant'];
+			}else{
+				$rows['montant_facture'] = 0;
+			}
+
+
+			$requete = $connexion-> query("SELECT SUM(montant_paie) AS montant_paie
+												FROM paiement_facture");
+			// $requete-> execute(array($entree['ref_fact'], $entree['id_deb']));
+			$reponse=$requete-> fetch();
+			if ($reponse) {
+				$rows['montant_paie'] = $reponse['montant_paie'];
+			}else{
+				$rows['montant_paie'] = 0;
+			}
+
+			$rows['balance'] = $rows['montant_paie']-$rows['montant_facture'];
+
+			return $rows;
+		}
+
 		public function tresorerie_mois($id_tres){
 			include("connexion.php");
 
@@ -3195,6 +3349,166 @@
 			}$requete-> closeCursor();
 
 			return $rows;
+
+		}
+
+		public function detail_client_finance($id_cli){
+			include("connexion.php");
+
+			$entree['id_cli'] = $id_cli;
+			$compteur=0;
+
+			$rows = array();
+
+			$requete = $connexion-> prepare("SELECT client.*,
+													facture.ref_fact AS ref_fact,
+													SUM(
+														IF(facture.tax_duty_part='Include',
+															IF(detail_facture_dossier.tva = '1',
+																IF(detail_facture_dossier.usd='0',
+																	(detail_facture_dossier.montant/dossier.roe_decl)*1.16,
+																	detail_facture_dossier.montant*1.16
+																),
+																IF(detail_facture_dossier.usd='0',
+																	detail_facture_dossier.montant/dossier.roe_decl,
+																	detail_facture_dossier.montant
+																)
+															),
+															IF(debours.id_t_deb<>1,
+																IF(detail_facture_dossier.tva = '1',
+																	IF(detail_facture_dossier.usd='0',
+																		(detail_facture_dossier.montant/dossier.roe_decl)*1.16,
+																		detail_facture_dossier.montant*1.16
+																	),
+																	IF(detail_facture_dossier.usd='0',
+																		detail_facture_dossier.montant/dossier.roe_decl,
+																		detail_facture_dossier.montant
+																	)
+																),
+																0
+															)
+														)
+													) AS montant_facture,
+													CONCAT('<a href=\"#\" title=\"Payments\"  onclick=\"modal_paiement_facture(\'',facture.ref_fact,'\')\">
+																<img src=\"../images/terminal-de-point-de-vente.png\" width=\"20px\">
+															</a>') AS btn_action
+											FROM facture_dossier facture, detail_facture_dossier, debours, dossier, client
+											WHERE detail_facture_dossier.ref_fact = facture.ref_fact
+												AND debours.id_deb = detail_facture_dossier.id_deb
+												AND detail_facture_dossier.id_dos = dossier.id_dos
+												AND client.id_cli = facture.id_cli
+												AND facture.id_cli = ?
+											GROUP BY facture.ref_fact
+											ORDER BY facture.date_fact");
+			$requete-> execute(array($entree['id_cli']));
+			while ($reponse = $requete-> fetch()) {
+				$compteur++;
+
+				$reponse['compteur'] = $compteur;
+				$reponse['montant_paie'] = $this-> getMontantFactureFinance($reponse['ref_fact'])['montant_paie'];
+				$reponse['solde'] = $reponse['montant_facture']-$reponse['montant_paie'];
+				$rows[] = $reponse;
+
+			}$requete-> closeCursor();
+
+			return $rows;
+
+		}
+
+		public function getMontantFactureFinance($ref_fact){
+			include('connexion.php');
+			$entree['ref_fact'] = $ref_fact;
+
+			$rows = array();
+
+			$requete = $connexion-> prepare("SELECT SUM(
+														IF(facture.tax_duty_part='Include',
+															IF(detail_facture_dossier.tva = '1',
+																IF(detail_facture_dossier.usd='0',
+																	(detail_facture_dossier.montant/dossier.roe_decl)*1.16,
+																	detail_facture_dossier.montant*1.16
+																),
+																IF(detail_facture_dossier.usd='0',
+																	detail_facture_dossier.montant/dossier.roe_decl,
+																	detail_facture_dossier.montant
+																)
+															),
+															IF(debours.id_t_deb<>1,
+																IF(detail_facture_dossier.tva = '1',
+																	IF(detail_facture_dossier.usd='0',
+																		(detail_facture_dossier.montant/dossier.roe_decl)*1.16,
+																		detail_facture_dossier.montant*1.16
+																	),
+																	IF(detail_facture_dossier.usd='0',
+																		detail_facture_dossier.montant/dossier.roe_decl,
+																		detail_facture_dossier.montant
+																	)
+																),
+																0
+															)
+														)
+													) AS montant
+												FROM detail_facture_dossier, dossier, facture_dossier facture, debours
+													WHERE facture.ref_fact = ?
+														AND facture.ref_fact = detail_facture_dossier.ref_fact
+														AND detail_facture_dossier.id_deb = debours.id_deb
+														AND dossier.id_dos = detail_facture_dossier.id_dos");
+			$requete-> execute(array($entree['ref_fact']));
+			$reponse=$requete-> fetch();
+			if ($reponse) {
+				$rows['montant_facture'] = $reponse['montant'];
+			}else{
+				$rows['montant_facture'] = 0;
+			}
+
+
+			$requete = $connexion-> prepare("SELECT SUM(paiement_facture.montant_paie) AS montant_paie
+												FROM paiement_facture, facture_dossier
+												WHERE paiement_facture.ref_fact = facture_dossier.ref_fact
+													AND facture_dossier.ref_fact = ?");
+			$requete-> execute(array($entree['ref_fact']));
+			$reponse=$requete-> fetch();
+			if ($reponse) {
+				$rows['montant_paie'] = $reponse['montant_paie'];
+			}else{
+				$rows['montant_paie'] = 0;
+			}
+
+
+			return $rows;
+		}
+
+		public function modal_paiement_facture($ref_fact){
+			include("connexion.php");
+
+			$entree['ref_fact'] = $ref_fact;
+			$compteur=0;
+
+			$rows = array();
+
+			$tableau = '';
+
+			$requete = $connexion-> prepare("SELECT *
+												FROM paiement_facture, tresorerie
+													WHERE paiement_facture.ref_fact = ?
+														AND paiement_facture.id_tres = tresorerie.id_tres");
+			$requete-> execute(array($entree['ref_fact']));
+			while ($reponse = $requete-> fetch()) {
+				$compteur++;
+
+				$tableau .='
+					<tr>
+						<td>'.$compteur.'</td>
+						<td>'.$reponse['date_paie'].'</td>
+						<td>'.$reponse['ref_paie'].'</td>
+						<td>'.$reponse['nom_tres'].'</td>
+						<td>'.$reponse['montant_paie'].'</td>
+					</tr>
+				';
+
+			}$requete-> closeCursor();
+
+			return $tableau;
 
 		}
 
@@ -11058,7 +11372,8 @@
 													(IF(dos.fob_usd IS NULL, 0, dos.fob_usd) +IF(dos.fret_usd IS NULL, 0, dos.fret_usd)+IF(dos.assurance_usd IS NULL, 0, dos.assurance_usd)+IF(dos.autre_frais_usd IS NULL, 0, dos.autre_frais_usd)) AS cif_usd,
 													((IF(dos.fob_usd IS NULL, 0, dos.fob_usd) +IF(dos.fret_usd IS NULL, 0, dos.fret_usd)+IF(dos.assurance_usd IS NULL, 0, dos.assurance_usd)+IF(dos.autre_frais_usd IS NULL, 0, dos.autre_frais_usd)))*dos.roe_inv AS cif_cdf,
 													IF(dos.id_mod_lic='1', cl.nom_cli, dos.supplier) AS supplier,
-													mt.nom_mod_trans AS nom_mod_trans
+													mt.nom_mod_trans AS nom_mod_trans,
+													dos.supplier AS supplier
 												FROM facture_dossier fd, detail_facture_dossier df, dossier dos, client cl, mode_transport mt
 												WHERE fd.ref_fact = ?
 													AND fd.ref_fact = df.ref_fact
@@ -11755,6 +12070,27 @@
 			$requete = $connexion-> prepare('INSERT INTO paiement_facture(ref_fact, ref_paie, date_paie, montant_paie, libelle_paie)
 												VALUES(?, ?, ?, ?, ?)');
 			$requete-> execute(array($entree['ref_fact'], $entree['ref_paie'], $entree['date_paie'], $entree['montant_paie'], $entree['libelle_paie']));
+
+		}
+
+		public function paiement_facture($ref_paie, $date_paie, $montant_paie, $ref_fact, $id_tres){
+			include('connexion.php');
+
+			$entree['ref_fact'] = $ref_fact;
+			$entree['ref_paie'] = $ref_paie;
+			$entree['date_paie'] = $date_paie;
+			$entree['montant_paie'] = $montant_paie;
+			$entree['id_tres'] = $id_tres;
+
+			// echo '<br>ref_fact = '.$ref_fact;
+			// echo '<br>ref_paie = '.$ref_paie;
+			// echo '<br>date_paie = '.$date_paie;
+			// echo '<br>montant_paie = '.$montant_paie;
+			// echo '<br>id_tres = '.$id_tres;
+
+			$requete = $connexion-> prepare('INSERT INTO paiement_facture(ref_fact, ref_paie, date_paie, montant_paie, id_tres, id_util)
+												VALUES(?, ?, ?, ?, ?, ?)');
+			$requete-> execute(array($entree['ref_fact'], $entree['ref_paie'], $entree['date_paie'], $entree['montant_paie'], $entree['id_tres'], $_SESSION['id_util']));
 
 		}
 
@@ -36429,6 +36765,23 @@
 				?>
 				<option value="<?php echo $reponse['id_etat']; ?>">
 					<?php echo $reponse['nom_etat']; ?>
+				</option>
+				<?php
+			}$requete-> closeCursor();
+		}
+
+		public function selectionnerTresorerie(){
+			include('connexion.php');
+			$requete = $connexion-> query("SELECT *
+											FROM tresorerie
+											ORDER BY nom_tres");
+
+
+			while($reponse = $requete-> fetch()){
+
+				?>
+				<option value="<?php echo $reponse['id_tres']; ?>">
+					<?php echo $reponse['nom_tres']; ?>
 				</option>
 				<?php
 			}$requete-> closeCursor();
