@@ -38,6 +38,12 @@ function afficherDossierEnAttenteApurementExcel($id_cli, $id_mod_lic, $row, $exc
 													AND d.ref_quit <> ''
 													AND d.ref_decl IS NOT NULL
 													AND d.ref_decl <> ''
+													AND d.ref_decl <> ''
+													AND d.ref_quit <> ''
+													AND d.num_lic <> 'N/A'
+													AND d.num_lic <> 'UNDER VALUE'
+													AND d.num_lic <> 'UNDERVALUE'
+													AND d.num_lic NOT LIKE '%UNDER%'
 													AND d.id_dos NOT IN(
 															SELECT id_dos FROM detail_apurement
 														)
