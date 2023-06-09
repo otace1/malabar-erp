@@ -23118,6 +23118,7 @@
 													AND d.num_lic <> 'N/A'
 													AND d.num_lic <> 'UNDER VALUE'
 													AND d.num_lic <> 'UNDERVALUE'
+													AND d.num_lic NOT LIKE '%UNDER%'
 													AND d.id_dos NOT IN (
 														SELECT id_dos 
 															FROM dossier 
@@ -31274,8 +31275,9 @@
 												FROM transmission_apurement
 												WHERE ref_trans_ap = ?
 													AND date_trans_ap = ?
-													AND banque = ?");
-			$requete-> execute(array($entree['ref_trans_ap'], $entree['date_trans_ap'], $entree['banque']));
+													AND banque = ?
+													AND id_util = ?");
+			$requete-> execute(array($entree['ref_trans_ap'], $entree['date_trans_ap'], $entree['banque'], $_SESSION['id_util']));
 			$reponse = $requete-> fetch();
 			return $reponse['id_trans_ap'];
 		}
@@ -34184,6 +34186,7 @@
 													AND num_lic <> 'N/A'
 													AND num_lic <> 'UNDER VALUE'
 													AND num_lic <> 'UNDERVALUE'
+													AND num_lic NOT LIKE '%UNDER%'
 													AND id_dos NOT IN (
 														SELECT id_dos 
 															FROM dossier 
