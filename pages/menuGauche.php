@@ -144,6 +144,20 @@
                 echo $maClasse-> afficherMenuTresorerieAJAX();
               ?>
             </li>
+          <li class="nav-item">
+              <a href="client_finance.php" class="nav-link" class="nav-link">
+                <img src="../images/poignee-de-main.png" width="25px">
+                <p>
+                <?php
+                  if ($maClasse-> getUtilisateur($_SESSION['id_util'])['langue']=='ENG') {
+                    echo 'Clients';
+                  }else if ($maClasse-> getUtilisateur($_SESSION['id_util'])['langue']=='FR') {
+                    echo 'Clients';
+                  }
+                ?>
+                </p>
+              </a>
+            </li>
           <li class="nav-header font-weight-bold">
             <?php
               if ($maClasse-> getUtilisateur($_SESSION['id_util'])['langue']=='ENG') {
@@ -198,7 +212,7 @@
                 </li>
               </ul>
           </li>
-           <li class="nav-item has-treeview">
+           <!--<li class="nav-item has-treeview">
               <a href="#" class="nav-link" class="nav-link">
                 <img src="../images/transaction.png" width="25px">
                 <p>
@@ -222,7 +236,7 @@
                   </a>
                 </li>
               </ul>
-          </li>
+          </li>-->
            <li class="nav-item has-treeview">
               <a href="#" class="nav-link" class="nav-link">
                 <img src="../images/registre.png" width="25px">

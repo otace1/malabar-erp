@@ -1537,6 +1537,19 @@
 		$response = $maClasse-> getDossier2($_POST['id_dos']);
 		
 		echo json_encode($response);
+	}else if ($_POST['operation']=="getMontantClientFinance") {
+		echo json_encode($maClasse-> getMontantClientFinance());
+	}else if ($_POST['operation']=="client_finance") {
+		echo json_encode($maClasse-> client_finance());
+	}else if ($_POST['operation']=="detail_client_finance") {
+		echo json_encode($maClasse-> detail_client_finance($_POST['id_cli']));
+	}else if ($_POST['operation']=="modal_paiement_facture") {
+		$response['detail_paiement_facture'] = $maClasse-> modal_paiement_facture($_POST['ref_fact']);
+		echo json_encode($response);
+	}else if ($_POST['operation']=="paiement_facture") {
+		$maClasse-> paiement_facture($_POST['ref_paie'], $_POST['date_paie'], $_POST['montant_paie'], $_POST['ref_fact'], $_POST['id_tres']);
+		$response['detail_paiement_facture'] = $maClasse-> modal_paiement_facture($_POST['ref_fact']);
+		echo json_encode($response);
 	}
 
 ?>
