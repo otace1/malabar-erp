@@ -3196,6 +3196,72 @@
 
 		}
 
+		public function fournisseur_finance(){
+			include("connexion.php");
+
+			// $entree['id_tres'] = $id_tres;
+			$compteur=0;
+
+			$rows = array();
+
+			$requete = $connexion-> query("SELECT *,
+												CONCAT(' <button class=\"btn btn-xs btn-info\" title=\"Details\" onclick=\"window.open(\'detail_fournisseur_finance.php?id_four=',id_four,'\',\'pop8\',\'width=1100,height=700\');\">
+														<i class=\"fa fa-eye\"></i>
+													</button>') AS btn_action
+											FROM fournisseur
+											ORDER BY nom_four ASC");
+			// $requete-> execute(array($entree['id_tres']));
+			while ($reponse = $requete-> fetch()) {
+				$compteur++;
+
+				$reponse['compteur'] = $compteur;
+				$reponse['montant_facture'] = $this-> getMontantFactureFournisseurFinance($reponse['id_four'])['montant_facture'];
+				$reponse['montant_paie'] = $this-> getMontantFactureFournisseurFinance($reponse['id_four'])['montant_paie'];
+				$reponse['solde'] = $reponse['montant_facture']-$reponse['montant_paie'];
+				$rows[] = $reponse;
+
+			}$requete-> closeCursor();
+
+			return $rows;
+
+		}
+
+		public function getMontantFactureFournisseurFinance($id_four){
+			include('connexion.php');
+			$entree['id_four'] = $id_four;
+
+			$rows = array();
+
+			$requete = $connexion-> prepare("SELECT SUM(
+														montant
+													) AS montant
+												FROM facture_fournisseur
+													WHERE id_four = ?");
+			$requete-> execute(array($entree['id_four']));
+			$reponse=$requete-> fetch();
+			if ($reponse) {
+				$rows['montant_facture'] = $reponse['montant'];
+			}else{
+				$rows['montant_facture'] = 0;
+			}
+
+
+			$requete = $connexion-> prepare("SELECT SUM(det.montant) AS montant
+												FROM detail_paiement_facture_fournisseur det, facture_fournisseur fact
+												WHERE det.id_fact = fact.id_fact
+													AND fact.id_four = ?");
+			$requete-> execute(array($entree['id_four']));
+			$reponse=$requete-> fetch();
+			if ($reponse) {
+				$rows['montant_paie'] = $reponse['montant'];
+			}else{
+				$rows['montant_paie'] = 0;
+			}
+
+
+			return $rows;
+		}
+
 		public function getMontantClientFinanceClient($id_cli){
 			include('connexion.php');
 			$entree['id_cli'] = $id_cli;
@@ -12094,6 +12160,27 @@
 
 		}
 
+		public function new_vendor($nom_four, $nif_four, $rccm_four, $adr_four, $tel_four){
+			include('connexion.php');
+
+			$entree['nom_four'] = $nom_four;
+			$entree['nif_four'] = $nif_four;
+			$entree['rccm_four'] = $rccm_four;
+			$entree['tel_four'] = $tel_four;
+			$entree['adr_four'] = $adr_four;
+
+			// echo '<br>adr_four = '.$adr_four;
+			// echo '<br>nom_four = '.$nom_four;
+			// echo '<br>nif_four = '.$nif_four;
+			// echo '<br>rccm_four = '.$rccm_four;
+			// echo '<br>tel_four = '.$tel_four;
+
+			$requete = $connexion-> prepare('INSERT INTO fournisseur(nom_four, nif_four, rccm_four, tel_four, adr_four)
+												VALUES(?, ?, ?, ?, ?)');
+			$requete-> execute(array($entree['nom_four'], $entree['nif_four'], $entree['rccm_four'], $entree['tel_four'], $entree['adr_four']));
+
+		}
+
 		public function new_mouvement($date_mvt, $entree, $sortie, $libelle, $reference, $id_tres){
 			include('connexion.php');
 
@@ -15032,7 +15119,7 @@
 				</td>
 				<td>
 					<input type="number" min="0" style="text-align: center; width: 8em;" onblur="calculDDE(<?php echo $compteur;?>);" id="dde_<?php echo $compteur;?>" name="dde_<?php echo $compteur;?>" class="bg bg-dark">
-					<input type="hidden" style="text-align: center; width: 8em;" name="dde_tva_<?php echo $compteur;?>" id="tva_<?php echo $compteur;?>" value="0" class="bg bg-dark">
+					<input type="hidden" style="text-align: center; width: 8em;" name="dde_tva_<?php echo $compteur;?>" id="tva_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDataDetailFacture($ref_fact, $reponse['id_dos'], 2)['montant'];?>" class="bg bg-dark">
 				</td>
 				<td style="text-align: center;">
 					<input type="number" step="0.001" min="0" style="text-align: center; width: 8em;" onblur="calculDDE(<?php echo $compteur;?>);" id="rie_<?php echo $compteur;?>" name="rie_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDataDetailFacture($ref_fact, $reponse['id_dos'], 1)['montant'];?>" class="bg bg-dark">
