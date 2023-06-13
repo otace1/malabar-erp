@@ -15118,8 +15118,8 @@
 					<input type="number" min="0" step="0.000001" style="text-align: center; width: 8em;" onblur="calculDDE(<?php echo $compteur;?>);" id="roe_decl_<?php echo $compteur;?>" name="roe_decl_<?php echo $compteur;?>" value="<?php echo $reponse['roe_decl'];?>" class="bg bg-dark">
 				</td>
 				<td>
-					<input type="number" min="0" style="text-align: center; width: 8em;" onblur="calculDDE(<?php echo $compteur;?>);" id="dde_<?php echo $compteur;?>" name="dde_<?php echo $compteur;?>" class="bg bg-dark">
-					<input type="hidden" style="text-align: center; width: 8em;" name="dde_tva_<?php echo $compteur;?>" id="tva_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDataDetailFacture($ref_fact, $reponse['id_dos'], 2)['montant'];?>" class="bg bg-dark">
+					<input type="number" min="0" style="text-align: center; width: 8em;" onblur="calculDDE(<?php echo $compteur;?>);" id="dde_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDataDetailFacture($ref_fact, $reponse['id_dos'], 2)['montant'];?>" name="dde_<?php echo $compteur;?>" class="bg bg-dark">
+					<input type="hidden" style="text-align: center; width: 8em;" name="dde_tva_<?php echo $compteur;?>" id="tva_<?php echo $compteur;?>" value="0" class="bg bg-dark">
 				</td>
 				<td style="text-align: center;">
 					<input type="number" step="0.001" min="0" style="text-align: center; width: 8em;" onblur="calculDDE(<?php echo $compteur;?>);" id="rie_<?php echo $compteur;?>" name="rie_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDataDetailFacture($ref_fact, $reponse['id_dos'], 1)['montant'];?>" class="bg bg-dark">
