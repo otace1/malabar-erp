@@ -3217,7 +3217,7 @@
 				$reponse['compteur'] = $compteur;
 				$reponse['montant_facture'] = $this-> getMontantFactureFournisseurFinance($reponse['id_four'])['montant_facture'];
 				$reponse['montant_paie'] = $this-> getMontantFactureFournisseurFinance($reponse['id_four'])['montant_paie'];
-				$reponse['solde'] = $reponse['montant_facture']-$reponse['montant_paie'];
+				$reponse['solde'] = $reponse['montant_paie']-$reponse['montant_facture'];
 				$rows[] = $reponse;
 
 			}$requete-> closeCursor();
@@ -3385,6 +3385,25 @@
 			return $rows;
 		}
 
+		public function getMontantFournisseurFinance(){
+			include('connexion.php');
+
+			$rows = array();
+
+			$requete = $connexion-> query("SELECT ff.*,
+													ff.montant AS montant_facture,
+													IF(SUM(paie.montant)>0, SUM(paie.montant), 0)  AS montant_paie,
+													(IF(SUM(paie.montant)>0, SUM(paie.montant), 0)-ff.montant) AS balance
+											FROM facture_fournisseur ff
+												LEFT JOIN paiement_facture_fournisseur paie
+													ON paie.id_fact = paie.id_fact
+											GROUP BY ff.id_fact");
+			// $requete-> execute(array($entree['ref_fact'], $entree['id_deb']));
+			$reponse=$requete-> fetch();
+			return $reponse;
+
+		}
+
 		public function tresorerie_mois($id_tres){
 			include("connexion.php");
 
@@ -3496,7 +3515,7 @@
 			$requete = $connexion-> prepare("SELECT ff.*,
 													ff.montant AS montant_facture,
 													IF(SUM(paie.montant)>0, SUM(paie.montant), 0)  AS montant_paie,
-													(ff.montant-IF(SUM(paie.montant)>0, SUM(paie.montant), 0)) AS solde,
+													(IF(SUM(paie.montant)>0, SUM(paie.montant), 0)-ff.montant) AS solde,
 													CONCAT('<a href=\"#\" title=\"Make / View Payments\" class=\"text-light\" onclick=\"modal_paiement_facture(\'',ff.id_fact,'\')\">
 																<img src=\"../images/terminal-de-point-de-vente.png\" width=\"20px\"> Payments
 															</a>') AS btn_action
