@@ -1,8 +1,9 @@
 <?php
   include("tetePopCDN.php");
   include("menuHaut.php");
-  include("menuGauche.php");
+  // include("menuGauche.php");
   //include("licenceExcel.php");
+
 
 ?>
   <!-- /.navbar -->
@@ -14,8 +15,14 @@
     <section class="content-header">
       <div class="container-fluid">
         <div class="header">
-          <h5><img src="../images/poignee-de-main.png" width="25px">
-            Clients
+          <h5><img src="../images/livreur.png" width="30px">
+            <?php
+              if ($maClasse-> getUtilisateur($_SESSION['id_util'])['langue']=='ENG') {
+                echo 'Vendors';
+              }else if ($maClasse-> getUtilisateur($_SESSION['id_util'])['langue']=='FR') {
+                echo 'Fournisseurs';
+              }
+            ?>
           </h5>
         </div>
 
@@ -90,11 +97,11 @@
           <div class="col-12 col-sm-12">
 
             <div class="card  card-body table-responsive p-0">
-              <table id="client_finance" cellspacing="0" width="100%" class="table table-dark table-bordered table-striped  table-sm text-nowrap">
+              <table id="fournisseur_finance" cellspacing="0" width="100%" class="table table-dark table-bordered table-striped  table-sm text-nowrap">
                 <thead>
                   <tr>
                     <th style="" width="10px">#</th>
-                    <th style="">Client Name</th>
+                    <th style="">Vendor Name</th>
                     <th style="">Debit</th>
                     <th style="">Credit</th>
                     <th style="">Solde</th>
@@ -123,14 +130,13 @@
   // ------------------------------------------------------------------------------------------------------
   ?>
 
-<div class="modal fade " id="modal_new_mouvement">
+<div class="modal fade " id="modal_new_vendor">
   <div class="modal-dialog modal-md">
-    <form method="POST" action="" id="form_new_mouvement" data-parsley-validate enctype="multipart/form-data">
-      <input type="hidden" name="id_tres" id="id_tres" value="">
-      <input type="hidden" name="operation" id="operation" value="new_mouvement">
+    <form method="POST" action="" id="form_new_vendor" data-parsley-validate enctype="multipart/form-data">
+      <input type="hidden" name="operation" id="operation" value="new_vendor">
     <div class="modal-content">
       <div class="modal-header ">
-        <h4 class="modal-title"><i class="fa fa-plus"></i> New Mouvement.</h4>
+        <h4 class="modal-title"><i class="fa fa-plus"></i> New Vendor.</h4>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -138,82 +144,29 @@
       <div class="modal-body">
         <div class="row">
 
-          <div class="col-md-6">
-            <label for="x_card_code" class="control-label mb-1">Date<sup class="text-danger">*</sup></label>
-            <input type="date" name="date_mvt" id="date_mvt" max="<?php echo date('Y-m-d');?>" class="form-control form-control-sm cc-exp" required>
-          </div>
-
-          <div class="col-md-6">
-            <label for="x_card_code" class="control-label mb-1">Reference<sup class="text-danger">*</sup></label>
-            <input maxlength="50" type="text" name="reference" id="reference" class="form-control form-control-sm cc-exp" required>
-          </div>
-
-          <div class="col-md-6">
-            <label for="x_card_code" class="control-label mb-1">Receipt</label>
-            <input type="number" step="0.05" name="paiement" id="paiement" class="form-control form-control-sm cc-exp">
-          </div>
-
-          <div class="col-md-6">
-            <label for="x_card_code" class="control-label mb-1">Payment</label>
-            <input type="number" step="0.05" name="invoice_amount" id="invoice_amount" class="form-control form-control-sm cc-exp">
+          <div class="col-md-12">
+            <label for="x_card_code" class="control-label mb-1">Name<sup class="text-danger">*</sup></label>
+            <input type="text" autocomplete="off" name="nom_four" id="nom_four" class="form-control form-control-sm cc-exp" required>
           </div>
 
           <div class="col-md-12">
-            <label for="x_card_code" class="control-label mb-1">Naration<sup class="text-danger">*</sup></label>
-            <textarea maxlength="50" name="libelle" id="libelle" class="form-control form-control-sm cc-exp" required></textarea>
-          </div>
-
-        </div>
-      </div>
-      <div class="modal-footer justify-content-between">
-        <button type="button" class="btn-xs btn-danger" data-dismiss="modal">Cancel</button>
-        <button type="submit" class="btn-xs btn-primary">Submit</button>
-      </div>
-    </div>
-    </form>
-    <!-- /.modal-content -->
-  </div>
-  <!-- /.modal-dialog -->
-</div>
-
-<div class="modal fade " id="modal_edit_mouvement">
-  <div class="modal-dialog modal-md">
-    <form method="POST" action="" id="form_edit_mouvement" data-parsley-validate enctype="multipart/form-data">
-      <input type="hidden" name="id_mvt" id="id_mvt_edit">
-      <input type="hidden" name="operation" id="operation" value="edit_mouvement">
-    <div class="modal-content">
-      <div class="modal-header ">
-        <h4 class="modal-title"><i class="fa fa-edit"></i> Edit Mouvement.</h4>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <div class="row">
-
-          <div class="col-md-6">
-            <label for="x_card_code" class="control-label mb-1">Date<sup class="text-danger">*</sup></label>
-            <input type="date" name="date_mvt" id="date_mvt_edit" max="<?php echo date('Y-m-d');?>" class="form-control form-control-sm cc-exp" required>
-          </div>
-
-          <div class="col-md-6">
-            <label for="x_card_code" class="control-label mb-1">Reference<sup class="text-danger">*</sup></label>
-            <input maxlength="50" type="text" name="reference" id="reference_edit" class="form-control form-control-sm cc-exp" required>
-          </div>
-
-          <div class="col-md-6">
-            <label for="x_card_code" class="control-label mb-1">Receipt</label>
-            <input type="number" step="0.05" name="paiement" id="paiement_edit" class="form-control form-control-sm cc-exp">
-          </div>
-
-          <div class="col-md-6">
-            <label for="x_card_code" class="control-label mb-1">Payment</label>
-            <input type="number" step="0.05" name="invoice_amount" id="invoice_amount_edit" class="form-control form-control-sm cc-exp">
+            <label for="x_card_code" class="control-label mb-1">NIF<sup class="text-danger">*</sup></label>
+            <input type="text" autocomplete="off" name="nif_four" id="nif_four" class="form-control form-control-sm cc-exp" required>
           </div>
 
           <div class="col-md-12">
-            <label for="x_card_code" class="control-label mb-1">Naration<sup class="text-danger">*</sup></label>
-            <textarea maxlength="50" name="libelle" id="libelle_edit" class="form-control form-control-sm cc-exp" required></textarea>
+            <label for="x_card_code" class="control-label mb-1">RCCM<sup class="text-danger">*</sup></label>
+            <input type="text" autocomplete="off" name="rccm_four" id="rccm_four" class="form-control form-control-sm cc-exp" required>
+          </div>
+
+          <div class="col-md-12">
+            <label for="x_card_code" class="control-label mb-1">Address<sup class="text-danger">*</sup></label>
+            <input type="text" autocomplete="off" name="adr_four" id="adr_four" class="form-control form-control-sm cc-exp" required>
+          </div>
+
+          <div class="col-md-12">
+            <label for="x_card_code" class="control-label mb-1">Tel<sup class="text-danger">*</sup></label>
+            <input type="text" autocomplete="off" name="tel_four" id="tel_four" class="form-control form-control-sm cc-exp" required>
           </div>
 
         </div>
@@ -262,13 +215,20 @@
           });
       }
 
-        $('#client_finance').DataTable({
+        $('#fournisseur_finance').DataTable({
            lengthMenu: [
               [15, 25, 50, 100, 500, -1],
               [15, 25, 50, 100, 500, 1000, 'All'],
             ],
             dom: 'Bfrtip',
             buttons: [
+                {
+                  text: '<i class="fa fa-plus"></i> New Vendor',
+                  className: 'btn btn-info',
+                  action: function ( e, dt, node, config ) {
+                      $('#modal_new_vendor').modal('show');
+                  }
+                },
                 'excel',
                 'pageLength'
             ],
@@ -288,12 +248,12 @@
                   "id_cli": "844"
               },
               "data": {
-                  "operation": "client_finance"
+                  "operation": "fournisseur_finance"
               }
             },
             "columns":[
               {"data":"compteur"},
-              {"data":"nom_cli"},
+              {"data":"nom_four"},
               {"data":"montant_facture",
                 render: DataTable.render.number( null, null, 2, null ),
                 className: 'dt-body-right'
@@ -311,4 +271,53 @@
               }
             ] 
           });
+
+
+  $(document).ready(function(){
+
+    $('#form_new_vendor').submit(function(e){
+
+      e.preventDefault();
+
+       if(confirm('Do you really want to submit ?')) {
+          
+          $('#spinner-div').show();
+          $('#modal_new_mouvement').modal('hide');
+
+          var fd = new FormData(this);
+          // alert($(this).attr('action'));
+          $.ajax({
+
+            url: 'ajax.php',
+            type: 'post',
+            processData: false,
+            contentType: false,
+            data: fd,
+            dataType: 'json',
+            success:function(data){
+              if (data.logout) {
+                alert(data.logout);
+                window.location="../deconnexion.php";
+              }else{
+                // $('#tableau_pv_contentieux').html(data.tableau_pv_contentieux);
+                $( '#form_new_vendor' ).each(function(){
+                    this.reset();
+                });
+                $('#fournisseur_finance').DataTable().ajax.reload();
+                $('#modal_new_vendor').modal('hide');
+              }
+            },
+            complete: function () {
+                // loadPV();
+                $('#spinner-div').hide();//Request is complete so hide spinner
+            }
+
+          });
+
+
+      }
+
+    });
+  
+  });
     </script>

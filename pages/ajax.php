@@ -1550,6 +1550,18 @@
 		$maClasse-> paiement_facture($_POST['ref_paie'], $_POST['date_paie'], $_POST['montant_paie'], $_POST['ref_fact'], $_POST['id_tres']);
 		$response['detail_paiement_facture'] = $maClasse-> modal_paiement_facture($_POST['ref_fact']);
 		echo json_encode($response);
+	}else if ($_POST['operation']=="fournisseur_finance") {
+		echo json_encode($maClasse-> fournisseur_finance());
+	}else if ($_POST['operation']=="new_vendor") {
+		$maClasse-> new_vendor($_POST['nom_four'], $_POST['nif_four'], $_POST['rccm_four'], $_POST['adr_four'], $_POST['tel_four']);
+		$response['msg'] = 'ok';
+		echo json_encode($response);
+	}else if ($_POST['operation']=="detail_fournisseur_finance") {
+		echo json_encode($maClasse-> detail_fournisseur_finance($_POST['id_four']));
+	}else if ($_POST['operation']=="new_invoice") {
+		$maClasse-> new_invoice($_POST['ref_fact'], $_POST['date_fact'], $_POST['montant'], $_POST['remarque'], $_POST['id_four']);
+		$response['msg'] = 'Done!';
+		echo json_encode($response);
 	}
 
 ?>
