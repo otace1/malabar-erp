@@ -1562,6 +1562,9 @@
 		$maClasse-> new_invoice($_POST['ref_fact'], $_POST['date_fact'], $_POST['montant'], $_POST['remarque'], $_POST['id_four']);
 		$response['msg'] = 'Done!';
 		echo json_encode($response);
+	}else if ($_POST['operation']=="getMontantFournisseurFinance") {
+		$response = $maClasse-> getMontantFournisseurFinance();
+		echo json_encode($response);
 	}
 
 ?>

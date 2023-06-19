@@ -1,9 +1,8 @@
 <?php
   include("tetePopCDN.php");
   include("menuHaut.php");
-  // include("menuGauche.php");
-  //include("licenceExcel.php");
-
+  include("menuGauche.php");
+  
 
 ?>
   <!-- /.navbar -->
@@ -185,16 +184,16 @@
     <script type="text/javascript">
       
       $(document).ready(function(){
-        getMontantClientFinance();
+        getMontantFournisseurFinance();
       });
 
-      function getMontantClientFinance(){
+      function getMontantFournisseurFinance(){
         $('#spinner-div').show();
         $.ajax({
 
             url: 'ajax.php',
             type: 'post',
-            data: {operation: "getMontantClientFinance"},
+            data: {operation: "getMontantFournisseurFinance"},
             dataType: 'json',
             success:function(data){
               if (data.logout) {
@@ -254,11 +253,11 @@
             "columns":[
               {"data":"compteur"},
               {"data":"nom_four"},
-              {"data":"montant_facture",
+              {"data":"montant_paie",
                 render: DataTable.render.number( null, null, 2, null ),
                 className: 'dt-body-right'
               },
-              {"data":"montant_paie",
+              {"data":"montant_facture",
                 render: DataTable.render.number( null, null, 2, null ),
                 className: 'dt-body-right'
               },
