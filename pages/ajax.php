@@ -1548,6 +1548,7 @@
 		echo json_encode($response);
 	}else if ($_POST['operation']=="paiement_facture") {
 		$maClasse-> paiement_facture($_POST['ref_paie'], $_POST['date_paie'], $_POST['montant_paie'], $_POST['ref_fact'], $_POST['id_tres']);
+		$maClasse-> new_mouvement($_POST['date_paie'], $_POST['montant_paie'], NULL, 'Receipt Payment Invoice '.$_POST['ref_fact'], $_POST['ref_paie'], $_POST['id_tres']);
 		$response['detail_paiement_facture'] = $maClasse-> modal_paiement_facture($_POST['ref_fact']);
 		echo json_encode($response);
 	}else if ($_POST['operation']=="fournisseur_finance") {
@@ -1564,6 +1565,15 @@
 		echo json_encode($response);
 	}else if ($_POST['operation']=="getMontantFournisseurFinance") {
 		$response = $maClasse-> getMontantFournisseurFinance();
+		echo json_encode($response);
+	}else if ($_POST['operation']=="modal_paiement_facture_fournisseur") {
+		$response = $maClasse-> get_facture_fournisseur($_POST['id_fact']);
+		$response['detail_paiement_facture_fournisseur'] = $maClasse-> modal_paiement_facture_fournisseur($_POST['id_fact']);
+		echo json_encode($response);
+	}else if ($_POST['operation']=="paiement_facture_fournisseur") {
+		$maClasse-> paiement_facture_fournisseur($_POST['ref_paie'], $_POST['date_paie'], $_POST['montant'], $_POST['id_fact'], $_POST['id_tres']);
+		$maClasse-> new_mouvement($_POST['date_paie'], NULL, $_POST['montant'], 'Payment Vendor Invoice '.$maClasse-> get_facture_fournisseur($_POST['id_fact'])['ref_fact'], $_POST['ref_paie'], $_POST['id_tres']);
+		$response['detail_paiement_facture_fournisseur'] = $maClasse-> modal_paiement_facture_fournisseur($_POST['id_fact']);
 		echo json_encode($response);
 	}
 

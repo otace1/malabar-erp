@@ -52,7 +52,7 @@
   include('pied.php');
   ?>
 
-  <div class="modal fade " id="modal_paiement_facture">
+  <div class="modal fade " id="modal_paiement_facture_fournisseur">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
@@ -63,9 +63,9 @@
         </div>
         <div class="modal-body">
 
-          <form id="form_paiement_facture" method="POST" action="" data-parsley-validate enctype="multipart/form-data">
-            <input type="hidden" name="operation" value="paiement_facture">
-            <input type="hidden" name="ref_fact" id="ref_fact">
+          <form id="form_paiement_facture_fournisseur" method="POST" action="" data-parsley-validate enctype="multipart/form-data">
+            <input type="hidden" name="operation" value="paiement_facture_fournisseur">
+            <input type="hidden" name="id_fact" id="id_fact">
             <div class="row">
               <div class="col-md-6">
                 <label for="x_card_code" class="control-label mb-1">Date</label>
@@ -86,7 +86,7 @@
               </div>
               <div class="col-md-6">
                 <label for="x_card_code" class="control-label mb-1">Amount</label>
-                <input type="number" step="0.01" name="montant_paie" class="form-control form-control-sm cc-exp" required>
+                <input type="number" step="0.01" name="montant" class="form-control form-control-sm cc-exp" required>
               </div>
 
             </div>
@@ -109,7 +109,7 @@
                     <th></th>
                   </tr>
                 </thead>
-                <tbody id="detail_paiement_facture"></tbody>
+                <tbody id="detail_paiement_facture_fournisseur"></tbody>
               </table>
             </div>
 
@@ -235,12 +235,12 @@
       ] 
     });
 
-  function modal_paiement_facture(ref_fact) {
+  function modal_paiement_facture_fournisseur(id_fact, ref_fact) {
     $('#spinner-div').show();
     $.ajax({
       url: 'ajax.php',
       type: 'post',
-      data: {ref_fact: ref_fact, operation: "modal_paiement_facture"},
+      data: {id_fact: id_fact, operation: "modal_paiement_facture_fournisseur"},
       dataType: 'json',
       success:function(data){
         if (data.logout) {
@@ -248,9 +248,9 @@
           window.location="../deconnexion.php";
         }else{
           $('#label_ref_fact').html(ref_fact);
-          $('#ref_fact').val(ref_fact);
-          $('#detail_paiement_facture').html(data.detail_paiement_facture);
-          $('#modal_paiement_facture').modal('show');
+          $('#id_fact').val(id_fact);
+          $('#detail_paiement_facture_fournisseur').html(data.detail_paiement_facture_fournisseur);
+          $('#modal_paiement_facture_fournisseur').modal('show');
         }
       },
       complete: function () {
@@ -264,7 +264,7 @@
 
   $(document).ready(function(){
 
-      $('#form_paiement_facture').submit(function(e){
+      $('#form_paiement_facture_fournisseur').submit(function(e){
 
               e.preventDefault();
 
@@ -285,12 +285,12 @@
                 alert(data.logout);
                 window.location="../deconnexion.php";
               }else{
-                $( '#form_paiement_facture' ).each(function(){
+                $( '#form_paiement_facture_fournisseur' ).each(function(){
                     this.reset();
                 });
-                $('#detail_paiement_facture').html(data.detail_paiement_facture);
+                $('#detail_paiement_facture_fournisseur').html(data.detail_paiement_facture_fournisseur);
                 $('#detail_fournisseur_finance').DataTable().ajax.reload();
-                // $('#modal_paiement_facture').modal('hide');
+                // $('#modal_paiement_facture_fournisseur').modal('hide');
               }
             },
             complete: function () {
