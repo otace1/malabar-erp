@@ -158,6 +158,20 @@
                 </p>
               </a>
             </li>
+          <li class="nav-item">
+              <a href="fournisseur_finance.php" class="nav-link" class="nav-link">
+                <img src="../images/livreur.png" width="25px">
+                <p>
+                <?php
+                  if ($maClasse-> getUtilisateur($_SESSION['id_util'])['langue']=='ENG') {
+                    echo 'Vendors';
+                  }else if ($maClasse-> getUtilisateur($_SESSION['id_util'])['langue']=='FR') {
+                    echo 'Fournisseur';
+                  }
+                ?>
+                </p>
+              </a>
+            </li>
           <li class="nav-header font-weight-bold">
             <?php
               if ($maClasse-> getUtilisateur($_SESSION['id_util'])['langue']=='ENG') {
