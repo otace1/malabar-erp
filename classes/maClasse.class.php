@@ -3247,7 +3247,7 @@
 
 
 			$requete = $connexion-> prepare("SELECT SUM(det.montant) AS montant
-												FROM detail_paiement_facture_fournisseur det, facture_fournisseur fact
+												FROM paiement_facture_fournisseur det, facture_fournisseur fact
 												WHERE det.id_fact = fact.id_fact
 													AND fact.id_four = ?");
 			$requete-> execute(array($entree['id_four']));
@@ -3390,14 +3390,12 @@
 
 			$rows = array();
 
-			$requete = $connexion-> query("SELECT ff.*,
-													ff.montant AS montant_facture,
+			$requete = $connexion-> query("SELECT SUM(ff.montant) AS montant_facture,
 													IF(SUM(paie.montant)>0, SUM(paie.montant), 0)  AS montant_paie,
-													(IF(SUM(paie.montant)>0, SUM(paie.montant), 0)-ff.montant) AS balance
+													(IF(SUM(paie.montant)>0, SUM(paie.montant), 0)-SUM(ff.montant)) AS balance
 											FROM facture_fournisseur ff
 												LEFT JOIN paiement_facture_fournisseur paie
-													ON paie.id_fact = paie.id_fact
-											GROUP BY ff.id_fact");
+													ON paie.id_fact = ff.id_fact");
 			// $requete-> execute(array($entree['ref_fact'], $entree['id_deb']));
 			$reponse=$requete-> fetch();
 			return $reponse;
@@ -3516,12 +3514,12 @@
 													ff.montant AS montant_facture,
 													IF(SUM(paie.montant)>0, SUM(paie.montant), 0)  AS montant_paie,
 													(IF(SUM(paie.montant)>0, SUM(paie.montant), 0)-ff.montant) AS solde,
-													CONCAT('<a href=\"#\" title=\"Make / View Payments\" class=\"text-light\" onclick=\"modal_paiement_facture(\'',ff.id_fact,'\')\">
+													CONCAT('<a href=\"#\" title=\"Make / View Payments\" class=\"text-light\" onclick=\"modal_paiement_facture_fournisseur(\'',ff.id_fact,'\',\'',ff.ref_fact,'\')\">
 																<img src=\"../images/terminal-de-point-de-vente.png\" width=\"20px\"> Payments
 															</a>') AS btn_action
 											FROM facture_fournisseur ff
 												LEFT JOIN paiement_facture_fournisseur paie
-													ON paie.id_fact = paie.id_fact
+													ON paie.id_fact = ff.id_fact
 											WHERE ff.id_four = ?
 											GROUP BY ff.id_fact
 											ORDER BY ff.date_fact");
@@ -3632,6 +3630,60 @@
 			}$requete-> closeCursor();
 
 			return $tableau;
+
+		}
+
+		public function modal_paiement_facture_fournisseur($id_fact){
+			include("connexion.php");
+
+			$entree['id_fact'] = $id_fact;
+			$compteur=0;
+
+			$rows = array();
+
+			$tableau = '';
+
+			$requete = $connexion-> prepare("SELECT *, paiement_facture_fournisseur.montant AS montant
+												FROM paiement_facture_fournisseur, facture_fournisseur, tresorerie
+													WHERE paiement_facture_fournisseur.id_fact = ?
+														AND paiement_facture_fournisseur.id_fact = facture_fournisseur.id_fact
+														AND paiement_facture_fournisseur.id_tres = tresorerie.id_tres");
+			$requete-> execute(array($entree['id_fact']));
+			while ($reponse = $requete-> fetch()) {
+				$compteur++;
+
+				$tableau .='
+					<tr>
+						<td>'.$compteur.'</td>
+						<td>'.$reponse['date_paie'].'</td>
+						<td>'.$reponse['ref_paie'].'</td>
+						<td>'.$reponse['nom_tres'].'</td>
+						<td>'.$reponse['montant'].'</td>
+					</tr>
+				';
+
+			}$requete-> closeCursor();
+
+			return $tableau;
+
+		}
+
+		public function get_facture_fournisseur($id_fact){
+			include("connexion.php");
+
+			$entree['id_fact'] = $id_fact;
+			$compteur=0;
+
+			$rows = array();
+
+			$tableau = '';
+
+			$requete = $connexion-> prepare("SELECT *
+												FROM facture_fournisseur
+													WHERE facture_fournisseur.id_fact = ?");
+			$requete-> execute(array($entree['id_fact']));
+			$reponse = $requete-> fetch();
+			return $reponse;
 
 		}
 
@@ -12214,6 +12266,27 @@
 			$requete = $connexion-> prepare('INSERT INTO paiement_facture(ref_fact, ref_paie, date_paie, montant_paie, id_tres, id_util)
 												VALUES(?, ?, ?, ?, ?, ?)');
 			$requete-> execute(array($entree['ref_fact'], $entree['ref_paie'], $entree['date_paie'], $entree['montant_paie'], $entree['id_tres'], $_SESSION['id_util']));
+
+		}
+
+		public function paiement_facture_fournisseur($ref_paie, $date_paie, $montant, $id_fact, $id_tres){
+			include('connexion.php');
+
+			$entree['id_fact'] = $id_fact;
+			$entree['ref_paie'] = $ref_paie;
+			$entree['date_paie'] = $date_paie;
+			$entree['montant'] = $montant;
+			$entree['id_tres'] = $id_tres;
+
+			// echo '<br>id_fact = '.$id_fact;
+			// echo '<br>ref_paie = '.$ref_paie;
+			// echo '<br>date_paie = '.$date_paie;
+			// echo '<br>montant = '.$montant;
+			// echo '<br>id_tres = '.$id_tres;
+
+			$requete = $connexion-> prepare('INSERT INTO paiement_facture_fournisseur(id_fact, ref_paie, date_paie, montant, id_tres, id_util)
+												VALUES(?, ?, ?, ?, ?, ?)');
+			$requete-> execute(array($entree['id_fact'], $entree['ref_paie'], $entree['date_paie'], $entree['montant'], $entree['id_tres'], $_SESSION['id_util']));
 
 		}
 
