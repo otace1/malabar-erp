@@ -1575,6 +1575,58 @@
 		$maClasse-> new_mouvement($_POST['date_paie'], NULL, $_POST['montant'], 'Payment Vendor Invoice '.$maClasse-> get_facture_fournisseur($_POST['id_fact'])['ref_fact'], $_POST['ref_paie'], $_POST['id_tres']);
 		$response['detail_paiement_facture_fournisseur'] = $maClasse-> modal_paiement_facture_fournisseur($_POST['id_fact']);
 		echo json_encode($response);
-	}
+	}else if($_POST['operation']=='creerDossierRisque'){//Creation PV Contentieux
+
+      $file = $_FILES['fichier'];
+      $filename = $file['name'];
+      $ext = pathinfo($filename, PATHINFO_EXTENSION);
+      $allowed = array('pdf', 'PDF', 'xls', 'xlsx', 'doc', 'docx', 'jpg', 'jpeg', 'png');
+
+     try {
+
+        $fichier = uniqid();
+
+        $maClasse-> creerDossierRisque($_POST['ref_doc'], $_POST['date_doc'], $_POST['date_recept'], $_POST['id_bur_douane'], $_POST['id_etap'], $_POST['date_proch_pres'], $_POST['id_reg'], $fichier.'.'.$ext, $_SESSION['id_util']);
+
+        $ref_doc_folder = $maClasse-> getLastDossierRisqueDouaneUtilisateur($_SESSION['id_util'])['id'];
+
+        $ref_doc_folder = str_replace("/", "_", "$ref_doc_folder");
+        
+				$dossier = '../pv/'.$ref_doc_folder;
+
+				if(!is_dir($dossier)){
+					mkdir("../pv/$ref_doc_folder", 0777);
+				}
+
+          $uploadFile = $dossier.'/'.$fichier.'.'.$ext;
+          move_uploaded_file($file['tmp_name'], $uploadFile);
+
+          $response = array('message' => 'Notification créée avec succès!');
+
+        } catch (Exception $e) {
+
+            $response = array('error' => $e->getMessage());
+
+        }
+        
+		$response['tableau_pv_contentieux'] = $maClasse-> getPVContentieux();
+        echo json_encode($response);exit;
+
+    }else if ($_POST['operation']=="dossier_risque_douane") {
+		echo json_encode($maClasse-> dossier_risque_douane());
+	}else if ($_POST['operation']=='modal_dossier_risque_douane') {
+		  
+		$response = $maClasse-> get_dossier_risque_douane($_POST['id']);
+		
+		echo json_encode($response);
+
+	}else if($_POST['operation']=='editDossierRisque'){//Creation PV Contentieux
+
+        $maClasse-> editerDossierRisque($_POST['id'], $_POST['ref_doc'], $_POST['date_doc'], $_POST['date_recept'], $_POST['id_bur_douane'], $_POST['id_etap'], $_POST['id_sen'], $_POST['date_proch_pres'], $_POST['id_reg'], $_POST['date_pres'], $_POST['remarque']);
+
+        $response = array('message' => 'Notification modifiée avec succès!');
+        echo json_encode($response);exit;
+
+    }
 
 ?>
