@@ -37511,12 +37511,7 @@
 
 			}$requete-> closeCursor();
 
-			if ($row) {
-				return $row;
-			}else{
-				return NULL;
-			}
-
+			return $rows;
 			
 
 		}
