@@ -33475,6 +33475,22 @@
 			}
 		}
 
+		public function getLastDossierRisqueDouaneUtilisateur($id_util){
+			include('connexion.php');
+			$entree['id_util'] = $id_util;
+
+			$requete = $connexion-> prepare("SELECT *
+											FROM dossier_risque_douane
+											WHERE id_util = ?
+											ORDER BY id DESC
+											LIMIT 0, 1");
+			$requete-> execute(array($entree['id_util']));
+			$reponse = $requete-> fetch();
+			if($reponse){
+				return $reponse;
+			}
+		}
+
 		public function getLastIdDocumentAppurement($id_util){
 			include('connexion.php');
 			$entree['id_util'] = $id_util;
@@ -37058,6 +37074,22 @@
 			}$requete-> closeCursor();
 		}
 
+		public function selectionnerScenario(){
+			include('connexion.php');
+			$requete = $connexion-> query("SELECT *
+											FROM senario_pv");
+
+
+			while($reponse = $requete-> fetch()){
+
+				?>
+				<option value="<?php echo $reponse['id_sen']; ?>">
+					<?php echo $reponse['nom_sen']; ?>
+				</option>
+				<?php
+			}$requete-> closeCursor();
+		}
+
 		public function selectionnerFactureEnCoursClient($id_cli, $id_mod_trans, $id_mod_lic){
 			include('connexion.php');
 			$entree['id_cli'] = $id_cli;
@@ -37338,6 +37370,53 @@
 
 		}
 
+		public function creerDossierRisque($ref_doc, $date_doc, $date_recept, $id_bur_douane, $id_etap, $date_proch_pres, $id_reg, $fichier, $id_util){
+			include('connexion.php');
+			$entree['ref_doc']=$ref_doc;
+			$entree['date_doc']=$date_doc;
+			$entree['date_recept']=$date_recept;
+			$entree['id_bur_douane']=$id_bur_douane;
+			$entree['id_etap']=$id_etap;
+			$entree['date_proch_pres']=$date_proch_pres;
+			$entree['id_reg']=$id_reg;
+			$entree['fichier']=$fichier;
+			$entree['id_util']=$id_util;
+
+			$requete = $connexion-> prepare('INSERT INTO dossier_risque_douane(ref_doc, date_doc, date_recept, 
+																id_bur_douane, id_etap, date_proch_pres, 
+																id_reg, fichier, id_util) 
+												VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)');
+			$requete-> execute(array($entree['ref_doc'], $entree['date_doc'], $entree['date_recept'], $entree['id_bur_douane'], $entree['id_etap'], $entree['date_proch_pres'], $entree['id_reg'], $entree['fichier'], $entree['id_util']));
+
+		}
+
+		public function editerDossierRisque($id, $ref_doc, $date_doc, $date_recept, $id_bur_douane, $id_etap, $id_sen, $date_proch_pres, $id_reg, $date_pres, $remarque){
+			include('connexion.php');
+			$entree['id']=$id;
+			$entree['ref_doc']=$ref_doc;
+			$entree['date_doc']=$date_doc;
+			$entree['date_recept']=$date_recept;
+			$entree['id_bur_douane']=$id_bur_douane;
+			$entree['id_etap']=$id_etap;
+			$entree['id_sen']=$id_sen;
+			$entree['date_proch_pres']=$date_proch_pres;
+			$entree['id_reg']=$id_reg;
+			$entree['date_pres']=$date_pres;
+			$entree['remarque']=$remarque;
+
+			if ($entree['date_pres'] == '') {
+				$entree['date_pres'] = NULL;
+			}
+
+			$requete = $connexion-> prepare('UPDATE dossier_risque_douane
+												SET ref_doc = ?, date_doc = ?, date_recept = ?, 
+																id_bur_douane = ?, id_etap = ?, id_sen = ?, date_proch_pres = ?, 
+																id_reg = ?, date_pres = ?, remarque = ?
+												WHERE id = ?');
+			$requete-> execute(array($entree['ref_doc'], $entree['date_doc'], $entree['date_recept'], $entree['id_bur_douane'], $entree['id_etap'], $entree['id_sen'], $entree['date_proch_pres'], $entree['id_reg'], $entree['date_pres'], $entree['remarque'], $entree['id']));
+
+		}
+
 		public function getPVContentieux(){
 			include("connexion.php");
 			// $entree['id_cli'] = $id_cli;
@@ -37398,6 +37477,72 @@
 			}else{
 				return NULL;
 			}
+
+			
+
+		}
+
+		public function dossier_risque_douane(){
+			include("connexion.php");
+			// $entree['id_cli'] = $id_cli;
+			$compteur=0;
+
+			$row = array();
+
+			$requete = $connexion-> query("SELECT *
+											FROM dossier_risque_douane dos, bureau_douane bur, modele_licence ml, regime reg, etape_risque_douane et, senario_pv sen
+											WHERE dos.id_bur_douane = bur.id_bur_douane
+												AND dos.id_reg = reg.id_reg
+												AND reg.id_mod_lic = ml.id_mod_lic
+												AND dos.id_etap = et.id_etap
+												AND dos.id_sen = sen.id_sen");
+			// $requete-> execute(array($entree['id_mod_lic'], $entree['id_cli']));
+			while ($reponse = $requete-> fetch()) {
+				$compteur++;
+
+				$reponse['compteur'] = $compteur;
+				$reponse['btn_action'] = '<a href="#" onclick="window.open(\'../pv/'.$reponse['id'].'/'.$reponse['fichier'].'\',\'pop5\',\'width=900,height=500\');">
+												<img src="../images/dossier (1).png" width="20px">
+										</a>
+										<a href="#" onclick="modal_dossier_risque_douane('.$reponse['id'].');;">
+											<img src="../images/crayon.png" width="20px">
+										</a>';
+				$row[] = $reponse;
+
+			}$requete-> closeCursor();
+
+			if ($row) {
+				return $row;
+			}else{
+				return NULL;
+			}
+
+			
+
+		}
+
+		public function get_dossier_risque_douane($id){
+			include("connexion.php");
+			$entree['id'] = $id;
+			$compteur=0;
+
+			$row = array();
+
+			$requete = $connexion-> prepare("SELECT *,
+												CONCAT('<button class=\'btn  \' onclick=\"window.open(\'../pv/',dos.id,'/',dos.fichier,'\',\'pop5\',\'width=900,height=500\');\"></button>') AS fichier_actuel
+											FROM dossier_risque_douane dos, bureau_douane bur, modele_licence ml, regime reg, etape_risque_douane et, senario_pv sen
+											WHERE dos.id_bur_douane = bur.id_bur_douane
+												AND dos.id_reg = reg.id_reg
+												AND reg.id_mod_lic = ml.id_mod_lic
+												AND dos.id_etap = et.id_etap
+												AND dos.id_sen = sen.id_sen
+												AND dos.id = ?");
+			$requete-> execute(array($entree['id']));
+			$reponse = $requete-> fetch();
+				$reponse['btn_action'] = '<a href="#" class="btn form-control cc-exp form-control-sm " onclick=\"window.open(\'../pv/'.$reponse['id'].'/'.$reponse['fichier'].'\',\'pop5\',\'width=900,height=500\');">
+												<img src="../images/dossier (1).png" width="20px">
+										</a>';
+			return $reponse;
 
 			
 
@@ -38940,6 +39085,42 @@
 			?>
 			<option value="<?php echo $reponse['nom_reg'];?>">
 				<?php echo $reponse['nom_reg'];?>
+			</option>
+			<?php
+			}$requete-> closeCursor();
+
+		}
+
+		public function selectionnerRegimeGrouping(){
+			include('connexion.php');
+			// $entree['id_mod_lic'] = $id_mod_lic;
+
+			$requete = $connexion-> query("SELECT *
+												FROM modele_licence
+													WHERE id_etat = '1'
+												ORDER BY id_mod_lic DESC");
+			// $requete-> execute(array($entree['id_mod_lic']));
+
+			while($reponse = $requete-> fetch()){
+			?>
+			<optgroup label="<?php echo $reponse['nom_mod_lic'];?>">
+			<?php
+				$requete2 = $connexion-> prepare("SELECT UPPER(nom_reg) AS nom_reg,
+														id_reg
+													FROM regime
+														WHERE id_mod_lic = ?
+													ORDER BY nom_reg ASC");
+				$requete2-> execute(array($reponse['id_mod_lic']));
+
+				while($reponse2 = $requete2-> fetch()){
+				?>
+				<option value="<?php echo $reponse2['id_reg'];?>">
+					<?php echo $reponse2['nom_reg'];?>
+				</option>
+				<?php
+				}$requete2-> closeCursor();
+
+			?>
 			</option>
 			<?php
 			}$requete-> closeCursor();
