@@ -1590,6 +1590,8 @@
 
         $ref_doc_folder = $maClasse-> getLastDossierRisqueDouaneUtilisateur($_SESSION['id_util'])['id'];
 
+        $maClasse-> creerPresentationRisqueDouane($ref_doc_folder, $_POST['date_proch_pres'], NULL, NULL, NULL);
+
         $ref_doc_folder = str_replace("/", "_", "$ref_doc_folder");
         
 				$dossier = '../pv/'.$ref_doc_folder;
@@ -1617,6 +1619,7 @@
 	}else if ($_POST['operation']=='modal_dossier_risque_douane') {
 		  
 		$response = $maClasse-> get_dossier_risque_douane($_POST['id']);
+		$response['presentation_risque_douane'] = $maClasse-> presentation_risque_douane($_POST['id']);
 		
 		echo json_encode($response);
 
@@ -1627,6 +1630,90 @@
         $response = array('message' => 'Notification modifiée avec succès!');
         echo json_encode($response);exit;
 
-    }
+    }else if($_POST['operation']=='creerPresentationRisqueDouane'){//Creation Presentation
+
+
+    	if ($_FILES['fichier']) {
+    		$file = $_FILES['fichier'];
+    		$filename = $file['name'];
+    		$ext = pathinfo($filename, PATHINFO_EXTENSION);
+
+    		$fichier = uniqid();
+    		$id = $_POST['id'];
+    		$id = str_replace("/", "_", "$id");
+			
+			$dossier = '../pv/'.$id;
+
+			if(!is_dir($dossier)){
+				mkdir("../pv/$id", 0777);
+			}
+			$uploadFile = $dossier.'/'.$fichier.'.'.$ext;
+			move_uploaded_file($file['tmp_name'], $uploadFile);
+
+    		$maClasse-> creerPresentationRisqueDouane($_POST['id'], $_POST['date_prevu'], $_POST['date_pres'], $_POST['remarque'], $fichier.'.'.$ext);
+
+    	}else{
+    		$maClasse-> creerPresentationRisqueDouane($_POST['id'], $_POST['date_prevu'], $_POST['date_pres'], $_POST['remarque'], NULL);
+    	}
+
+
+        $response['message'] = 'Presentation créée avec succès!';
+		$response['presentation_risque_douane'] = $maClasse-> presentation_risque_douane($_POST['id']);
+        echo json_encode($response);exit;
+
+    }else if ($_POST['operation']=='deletePresentation') {
+		  
+		$response = $maClasse-> deletePresentation($_POST['id_pres']);
+		$response['presentation_risque_douane'] = $maClasse-> presentation_risque_douane($_POST['id']);
+		
+		echo json_encode($response);
+
+	}else if ($_POST['operation']=='modal_editPresentation') {
+		  
+		$response = $maClasse-> getPresentation($_POST['id_pres']);
+		
+		echo json_encode($response);
+
+	}else if($_POST['operation']=='editPresentation'){//Creation Presentation
+
+
+    	if (!empty($_FILES['fichier']) && $_FILES['fichier']['name']!='') {
+    		$file = $_FILES['fichier'];
+    		$filename = $file['name'];
+    		$ext = pathinfo($filename, PATHINFO_EXTENSION);
+
+    		$fichier = uniqid();
+    		$id = $_POST['id'];
+    		$id = str_replace("/", "_", "$id");
+			
+			$dossier = '../pv/'.$id;
+
+			if(!is_dir($dossier)){
+				mkdir("../pv/$id", 0777);
+			}
+			$uploadFile = $dossier.'/'.$fichier.'.'.$ext;
+			move_uploaded_file($file['tmp_name'], $uploadFile);
+
+    		$maClasse-> editPresentation($_POST['id_pres'], $_POST['date_prevu'], $_POST['date_pres'], $_POST['remarque'], $fichier.'.'.$ext);
+
+    	}else{
+    		$maClasse-> editPresentation2($_POST['id_pres'], $_POST['date_prevu'], $_POST['date_pres'], $_POST['remarque']);
+    	}
+
+
+        $response['message'] = 'Presentation créée avec succès!';
+		$response['presentation_risque_douane'] = $maClasse-> presentation_risque_douane($_POST['id']);
+        echo json_encode($response);exit;
+
+    }else if ($_POST['operation']=='getNombreDossierRisqueDouane') {
+		  
+		$response['nbre_not_pres'] = $maClasse-> getNombreDossierRisqueDouane()['nbre_not_pres'];
+		$response['nbre_not_pres_10'] = $maClasse-> getNombreNotPres10()['nbre_not_pres_10'];
+		
+		echo json_encode($response);
+
+	}else if ($_POST['operation']=="popUpPresentation") {
+		echo json_encode($maClasse-> popUpPresentation($_POST['statut']));
+	}
 
 ?>
