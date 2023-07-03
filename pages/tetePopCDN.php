@@ -51,6 +51,7 @@
   <script src="../datatable/vfs_fonts.js"></script>
   <script src="../datatable/buttons.html5.min.js"></script>
   <script src="../datatable/buttons.print.min.js"></script>
+  <script src="../datatable/dataTables.rowGroup.min.js"></script>
 
   <!-- --------- AJAX -------- -->
   
@@ -75,6 +76,10 @@
 
   <link rel="icon" href="../images/logo.jpeg" type="image/x-icon">
 <style type="text/css">
+  table.dataTable tr.dtrg-group.dtrg-end th {
+      text-align: right;
+      font-weight: normal;
+  }
   
       ::-webkit-scrollbar{
         width: 15px;

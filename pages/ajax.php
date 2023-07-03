@@ -1303,29 +1303,6 @@
 		$response['id_taux'] = $maClasse-> getLastTaux()['id_taux'];
 		echo json_encode($response);
 
-	}else if ($_POST['operation']=='creerEcriture') {
-	  
-		$maClasse-> creerEcriture($_POST['date_e'], $_POST['libelle_e'], $_POST['id_jour'], $_POST['id_taux'], $_SESSION['id_util'], $_POST['id_mon'], $_POST['reference']);
-
-		$id_e = $maClasse-> getLastEcritureUtilisateur($_SESSION['id_util'])['id_e'];
-
-		for ($i=0; $i <=$_POST['nbre'] ; $i++) { 
-			
-			if (isset($_POST['id_compte_'.$i])&&($_POST['montant_debit_'.$i]>0)) {
-				$maClasse-> creerDetailEcriture($id_e, $_POST['id_compte_'.$i], $_POST['montant_debit_'.$i], NULL);
-				
-			}
-			if (isset($_POST['id_compte_'.$i])&&($_POST['montant_credit_'.$i]>0)) {
-				$maClasse-> creerDetailEcriture($id_e, $_POST['id_compte_'.$i], NULL, $_POST['montant_credit_'.$i]);
-				
-			}
-
-		}
-
-		$response['message'] = 'Ecriture Creee';
-
-		echo json_encode($response);
-
 	}else if ($_POST['operation']=='ecriture_journal') {
 	  
 		$response['ecriture_journal'] = $maClasse-> ecriture_journal();
@@ -1714,6 +1691,43 @@
 
 	}else if ($_POST['operation']=="popUpPresentation") {
 		echo json_encode($maClasse-> popUpPresentation($_POST['statut']));
+	}else if ($_POST['operation']=='liste_compte') {
+	  
+		$response['liste_compte'] = $maClasse-> liste_compte($_POST['compteur_compte']);
+		echo json_encode($response);
+
+	}else if ($_POST['operation']=='creerEcriture') {
+	  
+		$maClasse-> creerEcriture($_POST['date_e'], $_POST['libelle_e'], $_POST['id_jour'], $_POST['id_taux'], $_SESSION['id_util'], $_POST['id_t_e'], $_POST['reference']);
+
+		$id_e = $maClasse-> getLastEcritureUtilisateur($_SESSION['id_util'])['id_e'];
+
+		for ($i=0; $i <=$_POST['nbre'] ; $i++) { 
+			
+			if (isset($_POST['id_compte_'.$i])&&($_POST['montant_debit_'.$i]>0)) {
+				$maClasse-> creerDetailEcriture($id_e, $_POST['id_compte_'.$i], $_POST['montant_debit_'.$i], NULL);
+				
+			}
+			if (isset($_POST['id_compte_'.$i])&&($_POST['montant_credit_'.$i]>0)) {
+				$maClasse-> creerDetailEcriture($id_e, $_POST['id_compte_'.$i], NULL, $_POST['montant_credit_'.$i]);
+				
+			}
+
+		}
+
+		$response['message'] = 'Ecriture Creee';
+
+		echo json_encode($response);
+
+	}else if ($_POST['operation']=="ecriture_comptable") {
+		echo json_encode($maClasse-> ecriture_comptable());
+	}else if ($_POST['operation']=='getEcriture') {
+
+  		$response = $maClasse-> getEcriture($_POST['id_e']);
+		echo json_encode($response);
+
+	}else if ($_POST['operation']=="detail_ecriture_comptable") {
+		echo json_encode($maClasse-> detail_ecriture_comptable($_POST['id_e']));
 	}
 
 ?>

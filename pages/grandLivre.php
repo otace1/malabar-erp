@@ -56,7 +56,7 @@
               </div>    
               <!-- /.card-header -->
               <div class="card-body table-responsive p-0">
-                <table id="file_data" cellspacing="0" width="100%" class="table table-bordered table-striped table-dark table-sm text-nowrap">
+                <table id="file_data" cellspacing="0" width="100%" class="table table-bordered table-striped table-hover table-sm text-nowrap">
                   <thead>
                     <tr>
                       <th style="">#</th>
@@ -95,13 +95,13 @@
               </div>    
               <!-- /.card-header -->
               <div class="card-body table-responsive p-0">
-                <table id="file_data_2" cellspacing="0" width="100%" class="table table-bordered table-striped table-dark table-sm text-nowrap">
+                <table id="file_data_2" cellspacing="0" width="100%" class="table table-bordered table-striped table-hover table-sm text-nowrap">
                   <thead>
                     <tr>
                       <th style="">#</th>
                       <th style="">Date</th>
                       <th style="">Naration</th>
-                      <th style="">Currency</th>
+                      <!-- <th style="">Currency</th> -->
                       <th style="">Debit</th>
                       <th style="">Credit</th>
                     </tr>
@@ -267,7 +267,6 @@
             {"data":"compteur"},
             {"data":"date_e"},
             {"data":"libelle_e"},
-            {"data":"sig_mon"},
             {"data":"debit"},
             {"data":"credit"}
           ] 
