@@ -1356,7 +1356,7 @@
 			$requete-> execute(array($entree['date_e'], $entree['libelle_e'], $entree['id_jour'], $entree['id_taux'], $entree['id_util'], $entree['id_mon']));
 		}
 		
-		public function creerEcriture($date_e, $libelle_e, $id_jour, $id_taux, $id_util, $id_mon, $reference){
+		public function creerEcriture($date_e, $libelle_e, $id_jour, $id_taux, $id_util, $id_t_e, $reference){
 			include('connexion.php');
 
 			$entree['date_e'] = $date_e;
@@ -1364,12 +1364,12 @@
 			$entree['id_jour'] = $id_jour;
 			$entree['id_taux'] = $id_taux;
 			$entree['id_util'] = $id_util;
-			$entree['id_mon'] = $id_mon;
+			$entree['id_t_e'] = $id_t_e;
 			$entree['reference'] = $reference;
 
-			$requete = $connexion-> prepare('INSERT INTO ecriture(date_e, libelle_e, id_jour, id_taux, id_util, id_mon, reference)
+			$requete = $connexion-> prepare('INSERT INTO ecriture(date_e, libelle_e, id_jour, id_taux, id_util, id_t_e, reference)
 												VALUES(?, ?, ?, ?, ?, ?, ?)');
-			$requete-> execute(array($entree['date_e'], $entree['libelle_e'], $entree['id_jour'], $entree['id_taux'], $entree['id_util'], $entree['id_mon'], $entree['reference']));
+			$requete-> execute(array($entree['date_e'], $entree['libelle_e'], $entree['id_jour'], $entree['id_taux'], $entree['id_util'], $entree['id_t_e'], $entree['reference']));
 		}
 		
 		public function supprimerAffectationModeleFacture($id_mod_fact, $id_cli, $id_march, $id_mod_trans){
@@ -3146,8 +3146,10 @@
 												FROM compte
 													LEFT JOIN detail_ecriture det
 														ON compte.id_compte = det.id_compte
+													LEFT JOIN sub_classe_compte
+														ON compte.id_sub_class = sub_classe_compte.id_sub_class
 													LEFT JOIN classe_compte
-														ON compte.id_class = classe_compte.id_class
+														ON sub_classe_compte.id_class = classe_compte.id_class
 													LEFT JOIN monnaie
 														ON monnaie.id_mon = compte.id_mon
 												GROUP BY compte.id_compte
@@ -3536,6 +3538,62 @@
 
 		}
 
+		public function popUpPresentation($statut){
+			include("connexion.php");
+
+			$compteur=0;
+
+			$rows = array();
+
+			if($statut=='En attente presentation'){
+
+				$requete = $connexion-> query("SELECT *,
+														pres.remarque AS remarque,
+														DATE_FORMAT(pres.date_prevu, '%d/%m/%Y') AS date_prevu,
+														DATE_FORMAT(pres.date_pres, '%d/%m/%Y') AS date_pres,
+														DATE_FORMAT(doc.date_recept, '%d/%m/%Y') AS date_recept
+													FROM presentation_risque_douane pres, dossier_risque_douane doc, etape_risque_douane etap, senario_pv sen
+													WHERE pres.date_prevu IS NOT NULL
+														AND pres.date_pres IS NULL
+														AND pres.id = doc.id
+														AND doc.id_etap = etap.id_etap
+														AND sen.id_sen = doc.id_sen");
+				while ($reponse = $requete-> fetch()) {
+					$compteur++;
+
+					$reponse['compteur'] = $compteur;
+					$rows[] = $reponse;
+
+				}$requete-> closeCursor();
+
+			}else if($statut=='Presentation -10 jrs'){
+
+				$requete = $connexion-> query("SELECT *,
+														pres.remarque AS remarque,
+														DATE_FORMAT(pres.date_prevu, '%d/%m/%Y') AS date_prevu,
+														DATE_FORMAT(pres.date_pres, '%d/%m/%Y') AS date_pres,
+														DATE_FORMAT(doc.date_recept, '%d/%m/%Y') AS date_recept
+													FROM presentation_risque_douane pres, dossier_risque_douane doc, etape_risque_douane etap, senario_pv sen
+													WHERE pres.date_prevu IS NOT NULL
+														AND pres.date_pres IS NULL
+														AND DATEDIFF(pres.date_prevu, CURRENT_DATE()) <= 10
+														AND pres.id = doc.id
+														AND doc.id_etap = etap.id_etap
+														AND sen.id_sen = doc.id_sen");
+				while ($reponse = $requete-> fetch()) {
+					$compteur++;
+
+					$reponse['compteur'] = $compteur;
+					$rows[] = $reponse;
+
+				}$requete-> closeCursor();
+
+			}
+			
+			return $rows;
+
+		}
+
 		public function getMontantFactureFinance($ref_fact){
 			include('connexion.php');
 			$entree['ref_fact'] = $ref_fact;
@@ -3811,13 +3869,11 @@
 													FORMAT(detail_ecriture.credit, 2) AS credit,
 													compte.id_compte AS id_compte,
 													compte.code_compte AS code_compte,
-													compte.nom_compte AS nom_compte,
-													monnaie.sig_mon AS sig_mon
-												FROM compte, ecriture, detail_ecriture, monnaie
+													compte.nom_compte AS nom_compte
+												FROM compte, ecriture, detail_ecriture
 												WHERE compte.id_compte = ?
 													AND compte.id_compte = detail_ecriture.id_compte
 													AND detail_ecriture.id_e = ecriture.id_e
-													AND monnaie.id_mon = ecriture.id_mon
 												ORDER BY ecriture.id_e");
 			$requete-> execute(array($entree['id_compte']));
 			while ($reponse = $requete-> fetch()) {
@@ -9414,7 +9470,7 @@
 													AND fd.validation = '1'
 													AND fd.date_mail IS NULL
 													AND fd.id_cli = ?
-												ORDER BY fd.date_fact ASC");
+												ORDER BY fd.date_fact, fd.ref_fact ASC");
 			$requete-> execute(array($entree['id_mod_lic'], $entree['id_cli']));
 			while ($reponse = $requete-> fetch()) {
 				$compteur++;
@@ -37025,6 +37081,38 @@
 
 		//Methodes permettant de Selectionner 
 
+		public function selectionnerJournal(){
+			include('connexion.php');
+			$requete = $connexion-> query("SELECT *
+											FROM journal");
+
+
+			while($reponse = $requete-> fetch()){
+
+				?>
+				<option value="<?php echo $reponse['id_jour']; ?>">
+					<?php echo $reponse['nom_jour']; ?>
+				</option>
+				<?php
+			}$requete-> closeCursor();
+		}
+
+		public function selectionnerTypeEcriture(){
+			include('connexion.php');
+			$requete = $connexion-> query("SELECT *
+											FROM type_ecriture");
+
+
+			while($reponse = $requete-> fetch()){
+
+				?>
+				<option value="<?php echo $reponse['id_t_e']; ?>">
+					<?php echo $reponse['nom_t_e']; ?>
+				</option>
+				<?php
+			}$requete-> closeCursor();
+		}
+
 		public function selectionnerEtatPV(){
 			include('connexion.php');
 			$requete = $connexion-> query("SELECT *
@@ -37482,6 +37570,95 @@
 
 		}
 
+		public function ecriture_comptable(){
+			include("connexion.php");
+			// $entree['id_cli'] = $id_cli;
+			$compteur=0;
+
+			$row = array();
+
+			$requete = $connexion-> query("SELECT *, DATE_FORMAT(ec.date_e, '%Y-%m-%d') AS date_e_2,
+												SUM(det.debit) AS debit,
+												SUM(det.credit) AS credit
+											FROM ecriture ec, detail_ecriture det, compte c, journal j
+											WHERE ec.id_jour = j.id_jour
+												AND ec.id_e = det.id_e
+												AND det.id_compte = c.id_compte
+											GROUP BY ec.id_e
+											ORDER BY ec.id_e DESC");
+			// $requete-> execute(array($entree['id_mod_lic'], $entree['id_cli']));
+			while ($reponse = $requete-> fetch()) {
+				$compteur++;
+
+				$reponse['compteur'] = $compteur;
+				$reponse['btn_action'] = '<a href="#" onclick="detail_ecriture(\''.$reponse['id_e'].'\');">
+												<i class="fa fa-eye"></i>
+										</a>';
+				$reponse['btn_action2'] = '<a href="#" onclick="window.open(\'../pv/'.$reponse['id_e'].'/'.$reponse['id_e'].'\',\'pop5\',\'width=900,height=500\');">
+												<img src="../images/dossier (1).png" width="20px">
+										</a>';
+				$row[] = $reponse;
+
+			}$requete-> closeCursor();
+
+			return $row;
+			
+
+		}
+
+		public function detail_ecriture_comptable($id_e){
+			include("connexion.php");
+			$entree['id_e'] = $id_e;
+			$compteur=0;
+
+			$row = array();
+
+			$requete = $connexion-> prepare("SELECT *, DATE_FORMAT(ec.date_e, '%Y-%m-%d') AS date_e_2
+											FROM ecriture ec, detail_ecriture det, compte c, journal j
+											WHERE ec.id_e = ?
+												AND ec.id_jour = j.id_jour
+												AND ec.id_e = det.id_e
+												AND det.id_compte = c.id_compte
+											ORDER BY det.credit");
+			$requete-> execute(array($entree['id_e']));
+			while ($reponse = $requete-> fetch()) {
+				$compteur++;
+
+				$reponse['compteur'] = $compteur;
+				$reponse['btn_action'] = '<a href="#" onclick="detail_ecriture(\''.$reponse['id_e'].'\');">
+												<i class="fa fa-eye"></i>
+										</a>';
+				$reponse['btn_action2'] = '<a href="#" onclick="window.open(\'../pv/'.$reponse['id_e'].'/'.$reponse['id_e'].'\',\'pop5\',\'width=900,height=500\');">
+												<img src="../images/dossier (1).png" width="20px">
+										</a>';
+				$row[] = $reponse;
+
+			}$requete-> closeCursor();
+
+			return $row;
+			
+
+		}
+
+		public function getEcriture($id_e){
+			include("connexion.php");
+			$entree['id_e'] = $id_e;
+			$compteur=0;
+
+			$row = array();
+
+			$requete = $connexion-> prepare("SELECT *
+											FROM ecriture, journal, type_ecriture
+											WHERE ecriture.id_e = ?
+												AND ecriture.id_jour = journal.id_jour
+												AND ecriture.id_t_e = type_ecriture.id_t_e ");
+			$requete-> execute(array($entree['id_e']));
+			$reponse = $requete-> fetch();
+			return $reponse;
+			
+
+		}
+
 		public function dossier_risque_douane(){
 			include("connexion.php");
 			// $entree['id_cli'] = $id_cli;
@@ -37540,6 +37717,159 @@
 			return $reponse;
 
 			
+
+		}
+
+		public function presentation_risque_douane($id){
+			include("connexion.php");
+			$entree['id'] = $id;
+			$compteur=0;
+
+			$tableau = '';
+
+			$requete = $connexion-> prepare("SELECT *,
+													DATE_FORMAT(date_prevu, '%d/%m/%Y') AS date_prevu,
+													DATE_FORMAT(date_pres, '%d/%m/%Y') AS date_pres,
+													IF(fichier IS NOT NULL,
+														CONCAT('<a href=\"#\" title=\"Fichier\" onclick=\"window.open(\'../pv/',id,'/',fichier,'\',\'pop6\',\'width=900,height=500\');\">
+																	<img src=\"../images/dossier (1).png\" width=\"15px\">
+															</a>'),
+														NULL
+													) AS btn_fichier
+											FROM presentation_risque_douane
+											WHERE id = ?");
+			$requete-> execute(array($entree['id']));
+			while($reponse = $requete-> fetch()){
+				$compteur++;
+				$tableau .= '<tr>
+								<td>'.$compteur.'</td>
+								<td style="text-align: center;">'.$reponse['date_prevu'].'</td>
+								<td style="text-align: center;">'.$reponse['date_pres'].'</td>
+								<td style="">'.$reponse['remarque'].'</td>
+								<td style="">
+									'.$reponse['btn_fichier'].'
+									<a href="#" title="Modifier" onclick="modal_editPresentation('.$reponse['id_pres'].', '.$reponse['id'].');">
+										<img src="../images/crayon (1).png" width="15px">
+									</a>
+									<a href="#" title="Supprimer" onclick="deletePresentation('.$reponse['id_pres'].', '.$reponse['id'].');">
+										<img src="../images/bouton-supprimer.png" width="15px">
+									</a>
+								</td>
+							</tr>';
+			}
+			return $tableau;
+
+			
+
+		}
+
+		public function deletePresentation($id_pres){
+			include("connexion.php");
+			$entree['id_pres'] = $id_pres;
+
+			$requete = $connexion-> prepare("DELETE FROM presentation_risque_douane
+												WHERE id_pres = ?");
+			$requete-> execute(array($entree['id_pres']));
+		}
+
+		public function getNombreDossierRisqueDouane(){
+			include("connexion.php");
+			// $entree['id_pres'] = $id_pres;
+
+			$requete = $connexion-> query("SELECT COUNT(*) AS nbre_not_pres 
+												FROM presentation_risque_douane
+												WHERE date_prevu IS NOT NULL
+													AND date_pres IS NULL");
+			// $requete-> execute(array($entree['id_pres']));
+
+			$reponse = $requete-> fetch();
+
+			return $reponse;
+		}
+
+		public function getNombreNotPres10(){
+			include("connexion.php");
+			// $entree['id_pres'] = $id_pres;
+
+			$requete = $connexion-> query("SELECT COUNT(*) AS nbre_not_pres_10
+												FROM presentation_risque_douane
+												WHERE date_prevu IS NOT NULL
+													AND date_pres IS NULL
+													AND DATEDIFF(date_prevu, CURRENT_DATE()) <= 10");
+			// $requete-> execute(array($entree['id_pres']));
+
+			$reponse = $requete-> fetch();
+
+			return $reponse;
+		}
+
+		public function getPresentation($id_pres){
+			include("connexion.php");
+			$entree['id_pres'] = $id_pres;
+
+			$requete = $connexion-> prepare("SELECT * 
+												FROM presentation_risque_douane
+												WHERE id_pres = ?");
+			$requete-> execute(array($entree['id_pres']));
+
+			$reponse = $requete-> fetch();
+
+			return $reponse;
+		}
+
+		public function creerPresentationRisqueDouane($id, $date_prevu, $date_pres, $remarque, $fichier){
+			include("connexion.php");
+			$entree['id'] = $id;
+			$entree['date_prevu'] = $date_prevu;
+			$entree['date_pres'] = $date_pres;
+			$entree['remarque'] = $remarque;
+			$entree['fichier'] = $fichier;
+
+			if ($entree['date_pres'] == '') {
+				$entree['date_pres'] = NULL;
+			}
+
+			$requete = $connexion-> prepare("INSERT INTO presentation_risque_douane(id, date_prevu, date_pres, remarque, fichier, id_util)
+												VALUES(?, ?, ?, ?, ?, ?)");
+			$requete-> execute(array($entree['id'], $entree['date_prevu'], $entree['date_pres'], $entree['remarque'], $entree['fichier'], $_SESSION['id_util']));
+			
+
+		}
+
+		public function editPresentation($id_pres, $date_prevu, $date_pres, $remarque, $fichier){
+			include("connexion.php");
+			$entree['id_pres'] = $id_pres;
+			$entree['date_prevu'] = $date_prevu;
+			$entree['date_pres'] = $date_pres;
+			$entree['remarque'] = $remarque;
+			$entree['fichier'] = $fichier;
+
+			if ($entree['date_pres'] == '') {
+				$entree['date_pres'] = NULL;
+			}
+
+			$requete = $connexion-> prepare("UPDATE presentation_risque_douane 
+												SET date_prevu = ?, date_pres = ?, remarque = ?, fichier = ?
+												WHERE id_pres = ?");
+			$requete-> execute(array($entree['date_prevu'], $entree['date_pres'], $entree['remarque'], $entree['fichier'], $entree['id_pres']));
+
+		}
+
+		public function editPresentation2($id_pres, $date_prevu, $date_pres, $remarque){
+			include("connexion.php");
+			$entree['id_pres'] = $id_pres;
+			$entree['date_prevu'] = $date_prevu;
+			$entree['date_pres'] = $date_pres;
+			$entree['remarque'] = $remarque;
+
+			if ($entree['date_pres'] == '') {
+				$entree['date_pres'] = NULL;
+			}
+
+			$requete = $connexion-> prepare("UPDATE presentation_risque_douane 
+												SET date_prevu = ?, date_pres = ?, remarque = ?
+												WHERE id_pres = ?");
+			$requete-> execute(array($entree['date_prevu'], $entree['date_pres'], $entree['remarque'], $entree['id_pres']));
 
 		}
 
@@ -37987,6 +38317,32 @@
 
 		}
 
+		public function liste_compte($compteur_compte){
+			include("connexion.php");
+			$compteur=0;
+
+			$tableau = '';
+
+			$requete = $connexion-> query("SELECT compte.id_compte AS id_compte, 
+													compte.nom_compte AS nom_compte
+											FROM compte
+											ORDER BY compte.nom_compte");
+			// $requete-> execute(array($entree['id_jour']));
+			while ($reponse = $requete-> fetch()) {
+				$compteur++;
+
+				$tableau .='<tr>
+								<td>'.$compteur.'</td>
+								<td><a href="#" onclick="select_compte(\''.$reponse['id_compte'].'\', \''.$reponse['nom_compte'].'\',\''.$this-> getSoldeCompte($reponse['id_compte']).'\', '.$compteur_compte.')">'.$reponse['nom_compte'].'</a></td>
+								<td style="text-align: right;">'.$this-> getSoldeCompte($reponse['id_compte']).'</td>
+							</tr>';
+
+			}$requete-> closeCursor();
+
+			return $tableau;
+
+		}
+
 		public function liste_compte_hors_journal($id_jour){
 			include("connexion.php");
 			$entree['id_jour'] = $id_jour;
@@ -38092,6 +38448,7 @@
 				$tableau .='<tr>
 								<td>'.$compteur.'</td>
 								<td><a href="#" onclick="select_compte(\''.$reponse['id_compte'].'\', \''.$reponse['nom_compte'].'\',\''.$this-> getSoldeCompte($reponse['id_compte']).'\', \''.$compteur_compte.'\')">'.$reponse['nom_compte'].'</a></td>
+								<td style="text-align: right;">'.number_format($this-> getSoldeCompte($reponse['id_compte']), 2, ',', ' ').'</td>
 							</tr>';
 
 			}$requete-> closeCursor();
