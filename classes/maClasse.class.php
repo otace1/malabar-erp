@@ -7245,7 +7245,9 @@
 					
 					$unite = 'par declaration';
 					// $cost_2 = $this-> getMontantTotalTypeDeboursFacture($ref_fact, 1)['montant_usd'];
-					if (($reponse['ht_usd']*100)/$this-> getMontantTotalTypeDeboursFacture($ref_fact, 1)['montant_usd']>1) {
+					if ($data_dossier['id_cli']=='938') {
+						$cost_2 = number_format(($this-> getDataAffectationDeboursClientModeleLicence($reponse['id_deb'], $data_dossier['id_cli'], $data_dossier['id_mod_lic'], $data_dossier['id_march'], $data_dossier['id_mod_trans'])['montant']), 2, ',', '.').'%';
+					}else if (($reponse['ht_usd']*100)/$this-> getMontantTotalTypeDeboursFacture($ref_fact, 1)['montant_usd']>1) {
 						$cost_2 = number_format(($this-> getDataAffectationDeboursClientModeleLicence($reponse['id_deb'], $data_dossier['id_cli'], $data_dossier['id_mod_lic'], $data_dossier['id_march'], $data_dossier['id_mod_trans'])['montant']), 2, ',', '.').'%';
 					}else{
 						$cost_2 = number_format(($reponse['ht_usd']*100)/$this-> getMontantTotalTypeDeboursFacture($ref_fact, 1)['montant_usd'], 2, ',', '.').'%';
