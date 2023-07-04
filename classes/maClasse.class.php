@@ -34875,6 +34875,449 @@
 				$requete = $connexion-> query("SELECT dos.ref_dos AS ref_dos, 
 													fd.ref_fact AS ref_fact, 
 													dos.po_ref AS po_ref,
+													dos.roe_decl AS roe_decl,
+													DATE_FORMAT(fd.date_fact, '%d/%m/%Y') AS date_fact,
+													cl.nom_cli AS nom_cli,
+													SUM(
+														IF(det.usd='0' AND deb.id_t_deb='1', 
+															IF(det.tva='1',
+																IF(det.montant_tva>0,
+																	(det.montant_tva+det.montant),
+																	(det.montant*0.16)
+																),
+																det.montant
+															), 
+															0
+														)
+													) AS liquidation_cdf,
+													SUM(
+														IF(det.usd='0' AND deb.id_t_deb='1', 
+															IF(det.tva='1',
+																IF(det.montant_tva>0,
+																	(det.montant_tva+det.montant)/dos.roe_decl,
+																	(det.montant*0.16)/dos.roe_decl
+																),
+																det.montant/dos.roe_decl
+															), 
+															0
+														)
+													) AS liquidation_usd,
+													SUM(
+														IF(deb.id_t_deb='2' AND det.usd='1',
+															det.montant,
+															0
+														)
+													) AS other_charge,
+													SUM(
+														IF(deb.id_t_deb='2' AND det.usd='1' AND det.tva='1',
+															det.montant*0.16,
+															0
+														)
+													) AS tva_other_charge,
+													SUM(
+														IF(deb.id_t_deb='3' AND det.usd='1',
+															det.montant,
+															0
+														)
+													) AS ops_fee,
+													SUM(
+														IF(deb.id_t_deb='3' AND det.usd='1' AND det.tva='1',
+															det.montant*0.16,
+															0
+														)
+													) AS tva_ops_fee,
+													SUM(
+														IF(deb.id_t_deb='4' AND det.usd='1',
+															det.montant,
+															0
+														)
+													) AS agency_fee,
+													SUM(
+														IF(deb.id_t_deb='4' AND det.usd='1' AND det.tva='1',
+															det.montant*0.16,
+															0
+														)
+													) AS tva_agency_fee,
+									                SUM(
+														IF(det.usd='0', 
+															IF(det.tva='1',
+																IF(det.montant_tva>0,
+																	(det.montant_tva+det.montant)/dos.roe_decl,
+																	(det.montant*0.16)/dos.roe_decl
+																	),
+																det.montant/dos.roe_decl
+															), 
+															IF(det.tva='1',
+																det.montant*1.16,
+																det.montant
+															)
+														)
+													) AS montant_total,
+													IF(fd.validation='0',
+														'Pending Validation',
+														IF(fd.date_mail IS NULL,
+															'Awaiting to send',
+															IF(fd.ref_paie IS NULL,
+																'Pending Payment',
+																'Payed'
+																)
+															)
+														) AS statut,
+													CONCAT(CONCAT('<button class=\"btn btn-xs bg-primary square-btn-adjust\" onclick=\"window.open(\'',mf.view_page,'?ref_fact=',fd.ref_fact,'\',\'pop3\',\'width=1000,height=800\');\" title=\"View invoice\">
+									                    <i class=\"fas fa-eye\"></i> 
+									                </button>'),' ',
+									                CONCAT('<button class=\"btn btn-xs bg-success square-btn-adjust\" onclick=\"window.location.replace(\'',mf.excel,'?ref_fact=',fd.ref_fact,'\',\'pop4\',\'width=1000,height=800\');\" title=\"Export Annex\">
+									                    <i class=\"fas fa-file-excel\"></i> 
+									                </button>')) AS view_page
+												FROM facture_dossier fd, modele_facture mf, client cl, dossier dos, detail_facture_dossier det, debours deb
+												WHERE YEAR(fd.date_fact) = YEAR(CURRENT_DATE())
+													AND fd.id_mod_fact = mf.id_mod_fact
+													AND fd.ref_fact = det.ref_fact
+													AND det.id_dos = dos.id_dos
+													AND det.id_deb = deb.id_deb
+													AND fd.id_cli = cl.id_cli
+													$sqlClient
+													$sqlTransit
+													$sqlUtilisateur
+													$sqlTime
+												GROUP BY dos.id_dos
+												ORDER BY dos.id_dos DESC");
+				// $requete-> execute(array($entree['id_mod_lic']));
+				while($reponse = $requete-> fetch()){
+					$compteur++;
+
+					$reponse['compteur'] = $compteur;
+					$reponse['montant'] = number_format($this-> getMontantFactureGlobale($reponse['ref_fact'])+(( ($this-> getMontantFactureDebours($reponse['ref_fact'], 27)*$this-> getFactureGlobale($reponse['ref_fact'])['taux_commission']) - $this-> getMontantFactureDebours($reponse['ref_fact'], 27))), 2, ',', ' ');
+					$reponse['commodity'] = $this-> getMarchandiseFacture($reponse['ref_fact'])['nom_march'];
+					$rows[] = $reponse;
+				}$requete-> closeCursor();
+				
+				return $rows;
+				
+			}else if($statut=='Dossiers Non Facturés'){
+
+				$sqlTransit = "";
+				if (isset($id_mod_lic) && ($id_mod_lic != '')) {
+					$sqlTransit = ' AND dos.id_mod_lic = "'.$id_mod_lic.'" ';
+				}
+
+				$requete = $connexion-> query("SELECT dos.ref_dos AS ref_dos,
+													cl.nom_cli AS nom_cli, 
+													dos.po_ref AS po_ref,
+													dos.horse AS horse,
+													dos.trailer_1 AS trailer_1,
+													dos.trailer_2 AS trailer_2,
+													IF(dos.num_lot IS NOT NULL,
+														dos.num_lot,
+														dos.ref_fact
+													) AS num_lot,
+													IF(march.nom_march IS NOT NULL,
+														march.nom_march,
+														dos.commodity
+													) AS commodity,
+													dos.ref_decl AS ref_decl,
+													DATE_FORMAT(dos.date_decl, '%d/%m/%Y') AS date_decl,
+													dos.ref_liq AS ref_liq,
+													DATE_FORMAT(dos.date_liq, '%d/%m/%Y') AS date_liq,
+													dos.ref_quit AS ref_quit,
+													DATE_FORMAT(dos.date_quit, '%d/%m/%Y') AS date_quit,
+													DATEDIFF(CURRENT_DATE(), dos.date_quit) AS delay
+												FROM dossier dos
+												LEFT JOIN marchandise march
+													ON dos.id_march = march.id_march
+												LEFT JOIN client cl
+													ON dos.id_cli = cl.id_cli
+												WHERE dos.not_fact = '0'
+													AND dos.date_decl IS NOT NULL
+													AND dos.ref_decl IS NOT NULL
+													AND dos.date_liq IS NOT NULL
+													AND dos.ref_liq IS NOT NULL
+													AND dos.date_quit IS NOT NULL
+													AND dos.ref_quit IS NOT NULL
+													AND dos.id_dos NOT IN (
+														SELECT DISTINCT(dos.id_dos) 
+															FROM facture_dossier fd, detail_facture_dossier det, dossier dos
+															WHERE YEAR(fd.date_fact) = YEAR(CURRENT_DATE())
+																AND fd.ref_fact = det.ref_fact
+																AND det.id_dos = dos.id_dos
+													)
+													$sqlTransit
+												ORDER BY dos.id_dos
+											");
+				// $requete-> execute(array($entree['id_mod_lic']));
+				while($reponse = $requete-> fetch()){
+					$compteur++;
+
+					$reponse['compteur'] = $compteur;
+					$reponse['truck'] = $reponse['horse'].' / '.$reponse['trailer_1'].' / '.$reponse['trailer_2'];
+					$rows[] = $reponse;
+				}$requete-> closeCursor();
+				
+				return $rows;
+				
+			}
+
+		}
+
+		public function getListeFacturesBACKUP3_7_23($statut, $id_mod_lic, $id_util=NULL, $debut=NULL, $fin=NULL){
+			include('connexion.php');
+			// $entree['id_mod_lic'] = $id_mod_lic;
+
+			$sqlClient = "";
+			if (isset($id_cli) && ($id_cli != '')) {
+				$sqlClient = ' AND dos.id_cli = "'.$id_cli.'" ';
+			}
+
+			$compteur = 0;
+
+			if($statut=='Factures'){
+
+				$sqlTransit = "";
+				if (isset($id_mod_lic) && ($id_mod_lic != '')) {
+					$sqlTransit = ' AND fd.id_mod_lic = "'.$id_mod_lic.'" ';
+				}
+
+				$sqlUtilisateur = "";
+				if (isset($id_util) && ($id_util != '')) {
+					$sqlUtilisateur = ' AND fd.id_util = "'.$id_util.'" ';
+				}
+
+				$sqlTime = "";
+				if (isset($debut) && ($debut != '') && isset($fin) && ($fin != '')) {
+					$sqlTime = ' AND DATE(fd.date_fact) BETWEEN "'.$debut.'" AND "'.$fin.'"';
+				}
+
+				$requete = $connexion-> query("SELECT fd.ref_fact AS ref_fact, 
+													DATE_FORMAT(fd.date_fact, '%d/%m/%Y') AS date_fact,
+													cl.nom_cli AS nom_cli,
+													IF(fd.validation='0',
+														'Pending Validation',
+														IF(fd.date_mail IS NULL,
+															'Awaiting to send',
+															IF(fd.ref_paie IS NULL,
+																'Pending Payment',
+																'Payed'
+																)
+															)
+														) AS statut,
+													CONCAT(CONCAT('<button class=\"btn btn-xs bg-primary square-btn-adjust\" onclick=\"window.open(\'',mf.view_page,'?ref_fact=',fd.ref_fact,'\',\'pop3\',\'width=1000,height=800\');\" title=\"View invoice\">
+									                    <i class=\"fas fa-eye\"></i> 
+									                </button>'),' ',
+									                CONCAT('<button class=\"btn btn-xs bg-success square-btn-adjust\" onclick=\"window.location.replace(\'',mf.excel,'?ref_fact=',fd.ref_fact,'\',\'pop4\',\'width=1000,height=800\');\" title=\"Export Annex\">
+									                    <i class=\"fas fa-file-excel\"></i> 
+									                </button>')) AS view_page,
+									                SUM( 
+															IF(det.usd='1', 
+																det.montant, 
+																IF(det.tva='1',
+																	IF(det.montant_tva>0,
+																		(det.montant_tva+det.montant)/dos.roe_decl,
+																		(det.montant)/dos.roe_decl
+																	),
+																	(det.montant/dos.roe_decl)
+																)
+															) 
+														) AS montant_ht,
+									                SUM(
+																IF(det.usd='1', 
+																	IF(det.tva='1',
+																		det.montant*0.16,
+																		0
+																	), 
+																	0
+																)
+															) AS tva_usd,
+									                SUM(
+														IF(det.usd='0', 
+															IF(det.tva='1',
+																IF(det.montant_tva>0,
+																	(det.montant_tva+det.montant)/dos.roe_decl,
+																	(det.montant*0.16)/dos.roe_decl
+																	),
+																det.montant/dos.roe_decl
+															), 
+															IF(det.tva='1',
+																det.montant*1.16,
+																det.montant
+															)
+														)
+													) AS montant,
+
+													SUM(
+														IF(det.usd='1', 
+															IF(det.tva='1',
+																det.montant*1.16,
+																det.montant
+															), 
+															IF(det.tva='1',
+																IF(det.montant_tva>0,
+																	((det.montant_tva+det.montant)/dos.roe_decl),
+																	(det.montant/dos.roe_decl)*1.16
+																),
+																(det.montant/dos.roe_decl)
+															)
+														)
+													) AS ttc_usd,
+
+													SUM(
+														IF(det.usd='0', 
+															IF(det.tva='1',
+																IF(det.montant_tva>0,
+																	det.montant_tva+det.montant,
+																	det.montant*0.16
+																	),
+																det.montant
+															),
+															0
+														)
+													) AS ttc_cdf_2,
+													SUM(
+														IF(debours.id_t_deb='1',
+															IF(det.tva='1',
+																IF(det.usd='0',
+																	det.montant*1.16,
+																	(det.montant*dos.roe_decl)*1.16),
+																IF(det.usd='0',
+																	det.montant,
+																	det.montant*dos.roe_decl)
+																)
+															, 0)
+														) AS duty_cdf_2,
+													AVG(dos.roe_decl) AS roe_decl,
+													SUM(
+														IF(debours.id_t_deb='1' AND det.usd='0',
+															det.montant,
+															0)
+														) AS duty_vat_excl_cdf,
+													SUM(
+														IF(debours.id_t_deb='1' AND det.usd='0',
+															det.montant/dos.roe_decl,
+															0)
+														) AS duty_vat_excl_usd,
+													SUM(
+														IF(debours.id_t_deb='1' AND det.usd='0' AND det.tva='1',
+															IF(det.montant_tva>0,
+																det.montant_tva,
+																det.montant*0.16
+																),
+															0)
+														) AS duty_vat_cdf,
+													SUM(
+														IF(debours.id_t_deb='1' AND det.usd='0' AND det.tva='1',
+															IF(det.montant_tva>0,
+																det.montant_tva/dos.roe_decl,
+																(det.montant*0.16)/dos.roe_decl
+																),
+															0)
+														) AS duty_vat_usd,
+													SUM(
+														IF(debours.id_t_deb='1' AND det.usd='0',
+															IF(det.tva='1',
+																IF(det.montant_tva>0,
+																	det.montant+det.montant_tva,
+																	det.montant*1.16
+																),
+																det.montant
+															),
+															0
+														)
+													) AS total_duty_cdf,
+													SUM(
+														IF(debours.id_t_deb='1' AND det.usd='0',
+															IF(det.tva='1',
+																IF(det.montant_tva>0,
+																	(det.montant+det.montant_tva)/dos.roe_decl,
+																	(det.montant*1.16)/dos.roe_decl
+																),
+																det.montant/dos.roe_decl
+															),
+															0
+														)
+													) AS total_duty_usd,
+													SUM(
+														IF(debours.id_t_deb='2',
+															det.montant,
+															0
+															)
+														) AS other_charge_vat_excl,
+													SUM(
+														IF(debours.id_t_deb='2' AND det.tva='1',
+															det.montant*0.16,
+															0
+															)
+														) AS other_charge_vat,
+													SUM(
+														IF(debours.id_t_deb='3',
+															det.montant,
+															0
+															)
+														) AS ops_vat_excl,
+													SUM(
+														IF(debours.id_t_deb='3' AND det.tva='1',
+															det.montant*0.16,
+															0
+															)
+														) AS ops_vat,
+													SUM(
+														IF(debours.id_t_deb='4',
+															det.montant,
+															0
+															)
+														) AS service_vat_excl,
+													SUM(
+														IF(debours.id_t_deb='4' AND det.tva='1',
+															det.montant*0.16,
+															0
+															)
+														) AS service_vat
+												FROM facture_dossier fd, modele_facture mf, client cl, detail_facture_dossier det, dossier dos, debours
+												WHERE YEAR(fd.date_fact) = YEAR(CURRENT_DATE())
+													AND fd.id_mod_fact = mf.id_mod_fact
+													AND fd.id_cli = cl.id_cli
+													AND fd.ref_fact = det.ref_fact
+													AND debours.id_deb = det.id_deb
+													AND det.id_dos = dos.id_dos
+													$sqlClient
+													$sqlTransit
+													$sqlUtilisateur
+													$sqlTime
+												GROUP BY fd.ref_fact
+												ORDER BY fd.date_fact DESC");
+				// $requete-> execute(array($entree['id_mod_lic']));
+				while($reponse = $requete-> fetch()){
+					$compteur++;
+
+					$reponse['total_other_charge'] = $reponse['other_charge_vat_excl']+$reponse['other_charge_vat'];
+					$reponse['total_ops'] = $reponse['ops_vat_excl']+$reponse['ops_vat'];
+					$reponse['total_service'] = $reponse['service_vat_excl']+$reponse['service_vat'];
+
+					$reponse['compteur'] = $compteur;
+					// $reponse['montant'] = number_format($this-> getMontantFactureGlobale($reponse['ref_fact'])+(( ($this-> getMontantFactureDebours($reponse['ref_fact'], 27)*$this-> getFactureGlobale($reponse['ref_fact'])['taux_commission']) - $this-> getMontantFactureDebours($reponse['ref_fact'], 27))), 2, ',', ' ');
+					$reponse['commodity'] = $this-> getMarchandiseFacture($reponse['ref_fact'])['nom_march'];
+					$rows[] = $reponse;
+				}$requete-> closeCursor();
+				
+				return $rows;
+
+			}else if($statut=='Dossiers Facturés'){
+
+				$sqlTransit = "";
+				if (isset($id_mod_lic) && ($id_mod_lic != '')) {
+					$sqlTransit = ' AND dos.id_mod_lic = "'.$id_mod_lic.'" ';
+				}
+
+				$sqlUtilisateur = "";
+				if (isset($id_util) && ($id_util != '')) {
+					$sqlUtilisateur = ' AND fd.id_util = "'.$id_util.'" ';
+				}
+
+				$sqlTime = "";
+				if (isset($debut) && ($debut != '') && isset($fin) && ($fin != '')) {
+					$sqlTime = ' AND DATE(fd.date_fact) BETWEEN "'.$debut.'" AND "'.$fin.'"';
+				}
+				$requete = $connexion-> query("SELECT dos.ref_dos AS ref_dos, 
+													fd.ref_fact AS ref_fact, 
+													dos.po_ref AS po_ref,
 													DATE_FORMAT(fd.date_fact, '%d/%m/%Y') AS date_fact,
 													cl.nom_cli AS nom_cli,
 													IF(fd.validation='0',
