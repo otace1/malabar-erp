@@ -569,7 +569,10 @@
 		$response['nbre_facture'] = $maClasse-> getNbreFacture($id_mod_lic);
 		$response['nbre_dossier_facture'] = $maClasse-> getNbreDossierFacture($id_mod_lic);
 		$response['nbre_dossier_non_facture'] = $maClasse-> getNbreDossierNonFacture($id_mod_lic);
-		$response['btn_info_factures'] = '<span onclick="window.open(\'popUpDashboardFacturation.php?statut=Factures&amp;id_mod_lic='.$id_mod_lic.'\',\'pop1\',\'width=950,height=700\');">
+		$response['btn_info_factures'] = '<span onclick="window.open(\'popUpDashboardFacturation.php?statut=Factures&amp;id_mod_lic='.$id_mod_lic.'\',\'pop1\',\'width=1200,height=700\');">
+                Details <i class="fas fa-arrow-circle-right"></i>
+              </span>';
+		$response['btn_info_dossiers_factures'] = '<span onclick="window.open(\'popUpDashboardFacturation.php?statut=Dossiers Facturés&amp;id_mod_lic='.$id_mod_lic.'\',\'pop1\',\'width=1200,height=700\');">
                 Details <i class="fas fa-arrow-circle-right"></i>
               </span>';
 		echo json_encode($response);
@@ -1122,6 +1125,9 @@
 		$reponse['nbre_facture'] = $maClasse-> getNbreFacture($_POST['id_mod_lic'], NULL, $_POST['debut'], $_POST['fin']);
 		$reponse['nbre_dossier_facture'] = $maClasse-> getNbreDossierFacture($_POST['id_mod_lic'], NULL, $_POST['debut'], $_POST['fin']);
 		$reponse['btn_info_factures'] = '<span onclick="window.open(\'popUpDashboardFacturation.php?statut=Factures&amp;id_mod_lic='.$_POST['id_mod_lic'].'&amp;debut='.$_POST['debut'].'&amp;fin='.$_POST['fin'].'\',\'pop1\',\'width=950,height=700\');">
+                Details <i class="fas fa-arrow-circle-right"></i>
+              </span>';
+		$reponse['btn_info_dossiers_factures'] = '<span onclick="window.open(\'popUpDashboardFacturation.php?statut=Dossiers Facturés&amp;id_mod_lic='.$_POST['id_mod_lic'].'&amp;debut='.$_POST['debut'].'&amp;fin='.$_POST['fin'].'\',\'pop1\',\'width=1200,height=700\');">
                 Details <i class="fas fa-arrow-circle-right"></i>
               </span>';
 

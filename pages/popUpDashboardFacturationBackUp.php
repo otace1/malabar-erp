@@ -45,36 +45,8 @@
               </div>    
               <!-- /.card-header -->
               <div class="card-body table-responsive p-0">
-                <table id="file_data" cellspacing="0" width="100%" class="table table-bordered table-striped table-sm small text-nowrap">
+                <table id="file_data" cellspacing="0" width="100%" class="table table-bordered table-striped table-dark table-sm small text-nowrap">
                   <thead>
-                    <?php
-                    if ($_GET['statut']=='Dossiers Facturés' && $_GET['id_mod_lic']=='1') {
-                      ?>
-                      <tr>
-                        <th rowspan="2">#</th>
-                        <th rowspan="2">Notre Nº Ref #</th>
-                        <th rowspan="2">FACTURE Nº</th>
-                        <th rowspan="2">INV. DATE</th>
-                        <th rowspan="2">Nombre de Trucks</th>
-                        <th rowspan="2">Dossier(s):</th>
-                        <th colspan="5">Liquidation Amount</th>
-                        <th colspan="2">OGEFREM / FERI </th>
-                        <th colspan="2">LMC</th>
-                      </tr>
-                      <tr>
-                        <th >Qty(Mt)</th>
-                        <th style="">LIQ AMT CDF</th>
-                        <th style="">Rate(CDF/USD) BCC</th>
-                        <th style="">Ton Per USD</th>
-                        <th style="">LIQ AMT/USD</th>
-                        <th style="">Ton Per USD</th>
-                        <th style="">Amount</th>
-                        <th style="">Ton Per USD</th>
-                        <th style="">Amount</th>
-                      </tr>
-                      <?php
-                      }else{
-                    ?>
                     <tr>
                       <?php
                       if ($_GET['statut']=='Factures') {
@@ -105,25 +77,18 @@
                       <th style="">Status</th>
                       <th style="">Action</th>
                       <?php
-                      }else if ($_GET['statut']=='Dossiers Facturés' && $_GET['id_mod_lic']=='2') {
+                      }else if ($_GET['statut']=='Dossiers Facturés') {
                       ?>
                       <th style="">#</th>
-                      <th style="">Notre Nº Ref #</th>
-                      <th style="">FACTURE Nº</th>
-                      <th style="">INV. DATE</th>
-                      <th style="">PO REF #</th>
-                      <th style="">LIQ AMT CDF</th>
-                      <th style="">Rate(CDF/USD) BCC</th>
-                      <th style="">LIQ AMT/USD</th>
-                      <th style="">OTHER CHARGES / AUTRES FRAIS</th>
-                      <th style="">TVA/USD</th>
-                      <th style="">OPERATIONAL COSTS / COUT OPERATIONEL</th>
-                      <th style="">TVA/USD</th>
-                      <th style="">Agency fee</th>
-                      <th style="">TVA/USD</th>
-                      <th style="">Total Invoice</th>
+                      <th style="">MCA File Ref.</th>
+                      <th style="">PO.Ref.</th>
+                      <th style="">Inv.Ref.</th>
+                      <th style="">Date</th>
+                      <th style="">Client</th>
+                      <th style="">Commodity</th>
+                      <th style="">Montant</th>
                       <th style="">Status</th>
-                      <th style=""></th>
+                      <th style="">Action</th>
                       <?php
                       }else if ($_GET['statut']=='Dossiers Non Facturés') {
                       ?>
@@ -145,9 +110,6 @@
                       }
                       ?>
                     </tr>
-                    <?php
-                  }
-                    ?>
                   </thead>
                   <tbody>
                     <?php
@@ -208,22 +170,13 @@
             'excel',
             'pageLength', 'colvis'
         ],
-        fixedColumns: {
-          left: 2,
-          right: 2
-        },
-        paging: false,
-        scrollCollapse: true,
-        scrollX: true,
-        // scrollY: 300,
-
       "paging": true,
       "lengthChange": true,
       "searching": true,
       "ordering": true,
       "info": true,
       "autoWidth": true,
-      // "responsive": true,
+      "responsive": true,
         "ajax":{
           "type": "GET",
           "url":"ajax.php",
@@ -310,65 +263,17 @@
           {"data":"view_page"}
         ] 
             <?php
-          }else if ($_GET['statut']=='Dossiers Facturés' && $_GET['id_mod_lic']=='2'){
+          }else if ($_GET['statut']=='Dossiers Facturés'){
             ?>
         "columns":[
           {"data":"compteur"},
           {"data":"ref_dos"},
-          {"data":"ref_fact"},
-          {"data":"date_fact"},
           {"data":"po_ref"},
-          {"data":"liquidation_cdf",
-            render: DataTable.render.number( null, null, 2, null ),
-            className: 'dt-body-right'
-          },
-          {"data":"roe_decl",
-            // render: DataTable.render.number( null, null, 4, null ),
-            className: 'dt-body-right'
-          },
-          {"data":"liquidation_usd",
-            render: DataTable.render.number( null, null, 2, null ),
-            className: 'dt-body-right'
-          },
-          {"data":"other_charge",
-            render: DataTable.render.number( null, null, 2, null ),
-            className: 'dt-body-right'
-          },
-          {"data":"tva_other_charge",
-            render: DataTable.render.number( null, null, 2, null ),
-            className: 'dt-body-right'
-          },
-          {"data":"ops_fee",
-            render: DataTable.render.number( null, null, 2, null ),
-            className: 'dt-body-right'
-          },
-          {"data":"tva_ops_fee",
-            render: DataTable.render.number( null, null, 2, null ),
-            className: 'dt-body-right'
-          },
-          {"data":"agency_fee",
-            render: DataTable.render.number( null, null, 2, null ),
-            className: 'dt-body-right'
-          },
-          {"data":"tva_agency_fee",
-            render: DataTable.render.number( null, null, 2, null ),
-            className: 'dt-body-right'
-          },
-          {"data":"montant_total",
-            render: DataTable.render.number( null, null, 2, null ),
-            className: 'dt-body-right'
-          },
-          {"data":"statut"},
-          {"data":"view_page"}
-        ] 
-            <?php
-          }else if ($_GET['statut']=='Dossiers Facturés' && $_GET['id_mod_lic']=='1'){
-            ?>
-        "columns":[
-          {"data":"compteur"},
-          {"data":"ref_dos"},
           {"data":"ref_fact"},
           {"data":"date_fact"},
+          {"data":"nom_cli"},
+          {"data":"commodity"},
+          {"data":"montant"},
           {"data":"statut"},
           {"data":"view_page"}
         ] 

@@ -88,9 +88,10 @@
               <div class="icon">
                 <i class="fas fa-check"></i>
               </div>
-              <a href="#" class="small-box-footer" onclick="window.open('popUpDashboardFacturation.php?statut=Dossiers Facturés&amp;id_mod_lic=<?php echo $_GET['id_mod_lic_fact'];?>','pop1','width=1200,height=700');">
+              <a href="#" class="small-box-footer" id="btn_info_dossiers_factures"></a>
+              <!-- <a href="#" class="small-box-footer" onclick="window.open('popUpDashboardFacturation.php?statut=Dossiers Facturés&amp;id_mod_lic=<?php echo $_GET['id_mod_lic_fact'];?>','pop1','width=1200,height=700');">
                 Details <i class="fas fa-arrow-circle-right"></i>
-              </a>
+              </a> -->
             </div>
 
             <!-- /.info-box -->
@@ -265,6 +266,7 @@ if(isset($_GET['id_mod_lic_fact']) && isset($_GET['id_mod_lic_fact'])){
           $('#nbre_dossier_facture').html(data.nbre_dossier_facture);
           $('#nbre_dossier_non_facture').html(data.nbre_dossier_non_facture);
           $('#btn_info_factures').html(data.btn_info_factures);
+          $('#btn_info_dossiers_factures').html(data.btn_info_dossiers_factures);
           afficherMonitoringFacturation(<?php echo $_GET['id_mod_lic_fact'];?>);
         }
       },
@@ -291,6 +293,7 @@ if(isset($_GET['id_mod_lic_fact']) && isset($_GET['id_mod_lic_fact'])){
           $('#nbre_facture').html(data.nbre_facture);
           $('#nbre_dossier_facture').html(data.nbre_dossier_facture);
           $('#btn_info_factures').html(data.btn_info_factures);
+          $('#btn_info_dossiers_factures').html(data.btn_info_dossiers_factures);
           $('#afficherMonitoringFacturation').html(data.afficherMonitoringFacturation);
         }
       },
