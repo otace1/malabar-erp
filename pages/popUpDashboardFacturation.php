@@ -47,34 +47,6 @@
               <div class="card-body table-responsive p-0">
                 <table id="file_data" cellspacing="0" width="100%" class="table table-bordered table-striped table-sm small text-nowrap">
                   <thead>
-                    <?php
-                    if ($_GET['statut']=='Dossiers Facturés' && $_GET['id_mod_lic']=='1') {
-                      ?>
-                      <tr>
-                        <th rowspan="2">#</th>
-                        <th rowspan="2">Notre Nº Ref #</th>
-                        <th rowspan="2">FACTURE Nº</th>
-                        <th rowspan="2">INV. DATE</th>
-                        <th rowspan="2">Nombre de Trucks</th>
-                        <th rowspan="2">Dossier(s):</th>
-                        <th colspan="5">Liquidation Amount</th>
-                        <th colspan="2">OGEFREM / FERI </th>
-                        <th colspan="2">LMC</th>
-                      </tr>
-                      <tr>
-                        <th >Qty(Mt)</th>
-                        <th style="">LIQ AMT CDF</th>
-                        <th style="">Rate(CDF/USD) BCC</th>
-                        <th style="">Ton Per USD</th>
-                        <th style="">LIQ AMT/USD</th>
-                        <th style="">Ton Per USD</th>
-                        <th style="">Amount</th>
-                        <th style="">Ton Per USD</th>
-                        <th style="">Amount</th>
-                      </tr>
-                      <?php
-                      }else{
-                    ?>
                     <tr>
                       <?php
                       if ($_GET['statut']=='Factures') {
@@ -105,10 +77,52 @@
                       <th style="">Status</th>
                       <th style="">Action</th>
                       <?php
+                      }else if ($_GET['statut']=='Dossiers Facturés' && $_GET['id_mod_lic']=='1') {
+                      ?>
+                      <th>#</th>
+                      <th>Notre Nº Ref #</th>
+                      <th>Client</th>
+                      <th>Liquidation Ref.</th>
+                      <th>Liquidation Date</th>
+                      <th>FACTURE Nº</th>
+                      <th>INV. DATE</th>
+                      <th>Nombre de Trucks</th>
+                      <th>Dossier(s):</th>
+                      <th>Qty(Mt)</th>
+                      <th>LIQ AMT CDF</th>
+                      <th>Rate(CDF/USD) BCC</th>
+                      <th>Ton Per USD</th>
+                      <th>LIQ AMT/USD</th>
+                      <th>OGREFREM-Ton Per USD</th>
+                      <th>OGREFREM-Amount</th>
+                      <th>LMC-Ton Per USD</th>
+                      <th>LMC-Amount</th>
+                      <th>Tax Voire-Ton Per USD</th>
+                      <th>Tax Voire-Amount</th>
+                      <th>CEEC</th>
+                      <th>FINANCE COST</th>
+                      <th>OCC</th>
+                      <th>CGEA</th>
+                      <th>DGDA Security Seals</th>
+                      <th>ASSAY FEE</th>
+                      <th>Customs Clearence FEE</th>
+                      <th>OTHER CHARGES / AUTRES FRAIS</th>
+                      <th>TVA/USD</th>
+                      <th>OPERATIONAL COSTS / COUT OPERATIONEL</th>
+                      <th>TVA/USD</th>
+                      <th>AGENCY FEE</th>
+                      <th>TVA/USD</th>
+                      <th>Total Invoice</th>
+                      <th>Status</th>
+                      <th></th>
+                      <?php
                       }else if ($_GET['statut']=='Dossiers Facturés' && $_GET['id_mod_lic']=='2') {
                       ?>
                       <th style="">#</th>
                       <th style="">Notre Nº Ref #</th>
+                      <th>Client</th>
+                      <th>Liquidation Ref.</th>
+                      <th>Liquidation Date</th>
                       <th style="">FACTURE Nº</th>
                       <th style="">INV. DATE</th>
                       <th style="">PO REF #</th>
@@ -117,10 +131,13 @@
                       <th style="">LIQ AMT/USD</th>
                       <th style="">OTHER CHARGES / AUTRES FRAIS</th>
                       <th style="">TVA/USD</th>
+                      <th style="">Total</th>
                       <th style="">OPERATIONAL COSTS / COUT OPERATIONEL</th>
                       <th style="">TVA/USD</th>
+                      <th style="">Total</th>
                       <th style="">Agency fee</th>
                       <th style="">TVA/USD</th>
+                      <th style="">Total</th>
                       <th style="">Total Invoice</th>
                       <th style="">Status</th>
                       <th style=""></th>
@@ -145,9 +162,6 @@
                       }
                       ?>
                     </tr>
-                    <?php
-                  }
-                    ?>
                   </thead>
                   <tbody>
                     <?php
@@ -315,6 +329,9 @@
         "columns":[
           {"data":"compteur"},
           {"data":"ref_dos"},
+          {"data":"nom_cli"},
+          {"data":"ref_liq"},
+          {"data":"date_liq"},
           {"data":"ref_fact"},
           {"data":"date_fact"},
           {"data":"po_ref"},
@@ -327,6 +344,136 @@
             className: 'dt-body-right'
           },
           {"data":"liquidation_usd",
+            render: DataTable.render.number( null, null, 2, null ),
+            className: 'dt-body-right'
+          },
+          {"data":"other_charge",
+            render: DataTable.render.number( null, null, 2, null ),
+            className: 'dt-body-right'
+          },
+          {"data":"tva_other_charge",
+            render: DataTable.render.number( null, null, 2, null ),
+            className: 'dt-body-right'
+          },
+          {"data":"total_other_charge",
+            render: DataTable.render.number( null, null, 2, null ),
+            className: 'dt-body-right'
+          },
+          {"data":"ops_fee",
+            render: DataTable.render.number( null, null, 2, null ),
+            className: 'dt-body-right'
+          },
+          {"data":"tva_ops_fee",
+            render: DataTable.render.number( null, null, 2, null ),
+            className: 'dt-body-right'
+          },
+          {"data":"total_ops_fee",
+            render: DataTable.render.number( null, null, 2, null ),
+            className: 'dt-body-right'
+          },
+          {"data":"agency_fee",
+            render: DataTable.render.number( null, null, 2, null ),
+            className: 'dt-body-right'
+          },
+          {"data":"tva_agency_fee",
+            render: DataTable.render.number( null, null, 2, null ),
+            className: 'dt-body-right'
+          },
+          {"data":"total_agency_fee",
+            render: DataTable.render.number( null, null, 2, null ),
+            className: 'dt-body-right'
+          },
+          {"data":"montant_total",
+            render: DataTable.render.number( null, null, 2, null ),
+            className: 'dt-body-right'
+          },
+          {"data":"statut"},
+          {"data":"view_page"}
+        ] 
+            <?php
+          }else if ($_GET['statut']=='Dossiers Facturés' && $_GET['id_mod_lic']=='1'){
+            ?>
+        "columns":[
+          {"data":"compteur"},
+          {"data":"ref_dos"},
+          {"data":"nom_cli"},
+          {"data":"ref_liq"},
+          {"data":"date_liq"},
+          {"data":"ref_fact"},
+          {"data":"date_fact"},
+          {"data":"nbre_dossier",
+            render: DataTable.render.number( null, null, 0, null ),
+            className: 'dt-body-center'
+          },
+          {"data":"liste_dossier"},
+          {"data":"poids",
+            render: DataTable.render.number( null, null, 3, null ),
+            className: 'dt-body-right'
+          },
+          {"data":"liquidation_cdf",
+            render: DataTable.render.number( null, null, 2, null ),
+            className: 'dt-body-right'
+          },
+          {"data":"roe_decl",
+            className: 'dt-body-right'
+          },
+          {"data":"liquidation_usd_per_ton",
+            render: DataTable.render.number( null, null, 2, null ),
+            className: 'dt-body-right'
+          },
+          {"data":"liquidation_usd",
+            render: DataTable.render.number( null, null, 2, null ),
+            className: 'dt-body-right'
+          },
+          {"data":"feri_per_ton",
+            render: DataTable.render.number( null, null, 2, null ),
+            className: 'dt-body-right'
+          },
+          {"data":"feri",
+            render: DataTable.render.number( null, null, 2, null ),
+            className: 'dt-body-right'
+          },
+          {"data":"lmc_per_ton",
+            render: DataTable.render.number( null, null, 2, null ),
+            className: 'dt-body-right'
+          },
+          {"data":"lmc",
+            render: DataTable.render.number( null, null, 2, null ),
+            className: 'dt-body-right'
+          },
+          {"data":"voirie_per_ton",
+            render: DataTable.render.number( null, null, 2, null ),
+            className: 'dt-body-right'
+          },
+          {"data":"voirie",
+            render: DataTable.render.number( null, null, 2, null ),
+            className: 'dt-body-right'
+          },
+          {"data":"ceec",
+            render: DataTable.render.number( null, null, 2, null ),
+            className: 'dt-body-right'
+          },
+          {"data":"finance_cost",
+            render: DataTable.render.number( null, null, 2, null ),
+            className: 'dt-body-right'
+          },
+          {"data":"occ_sample",
+            render: DataTable.render.number( null, null, 2, null ),
+            className: 'dt-body-right'
+          },
+          {"data":"cgea",
+            render: DataTable.render.number( null, null, 2, null ),
+            className: 'dt-body-right'
+          },
+          {"data":"dgda_seal",
+            render: DataTable.render.number( null, null, 2, null ),
+            className: 'dt-body-right'
+          },
+          {"data":"assay",
+            render: DataTable.render.number( null, null, 2, null ),
+            className: 'dt-body-right'
+          },
+          {"data":"clearing_fee",
             render: DataTable.render.number( null, null, 2, null ),
             className: 'dt-body-right'
           },
@@ -358,17 +505,6 @@
             render: DataTable.render.number( null, null, 2, null ),
             className: 'dt-body-right'
           },
-          {"data":"statut"},
-          {"data":"view_page"}
-        ] 
-            <?php
-          }else if ($_GET['statut']=='Dossiers Facturés' && $_GET['id_mod_lic']=='1'){
-            ?>
-        "columns":[
-          {"data":"compteur"},
-          {"data":"ref_dos"},
-          {"data":"ref_fact"},
-          {"data":"date_fact"},
           {"data":"statut"},
           {"data":"view_page"}
         ] 

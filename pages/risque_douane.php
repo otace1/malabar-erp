@@ -14,7 +14,7 @@
     <section class="content-header">
       <div class="container-fluid">
         <div class="header">
-          <h5><img src="../images/conforme.png" width="30px"> Risque Douane</h5>
+          <h5><img src="../images/conforme.png" width="30px"> Contentieux</h5>
         </div>
 
       </div><!-- /.container-fluid -->
@@ -73,6 +73,7 @@
                       <th style="">#</th>
                       <th style="">Reference</th>
                       <th style=""></th>
+                      <th style="">Client</th>
                       <th style="">Etape / Type</th>
                       <th style="">Statut</th>
                       <th style="">Date Document</th>
@@ -124,6 +125,15 @@
           <div class="form-group">
             <label for="x_card_code" class="control-label mb-1">Ref. Document</label>
             <input class="form-control cc-exp form-control-sm" type="text" id="ref_doc" name="ref_doc" required>
+          </div>
+
+          <div class="form-group">
+            <label for="x_card_code" class="control-label mb-1">Client</label>
+            <select name="id_cli" id="id_cli" class="form-control cc-exp form-control-sm" required>
+                <?php
+                  $maClasse->selectionnerClient();
+                ?>
+            </select>
           </div>
 
           <div class="form-group">
@@ -203,137 +213,93 @@
       </div>
       <div class="modal-body">
         <div class="card card-primary card-outline card-outline-tabs">
-          <div class="card-header p-0 border-bottom-0">
-            <ul class="nav nav-tabs" id="custom-tabs-four-tab" role="tablist">
-              <li class="nav-item">
-                <a class="nav-link active" id="custom-tabs-four-home-tab" data-toggle="pill" href="#custom-tabs-four-home" role="tab" aria-controls="custom-tabs-four-home" aria-selected="true">Info Principale</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" id="custom-tabs-four-profile-tab" data-toggle="pill" href="#custom-tabs-four-profile" role="tab" aria-controls="custom-tabs-four-profile" aria-selected="false">Presentation</a>
-              </li>
-              <!-- <li class="nav-item">
-                <a class="nav-link" id="custom-tabs-four-messages-tab" data-toggle="pill" href="#custom-tabs-four-messages" role="tab" aria-controls="custom-tabs-four-messages" aria-selected="false">Fichiers</a>
-              </li> -->
-            </ul>
-          </div>
           <div class="card-body">
-            <div class="tab-content" id="custom-tabs-four-tabContent">
-              <div class="tab-pane fade show active" id="custom-tabs-four-home" role="tabpanel" aria-labelledby="custom-tabs-four-home-tab">
-                 
-                <div class="row">
+            <div class="row">
 
-                  <div class="col-md-12">
-                    <label for="x_card_code" class="control-label mb-1">Ref. Document</label>
-                    <input class="form-control cc-exp form-control-sm" type="text" id="ref_doc_edit" name="ref_doc" required>
-                  </div>
-
-                  <div class="col-md-6">
-                    <label for="x_card_code" class="control-label mb-1">Etape/Type Document</label>
-                    <select name="id_etap" id="id_etap_edit" class="form-control cc-exp form-control-sm" required>
-                      <option></option>
-                        <?php
-                          $maClasse->selectionnerEtatPV();
-                        ?>
-                    </select>
-                  </div>
-
-                  <div class="col-md-6">
-                    <label for="x_card_code" class="control-label mb-1">Statut</label>
-                    <select name="id_sen" id="id_sen_edit" class="form-control cc-exp form-control-sm" required>
-                      <option></option>
-                        <?php
-                          $maClasse->selectionnerScenario();
-                        ?>
-                    </select>
-                  </div>
-
-                  <div class="col-md-6">
-                    <label for="x_card_code" class="control-label mb-1">Date Document</label>
-                    <input class="form-control cc-exp form-control-sm" type="date" id="date_doc_edit" name="date_doc" required>
-                  </div>
-
-                  <div class="col-md-6">
-                    <label for="x_card_code" class="control-label mb-1">Date Reception</label>
-                    <input class="form-control cc-exp form-control-sm" type="date" id="date_recept_edit" name="date_recept" required>
-                  </div>
-
-                  <div class="col-md-6">
-                    <label for="x_card_code" class="control-label mb-1">Initiateur de la notification</label>
-                    <select name="id_bur_douane" id="id_bur_douane_edit" class="form-control cc-exp form-control-sm" required>
-                      <option></option>
-                        <?php
-                          $maClasse->selectionnerBureauDouane3();
-                        ?>
-                    </select>
-                  </div>
-
-                  <div class="col-md-6">
-                    <label for="x_card_code" class="control-label mb-1">Procedure / Regime</label>
-                    <select name="id_reg" id="id_reg_edit" class="form-control cc-exp form-control-sm" required>
-                      <option></option>
-                      <?php
-                        $maClasse-> selectionnerRegimeGrouping();
-                      ?>
-                    </select>
-                  </div>
-
-                  <div class="col-md-12">
-                    <label for="x_card_code" class="control-label mb-1">Remarque</label>
-                    <textarea class="form-control cc-exp form-control-sm" id="remarque_edit" name="remarque"></textarea>
-                  </div>
-                  
-                  <div class="col-md-12">
-                    <hr>
-                    <label for="x_card_code" class="control-label mb-1">Documents Joints</label>
-                    <table class="table hover display compact table-bordered table-striped table-sm small text-nowrap">
-                      <thead>
-                        <tr>
-                          <th>#</th>
-                          <th>Intitule</th>
-                          <th>Document Actuel</th>
-                          <th>Nouveau Document</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr>
-                          <td>1</td>
-                          <td>PV</td>
-                          <td></td>
-                          <td>
-                            <input class="form-control cc-exp form-control-sm" type="file" id="fi" name="fi">
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>2</td>
-                          <td>Memo / Lettres de réponse</td>
-                          <td></td>
-                          <td>
-                            <input class="form-control cc-exp form-control-sm" type="file" id="fi" name="fi">
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>3</td>
-                          <td>Preuve de paiement / Protocole d’accord</td>
-                          <td></td>
-                          <td>
-                            <input class="form-control cc-exp form-control-sm" type="file" id="fi" name="fi">
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>4</td>
-                          <td>Note de classement sans suite</td>
-                          <td></td>
-                          <td>
-                            <input class="form-control cc-exp form-control-sm" type="file" id="fi" name="fi">
-                          </td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
-
-                </div>
+              <div class="col-md-12">
+                <label for="x_card_code" class="control-label mb-1">Ref. Document</label>
+                <input class="form-control cc-exp form-control-sm" type="text" id="ref_doc_edit" name="ref_doc" required>
               </div>
-              <div class="tab-pane fade" id="custom-tabs-four-profile" role="tabpanel" aria-labelledby="custom-tabs-four-profile-tab">
+
+              <div class="col-md-6">
+                <label for="x_card_code" class="control-label mb-1">Etape/Type Document</label>
+                <select name="id_etap" id="id_etap_edit" class="form-control cc-exp form-control-sm" required>
+                  <option></option>
+                    <?php
+                      $maClasse->selectionnerEtatPV();
+                    ?>
+                </select>
+              </div>
+
+              <div class="col-md-6">
+                <label for="x_card_code" class="control-label mb-1">Statut</label>
+                <select name="id_sen" id="id_sen_edit" class="form-control cc-exp form-control-sm" required>
+                  <option></option>
+                    <?php
+                      $maClasse->selectionnerScenario();
+                    ?>
+                </select>
+              </div>
+
+              <div class="col-md-6">
+                <label for="x_card_code" class="control-label mb-1">Date Document</label>
+                <input class="form-control cc-exp form-control-sm" type="date" id="date_doc_edit" name="date_doc" required>
+              </div>
+
+              <div class="col-md-6">
+                <label for="x_card_code" class="control-label mb-1">Date Reception</label>
+                <input class="form-control cc-exp form-control-sm" type="date" id="date_recept_edit" name="date_recept" required>
+              </div>
+
+              <div class="col-md-6">
+                <label for="x_card_code" class="control-label mb-1">Initiateur de la notification</label>
+                <select name="id_bur_douane" id="id_bur_douane_edit" class="form-control cc-exp form-control-sm" required>
+                  <option></option>
+                    <?php
+                      $maClasse->selectionnerBureauDouane3();
+                    ?>
+                </select>
+              </div>
+
+              <div class="col-md-6">
+                <label for="x_card_code" class="control-label mb-1">Procedure / Regime</label>
+                <select name="id_reg" id="id_reg_edit" class="form-control cc-exp form-control-sm" required>
+                  <option></option>
+                  <?php
+                    $maClasse-> selectionnerRegimeGrouping();
+                  ?>
+                </select>
+              </div>
+
+              <div class="col-md-12">
+                <label for="x_card_code" class="control-label mb-1">Remarque</label>
+                <textarea class="form-control cc-exp form-control-sm" id="remarque_edit" name="remarque"></textarea>
+              </div>
+              
+              <div class="col-md-12">
+                <hr>
+                <label for="x_card_code" class="control-label mb-1">Documents Joints</label>
+                <table class="table hover display compact table-bordered table-striped table-sm small text-nowrap">
+                  <thead>
+                    <tr>
+                      <th>#</th>
+                      <th>Intitule</th>
+                      <th>Date</th>
+                      <th>Fichier</th>
+                      <th>
+                        <span class="btn btn-xs bg-primary" onclick="modal_creerDocumentJointRisque(id_edit.value);"><i class="fa fa-plus"></i></span>
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody id="document_joint_risque">
+                    
+                  </tbody>
+                </table>
+              </div>
+
+              <div class="col-md-12">
+                <hr>
+                <label for="x_card_code" class="control-label mb-1">Presentation(s)</label>
                 <table class="table hover display compact table-bordered table-striped table-sm small">
                   <thead>
                     <tr>
@@ -348,10 +314,9 @@
                   </tbody>
                 </table>
               </div>
-             <!--  <div class="tab-pane fade" id="custom-tabs-four-messages" role="tabpanel" aria-labelledby="custom-tabs-four-messages-tab">
-                 Morbi turpis dolor, vulputate vitae felis non, tincidunt congue mauris. Phasellus volutpat augue id mi placerat mollis. Vivamus faucibus eu massa eget condimentum. Fusce nec hendrerit sem, ac tristique nulla. Integer vestibulum orci odio. Cras nec augue ipsum. Suspendisse ut velit condimentum, mattis urna a, malesuada nunc. Curabitur eleifend facilisis velit finibus tristique. Nam vulputate, eros non luctus efficitur, ipsum odio volutpat massa, sit amet sollicitudin est libero sed ipsum. Nulla lacinia, ex vitae gravida fermentum, lectus ipsum gravida arcu, id fermentum metus arcu vel metus. Curabitur eget sem eu risus tincidunt eleifend ac ornare magna.
-              </div> -->
+
             </div>
+
           </div>
           <!-- /.card -->
         </div>
@@ -407,6 +372,49 @@
       <div class="modal-footer justify-content-between">
         <button type="button" class="btn-xs btn-danger" data-dismiss="modal">Annuler</button>
         <button type="submit" name="" class="btn-xs btn-primary">Créer</button>
+      </div>
+    </div>
+    </form>
+    <!-- /.modal-content -->
+  </div>
+  <!-- /.modal-dialog -->
+</div>
+
+<div class="modal fade creerDocumentJointRisque" id="modal_creerDocumentJointRisque">
+  <div class="modal-dialog modal-sm">
+    <form method="POST" id="form_creerDocumentJointRisque" action="" data-parsley-validate enctype="multipart/form-data">
+      <input type="hidden" name="operation" value="creerDocumentJointRisque">
+      <input type="hidden" name="id" id="id_dos_risq_joint">
+    <div class="modal-content">
+      <div class="modal-header ">
+        <h5 class="modal-title"><i class="fa fa-plus"></i> Joindre Fichier</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <!-- <div class="row"> -->
+
+          <div class="form-group">
+            <label for="x_card_code" class="control-label mb-1">Document</label>
+            <select class="form-control cc-exp form-control-sm" name="id_doc">
+              <option></option>
+              <?php
+                $maClasse-> selectionnerDocumentRisque();
+              ?>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="x_card_code" class="control-label mb-1">Fichier</label>
+            <input class="form-control cc-exp form-control-sm" type="file" name="fichier" >
+          </div>
+
+        <!-- </div> -->
+      </div>
+      <div class="modal-footer justify-content-between">
+        <button type="button" class="btn-xs btn-danger" data-dismiss="modal">Annuler</button>
+        <button type="submit" name="" class="btn-xs btn-primary">Joindre</button>
       </div>
     </div>
     </form>
@@ -586,6 +594,14 @@
 
   }
 
+  function modal_creerDocumentJointRisque(id){
+    
+    $('#id_dos_risq_joint').val(id);
+    
+    $('#modal_creerDocumentJointRisque').modal('show');
+
+  }
+
   function deletePresentation(id_pres, id){
     if(confirm('Voulez-vous supprimer cette presentation ?')) {
       $.ajax({
@@ -647,6 +663,7 @@
           $('#label_ref_doc').html(data.ref_doc);
 
           $('#presentation_risque_douane').html(data.presentation_risque_douane);
+          $('#document_joint_risque').html(data.document_joint_risque);
 
           $('#modal_dossier_risque_douane').modal('show');
         }
@@ -706,6 +723,7 @@
       {"data":"compteur"},
       {"data":"ref_doc"},
       {"data":"btn_action"},
+      {"data":"nom_cli"},
       {"data":"nom_etap"},
       {"data":"nom_sen"},
       {"data":"date_doc"},
@@ -714,6 +732,53 @@
       {"data":"nom_reg"},
       {"data":"remarque"}
     ] 
+  });
+
+  $(document).ready(function(){
+
+    $('#form_creerDocumentJointRisque').submit(function(e){
+
+      e.preventDefault();
+
+       if(confirm('Voulez-vous joindre ce fichier ?')) {
+          
+          $('#spinner-div').show();
+          $('#modal_creerDocumentJointRisque').modal('hide');
+
+          var fd = new FormData(this);
+          // alert($(this).attr('action'));
+          $.ajax({
+
+            url: 'ajax.php',
+            type: 'post',
+            processData: false,
+            contentType: false,
+            data: fd,
+            dataType: 'json',
+            success:function(data){
+              if (data.logout) {
+                alert(data.logout);
+                window.location="../deconnexion.php";
+              }else{
+                
+                document.getElementById("form_creerDocumentJointRisque").reset();
+
+                $('#document_joint_risque').html(data.document_joint_risque);
+
+              }
+            },
+            complete: function () {
+                loadPV();
+                $('#spinner-div').hide();//Request is complete so hide spinner
+            }
+
+          });
+
+
+      }
+
+    });
+  
   });
 
   $(document).ready(function(){

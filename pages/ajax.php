@@ -1569,7 +1569,7 @@
 
         $fichier = uniqid();
 
-        $maClasse-> creerDossierRisque($_POST['ref_doc'], $_POST['date_doc'], $_POST['date_recept'], $_POST['id_bur_douane'], $_POST['id_etap'], $_POST['date_proch_pres'], $_POST['id_reg'], $fichier.'.'.$ext, $_SESSION['id_util']);
+        $maClasse-> creerDossierRisque($_POST['ref_doc'], $_POST['id_cli'], $_POST['date_doc'], $_POST['date_recept'], $_POST['id_bur_douane'], $_POST['id_etap'], $_POST['date_proch_pres'], $_POST['id_reg'], $fichier.'.'.$ext, $_SESSION['id_util']);
 
         $ref_doc_folder = $maClasse-> getLastDossierRisqueDouaneUtilisateur($_SESSION['id_util'])['id'];
 
@@ -1603,6 +1603,7 @@
 		  
 		$response = $maClasse-> get_dossier_risque_douane($_POST['id']);
 		$response['presentation_risque_douane'] = $maClasse-> presentation_risque_douane($_POST['id']);
+		$response['document_joint_risque'] = $maClasse-> document_joint_risque($_POST['id']);
 		
 		echo json_encode($response);
 
@@ -1734,6 +1735,30 @@
 
 	}else if ($_POST['operation']=="detail_ecriture_comptable") {
 		echo json_encode($maClasse-> detail_ecriture_comptable($_POST['id_e']));
-	}
+	}else if($_POST['operation']=='creerDocumentJointRisque'){//Joindre Fichier Dossier Risque
+
+		$file = $_FILES['fichier'];
+		$filename = $file['name'];
+		$ext = pathinfo($filename, PATHINFO_EXTENSION);
+
+		$fichier = uniqid();
+		$id = $_POST['id'];
+		$id = str_replace("/", "_", "$id");
+		
+		$dossier = '../pv/'.$id;
+
+		if(!is_dir($dossier)){
+			mkdir("../pv/$id", 0777);
+		}
+		$uploadFile = $dossier.'/'.$fichier.'.'.$ext;
+		move_uploaded_file($file['tmp_name'], $uploadFile);
+
+		$maClasse-> creerDocumentJointRisque($_POST['id'], $_POST['id_doc'], $fichier.'.'.$ext);
+
+        $response['message'] = 'Fichier joint avec succès!';
+		$response['document_joint_risque'] = $maClasse-> document_joint_risque($_POST['id']);
+        echo json_encode($response);exit;
+
+    }
 
 ?>
