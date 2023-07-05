@@ -34879,7 +34879,10 @@
 													fd.ref_fact AS ref_fact, 
 													dos.po_ref AS po_ref,
 													dos.roe_decl AS roe_decl,
-													dos.poids AS poids,
+													IF(dos.poids>1,
+														dos.poids,
+														1
+														) AS poids,
 													dos.id_dos AS id_dos,
 													dos.ref_liq AS ref_liq,
 													dos.montant_liq AS montant_liq,
