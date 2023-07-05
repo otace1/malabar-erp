@@ -26812,9 +26812,12 @@
 					<td class="<?php echo $class;?> <?php echo $bg;?>" style=" border-right: 1px solid black; vertical-align: middle; text-align: left; padding: 0.6rem; border-top: 1px solid black; <?php echo $color;?>"><span class="<?php echo $clignoteDos;?>" style="<?php echo $couleurDos?>"><?php echo $reponse['ref_dos'];?></span>
 					 <?php 
 					  if(!isset($this-> getDataUtilisateur($_SESSION['id_util'])['tracking_enab'])){
+					  	if($this-> getDossierFacture($reponse['id_dos'])==false){
 					  ?>
 						<span title="Edit File" onclick="window.location.replace('editFile.php?id_cli=<?php echo $_GET['id_cli']; ?>&id_mod_trans=<?php echo $_GET['id_mod_trans']; ?>&id_mod_trac=<?php echo $_GET['id_mod_trac']; ?>&commodity=<?php echo $_GET['commodity']; ?>&statut=<?php echo $_GET['statut'];?>&id_march=<?php echo $_GET['id_march'];?>&page=<?php echo $page;?>&id_dos=<?php echo $reponse['id_dos'];?>','pop1','width=80,height=80');">&nbsp;&nbsp;&nbsp;<i class="fa fa-edit bg bg-warning" style="padding: 3px; border-radius: 5px;"></i></span>
+
 						<?php
+					}
 						if ($reponse['cleared'] != '2') {
 							if ($this-> getDataUtilisateur($_SESSION['id_util'])['tracking_delete'] == '1' && ($index == '1' && $premiere_entree == '0')) {
 							?>
@@ -34876,6 +34879,11 @@
 													fd.ref_fact AS ref_fact, 
 													dos.po_ref AS po_ref,
 													dos.roe_decl AS roe_decl,
+													dos.poids AS poids,
+													dos.id_dos AS id_dos,
+													dos.ref_liq AS ref_liq,
+													dos.montant_liq AS montant_liq,
+													DATE_FORMAT(dos.date_liq, '%d/%m/%Y') AS date_liq,
 													DATE_FORMAT(fd.date_fact, '%d/%m/%Y') AS date_fact,
 													cl.nom_cli AS nom_cli,
 													SUM(
@@ -34903,17 +34911,60 @@
 														)
 													) AS liquidation_usd,
 													SUM(
+														IF(det.usd='0' AND deb.id_t_deb='1', 
+															IF(det.tva='1',
+																IF(det.montant_tva>0,
+																	((det.montant_tva+det.montant)/dos.roe_decl)/dos.poids,
+																	(det.montant*0.16)/dos.roe_decl
+																),
+																(det.montant/dos.roe_decl)/dos.poids
+															), 
+															0
+														)
+													) AS liquidation_usd_per_ton,
+													SUM(
 														IF(deb.id_t_deb='2' AND det.usd='1',
 															det.montant,
 															0
 														)
 													) AS other_charge,
 													SUM(
+														IF(deb.id_t_deb='1', 
+															IF(det.usd='0',
+																IF(det.tva='1',
+																	IF(det.montant_tva>0,
+																		(det.montant_tva+det.montant)/dos.roe_decl,
+																		(det.montant*0.16)/dos.roe_decl
+																	),
+																	det.montant/dos.roe_decl
+																),
+																IF(det.tva='1',
+																	IF(det.montant_tva>0,
+																		(det.montant_tva+det.montant),
+																		(det.montant*0.16)
+																	),
+																	det.montant
+																)
+															),
+															0
+														)
+													) AS clearing_fee,
+													SUM(
 														IF(deb.id_t_deb='2' AND det.usd='1' AND det.tva='1',
 															det.montant*0.16,
 															0
 														)
 													) AS tva_other_charge,
+													SUM(
+
+														IF(deb.id_t_deb='2' AND det.usd='1',
+															IF(det.tva='1',
+																det.montant*1.16,
+																det.montant
+															),
+															0
+														)
+													) AS total_other_charge,
 													SUM(
 														IF(deb.id_t_deb='3' AND det.usd='1',
 															det.montant,
@@ -34927,6 +34978,16 @@
 														)
 													) AS tva_ops_fee,
 													SUM(
+
+														IF(deb.id_t_deb='3' AND det.usd='1',
+															IF(det.tva='1',
+																det.montant*1.16,
+																det.montant
+															),
+															0
+														)
+													) AS total_ops_fee,
+													SUM(
 														IF(deb.id_t_deb='4' AND det.usd='1',
 															det.montant,
 															0
@@ -34938,6 +34999,16 @@
 															0
 														)
 													) AS tva_agency_fee,
+													SUM(
+
+														IF(deb.id_t_deb='4' AND det.usd='1',
+															IF(det.tva='1',
+																det.montant*1.16,
+																det.montant
+															),
+															0
+														)
+													) AS total_agency_fee,
 									                SUM(
 														IF(det.usd='0', 
 															IF(det.tva='1',
@@ -34963,12 +35034,12 @@
 																)
 															)
 														) AS statut,
-													CONCAT(CONCAT('<button class=\"btn btn-xs bg-primary square-btn-adjust\" onclick=\"window.open(\'',mf.view_page,'?ref_fact=',fd.ref_fact,'\',\'pop3\',\'width=1000,height=800\');\" title=\"View invoice\">
+													CONCAT(CONCAT('<a href=\"#\" onclick=\"window.open(\'',mf.view_page,'?ref_fact=',fd.ref_fact,'\',\'pop3\',\'width=1000,height=800\');\" title=\"View invoice\">
 									                    <i class=\"fas fa-eye\"></i> 
-									                </button>'),' ',
-									                CONCAT('<button class=\"btn btn-xs bg-success square-btn-adjust\" onclick=\"window.location.replace(\'',mf.excel,'?ref_fact=',fd.ref_fact,'\',\'pop4\',\'width=1000,height=800\');\" title=\"Export Annex\">
+									                </a>'),' ',
+									                CONCAT('<a href=\"#\" class=\"text-success\" onclick=\"window.location.replace(\'',mf.excel,'?ref_fact=',fd.ref_fact,'\',\'pop4\',\'width=1000,height=800\');\" title=\"Export Annex\">
 									                    <i class=\"fas fa-file-excel\"></i> 
-									                </button>')) AS view_page
+									                </a>')) AS view_page
 												FROM facture_dossier fd, modele_facture mf, client cl, dossier dos, detail_facture_dossier det, debours deb
 												WHERE YEAR(fd.date_fact) = YEAR(CURRENT_DATE())
 													AND fd.id_mod_fact = mf.id_mod_fact
@@ -34989,6 +35060,31 @@
 					$reponse['compteur'] = $compteur;
 					$reponse['montant'] = number_format($this-> getMontantFactureGlobale($reponse['ref_fact'])+(( ($this-> getMontantFactureDebours($reponse['ref_fact'], 27)*$this-> getFactureGlobale($reponse['ref_fact'])['taux_commission']) - $this-> getMontantFactureDebours($reponse['ref_fact'], 27))), 2, ',', ' ');
 					$reponse['commodity'] = $this-> getMarchandiseFacture($reponse['ref_fact'])['nom_march'];
+					$reponse['nbre_dossier'] = $this-> getNombreDossierFacture2($reponse['ref_fact']);
+					$reponse['liste_dossier'] = $this-> getRangDossierFacture($reponse['ref_fact']);
+					$reponse['feri'] = $this-> getMontantDeboursFactureDossier2($reponse['ref_fact'], 5, $reponse['id_dos']);
+					$reponse['feri_per_ton'] = $this-> getMontantDeboursFactureDossier2($reponse['ref_fact'], 5, $reponse['id_dos'])/$reponse['poids'];
+					$reponse['lmc'] = $this-> getMontantDeboursFactureDossier2($reponse['ref_fact'], 6, $reponse['id_dos']);
+					$reponse['lmc_per_ton'] = $this-> getMontantDeboursFactureDossier2($reponse['ref_fact'], 6, $reponse['id_dos'])/$reponse['poids'];
+					$reponse['voirie'] = $this-> getMontantDeboursFactureDossier2($reponse['ref_fact'], 7, $reponse['id_dos']);
+					$reponse['voirie_per_ton'] = $this-> getMontantDeboursFactureDossier2($reponse['ref_fact'], 7, $reponse['id_dos'])/$reponse['poids'];
+					if ($this-> getMontantDeboursFactureDossier2($reponse['ref_fact'], 11, $reponse['id_dos'])>0) {
+						$reponse['ceec'] = $this-> getMontantDeboursFactureDossier2($reponse['ref_fact'], 11, $reponse['id_dos']);
+					}else{
+						$reponse['ceec'] = $this-> getMontantDeboursFactureDossier2($reponse['ref_fact'], 12, $reponse['id_dos']);
+					}
+
+					if ($this-> getMontantDeboursFactureDossier2($reponse['ref_fact'], 54, $reponse['id_dos'])>0) {
+						$reponse['finance_cost'] = $this-> getMontantDeboursFactureDossier2($reponse['ref_fact'], 54, $reponse['id_dos']);
+					}else{
+						$reponse['finance_cost'] = $this-> getMontantDeboursFactureDossier2($reponse['ref_fact'], 101, $reponse['id_dos']);
+					}
+
+					$reponse['occ_sample'] = $this-> getMontantDeboursFactureDossier2($reponse['ref_fact'], 9, $reponse['id_dos']);
+					$reponse['cgea'] = $this-> getMontantDeboursFactureDossier2($reponse['ref_fact'], 10, $reponse['id_dos']);
+					$reponse['dgda_seal'] = $this-> getMontantDeboursFactureDossier2($reponse['ref_fact'], 13, $reponse['id_dos']);
+					$reponse['assay'] = $this-> getMontantDeboursFactureDossier2($reponse['ref_fact'], 15, $reponse['id_dos']);
+
 					$rows[] = $reponse;
 				}$requete-> closeCursor();
 				
@@ -37903,9 +37999,10 @@
 
 		}
 
-		public function creerDossierRisque($ref_doc, $date_doc, $date_recept, $id_bur_douane, $id_etap, $date_proch_pres, $id_reg, $fichier, $id_util){
+		public function creerDossierRisque($ref_doc, $id_cli, $date_doc, $date_recept, $id_bur_douane, $id_etap, $date_proch_pres, $id_reg, $fichier, $id_util){
 			include('connexion.php');
 			$entree['ref_doc']=$ref_doc;
+			$entree['id_cli']=$id_cli;
 			$entree['date_doc']=$date_doc;
 			$entree['date_recept']=$date_recept;
 			$entree['id_bur_douane']=$id_bur_douane;
@@ -37915,11 +38012,11 @@
 			$entree['fichier']=$fichier;
 			$entree['id_util']=$id_util;
 
-			$requete = $connexion-> prepare('INSERT INTO dossier_risque_douane(ref_doc, date_doc, date_recept, 
+			$requete = $connexion-> prepare('INSERT INTO dossier_risque_douane(ref_doc, id_cli, date_doc, date_recept, 
 																id_bur_douane, id_etap, date_proch_pres, 
 																id_reg, fichier, id_util) 
-												VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)');
-			$requete-> execute(array($entree['ref_doc'], $entree['date_doc'], $entree['date_recept'], $entree['id_bur_douane'], $entree['id_etap'], $entree['date_proch_pres'], $entree['id_reg'], $entree['fichier'], $entree['id_util']));
+												VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
+			$requete-> execute(array($entree['ref_doc'], $entree['id_cli'], $entree['date_doc'], $entree['date_recept'], $entree['id_bur_douane'], $entree['id_etap'], $entree['date_proch_pres'], $entree['id_reg'], $entree['fichier'], $entree['id_util']));
 
 		}
 
@@ -38111,13 +38208,16 @@
 
 			$row = array();
 
-			$requete = $connexion-> query("SELECT *
-											FROM dossier_risque_douane dos, bureau_douane bur, modele_licence ml, regime reg, etape_risque_douane et, senario_pv sen
+			$requete = $connexion-> query("SELECT *,
+												DATE_FORMAT(dos.date_recept, '%d/%m/%Y') AS date_recept,
+												DATE_FORMAT(dos.date_doc, '%d/%m/%Y') AS date_doc
+											FROM dossier_risque_douane dos, bureau_douane bur, modele_licence ml, regime reg, etape_risque_douane et, senario_pv sen, client cl
 											WHERE dos.id_bur_douane = bur.id_bur_douane
 												AND dos.id_reg = reg.id_reg
 												AND reg.id_mod_lic = ml.id_mod_lic
 												AND dos.id_etap = et.id_etap
-												AND dos.id_sen = sen.id_sen");
+												AND dos.id_sen = sen.id_sen
+												AND dos.id_cli = cl.id_cli");
 			// $requete-> execute(array($entree['id_mod_lic'], $entree['id_cli']));
 			while ($reponse = $requete-> fetch()) {
 				$compteur++;
@@ -38208,6 +38308,40 @@
 
 		}
 
+		public function document_joint_risque($id){
+			include("connexion.php");
+			$entree['id'] = $id;
+			$compteur=0;
+
+			$tableau = '';
+
+			$requete = $connexion-> prepare("SELECT dr.nom_doc AS nom_doc,
+													DATE_FORMAT(djr.date_create, '%d/%m/%Y') AS date_create,
+													CONCAT('<a href=\"#\" class=\"btn btn-xs btn-info\" title=\"Fichier\" onclick=\"window.open(\'../pv/',id,'/',djr.fichier,'\',\'pop6\',\'width=900,height=500\');\">
+																	<img src=\"../images/dossier (1).png\" width=\"15px\"> Cliquez pour voir le fichier
+															</a>') AS btn_fichier
+											FROM document_joint_risque djr, document_risque dr, dossier_risque_douane dos
+											WHERE dos.id = ?
+												AND dos.id = djr.id_dos
+												AND djr.id_doc = dr.id_doc");
+			$requete-> execute(array($entree['id']));
+			while($reponse = $requete-> fetch()){
+				$compteur++;
+				$tableau .= '<tr>
+								<td>'.$compteur.'</td>
+								<td style="text-align: left;">'.$reponse['nom_doc'].'</td>
+								<td style="text-align: center;">'.$reponse['date_create'].'</td>
+								<td style="">
+									'.$reponse['btn_fichier'].'
+								</td>
+							</tr>';
+			}
+			return $tableau;
+
+			
+
+		}
+
 		public function deletePresentation($id_pres){
 			include("connexion.php");
 			$entree['id_pres'] = $id_pres;
@@ -38277,6 +38411,19 @@
 			$requete = $connexion-> prepare("INSERT INTO presentation_risque_douane(id, date_prevu, date_pres, remarque, fichier, id_util)
 												VALUES(?, ?, ?, ?, ?, ?)");
 			$requete-> execute(array($entree['id'], $entree['date_prevu'], $entree['date_pres'], $entree['remarque'], $entree['fichier'], $_SESSION['id_util']));
+			
+
+		}
+
+		public function creerDocumentJointRisque($id, $id_doc, $fichier){
+			include("connexion.php");
+			$entree['id'] = $id;
+			$entree['id_doc'] = $id_doc;
+			$entree['fichier'] = $fichier;
+
+			$requete = $connexion-> prepare("INSERT INTO document_joint_risque(id_dos, id_doc, fichier, id_util)
+												VALUES(?, ?, ?, ?)");
+			$requete-> execute(array($entree['id'], $entree['id_doc'], $entree['fichier'], $_SESSION['id_util']));
 			
 
 		}
@@ -38432,6 +38579,39 @@
 			}$requete-> closeCursor();
 
 			return $select;
+		}
+		
+		public function selectionnerDocumentRisqueAjax(){
+			include('connexion.php');
+			$select = "";
+			$requete = $connexion-> query("SELECT *
+											FROM document_risque");
+
+
+			while($reponse = $requete-> fetch()){
+				$select .= '<option value="'.$reponse['id_doc'].'">
+								'.$reponse['nom_doc'].'
+							</option>';
+			}$requete-> closeCursor();
+
+			return $select;
+		}
+
+		public function selectionnerDocumentRisque(){
+			include('connexion.php');
+			$select = "";
+			$requete = $connexion-> query("SELECT *
+											FROM document_risque");
+
+
+			while($reponse = $requete-> fetch()){
+				?>
+				<option value="<?php echo $reponse['id_doc'];?>">
+					<?php echo $reponse['nom_doc'];?>
+				</option>
+					<?php
+			}$requete-> closeCursor();
+
 		}
 
 		public function modificationPVContentieux($id_pv, $ref_pv, $date_pv, $date_reception, $id_bur_douane, $annee, $marchandise, $id_cli, $id_mod_lic, $id_etat, $id_sen, $remarque, $date_deb_contrad, $date_next_pres, $delai_grief, $infraction, $droit_cdf, $droit_usd, $amende_cdf, $amende_usd, $risque_potentiel){
