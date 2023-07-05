@@ -84,7 +84,7 @@
               <img src="../images/gestion-des-risques.png" width="25px">
               <span class="">
               <p>
-                CONTENETIEUX<br>
+                DOSSSIERS CONTENTIEUX<br>
               </p></span>
             </a>
           </li>

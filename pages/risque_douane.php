@@ -14,7 +14,7 @@
     <section class="content-header">
       <div class="container-fluid">
         <div class="header">
-          <h5><img src="../images/conforme.png" width="30px"> Contentieux</h5>
+          <h5><img src="../images/conforme.png" width="30px"> Dossiers Contentieux</h5>
         </div>
 
       </div><!-- /.container-fluid -->
