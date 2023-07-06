@@ -74,6 +74,8 @@
                       <th style="">Reference</th>
                       <th style=""></th>
                       <th style="">Client</th>
+                      <th style="">Presentation Prevue</th>
+                      <th style="">Delai</th>
                       <th style="">Etape / Type</th>
                       <th style="">Statut</th>
                       <th style="">Date Document</th>
@@ -471,15 +473,12 @@
   </div>
   <!-- /.modal-dialog -->
 </div>
-
+<!-- 
+<div id="load2">
+  <img src="../images/In turn appearing.gif">
+</div>
+ -->
 <script type="text/javascript">
-
-
-  $(document).ready(function(){
-
-    getNombreDossierRisqueDouane();
-
-  });
 
   function getNombreDossierRisqueDouane(){
 
@@ -675,6 +674,18 @@
 
   }
 
+  function blink_text(blink) {
+      // blink.fadeOut(500);
+      // blink.fadeIn(500);
+  }
+  setInterval(blink_text, 1000);
+
+  $(document).ready(function(){
+
+    getNombreDossierRisqueDouane();
+
+  });
+
   $('#file_data_dossier_risque_douane').DataTable({
      lengthMenu: [
         [10, 100, 500, -1],
@@ -700,7 +711,14 @@
           className: 'btn btn-dark'
         }
     ],
-    
+    'rowCallback': function(row, data, index){
+      
+      if($(row).find('td:eq(5)').text()<0){
+        console.log($(row).find('td:eq(5)').text());
+          $(row).find('td:eq(5)').addClass('bg bg-danger');
+          $(row).addClass('text-danger');
+        }
+      },
   "paging": true,
   "lengthChange": true,
   "searching": true,
@@ -724,6 +742,8 @@
       {"data":"ref_doc"},
       {"data":"btn_action"},
       {"data":"nom_cli"},
+      {"data":"date_prevu"},
+      {"data":"delai"},
       {"data":"nom_etap"},
       {"data":"nom_sen"},
       {"data":"date_doc"},
