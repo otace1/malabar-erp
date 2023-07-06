@@ -38125,12 +38125,13 @@
 			$requete = $connexion-> query("SELECT *, DATE_FORMAT(ec.date_e, '%Y-%m-%d') AS date_e_2,
 												SUM(det.debit) AS debit,
 												SUM(det.credit) AS credit
-											FROM ecriture ec, detail_ecriture det, compte c, journal j
+											FROM ecriture ec, detail_ecriture det, compte c, journal j, type_ecriture te
 											WHERE ec.id_jour = j.id_jour
 												AND ec.id_e = det.id_e
 												AND det.id_compte = c.id_compte
+												AND ec.id_t_e = te.id_t_e
 											GROUP BY ec.id_e
-											ORDER BY ec.id_e DESC");
+											ORDER BY ec.id_e ");
 			// $requete-> execute(array($entree['id_mod_lic'], $entree['id_cli']));
 			while ($reponse = $requete-> fetch()) {
 				$compteur++;
