@@ -38211,16 +38211,42 @@
 
 			$row = array();
 
+			// $requete = $connexion-> query("SELECT *,
+			// 									DATE_FORMAT(dos.date_recept, '%d/%m/%Y') AS date_recept,
+			// 									DATE_FORMAT(dos.date_doc, '%d/%m/%Y') AS date_doc
+			// 								FROM dossier_risque_douane dos, bureau_douane bur, modele_licence ml, regime reg, etape_risque_douane et, senario_pv sen, client cl
+			// 								WHERE dos.id_bur_douane = bur.id_bur_douane
+			// 									AND dos.id_reg = reg.id_reg
+			// 									AND reg.id_mod_lic = ml.id_mod_lic
+			// 									AND dos.id_etap = et.id_etap
+			// 									AND dos.id_sen = sen.id_sen
+			// 									AND dos.id_cli = cl.id_cli");
+
 			$requete = $connexion-> query("SELECT *,
 												DATE_FORMAT(dos.date_recept, '%d/%m/%Y') AS date_recept,
-												DATE_FORMAT(dos.date_doc, '%d/%m/%Y') AS date_doc
-											FROM dossier_risque_douane dos, bureau_douane bur, modele_licence ml, regime reg, etape_risque_douane et, senario_pv sen, client cl
-											WHERE dos.id_bur_douane = bur.id_bur_douane
-												AND dos.id_reg = reg.id_reg
-												AND reg.id_mod_lic = ml.id_mod_lic
-												AND dos.id_etap = et.id_etap
-												AND dos.id_sen = sen.id_sen
-												AND dos.id_cli = cl.id_cli");
+												DATE_FORMAT(dos.date_doc, '%d/%m/%Y') AS date_doc,
+												DATE_FORMAT(prd.date_prevu, '%d/%m/%Y') AS date_prevu,
+												dos.id AS id,
+												IF(prd.date_pres IS NOT NULL,
+													'',
+													DATEDIFF(prd.date_prevu, CURRENT_DATE())
+												) AS delai
+											FROM dossier_risque_douane dos
+												LEFT JOIN bureau_douane bur 
+													ON dos.id_bur_douane = bur.id_bur_douane
+												LEFT JOIN regime reg 
+													ON dos.id_reg = reg.id_reg 
+												LEFT JOIN modele_licence ml
+													ON reg.id_mod_lic = ml.id_mod_lic 
+												LEFT JOIN etape_risque_douane et
+													ON dos.id_etap = et.id_etap 
+												LEFT JOIN senario_pv sen 
+													ON dos.id_sen = sen.id_sen 
+												LEFT JOIN client cl
+													ON dos.id_cli = cl.id_cli
+												LEFT JOIN presentation_risque_douane prd
+													ON dos.id = prd.id
+														AND prd.date_pres IS NULL");
 			// $requete-> execute(array($entree['id_mod_lic'], $entree['id_cli']));
 			while ($reponse = $requete-> fetch()) {
 				$compteur++;
