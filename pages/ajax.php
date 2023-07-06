@@ -1294,7 +1294,7 @@
 
 		}
 
-		$response['message'] = 'Ecriture Creee';
+		$response['message'] = 'Done!';
 
 		echo json_encode($response);
 
@@ -1722,7 +1722,7 @@
 
 		}
 
-		$response['message'] = 'Ecriture Creee';
+		$response['message'] = 'Done!';
 
 		echo json_encode($response);
 
@@ -1759,6 +1759,44 @@
 		$response['document_joint_risque'] = $maClasse-> document_joint_risque($_POST['id']);
         echo json_encode($response);exit;
 
-    }
+    }else if ($_POST['operation']=='creerEcriture_1') {
+	  
+		$maClasse-> creerEcriture($_POST['date_e'], $_POST['libelle_e'], $_POST['id_jour'], $_POST['id_taux'], $_SESSION['id_util'], $_POST['id_t_e'], $_POST['reference']);
+
+		$id_e = $maClasse-> getLastEcritureUtilisateur($_SESSION['id_util'])['id_e'];
+
+		$total = 0;
+
+		if ($_POST['mvt']=='debit') {
+
+			for ($i=1; $i <=$_POST['nbre'] ; $i++) { 
+			
+				if (isset($_POST['id_compte_'.$i])&&($_POST['montant_'.$i]>0)) {
+					$total += $_POST['montant_'.$i];
+					$maClasse-> creerDetailEcriture($id_e, $_POST['id_compte_'.$i], NULL, $_POST['montant_'.$i]);
+				}
+
+			}
+			$maClasse-> creerDetailEcriture($id_e, $_POST['id_compte_0'], $total, NULL);
+
+		}else if ($_POST['mvt']=='credit') {
+
+			for ($i=1; $i <=$_POST['nbre'] ; $i++) { 
+			
+				if (isset($_POST['id_compte_'.$i])&&($_POST['montant_'.$i]>0)) {
+					$total += $_POST['montant_'.$i];
+					$maClasse-> creerDetailEcriture($id_e, $_POST['id_compte_'.$i], $_POST['montant_'.$i], NULL);
+				}
+
+			}
+			$maClasse-> creerDetailEcriture($id_e, $_POST['id_compte_0'], NULL, $total);
+		}
+
+
+		$response['message'] = 'Done!';
+
+		echo json_encode($response);
+
+	}
 
 ?>

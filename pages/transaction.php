@@ -37,7 +37,8 @@
                       <th style="">ID</th>
                       <th style="">Naration</th>
                       <th style="">Date</th>
-                      <th style="">Reference</th>
+                      <th style="">Voucher Type</th>
+                      <th style="">Doc.Support Ref.</th>
                       <th style="">Register</th>
                       <th style="">Amount</th>
                     </tr>
@@ -67,14 +68,14 @@
   // ------------------------------------------------------------------------------------------------------
   ?>
 
-<div class="modal fade creerEcritureComptable" id="modal_creerEcritureComptable">
+<div class="modal fade creerEcritureComptable_1" id="modal_creerEcritureComptable_1">
   <div class="modal-dialog modal-lg">
-    <form method="POST" action="" id="creerEcriture_form">
-    <input type="hidden" name="operation" value="creerEcriture">
+    <form method="POST" action="" id="creerEcriture_1_form">
+    <input type="hidden" name="operation" value="creerEcriture_1">
     <input type="hidden" name="id_taux" value="<?php echo $maClasse-> getLastTaux()['id_taux'];?>">
     <div class="modal-content">
       <div class="modal-header ">
-        <h4 class="modal-title"><i class="fa fa-plus"></i> Accounting Voucher Creation</h4>
+        <h4 class="modal-title"><i class="fa fa-plus"></i> Accounting Voucher Creation | Single Entry</h4>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -93,13 +94,168 @@
           </div>
 
           <div class="col-md-3">
-            <label for="x_card_code" class="control-label mb-1">Doc.Ref.</label>
+            <label for="x_card_code" class="control-label mb-1">Doc.Support Ref.</label>
             <input class="form-control cc-exp form-control-sm" type="text" id="reference" name="reference" required>
           </div>
 
           <div class="col-md-3">
             <label for="x_card_code" class="control-label mb-1">Date</label>
-            <input class="form-control cc-exp form-control-sm" type="date" id="date_e" name="date_e" required>
+            <input class="form-control cc-exp form-control-sm" value="<?php echo date('Y-m-d');?>" type="date" id="date_e" name="date_e" required>
+          </div>
+
+          <div class="col-md-3">
+            <label for="x_card_code" class="control-label mb-1">Journal</label>
+            <select name="id_jour" id="id_jour" class="form-control cc-exp form-control-sm" required>
+              <option></option>
+                <?php
+                  $maClasse->selectionnerJournal();
+                ?>
+            </select>
+          </div>
+
+          <div class="col-md-12">
+            <hr>
+          </div>
+
+          <div class="col-md-9">
+            <label for="x_card_code" class="control-label mb-1">Account</label>
+            <div class="input-group mb-3  input-group-sm">
+              <div class="input-group-prepend">
+                <button type="button" class="btn btn-sm btn-info" onclick="liste_compte(0);"><i class="fa fa-list"></i></button>
+              </div>
+            <!-- /btn-group -->
+              <input type="text" id="nom_compte_0" class="form-control text-dark form-control-sm" disabled>
+              <span class="input-group-append">
+                <button type="button" class="btn btn-default text-danger btn-flat" onclick="remove_compte(0);">
+                  <span class="fa fa-times"></span>
+                </button>
+              </span>
+            </div>
+            <input type="hidden" id="id_compte_0" name="id_compte_0">
+            <span class="small" id="solde_compte_0"></span>
+          </div>
+
+          <div class="col-md-3">
+            <label for="x_card_code" class="control-label mb-1">Mvt</label>
+            <select name="mvt" id="mvt" class="form-control cc-exp form-control-sm" required>
+              <option></option>
+              <option value="debit">Debit</option>
+              <option value="credit">Credit</option>
+            </select>
+          </div>
+
+          <div class="col-md-12">
+            <hr>
+          </div>
+          
+          <div class="col-md-12 table-responsive" style="height: 300px;">
+            <table class="small table table-head-fixed table-foot-fixed table-bordered table-hover text-nowrap table-sm">
+              <thead>
+                <tr class="">
+                  <th style="" width="5%">#</th>
+                  <th style="">Particular</th>
+                  <th style=" text-align: center;" width="20%">Amount</th>
+                </tr>
+              </thead>
+              <tbody id="">
+                <?php
+                for ($i=1; $i <=10 ; $i++) { 
+                  ?>
+                  <tr>
+                    <td style="text-align: center;">
+                      <?php echo $i;?>
+                    </td>
+                    <td>
+                      <div class="input-group mb-3  input-group-sm">
+                        <div class="input-group-prepend">
+                          <button type="button" class="btn btn-sm btn-info" onclick="liste_compte(<?php echo $i;?>);"><i class="fa fa-list"></i></button>
+                        </div>
+                      <!-- /btn-group -->
+                        <input type="text" id="nom_compte_<?php echo $i;?>" class="form-control text-dark form-control-sm" disabled>
+                        <span class="input-group-append">
+                          <button type="button" class="btn btn-default text-danger btn-flat" onclick="remove_compte(<?php echo $i;?>);">
+                            <span class="fa fa-times"></span>
+                          </button>
+                        </span>
+                      </div>
+                      <input type="hidden" id="id_compte_<?php echo $i;?>" name="id_compte_<?php echo $i;?>">
+                      <span class="small" id="solde_compte_<?php echo $i;?>"></span>
+                    </td>
+                    <td>
+                      <input class="form-control cc-exp form-control-sm text-center" type="number" onblur="getTotal1();" id="montant_<?php echo $i;?>" name="montant_<?php echo $i;?>">
+                    </td>
+                  </tr>
+                  <?php
+                }
+                ?>
+              </tbody>
+              <tfoot>
+                
+                <input type="hidden" name="nbre" value="<?php echo $i;?>">
+                  <tr>
+                    <td style="text-align: right;" colspan="2">
+                      TOTAL
+                    </td>
+                    <td>
+                      <input class="form-control cc-exp form-control-sm text-danger text-dark text-weight text-center" type="number" disabled id="total_1" name="total_1">
+                    </td>
+                  </tr>
+              </tfoot>
+            </table>
+          </div>
+          <div class="col-6 small">
+            <label for="x_card_code" class="control-label mb-1">Naration</label>
+            <textarea class="form-control form-control-sm" name="libelle_e" required></textarea>
+          </div>
+          <div class="col-6 text-right">
+            <span>Total <span class="text-md badge badge-dark" id="total_debit_1"></span></span>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer justify-content-between">
+        <!-- <button type="button" class="btn-xs btn-danger" data-dismiss="modal">Annuler</button> -->
+        <button type="submit" name="" class="btn-xs btn-primary">Submit</button>
+      </div>
+    </div>
+    </form>
+    <!-- /.modal-content -->
+  </div>
+  <!-- /.modal-dialog -->
+</div>
+
+<div class="modal fade creerEcritureComptable" id="modal_creerEcritureComptable">
+  <div class="modal-dialog modal-lg">
+    <form method="POST" action="" id="creerEcriture_form">
+    <input type="hidden" name="operation" value="creerEcriture">
+    <input type="hidden" name="id_taux" value="<?php echo $maClasse-> getLastTaux()['id_taux'];?>">
+    <div class="modal-content">
+      <div class="modal-header ">
+        <h4 class="modal-title"><i class="fa fa-plus"></i> Accounting Voucher Creation | Double Entry</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+
+          <div class="col-md-3">
+            <label for="x_card_code" class="control-label mb-1">Type</label>
+            <select name="id_t_e" id="id_t_e" class="form-control cc-exp form-control-sm" required>
+              <option></option>
+                <?php
+                  $maClasse->selectionnerTypeEcriture();
+                ?>
+            </select>
+          </div>
+
+          <div class="col-md-3">
+            <label for="x_card_code" class="control-label mb-1">Doc.Support Ref.</label>
+            <input class="form-control cc-exp form-control-sm" type="text" id="reference" name="reference" required>
+          </div>
+
+          <div class="col-md-3">
+            <label for="x_card_code" class="control-label mb-1">Date</label>
+            <input class="form-control cc-exp form-control-sm" value="<?php echo date('Y-m-d');?>" type="date" id="date_e" name="date_e" required>
           </div>
 
           <div class="col-md-3">
@@ -225,7 +381,7 @@
                 <tr class="">
                   <th width="5%">#</th>
                   <th style="">Name</th>
-                  <th style="">Solde</th>
+                  <th style="">Balance</th>
                 </tr>
               </thead>
               <tbody id="liste_compte">
@@ -560,6 +716,22 @@
     // $('#total_credit_2').html(total_credit);
   }
 
+  function getTotal1(){
+    total_1 = 0;
+    for (var i = 1; i <= 5; i++) {
+       
+      if (parseFloat($('#montant_'+i).val()) > 0 ) {
+        total_1 += parseFloat($('#montant_'+i).val());
+      }
+
+    }
+    // console.log(total);
+    $('#total_1').val(total_1);
+    $('#total_debit_1').html(new Intl.NumberFormat('en-DE').format(Math.round(total_1*1000)/1000));
+    // $('#total_debit_2').html(total_debit);
+    // $('#total_credit_2').html(total_credit);
+  }
+
   function remove_compte(compteur_compte){
     
     $('#nom_compte_'+compteur_compte).val('');
@@ -621,13 +793,33 @@
     ],
     dom: 'Bfrtip',
     buttons: [
-        {
-          text: '<i class="fa fa-plus"></i> Accounting Voucher Creation',
-          className: 'btn btn-info bt',
-          action: function ( e, dt, node, config ) {
-              $('#modal_creerEcritureComptable').modal('show');
-          }
+      {
+            extend: 'collection',
+            text: '<i class="fa fa-plus"></i> Accounting Voucher Creation',
+            buttons: [
+                {
+                  text: '<i class="fa fa-window-maximize"></i> Single Entry',
+                  className: 'btn btn-info bt',
+                  action: function ( e, dt, node, config ) {
+                      $( '#creerEcriture_1_form' ).each(function(){
+                        this.reset();
+                      });
+                      $('#modal_creerEcritureComptable_1').modal('show');
+                  }
+                },
+                {
+                  text: '<i class="fa fa-columns"></i> Double Entry',
+                  className: 'btn btn-info bt',
+                  action: function ( e, dt, node, config ) {
+                      $( '#creerEcriture_form' ).each(function(){
+                        this.reset();
+                      });
+                      $('#modal_creerEcritureComptable').modal('show');
+                  }
+                }
+            ]
         },
+        ,
         {
           extend: 'excel',
           text: '<i class="fa fa-file-excel"></i> Extract In Excel',
@@ -670,6 +862,7 @@
       {"data":"id_e"},
       {"data":"libelle_e"},
       {"data":"date_e_2"},
+      {"data":"nom_t_e"},
       {"data":"reference"},
       {"data":"nom_jour"},
       {"data":"debit",
@@ -681,14 +874,14 @@
 
   $(document).ready(function(){
 
-    $('#form_creerEcritureComptable').submit(function(e){
+    $('#creerEcriture_1_form').submit(function(e){
 
       e.preventDefault();
 
-       if(confirm('Voulez-vous creer cette notification ?')) {
+       if(confirm('Do you really want to submit ?')) {
           
           $('#spinner-div').show();
-          $('#modal_creerEcritureComptable').modal('hide');
+          $('#modal_creerEcritureComptable_1').modal('hide');
 
           var fd = new FormData(this);
           // alert($(this).attr('action'));
@@ -711,8 +904,7 @@
                 });
 
                 $('#file_data_ecriture_comptable').DataTable().ajax.reload();
-                getNombreDossierRisqueDouane();
-                alert(data.message);
+                $('#spinner-div').hide();//Request is complete so hide spinner
               }
             },
             complete: function () {
