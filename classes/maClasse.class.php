@@ -35117,6 +35117,7 @@
 													dos.ref_decl AS ref_decl,
 													DATE_FORMAT(dos.date_decl, '%d/%m/%Y') AS date_decl,
 													dos.ref_liq AS ref_liq,
+													dos.montant_liq AS montant_liq,
 													DATE_FORMAT(dos.date_liq, '%d/%m/%Y') AS date_liq,
 													dos.ref_quit AS ref_quit,
 													DATE_FORMAT(dos.date_quit, '%d/%m/%Y') AS date_quit,
