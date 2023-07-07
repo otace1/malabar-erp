@@ -155,6 +155,7 @@
                       <th style="">E.Date</th>
                       <th style="">L.Ref.</th>
                       <th style="">L.Date</th>
+                      <th style="">L.Amount</th>
                       <th style="">Q.Ref.</th>
                       <th style="">Q.Date</th>
                       <th style="">Delay</th>
@@ -523,6 +524,10 @@
           {"data":"date_decl"},
           {"data":"ref_liq"},
           {"data":"date_liq"},
+          {"data":"montant_liq",
+            render: DataTable.render.number( null, null, 2, null ),
+            className: 'dt-body-right'
+          },
           {"data":"ref_quit"},
           {"data":"date_quit"},
           {"data":"delay"}

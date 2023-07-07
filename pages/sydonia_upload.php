@@ -191,6 +191,7 @@
                             $date_liq = $worsheet-> getCellByColumnAndRow(4, $row)-> getFormattedValue();
                             $ref_quit = $worsheet-> getCellByColumnAndRow(5, $row)-> getValue();
                             $date_quit = $worsheet-> getCellByColumnAndRow(6, $row)-> getFormattedValue();
+                            $montant_liq = $worsheet-> getCellByColumnAndRow(5, $row)-> getValue();
 
                             $id_dos = $maClasse-> getDossierRefDos($ref_dos)['id_dos'];
                             //echo '<br> id_dos  = '.$id_dos;
@@ -274,6 +275,13 @@
                                 }
 
                               }
+
+                              if ($montant_liq > 1 && $montant_liq != $maClasse->getDossier($id_dos)['montant_liq']) {
+                                
+                                $maClasse-> MAJ_montant_liq($id_dos, $montant_liq);
+
+                              }
+
 
                             }
 
