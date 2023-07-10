@@ -117,6 +117,7 @@
                   <th>CEEC (UPTO 30MT)($)</th>
                   <th>CEEC (30MT to 60MT)($)</th>
                   <th>DGDA SEALS($)</th>
+                  <th>DM/CE/OCC($)</th>
                   <th>ASSAY FEE($)</th>
                   <th>OCC FEES($)</th>
                   <th>CEEC FEES($)</th>

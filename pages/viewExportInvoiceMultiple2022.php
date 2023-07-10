@@ -238,7 +238,7 @@ if ($facture['id_cli']==864 || $facture['id_cli']==878 || $facture['id_cli']==87
 					<br>&nbsp;R.D. CONGO</td>
 					<td width="10%"></td>
 				</tr>';
-}else if ($facture['id_cli']==875 || $facture['id_cli']==911) {
+}else if ($facture['id_cli']==875 || $facture['id_cli']==911 || $facture['id_cli']==901) {
 	$banque = '<tr>
 					<td width="10%" style="border-top: 1px solid black; border-left: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;INTITULE</td>
 					<td width="35%" style="border-top: 1px solid black; border-right: 1px solid black;  font-size: 7px;">&nbsp;MALABAR RDC SARL</td>

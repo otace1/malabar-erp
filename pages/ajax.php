@@ -235,6 +235,7 @@
 	  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 11, $_POST['ceec_30_'.$i], $_POST['ceec_30_tva_'.$i], '1');
 	  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 12, $_POST['ceec_60_'.$i], $_POST['ceec_60_tva_'.$i], '1');
 	  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 13, $_POST['dgda_seal_'.$i], $_POST['dgda_seal_tva_'.$i], '1');
+	  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 172, $_POST['dmc_ce_'.$i], $_POST['dmc_ce_tva_'.$i], '1');
 	  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 15, $_POST['assay_'.$i], $_POST['assay_tva_'.$i], '1');
 	  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 18, $_POST['occ_fees_'.$i], $_POST['occ_fees_tva_'.$i], '1');
 	  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 17, $_POST['com_ext_'.$i], $_POST['com_ext_tva_'.$i], '1');
@@ -500,6 +501,7 @@
 	  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 11, $_POST['ceec_30_'.$i], $_POST['ceec_30_tva_'.$i], '1');
 	  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 12, $_POST['ceec_60_'.$i], $_POST['ceec_60_tva_'.$i], '1');
 	  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 13, $_POST['dgda_seal_'.$i], $_POST['dgda_seal_tva_'.$i], '1');
+	  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 172, $_POST['dmc_ce_'.$i], $_POST['dmc_ce_tva_'.$i], '1');
 	  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 15, $_POST['assay_'.$i], $_POST['assay_tva_'.$i], '1');
 	  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 18, $_POST['occ_fees_'.$i], $_POST['occ_fees_tva_'.$i], '1');
 	  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 17, $_POST['com_ext_'.$i], $_POST['com_ext_tva_'.$i], '1');
