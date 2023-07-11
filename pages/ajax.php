@@ -1601,6 +1601,9 @@
 
     }else if ($_POST['operation']=="dossier_risque_douane") {
 		echo json_encode($maClasse-> dossier_risque_douane());
+
+		$response['selectionnerBureauDouane'] = $maClasse-> selectionnerBureauDouaneAjax2();
+		$response['selectionnerRegime'] = $maClasse-> selectionnerRegimeGroupingAjax();
 	}else if ($_POST['operation']=='modal_dossier_risque_douane') {
 		  
 		$response = $maClasse-> get_dossier_risque_douane($_POST['id']);
@@ -1799,6 +1802,35 @@
 
 		echo json_encode($response);
 
+	}else if ($_POST['operation']=='creerBureauDouane') {
+	  
+		$maClasse-> creerBureauDouane($_POST['nom_bur_douane']);
+		$response['message'] = 'Done!';
+		$response['selectionnerBureauDouane'] = $maClasse-> selectionnerBureauDouaneAjax2();
+
+		echo json_encode($response);
+
+	}else if ($_POST['operation']=='creerRegime') {
+	  
+		$maClasse-> creerRegime($_POST['nom_reg'], $_POST['id_mod_lic']);
+		$response['message'] = 'Done!';
+		$response['selectionnerRegime'] = $maClasse-> selectionnerRegimeGroupingAjax();
+
+		echo json_encode($response);
+
+	}else if ($_POST['operation']=='selectionnerBureauDouane') {
+	  
+		$response['selectionnerBureauDouane'] = $maClasse-> selectionnerBureauDouaneAjax2();
+		$response['selectionnerRegime'] = $maClasse-> selectionnerRegimeGroupingAjax();
+
+		echo json_encode($response);
+
+	}else if ($_POST['operation']=="getSelectRisque") {
+		$response['selectionnerBureauDouane'] = $maClasse-> selectionnerBureauDouaneAjax2();
+		$response['selectionnerRegime'] = $maClasse-> selectionnerRegimeGroupingAjax();
+		$response['selectionnerBureauDouane_edit'] = $maClasse-> selectionnerBureauDouaneAjax2_edit();
+		$response['selectionnerRegime_edit'] = $maClasse-> selectionnerRegimeGroupingAjax_edit();
+		echo json_encode($response);
 	}
 
 ?>

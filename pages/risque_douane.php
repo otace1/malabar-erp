@@ -164,23 +164,13 @@
           </div>
 
           <div class="form-group">
-            <label for="x_card_code" class="control-label mb-1">Initiateur de la notification</label>
-            <select name="id_bur_douane" id="id_bur_douane" class="form-control cc-exp form-control-sm" required>
-              <option></option>
-                <?php
-                  $maClasse->selectionnerBureauDouane3();
-                ?>
-            </select>
+            <label for="x_card_code" class="control-label mb-1">Initiateur de la notification <span class="btn btn-xs btn-info" onclick="modal_creerBureauDouane();"><i class="fa fa-plus"></i></span></label>
+            <span id="selectionnerBureauDouane"></span>
           </div>
 
           <div class="form-group">
-            <label for="x_card_code" class="control-label mb-1">Procedure / Regime</label>
-            <select name="id_reg" id="id_reg" class="form-control cc-exp form-control-sm" required>
-              <option></option>
-              <?php
-                $maClasse-> selectionnerRegimeGrouping();
-              ?>
-            </select>
+            <label for="x_card_code" class="control-label mb-1">Procedure / Regime <span class="btn btn-xs btn-info" onclick="modal_creerRegime();"><i class="fa fa-plus"></i></span></label>
+            <span id="selectionnerRegime"></span>
           </div>
 
           <div class="form-group">
@@ -214,10 +204,10 @@
         </button>
       </div>
       <div class="modal-body">
+
         <div class="card card-primary card-outline card-outline-tabs">
           <div class="card-body">
             <div class="row">
-
               <div class="col-md-12">
                 <label for="x_card_code" class="control-label mb-1">Ref. Document</label>
                 <input class="form-control cc-exp form-control-sm" type="text" id="ref_doc_edit" name="ref_doc" required>
@@ -255,22 +245,12 @@
 
               <div class="col-md-6">
                 <label for="x_card_code" class="control-label mb-1">Initiateur de la notification</label>
-                <select name="id_bur_douane" id="id_bur_douane_edit" class="form-control cc-exp form-control-sm" required>
-                  <option></option>
-                    <?php
-                      $maClasse->selectionnerBureauDouane3();
-                    ?>
-                </select>
+                <span id="selectionnerBureauDouane_edit"></span>
               </div>
 
               <div class="col-md-6">
                 <label for="x_card_code" class="control-label mb-1">Procedure / Regime</label>
-                <select name="id_reg" id="id_reg_edit" class="form-control cc-exp form-control-sm" required>
-                  <option></option>
-                  <?php
-                    $maClasse-> selectionnerRegimeGrouping();
-                  ?>
-                </select>
+                <span id="selectionnerRegime_edit"></span>
               </div>
 
               <div class="col-md-12">
@@ -473,12 +453,94 @@
   </div>
   <!-- /.modal-dialog -->
 </div>
+
+<div class="modal fade creerBureauDouane" id="modal_creerBureauDouane">
+  <div class="modal-dialog modal-sm">
+    <form method="POST" id="form_creerBureauDouane" action="" data-parsley-validate enctype="multipart/form-data">
+      <input type="hidden" name="operation" value="creerBureauDouane">
+    <div class="modal-content">
+      <div class="modal-header ">
+        <h5 class="modal-title"><i class="fa fa-plus"></i> Ajouter Initiateur</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <!-- <div class="row"> -->
+
+          <div class="form-group">
+            <label for="x_card_code" class="control-label mb-1">Denomination</label>
+            <input class="form-control cc-exp form-control-sm" type="text" name="nom_bur_douane" required>
+          </div>
+
+        <!-- </div> -->
+      </div>
+      <div class="modal-footer justify-content-between">
+        <button type="button" class="btn-xs btn-danger" data-dismiss="modal">Annuler</button>
+        <button type="submit" name="" class="btn-xs btn-primary">Ajouter</button>
+      </div>
+    </div>
+    </form>
+    <!-- /.modal-content -->
+  </div>
+  <!-- /.modal-dialog -->
+</div>
+
+<div class="modal fade creerRegime" id="modal_creerRegime">
+  <div class="modal-dialog modal-sm">
+    <form method="POST" id="form_creerRegime" action="" data-parsley-validate enctype="multipart/form-data">
+      <input type="hidden" name="operation" value="creerRegime">
+    <div class="modal-content">
+      <div class="modal-header ">
+        <h5 class="modal-title"><i class="fa fa-plus"></i> Ajouter Regime</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <!-- <div class="row"> -->
+
+          <div class="form-group">
+            <label for="x_card_code" class="control-label mb-1">Denomination</label>
+            <input class="form-control cc-exp form-control-sm" type="text" name="nom_reg" required>
+          </div>
+
+          <div class="form-group">
+            <label for="x_card_code" class="control-label mb-1">Type</label>
+            <select class="form-control cc-exp form-control-sm" name="id_mod_lic" required>
+              <option></option>
+              <option value="2">Import</option>
+              <option value="1">Export</option>
+            </select>
+          </div>
+
+        <!-- </div> -->
+      </div>
+      <div class="modal-footer justify-content-between">
+        <button type="button" class="btn-xs btn-danger" data-dismiss="modal">Annuler</button>
+        <button type="submit" name="" class="btn-xs btn-primary">Ajouter</button>
+      </div>
+    </div>
+    </form>
+    <!-- /.modal-content -->
+  </div>
+  <!-- /.modal-dialog -->
+</div>
+
 <!-- 
 <div id="load2">
   <img src="../images/In turn appearing.gif">
 </div>
  -->
 <script type="text/javascript">
+
+  function modal_creerBureauDouane(){
+    $('#modal_creerBureauDouane').modal('show');
+  }
+
+  function modal_creerRegime(){
+    $('#modal_creerRegime').modal('show');
+  }
 
   function getNombreDossierRisqueDouane(){
 
@@ -536,6 +598,98 @@
                 
                 $('#presentation_risque_douane').html(data.presentation_risque_douane);
                 getNombreDossierRisqueDouane();
+              }
+            },
+            complete: function () {
+                loadPV();
+                $('#spinner-div').hide();//Request is complete so hide spinner
+            }
+
+          });
+
+
+      }
+
+    });
+  
+  });
+
+  $(document).ready(function(){
+
+    $('#form_creerRegime').submit(function(e){
+
+      e.preventDefault();
+
+       if(confirm('Voulez-vous ajouter ce regime ?')) {
+          
+          $('#spinner-div').show();
+          $('#modal_creerRegime').modal('hide');
+
+          var fd = new FormData(this);
+          // alert($(this).attr('action'));
+          $.ajax({
+
+            url: 'ajax.php',
+            type: 'post',
+            processData: false,
+            contentType: false,
+            data: fd,
+            dataType: 'json',
+            success:function(data){
+              if (data.logout) {
+                alert(data.logout);
+                window.location="../deconnexion.php";
+              }else{
+                
+                $('#selectionnerRegime').html(data.selectionnerRegime);
+                getSelectRisque();
+
+              }
+            },
+            complete: function () {
+                loadPV();
+                $('#spinner-div').hide();//Request is complete so hide spinner
+            }
+
+          });
+
+
+      }
+
+    });
+  
+  });
+
+  $(document).ready(function(){
+
+    $('#form_creerBureauDouane').submit(function(e){
+
+      e.preventDefault();
+
+       if(confirm('Voulez-vous ajouter cet initiateur ?')) {
+          
+          $('#spinner-div').show();
+          $('#modal_creerBureauDouane').modal('hide');
+
+          var fd = new FormData(this);
+          // alert($(this).attr('action'));
+          $.ajax({
+
+            url: 'ajax.php',
+            type: 'post',
+            processData: false,
+            contentType: false,
+            data: fd,
+            dataType: 'json',
+            success:function(data){
+              if (data.logout) {
+                alert(data.logout);
+                window.location="../deconnexion.php";
+              }else{
+                
+                $('#selectionnerBureauDouane').html(data.selectionnerBureauDouane);
+                getSelectRisque();
+
               }
             },
             complete: function () {
@@ -626,6 +780,7 @@
   function modal_dossier_risque_douane(id){
     
     $('#spinner-div').show();
+    $('.load2').show();
 
      $.ajax({
       type: 'post',
@@ -688,8 +843,8 @@
 
   $('#file_data_dossier_risque_douane').DataTable({
      lengthMenu: [
-        [10, 100, 500, -1],
-        ['10 Lignes', '100 Lignes', '500 Lignes', 'All'],
+        [30, 50, 100, 500, -1],
+        ['30 Lignes', '50 Lignes', '100 Lignes', '500 Lignes', 'All'],
     ],
     dom: 'Bfrtip',
     buttons: [
@@ -697,7 +852,25 @@
           text: '<i class="fa fa-plus"></i> Notification',
           className: 'btn btn-info bt',
           action: function ( e, dt, node, config ) {
-              $('#modal_creerDossierRisque').modal('show');
+              // $('#modal_creerDossierRisque').modal('show');
+              $.ajax({
+                  type: 'post',
+                  url: 'ajax.php',
+                  data: {operation: 'selectionnerBureauDouane'},
+                  dataType: 'json',
+                  success:function(data){
+                    if (data.logout) {
+                      alert(data.logout);
+                      window.location="../deconnexion.php";
+                    }else{
+                      
+                       $('#selectionnerBureauDouane').html(data.selectionnerBureauDouane);
+                       $('#selectionnerRegime').html(data.selectionnerRegime);
+                       $('#modal_creerDossierRisque').modal('show');
+
+                    }
+                  }
+                });
           }
         },
         {
@@ -973,6 +1146,37 @@
     });
 
   });
+
+  $(document).ready(function(){
+   getSelectRisque();
+  });
+
+  function getSelectRisque(){
+
+    $('#spinner-div').show();
+
+     $.ajax({
+      type: 'post',
+      url: 'ajax.php',
+      data: {operation: 'getSelectRisque'},
+      dataType: 'json',
+      success:function(data){
+        if (data.logout) {
+          alert(data.logout);
+          window.location="../deconnexion.php";
+        }else{
+          $('#selectionnerBureauDouane').html(data.selectionnerBureauDouane);
+          $('#selectionnerRegime').html(data.selectionnerRegime);
+          $('#selectionnerBureauDouane_edit').html(data.selectionnerBureauDouane_edit);
+          $('#selectionnerRegime_edit').html(data.selectionnerRegime_edit);
+        }
+      },
+      complete: function () {
+          $('#spinner-div').hide();//Request is complete so hide spinner
+      }
+    });
+
+  }
 
   function loadPV(){
     
