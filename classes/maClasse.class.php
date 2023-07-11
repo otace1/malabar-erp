@@ -38454,6 +38454,31 @@
 
 		}
 
+		public function creerBureauDouane($nom_bur_douane){
+			include("connexion.php");
+
+			$entree['nom_bur_douane'] = $nom_bur_douane;
+
+			$requete = $connexion-> prepare("INSERT INTO bureau_douane(nom_bur_douane)
+												VALUES(?)");
+			$requete-> execute(array($entree['nom_bur_douane']));
+			
+
+		}
+
+		public function creerRegime($nom_reg, $id_mod_lic){
+			include("connexion.php");
+
+			$entree['nom_reg'] = $nom_reg;
+			$entree['id_mod_lic'] = $id_mod_lic;
+
+			$requete = $connexion-> prepare("INSERT INTO regime(nom_reg, id_mod_lic)
+												VALUES(?, ?)");
+			$requete-> execute(array($entree['nom_reg'], $entree['id_mod_lic']));
+			
+
+		}
+
 		public function creerDocumentJointRisque($id, $id_doc, $fichier){
 			include("connexion.php");
 			$entree['id'] = $id;
@@ -38616,6 +38641,48 @@
 								'.$reponse['nom_bur_douane'].'
 							</option>';
 			}$requete-> closeCursor();
+
+			return $select;
+		}
+		
+		public function selectionnerBureauDouaneAjax2(){
+			include('connexion.php');
+			$select = "<select name='id_bur_douane' id='id_bur_douane' class='form-control cc-exp form-control-sm' required>
+              			<option></option>";
+			$requete = $connexion-> query("SELECT *
+											FROM bureau_douane
+											WHERE active = '1'
+											ORDER BY nom_bur_douane");
+
+
+			while($reponse = $requete-> fetch()){
+				$select .= '<option value="'.$reponse['id_bur_douane'].'">
+								'.$reponse['nom_bur_douane'].'
+							</option>';
+			}$requete-> closeCursor();
+
+			$select.='</select>';
+
+			return $select;
+		}
+		
+		public function selectionnerBureauDouaneAjax2_edit(){
+			include('connexion.php');
+			$select = "<select name='id_bur_douane' id='id_bur_douane_edit' class='form-control cc-exp form-control-sm' required>
+              			<option></option>";
+			$requete = $connexion-> query("SELECT *
+											FROM bureau_douane
+											WHERE active = '1'
+											ORDER BY nom_bur_douane");
+
+
+			while($reponse = $requete-> fetch()){
+				$select .= '<option value="'.$reponse['id_bur_douane'].'">
+								'.$reponse['nom_bur_douane'].'
+							</option>';
+			}$requete-> closeCursor();
+
+			$select.='</select>';
 
 			return $select;
 		}
@@ -40140,6 +40207,76 @@
 			</option>
 			<?php
 			}$requete-> closeCursor();
+
+		}
+
+		public function selectionnerRegimeGroupingAjax(){
+			include('connexion.php');
+			
+			$select = "<select name='id_reg' id='id_reg' class='form-control cc-exp form-control-sm' required>
+              			<option></option>";
+
+			$requete = $connexion-> query("SELECT *
+												FROM modele_licence
+													WHERE id_etat = '1'
+												ORDER BY id_mod_lic DESC");
+			// $requete-> execute(array($entree['id_mod_lic']));
+
+			while($reponse = $requete-> fetch()){
+				$select .='<optgroup label="'.$reponse['nom_mod_lic'].'">';
+
+				$requete2 = $connexion-> prepare("SELECT UPPER(nom_reg) AS nom_reg,
+														id_reg
+													FROM regime
+														WHERE id_mod_lic = ?
+													ORDER BY nom_reg ASC");
+				$requete2-> execute(array($reponse['id_mod_lic']));
+
+				while($reponse2 = $requete2-> fetch()){
+					$select .='<option value="'.$reponse2['id_reg'].'">'.$reponse2['nom_reg'].'</option>';
+				}$requete2-> closeCursor();
+
+				$select .='</option>';
+			}$requete-> closeCursor();
+
+			$select .= '</select>';
+
+			return $select;
+
+		}
+
+		public function selectionnerRegimeGroupingAjax_edit(){
+			include('connexion.php');
+			
+			$select = "<select name='id_reg' id='id_reg_edit' class='form-control cc-exp form-control-sm' required>
+              			<option></option>";
+
+			$requete = $connexion-> query("SELECT *
+												FROM modele_licence
+													WHERE id_etat = '1'
+												ORDER BY id_mod_lic DESC");
+			// $requete-> execute(array($entree['id_mod_lic']));
+
+			while($reponse = $requete-> fetch()){
+				$select .='<optgroup label="'.$reponse['nom_mod_lic'].'">';
+
+				$requete2 = $connexion-> prepare("SELECT UPPER(nom_reg) AS nom_reg,
+														id_reg
+													FROM regime
+														WHERE id_mod_lic = ?
+													ORDER BY nom_reg ASC");
+				$requete2-> execute(array($reponse['id_mod_lic']));
+
+				while($reponse2 = $requete2-> fetch()){
+					$select .='<option value="'.$reponse2['id_reg'].'">'.$reponse2['nom_reg'].'</option>';
+				}$requete2-> closeCursor();
+
+				$select .='</option>';
+			}$requete-> closeCursor();
+
+			$select .= '</select>';
+
+			return $select;
 
 		}
 
