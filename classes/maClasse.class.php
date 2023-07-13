@@ -5643,6 +5643,73 @@
 			return $tbl;
 		}
 
+		public function getDossierFactureImportShalina($ref_fact){
+			include('connexion.php');
+			$entree['ref_fact'] = $ref_fact;
+
+			$tbl = '';
+			$compteur=0;
+			$total_poids = 0;
+			$requete = $connexion-> prepare('SELECT dos.ref_dos AS ref_dos,
+													dos.destination AS destination,
+													dos.transporter AS transporter,
+													dos.horse AS horse,
+													dos.trailer_1 AS trailer_1,
+													dos.trailer_2 AS trailer_2,
+													dos.container AS container,
+													dos.ref_fact AS ref_fact,
+													dos.t1 AS t1,
+													dos.po_ref AS po_ref,
+													dos.poids AS poids,
+													DATE_FORMAT(dos.klsa_arriv, "%d/%m/%Y") AS klsa_arriv,
+													DATE_FORMAT(dos.wiski_arriv, "%d/%m/%Y") AS wiski_arriv,
+													DATE_FORMAT(dos.date_crf, "%d/%m/%Y") AS date_crf,
+													DATE_FORMAT(dos.dispatch_deliv, "%d/%m/%Y") AS dispatch_deliv,
+													-- IF(dos.cleared="1",
+													-- 	"CLEARED",
+													-- 	"TRANSIT") AS cleared
+													"CLEARED" AS cleared
+												FROM debours d, detail_facture_dossier det, dossier dos
+												WHERE det.ref_fact = ?
+													AND det.id_deb = d.id_deb
+													AND det.id_dos = dos.id_dos
+												GROUP BY dos.id_dos');
+			$requete-> execute(array($entree['ref_fact']));
+			while($reponse = $requete-> fetch()){
+				$compteur++;
+				$total_poids+=$reponse['poids'];
+
+				$tbl .= '
+						<tr>				
+							<td width="5%" style=""></td>
+							<td width="3%" style="text-align: center; border: 1 solid black;">'.$compteur.'</td>
+							<td width="10%" style="text-align: center; border: 1 solid black;">'.$reponse['ref_dos'].'</td>
+							<td width="10%" style="text-align: center; border: 1 solid black;">'.$reponse['horse'].'</td>
+							<td width="10%" style="text-align: center; border: 1 solid black;">'.$reponse['trailer_1'].'</td>
+							<td width="10%" style="text-align: center; border: 1 solid black;">'.$reponse['trailer_2'].'</td>
+							<td width="10%" style="text-align: center; border: 1 solid black;">'.$reponse['container'].'</td>
+							<td width="10%" style="text-align: center; border: 1 solid black;">'.$reponse['po_ref'].'</td>
+							<td width="10%" style="text-align: center; border: 1 solid black;">'.$reponse['ref_fact'].'</td>
+							<td width="10%" style="text-align: center; border: 1 solid black;">'.$reponse['poids'].'</td>
+							<td width="10%" style="text-align: center; border: 1 solid black;">'.$reponse['dispatch_deliv'].'</td>
+							<td width="5%" style=""></td>
+						</tr>
+					';
+
+			}$requete-> closeCursor();
+
+			$tbl .= '
+					<tr>				
+						<td width="5%" style="text-align: right;"></td>
+						<td width="73%" style="text-align: center; border: 1 solid black;">Total</td>
+						<td width="10%" style="text-align: center; border: 1 solid black;">'.$total_poids.'</td>
+						<td width="5%" style=""></td>
+					</tr>
+				';
+
+			return $tbl;
+		}
+
 		public function getDetailFactureExportMultiple($ref_fact, $id_t_deb){
 			include('connexion.php');
 			$entree['ref_fact'] = $ref_fact;
