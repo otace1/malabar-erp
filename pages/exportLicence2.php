@@ -651,11 +651,11 @@ $indiceSheet = 0;
 												mon.*
 											FROM licence l
 											LEFT JOIN dossier d ON l.num_lic = d.num_lic
+												AND d.cleared <> '2'
 											LEFT JOIN monnaie mon ON l.id_mon = mon.id_mon
 											WHERE l.id_cli = ?
 												AND l.id_mod_lic = ?
 												AND YEAR(l.date_val) = ?
-												AND d.cleared <> '2'
 												$sqlTypeLicence
 												ORDER BY l.date_val ASC");
 		$requete-> execute(array($entree['id_cli'], $entree['id_mod_lic'], $entree['annee']));
