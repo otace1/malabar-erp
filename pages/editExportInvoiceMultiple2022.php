@@ -114,6 +114,7 @@
                   <th>CEEC (30MT to 60MT)($)</th>
                   <th>DGDA SEALS($)</th>
                   <th>DM/CE/OCC($)</th>
+                  <th>DILOLO BORDER($)</th>
                   <th>ASSAY FEE($)</th>
                   <th>OCC FEES($)</th>
                   <th>CEEC FEES($)</th>
