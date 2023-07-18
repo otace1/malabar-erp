@@ -40,6 +40,7 @@
                       <th style="">Voucher Type</th>
                       <th style="">Doc.Support Ref.</th>
                       <th style="">Register</th>
+                      <th style="">Currency</th>
                       <th style="">Amount</th>
                     </tr>
                   </thead>
@@ -83,7 +84,7 @@
       <div class="modal-body">
         <div class="row">
 
-          <div class="col-md-3">
+          <div class="col-md-2">
             <label for="x_card_code" class="control-label mb-1">Type</label>
             <select name="id_t_e" id="id_t_e" class="form-control cc-exp form-control-sm" required>
               <option></option>
@@ -98,7 +99,7 @@
             <input class="form-control cc-exp form-control-sm" type="text" id="reference" name="reference" required>
           </div>
 
-          <div class="col-md-3">
+          <div class="col-md-2">
             <label for="x_card_code" class="control-label mb-1">Date</label>
             <input class="form-control cc-exp form-control-sm" value="<?php echo date('Y-m-d');?>" type="date" id="date_e" name="date_e" required>
           </div>
@@ -109,6 +110,16 @@
               <option></option>
                 <?php
                   $maClasse->selectionnerJournal();
+                ?>
+            </select>
+          </div>
+
+          <div class="col-md-2">
+            <label for="x_card_code" class="control-label mb-1">Currency</label>
+            <select name="id_mon" id="id_mon" class="form-control cc-exp form-control-sm" required>
+              <option></option>
+                <?php
+                  $maClasse->selectionnerMonnaieComptable();
                 ?>
             </select>
           </div>
@@ -238,7 +249,7 @@
       <div class="modal-body">
         <div class="row">
 
-          <div class="col-md-3">
+          <div class="col-md-2">
             <label for="x_card_code" class="control-label mb-1">Type</label>
             <select name="id_t_e" id="id_t_e" class="form-control cc-exp form-control-sm" required>
               <option></option>
@@ -253,7 +264,7 @@
             <input class="form-control cc-exp form-control-sm" type="text" id="reference" name="reference" required>
           </div>
 
-          <div class="col-md-3">
+          <div class="col-md-2">
             <label for="x_card_code" class="control-label mb-1">Date</label>
             <input class="form-control cc-exp form-control-sm" value="<?php echo date('Y-m-d');?>" type="date" id="date_e" name="date_e" required>
           </div>
@@ -264,6 +275,16 @@
               <option></option>
                 <?php
                   $maClasse->selectionnerJournal();
+                ?>
+            </select>
+          </div>
+
+          <div class="col-md-2">
+            <label for="x_card_code" class="control-label mb-1">Currency</label>
+            <select name="id_mon" id="id_mon" class="form-control cc-exp form-control-sm" required>
+              <option></option>
+                <?php
+                  $maClasse->selectionnerMonnaieComptable();
                 ?>
             </select>
           </div>
@@ -282,7 +303,7 @@
                   <th style=" text-align: center;" width="20%">Credit</th>
                 </tr>
               </thead>
-              <tbody id="">
+              <tbody class="">
                 <?php
                 for ($i=1; $i <=10 ; $i++) { 
                   ?>
@@ -291,20 +312,20 @@
                       <?php echo $i;?>
                     </td>
                     <td>
-                      <div class="input-group mb-3  input-group-sm">
+                      <div class="input-group mb-6  input-group-sm">
                         <div class="input-group-prepend">
-                          <button type="button" class="btn btn-sm btn-info" onclick="liste_compte(<?php echo $i;?>);"><i class="fa fa-list"></i></button>
+                          <button type="button" class="btn btn-sm btn-info" onclick="liste_compte2(<?php echo $i;?>);"><i class="fa fa-list"></i></button>
                         </div>
                       <!-- /btn-group -->
-                        <input type="text" id="nom_compte_<?php echo $i;?>" class="form-control text-dark form-control-sm" disabled>
+                        <input type="text" id="nom_compte_2_<?php echo $i;?>" class="form-control text-dark form-control-sm" disabled>
                         <span class="input-group-append">
-                          <button type="button" class="btn btn-default text-danger btn-flat" onclick="remove_compte(<?php echo $i;?>);">
+                          <button type="button" class="btn btn-default text-danger btn-flat" onclick="remove_compte_2(<?php echo $i;?>);">
                             <span class="fa fa-times"></span>
                           </button>
                         </span>
                       </div>
-                      <input type="hidden" id="id_compte_<?php echo $i;?>" name="id_compte_<?php echo $i;?>">
-                      <span class="small" id="solde_compte_<?php echo $i;?>"></span>
+                      <input type="hidden" id="id_compte_2_<?php echo $i;?>" name="id_compte_<?php echo $i;?>">
+                      <span class="small" id="solde_compte_2_<?php echo $i;?>"></span>
                     </td>
                     <td>
                       <input class="form-control cc-exp form-control-sm text-center" type="number" onblur="getTotal();" id="montant_debit_<?php echo $i;?>" name="montant_debit_<?php echo $i;?>">
@@ -341,6 +362,15 @@
           <div class="col-6 text-right">
             <span>Total Debit <span class="text-md badge badge-dark" id="total_debit_2"></span></span><br>
             <span>Total Credit <span class="text-md badge badge-dark" id="total_credit_2"></span></span>
+          </div>
+          <div class="col-6 text-right">
+              <hr>
+            <div class="alert alert-success alert-dismissible fade show text-left" id="message_div" role="alert">
+              <span id="message"></span>
+              <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -401,6 +431,46 @@
   <!-- /.modal-dialog -->
 </div>
 
+<div class="modal fade actePV" id="modal_compte2">
+  <div class="modal-dialog modal-lg">
+    <!-- <form method="POST" id="form_actePV" action="" data-parsley-validate enctype="multipart/form-data"> -->
+    <div class="modal-content">
+      <!-- <div class="modal-header ">
+        <h4 class="modal-title"><img src="../images/presse-papiers.png" width="30px"> Account </h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div> -->
+        <input type="hidden" id="compteur_compte2">
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-md-12 table-responsive">
+            <table id="liste_compte2" cellspacing="0" width="100%" class="table hover display compact table-bordered table-striped table-sm text-nowrap small">
+              <thead class="">
+                <tr class="">
+                  <th width="5%">#</th>
+                  <th style="">Name</th>
+                  <th style="">Balance</th>
+                  <th width="5%">Type</th>
+                </tr>
+              </thead>
+              <tbody id="">
+                
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer justify-content-between">
+        <button type="button" class="btn-xs btn-danger" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+    <!-- </form> -->
+    <!-- /.modal-content -->
+  </div>
+  <!-- /.modal-dialog -->
+</div>
+
 <div class="modal fade creerEcritureComptable" id="modal_detail_ecriture">
   <div class="modal-dialog modal-lg">
 
@@ -414,7 +484,7 @@
       <div class="modal-body">
         <div class="row">
 
-          <div class="col-md-3">
+          <div class="col-md-2">
             <label for="x_card_code" class="control-label mb-1">Type</label>
             <input id="nom_t_e_det" class="form-control cc-exp form-control-sm" disabled>
           </div>
@@ -424,7 +494,7 @@
             <input class="form-control cc-exp form-control-sm" type="text" id="reference_det" disabled>
           </div>
 
-          <div class="col-md-3">
+          <div class="col-md-2">
             <label for="x_card_code" class="control-label mb-1">Date</label>
             <input class="form-control cc-exp form-control-sm" type="date" id="date_e_det" disabled>
           </div>
@@ -432,6 +502,11 @@
           <div class="col-md-3">
             <label for="x_card_code" class="control-label mb-1">Journal</label>
             <input id="nom_jour_det" class="form-control cc-exp form-control-sm" disabled>
+          </div>
+
+          <div class="col-md-2">
+            <label for="x_card_code" class="control-label mb-1">Currency</label>
+            <input class="form-control cc-exp form-control-sm" type="text" id="sig_mon_det" disabled>
           </div>
 
           <div class="col-md-12">
@@ -442,7 +517,6 @@
             <table id="detail_ecriture" cellspacing="0" width="100%" class="small table hover display compact table-bordered table-striped table-sm text-nowrap">
               <thead>
                 <tr>
-                  <th style="" width="5%">#</th>
                   <th style="">Particular</th>
                   <th style=" text-align: center;" width="20%">Debit</th>
                   <th style=" text-align: center;" width="20%">Credit</th>
@@ -452,9 +526,9 @@
               </tbody>
               <tfoot>
                 <tr>
-                  <td colspan="2" style="text-align: right;">Total</td>
-                  <td style="text-align: right;"></td>
-                  <td style="text-align: right;"></td>
+                  <td style="text-align: right;">Total</td>
+                  <td style="text-align: right;" class="font-weight-bold"></td>
+                  <td style="text-align: right;" class="font-weight-bold"></td>
                 </tr>
               </tfoot>
             </table>
@@ -463,10 +537,10 @@
             <label for="x_card_code" class="control-label mb-1">Naration</label>
             <textarea class="form-control form-control-sm" id="libelle_e_det" disabled></textarea>
           </div>
-          <div class="col-6 text-right">
+          <!-- <div class="col-6 text-right">
             <span>Total Debit <span class="text-md badge badge-dark" id="total_debit_2"></span></span><br>
             <span>Total Credit <span class="text-md badge badge-dark" id="total_credit_2"></span></span>
-          </div>
+          </div> -->
         </div>
       </div>
       <div class="modal-footer justify-content-between">
@@ -498,6 +572,7 @@
           $('#date_e_det').val(data.date_e);
           $('#nom_jour_det').val(data.nom_jour);
           $('#libelle_e_det').val(data.libelle_e);
+          $('#sig_mon_det').val(data.sig_mon);
         }
       }
     });
@@ -532,7 +607,11 @@
       ],
       dom: 'Bfrtip',
       buttons: [
-          'excel'
+          {
+            extend: 'excel',
+            text: '<i class="fa fa-file-excel"></i>',
+            className: 'btn btn-success'
+          }
       ],
       footerCallback: function (row, data, start, end, display) {
         var api = this.api();
@@ -541,10 +620,12 @@
         var intVal = function (i) {
             return typeof i === 'string' ? i.replace(/[\$,]/g, '') * 1 : typeof i === 'number' ? i : 0;
         };
- 
+        
+        col_debit = 1;
+        col_credit = 2;
         // Total over all pages
         total = api
-            .column(2)
+            .column(col_debit)
             .data()
             .reduce(function (a, b) {
                 return intVal(a) + intVal(b);
@@ -552,7 +633,7 @@
  
         // Total over this page
         pageTotal = api
-            .column(2, { page: 'current' })
+            .column(col_debit, { page: 'current' })
             .data()
             .reduce(function (a, b) {
                 return intVal(a) + intVal(b);
@@ -560,9 +641,9 @@
  
         // Update footer
         // $(api.column(2).footer()).html('$' + pageTotal + ' ( $' + total + ' total)');
-            $(api.column(2).footer()).html(DataTable.render.number( null, null, 2, null ).display(pageTotal));
+            $(api.column(col_debit).footer()).html(DataTable.render.number( null, null, 2, null ).display(pageTotal));
         total = api
-            .column(3)
+            .column(col_credit)
             .data()
             .reduce(function (a, b) {
                 return intVal(a) + intVal(b);
@@ -570,14 +651,14 @@
  
         // Total over this page
         pageTotal = api
-            .column(3, { page: 'current' })
+            .column(col_credit, { page: 'current' })
             .data()
             .reduce(function (a, b) {
                 return intVal(a) + intVal(b);
             }, 0);
  
         // Update footer
-            $(api.column(3).footer()).html(DataTable.render.number( null, null, 2, null ).display(pageTotal));
+            $(api.column(col_credit).footer()).html(DataTable.render.number( null, null, 2, null ).display(pageTotal));
     },
     "paging": true,
     "lengthChange": true,
@@ -599,7 +680,6 @@
         }
       },
       "columns":[
-        {"data":"compteur"},
         {"data":"nom_compte"},
         {"data":"debit",
           render: DataTable.render.number( null, null, 2, null ),
@@ -632,6 +712,8 @@
 
             var fd = new FormData(this);
             $('#spinner-div').show();
+            $('#modal_creerEcritureComptable_1').modal('hide');
+
 
             $.ajax({
               type: 'post',
@@ -650,6 +732,10 @@
                   });
                   $('#file_data_ecriture_comptable').DataTable().ajax.reload();
                   $('#spinner-div').hide();//Request is complete so hide spinner
+                  $('#message_div').show();
+                  $('#message').html(data.message);
+                  $('#total_debit_2').html(0);
+                  $('#total_credit_2').html(0);
                   // alert(data.message);
                 }
               },
@@ -743,6 +829,39 @@
 
   }
 
+  function remove_compte_2(compteur_compte){
+    
+    $('#nom_compte_2_'+compteur_compte).val('');
+    // document.getElementById('nom_compte').classList.remove("is-invalid");
+    // document.getElementById('nom_compte').classList.remove("text-danger");
+    $('#id_compte_2_'+compteur_compte).val('');
+    $('#solde_compte_2_'+compteur_compte).html('');
+
+
+  }
+
+  function select_compte2(id_compte, nom_compte, solde_compte, compteur_compte, type_solde=null){
+    
+    if (type_solde==null || type_solde=='') {
+      type_solde='';
+    }else{
+      type_solde = '('+type_solde+')';
+    }
+
+    $('#modal_compte2').modal('hide');
+    // $('#spinner-div').show();
+    // $('#liste_compte').html('');
+    $('#nom_compte_2_'+compteur_compte).val(nom_compte);
+    $('#solde_compte_2_'+compteur_compte).html('Current Bal. '+type_solde+': '+(new Intl.NumberFormat('en-DE').format(Math.round(solde_compte*1000)/1000)));
+    // document.getElementById('nom_compte').classList.remove("is-invalid");
+    // document.getElementById('nom_compte').classList.remove("text-danger");
+    $('#id_compte_2_'+compteur_compte).val(id_compte);
+
+
+    // $('#spinner-div').hide();
+
+  }
+
   function select_compte(id_compte, nom_compte, solde_compte, compteur_compte){
     
     $('#modal_compte').modal('hide');
@@ -786,6 +905,103 @@
 
   }
 
+  function liste_compte2(compteur_compte, id_jour){
+    
+    if ( $.fn.dataTable.isDataTable( '#liste_compte2' ) ) {
+        table = $('#liste_compte2').DataTable();
+    }
+    else {
+        table = $('#liste_compte2').DataTable( {
+            paging: false
+        } );
+    }
+
+    table.destroy();
+
+    $('#liste_compte2').DataTable({
+       lengthMenu: [
+          [10, 100, 500, -1],
+          ['10 Rows', '100 Rows', '500 Rows', 'All'],
+      ],
+      dom: 'Bfrtip',
+      buttons: [
+          {
+            extend: 'excel',
+            text: '<i class="fa fa-file-excel"></i>',
+            className: 'btn btn-success'
+          },
+          {
+            extend: 'pageLength',
+            text: '<i class="fa fa-list"></i>',
+            className: 'btn btn-dark'
+          }
+      ],
+      
+    "paging": true,
+    "lengthChange": true,
+    "searching": true,
+    "ordering": true,
+    "info": true,
+    "autoWidth": true,
+    "responsive": true,
+      "ajax":{
+        "type": "GET",
+        "url":"ajax.php",
+        "method":"post",
+        "dataSrc":{
+            "id_cli": ""
+        },
+        "data": {
+            "operation": "liste_compte2",
+            "compteur_compte": compteur_compte
+        }
+      },
+      "columns":[
+        {"data":"compteur"},
+        {"data":"compte"},
+        {"data":"solde",
+          render: DataTable.render.number( null, null, 2, null ),
+          className: 'dt-body-right'
+        },
+        {"data":"type_solde"}
+      ] 
+    });
+
+    // $('#liste_compte2').html(data.liste_compte);
+    $('#nom_compte_search').val('');
+    $('#modal_compte2').modal('show');
+    $('#compteur_compte').val(compteur_compte);
+
+
+  }
+
+  // function liste_compte2(compteur_compte, id_jour){
+    
+  //   $('#spinner-div').show();
+
+  //    $.ajax({
+  //     type: 'post',
+  //     url: 'ajax.php',
+  //     data: {operation: 'liste_compte2', compteur_compte: compteur_compte, id_jour: id_jour},
+  //     dataType: 'json',
+  //     success:function(data){
+  //       if (data.logout) {
+  //         alert(data.logout);
+  //         window.location="../deconnexion.php";
+  //       }else{
+  //         $('#liste_compte2').html(data.liste_compte);
+  //         $('#nom_compte_search').val('');
+  //         $('#modal_compte2').modal('show');
+  //         $('#compteur_compte').val(compteur_compte);
+  //       }
+  //     },
+  //     complete: function () {
+  //         $('#spinner-div').hide();//Request is complete so hide spinner
+  //     }
+  //   });
+
+  // }
+
   $('#file_data_ecriture_comptable').DataTable({
      lengthMenu: [
         [10, 100, 500, -1],
@@ -814,6 +1030,7 @@
                       $( '#creerEcriture_form' ).each(function(){
                         this.reset();
                       });
+                      $('#message_div').hide();
                       $('#modal_creerEcritureComptable').modal('show');
                   }
                 }
@@ -851,7 +1068,7 @@
       }
     },
     order: [
-        [3, 'asc']
+        [3, 'desc']
     ],
     rowGroup: {
         dataSrc: 2,
@@ -865,6 +1082,9 @@
       {"data":"nom_t_e"},
       {"data":"reference"},
       {"data":"nom_jour"},
+      {"data":"sig_mon",
+        className: 'dt-body-center'
+      },
       {"data":"debit",
         render: DataTable.render.number( null, null, 2, null ),
         className: 'dt-body-right'

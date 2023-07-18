@@ -158,6 +158,20 @@
               </a>
               <ul class="nav nav-treeview">
                 <li class="nav-item">
+                  <a href="trialBalance.php" class="nav-link">
+                    &nbsp;&nbsp;&nbsp;<i class="fa fa-balance-scale nav-icon"></i> 
+                    <p>
+                    <?php
+                      if ($maClasse-> getUtilisateur($_SESSION['id_util'])['langue']=='ENG') {
+                        echo 'Trial Balance';
+                      }else if ($maClasse-> getUtilisateur($_SESSION['id_util'])['langue']=='FR') {
+                        echo 'Balance de Comptes';
+                      }
+                    ?>
+                    </p>
+                  </a>
+                </li>
+                <li class="nav-item">
                   <a href="grandLivre.php" class="nav-link">
                     &nbsp;&nbsp;&nbsp;<i class="fa fa-folder-open nav-icon"></i>
                     <p>
@@ -171,7 +185,7 @@
                     </p>
                   </a>
                 </li>
-                <li class="nav-item">
+                <!-- <li class="nav-item">
                   <a href="balanceSheet.php" class="nav-link">
                     &nbsp;&nbsp;&nbsp;<i class="fa fa-folder-open nav-icon"></i>
                     <p>
@@ -184,7 +198,7 @@
                     ?>
                     </p>
                   </a>
-                </li>
+                </li> -->
               </ul>
           </li>
            <!--<li class="nav-item has-treeview">

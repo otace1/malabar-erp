@@ -1710,7 +1710,7 @@
 
 	}else if ($_POST['operation']=='creerEcriture') {
 	  
-		$maClasse-> creerEcriture($_POST['date_e'], $_POST['libelle_e'], $_POST['id_jour'], $_POST['id_taux'], $_SESSION['id_util'], $_POST['id_t_e'], $_POST['reference']);
+		$maClasse-> creerEcriture($_POST['date_e'], $_POST['libelle_e'], $_POST['id_jour'], $_POST['id_taux'], $_SESSION['id_util'], $_POST['id_t_e'], $_POST['reference'], $_POST['id_mon']);
 
 		$id_e = $maClasse-> getLastEcritureUtilisateur($_SESSION['id_util'])['id_e'];
 
@@ -1727,7 +1727,7 @@
 
 		}
 
-		$response['message'] = 'Done!';
+		$response['message'] = 'Accounting voucher created succefully! ID: '.$id_e;
 
 		echo json_encode($response);
 
@@ -1766,7 +1766,7 @@
 
     }else if ($_POST['operation']=='creerEcriture_1') {
 	  
-		$maClasse-> creerEcriture($_POST['date_e'], $_POST['libelle_e'], $_POST['id_jour'], $_POST['id_taux'], $_SESSION['id_util'], $_POST['id_t_e'], $_POST['reference']);
+		$maClasse-> creerEcriture($_POST['date_e'], $_POST['libelle_e'], $_POST['id_jour'], $_POST['id_taux'], $_SESSION['id_util'], $_POST['id_t_e'], $_POST['reference'], $_POST['id_mon']);
 
 		$id_e = $maClasse-> getLastEcritureUtilisateur($_SESSION['id_util'])['id_e'];
 
@@ -1831,6 +1831,17 @@
 		$response['selectionnerBureauDouane_edit'] = $maClasse-> selectionnerBureauDouaneAjax2_edit();
 		$response['selectionnerRegime_edit'] = $maClasse-> selectionnerRegimeGroupingAjax_edit();
 		echo json_encode($response);
+	}else if ($_POST['operation']=='liste_compte2') {
+	  
+		// $response['liste_compte'] = $maClasse-> liste_compte2($_POST['compteur_compte']);
+		// echo json_encode($response);
+
+		echo json_encode($maClasse-> liste_compte2Ajax($_POST['compteur_compte']));
+
+	}else if ($_POST['operation']=="afficherTialBalanceAjax") {
+		echo json_encode($maClasse-> afficherTialBalanceAjax());
+	}else if ($_POST['operation']=="detail_sub_class_trial_balance") {
+		echo json_encode($maClasse-> detail_sub_class_trial_balance($_POST['id_sub_class']));
 	}
 
 ?>
