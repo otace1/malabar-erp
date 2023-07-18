@@ -1356,7 +1356,7 @@
 			$requete-> execute(array($entree['date_e'], $entree['libelle_e'], $entree['id_jour'], $entree['id_taux'], $entree['id_util'], $entree['id_mon']));
 		}
 		
-		public function creerEcriture($date_e, $libelle_e, $id_jour, $id_taux, $id_util, $id_t_e, $reference){
+		public function creerEcriture($date_e, $libelle_e, $id_jour, $id_taux, $id_util, $id_t_e, $reference, $id_mon=1){
 			include('connexion.php');
 
 			$entree['date_e'] = $date_e;
@@ -1366,10 +1366,11 @@
 			$entree['id_util'] = $id_util;
 			$entree['id_t_e'] = $id_t_e;
 			$entree['reference'] = $reference;
+			$entree['id_mon'] = $id_mon;
 
-			$requete = $connexion-> prepare('INSERT INTO ecriture(date_e, libelle_e, id_jour, id_taux, id_util, id_t_e, reference)
-												VALUES(?, ?, ?, ?, ?, ?, ?)');
-			$requete-> execute(array($entree['date_e'], $entree['libelle_e'], $entree['id_jour'], $entree['id_taux'], $entree['id_util'], $entree['id_t_e'], $entree['reference']));
+			$requete = $connexion-> prepare('INSERT INTO ecriture(date_e, libelle_e, id_jour, id_taux, id_util, id_t_e, reference, id_mon)
+												VALUES(?, ?, ?, ?, ?, ?, ?, ?)');
+			$requete-> execute(array($entree['date_e'], $entree['libelle_e'], $entree['id_jour'], $entree['id_taux'], $entree['id_util'], $entree['id_t_e'], $entree['reference'], $entree['id_mon']));
 		}
 		
 		public function supprimerAffectationModeleFacture($id_mod_fact, $id_cli, $id_march, $id_mod_trans){
@@ -3155,6 +3156,187 @@
 												GROUP BY compte.id_compte
 												ORDER BY classe_compte.id_class, compte.nom_compte");
 			// $requete-> execute(array($entree['id_mod_lic'], $entree['id_cli']));
+			while ($reponse = $requete-> fetch()) {
+				$compteur++;
+
+				$reponse['compteur'] = $compteur;
+				$rows[] = $reponse;
+
+			}$requete-> closeCursor();
+
+			return $rows;
+
+		}
+
+		public function afficherTialBalanceAjax(){
+			include("connexion.php");
+
+			//$entree['type_fact'] = $type_fact;
+			$compteur=0;
+
+			$bg = "";
+			$badge = '';
+			$btn = '';
+			$etat ='';
+
+			$debut = $compteur;
+			$rows = array();
+
+			$requete = $connexion-> query("SELECT compte.id_compte AS id_compte,
+													compte.code_compte AS code_compte,
+													compte.nom_compte AS nom_compte,
+													classe_compte.nom_class AS nom_class,
+													-- sub_classe_compte.nom_sub_class AS nom_sub_class,
+													CONCAT('<span class=\"btn btn-xs btn-primary\"\" onclick=\"window.open(\'detail_sub_class_trial_balance.php?id_sub_class=',sub_classe_compte.id_sub_class,'\',\'pop8\',\'width=1100,height=700\');\"><i class=\"fa fa-eye\"></i></span> ',sub_classe_compte.nom_sub_class) AS nom_sub_class,
+													SUM(IF(det.debit IS NULL, 0, det.debit)) AS debit,
+													SUM(IF(det.credit IS NULL, 0, det.credit)) AS credit,
+													IF(SUM(IF(det.debit IS NULL, 0, det.debit))>SUM(IF(det.credit IS NULL, 0, det.credit)),
+														FORMAT(SUM(IF(det.debit IS NULL, 0, det.debit))-SUM(IF(det.credit IS NULL, 0, det.credit)),2),
+														NULL
+													) AS solde_debit,
+													IF(SUM(IF(det.debit IS NULL, 0, det.debit))<SUM(IF(det.credit IS NULL, 0, det.credit)),
+														FORMAT(SUM(IF(det.credit IS NULL, 0, det.credit))-SUM(IF(det.debit IS NULL, 0, det.debit)),2),
+														NULL
+													) AS solde_credit,
+													CONCAT('<span class=\"btn btn-xs btn-primary\"\" onclick=\"afficherEcritureCompte(',compte.id_compte,', \'',compte.nom_compte,'\', \'',IF(FORMAT(SUM(IF(det.debit IS NULL, 0, det.debit)),2) IS NULL, 0, FORMAT(SUM(IF(det.debit IS NULL, 0, det.debit)),2)),'\', \'',IF(FORMAT(SUM(IF(det.credit IS NULL, 0, det.credit)),2) IS NULL, 0, FORMAT(SUM(IF(det.credit IS NULL, 0, det.credit)),2)),'\')\">
+																<i class=\"fa fa-eye\"></i>
+															</span>') AS btn_action,
+													monnaie.sig_mon AS sig_mon,
+
+
+													IF((SUM(det.debit) IS NOT NULL) OR (SUM(det.credit) IS NOT NULL),
+														IF((SUM(IF(det.debit IS NULL, 0, IF(ec.id_mon=compte.id_mon, det.debit, IF(ec.id_mon='1', det.debit, det.debit/te.montant))))-SUM(IF(det.credit IS NULL, 0, IF(ec.id_mon=compte.id_mon, det.credit, IF(ec.id_mon='1', det.credit, det.credit/te.montant)))))>0,
+															(SUM(IF(det.debit IS NULL, 0, IF(ec.id_mon=compte.id_mon, det.debit, IF(ec.id_mon='1', det.debit, det.debit/te.montant))))-SUM(IF(det.credit IS NULL, 0, IF(ec.id_mon=compte.id_mon, det.credit, IF(ec.id_mon='1', det.credit, det.credit/te.montant))))),
+															''
+														),
+														''
+													) AS solde_debit,
+
+													IF((SUM(det.debit) IS NOT NULL) OR (SUM(det.credit) IS NOT NULL),
+														IF((SUM(IF(det.credit IS NULL, 0, IF(ec.id_mon=compte.id_mon, det.credit, IF(ec.id_mon='1', det.credit, det.credit/te.montant))))-SUM(IF(det.debit IS NULL, 0, IF(ec.id_mon=compte.id_mon, det.debit, IF(ec.id_mon='1', det.debit, det.debit/te.montant)))))>0,
+															(SUM(IF(det.credit IS NULL, 0, IF(ec.id_mon=compte.id_mon, det.credit, IF(ec.id_mon='1', det.credit, det.credit/te.montant))))-SUM(IF(det.debit IS NULL, 0, IF(ec.id_mon=compte.id_mon, det.debit, IF(ec.id_mon='1', det.debit, det.debit/te.montant))))),
+															''
+														),
+														''
+													) AS solde_credit
+
+												FROM compte, detail_ecriture det, sub_classe_compte, classe_compte, monnaie, ecriture ec, taux_echange te
+												WHERE compte.id_compte = det.id_compte
+													AND compte.id_sub_class = sub_classe_compte.id_sub_class
+													AND sub_classe_compte.id_class = classe_compte.id_class
+													AND monnaie.id_mon = compte.id_mon
+													AND ec.id_e = det.id_e
+													AND te.id_taux = ec.id_taux
+
+												-- FROM compte
+												-- 	LEFT JOIN detail_ecriture det
+												-- 		ON compte.id_compte = det.id_compte
+												-- 	LEFT JOIN sub_classe_compte
+												-- 		ON compte.id_sub_class = sub_classe_compte.id_sub_class
+												-- 	LEFT JOIN classe_compte
+												-- 		ON sub_classe_compte.id_class = classe_compte.id_class
+												-- 	LEFT JOIN monnaie
+												-- 		ON monnaie.id_mon = compte.id_mon
+												-- 	LEFT JOIN ecriture ec
+												-- 		ON ec.id_e = det.id_e
+												-- 	LEFT JOIN taux_echange te
+												-- 		ON te.id_taux = ec.id_taux
+												-- GROUP BY compte.id_compte
+												GROUP BY sub_classe_compte.id_sub_class
+												-- ORDER BY classe_compte.id_class, compte.nom_compte
+												ORDER BY classe_compte.id_class, sub_classe_compte.nom_sub_class");
+			// $requete-> execute(array($entree['id_mod_lic'], $entree['id_cli']));
+			while ($reponse = $requete-> fetch()) {
+				$compteur++;
+
+				$reponse['compteur'] = $compteur;
+				$rows[] = $reponse;
+
+			}$requete-> closeCursor();
+
+			return $rows;
+
+		}
+
+		public function detail_sub_class_trial_balance($id_sub_class){
+			include("connexion.php");
+
+			$entree['id_sub_class'] = $id_sub_class;
+			$compteur=0;
+
+			$bg = "";
+			$badge = '';
+			$btn = '';
+			$etat ='';
+
+			$debut = $compteur;
+			$rows = array();
+
+			$requete = $connexion-> prepare("SELECT compte.id_compte AS id_compte,
+													compte.code_compte AS code_compte,
+													compte.nom_compte AS nom_compte,
+													classe_compte.nom_class AS nom_class,
+													-- sub_classe_compte.nom_sub_class AS nom_sub_class,
+													CONCAT('<span class=\"btn btn-xs btn-primary\"\" onclick=\"window.open(\'detail_sub_class_trial_balance.php?id_sub_class=',sub_classe_compte.id_sub_class,'\',\'pop8\',\'width=1100,height=700\');\"><i class=\"fa fa-eye\"></i></span> ',sub_classe_compte.nom_sub_class) AS nom_sub_class,
+													SUM(IF(det.debit IS NULL, 0, det.debit)) AS debit,
+													SUM(IF(det.credit IS NULL, 0, det.credit)) AS credit,
+													IF(SUM(IF(det.debit IS NULL, 0, det.debit))>SUM(IF(det.credit IS NULL, 0, det.credit)),
+														FORMAT(SUM(IF(det.debit IS NULL, 0, det.debit))-SUM(IF(det.credit IS NULL, 0, det.credit)),2),
+														NULL
+													) AS solde_debit,
+													IF(SUM(IF(det.debit IS NULL, 0, det.debit))<SUM(IF(det.credit IS NULL, 0, det.credit)),
+														FORMAT(SUM(IF(det.credit IS NULL, 0, det.credit))-SUM(IF(det.debit IS NULL, 0, det.debit)),2),
+														NULL
+													) AS solde_credit,
+													CONCAT('<span class=\"btn btn-xs btn-primary\"\" onclick=\"afficherEcritureCompte(',compte.id_compte,', \'',compte.nom_compte,'\', \'',IF(FORMAT(SUM(IF(det.debit IS NULL, 0, det.debit)),2) IS NULL, 0, FORMAT(SUM(IF(det.debit IS NULL, 0, det.debit)),2)),'\', \'',IF(FORMAT(SUM(IF(det.credit IS NULL, 0, det.credit)),2) IS NULL, 0, FORMAT(SUM(IF(det.credit IS NULL, 0, det.credit)),2)),'\')\">
+																<i class=\"fa fa-eye\"></i>
+															</span>') AS btn_action,
+													monnaie.sig_mon AS sig_mon,
+
+
+													IF((SUM(det.debit) IS NOT NULL) OR (SUM(det.credit) IS NOT NULL),
+														IF((SUM(IF(det.debit IS NULL, 0, IF(ec.id_mon=compte.id_mon, det.debit, IF(ec.id_mon='1', det.debit, det.debit/te.montant))))-SUM(IF(det.credit IS NULL, 0, IF(ec.id_mon=compte.id_mon, det.credit, IF(ec.id_mon='1', det.credit, det.credit/te.montant)))))>0,
+															(SUM(IF(det.debit IS NULL, 0, IF(ec.id_mon=compte.id_mon, det.debit, IF(ec.id_mon='1', det.debit, det.debit/te.montant))))-SUM(IF(det.credit IS NULL, 0, IF(ec.id_mon=compte.id_mon, det.credit, IF(ec.id_mon='1', det.credit, det.credit/te.montant))))),
+															''
+														),
+														''
+													) AS solde_debit,
+
+													IF((SUM(det.debit) IS NOT NULL) OR (SUM(det.credit) IS NOT NULL),
+														IF((SUM(IF(det.credit IS NULL, 0, IF(ec.id_mon=compte.id_mon, det.credit, IF(ec.id_mon='1', det.credit, det.credit/te.montant))))-SUM(IF(det.debit IS NULL, 0, IF(ec.id_mon=compte.id_mon, det.debit, IF(ec.id_mon='1', det.debit, det.debit/te.montant)))))>0,
+															(SUM(IF(det.credit IS NULL, 0, IF(ec.id_mon=compte.id_mon, det.credit, IF(ec.id_mon='1', det.credit, det.credit/te.montant))))-SUM(IF(det.debit IS NULL, 0, IF(ec.id_mon=compte.id_mon, det.debit, IF(ec.id_mon='1', det.debit, det.debit/te.montant))))),
+															''
+														),
+														''
+													) AS solde_credit
+
+												FROM compte, detail_ecriture det, sub_classe_compte, classe_compte, monnaie, ecriture ec, taux_echange te
+												WHERE compte.id_compte = det.id_compte
+													AND compte.id_sub_class = sub_classe_compte.id_sub_class
+													AND sub_classe_compte.id_sub_class = ?
+													AND sub_classe_compte.id_class = classe_compte.id_class
+													AND monnaie.id_mon = compte.id_mon
+													AND ec.id_e = det.id_e
+													AND te.id_taux = ec.id_taux
+
+												-- FROM compte
+												-- 	LEFT JOIN detail_ecriture det
+												-- 		ON compte.id_compte = det.id_compte
+												-- 	LEFT JOIN sub_classe_compte
+												-- 		ON compte.id_sub_class = sub_classe_compte.id_sub_class
+												-- 	LEFT JOIN classe_compte
+												-- 		ON sub_classe_compte.id_class = classe_compte.id_class
+												-- 	LEFT JOIN monnaie
+												-- 		ON monnaie.id_mon = compte.id_mon
+												-- 	LEFT JOIN ecriture ec
+												-- 		ON ec.id_e = det.id_e
+												-- 	LEFT JOIN taux_echange te
+												-- 		ON te.id_taux = ec.id_taux
+												-- GROUP BY compte.id_compte
+												GROUP BY compte.id_compte
+												-- ORDER BY classe_compte.id_class, compte.nom_compte
+												ORDER BY compte.nom_compte");
+			$requete-> execute(array($entree['id_sub_class']));
 			while ($reponse = $requete-> fetch()) {
 				$compteur++;
 
@@ -16007,6 +16189,12 @@
 			                <a href="dossier.php?id_cli=<?php echo $reponse['id_cli'];?>&amp;id_mod_trac=<?php echo $id_mod_lic;?>&amp;id_mod_trans=3&commodity=&id_march=11" class="nav-link" <?php echo $style;?>>
 			                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="far fa-circle nav-icon"></i>
 			                  <p>DIVERS AIR</p>
+			                </a>
+			            </li>
+		              	<li class="nav-item">
+			                <a href="dossier.php?id_cli=<?php echo $reponse['id_cli'];?>&amp;id_mod_trac=<?php echo $id_mod_lic;?>&amp;id_mod_trans=1&commodity=&id_march=20" class="nav-link" <?php echo $style;?>>
+			                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="far fa-circle nav-icon"></i>
+			                  <p>LIME ROUTE</p>
 			                </a>
 			            </li>
 		              	<?php
@@ -33183,6 +33371,20 @@
 			}
 		}
 
+		public function getSubClass($id_sub_class){
+			include('connexion.php');
+			$entree['id_sub_class'] = $id_sub_class;
+
+			$requete = $connexion-> prepare("SELECT *
+												FROM sub_classe_compte
+												WHERE id_sub_class = ?");
+			$requete-> execute(array($entree['id_sub_class']));
+			$reponse = $requete-> fetch();
+			if($reponse){
+				return $reponse;
+			}
+		}
+
 		public function getFournisseur($id_four){
 			include('connexion.php');
 			$entree['id_four'] = $id_four;
@@ -33530,7 +33732,15 @@
 			include('connexion.php');
 			$entree['id_compte'] = $id_compte;
 
-			$requete = $connexion-> prepare("SELECT (SUM(IF(debit IS NULL, 0, debit))-SUM(IF(credit IS NULL, 0, credit))) AS solde
+			$requete = $connexion-> prepare("SELECT (SUM(IF(debit IS NULL, 0, debit))-SUM(IF(credit IS NULL, 0, credit))) AS solde_1,
+													IF((SUM(IF(debit IS NULL, 0, debit))-SUM(IF(credit IS NULL, 0, credit)))>0,
+														(SUM(IF(debit IS NULL, 0, debit))-SUM(IF(credit IS NULL, 0, credit))),
+														(SUM(IF(credit IS NULL, 0, credit))-SUM(IF(debit IS NULL, 0, debit)))
+													) AS solde,
+													IF((SUM(IF(debit IS NULL, 0, debit))-SUM(IF(credit IS NULL, 0, credit)))>0,
+														'Dr',
+														'Cr'
+													) AS type_solde
 												FROM detail_ecriture
 												WHERE id_compte = ?");
 			$requete-> execute(array($entree['id_compte']));
@@ -33541,6 +33751,47 @@
 			}else{
 				return '0';
 			}
+		}
+
+		public function getSoldeCompte2($id_compte){
+			include('connexion.php');
+			$entree['id_compte'] = $id_compte;
+
+			// $requete = $connexion-> prepare("SELECT (SUM(IF(debit IS NULL, 0, debit))-SUM(IF(credit IS NULL, 0, credit))) AS solde_1,
+			// 										IF((SUM(IF(debit IS NULL, 0, debit))-SUM(IF(credit IS NULL, 0, credit)))>0,
+			// 											(SUM(IF(debit IS NULL, 0, debit))-SUM(IF(credit IS NULL, 0, credit))),
+			// 											(SUM(IF(credit IS NULL, 0, credit))-SUM(IF(debit IS NULL, 0, debit)))
+			// 										) AS solde,
+			// 										IF((SUM(debit) IS NOT NULL) OR (SUM(credit) IS NOT NULL),
+			// 											IF((SUM(IF(debit IS NULL, 0, debit))-SUM(IF(credit IS NULL, 0, credit)))>0,
+			// 												'Dr',
+			// 												'Cr'
+			// 											),
+			// 											''
+			// 										) AS type_solde
+			// 									FROM detail_ecriture
+			// 									WHERE id_compte = ?");
+
+			$requete = $connexion-> prepare("SELECT IF((SUM(IF(det.debit IS NULL, 0, IF(ec.id_mon=c.id_mon, det.debit, IF(ec.id_mon='1', det.debit, det.debit/te.montant))))-SUM(IF(det.credit IS NULL, 0, IF(ec.id_mon=c.id_mon, det.credit, IF(ec.id_mon='1', det.credit, det.credit/te.montant)))))>0,
+														SUM(IF(det.debit IS NULL, 0, IF(ec.id_mon=c.id_mon, det.debit, IF(ec.id_mon='1', det.debit, det.debit/te.montant))))-SUM(IF(det.credit IS NULL, 0, IF(ec.id_mon=c.id_mon, det.credit, IF(ec.id_mon='1', det.credit, det.credit/te.montant)))),
+														SUM(IF(det.credit IS NULL, 0, IF(ec.id_mon=c.id_mon, det.credit, IF(ec.id_mon='1', det.credit, det.credit/te.montant))))-SUM(IF(det.debit IS NULL, 0, IF(ec.id_mon=c.id_mon, det.debit, IF(ec.id_mon='1', det.debit, det.debit/te.montant))))
+													) AS solde,
+													IF((SUM(debit) IS NOT NULL) OR (SUM(credit) IS NOT NULL),
+														IF((SUM(IF(det.debit IS NULL, 0, IF(ec.id_mon=c.id_mon, det.debit, IF(ec.id_mon='1', det.debit, det.debit/te.montant))))-SUM(IF(det.credit IS NULL, 0, IF(ec.id_mon=c.id_mon, det.credit, IF(ec.id_mon='1', det.credit, det.credit/te.montant)))))>0,
+															'Dr',
+															'Cr'
+														),
+														''
+													) AS type_solde
+												FROM detail_ecriture det, compte c, ecriture ec, taux_echange te
+												WHERE c.id_compte = ?
+													AND c.id_compte = det.id_compte
+													AND det.id_e = ec.id_e
+													AND ec.id_taux = te.id_taux");
+			$requete-> execute(array($entree['id_compte']));
+			$reponse = $requete-> fetch();
+			return $reponse;
+
 		}
 
 		public function getLicenceApuree($num_lic){
@@ -38200,14 +38451,17 @@
 
 			$requete = $connexion-> query("SELECT *, DATE_FORMAT(ec.date_e, '%Y-%m-%d') AS date_e_2,
 												SUM(det.debit) AS debit,
-												SUM(det.credit) AS credit
-											FROM ecriture ec, detail_ecriture det, compte c, journal j, type_ecriture te
+												SUM(det.credit) AS credit,
+												mon.sig_mon AS sig_mon
+											FROM ecriture ec, detail_ecriture det, compte c, journal j, type_ecriture te, monnaie mon
 											WHERE ec.id_jour = j.id_jour
 												AND ec.id_e = det.id_e
 												AND det.id_compte = c.id_compte
 												AND ec.id_t_e = te.id_t_e
+												AND ec.id_mon = mon.id_mon
 											GROUP BY ec.id_e
-											ORDER BY ec.id_e ");
+											-- ORDER BY ec.id_e DESC
+											ORDER BY DATE(ec.date_e) DESC, ec.id_e ASC");
 			// $requete-> execute(array($entree['id_mod_lic'], $entree['id_cli']));
 			while ($reponse = $requete-> fetch()) {
 				$compteur++;
@@ -38270,10 +38524,11 @@
 			$row = array();
 
 			$requete = $connexion-> prepare("SELECT *
-											FROM ecriture, journal, type_ecriture
+											FROM ecriture, journal, type_ecriture, monnaie
 											WHERE ecriture.id_e = ?
 												AND ecriture.id_jour = journal.id_jour
-												AND ecriture.id_t_e = type_ecriture.id_t_e ");
+												AND ecriture.id_t_e = type_ecriture.id_t_e
+												AND ecriture.id_mon = monnaie.id_mon");
 			$requete-> execute(array($entree['id_e']));
 			$reponse = $requete-> fetch();
 			return $reponse;
@@ -39138,6 +39393,58 @@
 			}$requete-> closeCursor();
 
 			return $tableau;
+
+		}
+
+		// public function liste_compte2($compteur_compte){
+		// 	include("connexion.php");
+		// 	$compteur=0;
+
+		// 	$tableau = '';
+
+		// 	$requete = $connexion-> query("SELECT compte.id_compte AS id_compte, 
+		// 											compte.nom_compte AS nom_compte
+		// 									FROM compte
+		// 									ORDER BY compte.nom_compte");
+		// 	// $requete-> execute(array($entree['id_jour']));
+		// 	while ($reponse = $requete-> fetch()) {
+		// 		$compteur++;
+
+		// 		$tableau .='<tr>
+		// 						<td>'.$compteur.'</td>
+		// 						<td><a href="#" onclick="select_compte2(\''.$reponse['id_compte'].'\', \''.$reponse['nom_compte'].'\',\''.$this-> getSoldeCompte($reponse['id_compte']).'\', '.$compteur_compte.')">'.$reponse['nom_compte'].'</a></td>
+		// 						<td style="text-align: right;">'.$this-> getSoldeCompte($reponse['id_compte']).'</td>
+		// 					</tr>';
+
+		// 	}$requete-> closeCursor();
+
+		// 	return $tableau;
+
+		// }
+
+		public function liste_compte2Ajax($compteur_compte){
+			include("connexion.php");
+			$compteur=0;
+
+			$row = array();
+
+			$requete = $connexion-> query("SELECT compte.id_compte AS id_compte, 
+													compte.nom_compte AS nom_compte
+											FROM compte
+											ORDER BY compte.nom_compte");
+			// $requete-> execute(array($entree['id_jour']));
+			while ($reponse = $requete-> fetch()) {
+				$compteur++;
+
+				$reponse['compteur'] = $compteur;
+				$reponse['compte'] = '<a href="#" onclick="select_compte2(\''.$reponse['id_compte'].'\', \''.$reponse['nom_compte'].'\',\''.$this-> getSoldeCompte2($reponse['id_compte'])['solde'].'\', '.$compteur_compte.', \''.$this-> getSoldeCompte2($reponse['id_compte'])['type_solde'].'\')">'.$reponse['nom_compte'].'</a>';
+				$reponse['solde'] = $this-> getSoldeCompte2($reponse['id_compte'])['solde'];
+				$reponse['type_solde'] = $this-> getSoldeCompte2($reponse['id_compte'])['type_solde'];
+				$row[] = $reponse;
+
+			}$requete-> closeCursor();
+
+			return $row;
 
 		}
 
