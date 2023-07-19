@@ -609,10 +609,6 @@
 
 	}elseif(isset($_POST['operation']) && $_POST['operation']=='popUpOperations'){ // On Recupere les data pour rapport Operations Popup
 		echo json_encode($maClasse-> getListeOperation($_POST['statut']));
-	}elseif(isset($_POST['operation']) && $_POST['operation']=='invoice_pending_validation_CDN'){ // On Recupere les factures CDN
-
-		echo json_encode($maClasse-> getInvoicePendingValidationCDN($_POST['id_cli'], $_POST['id_mod_lic']));
-
 	}elseif(isset($_POST['operation']) && $_POST['operation']=='modal_paiement'){ // On Recupere les data pour rapport Operations
 		$response['ref_fact'] = $_POST['ref_fact'];
 		$response['montant'] = round($maClasse-> getMontantFactureGlobale($_POST['ref_fact']), 2);
@@ -1844,6 +1840,20 @@
 		echo json_encode($maClasse-> afficherTialBalanceAjax());
 	}else if ($_POST['operation']=="detail_sub_class_trial_balance") {
 		echo json_encode($maClasse-> detail_sub_class_trial_balance($_POST['id_sub_class']));
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='getInvoiceAjax'){ // On Recupere les factures CDN
+
+		echo json_encode($maClasse-> getInvoiceAjax($_POST['id_cli'], $_POST['id_mod_lic'], $_POST['statut']));
+
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='dossiers_facture'){ // On Recupere les dossiers de factures
+
+		echo json_encode($maClasse-> dossiers_facture_ajax($_POST['ref_fact']));
+
+	}else if ($_POST['operation']=='remove_file_invoice') {
+	  
+		$maClasse-> supprimerDetailFactureDossier2($_POST['id_dos']);
+		$response['message'] = 'ok';
+		echo json_encode($response);
+
 	}
 
 ?>

@@ -1,5 +1,6 @@
 <?php
-  include("tete.php");
+  // include("tete.php");
+  include("tetepopCDN.php");
   include("menuHaut.php");
   include("menuGauche.php");
   //include("licenceExcel.php");
@@ -71,40 +72,6 @@
       <div class="container-fluid" style="">
         <div class="row">
 
-          <div class="col-12" id="searchInvoice" style="display: none;">
-            <div class="card">
-              <div class="card-header">
-                <h5 class="card-title" style="font-weight: bold;">
-                 <span style="color: #CCCC00;" class="badge badge-dark" id=""></span> Searching: <span class="text-primary" id="label_searchInvoice"></span> | results: <span id="nbre_searchInvoice" class="text-danger"></span>
-                </h5>
-
-              </div>    
-
-              <!-- /.card-header -->
-              <div class="card-body table-responsive p-0 small">
-                <table class=" table table-dark table-bordered table-hover text-nowrap table-sm">
-                  <thead>
-                    <tr class="bg bg-dark">
-                      <th style="border: 1px solid white;">#</th>
-                      <th style="border: 1px solid white;">REFERENCE</th>
-                      <th style="border: 1px solid white; text-align: center;">DATE</th>
-                      <th style="border: 1px solid white; text-align: center;">COMMODITY</th>
-                      <th style="border: 1px solid white; text-align: center;">AMOUNT</th>
-                      <th style="border: 1px solid white; text-align: center;">EDITOR</th>
-                      <th style="border: 1px solid white; text-align: center;">STATUS</th>
-                      <th style="border: 1px solid white; text-align: center;">ACTION</th>
-                    </tr>
-                  </thead>
-                  <tbody id="results_searchInvoice">
-                   
-                  </tbody>
-                </table>
-              </div>
-              <!-- /.card-body -->
-            </div>
-            <!-- /.card -->
-          </div>
-
           <div class="col-6">
             <div class="card">
               <div class="card-header">
@@ -115,24 +82,20 @@
               </div>    
 
               <!-- /.card-header -->
-              <div class="card-body table-responsive p-0 small" style="height: 400px;">
-                <table class=" table table-dark table-bordered table-hover text-nowrap table-head-fixed table-sm">
+              <div class="card-body table-responsive p-0 small">
+                <table id="invoice_pending_validation" class=" table table-dark table-bordered table-hover text-nowrap table-head-fixed table-sm">
                   <thead>
                     <tr class="bg bg-dark">
-                      <th style="border: 1px solid white;">#</th>
+                      <th style="border: 1px solid white;" width="5px">#</th>
                       <th style="border: 1px solid white;">REFERENCE</th>
                       <th style="border: 1px solid white; text-align: center;">DATE</th>
                       <th style="border: 1px solid white; text-align: center;">COMMODITY</th>
                       <th style="border: 1px solid white; text-align: center;">AMOUNT</th>
                       <th style="border: 1px solid white; text-align: center;">EDITOR</th>
-                      <th style="border: 1px solid white; text-align: center;">ACTION 
-                        <button class="btn-xs bg-primary square-btn-adjust" onclick="modal_check_multiple();" title="Validate">
-                            <i class="fas fa-check"></i>
-                        </button>
-                      </th>
+                      <th style="border: 1px solid white; text-align: center;">ACTION</th>
                     </tr>
                   </thead>
-                  <tbody id="invoice_pending_validation">
+                  <tbody>
                    
                   </tbody>
                 </table>
@@ -146,30 +109,17 @@
             <div class="card">
               <div class="card-header">
                 <h5 class="card-title" style="font-weight: bold;">
-                 <span style="color: #CCCC00;" class="badge badge-dark" id="nbre_invoice_waiting_to_send"></span> AWAITING TO SEND
+                 <span style="color: #CCCC00;" class="badge badge-dark" id="nbre_invoice_pending_validation"></span> AWAITING TO SEND
                 </h5>
-
-                <div class="card-tools">
-                  <!-- <form class="form-inline ml-3" method="POST" action="">
-                    <div class="input-group input-group-sm">
-                      <input class="form-control form-control-navbar" name="ref_fact" type="search" placeholder="Entrez numéro Facture" aria-label="Search">
-                      <div class="input-group-append">
-                        <button class="btn bg-primary btn-navbar" type="submit" name="search1">
-                          <i class="fas fa-search"></i>
-                        </button>
-                      </div>
-                    </div>
-                  </form> -->
-                </div>
 
               </div>    
 
               <!-- /.card-header -->
-              <div class="card-body table-responsive p-0 small" style="height: 400px;">
-                <table class=" table table-dark table-bordered table-hover text-nowrap table-head-fixed table-sm">
+              <div class="card-body table-responsive p-0 small">
+                <table id="invoice_waiting_to_send" class=" table table-dark table-bordered table-hover text-nowrap table-head-fixed table-sm">
                   <thead>
                     <tr class="bg bg-dark">
-                      <th style="border: 1px solid white;">#</th>
+                      <th style="border: 1px solid white;" width="5px">#</th>
                       <th style="border: 1px solid white;">REFERENCE</th>
                       <th style="border: 1px solid white; text-align: center;">DATE</th>
                       <th style="border: 1px solid white; text-align: center;">COMMODITY</th>
@@ -178,7 +128,7 @@
                       <th style="border: 1px solid white; text-align: center;">ACTION</th>
                     </tr>
                   </thead>
-                  <tbody id="invoice_waiting_to_send">
+                  <tbody>
                    
                   </tbody>
                 </table>
@@ -192,40 +142,26 @@
             <div class="card">
               <div class="card-header">
                 <h5 class="card-title" style="font-weight: bold;">
-                 <span style="color: #CCCC00;" class="badge badge-dark" id="nbre_invoice_send"></span> PENDING PAYMENT
+                 INVOICES SENDED
                 </h5>
-
-                <div class="card-tools">
-                  <!-- <form class="form-inline ml-3" method="POST" action="">
-                    <div class="input-group input-group-sm">
-                      <input class="form-control form-control-navbar" name="ref_fact" type="search" placeholder="Entrez numéro Facture" aria-label="Search">
-                      <div class="input-group-append">
-                        <button class="btn bg-primary btn-navbar" type="submit" name="search1">
-                          <i class="fas fa-search"></i>
-                        </button>
-                      </div>
-                    </div>
-                  </form> -->
-                </div>
 
               </div>    
 
               <!-- /.card-header -->
-              <div class="card-body table-responsive p-0 small" style="height: 400px;">
-                <table class=" table table-dark table-bordered table-hover text-nowrap table-head-fixed table-sm">
+              <div class="card-body table-responsive p-0 small">
+                <table id="invoice_send" class=" table table-dark table-bordered table-hover text-nowrap table-head-fixed table-sm">
                   <thead>
                     <tr class="bg bg-dark">
-                      <th style="border: 1px solid white;">#</th>
+                      <th style="border: 1px solid white;" width="5px">#</th>
                       <th style="border: 1px solid white;">REFERENCE</th>
                       <th style="border: 1px solid white; text-align: center;">DATE</th>
                       <th style="border: 1px solid white; text-align: center;">COMMODITY</th>
                       <th style="border: 1px solid white; text-align: center;">AMOUNT</th>
                       <th style="border: 1px solid white; text-align: center;">EDITOR</th>
-                      <th style="border: 1px solid white; text-align: center;">SENDING DATE</th>
                       <th style="border: 1px solid white; text-align: center;">ACTION</th>
                     </tr>
                   </thead>
-                  <tbody id="invoice_send">
+                  <tbody>
                    
                   </tbody>
                 </table>
@@ -235,51 +171,6 @@
             <!-- /.card -->
           </div>
 
-          <div class="col-6">
-            <div class="card">
-              <div class="card-header">
-                <h5 class="card-title" style="font-weight: bold;">
-                  PAYMENTS
-                </h5>
-
-                <div class="card-tools">
-                  <!-- <form class="form-inline ml-3" method="POST" action="">
-                    <div class="input-group input-group-sm">
-                      <input class="form-control form-control-navbar" name="ref_fact" type="search" placeholder="Entrez numéro Facture" aria-label="Search">
-                      <div class="input-group-append">
-                        <button class="btn bg-primary btn-navbar" type="submit" name="search1">
-                          <i class="fas fa-search"></i>
-                        </button>
-                      </div>
-                    </div>
-                  </form> -->
-                </div>
-
-              </div>    
-
-              <!-- /.card-header -->
-              <div class="card-body table-responsive p-0 small" style="height: 400px;">
-                <table class=" table table-dark table-bordered table-hover text-nowrap table-head-fixed table-sm">
-                  <thead>
-                    <tr class="bg bg-dark">
-                      <th style="border: 1px solid white;">#</th>
-                      <th style="border: 1px solid white;">REFERENCE</th>
-                      <th style="border: 1px solid white; text-align: center;">DATE</th>
-                      <th style="border: 1px solid white; text-align: center;">COMMODITY</th>
-                      <th style="border: 1px solid white; text-align: center;">PAYMENT DATE</th>
-                      <th style="border: 1px solid white; text-align: center;">AMOUNT</th>
-                      <th style="border: 1px solid white; text-align: center;">ACTION</th>
-                    </tr>
-                  </thead>
-                  <tbody id="invoice_payed">
-                   
-                  </tbody>
-                </table>
-              </div>
-              <!-- /.card-body -->
-            </div>
-            <!-- /.card -->
-          </div>
         </div>
       </div><!-- /.container-fluid -->
     </section>
@@ -341,73 +232,12 @@
   <!-- /.modal-dialog -->
 </div>
 
-<div class="modal fade" id="modal_paiement">
-  <div class="modal-dialog modal-md small">
-    <form id="modal_paiement_form" method="POST" action="" data-parsley-validate enctype="multipart/form-data">
-      <input type="hidden" name="operation" id="operation" value="paiement_invoice">
-      <input type="hidden" name="id_cli" id="id_cli" value="<?php echo $_GET['id_cli'];?>">
-      <input type="hidden" name="id_mod_lic" id="id_mod_lic" value="<?php echo $_GET['id_mod_lic_fact'];?>">
+<div class="modal fade" id="modal_dossiers_facture">
+  <div class="modal-dialog modal-lg small">
+   
     <div class="modal-content">
       <div class="modal-header ">
-        <h4 class="modal-title"><i class="fa fa-calculator"></i> Payment</h4>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <div class="row">
-
-          <div class="col-md-6">
-            <label for="x_card_code" class="control-label mb-1">Invoice Ref.</label>
-            <input id="label_ref_fact_payment" class="form-control form-control-sm cc-exp bg-dark" disabled>
-            <input type="hidden" style="text-align: center;" name="ref_fact" id="ref_fact_payment">
-          </div>
-
-          <div class="col-md-6">
-            <label for="x_card_code" class="control-label mb-1">Invoice Amount</label>
-            <input id="label_montant" style="text-align: center;" class="form-control form-control-sm cc-exp bg-dark" disabled>
-          </div>
-
-          <div class="col-md-6">
-            <label for="x_card_code" class="control-label mb-1">Payment Ref.</label>
-            <input id="ref_paie" name="ref_paie" class="form-control form-control-sm cc-exp" required>
-          </div>
-
-          <div class="col-md-6">
-            <label for="x_card_code" class="control-label mb-1">Date</label>
-            <input type="date" id="date_paie" name="date_paie" class="form-control form-control-sm cc-exp" required>
-          </div>
-
-          <div class="col-md-6">
-            <label for="x_card_code" class="control-label mb-1">Account</label>
-            <span id="compte_bancaire"></span>
-          </div>
-
-          <div class="col-md-6">
-            <label for="x_card_code" class="control-label mb-1">Bank</label>
-            <input type="text" id="nom_banq" class="form-control form-control-sm cc-exp" disabled>
-          </div>
-
-        </div>
-      </div>
-      <div class="modal-footer justify-content-between">
-        <button type="button" class="btn-xs btn-danger" data-dismiss="modal">Cancelled</button>
-        <button type="submit" name="rechercheClient" class="btn-xs btn-primary">Submit</button>
-      </div>
-    </div>
-    </form>
-    <!-- /.modal-content -->
-  </div>
-  <!-- /.modal-dialog -->
-</div>
-
-<div class="modal fade" id="modal_check_multiple">
-  <div class="modal-dialog modal-sm small">
-    <form id="modal_check_multiple_form" method="POST" action="" data-parsley-validate enctype="multipart/form-data">
-      <input type="hidden" name="operation" id="operation" value="check_multiple">
-    <div class="modal-content">
-      <div class="modal-header ">
-        <h4 class="modal-title"><i class="fa fa-check"></i> Multiple Validation</h4>
+        <h4 class="modal-title"><i class="fa fa-file"></i> File(s) in invoices</h4>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -416,28 +246,32 @@
         <div class="row">
 
           <div class="col-md-12">
-            <div class="card-body table-responsive p-0 small" style="height: 400px;">
-            <table class=" table table-dark table-bordered table-hover table-head-fixed  text-nowrap table-sm">
+            <label for="x_card_code" class="control-label mb-1">Invoice Ref.</label>
+            <input id="label_ref_fact_2" class="form-control form-control-sm cc-exp bg-dark" disabled>
+          </div>
+
+          <div class="col-md-12"><hr></div>
+
+          <div class="col-md-12">
+            <table id="dossiers_facture" cellspacing="0" width="100%" class="small table hover display compact table-bordered table-striped table-sm text-nowrap">
               <thead>
-                <tr class="bg bg-dark">
-                  <th>#</th>
-                  <th>Reference</th>
-                  <th>Action</th>
-                </tr>
+              <tr>
+                <th>#</th>
+                <th>File Ref.</th>
+                <th>Truck(Wagon)</th>
+                <th>Declaration</th>
+                <th>Liquidation</th>
+                <th>Quittance</th>
+                <th>Amount</th>
+              </tr>
               </thead>
-              <tbody id="table_invoices_check_multiple">
+              <tbody>
               </tbody>
             </table>
-            </div>
           </div>
         </div>
       </div>
-      <div class="modal-footer justify-content-between">
-        <button type="button" class="btn-xs btn-danger" data-dismiss="modal">Cancelled</button>
-        <button type="submit" name="ok" class="btn-xs btn-primary">Submit</button>
-      </div>
     </div>
-    </form>
     <!-- /.modal-content -->
   </div>
   <!-- /.modal-dialog -->
@@ -445,28 +279,299 @@
 
 <script type="text/javascript">
   
-  function getDataCompteBancaire(num_cmpt) {
+  function remove_file_invoice(id_dos){
+    if(confirm('Do really you want to remove this file ?')) {
+      $.ajax({
+        type: 'post',
+        url: 'ajax.php',
+        data: {id_dos: id_dos, operation: "remove_file_invoice"},
+        dataType: 'json',
+        success:function(data){
+          if (data.logout) {
+            alert(data.logout);
+            window.location="../deconnexion.php";
+          }else if(data.message){
+            
+            $('#dossiers_facture').DataTable().ajax.reload();
+            $('#invoice_waiting_to_send').DataTable().ajax.reload();
+            $('#invoice_pending_validation').DataTable().ajax.reload();
+            $('#invoice_send').DataTable().ajax.reload();
+          }
+        }
+      });
+    }
+  }
+
+  function modal_dossiers_facture(ref_fact){
+    
     $('#spinner-div').show();
-    $.ajax({
-      type: "POST",
-      url: "ajax.php",
-      data: { num_cmpt: num_cmpt, operation: 'getDataCompteBancaire'},
-      dataType:"json",
-      success:function(data){
-        if (data.logout) {
-          alert(data.logout);
-          window.location="../deconnexion.php";
-        }else{
-          $('#nom_banq').val(data.nom_banq);
+
+    $('#label_ref_fact_2').val(ref_fact);
+
+    if ( $.fn.dataTable.isDataTable( '#dossiers_facture' ) ) {
+        table = $('#dossiers_facture').DataTable();
+    }
+    else {
+        table = $('#dossiers_facture').DataTable( {
+            paging: false
+        } );
+    }
+
+    table.destroy();
+
+    $('#dossiers_facture').DataTable({
+       lengthMenu: [
+          [20, 50, 100, -1],
+          [20, 50, 100, 500, 'All'],
+      ],
+      dom: 'Bfrtip',
+      buttons: [
+          {
+            extend: 'excel',
+            text: '<i class="fa fa-file-excel"></i>',
+            className: 'btn btn-success'
+          }
+      ],
+    "paging": true,
+    "lengthChange": true,
+    "searching": true,
+    "ordering": true,
+    "info": true,
+    "autoWidth": true,
+    "responsive": true,
+      "ajax":{
+        "type": "GET",
+        "url":"ajax.php",
+        "method":"post",
+        "dataSrc":{
+            "id_cli": "844"
+        },
+        "data": {
+            "ref_fact": ref_fact,
+            "operation": "dossiers_facture"
         }
       },
-      complete: function () {
-          $('#spinner-div').hide();//Request is complete so hide spinner
-      }
+      "columns":[
+        {"data":"compteur"},
+        {"data":"ref_dos"},
+        {"data":"truck"},
+        {"data":"declaration"},
+        {"data":"liquidation"},
+        {"data":"quittance"},
+        {"data":"ttc_usd",
+          render: DataTable.render.number( null, null, 2, null ),
+          className: 'dt-body-right'
+        }
+      ] 
     });
+    $('#spinner-div').hide();//Request is complete so hide spinner
 
+    $('#modal_dossiers_facture').modal('show');
+    
   }
-  
+  // $(document).ready(function(){
+    
+  //   $('#spinner-div').show();
+
+  //    $.ajax({
+  //     type: 'post',
+  //     url: 'ajax.php',
+  //     data: {operation: 'getAllInvoices', id_cli:<?php echo $_GET['id_cli'];?>, id_mod_lic:<?php echo $_GET['id_mod_lic_fact'];?>},
+  //     dataType: 'json',
+  //     success:function(data){
+  //       if (data.logout) {
+  //         alert(data.logout);
+  //         window.location="../deconnexion.php";
+  //       }else{
+  //         $('#invoice_pending_validation').html(data.invoice_pending_validation);
+  //         $('#nbre_invoice_pending_validation').html(data.nbre_invoice_pending_validation);
+  //         $('#invoice_waiting_to_send').html(data.invoice_waiting_to_send);
+  //         $('#nbre_invoice_waiting_to_send').html(data.nbre_invoice_waiting_to_send);
+  //         $('#invoice_send').html(data.invoice_send);
+  //         $('#nbre_invoice_send').html(data.nbre_invoice_send);
+  //       }
+  //     },
+  //     complete: function () {
+  //         $('#spinner-div').hide();//Request is complete so hide spinner
+  //     }
+  //   });
+
+  // });
+
+  $('#invoice_waiting_to_send').DataTable({
+     lengthMenu: [
+        [10, 100, 500, -1],
+        [10, 100, 500, 'All'],
+    ],
+    dom: 'Bfrtip',
+  buttons: [
+      {
+        extend: 'excel',
+        text: '<i class="fa fa-file-excel"></i>',
+        className: 'btn btn-success'
+      },
+      {
+        extend: 'pageLength',
+        text: '<i class="fa fa-list"></i>',
+        className: 'btn btn-dark'
+      }
+  ],
+    
+  "paging": true,
+  "lengthChange": true,
+  "searching": true,
+  "ordering": true,
+  "info": true,
+  "autoWidth": true,
+  "responsive": true,
+    "ajax":{
+      "type": "GET",
+      "url":"ajax.php",
+      "method":"post",
+      "dataSrc":{
+          "id_cli": ""
+      },
+      "data": {
+          "id_cli": "<?php echo $_GET['id_cli'];?>",
+          "id_mod_lic": "<?php echo $_GET['id_mod_lic_fact'];?>",
+          "statut": "invoice_waiting_to_send",
+          "operation": "getInvoiceAjax"
+      }
+    },
+    rowGroup: {
+        dataSrc: "commodity",
+
+    },
+    "columns":[
+      {"data":"compteur"},
+      {"data":"ref_fact"},
+      {"data":"date_fact"},
+      {"data":"commodity"},
+      {"data":"montant",
+        render: DataTable.render.number( null, null, 2, null ),
+        className: 'dt-body-right'
+      },
+      {"data":"nom_util"},
+      {"data":"action"}
+    ] 
+  });
+
+  $('#invoice_pending_validation').DataTable({
+     lengthMenu: [
+        [10, 100, 500, -1],
+        [10, 100, 500, 'All'],
+    ],
+    dom: 'Bfrtip',
+  buttons: [
+      {
+        extend: 'excel',
+        text: '<i class="fa fa-file-excel"></i>',
+        className: 'btn btn-success'
+      },
+      {
+        extend: 'pageLength',
+        text: '<i class="fa fa-list"></i>',
+        className: 'btn btn-dark'
+      }
+  ],
+  "paging": true,
+  "lengthChange": true,
+  "searching": true,
+  "ordering": true,
+  "info": true,
+  "autoWidth": true,
+  "responsive": true,
+    "ajax":{
+      "type": "GET",
+      "url":"ajax.php",
+      "method":"post",
+      "dataSrc":{
+          "id_cli": ""
+      },
+      "data": {
+          "id_cli": "<?php echo $_GET['id_cli'];?>",
+          "id_mod_lic": "<?php echo $_GET['id_mod_lic_fact'];?>",
+          "statut": "invoice_pending_validation",
+          "operation": "getInvoiceAjax"
+      }
+    },
+    rowGroup: {
+        dataSrc: "commodity",
+
+    },
+    "columns":[
+      {"data":"compteur"},
+      {"data":"ref_fact"},
+      {"data":"date_fact"},
+      {"data":"commodity"},
+      {"data":"montant",
+        render: DataTable.render.number( null, null, 2, null ),
+        className: 'dt-body-right'
+      },
+      {"data":"nom_util"},
+      {"data":"action"}
+    ] 
+  });
+
+  $('#invoice_send').DataTable({
+     lengthMenu: [
+        [10, 100, 500, -1],
+        [10, 100, 500, 'All'],
+    ],
+    dom: 'Bfrtip',
+  buttons: [
+      {
+        extend: 'excel',
+        text: '<i class="fa fa-file-excel"></i>',
+        className: 'btn btn-success'
+      },
+      {
+        extend: 'pageLength',
+        text: '<i class="fa fa-list"></i>',
+        className: 'btn btn-dark'
+      }
+  ],
+    
+  "paging": true,
+  "lengthChange": true,
+  "searching": true,
+  "ordering": true,
+  "info": true,
+  "autoWidth": true,
+  "responsive": true,
+    "ajax":{
+      "type": "GET",
+      "url":"ajax.php",
+      "method":"post",
+      "dataSrc":{
+          "id_cli": ""
+      },
+      "data": {
+          "id_cli": "<?php echo $_GET['id_cli'];?>",
+          "id_mod_lic": "<?php echo $_GET['id_mod_lic_fact'];?>",
+          "statut": "invoice_send",
+          "operation": "getInvoiceAjax"
+      }
+    },
+    rowGroup: {
+        dataSrc: "commodity",
+
+    },
+    "columns":[
+      {"data":"compteur"},
+      {"data":"ref_fact"},
+      {"data":"date_fact"},
+      {"data":"commodity"},
+      {"data":"montant",
+        render: DataTable.render.number( null, null, 2, null ),
+        className: 'dt-body-right'
+      },
+      {"data":"nom_util"},
+      {"data":"action"}
+    ] 
+  });
+
+
   function modal_send_invoice(ref_fact) {
     $('#spinner-div').show();
     $.ajax({
@@ -493,7 +598,7 @@
     });
 
   }
-  
+
   $(document).ready(function(){
 
       $('#modal_send_invoice_form').submit(function(e){
@@ -529,7 +634,9 @@
               }
             },
             complete: function () {
-                getAllInvoices();
+                $('#invoice_waiting_to_send').DataTable().ajax.reload();
+                $('#invoice_pending_validation').DataTable().ajax.reload();
+                $('#invoice_send').DataTable().ajax.reload();
                 alert('Email has been sended');
                 $('#spinner-div').hide();//Request is complete so hide spinner
             }
@@ -542,36 +649,6 @@
   });
 
 //Recuperation des factures
-
-  $(document).ready(function(){
-    
-    $('#spinner-div').show();
-
-     $.ajax({
-      type: 'post',
-      url: 'ajax.php',
-      data: {operation: 'getAllInvoices', id_cli:<?php echo $_GET['id_cli'];?>, id_mod_lic:<?php echo $_GET['id_mod_lic_fact'];?>},
-      dataType: 'json',
-      success:function(data){
-        if (data.logout) {
-          alert(data.logout);
-          window.location="../deconnexion.php";
-        }else{
-          $('#invoice_pending_validation').html(data.invoice_pending_validation);
-          $('#nbre_invoice_pending_validation').html(data.nbre_invoice_pending_validation);
-          $('#invoice_waiting_to_send').html(data.invoice_waiting_to_send);
-          $('#nbre_invoice_waiting_to_send').html(data.nbre_invoice_waiting_to_send);
-          $('#invoice_send').html(data.invoice_send);
-          $('#invoice_payed').html(data.invoice_payed);
-          $('#nbre_invoice_send').html(data.nbre_invoice_send);
-        }
-      },
-      complete: function () {
-          $('#spinner-div').hide();//Request is complete so hide spinner
-      }
-    });
-
-  });
 
  function getAllInvoices(){
   $('#spinner-div').show();
@@ -591,7 +668,6 @@
         $('#invoice_waiting_to_send').html(data.invoice_waiting_to_send);
         $('#nbre_invoice_waiting_to_send').html(data.nbre_invoice_waiting_to_send);
         $('#invoice_send').html(data.invoice_send);
-        $('#invoice_payed').html(data.invoice_payed);
         $('#nbre_invoice_send').html(data.nbre_invoice_send);
       }
     },
@@ -618,13 +694,9 @@
               alert(data.logout);
               window.location="../deconnexion.php";
             }else{
-              $('#invoice_pending_validation').html(data.invoice_pending_validation);
-              $('#nbre_invoice_pending_validation').html(data.nbre_invoice_pending_validation);
-              $('#invoice_waiting_to_send').html(data.invoice_waiting_to_send);
-              $('#nbre_invoice_waiting_to_send').html(data.nbre_invoice_waiting_to_send);
-              $('#invoice_send').html(data.invoice_send);
-              $('#invoice_payed').html(data.invoice_payed);
-              $('#nbre_invoice_send').html(data.nbre_invoice_send);
+              $('#invoice_waiting_to_send').DataTable().ajax.reload();
+              $('#invoice_pending_validation').DataTable().ajax.reload();
+              $('#invoice_send').DataTable().ajax.reload();
               alert('Invoice ' + ref_fact + ' has been validated!');
             }
           },
@@ -639,7 +711,7 @@
 
   function supprimerFacture(ref_fact){
 
-    if(confirm('Do really you want to delete this invoice '+ref_fact+'?')) {
+    if(confirm('Do really you want to validate this invoice '+ref_fact+'?')) {
 
       $('#spinner-div').show();
 
@@ -653,13 +725,9 @@
               alert(data.logout);
               window.location="../deconnexion.php";
             }else{
-              $('#invoice_pending_validation').html(data.invoice_pending_validation);
-              $('#nbre_invoice_pending_validation').html(data.nbre_invoice_pending_validation);
-              $('#invoice_waiting_to_send').html(data.invoice_waiting_to_send);
-              $('#nbre_invoice_waiting_to_send').html(data.nbre_invoice_waiting_to_send);
-              $('#invoice_send').html(data.invoice_send);
-              $('#invoice_payed').html(data.invoice_payed);
-              $('#nbre_invoice_send').html(data.nbre_invoice_send);
+              $('#invoice_waiting_to_send').DataTable().ajax.reload();
+              $('#invoice_pending_validation').DataTable().ajax.reload();
+              $('#invoice_send').DataTable().ajax.reload();
               alert('Invoice ' + ref_fact + ' has been deleted!');
             }
           },
@@ -704,159 +772,5 @@ function editerFacture(ref_fact, edit_page){
     window.location= edit_page + '?ref_fact='+ref_fact;
   }
 }
-
-
-function modal_paiement(ref_fact) {
-  $('#spinner-div').show();
-  $.ajax({
-    type: "POST",
-    url: "ajax.php",
-    data: { ref_fact: ref_fact, operation: 'modal_paiement'},
-    dataType:"json",
-    success:function(data){
-      if (data.logout) {
-        alert(data.logout);
-        window.location="../deconnexion.php";
-      }else{
-        // alert('Hello');
-        // $("#updateModaliteFss").modal("hide");
-        $('#ref_fact_payment').val(ref_fact);
-        $('#label_ref_fact_payment').val(ref_fact);
-        $('#label_montant').val(data.label_montant);
-        $('#nom_banq').val(data.nom_banq);
-        $('#compte_bancaire').html(data.compte_bancaire);
-
-        // document.getElementById("montant_paie").max = data.montant;
-        // $('#').setAttribute("max", data.montant);
-        $('#modal_paiement').modal('show');
-      }
-    },
-    complete: function () {
-        $('#spinner-div').hide();//Request is complete so hide spinner
-    }
-  });
-
-  }
-
-  $(document).ready(function(){
-
-      $('#modal_paiement_form').submit(function(e){
-
-              e.preventDefault();
-
-        if(confirm('Do really you want to submit ?')) {
-
-          var fd = new FormData(this);
-          $('#modal_paiement').modal('hide');
-          $('#spinner-div').show();
-
-          $.ajax({
-            type: 'post',
-            url: 'ajax.php',
-            processData: false,
-            contentType: false,
-            data: fd,
-            dataType: 'json',
-            success:function(data){
-              if (data.logout) {
-                alert(data.logout);
-                window.location="../deconnexion.php";
-              }else if(data.message){
-                // $('#ref_fact').val(data.ref_fact);
-                // $('#id_dos').html(data.ref_dos);
-                $('#spinner-div').hide();//Request is complete so hide spinner
-                alert(data.message);
-              }else{
-                // $('#ref_fact').val(data.ref_fact);
-                // $('#id_dos').html(data.ref_dos);
-                $('#invoice_send').html(data.invoice_send);
-                $('#invoice_payed').html(data.invoice_payed);
-                $('#nbre_invoice_send').html(data.nbre_invoice_send);
-                alert('Payment made');
-              }
-            },
-            complete: function () {
-                // alert('Payment made!');
-                $('#spinner-div').hide();//Request is complete so hide spinner
-            }
-          });
-
-        }
-
-      });
-    
-  });
-
-  function modal_check_multiple(){
-
-    $('#spinner-div').show();
-    $.ajax({
-      type: "POST",
-      url: "ajax.php",
-      data: {id_cli:<?php echo $_GET['id_cli'];?>, id_mod_lic:<?php echo $_GET['id_mod_lic_fact'];?>, operation: 'modal_check_multiple'},
-      dataType:"json",
-      success:function(data){
-        if (data.logout) {
-          alert(data.logout);
-          window.location="../deconnexion.php";
-        }else{
-          $('#table_invoices_check_multiple').html(data.table_invoices_check_multiple);
-          $('#modal_check_multiple').modal('show');
-        }
-      },
-      complete: function () {
-          $('#spinner-div').hide();//Request is complete so hide spinner
-      }
-    });
-
-  }
-
-  $(document).ready(function(){
-
-      $('#modal_check_multiple_form').submit(function(e){
-
-              e.preventDefault();
-
-        if(confirm('Do really you want to submit ?')) {
-
-          var fd = new FormData(this);
-          $('#modal_check_multiple').modal('hide');
-          $('#spinner-div').show();
-
-          $.ajax({
-            type: 'post',
-            url: 'ajax.php',
-            processData: false,
-            contentType: false,
-            data: fd,
-            dataType: 'json',
-            success:function(data){
-              if (data.logout) {
-                alert(data.logout);
-                window.location="../deconnexion.php";
-              }else if(data.message){
-                // $('#ref_fact').val(data.ref_fact);
-                // $('#id_dos').html(data.ref_dos);
-                $('#spinner-div').hide();//Request is complete so hide spinner
-                alert(data.message);
-              }else{
-                // $('#ref_fact').val(data.ref_fact);
-                // $('#id_dos').html(data.ref_dos);
-                alert(data.compteur+' invoices validated!');
-                // alert('Done!');
-              }
-            },
-            complete: function () {
-                getAllInvoices();
-                // alert(data.compteur+' invoices validated!');
-                $('#spinner-div').hide();//Request is complete so hide spinner
-            }
-          });
-
-        }
-
-      });
-    
-  });
 
 </script>
