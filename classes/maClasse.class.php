@@ -9484,7 +9484,77 @@
 
 			$debut = $compteur;
 
+			$rows = array();
+
 			$requete = $connexion-> prepare("SELECT fd.ref_fact AS ref_fact,
+												DATE_FORMAT(fd.date_fact, '%d/%m/%Y') AS date_fact,
+												fd.validation AS validation,
+												fd.id_march AS id_march,
+												fd.type_fact AS type_fact,
+												cl.nom_cli AS nom_cli,
+												cl.id_cli AS id_cli,
+												u.nom_util AS nom_util,
+												u.validation_facture AS validation_facture,
+												fd.transmission AS transmission,
+												fd.type_fact AS type_fact,
+												fd.id_mod_lic AS id_mod_lic,
+												mf.edit_page AS edit_page,
+												mf.view_page AS view_page,
+												mf.excel AS excel,
+												CONCAT(CONCAT('<button class=\"btn btn-xs bg-info square-btn-adjust\" onclick=\"window.open(\'',mf.view_page,'?ref_fact=',fd.ref_fact,'\',\'pop3\',\'width=1000,height=800\');\" title=\"View invoice\">
+								                    <i class=\"fas fa-eye\"></i> 
+								                </button>'),' ',
+								                CONCAT('<button class=\"btn btn-xs bg-success square-btn-adjust\" onclick=\"window.location.replace(\'',mf.excel,'?ref_fact=',fd.ref_fact,'\',\'pop4\',\'width=1000,height=800\');\" title=\"Export Annex\">
+								                    <i class=\"fas fa-file-excel\"></i> 
+								                </button>'),' ',
+								                CONCAT('<button class=\"btn btn-xs bg-warning square-btn-adjust\" onclick=\"editerFacture(\'',fd.ref_fact,'\', \'',mf.edit_page,'\');\" title=\"Edit\">
+								                    <i class=\"fas fa-edit\"></i> 
+								                </button>'),' ',
+								                CONCAT('<button class=\"btn btn-xs bg-primary square-btn-adjust\" onclick=\"validerFacture(\'',fd.ref_fact,'\');\" title=\"Validate\">
+								                    <i class=\"fas fa-check\"></i> 
+								                </button>'),' ',
+								                CONCAT('<button class=\"btn btn-xs bg-danger square-btn-adjust\" onclick=\"supprimerFacture(\'',fd.ref_fact,'\');\" title=\"Delete\">
+								                    <i class=\"fas fa-times\"></i> 
+								                </button>')) AS action
+												FROM facture_dossier fd, client cl, utilisateur u, modele_facture mf
+											WHERE fd.id_mod_lic = ?
+												AND fd.id_util = u.id_util
+												AND fd.id_cli = cl.id_cli
+												AND fd.id_mod_fact = mf.id_mod_fact
+												AND fd.validation = '0'
+												AND fd.id_cli = ?
+											ORDER BY fd.date_fact ASC");
+			$requete-> execute(array($entree['id_mod_lic'], $entree['id_cli']));
+			while ($reponse = $requete-> fetch()) {
+				$compteur++;
+				$reponse['compteur'] = $compteur;
+				$reponse['montant'] = number_format($this-> getMontantFactureGlobale($reponse['ref_fact'])+(( ($this-> getMontantFactureDebours($reponse['ref_fact'], 27)*$this-> getFactureGlobale($reponse['ref_fact'])['taux_commission']) - $this-> getMontantFactureDebours($reponse['ref_fact'], 27))), 2, ',', ' ');
+				$reponse['commodity'] = $this-> getMarchandiseFacture($reponse['ref_fact'])['nom_march'];
+				$rows[] = $reponse;
+			}$requete-> closeCursor();
+			return $rows;
+
+		}
+
+		public function getInvoiceAjax($id_cli, $id_mod_lic, $statut){
+			include("connexion.php");
+			$entree['id_cli'] = $id_cli;
+			$entree['id_mod_lic'] = $id_mod_lic;
+			//$entree['type_fact'] = $type_fact;
+			$compteur=0;
+
+			$bg = "";
+			$badge = '';
+			$btn = '';
+			$etat ='';
+			$tableau = '';
+
+			$debut = $compteur;
+
+			$rows = array();
+
+			if ($statut=='invoice_pending_validation') {
+				$requete = $connexion-> prepare("SELECT fd.ref_fact AS ref_fact,
 													DATE_FORMAT(fd.date_fact, '%d/%m/%Y') AS date_fact,
 													fd.validation AS validation,
 													fd.id_march AS id_march,
@@ -9511,7 +9581,9 @@
 									                CONCAT('<button class=\"btn btn-xs bg-primary square-btn-adjust\" onclick=\"validerFacture(\'',fd.ref_fact,'\');\" title=\"Validate\">
 									                    <i class=\"fas fa-check\"></i> 
 									                </button>'),' ',
-									                CONCAT('<button class=\"btn btn-xs bg-danger square-btn-adjust\" onclick=\"supprimerFacture(\'',fd.ref_fact,'\');\" title=\"Delete\">
+									                CONCAT('<button class=\"btn btn-xs bg-secondary square-btn-adjust\" onclick=\"modal_dossiers_facture(\'',fd.ref_fact,'\');\" title=\"Files in invoice\">
+									                    <i class=\"fas fa-cogs\"></i> 
+									                </button> <button class=\"btn btn-xs bg-danger square-btn-adjust\" onclick=\"supprimerFacture(\'',fd.ref_fact,'\');\" title=\"Delete\">
 									                    <i class=\"fas fa-times\"></i> 
 									                </button>')) AS action
  												FROM facture_dossier fd, client cl, utilisateur u, modele_facture mf
@@ -9522,12 +9594,98 @@
 													AND fd.validation = '0'
 													AND fd.id_cli = ?
 												ORDER BY fd.date_fact ASC");
+			}else if ($statut=='invoice_waiting_to_send') {
+				$requete = $connexion-> prepare("SELECT fd.ref_fact AS ref_fact,
+													DATE_FORMAT(fd.date_fact, '%d/%m/%Y') AS date_fact,
+													fd.validation AS validation,
+													fd.id_march AS id_march,
+													fd.type_fact AS type_fact,
+													cl.nom_cli AS nom_cli,
+													cl.id_cli AS id_cli,
+													u.nom_util AS nom_util,
+													u.validation_facture AS validation_facture,
+													fd.transmission AS transmission,
+													fd.type_fact AS type_fact,
+													fd.id_mod_lic AS id_mod_lic,
+													mf.edit_page AS edit_page,
+													mf.view_page AS view_page,
+													mf.excel AS excel,
+													CONCAT(CONCAT('<button class=\"btn btn-xs bg-info square-btn-adjust\" onclick=\"window.open(\'',mf.view_page,'?ref_fact=',fd.ref_fact,'\',\'pop3\',\'width=1000,height=800\');\" title=\"View invoice\">
+									                    <i class=\"fas fa-eye\"></i> 
+									                </button>'),' ',
+									                CONCAT('<button class=\"btn btn-xs bg-success square-btn-adjust\" onclick=\"window.location.replace(\'',mf.excel,'?ref_fact=',fd.ref_fact,'\',\'pop4\',\'width=1000,height=800\');\" title=\"Export Annex\">
+									                    <i class=\"fas fa-file-excel\"></i> 
+									                </button>'),' ',
+									                CONCAT('<button class=\"btn btn-xs bg-warning square-btn-adjust\" onclick=\"editerFacture(\'',fd.ref_fact,'\', \'',mf.edit_page,'\');\" title=\"Edit\">
+									                    <i class=\"fas fa-edit\"></i> 
+									                </button>'),' ',
+									                CONCAT('<button class=\"btn btn-xs bg-purple square-btn-adjust\" onclick=\"modal_send_invoice(\'',fd.ref_fact,'\');\" title=\"Validate\">
+									                    <i class=\"fas fa-envelope\"></i> 
+									                </button>'),' ',
+									                CONCAT('<button class=\"btn btn-xs bg-secondary square-btn-adjust\" onclick=\"modal_dossiers_facture(\'',fd.ref_fact,'\');\" title=\"Files in invoice\">
+									                    <i class=\"fas fa-cogs\"></i> 
+									                </button> <button class=\"btn btn-xs bg-danger square-btn-adjust\" onclick=\"supprimerFacture(\'',fd.ref_fact,'\');\" title=\"Delete\">
+									                    <i class=\"fas fa-times\"></i> 
+									                </button>')) AS action
+ 												FROM facture_dossier fd, client cl, utilisateur u, modele_facture mf
+												WHERE fd.id_mod_lic = ?
+													AND fd.id_util = u.id_util
+													AND fd.id_cli = cl.id_cli
+													AND fd.id_mod_fact = mf.id_mod_fact
+													AND fd.validation = '1'
+													AND fd.date_mail IS NULL
+													AND fd.id_cli = ?
+												ORDER BY fd.date_fact DESC");
+			}else if ($statut=='invoice_send') {
+				$requete = $connexion-> prepare("SELECT fd.ref_fact AS ref_fact,
+													DATE_FORMAT(fd.date_fact, '%d/%m/%Y') AS date_fact,
+													fd.validation AS validation,
+													fd.id_march AS id_march,
+													fd.type_fact AS type_fact,
+													cl.nom_cli AS nom_cli,
+													cl.id_cli AS id_cli,
+													u.nom_util AS nom_util,
+													u.validation_facture AS validation_facture,
+													fd.transmission AS transmission,
+													fd.type_fact AS type_fact,
+													fd.id_mod_lic AS id_mod_lic,
+													mf.edit_page AS edit_page,
+													mf.view_page AS view_page,
+													mf.excel AS excel,
+													CONCAT(CONCAT('<button class=\"btn btn-xs bg-info square-btn-adjust\" onclick=\"window.open(\'',mf.view_page,'?ref_fact=',fd.ref_fact,'\',\'pop3\',\'width=1000,height=800\');\" title=\"View invoice\">
+									                    <i class=\"fas fa-eye\"></i> 
+									                </button>'),' ',
+									                CONCAT('<button class=\"btn btn-xs bg-success square-btn-adjust\" onclick=\"window.location.replace(\'',mf.excel,'?ref_fact=',fd.ref_fact,'\',\'pop4\',\'width=1000,height=800\');\" title=\"Export Annex\">
+									                    <i class=\"fas fa-file-excel\"></i> 
+									                </button>'),' ',
+									                CONCAT('<button class=\"btn btn-xs bg-warning square-btn-adjust\" onclick=\"editerFacture(\'',fd.ref_fact,'\', \'',mf.edit_page,'\');\" title=\"Edit\">
+									                    <i class=\"fas fa-edit\"></i> 
+									                </button>'),' ',
+									                CONCAT('<button class=\"btn btn-xs bg-purple square-btn-adjust\" onclick=\"modal_send_invoice(\'',fd.ref_fact,'\');\" title=\"Validate\">
+									                    <i class=\"fas fa-envelope\"></i> 
+									                </button>'),' ',
+									                CONCAT('<button class=\"btn btn-xs bg-secondary square-btn-adjust\" onclick=\"modal_dossiers_facture(\'',fd.ref_fact,'\');\" title=\"Files in invoice\">
+									                    <i class=\"fas fa-cogs\"></i> 
+									                </button> <button class=\"btn btn-xs bg-danger square-btn-adjust\" onclick=\"supprimerFacture(\'',fd.ref_fact,'\');\" title=\"Delete\">
+									                    <i class=\"fas fa-times\"></i> 
+									                </button>')) AS action
+ 												FROM facture_dossier fd, client cl, utilisateur u, modele_facture mf
+												WHERE fd.id_mod_lic = ?
+													AND fd.id_util = u.id_util
+													AND fd.id_cli = cl.id_cli
+													AND fd.id_mod_fact = mf.id_mod_fact
+													AND fd.validation = '1'
+													AND fd.date_mail IS NOT NULL
+													AND fd.id_cli = ?
+												ORDER BY fd.date_fact ASC");
+			}
 			$requete-> execute(array($entree['id_mod_lic'], $entree['id_cli']));
 			while ($reponse = $requete-> fetch()) {
 				$compteur++;
 				$reponse['compteur'] = $compteur;
-				$reponse['montant'] = number_format($this-> getMontantFactureGlobale($reponse['ref_fact'])+(( ($this-> getMontantFactureDebours($reponse['ref_fact'], 27)*$this-> getFactureGlobale($reponse['ref_fact'])['taux_commission']) - $this-> getMontantFactureDebours($reponse['ref_fact'], 27))), 2, ',', ' ');
+				$reponse['montant'] = $this-> getMontantFactureGlobale($reponse['ref_fact'])+(( ($this-> getMontantFactureDebours($reponse['ref_fact'], 27)*$this-> getFactureGlobale($reponse['ref_fact'])['taux_commission']) - $this-> getMontantFactureDebours($reponse['ref_fact'], 27)));
 				$reponse['commodity'] = $this-> getMarchandiseFacture($reponse['ref_fact'])['nom_march'];
+
 				$rows[] = $reponse;
 			}$requete-> closeCursor();
 			return $rows;
@@ -15372,6 +15530,69 @@
 			?>
 			<input name="nbre" type="hidden" value="<?php echo $compteur;?>">
 			<?php
+		}
+		
+		public function dossiers_facture_ajax($ref_fact){
+			include('connexion.php');
+
+			$entree['ref_fact'] = $ref_fact;
+			$rows = array();
+			$compteur = 0;
+
+			$requete = $connexion-> prepare("SELECT CONCAT(dos.ref_dos,'   <a href=\"#\" onclick=\"remove_file_invoice(\'',dos.id_dos,'\');\" title=\"Remove this file\">
+									                    <i class=\"fas fa-times text-danger\"></i> 
+									                </a>') AS ref_dos, dos.id_dos, dos.num_lot, 
+													dos.horse, dos.trailer_1, dos.trailer_2, 
+													dos.poids, dos.roe_decl,
+													CONCAT(dos.ref_decl, ' ', DATE_FORMAT(dos.date_decl, '%d/%m/%Y')) AS declaration,
+													CONCAT(dos.ref_liq, ' ', DATE_FORMAT(dos.date_liq, '%d/%m/%Y')) AS liquidation,
+													CONCAT(dos.ref_quit, ' ', DATE_FORMAT(dos.date_quit, '%d/%m/%Y')) AS quittance,
+													dos.horse, dos.trailer_1, dos.trailer_2,
+													CONCAT(
+														IF(dos.horse IS NOT NULL AND REPLACE(dos.horse, ' ', '') NOT LIKE '',
+															dos.horse,
+															''),
+														IF(dos.trailer_1 IS NOT NULL AND REPLACE(dos.trailer_1, ' ', '') NOT LIKE '',
+															CONCAT(' / ', dos.trailer_1),
+															''),
+														IF(dos.trailer_2 IS NOT NULL AND REPLACE(dos.trailer_2, ' ', '') NOT LIKE '',
+															CONCAT(' / ', dos.trailer_2),
+															'')
+													) AS truck,
+
+													SUM(
+														IF(det.usd='1', 
+															IF(det.tva='1',
+																det.montant*1.16,
+																det.montant
+															), 
+															IF(det.tva='1',
+																IF(det.montant_tva>0,
+																	((det.montant_tva+det.montant)/dos.roe_decl),
+																	(det.montant/dos.roe_decl)*1.16
+																),
+																(det.montant/dos.roe_decl)
+															)
+														)
+													) AS ttc_usd
+
+											FROM dossier dos, detail_facture_dossier det
+											WHERE det.ref_fact = ?
+												AND det.id_dos = dos.id_dos
+											GROUP BY dos.id_dos
+											ORDER BY dos.id_dos  ASC");
+
+			$requete-> execute(array($entree['ref_fact']));
+
+			while($reponse = $requete-> fetch()){
+				$compteur++;
+				$reponse['compteur'] = $compteur;
+
+				$rows[] = $reponse;
+
+			}$requete-> closeCursor();
+
+			return $rows;
 		}
 		
 		public function getDossiersImportAcidEditFactures($ref_fact){
