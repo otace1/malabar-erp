@@ -371,7 +371,18 @@
               </p></span>
             </a>
           </li>
-
+          <li class="nav-item">
+            <a href="pending_report.php" class="nav-link">
+              &nbsp;<img src="../images/calculator.png" width="25px">
+              <p><?php
+                  if ($maClasse-> getUtilisateur($_SESSION['id_util'])['langue']=='ENG') {
+                    echo 'Pending Invoices Report';
+                  }else if ($maClasse-> getUtilisateur($_SESSION['id_util'])['langue']=='FR') {
+                    echo 'Rapport factures en souffrance';
+                  }
+                ?></p>
+            </a>
+          </li>
             <?php
               $maClasse-> afficherMenuFacturation();
             ?>

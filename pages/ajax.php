@@ -1854,6 +1854,14 @@
 		$response['message'] = 'ok';
 		echo json_encode($response);
 
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='pending_report'){ // On Recupere les dossiers de factures
+
+		echo json_encode($maClasse-> pending_report());
+
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='detail_invoice_pending_report'){ // On Recupere les dossiers de factures
+
+		echo json_encode($maClasse-> detail_invoice_pending_report($_POST['id_cli'], $_POST['id_mod_lic']));
+
 	}
 
 ?>
