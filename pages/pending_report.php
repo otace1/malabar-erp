@@ -1,6 +1,6 @@
 <?php
   // include("tete.php");
-  include("tetepopCDN.php");
+  include("tetePopCDN.php");
   include("menuHaut.php");
   include("menuGauche.php");
   //include("licenceExcel.php");
