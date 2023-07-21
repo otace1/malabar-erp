@@ -130,7 +130,7 @@
 
           <div class="col-md-9">
             <label for="x_card_code" class="control-label mb-1">Account</label>
-            <div class="input-group mb-3  input-group-sm">
+            <div class="input-group mb-6  input-group-sm">
               <div class="input-group-prepend">
                 <button type="button" class="btn btn-sm btn-info" onclick="liste_compte(0);"><i class="fa fa-list"></i></button>
               </div>
@@ -177,7 +177,7 @@
                       <?php echo $i;?>
                     </td>
                     <td>
-                      <div class="input-group mb-3  input-group-sm">
+                      <div class="input-group mb-6  input-group-sm">
                         <div class="input-group-prepend">
                           <button type="button" class="btn btn-sm btn-info" onclick="liste_compte(<?php echo $i;?>);"><i class="fa fa-list"></i></button>
                         </div>

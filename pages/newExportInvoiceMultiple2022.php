@@ -58,7 +58,7 @@
       <div class="col-md-2">
         <div class="form-group">
           <label for="inputEmail3" class="col-form-label">Invoice Ref.: </label>
-          <input class="form-control form-control-sm bg bg-dark" type="text" name="ref_fact" id="ref_fact" value="<?php echo $maClasse-> buildRefFactureGlobale($_GET['id_cli']);?>">
+          <input class="form-control form-control-sm bg bg-dark" type="text" name="ref_fact" id="ref_fact" value="<?php echo $maClasse-> buildRefFactureGlobale($_GET['id_cli']);?>" required>
         </div>
       </div>
       <div class="col-md-2">
