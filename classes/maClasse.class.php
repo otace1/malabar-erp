@@ -15595,6 +15595,135 @@
 			return $rows;
 		}
 		
+		public function pending_report(){
+			include('connexion.php');
+
+			// $entree['ref_fact'] = $ref_fact;
+			$rows = array();
+			$compteur = 0;
+
+			$requete = $connexion-> query("SELECT u.nom_util AS nom_util,
+												cl.nom_cli AS nom_cli,
+												COUNT(
+													IF(dos.id_mod_lic=1,
+														dos.id_dos,
+														NULL
+													)
+												) AS nbre_export,
+												COUNT(
+													IF(dos.id_mod_lic=2,
+														dos.id_dos,
+														NULL
+													)
+												) AS nbre_import,
+												COUNT(dos.id_dos) AS nbre_total,
+												cl.id_cli AS id_cli,
+												dos.id_mod_lic AS id_mod_lic,
+												u.id_util AS id_util
+											FROM dossier dos
+												LEFT JOIN client cl
+													ON cl.id_cli = dos.id_cli
+												LEFT JOIN affectation_utilisateur_client_facturation aff
+													ON aff.id_cli = cl.id_cli
+														AND aff.id_mod_lic = dos.id_mod_lic
+												LEFT JOIN utilisateur u
+													ON u.id_util = aff.id_util
+												WHERE dos.id_dos NOT IN(
+														SELECT id_dos FROM detail_facture_dossier
+													)
+													AND dos.ref_quit IS NOT NULL
+													AND dos.date_quit IS NOT NULL
+													AND dos.not_fact = '0'
+											GROUP BY cl.id_cli, dos.id_mod_lic
+											ORDER BY u.nom_util
+											");
+
+			// $requete-> execute(array($entree['ref_fact']));
+
+			while($reponse = $requete-> fetch()){
+				$compteur++;
+				$reponse['compteur'] = $compteur;
+
+				$rows[] = $reponse;
+
+			}$requete-> closeCursor();
+
+			return $rows;
+		}
+		
+		public function detail_invoice_pending_report($id_cli, $id_mod_lic){
+			include('connexion.php');
+
+			$entree['id_cli'] = $id_cli;
+			$entree['id_mod_lic'] = $id_mod_lic;
+			$rows = array();
+			$compteur = 0;
+
+			$requete = $connexion-> prepare("SELECT dos.ref_dos AS ref_dos,
+													IF(dos.num_lot IS NOT NULL,
+														dos.num_lot,
+														dos.ref_fact
+													) AS num_lot,
+													dos.po_ref AS po_ref,
+													march.nom_march AS nom_march,
+													UPPER(CONCAT(
+														IF(dos.horse IS NOT NULL,
+															dos.horse,
+															NULL),
+														IF(dos.trailer_1 IS NOT NULL,
+															CONCAT('/',dos.trailer_1),
+															NULL),
+														IF(dos.trailer_1 IS NOT NULL,
+															CONCAT('/',dos.trailer_2),
+															NULL)
+														)
+													) AS truck,
+													dos.ref_decl AS ref_decl,
+													dos.date_decl AS date_decl,
+													dos.ref_liq AS ref_liq,
+													dos.date_liq AS date_liq,
+													DATEDIFF(CURRENT_DATE(), dos.date_liq) AS delay_liq,
+													dos.ref_quit AS ref_quit,
+													dos.date_quit AS date_quit,
+													dos.montant_liq AS montant_liq,
+													ml.nom_mod_lic AS nom_mod_lic,
+													u.nom_util AS nom_util,
+													YEAR(dos.date_creat_dos) AS annee
+												FROM dossier dos
+													LEFT JOIN client cl
+														ON cl.id_cli = dos.id_cli
+													LEFT JOIN marchandise march
+														ON march.id_march = dos.id_march
+													LEFT JOIN modele_licence ml
+														ON ml.id_mod_lic = dos.id_mod_lic
+													LEFT JOIN affectation_utilisateur_client_facturation aff
+														ON aff.id_cli = cl.id_cli
+															AND aff.id_mod_lic = dos.id_mod_lic
+													LEFT JOIN utilisateur u
+														ON u.id_util = aff.id_util
+												WHERE dos.id_dos NOT IN(
+														SELECT id_dos FROM detail_facture_dossier
+													)
+													AND dos.ref_quit IS NOT NULL
+													AND dos.date_quit IS NOT NULL
+													AND dos.not_fact = '0'
+													AND dos.id_cli = ?
+													AND dos.id_mod_lic = ?
+											");
+
+			$requete-> execute(array($entree['id_cli'], $entree['id_mod_lic']));
+
+			while($reponse = $requete-> fetch()){
+				$compteur++;
+				$reponse['compteur'] = $compteur;
+
+				$rows[] = $reponse;
+
+			}$requete-> closeCursor();
+
+			return $rows;
+		}
+		
 		public function getDossiersImportAcidEditFactures($ref_fact){
 			include('connexion.php');
 
