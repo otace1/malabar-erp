@@ -3004,11 +3004,51 @@
 			                  <p>Pending files <sup><b><span style="color: red;"><?php echo $this-> getNbreDossierEnAttenteFacture($id_mod_lic, $reponse['id_cli']);?></span></b></sup></p>
 			                </a>
 			            </li>
-					    <li class="nav-item">
-			                <a href="#" onclick="modal_facture(<?php echo $reponse['id_cli'];?>, <?php echo $id_mod_lic;?>);" class="nav-link">
-			                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-plus nav-icon"></i>
-			                  <p>Create New Invoice</p>
-			                </a>
+			            <li class="nav-item has-treeview">
+					        <a href="#" class="nav-link">
+					          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="nav-icon fas fa-plus"></i>
+					          <p>
+					            Create New Invoice
+					            <i class="right fas fa-angle-left"></i>
+					          </p>
+					        </a>
+				            <ul class="nav nav-treeview">
+								<li class="nav-item">
+					                <a href="#" onclick="modal_facture(<?php echo $reponse['id_cli'];?>, <?php echo $id_mod_lic;?>);" class="nav-link">
+					                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-circle nav-icon"></i>
+					                  <p>Clearing
+					                  </p>
+					                </a>
+					            </li>
+								<li class="nav-item">
+					                <a href="factureTransport.php?note_debit=3&type_fact=globale&id_mod_lic_fact=<?php echo $id_mod_lic;?>&id_cli=<?php echo $reponse['id_cli'];?>" onclick="" class="nav-link">
+					                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-circle nav-icon"></i>
+					                  <p>Transport
+					                  </p>
+					                </a>
+					            </li>
+								<li class="nav-item">
+					                <a href="factureNote.php?note_debit=2&type_fact=globale&id_mod_lic_fact=<?php echo $id_mod_lic;?>&id_cli=<?php echo $reponse['id_cli'];?>" onclick="" class="nav-link">
+					                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-circle nav-icon"></i>
+					                  <p>Credit Note
+					                  </p>
+					                </a>
+					            </li>
+								<li class="nav-item">
+					                <a href="factureNote.php?note_debit=1&type_fact=globale&id_mod_lic_fact=<?php echo $id_mod_lic;?>&id_cli=<?php echo $reponse['id_cli'];?>" onclick="" class="nav-link">
+					                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-circle nav-icon"></i>
+					                  <p>Debit Note
+					                  </p>
+					                </a>
+					            </li>
+								<li class="nav-item">
+					                <a href="#" onclick="" class="nav-link">
+					                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-circle nav-icon"></i>
+					                  <p>Services
+					                  </p>
+					                </a>
+					            </li>
+				            </ul>
 					    </li>
 					   <!--  <li class="nav-item">
 			                <a href="transmisFactureDossier.php?type_fact=partielle&id_mod_lic_fact=<?php echo $id_mod_lic;?>&id_cli=<?php echo $reponse['id_cli'];?>&amp;id_mod_lic_fact=<?php echo $id_mod_lic;?>" class="nav-link">
@@ -6104,6 +6144,299 @@
 			return $tbl;
 		}
 
+		public function detail_facture_note($ref_fact){
+			include('connexion.php');
+			$entree['ref_fact'] = $ref_fact;
+
+			$total_cost = 0;
+			$sub_total = 0;
+			$total_tva = 0;
+			$total_gen = 0;
+
+			$unite = 1;
+			$cost = 0;
+
+			$tbl = '
+					<tr>
+						<td style="text-align: left; font-weight: bold; border-left: 1px solid black; border-right: 0.5px solid black;" colspan="2" width="49%"></td>
+						<td style="text-align: center; border-right: 0.5px solid black;" colspan="2" width="6%"></td>
+						<td style="text-align: right; border-right: 0.5px solid black;" width="11%"></td>
+						<td style="text-align: right; border-right: 0.5px solid black;" width="11%"></td>
+						<td style="text-align: right; border-right: 0.5px solid black;" width="11.5%"></td>
+						<td style="text-align: right; border-right: 1px solid black;" width="11.5%"></td>
+					</tr>
+					';
+			$requete = $connexion-> prepare('SELECT dos.ref_dos AS ref_dos, 
+													det.montant AS ht,
+													IF(det.usd="1", 
+														0,
+														det.montant
+													) AS ht_cdf,
+													 
+													IF(det.usd="1", 
+														det.montant,
+														(det.montant/dos.roe_decl)
+													) AS ht_usd,
+													
+													IF(det.usd="1", 
+														IF(det.tva="1",
+															det.montant*1.16,
+															det.montant
+														), 
+														IF(det.tva="1",
+															(det.montant/dos.roe_decl)*1.16,
+															(det.montant/dos.roe_decl)
+														)
+													) AS ttc_usd,
+													
+													IF(det.usd="1", 
+														IF(det.tva="1",
+															det.montant*0.16,
+															0
+														), 
+														IF(det.tva="1",
+															(det.montant/dos.roe_decl)*0.16,
+															0
+														)
+													) AS tva_usd,
+													IF(det.detail IS NOT NULL, 
+														CONCAT(": ", det.detail),
+														""
+													) AS detail,
+													det.unite AS unite,
+													dos.poids AS poids
+												FROM detail_facture_dossier det, dossier dos
+												WHERE det.ref_fact = ?
+													AND det.id_dos = dos.id_dos');
+			$requete-> execute(array($entree['ref_fact']));
+			while($reponse = $requete-> fetch()){
+				
+				$total_cost += $cost;
+				$sub_total += $reponse['ht_usd'];
+				$total_tva += $reponse['tva_usd'];
+				$total_gen += $reponse['ttc_usd'];
+
+
+				$tbl .= '
+						<tr>
+							<td style="text-align: left; border-left: 1px solid black; border-right: 0.5px solid black; font-size: 6.5px;" colspan="2" width="49%">&nbsp;&nbsp;'
+								.$reponse['ref_dos'].
+							'</td>
+							<td style="text-align: center; border-right: 0.5px solid black; font-size: 6.5px;" width="6%">'
+								.$unite.
+							'
+							</td>
+							<td style="text-align: center; border-right: 0.5px solid black; font-size: 6.5px;" width="11%">'
+								.number_format($reponse['ht_usd']*$unite, 2, ',', '.').
+							'&nbsp;&nbsp;</td>
+							<td style="text-align: right; border-right: 0.5px solid black; font-size: 6.5px;" width="11%">'
+								.number_format($reponse['ht_usd'], 2, ',', '.').
+							'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+							<td style="text-align: right; border-right: 0.5px solid black; font-size: 6.5px;" width="11.5%">'
+								.number_format($reponse['tva_usd'], 2, ',', '.').
+							'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+							<td style="text-align: right; border-right: 1px solid black; font-size: 6.5px;" width="11.5%">'
+								.number_format($reponse['ttc_usd'], 2, ',', '.').
+							'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+						</tr>
+					';
+
+			}$requete-> closeCursor();
+			$tbl .='
+					<tr>
+						<td style="text-align: left; border-left: 1px solid black; border-right: 0.5px solid black; border-bottom: 0.5px solid black; font-size: 8px;" width="49%"></td>
+						<td style="text-align: center; border-bottom: 0.5px solid black; font-size: 7px; border-right: 0.5px solid black;" colspan="2" width="6%"></td>
+						<td style="text-align: right; border-right: 0.5px solid black; border-bottom: 0.5px solid black; font-size: 8px;" width="11%"></td>
+						<td style="text-align: right; border-right: 0.5px solid black; border-bottom: 0.5px solid black; font-size: 8px;" width="11%"></td>
+						<td style="text-align: right; border-right: 0.5px solid black; border-bottom: 0.5px solid black; font-size: 8px;" width="11.5%"></td>
+						<td style="text-align: right; border-right: 1px solid black; border-bottom: 0.5px solid black; font-size: 7px;" width="11.5%"></td>
+					</tr>
+					';
+			$tbl .= '
+					<tr>
+						<td style="text-align: right; border-right: 0.5px solid black; border: 0.5px solid black; font-weight: bold; background-color: rgb(220,220,220); font-size: 8px;" width="49%">SUB-TOTAL   / SOUS-TOTAL &nbsp;&nbsp;
+						</td>
+						<td style="text-align: right; border-right: 0.5px solid black; border: 0.5px solid black; font-weight: bold; background-color: rgb(220,220,220); font-size: 8px;" width="6%">
+						</td>
+						<td style="text-align: center; border-right: 0.5px solid black; border-bottom: 0.5px solid black; font-weight: bold; background-color: rgb(220,220,220);" width="11%">'
+							.number_format($total_cost, 2, ',', '.').
+						'&nbsp;&nbsp;</td>
+						<td style="text-align: right; border-right: 0.5px solid black; border-bottom: 0.5px solid black; font-weight: bold; background-color: rgb(220,220,220);" width="11%">'
+							.number_format($sub_total, 2, ',', '.').
+						'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+						<td style="text-align: right; border-right: 0.5px solid black; border-bottom: 0.5px solid black; font-weight: bold; background-color: rgb(220,220,220);" width="11.5%">'
+							.number_format($total_tva, 2, ',', '.').
+						'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+						<td style="text-align: right; border-right: 1px solid black; border-bottom: 0.5px solid black; font-weight: bold;  background-color: rgb(220,220,220);" width="11.5%">'
+							.number_format($total_gen, 2, ',', '.').
+						'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+					</tr>';
+
+			return $tbl;
+		}
+
+		public function detail_facture_transport($ref_fact){
+			include('connexion.php');
+			$entree['ref_fact'] = $ref_fact;
+
+			$total_cost = 0;
+			$sub_total = 0;
+			$total_tva = 0;
+			$total_gen = 0;
+
+			$unite = 1;
+			$cost = 0;
+
+			$tbl = '
+					<tr>
+						<td style=" border-left: 0.5px solid black;" width="10%"></td>
+						<td style="" width="10%"></td>
+						<td style="" width="10%"></td>
+						<td style="" width="10%"></td>
+						<td style=" border-right: 0.5px solid black;" width="9%"></td>
+						<td style="text-align: center; border-right: 0.5px solid black;" colspan="2" width="6%"></td>
+						<td style="text-align: right; border-right: 0.5px solid black;" width="11%"></td>
+						<td style="text-align: right; border-right: 0.5px solid black;" width="11%"></td>
+						<td style="text-align: right; border-right: 0.5px solid black;" width="11.5%"></td>
+						<td style="text-align: right; border-right: 1px solid black;" width="11.5%"></td>
+					</tr>
+					<tr>
+						<td style=" border: 1px solid black; background-color: rgb(220,220,220); text-align: center;" width="10%">MCA Ref.</td>
+						<td style=" border: 1px solid black; background-color: rgb(220,220,220); text-align: center;" width="10%">Invoice</td>
+						<td style=" border: 1px solid black; background-color: rgb(220,220,220); text-align: center;" width="10%">AWB Num</td>
+						<td style=" border: 1px solid black; background-color: rgb(220,220,220); text-align: center;" width="10%">PO Ref.</td>
+						<td style=" border: 1px solid black; background-color: rgb(220,220,220); text-align: center;" width="9%">Weight</td>
+						<td style="text-align: center; border-right: 0.5px solid black;" colspan="2" width="6%"></td>
+						<td style="text-align: right; border-right: 0.5px solid black;" width="11%"></td>
+						<td style="text-align: right; border-right: 0.5px solid black;" width="11%"></td>
+						<td style="text-align: right; border-right: 0.5px solid black;" width="11.5%"></td>
+						<td style="text-align: right; border-right: 1px solid black;" width="11.5%"></td>
+					</tr>
+					';
+			$requete = $connexion-> prepare('SELECT dos.ref_dos AS ref_dos, 
+													dos.ref_fact AS ref_fact,
+													dos.horse AS horse,
+													dos.po_ref AS po_ref,
+													dos.poids AS poids,
+													det.montant AS ht,
+													IF(det.usd="1", 
+														0,
+														det.montant
+													) AS ht_cdf,
+													 
+													IF(det.usd="1", 
+														det.montant,
+														(det.montant/dos.roe_decl)
+													) AS ht_usd,
+													
+													IF(det.usd="1", 
+														IF(det.tva="1",
+															det.montant*1.16,
+															det.montant
+														), 
+														IF(det.tva="1",
+															(det.montant/dos.roe_decl)*1.16,
+															(det.montant/dos.roe_decl)
+														)
+													) AS ttc_usd,
+													
+													IF(det.usd="1", 
+														IF(det.tva="1",
+															det.montant*0.16,
+															0
+														), 
+														IF(det.tva="1",
+															(det.montant/dos.roe_decl)*0.16,
+															0
+														)
+													) AS tva_usd,
+													IF(det.detail IS NOT NULL, 
+														CONCAT(": ", det.detail),
+														""
+													) AS detail,
+													det.unite AS unite,
+													dos.poids AS poids
+												FROM detail_facture_dossier det, dossier dos
+												WHERE det.ref_fact = ?
+													AND det.id_dos = dos.id_dos');
+			$requete-> execute(array($entree['ref_fact']));
+			while($reponse = $requete-> fetch()){
+				
+				$total_cost += $reponse['ht_usd']*$unite;
+				$sub_total += $reponse['ht_usd'];
+				$total_tva += $reponse['tva_usd'];
+				$total_gen += $reponse['ttc_usd'];
+
+
+				$tbl .= '
+						<tr>
+							<td style="text-align: center; border: 0.5px dotted grey; border-left: 1px solid black; font-size: 6.5px;" width="10%">'.$reponse['ref_dos'].
+							'</td>
+							<td style="text-align: center; border: 0.5px dotted grey; font-size: 6.5px;" width="10%">&nbsp;&nbsp;'
+								.$reponse['ref_fact'].
+							'</td>
+							<td style="text-align: center; border: 0.5px dotted grey; font-size: 6.5px;" width="10%">&nbsp;&nbsp;'
+								.$reponse['horse'].
+							'</td>
+							<td style="text-align: center; border: 0.5px dotted grey; font-size: 6.5px;" width="10%">&nbsp;&nbsp;'
+								.$reponse['po_ref'].
+							'</td>
+							<td style="text-align: center; border: 0.5px dotted grey; border-right: 0.5px solid black; font-size: 6.5px;" width="9%">&nbsp;&nbsp;'
+								.number_format($reponse['poids'], 2, ',', '.').
+							'</td>
+							<td style="text-align: center; border-right: 0.5px solid black; font-size: 6.5px;" width="6%">'
+								.$unite.
+							'
+							</td>
+							<td style="text-align: center; border-right: 0.5px solid black; font-size: 6.5px;" width="11%">'
+								.number_format($reponse['ht_usd']*$unite, 2, ',', '.').
+							'&nbsp;&nbsp;</td>
+							<td style="text-align: right; border-right: 0.5px solid black; font-size: 6.5px;" width="11%">'
+								.number_format($reponse['ht_usd'], 2, ',', '.').
+							'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+							<td style="text-align: right; border-right: 0.5px solid black; font-size: 6.5px;" width="11.5%">'
+								.number_format($reponse['tva_usd'], 2, ',', '.').
+							'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+							<td style="text-align: right; border-right: 1px solid black; font-size: 6.5px;" width="11.5%">'
+								.number_format($reponse['ttc_usd'], 2, ',', '.').
+							'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+						</tr>
+					';
+
+			}$requete-> closeCursor();
+			$tbl .='
+					<tr>
+						<td style="text-align: left; border-left: 1px solid black; border-right: 0.5px solid black; border-bottom: 0.5px solid black; font-size: 8px;" width="49%"></td>
+						<td style="text-align: center; border-bottom: 0.5px solid black; font-size: 7px; border-right: 0.5px solid black;" colspan="2" width="6%"></td>
+						<td style="text-align: right; border-right: 0.5px solid black; border-bottom: 0.5px solid black; font-size: 8px;" width="11%"></td>
+						<td style="text-align: right; border-right: 0.5px solid black; border-bottom: 0.5px solid black; font-size: 8px;" width="11%"></td>
+						<td style="text-align: right; border-right: 0.5px solid black; border-bottom: 0.5px solid black; font-size: 8px;" width="11.5%"></td>
+						<td style="text-align: right; border-right: 1px solid black; border-bottom: 0.5px solid black; font-size: 7px;" width="11.5%"></td>
+					</tr>
+					';
+			$tbl .= '
+					<tr>
+						<td style="text-align: right; border-right: 0.5px solid black; border: 0.5px solid black; font-weight: bold; background-color: rgb(220,220,220); font-size: 8px;" width="49%">SUB-TOTAL   / SOUS-TOTAL &nbsp;&nbsp;
+						</td>
+						<td style="text-align: right; border-right: 0.5px solid black; border: 0.5px solid black; font-weight: bold; background-color: rgb(220,220,220); font-size: 8px;" width="6%">
+						</td>
+						<td style="text-align: center; border-right: 0.5px solid black; border-bottom: 0.5px solid black; font-weight: bold; background-color: rgb(220,220,220);" width="11%">'
+							.number_format($total_cost, 2, ',', '.').
+						'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+						<td style="text-align: right; border-right: 0.5px solid black; border-bottom: 0.5px solid black; font-weight: bold; background-color: rgb(220,220,220);" width="11%">'
+							.number_format($sub_total, 2, ',', '.').
+						'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+						<td style="text-align: right; border-right: 0.5px solid black; border-bottom: 0.5px solid black; font-weight: bold; background-color: rgb(220,220,220);" width="11.5%">'
+							.number_format($total_tva, 2, ',', '.').
+						'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+						<td style="text-align: right; border-right: 1px solid black; border-bottom: 0.5px solid black; font-weight: bold;  background-color: rgb(220,220,220);" width="11.5%">'
+							.number_format($total_gen, 2, ',', '.').
+						'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+					</tr>';
+
+			return $tbl;
+		}
+
 		public function getTotalFactureMMGExport_1($ref_fact){
 			include('connexion.php');
 			$entree['ref_fact'] = $ref_fact;
@@ -8349,6 +8682,168 @@
 			return $tbl;
 		}
 
+		public function getTotalFactureGroup($ref_fact){
+			include('connexion.php');
+			$entree['ref_fact'] = $ref_fact;
+
+			$total_cost = 0;
+			$sub_total = 0;
+			$total_tva = 0;
+			$total_gen = 0;
+
+			$unite = 0;
+			$cost = 0;
+
+			$tbl = '';
+
+			$requete = $connexion-> prepare('SELECT d.nom_deb AS nom_deb, d.id_deb AS id_deb,
+													det.tva AS tva,
+													d.abr_deb AS abr_deb,
+													dos.roe_decl AS roe_decl,
+													SUM(
+														IF(d.id_deb=1 OR d.id_deb=2 OR d.id_deb=3 OR d.id_deb=4 OR d.id_deb=5 OR d.id_deb=6 OR d.id_deb=7 OR d.id_deb=8,
+																IF(det.usd=1,
+																	det.montant/dos.poids,
+																	(det.montant/dos.roe_decl)/dos.poids
+																),
+															IF(d.id_deb=11 AND dos.poids<30,
+																IF(det.usd=1,
+																	det.montant/1,
+																	(det.montant/dos.roe_decl)/1
+																),
+																IF(d.id_deb=12 AND dos.poids>=30,
+																	IF(det.usd=1,
+																		det.montant/1,
+																		(det.montant/dos.roe_decl)/1
+																	),
+																	IF(det.usd=1,
+																		det.montant/1,
+																		(det.montant/dos.roe_decl)/1
+																	)
+																	)
+																)
+														)
+													) AS total_cost,
+													SUM(det.montant) AS ht,
+													SUM( 
+														IF(det.usd="1", 
+															0,
+															det.montant
+														) 
+													) AS ht_cdf,
+													SUM( 
+														IF(det.usd="1", 
+															det.montant, 
+															IF(det.tva="1",
+																IF(det.montant_tva>0,
+																	(det.montant_tva+det.montant)/dos.roe_decl,
+																	(det.montant)/dos.roe_decl
+																),
+																(det.montant/dos.roe_decl)
+															)
+														) 
+													) AS ht_usd,
+													SUM(
+														IF(det.usd="1", 
+															IF(det.tva="1",
+																det.montant*1.16,
+																det.montant
+															), 
+															IF(det.tva="1",
+																IF(det.montant_tva>0,
+																	((det.montant_tva+det.montant)/dos.roe_decl),
+																	(det.montant/dos.roe_decl)*1.16
+																),
+																(det.montant/dos.roe_decl)
+															)
+														)
+													) AS ttc_usd,
+													SUM(
+														IF(det.usd="1", 
+															IF(det.tva="1",
+																det.montant*0.16,
+																0
+															), 
+															0
+														)
+													) AS tva_usd,
+													IF(det.detail IS NOT NULL, 
+														CONCAT(": ", det.detail),
+														""
+													) AS detail,
+													det.unite AS unite,
+													COUNT(DISTINCT(dos.ref_decl)) AS qte,
+													dos.poids AS poids
+												FROM debours d, detail_facture_dossier det, dossier dos
+												WHERE det.ref_fact = ?
+													AND det.id_deb = d.id_deb
+													AND det.id_dos = dos.id_dos
+												GROUP BY det.ref_fact');
+			$requete-> execute(array($entree['ref_fact']));
+			$reponse = $requete-> fetch();
+			// while($reponse = $requete-> fetch()){
+			// 	if($reponse['tva'] == '0'){
+			// 		$tva = '0';
+			// 		$ttc = $reponse['ht_usd'];
+			// 	}else{
+			// 		$tva = round(($reponse['ht_usd'] * 0.16), 2);
+			// 		$ttc = $reponse['ht_usd'] + round(($reponse['ht_usd'] * 0.16), 2);
+			// 	}
+
+			// 	if ($reponse['id_deb']=='1' || $reponse['id_deb']=='2' || $reponse['id_deb']=='3' || $reponse['id_deb']=='4' || $reponse['id_deb']=='5' || $reponse['id_deb']=='6' || $reponse['id_deb']=='7' || $reponse['id_deb']=='8') {
+					
+			// 		$unite = number_format($reponse['poids'], 2, ',', ' ');
+
+			// 	}else if($reponse['id_deb']=='11' && $reponse['poids']<30){
+			// 		$unite = 1;
+			// 	}else if($reponse['id_deb']=='12' && $reponse['poids']>30){
+			// 		$unite = 1;
+			// 	}else{
+			// 		$unite = 1;
+			// 	}
+
+			// 	$cost = $reponse['ht_usd']/$unite;
+
+			// 	$total_cost += $cost;
+			// 	$sub_total += $reponse['ht_usd'];
+			// 	$total_tva += $reponse['tva_usd'];
+			// 	$total_gen += $reponse['ttc_usd'];
+
+				$total_cost = '';//$reponse['total_cost'];
+				$sub_total = $reponse['ht_usd'];
+				$total_tva = $reponse['tva_usd'];
+				$total_gen = $reponse['ttc_usd'];
+
+			$tbl .= '
+					<tr>
+						<td style="text-align: right; border: 0.5px solid black; font-weight: bold; font-size: 8px;" width="23%">Total excl. TVA &nbsp;&nbsp;
+						</td>
+						<td style="text-align: right; border: 0.5px solid black; font-weight: bold;" width="11.5%">$ '
+							.number_format($sub_total, 2, ',', '.').
+						'&nbsp;&nbsp;</td>
+					</tr>
+					<tr>
+						<td style="text-align: right; border: 0.5px solid black; font-weight: bold; font-size: 8px;" width="23%"> TVA 16% &nbsp;&nbsp;
+						</td>
+						<td style="text-align: right; border: 0.5px solid black; font-weight: bold;" width="11.5%">$ '
+							.number_format($total_tva, 2, ',', '.').
+						'&nbsp;&nbsp;</td>
+					</tr>
+					<tr>
+						<td style="text-align: right; border: 0.5px solid black; font-weight: bold; font-size: 10px; font-weight: bold; background-color: rgb(220,220,220);" width="23%">Grand Total &nbsp;&nbsp;
+						</td>
+						<td style="text-align: right; border: 0.5px solid black; font-weight: bold; font-size: 10px; background-color: rgb(220,220,220);" width="11.5%">$ '
+							.number_format($total_gen, 2, ',', '.').
+						'&nbsp;&nbsp;</td>
+					</tr>
+					<tr>
+
+					</tr>
+					';
+
+			return $tbl;
+		}
+
 		public function getTotalFactureImportSingleExcluDuty1($ref_fact){
 			include('connexion.php');
 			$entree['ref_fact'] = $ref_fact;
@@ -9572,12 +10067,12 @@
 													CONCAT(CONCAT('<button class=\"btn btn-xs bg-info square-btn-adjust\" onclick=\"window.open(\'',mf.view_page,'?ref_fact=',fd.ref_fact,'\',\'pop3\',\'width=1000,height=800\');\" title=\"View invoice\">
 									                    <i class=\"fas fa-eye\"></i> 
 									                </button>'),' ',
-									                CONCAT('<button class=\"btn btn-xs bg-success square-btn-adjust\" onclick=\"window.location.replace(\'',mf.excel,'?ref_fact=',fd.ref_fact,'\',\'pop4\',\'width=1000,height=800\');\" title=\"Export Annex\">
+									                IF(mf.excel IS NOT NULL, CONCAT('<button class=\"btn btn-xs bg-success square-btn-adjust\" onclick=\"window.location.replace(\'',mf.excel,'?ref_fact=',fd.ref_fact,'\',\'pop4\',\'width=1000,height=800\');\" title=\"Export Annex\">
 									                    <i class=\"fas fa-file-excel\"></i> 
-									                </button>'),' ',
-									                CONCAT('<button class=\"btn btn-xs bg-warning square-btn-adjust\" onclick=\"editerFacture(\'',fd.ref_fact,'\', \'',mf.edit_page,'\');\" title=\"Edit\">
+									                </button>'), ''),' ',
+									                IF(mf.edit_page IS NOT NULL, CONCAT('<button class=\"btn btn-xs bg-warning square-btn-adjust\" onclick=\"editerFacture(\'',fd.ref_fact,'\', \'',mf.edit_page,'\');\" title=\"Edit\">
 									                    <i class=\"fas fa-edit\"></i> 
-									                </button>'),' ',
+									                </button>'), ''),' ',
 									                CONCAT('<button class=\"btn btn-xs bg-primary square-btn-adjust\" onclick=\"validerFacture(\'',fd.ref_fact,'\');\" title=\"Validate\">
 									                    <i class=\"fas fa-check\"></i> 
 									                </button>'),' ',
@@ -9613,12 +10108,12 @@
 													CONCAT(CONCAT('<button class=\"btn btn-xs bg-info square-btn-adjust\" onclick=\"window.open(\'',mf.view_page,'?ref_fact=',fd.ref_fact,'\',\'pop3\',\'width=1000,height=800\');\" title=\"View invoice\">
 									                    <i class=\"fas fa-eye\"></i> 
 									                </button>'),' ',
-									                CONCAT('<button class=\"btn btn-xs bg-success square-btn-adjust\" onclick=\"window.location.replace(\'',mf.excel,'?ref_fact=',fd.ref_fact,'\',\'pop4\',\'width=1000,height=800\');\" title=\"Export Annex\">
+									                IF(mf.excel IS NOT NULL, CONCAT('<button class=\"btn btn-xs bg-success square-btn-adjust\" onclick=\"window.location.replace(\'',mf.excel,'?ref_fact=',fd.ref_fact,'\',\'pop4\',\'width=1000,height=800\');\" title=\"Export Annex\">
 									                    <i class=\"fas fa-file-excel\"></i> 
-									                </button>'),' ',
-									                CONCAT('<button class=\"btn btn-xs bg-warning square-btn-adjust\" onclick=\"editerFacture(\'',fd.ref_fact,'\', \'',mf.edit_page,'\');\" title=\"Edit\">
+									                </button>'), ''),' ',
+									                IF(mf.edit_page IS NOT NULL, CONCAT('<button class=\"btn btn-xs bg-warning square-btn-adjust\" onclick=\"editerFacture(\'',fd.ref_fact,'\', \'',mf.edit_page,'\');\" title=\"Edit\">
 									                    <i class=\"fas fa-edit\"></i> 
-									                </button>'),' ',
+									                </button>'), ''),' ',
 									                CONCAT('<button class=\"btn btn-xs bg-purple square-btn-adjust\" onclick=\"modal_send_invoice(\'',fd.ref_fact,'\');\" title=\"Validate\">
 									                    <i class=\"fas fa-envelope\"></i> 
 									                </button>'),' ',
@@ -9655,12 +10150,12 @@
 													CONCAT(CONCAT('<button class=\"btn btn-xs bg-info square-btn-adjust\" onclick=\"window.open(\'',mf.view_page,'?ref_fact=',fd.ref_fact,'\',\'pop3\',\'width=1000,height=800\');\" title=\"View invoice\">
 									                    <i class=\"fas fa-eye\"></i> 
 									                </button>'),' ',
-									                CONCAT('<button class=\"btn btn-xs bg-success square-btn-adjust\" onclick=\"window.location.replace(\'',mf.excel,'?ref_fact=',fd.ref_fact,'\',\'pop4\',\'width=1000,height=800\');\" title=\"Export Annex\">
+									                IF(mf.excel IS NOT NULL, CONCAT('<button class=\"btn btn-xs bg-success square-btn-adjust\" onclick=\"window.location.replace(\'',mf.excel,'?ref_fact=',fd.ref_fact,'\',\'pop4\',\'width=1000,height=800\');\" title=\"Export Annex\">
 									                    <i class=\"fas fa-file-excel\"></i> 
-									                </button>'),' ',
-									                CONCAT('<button class=\"btn btn-xs bg-warning square-btn-adjust\" onclick=\"editerFacture(\'',fd.ref_fact,'\', \'',mf.edit_page,'\');\" title=\"Edit\">
+									                </button>'), ''),' ',
+									                IF(mf.edit_page IS NOT NULL, CONCAT('<button class=\"btn btn-xs bg-warning square-btn-adjust\" onclick=\"editerFacture(\'',fd.ref_fact,'\', \'',mf.edit_page,'\');\" title=\"Edit\">
 									                    <i class=\"fas fa-edit\"></i> 
-									                </button>'),' ',
+									                </button>'), ''),' ',
 									                CONCAT('<button class=\"btn btn-xs bg-purple square-btn-adjust\" onclick=\"modal_send_invoice(\'',fd.ref_fact,'\');\" title=\"Validate\">
 									                    <i class=\"fas fa-envelope\"></i> 
 									                </button>'),' ',
@@ -12591,6 +13086,35 @@
 				return null;
 
 			}
+
+		}
+
+		public function buildRefFactureNoteDebitCredit($id_cli, $type_note){
+			include('connexion.php');
+
+			if ($type_note=='1') {
+				$masque_note = '-ND-';
+			}else if($type_note=='2') {
+				$masque_note = '-NC-';
+			}else {
+				$masque_note = '-TR-';
+			}
+
+			$i = 1;
+
+			$a = $this-> getTailleCompteur($i);
+			//'2023-ND-PIPC-004
+			$code = date('Y').$masque_note.$this-> codePourClient($id_cli).'-'.$a;
+
+			while($this-> verifierExistanceRefFactureDossier($code) == true){
+				$i++;
+
+				$a = $this-> getTailleCompteur($i);
+
+				$code = date('Y').$masque_note.$this-> codePourClient($id_cli).'-'.$a;
+			}
+
+			return $code;
 
 		}
 
@@ -15724,6 +16248,69 @@
 			return $rows;
 		}
 		
+		public function invoice_assigned(){
+			include('connexion.php');
+
+			// $entree['id_cli'] = $id_cli;
+			// $entree['id_mod_lic'] = $id_mod_lic;
+			$rows = array();
+			$compteur = 0;
+
+			$requete = $connexion-> query("SELECT u.nom_util AS nom_util,
+													cl.nom_cli AS nom_cli,
+													-- ml.nom_mod_lic AS nom_mod_lic,
+													CONCAT(ml.nom_mod_lic,'   <a href=\"#\" onclick=\"remove_assignement(',u.id_util,',',ml.id_mod_lic,',',cl.id_cli,');\" title=\"Remove this assignement\">
+									                    <i class=\"fas fa-times text-danger\"></i> 
+									                </a>')  AS nom_mod_lic
+												FROM utilisateur u, client cl, modele_licence ml, affectation_utilisateur_client_facturation aff
+												WHERE u.id_util = aff.id_util
+													AND aff.id_cli = cl.id_cli
+													AND aff.id_mod_lic = ml.id_mod_lic
+												ORDER BY u.nom_util, cl.nom_cli
+												");
+
+			// $requete-> execute(array($entree['id_cli'], $entree['id_mod_lic']));
+
+			while($reponse = $requete-> fetch()){
+				$compteur++;
+				$reponse['compteur'] = $compteur;
+
+				$rows[] = $reponse;
+
+			}$requete-> closeCursor();
+
+			return $rows;
+		}
+		
+		public function create_assignement($id_util, $id_mod_lic, $id_cli){
+			include("connexion.php");
+			$entree['id_util'] = $id_util;
+			$entree['id_mod_lic'] = $id_mod_lic;
+			$entree['id_cli'] = $id_cli;
+
+			$requete = $connexion-> prepare("INSERT INTO affectation_utilisateur_client_facturation(id_util, id_mod_lic, id_cli)
+												VALUES(?, ?, ?)");
+			$requete-> execute(array($entree['id_util'], $entree['id_mod_lic'], $entree['id_cli']));
+			
+
+		}
+
+		public function remove_assignement($id_util, $id_mod_lic, $id_cli){
+			include("connexion.php");
+			$entree['id_util'] = $id_util;
+			$entree['id_mod_lic'] = $id_mod_lic;
+			$entree['id_cli'] = $id_cli;
+
+			$requete = $connexion-> prepare("DELETE FROM affectation_utilisateur_client_facturation
+												WHERE id_util = ? 
+													AND id_mod_lic = ? 
+													AND id_cli = ?");
+
+			$requete-> execute(array($entree['id_util'], $entree['id_mod_lic'], $entree['id_cli']));
+			
+
+		}
+
 		public function getDossiersImportAcidEditFactures($ref_fact){
 			include('connexion.php');
 
@@ -35347,9 +35934,9 @@
 													CONCAT(CONCAT('<button class=\"btn btn-xs bg-primary square-btn-adjust\" onclick=\"window.open(\'',mf.view_page,'?ref_fact=',fd.ref_fact,'\',\'pop3\',\'width=1000,height=800\');\" title=\"View invoice\">
 									                    <i class=\"fas fa-eye\"></i> 
 									                </button>'),' ',
-									                CONCAT('<button class=\"btn btn-xs bg-success square-btn-adjust\" onclick=\"window.location.replace(\'',mf.excel,'?ref_fact=',fd.ref_fact,'\',\'pop4\',\'width=1000,height=800\');\" title=\"Export Annex\">
+									                IF(mf.excel IS NOT NULL, CONCAT('<button class=\"btn btn-xs bg-success square-btn-adjust\" onclick=\"window.location.replace(\'',mf.excel,'?ref_fact=',fd.ref_fact,'\',\'pop4\',\'width=1000,height=800\');\" title=\"Export Annex\">
 									                    <i class=\"fas fa-file-excel\"></i> 
-									                </button>')) AS view_page,
+									                </button>'), '')) AS view_page,
 									                SUM( 
 															IF(det.usd='1', 
 																det.montant, 
@@ -35887,9 +36474,9 @@
 													CONCAT(CONCAT('<button class=\"btn btn-xs bg-primary square-btn-adjust\" onclick=\"window.open(\'',mf.view_page,'?ref_fact=',fd.ref_fact,'\',\'pop3\',\'width=1000,height=800\');\" title=\"View invoice\">
 									                    <i class=\"fas fa-eye\"></i> 
 									                </button>'),' ',
-									                CONCAT('<button class=\"btn btn-xs bg-success square-btn-adjust\" onclick=\"window.location.replace(\'',mf.excel,'?ref_fact=',fd.ref_fact,'\',\'pop4\',\'width=1000,height=800\');\" title=\"Export Annex\">
+									                IF(mf.excel IS NOT NULL, CONCAT('<button class=\"btn btn-xs bg-success square-btn-adjust\" onclick=\"window.location.replace(\'',mf.excel,'?ref_fact=',fd.ref_fact,'\',\'pop4\',\'width=1000,height=800\');\" title=\"Export Annex\">
 									                    <i class=\"fas fa-file-excel\"></i> 
-									                </button>')) AS view_page,
+									                </button>'), '')) AS view_page,
 									                SUM( 
 															IF(det.usd='1', 
 																det.montant, 
@@ -36117,9 +36704,9 @@
 													CONCAT(CONCAT('<button class=\"btn btn-xs bg-primary square-btn-adjust\" onclick=\"window.open(\'',mf.view_page,'?ref_fact=',fd.ref_fact,'\',\'pop3\',\'width=1000,height=800\');\" title=\"View invoice\">
 									                    <i class=\"fas fa-eye\"></i> 
 									                </button>'),' ',
-									                CONCAT('<button class=\"btn btn-xs bg-success square-btn-adjust\" onclick=\"window.location.replace(\'',mf.excel,'?ref_fact=',fd.ref_fact,'\',\'pop4\',\'width=1000,height=800\');\" title=\"Export Annex\">
+									                IF(mf.excel IS NOT NULL, CONCAT('<button class=\"btn btn-xs bg-success square-btn-adjust\" onclick=\"window.location.replace(\'',mf.excel,'?ref_fact=',fd.ref_fact,'\',\'pop4\',\'width=1000,height=800\');\" title=\"Export Annex\">
 									                    <i class=\"fas fa-file-excel\"></i> 
-									                </button>')) AS view_page
+									                </button>'), '')) AS view_page
 												FROM facture_dossier fd, modele_facture mf, client cl, dossier dos, detail_facture_dossier det
 												WHERE YEAR(fd.date_fact) = YEAR(CURRENT_DATE())
 													AND fd.id_mod_fact = mf.id_mod_fact
@@ -38310,6 +38897,43 @@
 
 		//Methodes permettant de Selectionner 
 
+		public function selectionnerModeleLicence(){
+			include('connexion.php');
+			// $entree['id_role'] = $id_role;
+			$requete = $connexion-> query("SELECT *
+											FROM modele_licence
+											WHERE id_etat = 1");
+			// $requete-> execute(array($entree['id_role']));
+
+			while($reponse = $requete-> fetch()){
+
+				?>
+				<option value="<?php echo $reponse['id_mod_lic']; ?>">
+					<?php echo $reponse['nom_mod_lic']; ?>
+				</option>
+				<?php
+			}$requete-> closeCursor();
+		}
+
+		public function selectionnerUtilisateurRole($id_role){
+			include('connexion.php');
+			$entree['id_role'] = $id_role;
+			$requete = $connexion-> prepare("SELECT *
+											FROM utilisateur
+											WHERE id_role = ?
+											ORDER BY nom_util");
+			$requete-> execute(array($entree['id_role']));
+
+			while($reponse = $requete-> fetch()){
+
+				?>
+				<option value="<?php echo $reponse['id_util']; ?>">
+					<?php echo $reponse['nom_util']; ?>
+				</option>
+				<?php
+			}$requete-> closeCursor();
+		}
+
 		public function selectionnerJournal(){
 			include('connexion.php');
 			$requete = $connexion-> query("SELECT *
@@ -38610,6 +39234,147 @@
 						<td style="text-align: right;">'.number_format($duty_cdf, 2, ',', ' ').'</td>
 						<td style="text-align: right;">'.number_format($duty_usd, 2, ',', ' ').'</td>
 						<td style="text-align: right;">'.number_format($other_usd, 2, ',', ' ').'</td>
+						<td style="text-align: right;">'.number_format($total_usd, 2, ',', ' ').'</td>
+					</tr>';
+
+			return $file;
+		}
+
+		public function detail_invoice($ref_fact){
+			include('connexion.php');
+			$entree['ref_fact'] = $ref_fact;
+			// $entree['id_mod_trans'] = $id_mod_trans;
+			// $entree['id_mod_lic'] = $id_mod_lic;
+
+			$file = '';
+			$compteur = 0;
+			$duty_cdf = 0;
+			$duty_usd = 0;
+			$other_usd = 0;
+			$total_usd = 0;
+			$liquidation = 0;
+			$liquidation_usd = 0;
+
+			$requete = $connexion-> prepare("SELECT dossier.ref_dos AS ref_dos,
+													dossier.id_dos AS id_dos,
+													dossier.id_cli AS id_cli,
+													dossier.id_mod_lic AS id_mod_lic,
+													dossier.id_march AS id_march,
+													dossier.id_mod_trans AS id_mod_trans,
+													dossier.num_lic AS num_lic,
+													dossier.roe_decl AS roe_decl,
+													SUM(
+														IF(detail_facture_dossier.usd='0', 
+															IF(detail_facture_dossier.tva='1',
+																IF(detail_facture_dossier.montant_tva>0,
+																	detail_facture_dossier.montant_tva+detail_facture_dossier.montant,
+																	detail_facture_dossier.montant*0.16
+																	),
+																detail_facture_dossier.montant
+															),
+															0
+														)
+													) AS ttc_cdf,
+													SUM(
+														IF(debours.id_t_deb='1' AND detail_facture_dossier.usd='0',
+															IF(detail_facture_dossier.tva='1',
+																IF(detail_facture_dossier.usd='0',
+																	detail_facture_dossier.montant*1.16,
+																	(detail_facture_dossier.montant*dossier.roe_decl)*1.16),
+																IF(detail_facture_dossier.usd='0',
+																	detail_facture_dossier.montant,
+																	detail_facture_dossier.montant*dossier.roe_decl)
+																)
+															, 0)
+														) AS liquidation,
+													SUM(
+														IF(debours.id_t_deb='1' AND detail_facture_dossier.usd='0',
+															IF(detail_facture_dossier.tva='1',
+																IF(detail_facture_dossier.usd='0',
+																	(detail_facture_dossier.montant*1.16)/dossier.roe_decl,
+																	(detail_facture_dossier.montant*dossier.roe_decl)*1.16),
+																IF(detail_facture_dossier.usd='0',
+																	detail_facture_dossier.montant/dossier.roe_decl,
+																	detail_facture_dossier.montant)
+																)
+															, 0)
+														) AS liquidation_usd,
+													SUM(
+														IF(debours.id_t_deb='1',
+															IF(detail_facture_dossier.tva='1',
+																IF(detail_facture_dossier.usd='0',
+																	detail_facture_dossier.montant*1.16,
+																	(detail_facture_dossier.montant*dossier.roe_decl)*1.16),
+																IF(detail_facture_dossier.usd='0',
+																	detail_facture_dossier.montant,
+																	detail_facture_dossier.montant*dossier.roe_decl)
+																)
+															, 0)
+														) AS duty_cdf,
+													SUM(
+														IF(debours.id_t_deb='1',
+															IF(detail_facture_dossier.tva='1',
+																IF(detail_facture_dossier.usd='1',
+																	detail_facture_dossier.montant*1.16,
+																	(detail_facture_dossier.montant/dossier.roe_decl)*1.16),
+																IF(detail_facture_dossier.usd='1',
+																	detail_facture_dossier.montant,
+																	detail_facture_dossier.montant/dossier.roe_decl)
+																)
+															, 0)
+														) AS duty_usd,
+													SUM(
+														IF(debours.id_t_deb<>'1',
+															IF(detail_facture_dossier.tva='1',
+																IF(detail_facture_dossier.usd='1',
+																	detail_facture_dossier.montant*1.16,
+																	(detail_facture_dossier.montant/dossier.roe_decl)*1.16),
+																IF(detail_facture_dossier.usd='1',
+																	detail_facture_dossier.montant,
+																	detail_facture_dossier.montant/dossier.roe_decl)
+																)
+															, 0)
+														) AS other_usd,
+													SUM(
+														IF(detail_facture_dossier.tva='1',
+															IF(detail_facture_dossier.usd='1',
+																detail_facture_dossier.montant*1.16,
+																(detail_facture_dossier.montant/dossier.roe_decl)*1.16),
+															IF(detail_facture_dossier.usd='1',
+																detail_facture_dossier.montant,
+																(detail_facture_dossier.montant/dossier.roe_decl))
+															)
+														) AS total_usd
+												FROM dossier, detail_facture_dossier, debours
+												WHERE detail_facture_dossier.ref_fact = ?
+													AND detail_facture_dossier.id_dos = dossier.id_dos
+													AND detail_facture_dossier.id_deb = debours.id_deb
+												GROUP BY dossier.id_dos");
+			$requete-> execute(array($entree['ref_fact']));
+
+			while($reponse = $requete-> fetch()){
+				$compteur++;
+				$duty_cdf += $reponse['duty_cdf'];
+				$duty_usd += $reponse['duty_usd'];
+				$other_usd += $reponse['other_usd'];
+				$total_usd += $reponse['total_usd'];
+				$liquidation += $reponse['liquidation'];
+				$liquidation_usd += $reponse['liquidation_usd'];
+
+				$file .= '<tr>
+							<td>'.$compteur.'</td>
+							<td>'.$reponse['ref_dos'].'</td>
+							<td style="text-align: right;">'.number_format($reponse['total_usd'], 2, ',', ' ').'</td>
+							<td style="text-align: center;">
+								<span class="btn btn-xs btn btn-danger" onclick="supprimerDetailFactureDossier3(\''.$ref_fact.'\', '.$reponse['id_dos'].');">
+									<i class="fa fa-times"></i>
+								</span>
+							</td>
+						</tr>';
+			}$requete-> closeCursor();
+
+			$file .= '<tr>
+						<td colspan="2">TOTAL</td>
 						<td style="text-align: right;">'.number_format($total_usd, 2, ',', ' ').'</td>
 					</tr>';
 
@@ -39725,6 +40490,33 @@
 			}$requete-> closeCursor();
 
 			return $tableau;
+
+		}
+
+		public function liste_dossier_ajax($id_cli, $id_mod_lic){
+			include("connexion.php");
+			$entree['id_cli'] = $id_cli;
+			$entree['id_mod_lic'] = $id_mod_lic;
+			$compteur=0;
+
+			$row = array();
+
+			$requete = $connexion-> prepare("SELECT dos.id_dos AS id_dos, 
+													dos.ref_dos AS ref_dos
+											FROM dossier dos
+											WHERE id_cli = ?
+												AND id_mod_lic = ?");
+			$requete-> execute(array($entree['id_cli'], $entree['id_mod_lic']));
+			while ($reponse = $requete-> fetch()) {
+				$compteur++;
+
+				$reponse['compteur'] = $compteur;
+				$reponse['dossier'] = '<a href="#" onclick="select_dossier(\''.$reponse['id_dos'].'\', \''.$reponse['ref_dos'].'\')">'.$reponse['ref_dos'].'</a>';
+				$row[] = $reponse;
+
+			}$requete-> closeCursor();
+
+			return $row;
 
 		}
 
@@ -45155,6 +45947,19 @@
 			$requete = $connexion-> prepare("DELETE FROM detail_facture_dossier
 												WHERE id_dos = ?");
 			$requete-> execute(array($entree['id_dos']));
+
+		}
+
+		public function supprimerDetailFactureDossier3($ref_fact, $id_dos){
+
+			include('connexion.php');
+			$entree['id_dos'] = $id_dos;
+			$entree['ref_fact'] = $ref_fact;
+
+			$requete = $connexion-> prepare("DELETE FROM detail_facture_dossier
+												WHERE id_dos = ?
+													AND ref_fact = ?");
+			$requete-> execute(array($entree['id_dos'], $entree['ref_fact']));
 
 		}
 
