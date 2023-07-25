@@ -108,10 +108,13 @@
                       <th>Customs Clearence FEE</th>
                       <th>OTHER CHARGES / AUTRES FRAIS</th>
                       <th>TVA/USD</th>
+                      <th>Total</th>
                       <th>OPERATIONAL COSTS / COUT OPERATIONEL</th>
                       <th>TVA/USD</th>
+                      <th>Total</th>
                       <th>AGENCY FEE</th>
                       <th>TVA/USD</th>
+                      <th>Total</th>
                       <th>Total Invoice</th>
                       <th>Status</th>
                       <th></th>
@@ -486,6 +489,10 @@
             render: DataTable.render.number( null, null, 2, null ),
             className: 'dt-body-right'
           },
+          {"data":"total_other_charge",
+            render: DataTable.render.number( null, null, 2, null ),
+            className: 'dt-body-right'
+          },
           {"data":"ops_fee",
             render: DataTable.render.number( null, null, 2, null ),
             className: 'dt-body-right'
@@ -494,11 +501,19 @@
             render: DataTable.render.number( null, null, 2, null ),
             className: 'dt-body-right'
           },
+          {"data":"total_ops_fee",
+            render: DataTable.render.number( null, null, 2, null ),
+            className: 'dt-body-right'
+          },
           {"data":"agency_fee",
             render: DataTable.render.number( null, null, 2, null ),
             className: 'dt-body-right'
           },
           {"data":"tva_agency_fee",
+            render: DataTable.render.number( null, null, 2, null ),
+            className: 'dt-body-right'
+          },
+          {"data":"total_agency_fee",
             render: DataTable.render.number( null, null, 2, null ),
             className: 'dt-body-right'
           },

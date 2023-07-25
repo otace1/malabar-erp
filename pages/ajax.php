@@ -1862,6 +1862,45 @@
 
 		echo json_encode($maClasse-> detail_invoice_pending_report($_POST['id_cli'], $_POST['id_mod_lic']));
 
-	}
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='invoice_assigned'){ // On Recupere les dossiers de factures
 
+		echo json_encode($maClasse-> invoice_assigned());
+
+	}else if ($_POST['operation']=='remove_assignement') {
+	  
+		$maClasse-> remove_assignement($_POST['id_util'], $_POST['id_mod_lic'], $_POST['id_cli']);
+		$response['message'] = 'ok';
+		echo json_encode($response);
+
+	}else if ($_POST['operation']=='create_assignement') {
+	  
+		$maClasse-> create_assignement($_POST['id_util'], $_POST['id_mod_lic'], $_POST['id_cli']);
+		$response['message'] = 'ok';
+		echo json_encode($response);
+
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='liste_dossier_ajax'){ 
+
+		echo json_encode($maClasse-> liste_dossier_ajax($_POST['id_cli'], $_POST['id_mod_lic']));
+
+	}else if(isset($_POST['operation']) && $_POST['operation']=='creerDetailFactureDossier'){// On recupere les donnees du dossier a facturer 
+
+		//On test si la facture existe deja
+		if (empty($maClasse-> getFactureGlobale($_POST['ref_fact']))) {
+			
+  			$maClasse-> creerFactureDossier($_POST['ref_fact'], $_POST['id_mod_fact'], $_POST['id_cli'], $_SESSION['id_util'], $_POST['id_mod_lic'], 'globale', $_POST['information'], $_POST['note_debit']);
+		}
+
+  		$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos'], $_POST['id_deb'], $_POST['montant'], $_POST['tva'], '1');
+  		
+  		$reponse['detail_invoice'] = $maClasse-> detail_invoice($_POST['ref_fact']);
+
+  		echo json_encode($reponse);
+
+	}else if ($_POST['operation']=='supprimerDetailFactureDossier3') {
+	  
+		$maClasse-> supprimerDetailFactureDossier3($_POST['ref_fact'], $_POST['id_dos']);
+		$response['detail_invoice'] = $maClasse-> detail_invoice($_POST['ref_fact']);
+		echo json_encode($response);
+
+	}
 ?>

@@ -27,15 +27,15 @@
       <div class="container-fluid" style="">
         <div class="row">
 
-          <div class="col-8">
+          <div class="col-7">
             <div class="card">
               <!-- /.card-header -->
               <div class="card-body table-responsive p-0 small">
-                <table id="pending_report" class=" table table-bordered table-hover text-nowrap table-head-fixed table-sm">
+                <table id="pending_report" class=" table table-bordered table-hover text-nowrap table-head-fixed table-sm"style="cursor:pointer">
                   <thead>
                     <tr class="">
                       <th style="text-align: center;">Client</th>
-                      <th style="text-align: center;">Personne</th>
+                      <th style="text-align: center;">Person Name</th>
                       <th style="text-align: center;">Export</th>
                       <th style="text-align: center;">Import</th>
                       <th style="text-align: center;">Grand Total</th>
@@ -59,6 +59,28 @@
             <!-- /.card -->
           </div>
 
+          <div class="col-5">
+            <div class="card">
+              <!-- /.card-header -->
+              <div class="card-body table-responsive p-0 small">
+                <table id="invoice_assigned" class=" table table-bordered table-hover text-nowrap table-head-fixed table-sm">
+                  <thead>
+                    <tr class="">
+                      <th style="text-align: center;">Client</th>
+                      <th style="text-align: center;">Person Name</th>
+                      <th style="text-align: center;">transit</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                   
+                  </tbody>
+                </table>
+              </div>
+              <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+          </div>
+
         </div>
       </div><!-- /.container-fluid -->
     </section>
@@ -72,42 +94,49 @@
   // ------------------------------------------------------------------------------------------------------
   ?>
 
-<div class="modal fade" id="modal_send_invoice">
+<div class="modal fade" id="modal_create_assignement">
   <div class="modal-dialog modal-sm small">
-    <form id="modal_send_invoice_form" method="POST" action="" data-parsley-validate enctype="multipart/form-data">
-      <input type="hidden" name="operation" id="operation" value="send_invoice_mail">
+    <form id="create_assignement_form" method="POST" action="" data-parsley-validate enctype="multipart/form-data">
+      <input type="hidden" name="operation" id="operation" value="create_assignement">
     <div class="modal-content">
       <div class="modal-header ">
-        <h4 class="modal-title"><i class="fa fa-envelope"></i> Send email</h4>
+        <h4 class="modal-title"><i class="fa fa-plus"></i> New Assignement</h4>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body">
-        <div class="row">
-
-          <div class="col-md-12">
-            <label for="x_card_code" class="control-label mb-1">Invoice Ref.</label>
-            <input id="label_ref_fact" class="form-control form-control-sm cc-exp bg-dark" disabled>
-            <input type="hidden" name="ref_fact" id="ref_fact">
-          </div>
-
-          <div class="col-md-12"><hr></div>
-
-          <div class="col-md-12">
-            <table class=" table table-dark table-bordered table-hover text-nowrap table-sm">
-              <thead>
-                <tr class="bg bg-dark">
-                  <th>#</th>
-                  <th>Email Address</th>
-                  <th>Action</th>
-                </tr>
-              </thead>
-              <tbody id="tableau_email">
-              </tbody>
-            </table>
-          </div>
+        
+        <div class="form-group">
+          <label for="x_card_code" class="control-label mb-1">Person</label>
+          <select class="form-control cc-exp form-control-sm" name="id_util">
+            <option></option>
+            <?php
+              $maClasse-> selectionnerUtilisateurRole(12);
+            ?>
+          </select>
         </div>
+
+        <div class="form-group">
+          <label for="x_card_code" class="control-label mb-1">Client</label>
+          <select class="form-control cc-exp form-control-sm" name="id_cli">
+            <option></option>
+            <?php
+              $maClasse-> selectionnerClient();
+            ?>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="x_card_code" class="control-label mb-1">Transit</label>
+          <select class="form-control cc-exp form-control-sm" name="id_mod_lic">
+            <option></option>
+            <?php
+              $maClasse-> selectionnerModeleLicence();
+            ?>
+          </select>
+        </div>
+
       </div>
       <div class="modal-footer justify-content-between">
         <button type="button" class="btn-xs btn-danger" data-dismiss="modal">Cancelled</button>
@@ -120,60 +149,156 @@
   <!-- /.modal-dialog -->
 </div>
 
-<div class="modal fade" id="modal_detail_invoice_pending_report">
-  <div class="modal-dialog modal-xl small">
-   
-    <div class="modal-content">
-      <div class="modal-header ">
-        <h4 class="modal-title"><i class="fa fa-file"></i> Details</h4>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <div class="row">
-
-          <div class="col-md-12 table-responsive">
-            <table id="detail_invoice_pending_report" cellspacing="0" width="100%" class="small table hover display compact table-bordered table-striped table-sm text-nowrap">
-              <thead>
-              <tr>
-                <th>#</th>
-                <th>MCA File Ref.</th>
-                <th>Lot Num. / Inv.No.</th>
-                <th>PO.No.</th>
-                <th>Commodity</th>
-                <th>Truck / Wagon / AWB</th>
-                <th>E.Ref</th>
-                <th>E.Date</th>
-                <th>L.Ref</th>
-                <th>L.Date</th>
-                <th>L.Amount</th>
-                <th>Delay</th>
-                <th>Q.Ref</th>
-                <th>Q.Date</th>
-                <th>Transit</th>
-                <th>Person Assigned</th>
-                <th>Year</th>
-              </tr>
-              </thead>
-              <tbody>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-    </div>
-    <!-- /.modal-content -->
-  </div>
-  <!-- /.modal-dialog -->
-</div>
-
 <script type="text/javascript">
   
+  $(document).ready(function(){
+
+    $('#create_assignement_form').submit(function(e){
+
+      e.preventDefault();
+
+       if(confirm('Do you really want to submit ?')) {
+          
+          $('#spinner-div').show();
+          $('#modal_create_assignement').modal('hide');
+
+          var fd = new FormData(this);
+          // alert($(this).attr('action'));
+          $.ajax({
+
+            url: 'ajax.php',
+            type: 'post',
+            processData: false,
+            contentType: false,
+            data: fd,
+            dataType: 'json',
+            success:function(data){
+              if (data.logout) {
+                alert(data.logout);
+                window.location="../deconnexion.php";
+              }else{
+                
+                $( 'form' ).each(function(){
+                    this.reset();
+                });
+
+                $('#pending_report').DataTable().ajax.reload();
+                $('#invoice_assigned').DataTable().ajax.reload();
+                $('#spinner-div').hide();//Request is complete so hide spinner
+              }
+            },
+            complete: function () {
+                loadPV();
+                $('#spinner-div').hide();//Request is complete so hide spinner
+            }
+
+          });
+
+
+      }
+
+    });
+  
+  });
+  function remove_assignement(id_util, id_mod_lic, id_cli){
+
+    if(confirm('Do really you want to delete this assignement ?')) {
+
+      $('#spinner-div').show();
+
+        $.ajax({
+          type: "POST",
+          url: "ajax.php",
+          data: { id_util: id_util, id_cli:id_cli, id_mod_lic:id_mod_lic, operation: 'remove_assignement'},
+          dataType:"json",
+          success:function(data){
+            if (data.logout) {
+              alert(data.logout);
+              window.location="../deconnexion.php";
+            }else{
+              $('#invoice_assigned').DataTable().ajax.reload();
+              $('#pending_report').DataTable().ajax.reload();
+            }
+          },
+          complete: function () {
+              $('#spinner-div').hide();//Request is complete so hide spinner
+          }
+        });
+
+    }
+
+  }
+
+  $('#invoice_assigned').DataTable({
+     lengthMenu: [
+        [15, 25, 50, -1],
+        [15, 25, 50, 'All'],
+    ],
+    dom: 'Bfrtip',
+  buttons: [
+      {
+        extend: 'excel',
+        text: '<i class="fa fa-file-excel"></i>',
+        title: 'ASSIGNEMENT',
+        className: 'btn btn-success'
+      },
+      {
+        extend: 'pageLength',
+        text: '<i class="fa fa-list"></i>',
+        className: 'btn btn-dark'
+      }
+      <?php
+      if ($maClasse-> getUtilisateur($_SESSION['id_util'])['assignement_facturation']=='1') {
+      ?>
+      ,
+      {
+        text: '<i class="fa fa-plus"></i> New',
+        className: 'btn btn-info',
+        action: function ( e, dt, node, config ) {
+            $( '#create_assignement_form' ).each(function(){
+              this.reset();
+            });
+            $('#modal_create_assignement').modal('show');
+        }
+      }
+      <?php
+      }
+      ?>
+  ],
+  "paging": true,
+  "lengthChange": true,
+  "searching": true,
+  "ordering": true,
+  "info": true,
+  "autoWidth": true,
+  "responsive": true,
+    "ajax":{
+      "type": "GET",
+      "url":"ajax.php",
+      "method":"post",
+      "dataSrc":{
+          "id_cli": ""
+      },
+      "data": {
+          "operation": "invoice_assigned"
+      }
+    },
+    order: [[0, 'asc']],
+    rowGroup: {
+        dataSrc: 0
+    },
+
+    "columns":[
+      {"data":"nom_util"},
+      {"data":"nom_cli"},
+      {"data":"nom_mod_lic"}
+    ]
+  });
+
   $('#pending_report').DataTable({
      lengthMenu: [
-        [25, 50, -1],
-        [25, 50, 'All'],
+        [15, 25, 50, -1],
+        [15, 25, 50, 'All'],
     ],
     dom: 'Bfrtip',
   buttons: [
@@ -337,82 +462,13 @@
   table.on('click', 'tbody tr', function () {
       let data = table.row(this).data();
 
-      modal_detail_invoice_pending_report(data.id, data.id_mod_lic);
+      modal_detail_invoice_pending_report(data.id_cli, data.id_mod_lic);
       
       // alert('You clicked on ' + data[0] + "'s row");
   });
 
   function modal_detail_invoice_pending_report(id_cli, id_mod_lic){
-    
-    $('#spinner-div').show();
-
-    if ( $.fn.dataTable.isDataTable( '#detail_invoice_pending_report' ) ) {
-        table = $('#detail_invoice_pending_report').DataTable();
-    }
-    else {
-        table = $('#detail_invoice_pending_report').DataTable( {
-            paging: false
-        } );
-    }
-
-    table.destroy();
-
-    $('#detail_invoice_pending_report').DataTable({
-       lengthMenu: [
-          [20, 30, 50, -1],
-          [20, 30, 50, 1000, 'All'],
-      ],
-      dom: 'Bfrtip',
-      buttons: [
-          {
-            extend: 'excel',
-            text: '<i class="fa fa-file-excel"></i>',
-            className: 'btn btn-success'
-          }
-      ],
-    "paging": true,
-    "lengthChange": true,
-    "searching": true,
-    "ordering": true,
-    "info": true,
-    "autoWidth": true,
-    "responsive": true,
-      "ajax":{
-        "type": "GET",
-        "url":"ajax.php",
-        "method":"post",
-        "dataSrc":{
-            "id_cli": "844"
-        },
-        "data": {
-            "id_cli": id_cli,
-            "id_mod_lic": id_mod_lic,
-            "operation": "detail_invoice_pending_report"
-        }
-      },
-      "columns":[
-        {"data":"compteur"},
-        {"data":"ref_dos"},
-        {"data":"num_lot"},
-        {"data":"po_ref"},
-        {"data":"nom_march"},
-        {"data":"truck"},
-        {"data":"ref_decl"},
-        {"data":"date_decl"},
-        {"data":"ref_liq"},
-        {"data":"date_liq"},
-        {"data":"montant_liq"},
-        {"data":"delay_liq"},
-        {"data":"ref_quit"},
-        {"data":"date_quit"},
-        {"data":"nom_mod_lic"},
-        {"data":"nom_util"},
-        {"data":"annee"}
-      ] 
-    });
-    $('#spinner-div').hide();//Request is complete so hide spinner
-
-    $('#modal_detail_invoice_pending_report').modal('show');
-    
+    window.open('detail_pending_report.php?id_cli='+id_cli+'&id_mod_lic='+id_mod_lic,'pop10','width=1500,height=950');
   }
+
 </script>
