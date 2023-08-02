@@ -580,7 +580,7 @@
                   //     this.reset();
                   // });
                   $('#horse').val('');
-                  $('#roe_decl').val('');
+                  // $('#roe_decl').val('');
                   $('#trailer_1').val('');
                   $('#trailer_1').val('');
                   $('#id_dos').html(data.ref_dos);
