@@ -38,6 +38,9 @@
             <div class="card">
               <div class="card-header">
                 <button class="btn btn-xs btn-danger" onclick="window.location='listerFactureDossier.php?type_fact=globale&id_mod_lic_fact=2&id_cli=<?php echo $maClasse-> getClientFacture($_GET['ref_fact'])['id_cli'];?>'"><< Go Back</button>
+                <div class="float-right">
+                  <button class="btn btn-xs btn-info" onclick="modal_edit_avance('<?php echo $_GET['ref_fact'];?>');"><i class="fa fa-edit"></i>Advanced modification</button>
+                </div>
               </div>
               <!-- /.card-header -->
 
@@ -280,7 +283,128 @@
     <!-- /.modal-dialog -->
   </div>
 
+  <div class="modal fade" id="modal_edit_avance">
+    <div class="modal-dialog modal-xl">
+      <!-- <form id="ajuster_cif_cdf_form" method="POST" action="" data-parsley-validate enctype="multipart/form-data"> -->
+        <input type="hidden" name="operation" value="ajuster_cif_cdf">
+        <input type="hidden" name="id_dos" value="<?php echo $maClasse-> getDataFactureGlobale($_GET['ref_fact'])['id_dos'];?>">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title"><i class="fa fa-edit"></i> Advanced modification | <?php echo $_GET['ref_fact'];?></h4>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+
+            <div class="col-md-12 table-responsive">
+              <table class="table table-bordered table-striped text-nowrap table-hover table-sm small text-nowrap">
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>File Ref.</th>
+                    <th>Amount</th>
+                    <th>Currency</th>
+                    <th>TVA</th>
+                    <th>TVA Amount</th>
+                  </tr>
+                </thead>
+                <tbody class="small" id="detail_facture_avance"></tbody>
+              </table>
+            </div>
+
+          </div>
+        </div>
+        <!-- <div class="modal-footer justify-content-between">
+          <button type="button" class="btn btn-xs btn-danger" data-dismiss="modal">Cancel</button>
+          <button type="submit" name="" class="btn btn-xs btn-primary">Submit</button>
+        </div> -->
+      </div>
+      <!-- </form> -->
+      <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+  </div>
+
 <script type="text/javascript">
+
+  function getDeboursFacture(){
+    $('#spinner-div').show();
+    $.ajax({
+      type: "POST",
+      url: "ajax.php",
+      data: { id_mod_fact: 3, id_dos: <?php echo $maClasse-> getDataFactureGlobale($_GET['ref_fact'])['id_dos'];?>, id_mod_lic: 2, id_march:<?php echo $maClasse-> getDataFactureGlobale($_GET['ref_fact'])['id_march'];?>, id_mod_trans:<?php echo $maClasse-> getDataFactureGlobale($_GET['ref_fact'])['id_march'];?>, ref_fact:'<?php echo $_GET['ref_fact'];?>', operation: 'getTableauImportInvoiceSingleEdit'},
+      dataType:"json",
+      success:function(data){
+        if (data.logout) {
+          alert(data.logout);
+          window.location="../deconnexion.php";
+        }else{
+          $('#debours').html(data.debours);
+        }
+      },
+      complete: function () {
+          $('#spinner-div').hide();//Request is complete so hide spinner
+      }
+    });
+
+  }
+
+  function advance_edit(ref_fact, id_dos, id_deb, montant, montant_tva, tva, usd){
+    // console.log('------------\n');
+    $.ajax({
+      type: 'post',
+      url: 'ajax.php',
+      data: {ref_fact: ref_fact, id_dos: id_dos, id_deb: id_deb, montant: montant, montant_tva: montant_tva, tva: tva, usd: usd, operation: 'advance_edit'},
+      dataType: 'json',
+      success:function(data){
+        if (data.logout) {
+          alert(data.logout);
+          window.location="../deconnexion.php";
+        }else{
+          getDeboursFacture();
+          $('#detail_facture_avance').html(data.detail_facture_avance);
+          $('#montant_t_deb_1').html((new Intl.NumberFormat('en-DE').format(Math.round(data.taxe*1000)/1000)));
+          $('#montant_t_deb_2').html((new Intl.NumberFormat('en-DE').format(Math.round(data.other*1000)/1000)));
+          $('#montant_t_deb_3').html((new Intl.NumberFormat('en-DE').format(Math.round(data.ops*1000)/1000)));
+          $('#montant_t_deb_4').html((new Intl.NumberFormat('en-DE').format(Math.round(data.service*1000)/1000)));
+          // $('#modal_edit_avance').modal('show');
+        }
+      },
+      complete: function () {
+          $('#spinner-div').hide();//Request is complete so hide spinner
+      }
+    });
+  }
+
+  function modal_edit_avance(ref_fact){
+    $('#spinner-div').show();
+    $.ajax({
+      type: 'post',
+      url: 'ajax.php',
+      data: {ref_fact: ref_fact, id_dos: <?php echo $maClasse-> getDataFactureGlobale($_GET['ref_fact'])['id_dos'];?>, operation: 'modal_edit_avance'},
+      dataType: 'json',
+      success:function(data){
+        if (data.logout) {
+          alert(data.logout);
+          window.location="../deconnexion.php";
+        }else{
+
+          $('#detail_facture_avance').html(data.detail_facture_avance);
+          $('#montant_t_deb_1').html((new Intl.NumberFormat('en-DE').format(Math.round(data.taxe*1000)/1000)));
+          $('#montant_t_deb_2').html((new Intl.NumberFormat('en-DE').format(Math.round(data.other*1000)/1000)));
+          $('#montant_t_deb_3').html((new Intl.NumberFormat('en-DE').format(Math.round(data.ops*1000)/1000)));
+          $('#montant_t_deb_4').html((new Intl.NumberFormat('en-DE').format(Math.round(data.service*1000)/1000)));
+          $('#modal_edit_avance').modal('show');
+        }
+      },
+      complete: function () {
+          $('#spinner-div').hide();//Request is complete so hide spinner
+      }
+    });
+
+  }
 
   function modal_ajuster_cif_cdf(id_dos){
     $('#spinner-div').show();

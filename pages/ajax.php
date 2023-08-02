@@ -1902,5 +1902,27 @@
 		$response['detail_invoice'] = $maClasse-> detail_invoice($_POST['ref_fact']);
 		echo json_encode($response);
 
+	}else if ($_POST['operation']=='modal_edit_avance') {
+	  
+		$response['detail_facture_avance'] = $maClasse-> modal_edit_avance($_POST['ref_fact']);
+		$response['taxe'] = $maClasse-> get_total_advance($_POST['ref_fact'], $_POST['id_dos'])['taxe'];
+		$response['other'] = $maClasse-> get_total_advance($_POST['ref_fact'], $_POST['id_dos'])['other'];
+		$response['service'] = $maClasse-> get_total_advance($_POST['ref_fact'], $_POST['id_dos'])['service'];
+		$response['ops'] = $maClasse-> get_total_advance($_POST['ref_fact'], $_POST['id_dos'])['ops'];
+		echo json_encode($response);
+
+	}else if ($_POST['operation']=="detail_compte") {
+		echo json_encode($maClasse-> detail_compte($_POST['id_compte']));
+	}else if ($_POST['operation']=='advance_edit') {
+
+		$maClasse-> advance_edit($_POST['ref_fact'], $_POST['id_dos'], $_POST['id_deb'], $_POST['montant'], $_POST['montant_tva'], $_POST['tva'], $_POST['usd']);
+	  
+		$response['detail_facture_avance'] = $maClasse-> modal_edit_avance($_POST['ref_fact']);
+		$response['taxe'] = $maClasse-> get_total_advance($_POST['ref_fact'], $_POST['id_dos'])['taxe'];
+		$response['other'] = $maClasse-> get_total_advance($_POST['ref_fact'], $_POST['id_dos'])['other'];
+		$response['service'] = $maClasse-> get_total_advance($_POST['ref_fact'], $_POST['id_dos'])['service'];
+		$response['ops'] = $maClasse-> get_total_advance($_POST['ref_fact'], $_POST['id_dos'])['ops'];
+		echo json_encode($response);
+
 	}
 ?>
