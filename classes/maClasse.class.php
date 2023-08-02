@@ -3227,7 +3227,7 @@
 													compte.nom_compte AS nom_compte,
 													classe_compte.nom_class AS nom_class,
 													-- sub_classe_compte.nom_sub_class AS nom_sub_class,
-													CONCAT('<span class=\"btn btn-xs btn-primary\"\" onclick=\"window.open(\'detail_sub_class_trial_balance.php?id_sub_class=',sub_classe_compte.id_sub_class,'\',\'pop8\',\'width=1100,height=700\');\"><i class=\"fa fa-eye\"></i></span> ',sub_classe_compte.nom_sub_class) AS nom_sub_class,
+													CONCAT('<a href=\"#\" onclick=\"window.open(\'detail_sub_class_trial_balance.php?id_sub_class=',sub_classe_compte.id_sub_class,'\',\'pop8\',\'width=1100,height=700\');\"><i class=\"fa fa-eye text-primary\"></i></a> ',sub_classe_compte.nom_sub_class) AS nom_sub_class,
 													SUM(IF(det.debit IS NULL, 0, det.debit)) AS debit,
 													SUM(IF(det.credit IS NULL, 0, det.credit)) AS credit,
 													IF(SUM(IF(det.debit IS NULL, 0, det.debit))>SUM(IF(det.credit IS NULL, 0, det.credit)),
@@ -3238,23 +3238,22 @@
 														FORMAT(SUM(IF(det.credit IS NULL, 0, det.credit))-SUM(IF(det.debit IS NULL, 0, det.debit)),2),
 														NULL
 													) AS solde_credit,
-													CONCAT('<span class=\"btn btn-xs btn-primary\"\" onclick=\"afficherEcritureCompte(',compte.id_compte,', \'',compte.nom_compte,'\', \'',IF(FORMAT(SUM(IF(det.debit IS NULL, 0, det.debit)),2) IS NULL, 0, FORMAT(SUM(IF(det.debit IS NULL, 0, det.debit)),2)),'\', \'',IF(FORMAT(SUM(IF(det.credit IS NULL, 0, det.credit)),2) IS NULL, 0, FORMAT(SUM(IF(det.credit IS NULL, 0, det.credit)),2)),'\')\">
-																<i class=\"fa fa-eye\"></i>
+													CONCAT('<span class=\"\"\" onclick=\"afficherEcritureCompte(',compte.id_compte,', \'',compte.nom_compte,'\', \'',IF(FORMAT(SUM(IF(det.debit IS NULL, 0, det.debit)),2) IS NULL, 0, FORMAT(SUM(IF(det.debit IS NULL, 0, det.debit)),2)),'\', \'',IF(FORMAT(SUM(IF(det.credit IS NULL, 0, det.credit)),2) IS NULL, 0, FORMAT(SUM(IF(det.credit IS NULL, 0, det.credit)),2)),'\')\">
+																<i class=\"text-primary fa fa-eye\"></i>
 															</span>') AS btn_action,
 													monnaie.sig_mon AS sig_mon,
 
-
 													IF((SUM(det.debit) IS NOT NULL) OR (SUM(det.credit) IS NOT NULL),
-														IF((SUM(IF(det.debit IS NULL, 0, IF(ec.id_mon=compte.id_mon, det.debit, IF(ec.id_mon='1', det.debit, det.debit/te.montant))))-SUM(IF(det.credit IS NULL, 0, IF(ec.id_mon=compte.id_mon, det.credit, IF(ec.id_mon='1', det.credit, det.credit/te.montant)))))>0,
-															(SUM(IF(det.debit IS NULL, 0, IF(ec.id_mon=compte.id_mon, det.debit, IF(ec.id_mon='1', det.debit, det.debit/te.montant))))-SUM(IF(det.credit IS NULL, 0, IF(ec.id_mon=compte.id_mon, det.credit, IF(ec.id_mon='1', det.credit, det.credit/te.montant))))),
+														IF((SUM(IF(det.debit IS NULL, 0, IF(ec.id_mon='1', det.debit, IF(ec.id_mon='1', det.debit, det.debit/te.montant))))-SUM(IF(det.credit IS NULL, 0, IF(ec.id_mon=compte.id_mon, det.credit, IF(ec.id_mon='1', det.credit, det.credit/te.montant)))))>0,
+															(SUM(IF(det.debit IS NULL, 0, IF(ec.id_mon='1', det.debit, IF(ec.id_mon='1', det.debit, det.debit/te.montant))))-SUM(IF(det.credit IS NULL, 0, IF(ec.id_mon=compte.id_mon, det.credit, IF(ec.id_mon='1', det.credit, det.credit/te.montant))))),
 															''
 														),
 														''
 													) AS solde_debit,
 
 													IF((SUM(det.debit) IS NOT NULL) OR (SUM(det.credit) IS NOT NULL),
-														IF((SUM(IF(det.credit IS NULL, 0, IF(ec.id_mon=compte.id_mon, det.credit, IF(ec.id_mon='1', det.credit, det.credit/te.montant))))-SUM(IF(det.debit IS NULL, 0, IF(ec.id_mon=compte.id_mon, det.debit, IF(ec.id_mon='1', det.debit, det.debit/te.montant)))))>0,
-															(SUM(IF(det.credit IS NULL, 0, IF(ec.id_mon=compte.id_mon, det.credit, IF(ec.id_mon='1', det.credit, det.credit/te.montant))))-SUM(IF(det.debit IS NULL, 0, IF(ec.id_mon=compte.id_mon, det.debit, IF(ec.id_mon='1', det.debit, det.debit/te.montant))))),
+														IF((SUM(IF(det.credit IS NULL, 0, IF(ec.id_mon='1', det.credit, IF(ec.id_mon='1', det.credit, det.credit/te.montant))))-SUM(IF(det.debit IS NULL, 0, IF(ec.id_mon='1', det.debit, IF(ec.id_mon='1', det.debit, det.debit/te.montant)))))>0,
+															(SUM(IF(det.credit IS NULL, 0, IF(ec.id_mon='1', det.credit, IF(ec.id_mon='1', det.credit, det.credit/te.montant))))-SUM(IF(det.debit IS NULL, 0, IF(ec.id_mon='1', det.debit, IF(ec.id_mon='1', det.debit, det.debit/te.montant))))),
 															''
 														),
 														''
@@ -3380,7 +3379,119 @@
 			while ($reponse = $requete-> fetch()) {
 				$compteur++;
 
-				$reponse['compteur'] = $compteur;
+				$reponse['compteur'] = $compteur.'<a title="View more details" href="#" style="color: black;" onclick="window.open(\'pop_detail_compte.php?id_compte='.$reponse['id_compte'].'\',\'pop11\',\'width=1000,height=500\');">
+						<span class="fa fa-eye text-primary"></>
+					</a>';
+				$rows[] = $reponse;
+
+			}$requete-> closeCursor();
+
+			return $rows;
+
+		}
+
+		public function detail_compte($id_compte){
+			include("connexion.php");
+
+			$entree['id_compte'] = $id_compte;
+			$compteur=0;
+
+			$bg = "";
+			$badge = '';
+			$btn = '';
+			$etat ='';
+
+			$debut = $compteur;
+			$rows = array();
+
+			$requete = $connexion-> prepare("SELECT compte.id_compte AS id_compte,
+													compte.code_compte AS code_compte,
+													compte.nom_compte AS nom_compte,
+													classe_compte.nom_class AS nom_class,
+													ec.date_e AS date_e,
+													ec.id_e AS id_e,
+													ec.libelle_e AS libelle_e,
+													det.debit AS debit,
+													det.credit AS credit,
+													monnaie.sig_mon AS sig_mon,
+													IF(ec.id_mon=1,
+														'1',
+														te.montant
+													) AS montant_taux,
+													IF(ec.id_mon=1,
+														det.debit,
+														det.debit/te.montant
+													) AS debit_acc,
+													IF(ec.id_mon=1,
+														det.credit,
+														det.credit/te.montant
+													) AS credit_acc,
+													-- sub_classe_compte.nom_sub_class AS nom_sub_class,
+													CONCAT('<span class=\"btn btn-xs btn-primary\"\" onclick=\"detail_ecriture(\'',compte.id_compte,'\');\"><i class=\"fa fa-eye\"></i></span> ',sub_classe_compte.nom_sub_class) AS nom_sub_class,
+													(IF(det.debit IS NULL, 0, det.debit)) AS debit,
+													(IF(det.credit IS NULL, 0, det.credit)) AS credit,
+													IF((IF(det.debit IS NULL, 0, det.debit))>(IF(det.credit IS NULL, 0, det.credit)),
+														FORMAT((IF(det.debit IS NULL, 0, det.debit))-(IF(det.credit IS NULL, 0, det.credit)),2),
+														NULL
+													) AS solde_debit,
+													IF((IF(det.debit IS NULL, 0, det.debit))<(IF(det.credit IS NULL, 0, det.credit)),
+														FORMAT((IF(det.credit IS NULL, 0, det.credit))-(IF(det.debit IS NULL, 0, det.debit)),2),
+														NULL
+													) AS solde_credit,
+													CONCAT('<span class=\"btn btn-xs btn-primary\"\" onclick=\"afficherEcritureCompte(',compte.id_compte,', \'',compte.nom_compte,'\', \'',IF(FORMAT((IF(det.debit IS NULL, 0, det.debit)),2) IS NULL, 0, FORMAT((IF(det.debit IS NULL, 0, det.debit)),2)),'\', \'',IF(FORMAT((IF(det.credit IS NULL, 0, det.credit)),2) IS NULL, 0, FORMAT((IF(det.credit IS NULL, 0, det.credit)),2)),'\')\">
+																<i class=\"fa fa-eye\"></i>
+															</span>') AS btn_action,
+													monnaie.sig_mon AS sig_mon,
+
+
+													IF(((det.debit) IS NOT NULL) OR ((det.credit) IS NOT NULL),
+														IF(((IF(det.debit IS NULL, 0, IF(ec.id_mon=compte.id_mon, det.debit, IF(ec.id_mon='1', det.debit, det.debit/te.montant))))-(IF(det.credit IS NULL, 0, IF(ec.id_mon=compte.id_mon, det.credit, IF(ec.id_mon='1', det.credit, det.credit/te.montant)))))>0,
+															((IF(det.debit IS NULL, 0, IF(ec.id_mon=compte.id_mon, det.debit, IF(ec.id_mon='1', det.debit, det.debit/te.montant))))-(IF(det.credit IS NULL, 0, IF(ec.id_mon=compte.id_mon, det.credit, IF(ec.id_mon='1', det.credit, det.credit/te.montant))))),
+															''
+														),
+														''
+													) AS solde_debit,
+
+													IF(((det.debit) IS NOT NULL) OR ((det.credit) IS NOT NULL),
+														IF(((IF(det.credit IS NULL, 0, IF(ec.id_mon=compte.id_mon, det.credit, IF(ec.id_mon='1', det.credit, det.credit/te.montant))))-(IF(det.debit IS NULL, 0, IF(ec.id_mon=compte.id_mon, det.debit, IF(ec.id_mon='1', det.debit, det.debit/te.montant)))))>0,
+															((IF(det.credit IS NULL, 0, IF(ec.id_mon=compte.id_mon, det.credit, IF(ec.id_mon='1', det.credit, det.credit/te.montant))))-(IF(det.debit IS NULL, 0, IF(ec.id_mon=compte.id_mon, det.debit, IF(ec.id_mon='1', det.debit, det.debit/te.montant))))),
+															''
+														),
+														''
+													) AS solde_credit
+
+												FROM compte, detail_ecriture det, sub_classe_compte, classe_compte, monnaie, ecriture ec, taux_echange te
+												WHERE compte.id_compte = det.id_compte
+													AND compte.id_compte = ?
+													AND compte.id_sub_class = sub_classe_compte.id_sub_class
+													AND sub_classe_compte.id_class = classe_compte.id_class
+													AND monnaie.id_mon = ec.id_mon
+													AND ec.id_e = det.id_e
+													AND te.id_taux = ec.id_taux
+
+												-- FROM compte
+												-- 	LEFT JOIN detail_ecriture det
+												-- 		ON compte.id_compte = det.id_compte
+												-- 	LEFT JOIN sub_classe_compte
+												-- 		ON compte.id_sub_class = sub_classe_compte.id_sub_class
+												-- 	LEFT JOIN classe_compte
+												-- 		ON sub_classe_compte.id_class = classe_compte.id_class
+												-- 	LEFT JOIN monnaie
+												-- 		ON monnaie.id_mon = compte.id_mon
+												-- 	LEFT JOIN ecriture ec
+												-- 		ON ec.id_e = det.id_e
+												-- 	LEFT JOIN taux_echange te
+												-- 		ON te.id_taux = ec.id_taux
+												-- GROUP BY compte.id_compte
+												-- ORDER BY classe_compte.id_class, compte.nom_compte
+												ORDER BY compte.nom_compte");
+			$requete-> execute(array($entree['id_compte']));
+			while ($reponse = $requete-> fetch()) {
+				$compteur++;
+
+				$reponse['compteur'] = $compteur.'<a title="View more details" href="#" style="color: black;" onclick="detail_ecriture(\''.$reponse['id_e'].'\');">
+						<span class="fa fa-eye text-primary"></>
+					</a>';
 				$rows[] = $reponse;
 
 			}$requete-> closeCursor();
@@ -34330,6 +34441,20 @@
 			}
 		}
 
+		public function getCompte($id_compte){
+			include('connexion.php');
+			$entree['id_compte'] = $id_compte;
+
+			$requete = $connexion-> prepare("SELECT *
+												FROM compte
+												WHERE id_compte = ?");
+			$requete-> execute(array($entree['id_compte']));
+			$reponse = $requete-> fetch();
+			if($reponse){
+				return $reponse;
+			}
+		}
+
 		public function getFournisseur($id_four){
 			include('connexion.php');
 			$entree['id_four'] = $id_four;
@@ -39379,6 +39504,145 @@
 					</tr>';
 
 			return $file;
+		}
+
+		public function modal_edit_avance($ref_fact){
+			include('connexion.php');
+			$entree['ref_fact'] = $ref_fact;
+			// $entree['id_mod_trans'] = $id_mod_trans;
+			// $entree['id_mod_lic'] = $id_mod_lic;
+
+			$file = '';
+			$compteur = 0;
+			$duty_cdf = 0;
+			$duty_usd = 0;
+			$other_usd = 0;
+			$total_usd = 0;
+			$liquidation = 0;
+			$liquidation_usd = 0;
+
+			$id_t_deb = '';
+
+			$requete = $connexion-> prepare("SELECT dossier.id_dos AS id_dos,
+													dossier.ref_dos AS ref_dos,
+													ROUND(detail_facture_dossier.montant, 2) AS montant,
+													ROUND(detail_facture_dossier.montant_tva, 2) AS montant_tva,
+													detail_facture_dossier.tva AS tva,
+													detail_facture_dossier.usd AS usd,
+													debours.nom_deb AS nom_deb,
+													debours.id_deb AS id_deb,
+													type_debours.id_t_deb AS id_t_deb,
+													type_debours.nom_t_deb AS nom_t_deb,
+													IF(detail_facture_dossier.usd='1',
+														CONCAT('<option value=\'1\'>USD</option><option value=\'0\'>CDF</option>'),
+														CONCAT('<option value=\'0\'>CDF</option><option value=\'1\'>USD</option>')
+													) AS usd,
+													IF(detail_facture_dossier.tva='1',
+														CONCAT('<option value=\'1\'>YES</option><option value=\'0\'>NO</option>'),
+														CONCAT('<option value=\'0\'>NO</option><option value=\'1\'>YES</option>')
+													) AS tva
+												FROM dossier, detail_facture_dossier, debours, type_debours
+												WHERE detail_facture_dossier.ref_fact = ?
+													AND detail_facture_dossier.id_dos = dossier.id_dos
+													AND detail_facture_dossier.id_deb = debours.id_deb
+													AND debours.id_t_deb = type_debours.id_t_deb
+												ORDER BY debours.id_t_deb, debours.rang, debours.id_deb");
+			$requete-> execute(array($entree['ref_fact']));
+
+			while($reponse = $requete-> fetch()){
+				$compteur++;
+
+				if ($id_t_deb != $reponse['id_t_deb']) {
+					$id_t_deb = $reponse['id_t_deb'];
+					$file.= '
+							<tr id="">
+								<th colspan="6" class="bg bg-secondary">
+									<u>'.$reponse['nom_t_deb'].'</u> <span class="float-right text-sm badge badge-dark" id="montant_t_deb_'.$reponse['id_t_deb'].'"></span>
+								</th>
+							</tr>';
+				}
+				// advance_edit(ref_fact, id_dos, id_deb, montant, montant_tva, tva, usd)
+
+				$file .= '<tr>
+							<input type="hidden" id="id_deb_am_'.$compteur.'" value="'.$reponse['id_deb'].'">
+							<td>'.$compteur.'</td>
+							<td>'.$reponse['nom_deb'].'</td>
+							<td><input type="number" id="montant_am_'.$compteur.'" class="text-right" value="'.$reponse['montant'].'" onblur="advance_edit(\''.$ref_fact.'\', '.$reponse['id_dos'].', id_deb_am_'.$compteur.'.value, this.value, montant_tva_am_'.$compteur.'.value, tva_am_'.$compteur.'.value, usd_am_'.$compteur.'.value);"></td>
+							<td><select id="usd_am_'.$compteur.'" onchange="advance_edit(\''.$ref_fact.'\', '.$reponse['id_dos'].', id_deb_am_'.$compteur.'.value, montant_am_'.$compteur.'.value, montant_tva_am_'.$compteur.'.value, tva_am_'.$compteur.'.value, this.value);">'.$reponse['usd'].'</select></td>
+							<td><select name="tva"  id="tva_am_'.$compteur.'" onchange="advance_edit(\''.$ref_fact.'\', '.$reponse['id_dos'].', id_deb_am_'.$compteur.'.value, montant_am_'.$compteur.'.value, montant_tva_am_'.$compteur.'.value, this.value, usd_am_'.$compteur.'.value);" >'.$reponse['tva'].'</select></td>
+							<td><input type="number" id="montant_tva_am_'.$compteur.'" class="text-right" value="'.$reponse['montant_tva'].'" onblur="advance_edit(\''.$ref_fact.'\', '.$reponse['id_dos'].', id_deb_am_'.$compteur.'.value, montant_am_'.$compteur.'.value, this.value, tva_am_'.$compteur.'.value, usd_am_'.$compteur.'.value);"></td>
+						</tr>';
+			}$requete-> closeCursor();
+
+			return $file;
+		}
+
+		public function get_total_advance($ref_fact, $id_dos){
+			include('connexion.php');
+
+			$entree['ref_fact'] = $ref_fact;
+			$entree['id_dos'] = $id_dos;
+
+			$requete = $connexion-> prepare("SELECT ROUND(SUM(
+														IF(debours.id_t_deb='1', detail_facture_dossier.montant+IF(detail_facture_dossier.montant_tva IS NOT NULL, detail_facture_dossier.montant_tva, 0), 0)
+													)) AS taxe,
+													SUM(
+														IF(debours.id_t_deb='2', 
+															IF(detail_facture_dossier.tva='1', 
+																detail_facture_dossier.montant*1.16,
+																detail_facture_dossier.montant
+															), 
+															0
+														)
+													) AS other,
+													SUM(
+														IF(debours.id_t_deb='3', 
+															IF(detail_facture_dossier.tva='1', 
+																detail_facture_dossier.montant*1.16,
+																detail_facture_dossier.montant
+															), 
+															0
+														)
+													) AS ops,
+													SUM(
+														IF(debours.id_t_deb='4', 
+															IF(detail_facture_dossier.tva='1', 
+																detail_facture_dossier.montant*1.16,
+																detail_facture_dossier.montant
+															), 
+															0
+														)
+													) AS service
+												FROM detail_facture_dossier, debours
+												WHERE detail_facture_dossier.ref_fact = ? 
+													AND detail_facture_dossier.id_dos = ?
+													and detail_facture_dossier.id_deb = debours.id_deb
+												GROUP BY detail_facture_dossier.id_dos");
+			$requete-> execute(array($entree['ref_fact'], $entree['id_dos']));
+			$reponse=$requete-> fetch();
+
+			if($reponse){
+				return $reponse;
+			}
+		}
+
+		public function advance_edit($ref_fact, $id_dos, $id_deb, $montant, $montant_tva, $tva, $usd){
+			include('connexion.php');
+
+			$entree['ref_fact'] = $ref_fact;
+			$entree['id_dos'] = $id_dos;
+			$entree['id_deb'] = $id_deb;
+			$entree['montant'] = $montant;
+			$entree['montant_tva'] = $montant_tva;
+			$entree['tva'] = $tva;
+			$entree['usd'] = $usd;
+
+			$requete = $connexion-> prepare("UPDATE detail_facture_dossier
+											SET montant = ?, montant_tva = ?, tva = ?, usd = ?
+											WHERE ref_fact = ?
+												AND id_dos = ?
+												AND id_deb = ?");
+			$requete-> execute(array($entree['montant'], $entree['montant_tva'], $entree['tva'], $entree['usd'], $entree['ref_fact'], $entree['id_dos'], $entree['id_deb']));
 		}
 
 		public function selectionnerMonnaieComptable(){
