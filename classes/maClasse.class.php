@@ -3500,6 +3500,39 @@
 
 		}
 
+		public function facturation_suivi_licence($id_cli, $id_mod_lic){
+			include("connexion.php");
+
+			$entree['id_cli'] = $id_cli;
+			$entree['id_mod_lic'] = $id_mod_lic;
+			$compteur=0;
+
+			$rows = array();
+
+			$requete = $connexion-> prepare("SELECT l.num_lic AS num_lic,
+													COUNT(dos.id_dos) AS nbre_dos
+												FROM licence l, dossier dos
+												WHERE l.num_lic = dos.num_lic
+													AND l.id_cli = ?
+													AND l.id_mod_lic = ?
+												GROUP BY l.num_lic
+												ORDER BY l.date_val");
+			$requete-> execute(array($entree['id_cli'], $entree['id_mod_lic']));
+			while ($reponse = $requete-> fetch()) {
+				$compteur++;
+
+				// $reponse['compteur'] = $compteur.'<a title="View more details" href="#" style="color: black;" onclick="detail_ecriture(\''.$reponse['id_e'].'\');">
+				// 		<span class="fa fa-eye text-primary"></>
+				// 	</a>';
+				$reponse['compteur'] = $compteur;
+				$rows[] = $reponse;
+
+			}$requete-> closeCursor();
+
+			return $rows;
+
+		}
+
 		public function client_finance(){
 			include("connexion.php");
 
@@ -12562,7 +12595,13 @@
 												WHERE id_bur_douane = ?");
 			$requete-> execute(array($entree['id_bur_douane']));
 			$reponse = $requete-> fetch();
-			return $reponse;
+
+			if ($reponse) {
+				return $reponse;
+			}else{
+				return null;
+			}
+			
 		}
 
 		public function getDataDossierFacturePartielle($ref_fact){
@@ -39942,6 +39981,7 @@
 			// 									AND dos.id_cli = cl.id_cli");
 
 			$requete = $connexion-> query("SELECT *,
+												dos.fichier AS fichier,
 												DATE_FORMAT(dos.date_recept, '%d/%m/%Y') AS date_recept,
 												DATE_FORMAT(dos.date_doc, '%d/%m/%Y') AS date_doc,
 												DATE_FORMAT(prd.date_prevu, '%d/%m/%Y') AS date_prevu,
