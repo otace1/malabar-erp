@@ -3510,26 +3510,88 @@
 			$rows = array();
 
 			$requete = $connexion-> prepare("SELECT l.num_lic AS num_lic,
-													COUNT(dos.id_dos) AS nbre_dos
+													COUNT(dos.id_dos) AS nbre_dos,
+													l.fact_suiv_lic AS fact_suiv_lic
 												FROM licence l, dossier dos
 												WHERE l.num_lic = dos.num_lic
 													AND l.id_cli = ?
 													AND l.id_mod_lic = ?
 												GROUP BY l.num_lic
-												ORDER BY l.date_val");
+												ORDER BY l.date_val DESC");
 			$requete-> execute(array($entree['id_cli'], $entree['id_mod_lic']));
 			while ($reponse = $requete-> fetch()) {
 				$compteur++;
+				if($this-> checkFileInvoicedLicense($reponse['num_lic'])!=false){
+					$reponse['statut'] = '<span class="text-xs badge badge-success">Invoiced ('.$this-> checkFileInvoicedLicense($reponse['num_lic'])['ref_fact'].')</span>';
+				}else if($reponse['fact_suiv_lic']=='1'){
+					$reponse['statut'] = '<span class="text-xs badge badge-warning">To be invoiced</span>';
+				}else{
+					$reponse['statut'] = '<span class="text-xs badge badge-danger">Disabled</span>';
+				}
 
-				// $reponse['compteur'] = $compteur.'<a title="View more details" href="#" style="color: black;" onclick="detail_ecriture(\''.$reponse['id_e'].'\');">
-				// 		<span class="fa fa-eye text-primary"></>
-				// 	</a>';
+				$reponse['nbre_dos'].='<a title="Dossiers affectés" href="#" style="color: black;" onclick="window.open(\'popUpDossierLicence.php?num_lic='.$reponse['num_lic'].'&couleur=\',\'pop1\',\'width=1300,height=900\');">
+							<i class="fa fa-folder-open"></i>
+						</a>';
+				
+				$reponse['btn_action'] = '<a title="Edit" href="#" style="color: black;" class="" onclick="modal_edit_suivi_licence(\''.$reponse['num_lic'].'\', \''.$reponse['fact_suiv_lic'].'\');">
+						<i class="fa fa-edit"></i>
+					</a>';
 				$reponse['compteur'] = $compteur;
 				$rows[] = $reponse;
 
 			}$requete-> closeCursor();
 
 			return $rows;
+
+		}
+
+		public function get_facturation_suivi_licence($id_cli, $id_mod_lic){
+			include("connexion.php");
+
+			$entree['id_cli'] = $id_cli;
+			$entree['id_mod_lic'] = $id_mod_lic;
+			$compteur=0;
+
+			$rows = array();
+
+			$requete = $connexion-> prepare("SELECT *
+												FROM facturation_suivi_licence
+												WHERE id_cli = ?
+													AND id_mod_lic = ?");
+			$requete-> execute(array($entree['id_cli'], $entree['id_mod_lic']));
+			$reponse = $requete-> fetch();
+
+			if ($reponse) {
+				return $reponse;
+			}else{
+				return false;
+			}
+
+		}
+
+		public function checkFileInvoicedLicense($num_lic){
+			include("connexion.php");
+
+			$entree['num_lic'] = $num_lic;
+			$compteur=0;
+
+			$rows = array();
+
+			$requete = $connexion-> prepare("SELECT dos.ref_dos AS ref_dos,
+													det.ref_fact AS ref_fact
+											FROM dossier dos, detail_facture_dossier det
+											WHERE dos.num_lic = ?
+												AND dos.id_dos = det.id_dos
+												AND (det.id_deb = 102
+													OR det.id_deb = 106)
+												");
+			$requete-> execute(array($entree['num_lic']));
+			$reponse = $requete-> fetch();
+			if ($reponse) {
+				return $reponse;
+			}else{
+				return false;
+			}
 
 		}
 
@@ -14718,6 +14780,18 @@
 						}
 
 						
+					}else if ( $this-> get_facturation_suivi_licence($this-> getDossier($id_dos)['id_cli'], $this-> getDossier($id_dos)['id_mod_lic'])!=false && $this-> checkFileInvoicedLicense($this-> getDossier($id_dos)['num_lic'])!=false && ($reponseDebours['id_deb']=='102' || $reponseDebours['id_deb']=='102')){
+
+						$unite_input = '<span id="unite_'.$compteur.'"></span>';
+						$montant_input = '<input type="number" step="0.001" style="text-align: center;" class="bg-dark" name="montant_'.$compteur.'" id="montant_'.$reponseDebours['id_deb'].'" value="" onblur="getTotal()">';
+						$montant_tva_input = '';
+						
+					}else if ( $this-> getLicence($this-> getDossier($id_dos)['num_lic'])['fact_suiv_lic']=='0' && ($reponseDebours['id_deb']=='102' || $reponseDebours['id_deb']=='102')){
+
+						$unite_input = '<span id="unite_'.$compteur.'"></span>';
+						$montant_input = '<input type="number" step="0.001" style="text-align: center;" class="bg-dark" name="montant_'.$compteur.'" id="montant_'.$reponseDebours['id_deb'].'" value="" onblur="getTotal()">';
+						$montant_tva_input = '';
+						
 					}else{
 
 						$unite_input = '<span id="unite_'.$compteur.'"></span>';
@@ -16093,6 +16167,10 @@
 					<input type="number" step="0.001" min="0" style="text-align: center; width: 8em;" name="frais_agence_<?php echo $compteur;?>"  id="frais_agence_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport(21, $id_mod_lic, $id_cli, $id_march, $id_mod_trans)['montant'];?>" class="bg bg-dark">
 					<input type="hidden" style="text-align: center; width: 8em;" name="frais_agence_tva_<?php echo $compteur;?>" id="tva_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport(21, $id_mod_lic, $id_cli, $id_march, $id_mod_trans)['tva'];?>" class="bg bg-dark">
 				</td>
+				<td style="text-align: center;">
+					<input type="number" step="0.001" min="0" style="text-align: center; width: 8em;" name="seguce_<?php echo $compteur;?>"  id="seguce_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport(176, $id_mod_lic, $id_cli, $id_march, $id_mod_trans)['montant'];?>" class="bg bg-dark">
+					<input type="hidden" style="text-align: center; width: 8em;" name="seguce_tva_<?php echo $compteur;?>" id="tva_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport(176, $id_mod_lic, $id_cli, $id_march, $id_mod_trans)['tva'];?>" class="bg bg-dark">
+				</td>
 			</tr>
 			<?php
 			}$requete-> closeCursor();
@@ -16820,6 +16898,10 @@
 				<td style="text-align: center;">
 					<input type="number" step="0.001" min="0" style="text-align: center; width: 8em;" name="frais_agence_<?php echo $compteur;?>"  id="frais_agence_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDataDetailFacture($ref_fact, $reponse['id_dos'], 21)['montant'];?>" class="bg bg-dark">
 					<input type="hidden" style="text-align: center; width: 8em;" name="frais_agence_tva_<?php echo $compteur;?>" id="tva_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDataDetailFacture($ref_fact, $reponse['id_dos'], 21)['tva'];?>" class="bg bg-dark">
+				</td>
+				<td style="text-align: center;">
+					<input type="number" step="0.001" min="0" style="text-align: center; width: 8em;" name="seguce_<?php echo $compteur;?>"  id="seguce_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDataDetailFacture($ref_fact, $reponse['id_dos'], 176)['montant'];?>" class="bg bg-dark">
+					<input type="hidden" style="text-align: center; width: 8em;" name="seguce_tva_<?php echo $compteur;?>" id="tva_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDataDetailFacture($ref_fact, $reponse['id_dos'], 176)['tva'];?>" class="bg bg-dark">
 				</td>
 			</tr>
 			<?php
@@ -45066,6 +45148,17 @@
 			$requete = $connexion-> prepare("UPDATE dossier SET fob = ?
 												WHERE id_dos = ?");
 			$requete-> execute(array($entree['fob'], $entree['id_dos']));
+
+		} 
+
+		public function MAJ_fact_suiv_lic($num_lic, $fact_suiv_lic){
+			
+			include('connexion.php');
+			$entree['num_lic'] = $num_lic;
+			$entree['fact_suiv_lic'] = $fact_suiv_lic;
+			$requete = $connexion-> prepare("UPDATE licence SET fact_suiv_lic = ?
+												WHERE num_lic = ?");
+			$requete-> execute(array($entree['fact_suiv_lic'], $entree['num_lic']));
 
 		} 
 
