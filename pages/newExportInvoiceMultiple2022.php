@@ -140,6 +140,7 @@
                   <th>COST INTERNAL($)</th>
                   <th>OTHER SERVICES COST($)</th>
                   <th>CONTRACTOR AGENCY FEE($)</th>
+                  <th>SEGUCE CHARGE($)</th>
               </tr>
           </thead>
           <tbody>

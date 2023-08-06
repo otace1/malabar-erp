@@ -258,6 +258,7 @@
 	  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 20, $_POST['cost_intern_'.$i], $_POST['cost_intern_tva_'.$i], '1');
 	  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 58, $_POST['other_service_'.$i], $_POST['other_service_tva_'.$i], '1');
 	  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 21, $_POST['frais_agence_'.$i], $_POST['frais_agence_tva_'.$i], '1');
+	  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 176, $_POST['seguce_'.$i], $_POST['seguce_tva_'.$i], '1');
 
 	  					//1.5% Finance Cost
 	  					if(!empty(($maClasse-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport(54, $_POST['id_mod_lic'], $_POST['id_cli'], $_POST['id_march'], $_POST['id_mod_trans']))) && ($maClasse-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport(54, $_POST['id_mod_lic'], $_POST['id_cli'], $_POST['id_march'], $_POST['id_mod_trans'])['id_deb']!=0)){
@@ -525,6 +526,7 @@
 	  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 20, $_POST['cost_intern_'.$i], $_POST['cost_intern_tva_'.$i], '1');
 	  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 58, $_POST['other_service_'.$i], $_POST['other_service_tva_'.$i], '1');
 	  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 21, $_POST['frais_agence_'.$i], $_POST['frais_agence_tva_'.$i], '1');
+	  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 176, $_POST['seguce_'.$i], $_POST['seguce_tva_'.$i], '1');
 
 	  					//1.5% Finance Cost
 	  					if(!empty(($maClasse-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport(54, $_POST['id_mod_lic'], $_POST['id_cli'], $_POST['id_march'], $_POST['id_mod_trans']))) && ($maClasse-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport(54, $_POST['id_mod_lic'], $_POST['id_cli'], $_POST['id_march'], $_POST['id_mod_trans'])['id_deb']!=0)){
@@ -1922,6 +1924,14 @@
 		$response['other'] = $maClasse-> get_total_advance($_POST['ref_fact'], $_POST['id_dos'])['other'];
 		$response['service'] = $maClasse-> get_total_advance($_POST['ref_fact'], $_POST['id_dos'])['service'];
 		$response['ops'] = $maClasse-> get_total_advance($_POST['ref_fact'], $_POST['id_dos'])['ops'];
+		echo json_encode($response);
+
+	}else if ($_POST['operation']=="facturation_suivi_licence") {
+		echo json_encode($maClasse-> facturation_suivi_licence($_POST['id_cli'], $_POST['id_mod_lic']));
+	}else if ($_POST['operation']=='edit_suivi_licence') {
+	  
+		$maClasse-> MAJ_fact_suiv_lic($_POST['num_lic'], $_POST['fact_suiv_lic']);
+		$response['message'] = 'Done!';
 		echo json_encode($response);
 
 	}

@@ -23,6 +23,9 @@
         <div class="header">
           <h5>
             <i class="fa fa-calculator nav-icon"></i> NEW INVOICE
+            <span class="float-right">
+              <button class="btn btn-xs btn-info" onclick="facturation_suivi_licence(<?php echo $_GET['id_cli'];?>, <?php echo $_GET['id_mod_lic_fact'];?>);"><i class="fa fa-file"></i> Application Licenses</button>
+            </span>
           </h5>
         </div>
 
@@ -238,8 +241,211 @@
   </div>
   <?php include("pied.php");?>
 
+<div class="modal fade" id="modal_facturation_suivi_licence">
+  <div class="modal-dialog modal-lg">
+    <!-- <form id="demo-form2" method="POST" action="" data-parsley-validate enctype="multipart/form-data"> -->
+    <div class="modal-content">
+      <div class="modal-header ">
+        <h4 class="modal-title"><i class="fa fa-file"></i> Licenses</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body small">
+        <div class=" table-responsive p-0">
+          <table id="facturation_suivi_licence" cellspacing="0" width="100%" class="table hover display compact table-bordered table-striped table-sm text-nowrap">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>License Ref.</th>
+                <th>Files</th>
+                <th>Statut</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody class="small"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <!-- </form> -->
+    <!-- /.modal-content -->
+  </div>
+  <!-- /.modal-dialog -->
+</div>
+
+<div class="modal fade" id="modal_edit_suivi_licence">
+  <div class="modal-dialog modal-md">
+    <form id="form_edit_suivi_licence" method="POST" action="" data-parsley-validate enctype="multipart/form-data">
+      <input type="hidden" name="num_lic" id="num_lic_edit">
+      <input type="hidden" name="operation" value="edit_suivi_licence">
+    <div class="modal-content">
+      <div class="modal-header ">
+        <h4 class="modal-title"><i class="fa fa-edit"></i> Edit <span id="label_num_lic"></span></h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label for="x_card_code" class="control-label mb-1">Invoicing</label>
+          <!-- <span id="select_fact_suiv_lic"></span> -->
+          <select name="fact_suiv_lic" id="fact_suiv_lic" class="form-control form-control-sm">
+            <option value="1">YES</option>
+            <option value="0">NO</option>
+          </select>
+        </div>
+      </div>
+      <div class="modal-footer justify-content-between">
+        <button type="button" class="btn btn-xs btn-danger" data-dismiss="modal">Cancel</button>
+        <button type="submit" class="btn btn-xs btn-primary">Submit</button>
+      </div>
+    </div>
+    </form>
+    <!-- /.modal-content -->
+  </div>
+  <!-- /.modal-dialog -->
+</div>
+
 <script type="text/javascript">
 
+  // function modal_edit_suivi_licence(num_lic, select_fact_suiv_lic){
+  //   $('#spinner-div').show();
+  //   $.ajax({
+  //     type: 'post',
+  //     url: 'ajax.php',
+  //     data: {num_lic: num_lic, fob_usd: fob_usd, operation: 'maj_fob_usd'},
+  //     dataType: 'json',
+  //     success:function(data){
+  //       if (data.logout) {
+  //         alert(data.logout);
+  //         window.location="../deconnexion.php";
+  //       }
+  //     },
+  //     complete: function () {
+  //         $('#spinner-div').hide();//Request is complete so hide spinner
+  //     }
+  //   });
+
+  // }
+
+  $(document).ready(function(){
+
+    $('#form_edit_suivi_licence').submit(function(e){
+
+      e.preventDefault();
+
+      if(confirm('Do really you want to submit ?')) {
+
+        var fd = new FormData(this);
+        $('#spinner-div').show();
+
+        $.ajax({
+          type: 'post',
+          url: 'ajax.php',
+          processData: false,
+          contentType: false,
+          data: fd,
+          dataType: 'json',
+          success:function(data){
+            if (data.logout) {
+              alert(data.logout);
+              window.location="../deconnexion.php";
+            }else if(data.message){
+              $( '#form_edit_suivi_licence' ).each(function(){
+                  this.reset();
+              });
+              
+              $('#facturation_suivi_licence').DataTable().ajax.reload();
+              $('#modal_edit_suivi_licence').modal('hide');
+              getTableauImportInvoiceSingle($('#id_mod_fact').val(), $('#id_dos').val(), $('#id_mod_lic').val(), $('#id_march').val(), $('#id_mod_trans').val(), null);
+            }
+          },
+          complete: function () {
+              $('#spinner-div').hide();//Request is complete so hide spinner
+          }
+        });
+
+
+      }
+
+    });
+    
+  });
+
+  function modal_edit_suivi_licence(num_lic, fact_suiv_lic){
+    $('#fact_suiv_lic').val(fact_suiv_lic);
+    $('#label_num_lic').html(label_num_lic);
+    $('#num_lic_edit').val(num_lic);
+    $('#modal_edit_suivi_licence').modal('show');
+  }
+
+  function facturation_suivi_licence(id_cli, id_mod_lic){
+    
+    $('#spinner-div').show();
+
+    //  var today   = new Date();
+    // document.title = id_e + today.getDay() + "_" + today.getMonth() + "_" + today.getYear() + "_" + today.getHours() + "_" + today.getMinutes() + "_" + today.getSeconds();
+
+    if ( $.fn.dataTable.isDataTable( '#facturation_suivi_licence' ) ) {
+        table = $('#facturation_suivi_licence').DataTable();
+    }
+    else {
+        table = $('#facturation_suivi_licence').DataTable( {
+            paging: false
+        } );
+    }
+
+    table.destroy();
+
+    $('#facturation_suivi_licence').DataTable({
+       lengthMenu: [
+          [15, 25, 50, 100, -1],
+          [15, 25, 50, 100, 1000, 'All'],
+      ],
+      dom: 'Bfrtip',
+      buttons: [
+          {
+            extend: 'excel',
+            text: '<i class="fa fa-file-excel"></i>',
+            className: 'btn btn-success'
+          }
+      ],
+    "paging": true,
+    "lengthChange": true,
+    "searching": true,
+    "ordering": true,
+    "info": true,
+    "autoWidth": true,
+    "responsive": true,
+      "ajax":{
+        "type": "GET",
+        "url":"ajax.php",
+        "method":"post",
+        "dataSrc":{
+            "id_cli": "844"
+        },
+        "data": {
+            "id_cli": id_cli,
+            "id_mod_lic": id_mod_lic,
+            "operation": "facturation_suivi_licence"
+        }
+      },
+      "columns":[
+        {"data":"compteur"},
+        {"data":"num_lic"},
+        {"data":"nbre_dos"},
+        {"data":"statut",
+          className: 'dt-body-center'},
+        {"data":"btn_action",
+          className: 'dt-body-right'}
+      ] 
+    });
+    $('#spinner-div').hide();//Request is complete so hide spinner
+
+    $('#modal_facturation_suivi_licence').modal('show');
+    
+  }
   function round(num, decimalPlaces = 0) {
     return new Decimal(num).toDecimalPlaces(decimalPlaces).toNumber();
   }
