@@ -1,5 +1,5 @@
 <?php
-  include("tetePopCDN.php");
+  include("tete.php");
   include("menuHaut.php");
   include("menuGauche.php");
   //include("licenceExcel.php");
@@ -86,71 +86,40 @@
     <section class="content">
       <div class="container-fluid" style="">
         <div class="row">
-
           <div class="col-12">
             <div class="card">
               <div class="card-header">
                 <h5 class="card-title" style="font-weight: bold;">
-                  Awaiting Support Documents
+
                 </h5>
 
-              </div>    
 
+                <div class="card-tools">
+                  
+                </div>
+              </div>    
               <!-- /.card-header -->
-              <div class="card-body table-responsive p-0 small">
-                <table id="afficherDossierEnAttenteFactureAjaxAwaitingSupportDocs" class=" table table-bordered table-hover text-nowrap table-sm">
+              <div class="card-body table-responsive p-0" style="height: 500px;">
+                <table class=" table table-dark table-head-fixed table-bordered table-hover text-nowrap table-sm">
                   <thead>
-                    <tr class="">
-                      <th style="" width="5px">#</th>
-                      <th style="">File Ref.</th>
-                      <th style="">Commodity</th>
-                      <th style=" text-align: center;">Decl.Ref.</th>
-                      <th style=" text-align: center;">Decl.Date</th>
-                      <th style=" text-align: center;">Liq.Ref.</th>
-                      <th style=" text-align: center;">Liq.Date</th>
-                      <th style=" text-align: center;">Quit.Ref.</th>
-                      <th style=" text-align: center;">Quit.Date</th>
-                      <th style=" text-align: center;"></th>
+                    <tr class="bg bg-dark">
+                      <th style="border: 1px solid white;">#</th>
+                      <th style="border: 1px solid white;">REFERENCE</th>
+                      <th style="border: 1px solid white; text-align: center;">COMMODITY</th>
+                      <th style="border: 1px solid white; text-align: center;">DECL. REF.</th>
+                      <th style="border: 1px solid white; text-align: center;">DECL. DATE</th>
+                      <th style="border: 1px solid white; text-align: center;">LIQ. REF.</th>
+                      <th style="border: 1px solid white; text-align: center;">LIQ. DATE</th>
+                      <th style="border: 1px solid white; text-align: center;">QUIT. REF.</th>
+                      <th style="border: 1px solid white; text-align: center;">QUIT. DATE</th>
+                      <th style="border: 1px solid white; text-align: center;">FOB</th>
+                      <th style="border: 1px solid white; text-align: center;">WEIGHT</th>
                     </tr>
                   </thead>
-                  <tbody>
-                   
-                  </tbody>
-                </table>
-              </div>
-              <!-- /.card-body -->
-            </div>
-            <!-- /.card -->
-          </div>
-
-          <div class="col-12">
-            <div class="card">
-              <div class="card-header">
-                <h5 class="card-title" style="font-weight: bold;">
-                  To Be Invoiced
-                </h5>
-
-              </div>    
-
-              <!-- /.card-header -->
-              <div class="card-body table-responsive p-0 small">
-                <table id="afficherDossierEnAttenteFactureAjaxWithSupportDocs" class=" table table-bordered table-hover text-nowrap table-sm">
-                  <thead>
-                    <tr class="">
-                      <th style="">#</th>
-                      <th style="">File Ref.</th>
-                      <th style="">Commodity</th>
-                      <th style=" text-align: center;">Decl.Ref.</th>
-                      <th style=" text-align: center;">Decl.Date</th>
-                      <th style=" text-align: center;">Liq.Ref.</th>
-                      <th style=" text-align: center;">Liq.Date</th>
-                      <th style=" text-align: center;">Quit.Ref.</th>
-                      <th style=" text-align: center;">Quit.Date</th>
-                      <th style=" text-align: center;"></th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                   
+                  <tbody id="afficherDossierEnAttenteFactureAjax">
+                    <?php
+                    // $maClasse-> afficherDossierEnAttenteFacture($_GET['id_cli'], $_GET['id_mod_lic_fact']);
+                    ?>
                   </tbody>
                 </table>
               </div>
@@ -210,141 +179,6 @@
 </div>
 
 <script type="text/javascript">
-
-  $('#afficherDossierEnAttenteFactureAjaxAwaitingSupportDocs').DataTable({
-     lengthMenu: [
-        [10, 20, 50, 100, -1],
-        [10, 20, 50, 100, 'All'],
-    ],
-    dom: 'Bfrtip',
-  buttons: [
-      {
-        extend: 'excel',
-        text: '<i class="fa fa-file-excel"></i>',
-        className: 'btn btn-success'
-      },
-      {
-        extend: 'pageLength',
-        text: '<i class="fa fa-list"></i>',
-        className: 'btn btn-dark'
-      }
-  ],
-    
-  "paging": true,
-  "lengthChange": true,
-  "searching": true,
-  "ordering": true,
-  "info": true,
-  "autoWidth": true,
-    "ajax":{
-      "type": "GET",
-      "url":"ajax.php",
-      "method":"post",
-      "dataSrc":{
-          "id_cli": ""
-      },
-      "data": {
-          "id_cli": "<?php echo $_GET['id_cli'];?>",
-          "id_mod_lic": "<?php echo $_GET['id_mod_lic_fact'];?>",
-          "support_doc": "0",
-          "operation": "afficherDossierEnAttenteFactureAjaxAwaitingSupportDocs"
-      }
-    },
-    "columns":[
-      {"data":"compteur"},
-      {"data":"ref_dos"},
-      {"data":"commodity"},
-      {"data":"ref_decl",
-        className: 'dt-body-center'
-      },
-      {"data":"date_decl",
-        className: 'dt-body-center'
-      },
-      {"data":"ref_liq",
-        className: 'dt-body-center'
-      },
-      {"data":"date_liq",
-        className: 'dt-body-center'
-      },
-      {"data":"ref_quit",
-        className: 'dt-body-center'
-      },
-      {"data":"date_quit",
-        className: 'dt-body-center'
-      },
-      {"data":"btn_action",
-        className: 'dt-body-center'
-      }
-    ] 
-  });
-
-  $('#afficherDossierEnAttenteFactureAjaxWithSupportDocs').DataTable({
-     lengthMenu: [
-        [10, 20, 50, 100, -1],
-        [10, 20, 50, 100, 'All'],
-    ],
-    dom: 'Bfrtip',
-  buttons: [
-      {
-        extend: 'excel',
-        text: '<i class="fa fa-file-excel"></i>',
-        className: 'btn btn-success'
-      },
-      {
-        extend: 'pageLength',
-        text: '<i class="fa fa-list"></i>',
-        className: 'btn btn-dark'
-      }
-  ],
-    
-  "paging": true,
-  "lengthChange": true,
-  "searching": true,
-  "ordering": true,
-  "info": true,
-  "autoWidth": true,
-    "ajax":{
-      "type": "GET",
-      "url":"ajax.php",
-      "method":"post",
-      "dataSrc":{
-          "id_cli": ""
-      },
-      "data": {
-          "id_cli": "<?php echo $_GET['id_cli'];?>",
-          "id_mod_lic": "<?php echo $_GET['id_mod_lic_fact'];?>",
-          "support_doc": "1",
-          "operation": "afficherDossierEnAttenteFactureAjaxWithSupportDocs"
-      }
-    },
-    "columns":[
-      {"data":"compteur"},
-      {"data":"ref_dos"},
-      {"data":"commodity"},
-      {"data":"ref_decl",
-        className: 'dt-body-center'
-      },
-      {"data":"date_decl",
-        className: 'dt-body-center'
-      },
-      {"data":"ref_liq",
-        className: 'dt-body-center'
-      },
-      {"data":"date_liq",
-        className: 'dt-body-center'
-      },
-      {"data":"ref_quit",
-        className: 'dt-body-center'
-      },
-      {"data":"date_quit",
-        className: 'dt-body-center'
-      },
-      {"data":"btn_action",
-        className: 'dt-body-center'
-      }
-    ] 
-  });
-
   $(document).ready(function(){
 
       $('#enregistrerFactureExportMultiple_form').submit(function(e){
@@ -417,56 +251,6 @@
     
   });
 
-  function MAJ_support_doc(id_dos, ref_dos, support_doc){
-    if (support_doc=='1') {
-      if(confirm('Do really you want to confirm support documents for '+ref_dos+' ?')) {
-
-        $.ajax({
-          type: 'post',
-          url: 'ajax.php',
-          data: {support_doc: support_doc, id_dos: id_dos, operation: 'MAJ_support_doc'},
-          dataType: 'json',
-          success:function(data){
-            if (data.logout) {
-              alert(data.logout);
-              window.location="../deconnexion.php";
-            }else{
-              $('#afficherDossierEnAttenteFactureAjaxAwaitingSupportDocs').DataTable().ajax.reload();
-              $('#afficherDossierEnAttenteFactureAjaxWithSupportDocs').DataTable().ajax.reload();
-            }
-          },
-          complete: function () {
-              $('#spinner-div').hide();//Request is complete so hide spinner
-          }
-        });
-
-      }
-    }else{
-      if(confirm('Do really you want to unconfirm support documents for '+ref_dos+' ?')) {
-
-        $.ajax({
-          type: 'post',
-          url: 'ajax.php',
-          data: {support_doc: support_doc, id_dos: id_dos, operation: 'MAJ_support_doc'},
-          dataType: 'json',
-          success:function(data){
-            if (data.logout) {
-              alert(data.logout);
-              window.location="../deconnexion.php";
-            }else{
-              $('#afficherDossierEnAttenteFactureAjaxAwaitingSupportDocs').DataTable().ajax.reload();
-              $('#afficherDossierEnAttenteFactureAjaxWithSupportDocs').DataTable().ajax.reload();
-            }
-          },
-          complete: function () {
-              $('#spinner-div').hide();//Request is complete so hide spinner
-          }
-        });
-
-      }
-    }
-  }
-
   function MAJ_not_fact(id_dos, ref_dos, id_cli, id_mod_lic){
     if(confirm('Do really you want to disable '+ref_dos+' ?')) {
 
@@ -480,7 +264,7 @@
             alert(data.logout);
             window.location="../deconnexion.php";
           }else{
-            $('#afficherDossierEnAttenteFactureAjaxAwaitingSupportDocs').DataTable().ajax.reload();
+            $('#afficherDossierEnAttenteFactureAjax').html(data.afficherDossierEnAttenteFactureAjax);
           }
         },
         complete: function () {

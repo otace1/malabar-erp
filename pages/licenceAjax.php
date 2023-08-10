@@ -244,13 +244,20 @@
       ],
       processing: true,
       language: { "processing": '<img src="../images/GD.gif" width="100px">' },
+      fixedColumns: {
+          left: 2
+          // ,
+          // right: 1
+      },
+      "paging": true,
+      "scrollX": true,
       "paging": true,
       "lengthChange": true,
       "searching": true,
       "ordering": true,
       "info": true,
       "autoWidth": true,
-      "responsive": true,
+      // "responsive": true,
         "ajax":{
           "type": "GET",
           "url":"ajax.php",
@@ -282,9 +289,12 @@
           {"data":"nom_banq"},
           {"data":"sig_mon"},
           {"data":"fob",
-      render: DataTable.render.number( null, null, 2, null ),
-      className: 'dt-body-right'},
-          {"data":"nbre_dos"},
+            render: DataTable.render.number( null, null, 2, null ),
+            className: 'dt-body-right'
+          },
+          {"data":"nbre_dos",
+            className: 'dt-body-right'
+          },
           {"data":"fob_dos",
       render: DataTable.render.number( null, null, 2, null ),
       className: 'dt-body-right'},
@@ -294,7 +304,13 @@
           {"data":"ref_fact"},
           {"data":"remarque"},
           {"data":"fichier"}
-        ] 
+        ],
+        "createdRow": function( row, data, dataIndex ) {
+          if ( data.solde_fob < 0) {
+            console.log(data.solde_fob);
+            $('td:eq(15)', row).addClass("font-weight-bold bg-danger");
+          }
+        } 
             <?php
           }
         ?>

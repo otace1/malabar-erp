@@ -123,6 +123,7 @@
                       ?>
                       <th style="">#</th>
                       <th style="">Notre Nº Ref #</th>
+                      <th style="">Support Documents</th>
                       <th>Client</th>
                       <th>Liquidation Ref.</th>
                       <th>Liquidation Date</th>
@@ -149,6 +150,7 @@
                       ?>
                       <th style="">#</th>
                       <th style="">MCA File Ref.</th>
+                      <th style="">Support Documents</th>
                       <th style="">Lot Num. / Inv.No.</th>
                       <th style="">PO.No.</th>
                       <th style="">Client</th>
@@ -227,8 +229,7 @@
             'pageLength', 'colvis'
         ],
         fixedColumns: {
-          left: 2,
-          right: 2
+          left: 2
         },
         paging: false,
         scrollCollapse: true,
@@ -530,6 +531,7 @@
         "columns":[
           {"data":"compteur"},
           {"data":"ref_dos"},
+          {"data":"support_doc"},
           {"data":"po_ref"},
           {"data":"num_lot"},
           {"data":"nom_cli"},

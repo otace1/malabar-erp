@@ -52,6 +52,8 @@
   <script src="../datatable/buttons.html5.min.js"></script>
   <script src="../datatable/buttons.print.min.js"></script>
   <script src="../datatable/dataTables.rowGroup.min.js"></script>
+  <script src="../datatable/dataTables.fixedColumns.min.js"></script>
+  <link rel="stylesheet" href="../datatable/fixedColumns.dataTables.min.css">
 
   <!-- --------- AJAX -------- -->
   
@@ -100,6 +102,14 @@
   text-align: center;
   background-color: rgba(255, 255, 255, 0.8);
   z-index: 2;
+}
+
+table.dataTable tbody tr:hover {
+  background-color: #eddfdf;
+}
+
+table.dataTable tbody tr:hover > .sorting_1 {
+  background-color: #eddfdf;
 }
 
 </style>

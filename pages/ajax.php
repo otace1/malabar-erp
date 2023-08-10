@@ -1934,5 +1934,15 @@
 		$response['message'] = 'Done!';
 		echo json_encode($response);
 
+	}else if ($_POST['operation']=="afficherDossierEnAttenteFactureAjaxAwaitingSupportDocs") {
+		echo json_encode($maClasse-> afficherDossierEnAttenteFactureAjax2($_POST['id_cli'], $_POST['id_mod_lic'], '0'));
+	}else if ($_POST['operation']=="afficherDossierEnAttenteFactureAjaxWithSupportDocs") {
+		echo json_encode($maClasse-> afficherDossierEnAttenteFactureAjax2($_POST['id_cli'], $_POST['id_mod_lic'], '1'));
+	}else if ($_POST['operation']=='MAJ_support_doc') {
+	  
+		$maClasse-> MAJ_support_doc($_POST['id_dos'], $_POST['support_doc']);
+		$response['message'] = 'Done!';
+		echo json_encode($response);
+
 	}
 ?>
