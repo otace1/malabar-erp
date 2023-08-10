@@ -15805,6 +15805,81 @@
 
 		}
 
+		public function afficherDossierEnAttenteFactureAjax2($id_cli, $id_mod_lic, $support_doc){
+			include("connexion.php");
+			$entree['id_cli'] = $id_cli;
+			$entree['id_mod_lic'] = $id_mod_lic;
+			$entree['support_doc'] = $support_doc;
+			$compteur=0;
+			$rows = array();
+
+			$requete = $connexion-> prepare("SELECT dossier.ref_dos AS ref_dos,
+													dossier.id_dos,
+													IF(marchandise.nom_march IS NOT NULL,
+														marchandise.nom_march,
+														dossier.commodity
+														)
+													 AS commodity,
+													dossier.ref_decl AS ref_decl,
+													dossier.date_decl AS date_decl,
+													-- DATE_FORMAT(dossier.date_decl, '%d/%m/%Y') AS date_decl,
+													dossier.ref_liq AS ref_liq,
+													dossier.date_liq AS date_liq,
+													-- DATE_FORMAT(dossier.date_liq, '%d/%m/%Y') AS date_liq,
+													dossier.ref_quit AS ref_quit,
+													dossier.date_quit AS date_quit,
+													-- DATE_FORMAT(dossier.date_quit, '%d/%m/%Y') AS date_quit,
+													dossier.fob AS fob, 
+													dossier.poids AS poids,
+													IF(dossier.support_doc='1',
+														CONCAT('<div class=\"dropdown\">
+														  <button class=\"btn btn-secondary btn-xs dropdown-toggle\" type=\"button\" id=\"dropdownMenuButton\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\">
+														    Action
+														  </button>
+														  <div class=\"dropdown-menu\" aria-labelledby=\"dropdownMenuButton\">
+														    <a class=\"dropdown-item text-sm text-warning\" href=\"#\" onclick=\"MAJ_support_doc(',dossier.id_dos,',\'',dossier.ref_dos,'\',0)\"><i class=\"fa fa-times\"></i> Unconfirm support documents</a>
+														    <a class=\"dropdown-item text-sm text-danger\" href=\"#\" onclick=\"MAJ_not_fact(',dossier.id_dos,',\'',dossier.ref_dos,'\',',dossier.id_cli,',',dossier.id_mod_lic,')\"><i class=\"fa fa-times\"></i> Disable invoicing</a>
+														  </div>
+														</div>'),
+														CONCAT('<div class=\"dropdown\">
+														  <button class=\"btn btn-secondary btn-xs dropdown-toggle\" type=\"button\" id=\"dropdownMenuButton\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\">
+														    Action
+														  </button>
+														  <div class=\"dropdown-menu\" aria-labelledby=\"dropdownMenuButton\">
+														    <a class=\"dropdown-item text-sm text-primary\" href=\"#\" onclick=\"MAJ_support_doc(',dossier.id_dos,',\'',dossier.ref_dos,'\',1)\"><i class=\"fa fa-check\"></i> Confirm support documents</a>
+														    <a class=\"dropdown-item text-sm text-danger\" href=\"#\" onclick=\"MAJ_not_fact(',dossier.id_dos,',\'',dossier.ref_dos,'\',',dossier.id_cli,',',dossier.id_mod_lic,')\"><i class=\"fa fa-times\"></i> Disable invoicing</a>
+														  </div>
+														</div>')
+													) AS btn_action
+												FROM dossier
+												LEFT JOIN marchandise
+													ON marchandise.id_march = dossier.id_march
+												WHERE dossier.id_mod_lic = ?
+													AND dossier.id_cli = ?
+													AND dossier.support_doc = ?
+													AND dossier.ref_decl IS NOT NULL
+													AND dossier.date_decl IS NOT NULL
+													AND dossier.ref_liq IS NOT NULL
+													AND dossier.date_liq IS NOT NULL
+													AND dossier.ref_quit IS NOT NULL
+													AND dossier.date_quit IS NOT NULL
+													AND dossier.id_dos NOT IN (SELECT id_dos FROM detail_facture_dossier)
+													AND dossier.not_fact = '0'");
+			$requete-> execute(array($entree['id_mod_lic'], $entree['id_cli'], $entree['support_doc']));
+			while ($reponse = $requete-> fetch()) {
+				$compteur++;
+
+				// $reponse['btn_action'] = '<button class="btn-xs btn-danger" onclick="MAJ_not_fact('.$reponse['id_dos'].', \''.$reponse['ref_dos'].'\', '.$id_cli.', '.$id_mod_lic.');"><i class="fa fa-times"></i> Disable</button>';
+
+				$reponse['compteur'] = $compteur;
+
+				$rows[] = $reponse;
+			}$requete-> closeCursor();
+
+			return $rows;
+
+		}
+
 		public function afficherMenuRegistreAJAX(){
 			include("connexion.php");
 			// $entree['id_cli'] = $id_cli;
@@ -25207,69 +25282,94 @@
 												l.remarque AS remarque,
 												t.id_type_lic AS id_type_lic,
 												UPPER(t.nom_type_lic) AS nom_type_lic,
+												-- COUNT(dos.id_dos) AS nbre_dos,
+												SUM(IF(dos.fob IS NOT NULL, dos.fob, 0)) AS fob_dos,
+												(IF(l.fob IS NOT NULL, l.fob, 0)-SUM(IF(dos.fob IS NOT NULL, dos.fob, 0))) AS solde_fob,
+												IF((IF(l.fob IS NOT NULL, l.fob, 0)-SUM(IF(dos.fob IS NOT NULL, dos.fob, 0)))<0,
+													'bg bg-danger', 
+													''
+												) AS class_solde_fob,
 												DATE_FORMAT(l.date_fact, '%d/%m/%Y') AS date_fact,
 												l.poids AS poids_lic,
 												l.id_mod_trans AS id_mod_trans,
-												CONCAT(' <button class=\"btn btn-xs btn-info\" title=\"Dossiers affectés\" onclick=\"window.open(\'popUpDossierLicence.php?num_lic=',l.num_lic,'\',\'pop1\',\'width=1100,height=900\');\">
+												CONCAT(COUNT(dos.id_dos),' <button class=\"btn btn-xs btn-info\" title=\"Dossiers affectés\" onclick=\"window.open(\'popUpDossierLicence.php?num_lic=',l.num_lic,'\',\'pop1\',\'width=1100,height=900\');\">
 														<i class=\"fa fa-folder-open\"></i>
-													</button>') AS btn_dossier,
+													</button>') AS nbre_dos,
 												CONCAT(' <button class=\"btn btn-xs btn-info\" title=\"Fichier Licence\" onclick=\"window.open(\'../dossiers/',l.num_lic,'/',l.fichier_lic,'\',\'pop1\',\'width=1100,height=900\');\">
 														<i class=\"fa fa-file\"></i> Fichier Licence
 													</button>') AS fichier,
 												IF(l.consommable='1', 'Consommable', 'Autres/Divers') AS type_lic				
-											FROM licence l, monnaie m, client cl, banque b, type_licence t
+											-- FROM licence l, monnaie m, client cl, banque b, type_licence t
+											-- WHERE l.id_mod_lic = ?
+											-- 	AND l.id_type_lic = t.id_type_lic
+											-- 	AND l.id_cli = cl.id_cli
+											-- 	AND l.id_mon = m.id_mon
+											-- 	AND l.id_banq = b.id_banq
+											-- 	-- AND YEAR(l.date_val) >= YEAR(CURRENT_DATE())-1
+											-- ORDER BY l.date_val DESC			
+											FROM licence l
+												LEFT JOIN monnaie m
+													ON l.id_mon = m.id_mon 
+												LEFT JOIN client cl
+													ON l.id_cli = cl.id_cli 
+												LEFT JOIN banque b
+													ON l.id_banq = b.id_banq 
+												LEFT JOIN type_licence t
+													ON l.id_type_lic = t.id_type_lic
+												LEFT JOIN dossier dos
+													ON l.num_lic = dos.num_lic
+												
+												-- AND YEAR(l.date_val) >= YEAR(CURRENT_DATE())-1
 											WHERE l.id_mod_lic = ?
-												AND l.id_type_lic = t.id_type_lic
-												AND l.id_cli = cl.id_cli
-												AND l.id_mon = m.id_mon
-												AND l.id_banq = b.id_banq
+											GROUP BY l.num_lic
 											ORDER BY l.date_val DESC");
 			$requete-> execute(array($entree['id_mod_lic']));
 			while($reponse = $requete-> fetch()){
 				$compteur++;
 				$reponse['compteur'] = $compteur;
-				$reponse['nbre_dos'] = $this-> getNbreDossierLicence($reponse['num_lic']);
-				$reponse['nbre_dos'] .= $reponse['btn_dossier'];
-				$reponse['fob_dos'] = $this-> getSommeFobLicence($reponse['num_lic']);
-				$reponse['solde_fob'] = $reponse['fob']-$reponse['fob_dos'];
+				// $reponse['nbre_dos'] = $this-> getNbreDossierLicence($reponse['num_lic']);
+				// $reponse['nbre_dos'] .= $reponse['btn_dossier'];
+				// $reponse['fob_dos'] = $this-> getSommeFobLicence($reponse['num_lic']);
+				// $reponse['solde_fob'] = $reponse['fob']-$reponse['fob_dos'];
 
-				if (!empty($this-> getLastEpirationLicence2($reponse['num_lic']))&&($this-> getLastEpirationLicence2($reponse['num_lic']))!=NULL) {
-					$reponse['date_exp'] = $this-> getLastEpirationLicence2($reponse['num_lic']);
-				}else{
-					$reponse['date_exp'] = NULL;
-				}
+				// if (!empty($this-> getLastEpirationLicence2($reponse['num_lic']))&&($this-> getLastEpirationLicence2($reponse['num_lic']))!=NULL) {
+				// 	$reponse['date_exp'] = $this-> getLastEpirationLicence2($reponse['num_lic']);
+				// }else{
+				// 	$reponse['date_exp'] = NULL;
+				// }
 
 				$reponse['statut'] = '<span class="text-xs badge badge-light">unused</span>';
+				$reponse['date_exp'] = $this-> getLastEpirationLicence2($reponse['num_lic']);
 
-				if( ($reponse['fob'] <= $this-> getSommeFobAppureLicence($reponse['num_lic'])) || (($reponse['fob']-$this-> getSommeFobAppureLicence($reponse['num_lic']))<1) ){
+				// if( ($reponse['fob'] <= $this-> getSommeFobAppureLicence($reponse['num_lic'])) || (($reponse['fob']-$this-> getSommeFobAppureLicence($reponse['num_lic']))<1) ){
 
-					$reponse['statut'] = '<span class="text-xs badge badge-success">Totalement Apurée</span>';
+				// 	$reponse['statut'] = '<span class="text-xs badge badge-success">Totalement Apurée</span>';
 
-				}else if( ($reponse['fob'] < $this-> getSommeFobLicence($reponse['num_lic'])) && ($reponse['fob'] != $this-> getSommeFobAppureLicence($reponse['num_lic'])) ){
+				// }else if( ($reponse['fob'] < $this-> getSommeFobLicence($reponse['num_lic'])) && ($reponse['fob'] != $this-> getSommeFobAppureLicence($reponse['num_lic'])) ){
 
-					$reponse['statut'] = '<span class="text-xs badge badge-danger clignoteb">FOB negatif</span>';
+				// 	$reponse['statut'] = '<span class="text-xs badge badge-danger clignoteb">FOB negatif</span>';
 
-				}else if( ($reponse['fob'] == $this-> getSommeFobLicence($reponse['num_lic'])) && ($reponse['fob'] != $this-> getSommeFobAppureLicence($reponse['num_lic'])) ){
+				// }else if( ($reponse['fob'] == $this-> getSommeFobLicence($reponse['num_lic'])) && ($reponse['fob'] != $this-> getSommeFobAppureLicence($reponse['num_lic'])) ){
 
-					$reponse['statut'] = '<span class="text-xs badge badge-dark">Cloturée en attente transmission Banque</span>';
+				// 	$reponse['statut'] = '<span class="text-xs badge badge-dark">Cloturée en attente transmission Banque</span>';
 
-				}else if($reponse['date_exp'] < $reponse['aujourdhui']){
+				// }else if($reponse['date_exp'] < $reponse['aujourdhui']){
 
-					$reponse['statut'] = '<span class="text-xs badge badge-danger clignoteb">Expirée</span>';
+				// 	$reponse['statut'] = '<span class="text-xs badge badge-danger clignoteb">Expirée</span>';
 
-				}else if( ($this-> getDifferenceDate($reponse['date_exp'], $reponse['aujourdhui']) < 40) && ($this-> getDifferenceDate($reponse['date_exp'], $reponse['aujourdhui']) >= 0) ){
+				// }else if( ($this-> getDifferenceDate($reponse['date_exp'], $reponse['aujourdhui']) < 40) && ($this-> getDifferenceDate($reponse['date_exp'], $reponse['aujourdhui']) >= 0) ){
 
-					$reponse['statut'] = '<span class="text-xs badge badge-warning">Expiration -40 Jours</span>';
+				// 	$reponse['statut'] = '<span class="text-xs badge badge-warning">Expiration -40 Jours</span>';
 
-				}else if( ($this-> getDifferenceDate($reponse['date_exp'], $reponse['aujourdhui']) < 40) && ($this-> getDifferenceDate($reponse['date_exp'], $reponse['aujourdhui']) < 0) ){
+				// }else if( ($this-> getDifferenceDate($reponse['date_exp'], $reponse['aujourdhui']) < 40) && ($this-> getDifferenceDate($reponse['date_exp'], $reponse['aujourdhui']) < 0) ){
 
-					$reponse['statut'] = '<span class="text-xs badge badge-danger clignoteb">Expirée</span>';
+				// 	$reponse['statut'] = '<span class="text-xs badge badge-danger clignoteb">Expirée</span>';
 
-				} else if( ($reponse['fob'] >= $this-> getSommeFobLicence($reponse['num_lic'])) && ($this-> getSommeFobLicence($reponse['num_lic'])>0) ){
+				// } else if( ($reponse['fob'] >= $this-> getSommeFobLicence($reponse['num_lic'])) && ($this-> getSommeFobLicence($reponse['num_lic'])>0) ){
 
-					$reponse['statut'] = '<span class="text-xs badge badge-info">Partiellement Apurée</span>';
+				// 	$reponse['statut'] = '<span class="text-xs badge badge-info">Partiellement Apurée</span>';
 
-				}
+				// }
 				$rows[] = $reponse;
 				
 			}$requete-> closeCursor();
@@ -36632,6 +36732,10 @@
 														dos.commodity
 													) AS commodity,
 													dos.ref_decl AS ref_decl,
+													IF(dos.support_doc='1',
+														'Available',
+														'Unavailable'
+													) AS support_doc,
 													DATE_FORMAT(dos.date_decl, '%d/%m/%Y') AS date_decl,
 													dos.ref_liq AS ref_liq,
 													dos.montant_liq AS montant_liq,
@@ -43757,6 +43861,25 @@
 			$requete = $connexion-> prepare("UPDATE dossier SET id_front = ?
 												WHERE id_dos = ?");
 			$requete-> execute(array($entree['id_front'], $entree['id_dos']));
+
+		} 
+
+		public function MAJ_support_doc($id_dos, $support_doc){
+
+			//Log
+			if ($this-> getDossier($id_dos)['support_doc'] != $support_doc) {
+				
+				// $colonne = $this-> getNomColonneClient('support_doc', $_GET['id_cli'], $_GET['id_mod_trans'], $_GET['id_mod_trac']);
+				$this-> creerLogDossier('Support Documents', $support_doc, $id_dos, $_SESSION['id_util']);
+
+			}
+
+			include('connexion.php');
+			$entree['id_dos'] = $id_dos;
+			$entree['support_doc'] = $support_doc;
+			$requete = $connexion-> prepare("UPDATE dossier SET support_doc = ?
+												WHERE id_dos = ?");
+			$requete-> execute(array($entree['support_doc'], $entree['id_dos']));
 
 		} 
 
