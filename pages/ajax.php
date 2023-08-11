@@ -1944,5 +1944,11 @@
 		$response['message'] = 'Done!';
 		echo json_encode($response);
 
+	}else if ($_POST['operation']=='getPathArchive') {
+	  
+		$response['lien'] = $maClasse-> getPathArchive($_POST['id_dos']).$maClasse-> getDossier($_POST['id_dos'])['ref_dos'].'.pdf';
+		
+		echo json_encode($response);
+
 	}
 ?>

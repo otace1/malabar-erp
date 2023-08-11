@@ -1,7 +1,7 @@
 <?php
   include("tetePopCDN.php");
   include("menuHaut.php");
-  include("menuGauche.php");
+  // include("menuGauche.php");
   //include("licenceExcel.php");
 
   $modele = $maClasse-> getElementModeleLicence($_GET['id_mod_lic_fact']);
@@ -210,6 +210,28 @@
 </div>
 
 <script type="text/javascript">
+
+  function find_support_doc(id_dos) {
+    $.ajax({
+      type: 'post',
+      url: 'ajax.php',
+      data: {id_dos: id_dos, operation: "getPathArchive"},
+      dataType: 'json',
+      success:function(data){
+        if (data.logout) {
+          alert(data.logout);
+          window.location="../deconnexion.php";
+        }else{
+          $( '#enregistrerFactureExportMultiple_form' ).each(function(){
+              this.reset();
+          });
+          console.log(data.lien);
+          window.open(data.lien,'pop1','width=500,height=400');
+        }
+      }
+    });
+
+  }
 
   $('#afficherDossierEnAttenteFactureAjaxAwaitingSupportDocs').DataTable({
      lengthMenu: [
