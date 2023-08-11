@@ -15837,6 +15837,7 @@
 														    Action
 														  </button>
 														  <div class=\"dropdown-menu\" aria-labelledby=\"dropdownMenuButton\">
+														    <a class=\"dropdown-item text-sm text-info\" href=\"#\" onclick=\"find_support_doc(\'',dossier.id_dos,'\')\"><i class=\"fa fa-search\"></i> Find support documents </a>
 														    <a class=\"dropdown-item text-sm text-warning\" href=\"#\" onclick=\"MAJ_support_doc(',dossier.id_dos,',\'',dossier.ref_dos,'\',0)\"><i class=\"fa fa-times\"></i> Unconfirm support documents</a>
 														    <a class=\"dropdown-item text-sm text-danger\" href=\"#\" onclick=\"MAJ_not_fact(',dossier.id_dos,',\'',dossier.ref_dos,'\',',dossier.id_cli,',',dossier.id_mod_lic,')\"><i class=\"fa fa-times\"></i> Disable invoicing</a>
 														  </div>
@@ -15846,6 +15847,7 @@
 														    Action
 														  </button>
 														  <div class=\"dropdown-menu\" aria-labelledby=\"dropdownMenuButton\">
+														    <a class=\"dropdown-item text-sm text-info\" href=\"#\" onclick=\"find_support_doc(\'',dossier.id_dos,'\')\"><i class=\"fa fa-search\"></i> Find support documents </a>
 														    <a class=\"dropdown-item text-sm text-primary\" href=\"#\" onclick=\"MAJ_support_doc(',dossier.id_dos,',\'',dossier.ref_dos,'\',1)\"><i class=\"fa fa-check\"></i> Confirm support documents</a>
 														    <a class=\"dropdown-item text-sm text-danger\" href=\"#\" onclick=\"MAJ_not_fact(',dossier.id_dos,',\'',dossier.ref_dos,'\',',dossier.id_cli,',',dossier.id_mod_lic,')\"><i class=\"fa fa-times\"></i> Disable invoicing</a>
 														  </div>
@@ -15854,6 +15856,10 @@
 												FROM dossier
 												LEFT JOIN marchandise
 													ON marchandise.id_march = dossier.id_march
+												LEFT JOIN archive_path_folder arch
+													ON dossier.id_cli = arch.id_cli
+														AND dossier.id_mod_lic = arch.id_mod_lic
+														AND dossier.id_mod_trans = arch.id_mod_trans
 												WHERE dossier.id_mod_lic = ?
 													AND dossier.id_cli = ?
 													AND dossier.support_doc = ?
@@ -15869,7 +15875,7 @@
 			while ($reponse = $requete-> fetch()) {
 				$compteur++;
 
-				// $reponse['btn_action'] = '<button class="btn-xs btn-danger" onclick="MAJ_not_fact('.$reponse['id_dos'].', \''.$reponse['ref_dos'].'\', '.$id_cli.', '.$id_mod_lic.');"><i class="fa fa-times"></i> Disable</button>';
+				// $reponse['btn_action'] .= '<a href="file:///'.$this-> getPathArchive($reponse['id_dos']).'/'.$reponse['ref_dos'].'">Find Support Documents</a>';
 
 				$reponse['compteur'] = $compteur;
 
@@ -15878,6 +15884,23 @@
 
 			return $rows;
 
+		}
+
+		public function getPathArchive($id_dos){
+			include('connexion.php');
+
+			// $entree['id_dos'] = $id_dos;
+
+			$requete = $connexion-> prepare('SELECT lien
+												FROM archive_path_folder
+												WHERE id_cli = ?
+													AND id_mod_lic = ?
+													AND id_mod_trans = ?');
+			$requete-> execute(array($this-> getDossier($id_dos)['id_cli'], $this-> getDossier($id_dos)['id_mod_lic'], $this-> getDossier($id_dos)['id_mod_trans']));
+
+			$reponse = $requete-> fetch();
+
+			return $reponse['lien'];
 		}
 
 		public function afficherMenuRegistreAJAX(){
