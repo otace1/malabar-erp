@@ -123,7 +123,6 @@
                       ?>
                       <th style="">#</th>
                       <th style="">Notre Nº Ref #</th>
-                      <th style="">Support Documents</th>
                       <th>Client</th>
                       <th>Liquidation Ref.</th>
                       <th>Liquidation Date</th>
