@@ -818,6 +818,37 @@
 
   		}
 	    echo json_encode($response);exit;
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='enregistrerFactureImportShalina'){// On enregistre la facture Shalina
+
+  		if(isset($_POST['ref_fact'])){
+  			try {
+  			
+  			for ($i=1; $i <= $_POST['compteur'] ; $i++) { 
+  				if (isset($_POST['montant_'.$i]) && $_POST['montant_'.$i] > 1) {
+
+  					if (!isset($_POST['pourcentage_qte_ddi_'.$i]) || empty($_POST['pourcentage_qte_ddi_'.$i]) || ($_POST['pourcentage_qte_ddi_'.$i]=='') || ($_POST['pourcentage_qte_ddi_'.$i]<0)) {
+  						$_POST['pourcentage_qte_ddi_'.$i] = NULL;
+  					}
+
+  					$maClasse-> creerDetailFactureDossier3($_POST['ref_fact'], $_POST['id_dos'], $_POST['id_deb_'.$i], $_POST['montant_'.$i], $_POST['tva_'.$i], $_POST['usd_'.$i], NULL, NULL, $_POST['pourcentage_qte_ddi_'.$i]);
+  					// $maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos'], $_POST['id_deb_'.$i], $_POST['montant_'.$i], $_POST['tva_'.$i], $_POST['usd_'.$i], NULL, NULL);
+  				}
+  				
+  			}
+
+  			$response = array('message' => 'File Invoiced');
+  			// $response['ref_fact'] = $maClasse-> buildRefFactureGlobale($_POST['id_cli']);
+			$response['ref_dos'] =$maClasse-> selectionnerDossierClientModeleLicenceMarchandise2($_POST['id_cli'], $_POST['id_mod_lic'], $_POST['id_march'], $_POST['id_mod_trans']);
+  			// $response['ref_dos'] =$maClasse-> selectionnerDossierClientModeleLicenceMarchandise2($_POST['id_cli'], $_POST['id_mod_lic'], $_POST['id_march']);
+
+  			} catch (Exception $e) {
+
+	            $response = array('error' => $e->getMessage());
+
+	        }
+
+  		}
+	    echo json_encode($response);exit;
 	}elseif(isset($_POST['operation']) && $_POST['operation']=='editFactureImportSingle'){// On enregistre la facture Export Single
 
   		if(isset($_POST['ref_fact'])){
@@ -1481,7 +1512,7 @@
 		echo json_encode($response);
 
 	}else if ($_POST['operation']=="afficherLicenceAjax") {
-		echo json_encode($maClasse-> afficherLicenceAjax($_POST['id_mod_lic']));
+		echo json_encode($maClasse-> afficherLicenceAjax($_POST['id_mod_lic'], $_POST['id_cli']));
 	}else if ($_POST['operation']=="tableau_pv_contentieux") {
 		echo json_encode($maClasse-> getPVContentieux());
 	}else if ($_POST['operation']=="afficherBalanceSheetAjax") {
@@ -1947,6 +1978,24 @@
 	}else if ($_POST['operation']=='getPathArchive') {
 	  
 		$response['lien'] = $maClasse-> getPathArchive($_POST['id_dos']).$maClasse-> getDossier($_POST['id_dos'])['ref_dos'].'.pdf';
+		
+		echo json_encode($response);
+
+	}else if ($_POST['operation']=='deroulerMenuLicence') {
+	  
+		$response['menuLicence'] = $maClasse-> deroulerMenuLicence($_POST['id_mod_lic']);
+		
+		echo json_encode($response);
+
+	}else if ($_POST['operation']=='factureLicenceDisponible') {
+	  
+		$response['factureLicenceDisponible'] = $maClasse-> factureLicenceDisponible($_POST['id_cli'], $_POST['id_mod_lic']);
+		
+		echo json_encode($response);
+
+	}else if ($_POST['operation']=='getDataFacture') {
+	  
+		$response = $maClasse-> getDataFacture($_POST['ref_fact']);
 		
 		echo json_encode($response);
 
