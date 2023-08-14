@@ -2855,6 +2855,115 @@
 
 		}
 
+		public function afficherMenuLicenceAjax(){
+			include("connexion.php");
+			if(!isset($_GET['id_mod_lic'])){
+				$_GET['id_mod_lic'] = '';
+			}
+			$id_cli = '';
+			$active = '';
+			$open = '';
+			if($_SESSION['id_role'] == '1' || $_SESSION['id_role'] == '5' || $_SESSION['id_role'] == '11'){
+				$sql = "SELECT id_mod_lic, 
+							nom_mod_lic,
+							sigle_mod_lic
+						FROM modele_licence
+						WHERE id_etat = 1
+							AND id_mod_lic < 3
+						ORDER BY rang_lic ASC";
+			$requete = $connexion-> query($sql);
+			while($reponse = $requete-> fetch()){
+				?>
+				<li id="mainMenuLicence_<?php echo $reponse['id_mod_lic'];?>" class="nav-item has-treeview" >
+			        <a href="#" class="nav-link"onclick="deroulerMenuLicence(<?php echo $reponse['id_mod_lic'];?>);">
+			          <i class="nav-icon fas fa-file"></i>
+			          <p>
+			            <?php echo $reponse['nom_mod_lic'];?>
+			            <i class="right fas fa-angle-left"></i>
+			          </p>
+			        </a>
+			        <ul class="nav nav-treeview" id="menuLicence_<?php echo $reponse['id_mod_lic'];?>">
+			        	<span></span>
+			        </ul>
+			    </li>
+				<?php
+			}$requete-> closeCursor();
+
+			}
+
+		}
+
+		public function deroulerMenuLicence($id_mod_lic){
+			include("connexion.php");
+			$entree['id_mod_lic'] = $id_mod_lic;
+
+			$menu = '';
+			
+			$requete = $connexion-> prepare("SELECT cl.nom_cli AS nom_cli, 
+													cl.id_cli AS id_cli
+												FROM client cl, affectation_client_modele_licence aff
+												WHERE cl.id_cli = aff.id_cli
+													AND aff.id_mod_lic = ?
+												ORDER BY cl.nom_cli");
+			$requete-> execute(array($entree['id_mod_lic']));
+
+			while($reponse = $requete-> fetch()){
+				$menu .= '<li class=\'nav-item has-treeview\'>
+			                <a class=\'nav-link\' href=\'#\'>
+			                  &nbsp;&nbsp;&nbsp;&nbsp;<img src=\'../images/logo.jpeg\' class=\'img-circle\' width=\'20px\'>
+			                  <p>'.$reponse['nom_cli'].'</p>
+			                </a>
+			                <ul class=\'nav nav-treeview\'>
+			                	<li class=\'nav-item\'>
+					                <a href=\'licenceAjax.php?id_mod_lic='.$id_mod_lic.'&amp;id_cli='.$reponse['id_cli'].'\' class=\'nav-link\'>
+					                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class=\'nav-icon fas fa-minus\'></i>
+					                  <p>Licence</p>
+					                </a>
+				              	</li>
+			                	<li class=\'nav-item\'>
+					                <a href=\'factureAjax.php?id_mod_lic='.$id_mod_lic.'&amp;id_cli='.$reponse['id_cli'].'\' class=\'nav-link\'>
+					                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class=\'nav-icon fas fa-minus\'></i>
+					                  <p>Facture</p>
+					                </a>
+				              	</li>
+			                </ul>
+			              </li>';
+			}$requete-> closeCursor();
+
+			return $menu;
+
+		}
+
+		public function factureLicenceDisponible($id_cli, $id_mod_lic){
+			include("connexion.php");
+			$entree['id_cli'] = $id_cli;
+			$entree['id_mod_lic'] = $id_mod_lic;
+
+			$option = '<select id=\'ref_fact\' onchange=\'getDataFacture(this.value);\' class=\'form-control form-control-sm cc-exp\'><option></option>';
+			
+			$requete = $connexion-> prepare("SELECT *
+												FROM facture_licence
+												WHERE id_cli = ?
+													AND id_mod_lic = ?
+													AND  NOT EXISTS (
+															SELECT licence.ref_fact
+																FROM licence 
+																WHERE licence.id_cli = ?
+																	AND licence.id_mod_lic = ?
+																	AND licence.ref_fact = facture_licence.ref_fact
+														)");
+			$requete-> execute(array($entree['id_cli'], $entree['id_mod_lic'], $entree['id_cli'], $entree['id_mod_lic']));
+
+			while($reponse = $requete-> fetch()){
+				$option .= '<option value=\''.$reponse['ref_fact'].'\'>'.$reponse['ref_fact'].'</option>';
+			}$requete-> closeCursor();
+
+			$option .='</select>';
+
+			return $option;
+
+		}
+
 		public function afficherMenuFacturationBackup(){
 			include("connexion.php");
 			if(!isset($_GET['id_mod_lic'])){
@@ -15837,7 +15946,6 @@
 														    Action
 														  </button>
 														  <div class=\"dropdown-menu\" aria-labelledby=\"dropdownMenuButton\">
-														    <a class=\"dropdown-item text-sm text-info\" href=\"#\" onclick=\"find_support_doc(\'',dossier.id_dos,'\')\"><i class=\"fa fa-search\"></i> Find support documents </a>
 														    <a class=\"dropdown-item text-sm text-warning\" href=\"#\" onclick=\"MAJ_support_doc(',dossier.id_dos,',\'',dossier.ref_dos,'\',0)\"><i class=\"fa fa-times\"></i> Unconfirm support documents</a>
 														    <a class=\"dropdown-item text-sm text-danger\" href=\"#\" onclick=\"MAJ_not_fact(',dossier.id_dos,',\'',dossier.ref_dos,'\',',dossier.id_cli,',',dossier.id_mod_lic,')\"><i class=\"fa fa-times\"></i> Disable invoicing</a>
 														  </div>
@@ -15847,7 +15955,6 @@
 														    Action
 														  </button>
 														  <div class=\"dropdown-menu\" aria-labelledby=\"dropdownMenuButton\">
-														    <a class=\"dropdown-item text-sm text-info\" href=\"#\" onclick=\"find_support_doc(\'',dossier.id_dos,'\')\"><i class=\"fa fa-search\"></i> Find support documents </a>
 														    <a class=\"dropdown-item text-sm text-primary\" href=\"#\" onclick=\"MAJ_support_doc(',dossier.id_dos,',\'',dossier.ref_dos,'\',1)\"><i class=\"fa fa-check\"></i> Confirm support documents</a>
 														    <a class=\"dropdown-item text-sm text-danger\" href=\"#\" onclick=\"MAJ_not_fact(',dossier.id_dos,',\'',dossier.ref_dos,'\',',dossier.id_cli,',',dossier.id_mod_lic,')\"><i class=\"fa fa-times\"></i> Disable invoicing</a>
 														  </div>
@@ -25265,9 +25372,10 @@
 			}
 		}
 
-		public function afficherLicenceAjax($id_mod_lic){
+		public function afficherLicenceAjax($id_mod_lic, $id_cli){
 			include("connexion.php");
 			$entree['id_mod_lic'] = $id_mod_lic;
+			$entree['id_cli'] = $id_cli;
 
 			$compteur = 0;
 			$rows = array();
@@ -25341,12 +25449,14 @@
 													ON l.id_type_lic = t.id_type_lic
 												LEFT JOIN dossier dos
 													ON l.num_lic = dos.num_lic
+														AND dos.cleared <> '2'
 												
 												-- AND YEAR(l.date_val) >= YEAR(CURRENT_DATE())-1
 											WHERE l.id_mod_lic = ?
+												AND l.id_cli = ?
 											GROUP BY l.num_lic
 											ORDER BY l.date_val DESC");
-			$requete-> execute(array($entree['id_mod_lic']));
+			$requete-> execute(array($entree['id_mod_lic'], $entree['id_cli']));
 			while($reponse = $requete-> fetch()){
 				$compteur++;
 				$reponse['compteur'] = $compteur;
@@ -25364,35 +25474,35 @@
 				$reponse['statut'] = '<span class="text-xs badge badge-light">unused</span>';
 				$reponse['date_exp'] = $this-> getLastEpirationLicence2($reponse['num_lic']);
 
-				// if( ($reponse['fob'] <= $this-> getSommeFobAppureLicence($reponse['num_lic'])) || (($reponse['fob']-$this-> getSommeFobAppureLicence($reponse['num_lic']))<1) ){
+				if( ($reponse['fob'] <= $this-> getSommeFobAppureLicence($reponse['num_lic'])) || (($reponse['fob']-$this-> getSommeFobAppureLicence($reponse['num_lic']))<1) ){
 
-				// 	$reponse['statut'] = '<span class="text-xs badge badge-success">Totalement Apurée</span>';
+					$reponse['statut'] = '<span class="text-xs badge badge-success">Totalement Apurée</span>';
 
-				// }else if( ($reponse['fob'] < $this-> getSommeFobLicence($reponse['num_lic'])) && ($reponse['fob'] != $this-> getSommeFobAppureLicence($reponse['num_lic'])) ){
+				}else if( ($reponse['fob'] < $this-> getSommeFobLicence($reponse['num_lic'])) && ($reponse['fob'] != $this-> getSommeFobAppureLicence($reponse['num_lic'])) ){
 
-				// 	$reponse['statut'] = '<span class="text-xs badge badge-danger clignoteb">FOB negatif</span>';
+					$reponse['statut'] = '<span class="text-xs badge badge-danger clignoteb">FOB negatif</span>';
 
-				// }else if( ($reponse['fob'] == $this-> getSommeFobLicence($reponse['num_lic'])) && ($reponse['fob'] != $this-> getSommeFobAppureLicence($reponse['num_lic'])) ){
+				}else if( ($reponse['fob'] == $this-> getSommeFobLicence($reponse['num_lic'])) && ($reponse['fob'] != $this-> getSommeFobAppureLicence($reponse['num_lic'])) ){
 
-				// 	$reponse['statut'] = '<span class="text-xs badge badge-dark">Cloturée en attente transmission Banque</span>';
+					$reponse['statut'] = '<span class="text-xs badge badge-dark">Cloturée en attente transmission Banque</span>';
 
-				// }else if($reponse['date_exp'] < $reponse['aujourdhui']){
+				}else if($reponse['date_exp'] < $reponse['aujourdhui']){
 
-				// 	$reponse['statut'] = '<span class="text-xs badge badge-danger clignoteb">Expirée</span>';
+					$reponse['statut'] = '<span class="text-xs badge badge-danger clignoteb">Expirée</span>';
 
-				// }else if( ($this-> getDifferenceDate($reponse['date_exp'], $reponse['aujourdhui']) < 40) && ($this-> getDifferenceDate($reponse['date_exp'], $reponse['aujourdhui']) >= 0) ){
+				}else if( ($this-> getDifferenceDate($reponse['date_exp'], $reponse['aujourdhui']) < 40) && ($this-> getDifferenceDate($reponse['date_exp'], $reponse['aujourdhui']) >= 0) ){
 
-				// 	$reponse['statut'] = '<span class="text-xs badge badge-warning">Expiration -40 Jours</span>';
+					$reponse['statut'] = '<span class="text-xs badge badge-warning">Expiration -40 Jours</span>';
 
-				// }else if( ($this-> getDifferenceDate($reponse['date_exp'], $reponse['aujourdhui']) < 40) && ($this-> getDifferenceDate($reponse['date_exp'], $reponse['aujourdhui']) < 0) ){
+				}else if( ($this-> getDifferenceDate($reponse['date_exp'], $reponse['aujourdhui']) < 40) && ($this-> getDifferenceDate($reponse['date_exp'], $reponse['aujourdhui']) < 0) ){
 
-				// 	$reponse['statut'] = '<span class="text-xs badge badge-danger clignoteb">Expirée</span>';
+					$reponse['statut'] = '<span class="text-xs badge badge-danger clignoteb">Expirée</span>';
 
-				// } else if( ($reponse['fob'] >= $this-> getSommeFobLicence($reponse['num_lic'])) && ($this-> getSommeFobLicence($reponse['num_lic'])>0) ){
+				} else if( ($reponse['fob'] >= $this-> getSommeFobLicence($reponse['num_lic'])) && ($this-> getSommeFobLicence($reponse['num_lic'])>0) ){
 
-				// 	$reponse['statut'] = '<span class="text-xs badge badge-info">Partiellement Apurée</span>';
+					$reponse['statut'] = '<span class="text-xs badge badge-info">Partiellement Apurée</span>';
 
-				// }
+				}
 				$rows[] = $reponse;
 				
 			}$requete-> closeCursor();
