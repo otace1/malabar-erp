@@ -1,7 +1,7 @@
 <?php
   include("tetePopCDN.php");
   include("menuHaut.php");
-  // include("menuGauche.php");
+  include("menuGauche.php");
   //include("licenceExcel.php");
 
   $modele = $maClasse-> getElementModeleLicence($_GET['id_mod_lic_fact']);
@@ -225,8 +225,18 @@
           $( '#enregistrerFactureExportMultiple_form' ).each(function(){
               this.reset();
           });
-          console.log(data.lien);
-          window.open(data.lien,'pop1','width=500,height=400');
+          // console.log('file:\\\\\\'+data.lien);
+          window.open('file:\\\\\\'+data.lien,'pop1','width=500,height=400');
+          // var txt = '';
+          // var xmlhttp = new XMLHttpRequest();
+          // xmlhttp.onreadystatechange = function(){
+          //   if(xmlhttp.status == 200 && xmlhttp.readyState == 4){
+          //     txt = xmlhttp.responseText;
+          //   }
+          // };
+          // xmlhttp.open("GET",'file:\\\\\\'+data.lien,true);
+          // xmlhttp.send();
+          // // window.location=data.lien;
         }
       }
     });
