@@ -1,5 +1,5 @@
 <?php
-  include("tete.php");
+  include("tetePopCDN.php");
   include("menuHaut.php");
   include("menuGauche.php");
 
