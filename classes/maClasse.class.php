@@ -13709,7 +13709,7 @@
 
 		}
 
-		public function creerFactureDossier($ref_fact, $id_mod_fact, $id_cli, $id_util, $id_mod_lic, $type_fact, $information, $note_debit='0'){
+		public function creerFactureDossier($ref_fact, $id_mod_fact, $id_cli, $id_util, $id_mod_lic, $type_fact, $information, $note_debit='0', $type_case=NULL){
 			include('connexion.php');
 
 			$entree['ref_fact'] = $ref_fact;
@@ -13720,6 +13720,7 @@
 			$entree['type_fact'] = $type_fact;
 			$entree['information'] = $information;
 			$entree['note_debit'] = $note_debit;
+			$entree['type_case'] = $type_case;
 
 			// echo "<br>ref_fact = $ref_fact";
 			// echo "<br>id_mod_fact = $id_mod_fact";
@@ -13732,11 +13733,11 @@
 
 			$requete = $connexion-> prepare('INSERT INTO facture_dossier(ref_fact, id_mod_fact, id_cli, id_util, 
 																			id_mod_lic, type_fact, information, 
-																			note_debit)
-												VALUES(?, ?, ?, ?, ?, ?, ?, ?)');
+																			note_debit, type_case)
+												VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)');
 			$requete-> execute(array($entree['ref_fact'], $entree['id_mod_fact'], $entree['id_cli'], $entree['id_util'], 
 									$entree['id_mod_lic'], $entree['type_fact'], $entree['information'], 
-									$entree['note_debit']));
+									$entree['note_debit'], $entree['type_case']));
 
 		}
 		
@@ -41718,6 +41719,29 @@
 				?>
 				<option value="<?php echo $reponse['ref_fact']; ?>">
 					<?php echo $reponse['ref_fact']; ?>
+				</option>
+				<?php
+			}$requete-> closeCursor();
+		}
+
+		public function selectionnerTypeDebitCredit($credit_debit, $id_mod_lic){
+			include('connexion.php');
+
+			$entree['id_mod_lic'] = $id_mod_lic;
+			$entree['credit_debit'] = $credit_debit;
+
+			$requete = $connexion-> prepare("SELECT *
+											FROM type_debit_credit_note
+											WHERE credit_debit = ?
+												AND (id_mod_lic = ? OR id_mod_lic IS NULL)");
+
+			$requete-> execute(array($entree['credit_debit'], $entree['id_mod_lic']));
+
+			while($reponse = $requete-> fetch()){
+
+				?>
+				<option value="<?php echo $reponse['id_type']; ?>">
+					<?php echo $reponse['nom_type']; ?>
 				</option>
 				<?php
 			}$requete-> closeCursor();
