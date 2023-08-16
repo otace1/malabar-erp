@@ -60,6 +60,19 @@
           </div>
 
       </div>
+      <div class="col-md-3">
+        
+          <div class="form-group">
+            <label for="inputEmail3" class="col-form-label">Cases: </label>
+            <select class="form-control form-control-sm" name="type_case" id="type_case" required>
+              <option></option>
+              <?php
+                $maClasse-> selectionnerTypeDebitCredit($_GET['note_debit'], $_GET['id_mod_lic_fact']);
+              ?>
+            </select>
+          </div>
+
+      </div>
       <div class="col-md-5">
         
           <div class="form-group">
@@ -106,7 +119,7 @@
                   <option value="1">YES</option>
                 </select>
                 <div class="input-group-prepend">
-                  <button type="button" class="btn btn-sm btn-primary" onclick="creerDetailFactureDossier(ref_fact.value, id_dos.value, 174, montant.value, tva.value, '1', id_mod_lic.value, id_mod_fact.value, id_cli.value, note_debit.value, information.value);"><i class="fa fa-check"></i></button>
+                  <button type="button" class="btn btn-sm btn-primary" onclick="creerDetailFactureDossier(ref_fact.value, id_dos.value, 174, montant.value, tva.value, '1', id_mod_lic.value, id_mod_fact.value, id_cli.value, note_debit.value, information.value, type_case.value);"><i class="fa fa-check"></i></button>
                 </div>
               </div>
             </div>
@@ -229,9 +242,11 @@
       }
   }
   
-  function creerDetailFactureDossier(ref_fact, id_dos, id_deb, montant, tva, usd, id_mod_lic, id_mod_fact, id_cli, note_debit, information){
+  function creerDetailFactureDossier(ref_fact, id_dos, id_deb, montant, tva, usd, id_mod_lic, id_mod_fact, id_cli, note_debit, information, type_case){
     if ($('#ref_fact').val()===null || $('#ref_fact').val()==='' ) {
       alert('Error !! Please enter the invoice ref.');
+    }else if ($('#type_case').val()===null || $('#type_case').val()==='' ) {
+      alert('Error !! Please enter the case.');
     }else if ($('#information').val()===null || $('#information').val()==='' ) {
       alert('Error !! Please enter the naration.');
     }else if ($('#id_dos').val()===null || $('#id_dos').val()==='' ) {
@@ -247,7 +262,7 @@
         $.ajax({
           type: 'post',
           url: 'ajax.php',
-          data: {ref_fact: ref_fact, id_dos: id_dos, id_deb: id_deb, montant: montant, tva: tva, usd: usd, id_mod_lic: id_mod_lic, id_mod_fact: id_mod_fact, id_cli: id_cli, note_debit: note_debit, information: information, operation: "creerDetailFactureDossier"},
+          data: {ref_fact: ref_fact, id_dos: id_dos, id_deb: id_deb, montant: montant, tva: tva, usd: usd, id_mod_lic: id_mod_lic, id_mod_fact: id_mod_fact, id_cli: id_cli, note_debit: note_debit, information: information, type_case: type_case, operation: "creerDetailFactureDossier"},
           dataType: 'json',
           success:function(data){
             if (data.logout) {
