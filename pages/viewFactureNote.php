@@ -199,26 +199,36 @@ $banque = '<tr>
 			<td width="10%" style="border-top: 1px solid black; border-left: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;INTITULE</td>
 			<td width="35%" style="border-top: 1px solid black; border-right: 1px solid black;  font-size: 7px;">&nbsp;MALABAR CLEARING AGENCY SARL</td>
 			<td width="10%"></td>
+			<td width="10%" style="border-top: 1px solid black; border-left: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;INTITULE</td>
+			<td width="35%" style="border-top: 1px solid black; border-right: 1px solid black;  font-size: 7px;">&nbsp;MALABAR CLEARING AGENCY SARL</td>
 		</tr>
 		<tr>
 			<td width="10%" style="border-left: 1px solid black;  font-size: 7px;">&nbsp;N.COMPTE</td>
 			<td width="35%" style="border-right: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;00130-00001020614-41</td>
 			<td width="10%"></td>
+			<td width="10%" style="border-left: 1px solid black;  font-size: 7px;">&nbsp;N.COMPTE</td>
+			<td width="35%" style="border-right: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;05100-05130-01003333601-20</td>
 		</tr>
 		<tr>
 			<td width="10%" style="border-left: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;SWIFT</td>
 			<td width="35%" style="border-right: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;PRCBCDKI</td>
 			<td width="10%"></td>
+			<td width="10%" style="border-left: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;SWIFT</td>
+			<td width="35%" style="border-right: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;RAWBCDKIXXX</td>
 		</tr>
 		<tr>
 			<td width="10%" style="border-bottom: 1px solid black; border-left: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;BANQUE</td>
 			<td width="35%" style="border-bottom: 1px solid black; border-right: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;EQUITY BANK CONGO SA		
 			<br>&nbsp;LUBUMBASHI		
-			<br>&nbsp;R.D. CONGO</td>
+			, R.D. CONGO</td>
 			<td width="10%"></td>
+			<td width="10%" style="border-bottom: 1px solid black; border-left: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;BANQUE</td>
+			<td width="35%" style="border-bottom: 1px solid black; border-right: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;RAWBANK
+			<br>&nbsp;LUBUMBASHI		
+			, R.D. CONGO</td>
 		</tr>';
 
-if ($facture['id_cli']==864 || $facture['id_cli']==878 || $facture['id_cli']==876 || $facture['id_cli']==905 || $facture['id_cli']==904) {
+if ($facture['id_cli']==878 || $facture['id_cli']==876) {
 	$banque = '<tr>
 					<td width="10%" style="border-top: 1px solid black; border-left: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;INTITULE</td>
 					<td width="35%" style="border-top: 1px solid black; border-right: 1px solid black;  font-size: 7px;">&nbsp;MALABAR RDC SARL</td>
@@ -238,110 +248,70 @@ if ($facture['id_cli']==864 || $facture['id_cli']==878 || $facture['id_cli']==87
 					<td width="10%" style="border-bottom: 1px solid black; border-left: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;BANQUE</td>
 					<td width="35%" style="border-bottom: 1px solid black; border-right: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;BCDC		
 					<br>&nbsp;LUBUMBASHI		
-					<br>&nbsp;R.D. CONGO</td>
+					, R.D. CONGO</td>
 					<td width="10%"></td>
 				</tr>';
-}else if ($facture['id_cli']==875 || $facture['id_cli']==911 || $facture['id_cli']==901) {
+}else if ($facture['id_cli']==864 || $facture['id_cli']==899 || $facture['id_cli']==916 || $facture['id_cli']==906 || $facture['id_cli']==901 || $facture['id_cli']==932 || $facture['id_cli']==856 || $facture['id_cli']==923 || $facture['id_cli']==905 || $facture['id_cli']==912 || $facture['id_cli']==927 || $facture['id_cli']==869 || $facture['id_cli']==919 || $facture['id_cli']==922 || $facture['id_cli']==934 || $facture['id_cli']==879 || $facture['id_cli']==859 || $facture['id_cli']==938 || $facture['id_cli']==903 || $facture['id_cli']==918) {
 	$banque = '<tr>
 					<td width="10%" style="border-top: 1px solid black; border-left: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;INTITULE</td>
 					<td width="35%" style="border-top: 1px solid black; border-right: 1px solid black;  font-size: 7px;">&nbsp;MALABAR RDC SARL</td>
 					<td width="10%"></td>
+					<td width="10%" style="border-top: 1px solid black; border-left: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;INTITULE</td>
+					<td width="35%" style="border-top: 1px solid black; border-right: 1px solid black;  font-size: 7px;">&nbsp;MALABAR CLEARING AGENCY SARL</td>
 				</tr>
 				<tr>
+					<td width="10%" style="border-left: 1px solid black;  font-size: 7px;">&nbsp;N.COMPTE</td>
+					<td width="35%" style="border-right: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;00011-00130-00001020614-41</td>
+					<td width="10%"></td>
 					<td width="10%" style="border-left: 1px solid black;  font-size: 7px;">&nbsp;N.COMPTE</td>
 					<td width="35%" style="border-right: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;05100-05130-01003333601-20</td>
-					<td width="10%"></td>
 				</tr>
 				<tr>
+					<td width="10%" style="border-left: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;SWIFT</td>
+					<td width="35%" style="border-right: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;BCDCCDKI</td>
+					<td width="10%"></td>
 					<td width="10%" style="border-left: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;SWIFT</td>
 					<td width="35%" style="border-right: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;RAWBCDKIXXX</td>
-					<td width="10%"></td>
 				</tr>
 				<tr>
-					<td width="10%" style=" border-left: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;BANQUE</td>
-					<td width="35%" style=" border-right: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;RAWBANK S.A</td>
+					<td width="10%" style="border-bottom: 1px solid black; border-left: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;BANQUE</td>
+					<td width="35%" style="border-bottom: 1px solid black; border-right: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;BCDC		
+					<br>&nbsp;LUBUMBASHI		
+					, R.D. CONGO</td>
 					<td width="10%"></td>
-				</tr>
-				<tr>
-					<td width="10%" style="border-left: 1px solid black;  font-size: 7px;">&nbsp;N.COMPTE</td>
-					<td width="35%" style="border-right: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;00011-00130-00001020614-41</td>
-					<td width="10%"></td>
-				</tr>
-				<tr>
-					<td width="10%" style="border-bottom: 1px solid black; border-left: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;SWIFT<br>
-					&nbsp;BANQUE</td>
-					<td width="35%" style="border-bottom: 1px solid black; border-right: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;BCDCCDKI<br>
-					&nbsp;EQUITY BCDC CONGO SA<br>
-					&nbsp;LUBUMBASHI, R.D.CONGO</td>
-					<td width="10%"></td>
+					<td width="10%" style="border-bottom: 1px solid black; border-left: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;BANQUE</td>
+					<td width="35%" style="border-bottom: 1px solid black; border-right: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;RAWBANK
+					<br>&nbsp;LUBUMBASHI		
+					, R.D. CONGO</td>
 				</tr>';
-}else if ($facture['id_cli']==920) {
+}else if ($facture['id_cli']==857) {
 	$banque = '<tr>
 					<td width="10%" style="border-top: 1px solid black; border-left: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;INTITULE</td>
 					<td width="35%" style="border-top: 1px solid black; border-right: 1px solid black;  font-size: 7px;">&nbsp;MALABAR RDC SARL</td>
 					<td width="10%"></td>
-				</tr>
-				<tr>
-					<td width="10%" style="border-left: 1px solid black;  font-size: 7px;">&nbsp;N.COMPTE</td>
-					<td width="35%" style="border-right: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;00018 - 00016 - 01231051200 - 54</td>
-					<td width="10%"></td>
-				</tr>
-				<tr>
-					<td width="10%" style="border-left: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;SWIFT</td>
-					<td width="35%" style="border-right: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;PRCBCDKI</td>
-					<td width="10%"></td>
-				</tr>
-				<tr>
-					<td width="10%" style=" border-left: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;BANQUE</td>
-					<td width="35%" style=" border-right: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;EQUITY BANK CONGO SA, <br>LUBUMBASHI, R.D. CONGO</td>
-					<td width="10%"></td>
-				</tr>
-				<tr>
-					<td width="10%" style="border-left: 1px solid black;  font-size: 7px;">&nbsp;N.COMPTE</td>
-					<td width="35%" style="border-right: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;00011-00130-00001020614-41</td>
-					<td width="10%"></td>
-				</tr>
-				<tr>
-					<td width="10%" style="border-bottom: 1px solid black; border-left: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;SWIFT<br>
-					&nbsp;BANQUE</td>
-					<td width="35%" style="border-bottom: 1px solid black; border-right: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;BCDCCDKI<br>
-					&nbsp;EQUITY BCDC CONGO SA<br>
-					&nbsp;LUBUMBASHI, R.D.CONGO</td>
-					<td width="10%"></td>
-				</tr>';
-}else if ($facture['id_cli']==916) {
-	$banque = '<tr>
 					<td width="10%" style="border-top: 1px solid black; border-left: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;INTITULE</td>
-					<td width="35%" style="border-top: 1px solid black; border-right: 1px solid black;  font-size: 7px;">&nbsp;MALABAR RDC SARL</td>
-					<td width="10%"></td>
+					<td width="35%" style="border-top: 1px solid black; border-right: 1px solid black;  font-size: 7px;">&nbsp;MALABAR RDC SARL V/C KAMOA COPPER SA-DGDA</td>
 				</tr>
 				<tr>
 					<td width="10%" style="border-left: 1px solid black;  font-size: 7px;">&nbsp;N.COMPTE</td>
-					<td width="35%" style="border-right: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;00026  00004  35200002629  39</td>
+					<td width="35%" style="border-right: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;00011-00130-00001020614-41/USD</td>
 					<td width="10%"></td>
+					<td width="10%" style="border-left: 1px solid black;  font-size: 7px;">&nbsp;N.COMPTE</td>
+					<td width="35%" style="border-right: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;00011-15055-52000867229-60/USD</td>
 				</tr>
 				<tr>
 					<td width="10%" style="border-left: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;SWIFT</td>
-					<td width="35%" style="border-right: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;ECOCCDKI</td>
+					<td width="35%" style="border-right: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;BCDCCDKI</td>
 					<td width="10%"></td>
+					<td width="10%" style="border-left: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;SWIFT</td>
+					<td width="35%" style="border-right: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;BCDCCDKIxxx</td>
 				</tr>
 				<tr>
-					<td width="10%" style=" border-left: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;BANQUE</td>
-					<td width="35%" style=" border-right: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;ECOBANK DRC</td>
+					<td width="10%" style="border-bottom: 1px solid black; border-left: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;BANQUE</td>
+					<td width="35%" style="border-bottom: 1px solid black; border-right: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;EQUITY BANK CONGO SA LUBUMBASHI , R.D. CONGO</td>
 					<td width="10%"></td>
-				</tr>
-				<tr>
-					<td width="10%" style="border-left: 1px solid black;  font-size: 7px;">&nbsp;N.COMPTE</td>
-					<td width="35%" style="border-right: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;00011-00130-00001020614-41</td>
-					<td width="10%"></td>
-				</tr>
-				<tr>
-					<td width="10%" style="border-bottom: 1px solid black; border-left: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;SWIFT<br>
-					&nbsp;BANQUE</td>
-					<td width="35%" style="border-bottom: 1px solid black; border-right: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;BCDCCDKI<br>
-					&nbsp;EQUITY BCDC CONGO SA<br>
-					&nbsp;LUBUMBASHI, R.D.CONGO</td>
-					<td width="10%"></td>
+					<td width="10%" style="border-bottom: 1px solid black; border-left: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;BANQUE</td>
+					<td width="35%" style="border-bottom: 1px solid black; border-right: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;EQUITY BANK CONGO SA LUBUMBASHI , R.D. CONGO</td>
 				</tr>';
 }
 
