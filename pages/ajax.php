@@ -1920,7 +1920,7 @@
 		//On test si la facture existe deja
 		if (empty($maClasse-> getFactureGlobale($_POST['ref_fact']))) {
 			
-  			$maClasse-> creerFactureDossier($_POST['ref_fact'], $_POST['id_mod_fact'], $_POST['id_cli'], $_SESSION['id_util'], $_POST['id_mod_lic'], 'globale', $_POST['information'], $_POST['note_debit'], $_POST['type_case']);
+  			$maClasse-> creerFactureDossier($_POST['ref_fact'], $_POST['id_mod_fact'], $_POST['id_cli'], $_SESSION['id_util'], $_POST['id_mod_lic'], 'globale', $_POST['information'], $_POST['note_debit'], $_POST['type_case'], $_POST['taux']);
 		}
 
   		$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos'], $_POST['id_deb'], $_POST['montant'], $_POST['tva'], '1');
