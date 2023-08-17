@@ -9152,7 +9152,11 @@
 						'&nbsp;&nbsp;</td>
 					</tr>
 					<tr>
-
+						<td style="text-align: right; border: 0.5px solid black; font-weight: bold; font-size: 8px;" width="23%"> Equivalent en CDF &nbsp;&nbsp;
+						</td>
+						<td style="text-align: right; border: 0.5px solid black; font-weight: bold;" width="11.5%">'
+							.number_format($total_gen*$this-> getFactureGlobale($ref_fact)['taux'], 2, ',', '.').
+						'&nbsp;&nbsp;</td>
 					</tr>
 					';
 
@@ -13709,7 +13713,7 @@
 
 		}
 
-		public function creerFactureDossier($ref_fact, $id_mod_fact, $id_cli, $id_util, $id_mod_lic, $type_fact, $information, $note_debit='0', $type_case=NULL){
+		public function creerFactureDossier($ref_fact, $id_mod_fact, $id_cli, $id_util, $id_mod_lic, $type_fact, $information, $note_debit='0', $type_case=NULL, $taux=NULL){
 			include('connexion.php');
 
 			$entree['ref_fact'] = $ref_fact;
@@ -13721,6 +13725,7 @@
 			$entree['information'] = $information;
 			$entree['note_debit'] = $note_debit;
 			$entree['type_case'] = $type_case;
+			$entree['taux'] = $taux;
 
 			// echo "<br>ref_fact = $ref_fact";
 			// echo "<br>id_mod_fact = $id_mod_fact";
@@ -13733,11 +13738,11 @@
 
 			$requete = $connexion-> prepare('INSERT INTO facture_dossier(ref_fact, id_mod_fact, id_cli, id_util, 
 																			id_mod_lic, type_fact, information, 
-																			note_debit, type_case)
-												VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)');
+																			note_debit, type_case, taux)
+												VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
 			$requete-> execute(array($entree['ref_fact'], $entree['id_mod_fact'], $entree['id_cli'], $entree['id_util'], 
 									$entree['id_mod_lic'], $entree['type_fact'], $entree['information'], 
-									$entree['note_debit'], $entree['type_case']));
+									$entree['note_debit'], $entree['type_case'], $entree['taux']));
 
 		}
 		
