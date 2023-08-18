@@ -37141,10 +37141,19 @@
 						$reponse['finance_cost'] = $this-> getMontantDeboursFactureDossier2($reponse['ref_fact'], 101, $reponse['id_dos']);
 					}
 
+					$reponse['rie'] = ($this-> getMontantDeboursFactureDossier2($reponse['ref_fact'], 1, $reponse['id_dos']))/$reponse['roe_decl'];
+					$reponse['rie_per_ton'] = ($this-> getMontantDeboursFactureDossier2($reponse['ref_fact'], 1, $reponse['id_dos'])/$reponse['poids'])/$reponse['roe_decl'];
+					$reponse['rls'] = ($this-> getMontantDeboursFactureDossier2($reponse['ref_fact'], 3, $reponse['id_dos']))/$reponse['roe_decl'];
+					$reponse['rls_per_ton'] = ($this-> getMontantDeboursFactureDossier2($reponse['ref_fact'], 3, $reponse['id_dos'])/$reponse['poids'])/$reponse['roe_decl'];
+					$reponse['fsr'] = ($this-> getMontantDeboursFactureDossier2($reponse['ref_fact'], 4, $reponse['id_dos']))/$reponse['roe_decl'];
+					$reponse['fsr_per_ton'] = ($this-> getMontantDeboursFactureDossier2($reponse['ref_fact'], 4, $reponse['id_dos'])/$reponse['poids'])/$reponse['roe_decl'];
+					
 					$reponse['occ_sample'] = $this-> getMontantDeboursFactureDossier2($reponse['ref_fact'], 9, $reponse['id_dos']);
 					$reponse['cgea'] = $this-> getMontantDeboursFactureDossier2($reponse['ref_fact'], 10, $reponse['id_dos']);
 					$reponse['dgda_seal'] = $this-> getMontantDeboursFactureDossier2($reponse['ref_fact'], 13, $reponse['id_dos']);
 					$reponse['assay'] = $this-> getMontantDeboursFactureDossier2($reponse['ref_fact'], 15, $reponse['id_dos']);
+					$reponse['scelle'] = $this-> getMontantDeboursFactureDossier2($reponse['ref_fact'], 45, $reponse['id_dos']);
+					$reponse['tresco'] = $this-> getMontantDeboursFactureDossier2($reponse['ref_fact'], 94, $reponse['id_dos']);
 
 					$rows[] = $reponse;
 				}$requete-> closeCursor();
