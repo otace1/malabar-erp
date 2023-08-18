@@ -1999,5 +1999,21 @@
 		
 		echo json_encode($response);
 
+	}else if(isset($_POST['operation']) && $_POST['operation']=='creerFactureService'){// creerFactureService
+
+  		$maClasse-> creerFactureDossier($_POST['ref_fact'], $_POST['id_mod_fact'], $_POST['id_cli'], $_SESSION['id_util'], $_POST['id_mod_lic'], 'globale', $_POST['information'], $_POST['note_debit'], NULL, $_POST['taux']);
+
+  		for ($i=1; $i <= $_POST['nbre'] ; $i++) { 
+  			
+  			if (!empty($_POST['detail_'.$i]) && ($_POST['montant_'.$i]>0)) {
+  				$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos'], $_POST['id_deb_'.$i], $_POST['montant_'.$i], $_POST['tva_'.$i], '1', $_POST['detail_'.$i], $_POST['unite_'.$i]);
+  			}
+
+  		}
+  		
+  		$reponse['msg'] = 'Done!';
+
+  		echo json_encode($reponse);
+
 	}
 ?>

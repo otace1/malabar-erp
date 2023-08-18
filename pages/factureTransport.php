@@ -10,7 +10,8 @@
     </script>
     <?php
   }
-
+$_GET['id_mod_trans'] = 1;
+$_GET['id_march'] = 11;
 
 ?>
   <!-- /.navbar -->
@@ -56,7 +57,7 @@
         
           <div class="form-group">
             <label for="inputEmail3" class="col-form-label">Invoice Ref.: </label>
-          <input class="form-control form-control-sm bg bg-dark" type="text" name="ref_fact" id="ref_fact" value="<?php echo $maClasse-> buildRefFactureNoteDebitCredit($_GET['id_cli'], $_GET['note_debit']);?>" required>
+          <input class="form-control form-control-sm bg bg-dark" type="text" name="ref_fact" id="ref_fact" value="<?php echo $maClasse-> buildRefFactureGlobale($_GET['id_cli'], $_GET['id_mod_lic_fact']);?>" required>
           </div>
 
       </div>
