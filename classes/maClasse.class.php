@@ -12841,6 +12841,78 @@
 
 		}
 
+		public function getMontantDeboursClientModeleLicenceMarchandiseModeTransport2($id_deb, $id_mod_lic, $id_cli, $id_march, $id_mod_trans, $id_dos=NULL){
+			include('connexion.php');
+			$entree['id_deb'] = $id_deb;
+			$entree['id_mod_lic'] = $id_mod_lic;
+			$entree['id_cli'] = $id_cli;
+			$entree['id_march'] = $id_march;
+			$entree['id_mod_trans'] = $id_mod_trans;
+			$tbl = '';
+
+			$sommeTVA = 0;
+			$sommeHT = 0;
+			$sommeTTC = 0;
+
+			if ($id_deb == 7 && $id_march!=17) {
+				$reponse['montant'] = $this-> getDossier($id_dos)['poids']*50;
+				$reponse['tva'] = '0';
+				return $reponse;
+			}else if ($id_deb == 5) {
+				$reponse['montant'] = $this-> getDossier($id_dos)['poids']*3;
+				$reponse['tva'] = '0';
+				return $reponse;
+			}else if ($id_deb == 6 && $id_march == 13) {
+				$reponse['montant'] = $this-> getDossier($id_dos)['poids']*8;
+				$reponse['tva'] = '0';
+				return $reponse;
+			}else if ($id_deb == 8 && $id_march == 13) {
+				$reponse['montant'] = $this-> getDossier($id_dos)['poids']*100;
+				$reponse['tva'] = '0';
+				return $reponse;
+			}else if ($id_deb == 6) {
+				$reponse['montant'] = $this-> getDossier($id_dos)['poids']*5;
+				$reponse['tva'] = '0';
+				return $reponse;
+			}else if ($id_deb == 11) {
+				if ($this-> getDossier($id_dos)['poids']<=30) {
+					$reponse['montant'] = 125;
+				}else{
+					$reponse['montant'] = 0;
+				}
+				$reponse['tva'] = '0';
+				return $reponse;
+			}else if ($id_deb == 12) {
+				if ($this-> getDossier($id_dos)['poids']>30) {
+					$reponse['montant'] = 250;
+				}else{
+					$reponse['montant'] = 0;
+				}
+				$reponse['tva'] = '0';
+				return $reponse;
+			}else{
+				$requete = $connexion-> prepare("SELECT *
+													FROM affectation_debours_client_modele_licence
+													WHERE id_deb = ?
+														AND id_mod_lic = ?
+														AND id_cli = ?
+														AND id_march = ?
+														AND id_mod_trans = ?");
+				$requete-> execute(array($entree['id_deb'], $entree['id_mod_lic'], $entree['id_cli'], $entree['id_march'], $entree['id_mod_trans']));
+				$reponse = $requete-> fetch();
+				
+				if ($reponse) {
+					return $reponse;
+				}else{
+					$reponse['montant'] = 1;
+					$reponse['tva'] = '0';
+					$reponse['id_deb'] = '0';
+					return $reponse;
+				}
+			}
+
+		}
+
 		public function getDataAffectationDeboursClientModeleLicence($id_deb, $id_cli, $id_mod_lic, $id_march, $id_mod_trans){
 			include('connexion.php');
 			$entree['id_deb'] = $id_deb;
@@ -37100,7 +37172,11 @@
 									                </a>'),' ',
 									                CONCAT('<a href=\"#\" class=\"text-success\" onclick=\"window.location.replace(\'',mf.excel,'?ref_fact=',fd.ref_fact,'\',\'pop4\',\'width=1000,height=800\');\" title=\"Export Annex\">
 									                    <i class=\"fas fa-file-excel\"></i> 
-									                </a>')) AS view_page
+									                </a>')) AS view_page,
+									                dos.id_mod_lic AS id_mod_lic,
+									                dos.id_cli AS id_cli,
+									                dos.id_mod_trans AS id_mod_trans,
+									                dos.id_march AS id_march
 												FROM facture_dossier fd, modele_facture mf, client cl, dossier dos, detail_facture_dossier det, debours deb
 												WHERE YEAR(fd.date_fact) = YEAR(CURRENT_DATE())
 													AND fd.id_mod_fact = mf.id_mod_fact
@@ -37152,7 +37228,7 @@
 					$reponse['cgea'] = $this-> getMontantDeboursFactureDossier2($reponse['ref_fact'], 10, $reponse['id_dos']);
 					$reponse['dgda_seal'] = $this-> getMontantDeboursFactureDossier2($reponse['ref_fact'], 13, $reponse['id_dos']);
 					$reponse['assay'] = $this-> getMontantDeboursFactureDossier2($reponse['ref_fact'], 15, $reponse['id_dos']);
-					$reponse['scelle'] = $this-> getMontantDeboursFactureDossier2($reponse['ref_fact'], 45, $reponse['id_dos']);
+					$reponse['scelle'] = $this-> getMontantDeboursFactureDossier2($reponse['ref_fact'], 45, $reponse['id_dos'])/$this-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport2(45, $reponse['id_mod_lic'], $reponse['id_cli'], $reponse['id_march'], $reponse['id_mod_trans'])['montant'];
 					$reponse['tresco'] = $this-> getMontantDeboursFactureDossier2($reponse['ref_fact'], 94, $reponse['id_dos']);
 
 					$rows[] = $reponse;
