@@ -1,7 +1,7 @@
 <?php
   include("tetePopCDN.php");
   include("menuHaut.php");
-  // include("menuGauche.php");
+  include("menuGauche.php");
 
    if( isset($_POST['creerFactureDossier']) ){
     ?>
