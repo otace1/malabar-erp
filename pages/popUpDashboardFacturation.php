@@ -93,6 +93,12 @@
                       <th>Rate(CDF/USD) BCC</th>
                       <th>Ton Per USD</th>
                       <th>LIQ AMT/USD</th>
+                      <th>RIE-Ton Per USD</th>
+                      <th>RIE-Amount</th>
+                      <th>RLS-Ton Per USD</th>
+                      <th>RLS-Amount</th>
+                      <th>FSR-Ton Per USD</th>
+                      <th>FSR-Amount</th>
                       <th>OGREFREM-Ton Per USD</th>
                       <th>OGREFREM-Amount</th>
                       <th>LMC-Ton Per USD</th>
@@ -124,6 +130,9 @@
                       <th style="">#</th>
                       <th style="">Notre Nº Ref #</th>
                       <th>Client</th>
+                      <th>Poids</th>
+                      <th>Scelle Electronique</th>
+                      <th>Frais Tresco</th>
                       <th>Liquidation Ref.</th>
                       <th>Liquidation Date</th>
                       <th style="">FACTURE Nº</th>
@@ -334,6 +343,18 @@
           {"data":"compteur"},
           {"data":"ref_dos"},
           {"data":"nom_cli"},
+          {"data":"poids",
+            render: DataTable.render.number( null, null, 2, null ),
+            className: 'dt-body-right'
+          },
+          {"data":"scelle",
+            render: DataTable.render.number( null, null, 2, null ),
+            className: 'dt-body-right'
+          },
+          {"data":"tresco",
+            render: DataTable.render.number( null, null, 2, null ),
+            className: 'dt-body-right'
+          },
           {"data":"ref_liq"},
           {"data":"date_liq"},
           {"data":"ref_fact"},
@@ -426,6 +447,30 @@
             className: 'dt-body-right'
           },
           {"data":"liquidation_usd",
+            render: DataTable.render.number( null, null, 2, null ),
+            className: 'dt-body-right'
+          },
+          {"data":"rie_per_ton",
+            render: DataTable.render.number( null, null, 2, null ),
+            className: 'dt-body-right'
+          },
+          {"data":"rie",
+            render: DataTable.render.number( null, null, 2, null ),
+            className: 'dt-body-right'
+          },
+          {"data":"rls_per_ton",
+            render: DataTable.render.number( null, null, 2, null ),
+            className: 'dt-body-right'
+          },
+          {"data":"rls",
+            render: DataTable.render.number( null, null, 2, null ),
+            className: 'dt-body-right'
+          },
+          {"data":"fsr_per_ton",
+            render: DataTable.render.number( null, null, 2, null ),
+            className: 'dt-body-right'
+          },
+          {"data":"fsr",
             render: DataTable.render.number( null, null, 2, null ),
             className: 'dt-body-right'
           },
