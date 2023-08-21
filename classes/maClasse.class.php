@@ -37234,7 +37234,12 @@
 					$reponse['cgea'] = $this-> getMontantDeboursFactureDossier2($reponse['ref_fact'], 10, $reponse['id_dos']);
 					$reponse['dgda_seal'] = $this-> getMontantDeboursFactureDossier2($reponse['ref_fact'], 13, $reponse['id_dos']);
 					$reponse['assay'] = $this-> getMontantDeboursFactureDossier2($reponse['ref_fact'], 15, $reponse['id_dos']);
-					$reponse['nbre_scelle'] = $this-> getMontantDeboursFactureDossier2($reponse['ref_fact'], 45, $reponse['id_dos'])/$this-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport2(45, $reponse['id_mod_lic'], $reponse['id_cli'], $reponse['id_march'], $reponse['id_mod_trans'])['montant'];
+					if ($this-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport2(45, $reponse['id_mod_lic'], $reponse['id_cli'], $reponse['id_march'], $reponse['id_mod_trans'])['montant']>1) {
+						$reponse['nbre_scelle'] = $this-> getMontantDeboursFactureDossier2($reponse['ref_fact'], 45, $reponse['id_dos'])/$this-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport2(45, $reponse['id_mod_lic'], $reponse['id_cli'], $reponse['id_march'], $reponse['id_mod_trans'])['montant'];
+					}else{
+						$reponse['nbre_scelle'] = $this-> getMontantDeboursFactureDossier2($reponse['ref_fact'], 45, $reponse['id_dos'])/35;
+					}
+					
 					$reponse['scelle'] = $this-> getMontantDeboursFactureDossier2($reponse['ref_fact'], 45, $reponse['id_dos']);
 					$reponse['tresco'] = $this-> getMontantDeboursFactureDossier2($reponse['ref_fact'], 94, $reponse['id_dos']);
 
