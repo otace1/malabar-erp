@@ -131,7 +131,8 @@
                       <th style="">Notre Nº Ref #</th>
                       <th>Client</th>
                       <th>Poids</th>
-                      <th>Scelle Electronique</th>
+                      <th>Scelle Electr.</th>
+                      <th>Scelle Electr. Amount</th>
                       <th>Frais Tresco</th>
                       <th>Liquidation Ref.</th>
                       <th>Liquidation Date</th>
@@ -346,6 +347,10 @@
           {"data":"poids",
             render: DataTable.render.number( null, null, 2, null ),
             className: 'dt-body-right'
+          },
+          {"data":"nbre_scelle",
+            render: DataTable.render.number( null, null, 0, null ),
+            className: 'dt-body-center'
           },
           {"data":"scelle",
             render: DataTable.render.number( null, null, 2, null ),
