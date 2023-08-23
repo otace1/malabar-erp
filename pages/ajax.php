@@ -57,6 +57,22 @@
 
   		echo json_encode($reponse);
 
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='maj_roe_liq'){// MAJ Roe Liq
+
+  		$reponse = $maClasse-> getDataDossier($_POST['id_dos']);
+  		$maClasse-> maj_roe_liq($_POST['id_dos'], $_POST['roe_liq']);
+
+  		echo json_encode($reponse);
+
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='maj_id_bank_liq'){// MAJ id_bank_liq
+
+  		// $reponse = $maClasse-> getDataDossier($_POST['id_dos']);
+  		$maClasse-> MAJ_id_bank_liq($_POST['id_dos'], $_POST['id_bank_liq']);
+  		$reponse['roe_decl'] = $maClasse-> getMontantTauxBanqueDate($_POST['id_bank_liq'], $maClasse-> getDataDossier($_POST['id_dos'])['date_quit']);
+  		$maClasse-> MAJ_roe_decl($_POST['id_dos'], $reponse['roe_decl']);
+
+  		echo json_encode($reponse);
+
 	}elseif(isset($_POST['operation']) && $_POST['operation']=='maj_roe_inv'){// MAJ Roe Inv
 
   		$reponse = $maClasse-> getDataDossier($_POST['id_dos']);
@@ -2011,6 +2027,30 @@
 
   		}
   		
+  		$reponse['msg'] = 'Done!';
+
+  		echo json_encode($reponse);
+
+	}else if(isset($_POST['operation']) && $_POST['operation']=='afficherMonitoringTaux'){// Afiicher Taux
+
+  		$reponse['afficherMonitoringTaux'] = $maClasse-> afficherMonitoringTaux();
+
+  		echo json_encode($reponse);
+
+	}else if(isset($_POST['operation']) && $_POST['operation']=='creation_taux_banque'){// creation_taux_banque
+		// creerTauxBCC($date_taux, $montant)
+		// getTauxBCCDate($date_taux)
+		// creerTauxBanque($id_taux_bcc, $id_banq, $date_taux, $montant)
+
+  		$maClasse-> creerTauxBCC($_POST['date_taux'], $_POST['bcc']);
+  		$id_taux_bcc = $maClasse-> getTauxBCCDate($_POST['date_taux'])['id'];
+  		//tmb
+  		$maClasse-> creerTauxBanque($id_taux_bcc, 1, $_POST['date_taux'], $_POST['tmb']);
+  		//rawbank
+  		$maClasse-> creerTauxBanque($id_taux_bcc, 2, $_POST['date_taux'], $_POST['rawbank']);
+  		//equity
+  		$maClasse-> creerTauxBanque($id_taux_bcc, 3, $_POST['date_taux'], $_POST['equity']);
+
   		$reponse['msg'] = 'Done!';
 
   		echo json_encode($reponse);

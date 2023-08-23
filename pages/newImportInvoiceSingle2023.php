@@ -129,10 +129,23 @@
               <th><input style="text-align: center; width: 9em;" id="assurance_usd" name="assurance_usd" onblur="maj_assurance_usd(id_dos.value, this.value);calculCIF();" class="" type="number" step="0.000001" min="0" required></th>
             </tr>
             <tr>
+              <th>Bank</th>
+              <th>
+                <select style="width: 9em;" id="id_bank_liq" name="id_bank_liq" onchange="maj_id_bank_liq(id_dos.value, this.value);calculCIF();"required>
+                  <option></option>
+                  <?php
+                    $maClasse-> selectionnerBanqueLiquidation();
+                  ?>
+                </select>
+              </th>
+              <th>Bank Rate</th>
+              <th><input style="text-align: center; width: 9em;" id="roe_decl" name="roe_decl" onblur="maj_roe_decl(id_dos.value, this.value);calculCIF();" type="number" step="0.000001" min="1" required></th>
+            </tr>
+            <tr>
               <th>Rate (CDF/<span id="label_mon_fob"></span>) INV.</th>
               <th><input style="text-align: center; width: 9em;" id="roe_inv" name="roe_inv" onblur="maj_roe_inv(id_dos.value, this.value);calculCIF();" type="number" step="0.000001" min="1" required></th>
               <th>Rate(CDF/USD) BCC</th>
-              <th><input style="text-align: center; width: 9em;" id="roe_decl" name="roe_decl" onblur="maj_roe_decl(id_dos.value, this.value);calculCIF();" type="number" step="0.000001" min="1" required></th>
+              <th><input style="text-align: center; width: 9em;" id="roe_liq" name="roe_liq" onblur="maj_roe_liq(id_dos.value, this.value);calculCIF();" type="number" step="0.000001" min="1" required></th>
             </tr>
             <tr>
               <th>CIF (<span id="label_mon_cif"></span>)</th>
@@ -478,6 +491,8 @@
           $('#roe_inv').val(data.roe_inv);
           $('#commodity').val(data.commodity);
           // $('#truck').val(data.truck);
+          $('#id_bank_liq').val(data.id_bank_liq);
+          $('#roe_liq').val(data.roe_liq);
           $('#horse').val(data.horse);
           $('#trailer_1').val(data.trailer_1);
           $('#trailer_2').val(data.trailer_2);
@@ -651,6 +666,48 @@
         if (data.logout) {
           alert(data.logout);
           window.location="../deconnexion.php";
+        }
+      },
+      complete: function () {
+          $('#spinner-div').hide();//Request is complete so hide spinner
+      }
+    });
+
+  }
+
+  function maj_roe_liq(id_dos, roe_liq){
+    $('#spinner-div').show();
+    $.ajax({
+      type: 'post',
+      url: 'ajax.php',
+      data: {id_dos: id_dos, roe_liq: roe_liq, operation: 'maj_roe_liq'},
+      dataType: 'json',
+      success:function(data){
+        if (data.logout) {
+          alert(data.logout);
+          window.location="../deconnexion.php";
+        }
+      },
+      complete: function () {
+          $('#spinner-div').hide();//Request is complete so hide spinner
+      }
+    });
+
+  }
+
+  function maj_id_bank_liq(id_dos, id_bank_liq){
+    $('#spinner-div').show();
+    $.ajax({
+      type: 'post',
+      url: 'ajax.php',
+      data: {id_dos: id_dos, id_bank_liq: id_bank_liq, operation: 'maj_id_bank_liq'},
+      dataType: 'json',
+      success:function(data){
+        if (data.logout) {
+          alert(data.logout);
+          window.location="../deconnexion.php";
+        }else{
+          $('#roe_decl').val(data.roe_decl);
         }
       },
       complete: function () {
