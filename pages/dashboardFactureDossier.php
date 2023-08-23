@@ -387,12 +387,13 @@ if(isset($_GET['id_mod_lic_fact']) && isset($_GET['id_mod_lic_fact'])){
         </button>
       </div>
       <div class="modal-body table-responsive">
-        <table class=" table table-head-fixed table-bordered table-hover text-nowrap table-sm">
+        <table class=" table table-head-fixed table-bordered table-hover small text-nowrap table-sm">
           <thead>
             <tr>
               <th style="">#</th>
               <th style="">File Ref.</th>
               <th style="">INV Ref.</th>
+              <th style="">INV Date</th>
               <th style="">Decl.Ref.</th>
               <th style="">Decl.Date</th>
               <th style="">Liq.Ref.</th>
