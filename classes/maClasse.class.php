@@ -16636,7 +16636,7 @@
 
 			$tbl = "";
 
-			$tmb_preced = 0;
+			$ecobank_preced = 0;
 			$rawbank_preced = 0;
 			$equity_preced = 0;
 
@@ -16648,16 +16648,16 @@
 			while ($reponse = $requete-> fetch()) {
 				$compteur++;
 
-				$reste_tmb = $this-> getMontantTauxBanque(1, $reponse['id'])-$reponse['montant'];
+				$reste_ecobank = $this-> getMontantTauxBanque(5, $reponse['id'])-$reponse['montant'];
 				$reste_rawbank = $this-> getMontantTauxBanque(2, $reponse['id'])-$reponse['montant'];
 				$reste_equity = $this-> getMontantTauxBanque(3, $reponse['id'])-$reponse['montant'];
 
-				if ($tmb_preced > $reste_tmb) {
-					$arrow_tmb = '<i class="fa fa-arrow-down text-danger"></i>';
-				}else if ($tmb_preced < $reste_tmb) {
-					$arrow_tmb = '<i class="fa fa-arrow-up text-success"></i>';
+				if ($ecobank_preced > $reste_ecobank) {
+					$arrow_ecobank = '<i class="fa fa-arrow-down text-danger"></i>';
+				}else if ($ecobank_preced < $reste_ecobank) {
+					$arrow_ecobank = '<i class="fa fa-arrow-up text-success"></i>';
 				}else{
-					$arrow_tmb = '<i class="fa fa-minus text-info"></i>';
+					$arrow_ecobank = '<i class="fa fa-minus text-info"></i>';
 				}
 
 				if ($rawbank_preced > $reste_rawbank) {
@@ -16684,20 +16684,122 @@
 								'.$reponse['date_taux'].'
 							</td>
 							<td class="" style="text-align: right;" class="">'.number_format($reponse['montant'], 3, ',', '.').'</td>
-							<td class="" style="text-align: right;" class="">'.number_format($this-> getMontantTauxBanque(1, $reponse['id']), 3, ',', '.').'</td>
-							<td class="" style="text-align: right;" class="">'.$arrow_tmb.number_format($reste_tmb, 3, ',', '.').'</td>
 							<td class="" style="text-align: right;" class="">'.number_format($this-> getMontantTauxBanque(2, $reponse['id']), 3, ',', '.').'</td>
 							<td class="" style="text-align: right;" class="">'.$arrow_rawbank.number_format($reste_rawbank, 3, ',', '.').'</td>
 							<td class="" style="text-align: right;" class="">'.number_format($this-> getMontantTauxBanque(3, $reponse['id']), 3, ',', '.').'</td>
 							<td class="" style="text-align: right;" class="">'.$arrow_equity.number_format($reste_equity, 3, ',', '.').'</td>
+							<td class="" style="text-align: right;" class="">'.number_format($this-> getMontantTauxBanque(5, $reponse['id']), 3, ',', '.').'</td>
+							<td class="" style="text-align: right;" class="">'.$arrow_ecobank.number_format($reste_ecobank, 3, ',', '.').'</td>
 							<td>
 								<a href="#" onclick="delete_taux_banque('.$reponse['id'].')"><i class="fa fa-times text-danger"></i></a>
+								<a href="#" onclick="appliquer_taux('.$reponse['id'].')"><i class="fa fa-check text-sucess"></i></a>
 							</td>
 						</tr>';
 
-			$tmb_preced = $reste_tmb;
+			$ecobank_preced = $reste_ecobank;
 			$rawbank_preced = $reste_rawbank;
 			$equity_preced = $reste_equity;
+
+			}$requete-> closeCursor();
+
+			return $tbl;
+
+		}
+
+		public function files_awaiting_rate($id_mod_lic){
+			include("connexion.php");
+			$entree['id_mod_lic'] = $id_mod_lic;
+
+			$compteur=0;
+
+			$tbl = "";
+
+			$ecobank_preced = 0;
+			$rawbank_preced = 0;
+			$equity_preced = 0;
+
+			$requete = $connexion-> prepare("SELECT dos.ref_dos AS ref_dos,
+													CONCAT(dos.ref_decl, ' ', dos.date_decl) AS declaration,
+													CONCAT(dos.ref_liq, ' ', dos.date_liq) AS liquidation,
+													CONCAT(dos.ref_quit, ' ', dos.date_quit) AS quittance,
+													dos.id_dos AS id_dos,
+													dos.roe_decl AS roe_decl,
+													dos.ref_decl AS ref_decl,
+													factdos.ref_fact AS ref_fact,
+													banque.nom_banq AS nom_banq,
+													taux_banque.montant AS montant_taux,
+													DATE_FORMAT(dos.date_decl, '%d/%m/%Y') AS date_decl,
+													dos.ref_decl AS ref_liq,
+													DATE_FORMAT(dos.date_liq, '%d/%m/%Y') AS date_liq,
+													dos.ref_decl AS ref_quit,
+													DATE_FORMAT(dos.date_quit, '%d/%m/%Y') AS date_quit
+												FROM dossier dos
+												LEFT JOIN banque
+													ON banque.id_banq = dos.id_bank_liq
+												LEFT JOIN taux_banque
+													ON banque.id_banq = taux_banque.id_banq
+														AND taux_banque.date_taux = dos.date_quit
+												LEFT JOIN detail_facture_dossier dfd
+													ON dfd.id_dos = dos.id_dos
+												LEFT JOIN facture_dossier factdos
+													ON factdos.ref_fact = dfd.ref_fact
+												WHERE dos.id_dos IN (
+														SELECT DISTINCT(id_dos)
+															FROM detail_facture_dossier det, facture_dossier fact
+															WHERE det.ref_fact = fact.ref_fact
+																AND DATE(fact.date_fact) >= '2023-08-22'
+													)
+													AND (
+														dos.id_bank_liq IS NULL
+														OR
+														dos.roe_decl != (
+																SELECT tb.montant
+																	FROM taux_banque tb
+																	WHERE tb.id_banq = dos.id_bank_liq
+																		AND tb.date_taux = dos.date_quit
+															)
+														)
+													AND dos.id_mod_lic = ?
+												GROUP BY dos.id_dos");
+			$requete-> execute(array($entree['id_mod_lic']));
+			while ($reponse = $requete-> fetch()) {
+				$compteur++;
+
+				$tbl .= '<tr>
+							<td class="" style="text-align: center;" class="">
+								'.$compteur.'
+							</td>
+							<td class="" style="text-align:;" class="">
+								'.$reponse['ref_dos'].'
+							</td>
+							<td class="" style="text-align:;" class="">
+								'.$reponse['ref_fact'].'
+							</td>
+							<td class="" style="text-align:;" class="">
+								'.$reponse['ref_decl'].'
+							</td>
+							<td class="" style="text-align:;" class="">
+								'.$reponse['date_decl'].'
+							</td>
+							<td class="" style="text-align:;" class="">
+								'.$reponse['ref_liq'].'
+							</td>
+							<td class="" style="text-align:;" class="">
+								'.$reponse['date_liq'].'
+							</td>
+							<td class="" style="text-align:;" class="">
+								'.$reponse['ref_quit'].'
+							</td>
+							<td class="" style="text-align:;" class="">
+								'.$reponse['date_quit'].'
+							</td>
+							<td class="" style="text-align:right;" class="">
+								'.number_format($reponse['roe_decl'], 4, ',', '.').'
+							</td>
+							<td class="" style="text-align:center;" class="">
+								<select id="id_bank_liq_'.$compteur.'" class="form-control form-control-sm" onchange="MAJ_id_bank_liq('.$reponse['id_dos'].', this.value, '.$id_mod_lic.')"><option></option>'.$this-> selectionnerBanqueLiquidationAjax().'</select>
+							</td>
+						</tr>';
 
 			}$requete-> closeCursor();
 
@@ -17293,6 +17395,18 @@
 													AND id_cli = ?");
 
 			$requete-> execute(array($entree['id_util'], $entree['id_mod_lic'], $entree['id_cli']));
+			
+
+		}
+
+		public function delete_taux_banque($id){
+			include("connexion.php");
+			$entree['id'] = $id;
+
+			$requete = $connexion-> prepare("DELETE FROM taux_bcc
+												WHERE id = ? ");
+
+			$requete-> execute(array($entree['id']));
 			
 
 		}
@@ -38122,6 +38236,42 @@
 			return $reponse['nbre'];
 		}
 
+		public function nbre_facture_sans_taux($id_mod_lic=NULL){
+			include('connexion.php');
+			// $entree['id_mod_lic'] = $id_mod_lic;
+
+			$sqlTransit = "";
+			if (isset($id_mod_lic) && ($id_mod_lic != '')) {
+				$sqlTransit = ' AND dos.id_mod_lic = "'.$id_mod_lic.'" ';
+			}
+
+			$compteur = 0;
+
+			$requete = $connexion-> query("SELECT COUNT(DISTINCT(dos.id_dos)) AS nbre
+												FROM dossier dos
+												WHERE dos.id_dos IN (
+														SELECT DISTINCT(id_dos)
+															FROM detail_facture_dossier det, facture_dossier fact
+															WHERE det.ref_fact = fact.ref_fact
+																AND DATE(fact.date_fact) >= '2023-08-22'
+													)
+													AND (
+														dos.id_bank_liq IS NULL
+														OR
+														dos.roe_decl <> (
+																SELECT tb.montant
+																	FROM taux_banque tb
+																	WHERE tb.id_banq = dos.id_bank_liq
+																		AND tb.date_taux = dos.date_quit
+															)
+														)
+													$sqlTransit");
+			// $requete-> execute(array($entree['id_mod_lic']));
+			$reponse = $requete-> fetch();
+			
+			return $reponse['nbre'];
+		}
+
 		public function getNbreDossierNonFacture($id_mod_lic){
 			include('connexion.php');
 			// $entree['id_mod_lic'] = $id_mod_lic;
@@ -42833,6 +42983,25 @@
 
 		}
 
+		public function selectionnerBanqueLiquidationAjax(){
+			include('connexion.php');
+
+			$select = '';
+
+			$requete = $connexion-> query("SELECT UPPER(nom_banq) AS nom_banq,
+													id_banq
+												FROM banque
+												WHERE liquidation = '1'
+												ORDER BY nom_banq ASC");
+
+			while($reponse = $requete-> fetch()){
+				$select.= '<option value="'.$reponse['id_banq'].'">'.$reponse['nom_banq'].'</option>';
+			}$requete-> closeCursor();
+
+			return $select;
+
+		}
+
 		public function selectionnerFrontiere(){
 			include('connexion.php');
 
@@ -43708,6 +43877,26 @@
 			$requete = $connexion-> prepare("UPDATE dossier SET num_lic= ?	
 												WHERE num_lic = ?");
 			$requete-> execute(array($entree['num_lic'], $entree['num_lic_old']));
+
+		} 
+		
+		public function appliquer_taux($id){
+
+			include('connexion.php');
+			$entree['id'] = $id;
+
+			$requete = $connexion-> prepare('SELECT *
+												FROM taux_banque
+												WHERE id_taux_bcc = ?');
+			while ($reponse = $requete-> fetch()) {
+				
+				$requete2 = $connexion-> prepare('UPDATE dossier 
+													SET roe_decl = ?
+													WHERE id_bank_liq = ? 
+														AND date_quit = ?');
+				$requete2-> execute(array($reponse['montant'], $reponse['id_banq'], $reponse['date_taux']));
+
+			}$requete-> closeCursor();
 
 		} 
 
