@@ -1,7 +1,7 @@
 <?php
   include("tete.php");
   include("menuHaut.php");
-  include("menuGauche.php");
+  // include("menuGauche.php");
 
 ?>
   <!-- /.navbar -->
@@ -126,6 +126,35 @@
             <!-- /.info-box -->
           </div>
         
+          <div class="col-md-3 col-sm-6 col-12">
+
+            <div class="small-box bg-warning">
+              <div class="inner">
+                <h5>
+                  <span id="nbre_facture_sans_taux"></span>
+                </h5>
+
+                <p> 
+                  <?php
+                  if ($maClasse-> getUtilisateur($_SESSION['id_util'])['langue']=='ENG') {
+                    echo 'Files invoiced awaiting banks rates';
+                  }else if ($maClasse-> getUtilisateur($_SESSION['id_util'])['langue']=='FR') {
+                    echo 'Dossiers Factures en attente des taux bancaires';
+                  }
+                  ?> 
+                </p>
+              </div>
+              <div class="icon">
+                <i class="fas fa-exclamation"></i>
+              </div>
+              <a href="#" class="small-box-footer" onclick="modal_awaiting_rate(<?php echo $_GET['id_mod_lic_fact'];?>);">
+                Details <i class="fas fa-arrow-circle-right"></i>
+              </a>
+            </div>
+
+            <!-- /.info-box -->
+          </div>
+        
           <div class="col-md-6 col-sm-6 col-12">
              <section class="content">
               <div class="container-fluid" style="">
@@ -218,9 +247,9 @@
                               <th style="" rowspan="2">#</th>
                               <th style="" rowspan="2">Date</th>
                               <th style="" rowspan="2">BCC</th>
-                              <th style=" text-align: center;" colspan="2">TMB</th>
                               <th style=" text-align: center;" colspan="2">RAWBANK</th>
-                              <th style=" text-align: center;" colspan="2">EQUITY</th>
+                              <th style=" text-align: center;" colspan="2">EQUITY BCDC</th>
+                              <th style=" text-align: center;" colspan="2">ECOBANK</th>
                             </tr>
                             <tr class="">
                               <th style=" text-align: center;">Amt</th>
@@ -323,16 +352,16 @@ if(isset($_GET['id_mod_lic_fact']) && isset($_GET['id_mod_lic_fact'])){
           <input name="bcc" type="number" min="0" step="0.000001" class="form-control form-control-sm cc-exp" required>
         </div>
         <div class="form-group">
-          <label for="x_card_code" class="control-label mb-1">TMB</label>
-          <input name="tmb" type="number" min="0" step="0.000001" class="form-control form-control-sm cc-exp">
-        </div>
-        <div class="form-group">
           <label for="x_card_code" class="control-label mb-1">RAWBANK</label>
           <input name="rawbank" type="number" min="0" step="0.000001" class="form-control form-control-sm cc-exp">
         </div>
         <div class="form-group">
-          <label for="x_card_code" class="control-label mb-1">EQUITY</label>
+          <label for="x_card_code" class="control-label mb-1">EQUITY BCDC</label>
           <input name="equity" type="number" min="0" step="0.000001" class="form-control form-control-sm cc-exp">
+        </div>
+        <div class="form-group">
+          <label for="x_card_code" class="control-label mb-1">ECOBANK</label>
+          <input name="ecobank" type="number" min="0" step="0.000001" class="form-control form-control-sm cc-exp">
         </div>
       </div>
       <div class="modal-footer justify-content-between">
@@ -346,7 +375,142 @@ if(isset($_GET['id_mod_lic_fact']) && isset($_GET['id_mod_lic_fact'])){
   <!-- /.modal-dialog -->
 </div>
 
+<div class="modal fade" id="modal_awaiting_rate">
+  <div class="modal-dialog modal-xl">
+    <!-- <form id="form_creation_taux_banque" method="POST" action="" data-parsley-validate enctype="multipart/form-data"> -->
+      <!-- <input type="hidden" name="operation" value="creation_taux_banque"> -->
+    <div class="modal-content">
+      <div class="modal-header ">
+        <h4 class="modal-title"><i class="fa fa-exclamation-triangle"></i> Files Invoiced Awaiting Bank Rates</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body table-responsive">
+        <table class=" table table-head-fixed table-bordered table-hover text-nowrap table-sm">
+          <thead>
+            <tr>
+              <th style="">#</th>
+              <th style="">File Ref.</th>
+              <th style="">INV Ref.</th>
+              <th style="">Decl.Ref.</th>
+              <th style="">Decl.Date</th>
+              <th style="">Liq.Ref.</th>
+              <th style="">Liq.Date</th>
+              <th style="">Quit.Ref.</th>
+              <th style="">Quit.Date</th>
+              <th style="">File Rate</th>
+              <th style="">Bank</th>
+            </tr>
+          </thead>
+          <tbody id="files_awaiting_rate">
+          </tbody>
+        </table>
+      </div>
+      <!-- <div class="modal-footer justify-content-between">
+        <button type="button" class="btn btn-danger btn-xs" data-dismiss="modal">Cancel</button>
+        <button type="submit" class="btn btn-primary btn-xs">Submit</button>
+      </div>
+ -->    </div>
+    <!-- </form> -->
+    <!-- /.modal-content -->
+  </div>
+  <!-- /.modal-dialog -->
+</div>
+
 <script type="text/javascript">
+
+  function appliquer_taux(id){
+    if(confirm('Do really you want to update the files rates regarding this rates ?')) {
+      $('#spinner-div').show();
+      $.ajax({
+        type: 'post',
+        url: 'ajax.php',
+        data: {operation: 'appliquer_taux', id: id},
+        dataType: 'json',
+        success:function(data){
+          if (data.logout) {
+            alert(data.logout);
+            window.location="../deconnexion.php";
+          }else{
+            afficherMonitoringTaux();
+          }
+        },
+        complete: function () {
+            $('#spinner-div').hide();//Request is complete so hide spinner
+        }
+      });
+    }
+  }
+
+  function MAJ_id_bank_liq(id_dos, id_bank_liq, id_mod_lic){
+    if(confirm('Do really you want to update ?')) {
+      $('#spinner-div').show();
+      $.ajax({
+        type: 'post',
+        url: 'ajax.php',
+        data: {operation: 'maj_id_bank_liq2', id_dos: id_dos, id_bank_liq: id_bank_liq, id_mod_lic: id_mod_lic},
+        dataType: 'json',
+        success:function(data){
+          if (data.logout) {
+            alert(data.logout);
+            window.location="../deconnexion.php";
+          }else{
+            $('#files_awaiting_rate').html(data.files_awaiting_rate);
+            $('#nbre_facture_sans_taux').html(data.nbre_facture_sans_taux);
+          }
+        },
+        complete: function () {
+            $('#spinner-div').hide();//Request is complete so hide spinner
+        }
+      });
+    }
+  }
+
+  function modal_awaiting_rate(id_mod_lic){
+    $('#spinner-div').show();
+    $.ajax({
+      type: 'post',
+      url: 'ajax.php',
+      data: {operation: 'files_awaiting_rate', id_mod_lic: id_mod_lic},
+      dataType: 'json',
+      success:function(data){
+        if (data.logout) {
+          alert(data.logout);
+          window.location="../deconnexion.php";
+        }else{
+          $('#files_awaiting_rate').html(data.files_awaiting_rate);
+        }
+      },
+      complete: function () {
+          $('#spinner-div').hide();//Request is complete so hide spinner
+      }
+    });
+    $('#modal_awaiting_rate').modal('show');
+  }
+
+  function delete_taux_banque(id){
+    if(confirm('Do really you want to delete this rates ?')) {
+      $('#spinner-div').show();
+      $.ajax({
+        type: 'post',
+        url: 'ajax.php',
+        data: {operation: 'delete_taux_banque', id: id},
+        dataType: 'json',
+        success:function(data){
+          if (data.logout) {
+            alert(data.logout);
+            window.location="../deconnexion.php";
+          }else{
+            afficherMonitoringTaux();
+          }
+        },
+        complete: function () {
+            $('#spinner-div').hide();//Request is complete so hide spinner
+        }
+      });
+    }
+  }
 
 
   $(document).ready(function(){
@@ -357,6 +521,7 @@ if(isset($_GET['id_mod_lic_fact']) && isset($_GET['id_mod_lic_fact'])){
 
       if(confirm('Do really you want to submit ?')) {
 
+          $('#modal_creation_taux_banque').modal('hide');
           // alert('Hello');
 
           var fd = new FormData(this);
@@ -378,7 +543,6 @@ if(isset($_GET['id_mod_lic_fact']) && isset($_GET['id_mod_lic_fact'])){
                     this.reset();
                 });
                 afficherMonitoringTaux();
-                $('#modal_creation_taux_banque').modal('hide');
               }
             },
             complete: function () {
@@ -412,6 +576,7 @@ if(isset($_GET['id_mod_lic_fact']) && isset($_GET['id_mod_lic_fact'])){
           $('#nbre_facture').html(data.nbre_facture);
           $('#nbre_dossier_facture').html(data.nbre_dossier_facture);
           $('#nbre_dossier_non_facture').html(data.nbre_dossier_non_facture);
+          $('#nbre_facture_sans_taux').html(data.nbre_facture_sans_taux);
           $('#btn_info_factures').html(data.btn_info_factures);
           $('#btn_info_dossiers_factures').html(data.btn_info_dossiers_factures);
           afficherMonitoringFacturation(<?php echo $_GET['id_mod_lic_fact'];?>);

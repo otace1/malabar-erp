@@ -591,6 +591,7 @@
 		$response['nbre_facture'] = $maClasse-> getNbreFacture($id_mod_lic);
 		$response['nbre_dossier_facture'] = $maClasse-> getNbreDossierFacture($id_mod_lic);
 		$response['nbre_dossier_non_facture'] = $maClasse-> getNbreDossierNonFacture($id_mod_lic);
+		$response['nbre_facture_sans_taux'] = $maClasse-> nbre_facture_sans_taux($id_mod_lic);
 		$response['btn_info_factures'] = '<span onclick="window.open(\'popUpDashboardFacturation.php?statut=Factures&amp;id_mod_lic='.$id_mod_lic.'\',\'pop1\',\'width=1200,height=700\');">
                 Details <i class="fas fa-arrow-circle-right"></i>
               </span>';
@@ -2044,15 +2045,53 @@
 
   		$maClasse-> creerTauxBCC($_POST['date_taux'], $_POST['bcc']);
   		$id_taux_bcc = $maClasse-> getTauxBCCDate($_POST['date_taux'])['id'];
-  		//tmb
-  		$maClasse-> creerTauxBanque($id_taux_bcc, 1, $_POST['date_taux'], $_POST['tmb']);
+  		//ecobank
+  		$maClasse-> creerTauxBanque($id_taux_bcc, 5, $_POST['date_taux'], $_POST['ecobank']);
   		//rawbank
   		$maClasse-> creerTauxBanque($id_taux_bcc, 2, $_POST['date_taux'], $_POST['rawbank']);
   		//equity
   		$maClasse-> creerTauxBanque($id_taux_bcc, 3, $_POST['date_taux'], $_POST['equity']);
+		
+		$maClasse-> appliquer_taux($id_taux_bcc);
+		
+  		$reponse['msg'] = 'Done!';
+
+  		echo json_encode($reponse);
+
+	}else if(isset($_POST['operation']) && $_POST['operation']=='delete_taux_banque'){// creation_taux_banque
+		// creerTauxBCC($date_taux, $montant)
+		// getTauxBCCDate($date_taux)
+		// creerTauxBanque($id_taux_bcc, $id_banq, $date_taux, $montant)
+
+  		$maClasse-> delete_taux_banque($_POST['id']);
 
   		$reponse['msg'] = 'Done!';
 
+  		echo json_encode($reponse);
+
+	}else if(isset($_POST['operation']) && $_POST['operation']=='files_awaiting_rate'){// Afiicher Taux
+
+  		$reponse['files_awaiting_rate'] = $maClasse-> files_awaiting_rate($_POST['id_mod_lic']);
+
+  		echo json_encode($reponse);
+
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='maj_id_bank_liq2'){// MAJ id_bank_liq 2
+
+  		// $reponse = $maClasse-> getDataDossier($_POST['id_dos']);
+  		$maClasse-> MAJ_id_bank_liq($_POST['id_dos'], $_POST['id_bank_liq']);
+  		$reponse['roe_decl'] = $maClasse-> getMontantTauxBanqueDate($_POST['id_bank_liq'], $maClasse-> getDataDossier($_POST['id_dos'])['date_quit']);
+  		$maClasse-> MAJ_roe_decl($_POST['id_dos'], $reponse['roe_decl']);
+  		$reponse['files_awaiting_rate'] = $maClasse-> files_awaiting_rate($_POST['id_mod_lic']);
+
+		$reponse['nbre_facture_sans_taux'] = $maClasse-> nbre_facture_sans_taux($_POST['id_mod_lic']);
+
+  		echo json_encode($reponse);
+
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='appliquer_taux'){// appliquer_taux
+
+  		// $reponse = $maClasse-> getDataDossier($_POST['id_dos']);
+  		$maClasse-> appliquer_taux($_POST['id']);
+  		$reponse['msg'] = 'Done!';
   		echo json_encode($reponse);
 
 	}

@@ -1230,7 +1230,7 @@
     // cog = (cif_cdf*0.00457);
     
     // alert(tva_ddi);
-    rls = 85*unite_rls*roe_decl;
+    rls = 85*unite_rls*roe_liq;
     if ($('#tva_rls').val() == '1' ) {
       tva_rls = rls*0.16;
     }else{
@@ -1461,7 +1461,7 @@
     // cog = (cif_cdf*0.00457);
     
     // alert(tva_ddi);
-    rls = 85*unite_rls*roe_decl;
+    rls = 85*unite_rls*roe_liq;
     if ($('#tva_rls').val() == '1' ) {
       tva_rls = rls*0.16;
     }else{
