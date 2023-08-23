@@ -16729,6 +16729,7 @@
 													banque.nom_banq AS nom_banq,
 													taux_banque.montant AS montant_taux,
 													DATE_FORMAT(dos.date_decl, '%d/%m/%Y') AS date_decl,
+													DATE_FORMAT(factdos.date_fact, '%d/%m/%Y') AS date_fact,
 													dos.ref_decl AS ref_liq,
 													DATE_FORMAT(dos.date_liq, '%d/%m/%Y') AS date_liq,
 													dos.ref_decl AS ref_quit,
@@ -16747,7 +16748,7 @@
 														SELECT DISTINCT(id_dos)
 															FROM detail_facture_dossier det, facture_dossier fact
 															WHERE det.ref_fact = fact.ref_fact
-																AND DATE(fact.date_fact) >= '2023-08-22'
+																
 													)
 													AND (
 														dos.id_bank_liq IS NULL
@@ -16760,6 +16761,7 @@
 															)
 														)
 													AND dos.id_mod_lic = ?
+													AND DATE(dos.date_quit) >= '2023-08-22'
 												GROUP BY dos.id_dos");
 			$requete-> execute(array($entree['id_mod_lic']));
 			while ($reponse = $requete-> fetch()) {
@@ -16774,6 +16776,9 @@
 							</td>
 							<td class="" style="text-align:;" class="">
 								'.$reponse['ref_fact'].'
+							</td>
+							<td class="" style="text-align:;" class="">
+								'.$reponse['date_fact'].'
 							</td>
 							<td class="" style="text-align:;" class="">
 								'.$reponse['ref_decl'].'
@@ -38253,7 +38258,6 @@
 														SELECT DISTINCT(id_dos)
 															FROM detail_facture_dossier det, facture_dossier fact
 															WHERE det.ref_fact = fact.ref_fact
-																AND DATE(fact.date_fact) >= '2023-08-22'
 													)
 													AND (
 														dos.id_bank_liq IS NULL
@@ -38265,6 +38269,7 @@
 																		AND tb.date_taux = dos.date_quit
 															)
 														)
+													AND DATE(dos.date_quit) >= '2023-08-22'
 													$sqlTransit");
 			// $requete-> execute(array($entree['id_mod_lic']));
 			$reponse = $requete-> fetch();
