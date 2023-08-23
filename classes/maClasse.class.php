@@ -5701,7 +5701,8 @@
 			$entree['ref_fact'] = $ref_fact;
 
 			$requete = $connexion-> prepare("SELECT ROUND(AVG(dos.roe_decl) ,4) AS roe_decl,
-													ROUND(AVG(dos.roe_inv) ,4) AS roe_inv
+													ROUND(AVG(dos.roe_inv) ,4) AS roe_inv,
+													ROUND(AVG(dos.roe_liq) ,4) AS roe_liq
 												FROM facture_dossier f, detail_facture_dossier df, dossier dos
 												WHERE f.ref_fact = ?
 													AND f.ref_fact = df.ref_fact
@@ -13243,6 +13244,18 @@
 			return $reponse;
 		}
 
+		public function getDataBancaire($id_banq){
+			include('connexion.php');
+			$entree['id_banq'] = $id_banq;
+
+			$requete = $connexion-> prepare("SELECT *
+												FROM banque
+												WHERE id_banq = ?");
+			$requete-> execute(array($entree['id_banq']));
+			$reponse = $requete-> fetch();
+			return $reponse;
+		}
+
 		public function getRangDossierFacture($ref_fact){
 			include('connexion.php');
 			$entree['ref_fact'] = $ref_fact;
@@ -16520,6 +16533,172 @@
 				            	</a>
 							</td>
 						</tr>';
+			}$requete-> closeCursor();
+
+			return $tbl;
+
+		}
+
+		public function getMontantTauxBanque($id_banq, $id_taux_bcc){
+			include('connexion.php');
+			$entree['id_banq'] = $id_banq;
+			$entree['id_taux_bcc'] = $id_taux_bcc;
+
+			$compteur = 0;
+
+			$requete = $connexion-> prepare("SELECT *
+											FROM taux_banque
+											WHERE id_banq = ?
+												AND id_taux_bcc = ?");
+			$requete-> execute(array($entree['id_banq'], $entree['id_taux_bcc']));
+			$reponse = $requete-> fetch();
+
+			if ($reponse) {
+				return $reponse['montant'];
+			}else{
+				return '0';
+			}
+			
+			
+		}
+
+		public function getMontantTauxBanqueDate($id_banq, $date_taux){
+			include('connexion.php');
+			$entree['id_banq'] = $id_banq;
+			$entree['date_taux'] = $date_taux;
+
+			$compteur = 0;
+
+			$requete = $connexion-> prepare("SELECT *
+											FROM taux_banque
+											WHERE id_banq = ?
+												AND date_taux = ?");
+			$requete-> execute(array($entree['id_banq'], $entree['date_taux']));
+			$reponse = $requete-> fetch();
+
+			if ($reponse) {
+				return $reponse['montant'];
+			}else{
+				return '0';
+			}
+			
+			
+		}
+
+		public function creerTauxBCC($date_taux, $montant){
+			include('connexion.php');
+			$entree['date_taux'] = $date_taux;
+			$entree['montant'] = $montant;
+
+			$compteur = 0;
+
+			$requete = $connexion-> prepare("INSERT INTO taux_bcc(date_taux, montant, id_util)
+											VALUES(?, ?, ?)");
+			$requete-> execute(array($entree['date_taux'], $entree['montant'], $_SESSION['id_util']));
+			
+		}
+
+		public function getTauxBCCDate($date_taux){
+			include('connexion.php');
+			$entree['date_taux'] = $date_taux;
+
+			$compteur = 0;
+
+			$requete = $connexion-> prepare("SELECT * 
+											FROM taux_bcc 
+											WHERE date_taux = ?");
+			$requete-> execute(array($entree['date_taux']));
+			$reponse = $requete-> fetch();
+
+			return $reponse;
+			
+		}
+
+		public function creerTauxBanque($id_taux_bcc, $id_banq, $date_taux, $montant){
+			include('connexion.php');
+			$entree['id_taux_bcc'] = $id_taux_bcc;
+			$entree['id_banq'] = $id_banq;
+			$entree['date_taux'] = $date_taux;
+			$entree['montant'] = $montant;
+
+			$compteur = 0;
+
+			$requete = $connexion-> prepare("INSERT INTO taux_banque(id_taux_bcc, id_banq, date_taux, montant, id_util)
+											VALUES(?, ?, ?, ?, ?)");
+			$requete-> execute(array($entree['id_taux_bcc'], $entree['id_banq'], $entree['date_taux'], $entree['montant'], $_SESSION['id_util']));
+			
+		}
+
+		public function afficherMonitoringTaux(){
+			include("connexion.php");
+
+			$compteur=0;
+
+			$tbl = "";
+
+			$tmb_preced = 0;
+			$rawbank_preced = 0;
+			$equity_preced = 0;
+
+			$requete = $connexion-> query("SELECT * FROM (
+												SELECT * FROM taux_bcc ORDER BY date_taux DESC LIMIT 0, 20
+											) Var1
+											ORDER BY date_taux ASC");
+			// $requete-> execute(array($entree['id_mod_lic'], $entree['id_cli']));
+			while ($reponse = $requete-> fetch()) {
+				$compteur++;
+
+				$reste_tmb = $this-> getMontantTauxBanque(1, $reponse['id'])-$reponse['montant'];
+				$reste_rawbank = $this-> getMontantTauxBanque(2, $reponse['id'])-$reponse['montant'];
+				$reste_equity = $this-> getMontantTauxBanque(3, $reponse['id'])-$reponse['montant'];
+
+				if ($tmb_preced > $reste_tmb) {
+					$arrow_tmb = '<i class="fa fa-arrow-down text-danger"></i>';
+				}else if ($tmb_preced < $reste_tmb) {
+					$arrow_tmb = '<i class="fa fa-arrow-up text-success"></i>';
+				}else{
+					$arrow_tmb = '<i class="fa fa-minus text-info"></i>';
+				}
+
+				if ($rawbank_preced > $reste_rawbank) {
+					$arrow_rawbank = '<i class="fa fa-arrow-down text-danger"></i>';
+				}else if ($rawbank_preced < $reste_rawbank) {
+					$arrow_rawbank = '<i class="fa fa-arrow-up text-success"></i>';
+				}else{
+					$arrow_rawbank = '<i class="fa fa-minus text-info"></i>';
+				}
+
+				if ($equity_preced > $reste_equity) {
+					$arrow_equity = '<i class="fa fa-arrow-down text-danger"></i>';
+				}else if ($equity_preced < $reste_equity) {
+					$arrow_equity = '<i class="fa fa-arrow-up text-success"></i>';
+				}else{
+					$arrow_equity = '<i class="fa fa-minus text-info"></i>';
+				}
+
+				$tbl .= '<tr>
+							<td class="" style="text-align: center;" class="">
+								'.$compteur.'
+							</td>
+							<td class="" style="text-align: right;" class="">
+								'.$reponse['date_taux'].'
+							</td>
+							<td class="" style="text-align: right;" class="">'.number_format($reponse['montant'], 3, ',', '.').'</td>
+							<td class="" style="text-align: right;" class="">'.number_format($this-> getMontantTauxBanque(1, $reponse['id']), 3, ',', '.').'</td>
+							<td class="" style="text-align: right;" class="">'.$arrow_tmb.number_format($reste_tmb, 3, ',', '.').'</td>
+							<td class="" style="text-align: right;" class="">'.number_format($this-> getMontantTauxBanque(2, $reponse['id']), 3, ',', '.').'</td>
+							<td class="" style="text-align: right;" class="">'.$arrow_rawbank.number_format($reste_rawbank, 3, ',', '.').'</td>
+							<td class="" style="text-align: right;" class="">'.number_format($this-> getMontantTauxBanque(3, $reponse['id']), 3, ',', '.').'</td>
+							<td class="" style="text-align: right;" class="">'.$arrow_equity.number_format($reste_equity, 3, ',', '.').'</td>
+							<td>
+								<a href="#" onclick="delete_taux_banque('.$reponse['id'].')"><i class="fa fa-times text-danger"></i></a>
+							</td>
+						</tr>';
+
+			$tmb_preced = $reste_tmb;
+			$rawbank_preced = $reste_rawbank;
+			$equity_preced = $reste_equity;
+
 			}$requete-> closeCursor();
 
 			return $tbl;
@@ -42635,6 +42814,25 @@
 
 		}
 
+		public function selectionnerBanqueLiquidation(){
+			include('connexion.php');
+
+			$requete = $connexion-> query("SELECT UPPER(nom_banq) AS nom_banq,
+													id_banq
+												FROM banque
+												WHERE liquidation = '1'
+												ORDER BY nom_banq ASC");
+
+			while($reponse = $requete-> fetch()){
+			?>
+			<option value="<?php echo $reponse['id_banq'];?>">
+				<?php echo $reponse['nom_banq'];?>
+			</option>
+			<?php
+			}$requete-> closeCursor();
+
+		}
+
 		public function selectionnerFrontiere(){
 			include('connexion.php');
 
@@ -44498,6 +44696,44 @@
 			$requete = $connexion-> prepare("UPDATE dossier SET roe_decl = ?
 												WHERE id_dos = ?");
 			$requete-> execute(array($entree['roe_decl'], $entree['id_dos']));
+
+		}
+
+		public function MAJ_id_bank_liq($id_dos, $id_bank_liq){
+
+			include('connexion.php');
+			$entree['id_dos'] = $id_dos;
+			$entree['id_bank_liq'] = $id_bank_liq;
+
+			//Log
+			if ($this-> getDossier($id_dos)['id_bank_liq'] != $id_bank_liq) {
+				
+				$this-> creerLogDossier('Bank Liq', $id_bank_liq, $id_dos, $_SESSION['id_util']);
+
+			}
+
+			$requete = $connexion-> prepare("UPDATE dossier SET id_bank_liq = ?
+												WHERE id_dos = ?");
+			$requete-> execute(array($entree['id_bank_liq'], $entree['id_dos']));
+
+		}
+
+		public function MAJ_roe_liq($id_dos, $roe_liq){
+
+			include('connexion.php');
+			$entree['id_dos'] = $id_dos;
+			$entree['roe_liq'] = $roe_liq;
+
+			//Log
+			if ($this-> getDossier($id_dos)['roe_liq'] != $roe_liq) {
+				
+				$this-> creerLogDossier('Roe Liq', $roe_liq, $id_dos, $_SESSION['id_util']);
+
+			}
+
+			$requete = $connexion-> prepare("UPDATE dossier SET roe_liq = ?
+												WHERE id_dos = ?");
+			$requete-> execute(array($entree['roe_liq'], $entree['id_dos']));
 
 		}
 
