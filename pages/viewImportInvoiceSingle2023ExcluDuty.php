@@ -437,32 +437,36 @@ $tbl = <<<EOD
 			<td width="23%" style="text-align: left; border: 0.3px solid black; font-size: 7px;">&nbsp;Autres Charges/$id_mon_autre_frais: </td>
 			<td width="22%" style="text-align: center; border: 0.3px solid black; font-size: 7px;">$autre_frais_usd</td>
 			<td width="15%" style="text-align: left; "></td>
-			<td width="15%" style="text-align: left; border: 0.3px solid black; font-size: 7px;">&nbsp;Bank: </td>
-			<td width="25%" style="text-align: center; border: 0.3px solid black; font-size: 7px; font-weight: bold;">$nom_banq</td>
+			<td width="8%" style="text-align: left; border: 0.3px solid black; font-size: 7px;">&nbsp;Bank: </td>
+			<td width="16%" style="text-align: center; border: 0.3px solid black; font-size: 7px; font-weight: bold;">$nom_banq</td>
+			<td width="8%" style="text-align: left; border: 0.3px solid black; font-size: 7px;">&nbsp;Bank Rate: </td>
+			<td width="8%" style="text-align: center; border: 0.3px solid black; font-size: 7px; font-weight: bold;">$roe_decl</td>
 		</tr>
 		<tr>
 			<td width="23%" style="text-align: left; border: 0.3px solid black; font-size: 7px;">&nbsp;Assurance/$id_mon_assurance: </td>
 			<td width="22%" style="text-align: center; border: 0.3px solid black; font-size: 7px;">$assurance_usd</td>
-			<td width="15%" style="text-align: left; "></td>
-			<td width="15%" style="text-align: left; border: 0.3px solid black; font-size: 7px;">&nbsp;Bank Rate: </td>
-			<td width="25%" style="text-align: center; border: 0.3px solid black; font-size: 7px; font-weight: bold;">$roe_decl</td>
-		</tr>
-		<tr>
-			<td width="23%" style="text-align: left; border: 0.3px solid black; font-size: 7px; font-weight: bold;">&nbsp;CIF/$id_mon_fob: </td>
-			<td width="22%" style="text-align: center; border: 0.3px solid black; font-size: 7.5px; font-weight: bold;">$cif_usd</td>
 			<td width="15%" style="text-align: left; "></td>
 			<td width="15%" style="text-align: left; border: 0.3px solid black; font-size: 7px;">&nbsp;Declaration: </td>
 			<td width="12.5%" style="text-align: center; border: 0.3px solid black; font-size: 7px; font-weight: bold;">$ref_decl</td>
 			<td width="12.5%" style="text-align: center; border: 0.3px solid black; font-size: 7px; font-weight: bold;">$date_decl</td>
 		</tr>
 		<tr>
-			<td width="23%" style="text-align: left; border: 0.3px solid black; font-size: 7px; font-weight: bold;">&nbsp;CIF/CDF: </td>
-			<td width="22%" style="text-align: center; border: 0.3px solid black; font-size: 7.5px; font-weight: bold;">$cif_cdf</td>
+			<td width="23%" style="text-align: left; border: 0.3px solid black; font-size: 7px; font-weight: bold;">&nbsp;CIF/$id_mon_fob: </td>
+			<td width="22%" style="text-align: center; border: 0.3px solid black; font-size: 7.5px; font-weight: bold;">$cif_usd</td>
 			<td width="15%" style="text-align: left; "></td>
 			<td width="15%" style="text-align: left; border: 0.3px solid black; font-size: 7px;">&nbsp;Liquidation: </td>
 			<td width="12.5%" style="text-align: center; border: 0.3px solid black; font-size: 7px; font-weight: bold;">$ref_liq</td>
 			<td width="12.5%" style="text-align: center; border: 0.3px solid black; font-size: 7px; font-weight: bold;">$date_liq</td>
 		</tr>
+		<tr>
+			<td width="23%" style="text-align: left; border: 0.3px solid black; font-size: 7px; font-weight: bold;">&nbsp;CIF/CDF: </td>
+			<td width="22%" style="text-align: center; border: 0.3px solid black; font-size: 7.5px; font-weight: bold;">$cif_cdf</td>
+			<td width="15%" style="text-align: left; "></td>
+			<td width="15%" style="text-align: left; border: 0.3px solid black; font-size: 7px;">&nbsp;Quiittance: </td>
+			<td width="12.5%" style="text-align: center; border: 0.3px solid black; font-size: 7px; font-weight: bold;">$ref_quit</td>
+			<td width="12.5%" style="text-align: center; border: 0.3px solid black; font-size: 7px; font-weight: bold;">$date_quit</td>
+		</tr>
+
 		<tr>
 			<td width="100%"></td>
 		</tr>
@@ -640,32 +644,36 @@ $tbl2 = <<<EOD
 			<td width="23%" style="text-align: left; border: 0.3px solid black; font-size: 7px;">&nbsp;Autres Charges/$id_mon_autre_frais: </td>
 			<td width="22%" style="text-align: center; border: 0.3px solid black; font-size: 7px;">$autre_frais_usd</td>
 			<td width="15%" style="text-align: left; "></td>
-			<td width="15%" style="text-align: left; border: 0.3px solid black; font-size: 7px;">&nbsp;Bank: </td>
-			<td width="25%" style="text-align: center; border: 0.3px solid black; font-size: 7px; font-weight: bold;">$nom_banq</td>
+			<td width="8%" style="text-align: left; border: 0.3px solid black; font-size: 7px;">&nbsp;Bank: </td>
+			<td width="16%" style="text-align: center; border: 0.3px solid black; font-size: 7px; font-weight: bold;">$nom_banq</td>
+			<td width="8%" style="text-align: left; border: 0.3px solid black; font-size: 7px;">&nbsp;Bank Rate: </td>
+			<td width="8%" style="text-align: center; border: 0.3px solid black; font-size: 7px; font-weight: bold;">$roe_decl</td>
 		</tr>
 		<tr>
 			<td width="23%" style="text-align: left; border: 0.3px solid black; font-size: 7px;">&nbsp;Assurance/$id_mon_assurance: </td>
 			<td width="22%" style="text-align: center; border: 0.3px solid black; font-size: 7px;">$assurance_usd</td>
-			<td width="15%" style="text-align: left; "></td>
-			<td width="15%" style="text-align: left; border: 0.3px solid black; font-size: 7px;">&nbsp;Bank Rate: </td>
-			<td width="25%" style="text-align: center; border: 0.3px solid black; font-size: 7px; font-weight: bold;">$roe_decl</td>
-		</tr>
-		<tr>
-			<td width="23%" style="text-align: left; border: 0.3px solid black; font-size: 7px; font-weight: bold;">&nbsp;CIF/$id_mon_fob: </td>
-			<td width="22%" style="text-align: center; border: 0.3px solid black; font-size: 7.5px; font-weight: bold;">$cif_usd</td>
 			<td width="15%" style="text-align: left; "></td>
 			<td width="15%" style="text-align: left; border: 0.3px solid black; font-size: 7px;">&nbsp;Declaration: </td>
 			<td width="12.5%" style="text-align: center; border: 0.3px solid black; font-size: 7px; font-weight: bold;">$ref_decl</td>
 			<td width="12.5%" style="text-align: center; border: 0.3px solid black; font-size: 7px; font-weight: bold;">$date_decl</td>
 		</tr>
 		<tr>
-			<td width="23%" style="text-align: left; border: 0.3px solid black; font-size: 7px; font-weight: bold;">&nbsp;CIF/CDF: </td>
-			<td width="22%" style="text-align: center; border: 0.3px solid black; font-size: 7.5px; font-weight: bold;">$cif_cdf</td>
+			<td width="23%" style="text-align: left; border: 0.3px solid black; font-size: 7px; font-weight: bold;">&nbsp;CIF/$id_mon_fob: </td>
+			<td width="22%" style="text-align: center; border: 0.3px solid black; font-size: 7.5px; font-weight: bold;">$cif_usd</td>
 			<td width="15%" style="text-align: left; "></td>
 			<td width="15%" style="text-align: left; border: 0.3px solid black; font-size: 7px;">&nbsp;Liquidation: </td>
 			<td width="12.5%" style="text-align: center; border: 0.3px solid black; font-size: 7px; font-weight: bold;">$ref_liq</td>
 			<td width="12.5%" style="text-align: center; border: 0.3px solid black; font-size: 7px; font-weight: bold;">$date_liq</td>
 		</tr>
+		<tr>
+			<td width="23%" style="text-align: left; border: 0.3px solid black; font-size: 7px; font-weight: bold;">&nbsp;CIF/CDF: </td>
+			<td width="22%" style="text-align: center; border: 0.3px solid black; font-size: 7.5px; font-weight: bold;">$cif_cdf</td>
+			<td width="15%" style="text-align: left; "></td>
+			<td width="15%" style="text-align: left; border: 0.3px solid black; font-size: 7px;">&nbsp;Quiittance: </td>
+			<td width="12.5%" style="text-align: center; border: 0.3px solid black; font-size: 7px; font-weight: bold;">$ref_quit</td>
+			<td width="12.5%" style="text-align: center; border: 0.3px solid black; font-size: 7px; font-weight: bold;">$date_quit</td>
+		</tr>
+
 		<tr>
 			<td width="100%"></td>
 		</tr>

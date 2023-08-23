@@ -1,7 +1,7 @@
 <?php
   include("tete.php");
   include("menuHaut.php");
-  // include("menuGauche.php");
+  include("menuGauche.php");
 
 ?>
   <!-- /.navbar -->
