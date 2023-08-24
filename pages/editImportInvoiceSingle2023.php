@@ -1155,6 +1155,12 @@
       roe_decl=0;
     }
 
+    if (parseFloat($('#roe_liq').val()) > 0 ) {
+      roe_liq = parseFloat($('#roe_liq').val());
+    }else{
+      roe_liq=0;
+    }
+
     if (parseFloat($('#unite_rls').val()) > 0 ) {
       unite_rls = parseFloat($('#unite_rls').val());
     }else{
@@ -1385,6 +1391,12 @@
       roe_decl = parseFloat($('#roe_decl').val());
     }else{
       roe_decl=0;
+    }
+
+    if (parseFloat($('#roe_liq').val()) > 0 ) {
+      roe_liq = parseFloat($('#roe_liq').val());
+    }else{
+      roe_liq=0;
     }
 
     if (parseFloat($('#unite_rls').val()) > 0 ) {
