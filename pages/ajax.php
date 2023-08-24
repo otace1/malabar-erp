@@ -1399,6 +1399,8 @@
 		$response['trailer_2'] =$maClasse-> getDossier($_POST['id_dos'])['trailer_2'];
 		$response['roe_decl'] =$maClasse-> getDossier($_POST['id_dos'])['roe_decl'];
 		$response['poids'] =$maClasse-> getDossier($_POST['id_dos'])['poids'];
+		$response['roe_liq'] =$maClasse-> getDossier($_POST['id_dos'])['roe_liq'];
+		$response['id_bank_liq'] =$maClasse-> getDossier($_POST['id_dos'])['id_bank_liq'];
   		$response['detail_facture_dossier'] = $maClasse-> getDeboursPourFactureClientModeleLicenceAjaxEdit($_POST['id_cli'], $_POST['id_mod_lic'], $_POST['id_march'], $_POST['id_mod_trans'], $_POST['id_dos'], $_POST['ref_fact']);
 		// $response['message'] = 'ok';
 		echo json_encode($response);

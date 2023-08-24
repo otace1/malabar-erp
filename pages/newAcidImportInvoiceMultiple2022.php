@@ -95,8 +95,25 @@
         <div class="row">
           <div class="col-md-2">
             <div class="form-group">
-              <label for="inputEmail3" class="col-form-label">Rate</label>
+              <label for="inputEmail3" class="col-form-label">Bank</label>
+              <select class="form-control form-control-sm" name="id_bank_liq" id="id_bank_liq" onchange="maj_id_bank_liq(id_dos.value, this.value)">
+                <option></option>
+                <?php
+                  $maClasse-> selectionnerBanqueLiquidation();
+                ?>
+              </select>
+            </div>
+          </div>
+          <div class="col-md-2">
+            <div class="form-group">
+              <label for="inputEmail3" class="col-form-label">Bank Rate</label>
               <input type="number" step="0.0001" class="form-control form-control-sm" name="roe_decl" id="roe_decl" onblur="maj_roe_decl(id_dos.value, this.value)">
+            </div>
+          </div>
+          <div class="col-md-2">
+            <div class="form-group">
+              <label for="inputEmail3" class="col-form-label">BCDC Rate</label>
+              <input type="number" step="0.0001" class="form-control form-control-sm" name="roe_liq" id="roe_liq" onblur="maj_roe_liq(id_dos.value, this.value)">
             </div>
           </div>
           <div class="col-md-2">
@@ -257,8 +274,25 @@
         <div class="row">
           <div class="col-md-2">
             <div class="form-group">
-              <label for="inputEmail3" class="col-form-label">Rate</label>
+              <label for="inputEmail3" class="col-form-label">Bank</label>
+              <select class="form-control form-control-sm" name="id_bank_liq" id="id_bank_liq_edit" onchange="maj_id_bank_liq(id_dos_edit.value, this.value); detail_invoice_acid(ref_fact_edit.value);">
+                <option></option>
+                <?php
+                  $maClasse-> selectionnerBanqueLiquidation();
+                ?>
+              </select>
+            </div>
+          </div>
+          <div class="col-md-2">
+            <div class="form-group">
+              <label for="inputEmail3" class="col-form-label">Bank Rate</label>
               <input type="number" step="0.0001" class="form-control form-control-sm" name="roe_decl" id="roe_decl_edit" onblur="maj_roe_decl(id_dos_edit.value, this.value); detail_invoice_acid(ref_fact_edit.value);">
+            </div>
+          </div>
+          <div class="col-md-2">
+            <div class="form-group">
+              <label for="inputEmail3" class="col-form-label">BCDC Rate</label>
+              <input type="number" step="0.0001" class="form-control form-control-sm" name="roe_liq" id="roe_liq_edit" onblur="maj_roe_liq(id_dos_edit.value, this.value); detail_invoice_acid(ref_fact_edit.value);">
             </div>
           </div>
           <div class="col-md-2">
@@ -466,6 +500,8 @@
             $('#trailer_1_edit').val(data.trailer_1);
             $('#trailer_2_edit').val(data.trailer_2);
             $('#roe_decl_edit').val(data.roe_decl);
+            $('#roe_liq_edit').val(data.roe_liq);
+            $('#id_bank_liq_edit').val(data.id_bank_liq);
             $('#poids_edit').val(data.poids);
             $('#modalEditDetailFactureDossier').modal('show');
           }
@@ -509,6 +545,8 @@
           $('#roe_inv').val(data.roe_inv);
           $('#commodity').val(data.commodity);
           // $('#truck').val(data.truck);
+          $('#roe_liq').val(data.roe_liq);
+          $('#id_bank_liq').val(data.id_bank_liq);
           $('#horse').val(data.horse);
           $('#trailer_1').val(data.trailer_1);
           $('#trailer_2').val(data.trailer_2);
@@ -579,6 +617,8 @@
                   // $( '#enregistrerFactureImportMMGAcid_form' ).each(function(){
                   //     this.reset();
                   // });
+                  $('#id_bank_liq').val('');
+                  $('#roe_liq').val('');
                   $('#horse').val('');
                   // $('#roe_decl').val('');
                   $('#trailer_1').val('');
@@ -748,6 +788,49 @@
         if (data.logout) {
           alert(data.logout);
           window.location="../deconnexion.php";
+        }
+      },
+      complete: function () {
+          $('#spinner-div').hide();//Request is complete so hide spinner
+      }
+    });
+
+  }
+
+  function maj_roe_liq(id_dos, roe_liq){
+    $('#spinner-div').show();
+    $.ajax({
+      type: 'post',
+      url: 'ajax.php',
+      data: {id_dos: id_dos, roe_liq: roe_liq, operation: 'maj_roe_liq'},
+      dataType: 'json',
+      success:function(data){
+        if (data.logout) {
+          alert(data.logout);
+          window.location="../deconnexion.php";
+        }
+      },
+      complete: function () {
+          $('#spinner-div').hide();//Request is complete so hide spinner
+      }
+    });
+
+  }
+
+  function maj_id_bank_liq(id_dos, id_bank_liq){
+    $('#spinner-div').show();
+    $.ajax({
+      type: 'post',
+      url: 'ajax.php',
+      data: {id_dos: id_dos, id_bank_liq: id_bank_liq, operation: 'maj_id_bank_liq'},
+      dataType: 'json',
+      success:function(data){
+        if (data.logout) {
+          alert(data.logout);
+          window.location="../deconnexion.php";
+        }else{
+          $('#roe_decl').val(data.roe_decl);
+          $('#roe_decl_edit').val(data.roe_decl);
         }
       },
       complete: function () {
