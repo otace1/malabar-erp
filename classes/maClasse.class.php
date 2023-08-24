@@ -16824,7 +16824,7 @@
 
 			$requete = $connexion-> prepare("SELECT ref_dos, id_dos, num_lot, 
 													horse, trailer_1, trailer_2, 
-													poids, roe_decl,
+													poids, roe_decl, id_bank_liq,
 													CONCAT(ref_decl, ' ', DATE_FORMAT(date_decl, '%d/%m/%Y')) AS declaration,
 													CONCAT(ref_liq, ' ', DATE_FORMAT(date_liq, '%d/%m/%Y')) AS liquidation,
 													CONCAT(ref_quit, ' ', DATE_FORMAT(date_quit, '%d/%m/%Y')) AS quittance,
@@ -16879,6 +16879,14 @@
 					<input type="checkbox" id="check_<?php echo $compteur;?>" name="check_<?php echo $compteur;?>" class="bg bg-dark">
 				</td>
 				<td>
+					<select style="text-align: center; width: 8em;" name="id_bank_liq_<?php echo $compteur;?>" id="id_bank_liq_<?php echo $compteur;?>" onchange="maj_id_bank_liq(<?php echo $reponse['id_dos'];?>, this.value, <?php echo $compteur;?>)">
+		                <option></option>
+		                <?php
+		                  $this-> selectionnerBanqueLiquidation();
+		                ?>
+		              </select>
+				</td>
+				<td onload="getBank(<?php echo $reponse['id_bank_liq'];?>, <?php echo $compteur;?>); alert('<?php echo $compteur;?>');">
 					<input type="number" min="0" step="0.000001" style="text-align: center; width: 8em;" onblur="calculDDE(<?php echo $compteur;?>);" id="roe_decl_<?php echo $compteur;?>" name="roe_decl_<?php echo $compteur;?>" value="<?php echo $reponse['roe_decl'];?>" class="bg bg-dark">
 				</td>
 				<td>
