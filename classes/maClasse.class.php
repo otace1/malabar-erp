@@ -37500,7 +37500,15 @@
 				while($reponse = $requete-> fetch()){
 					$compteur++;
 
-					$reponse['avg_liquidation_usd_per_ton'] = $this-> getMontantFactureDossierDebours3($reponse['ref_fact'], 2)/$this-> getPoidsFacture($reponse['ref_fact']);
+					if ($id_mod_lic=='1') {
+						
+						$reponse['avg_liquidation_usd_per_ton'] = $this-> getMontantFactureDossierDebours3($reponse['ref_fact'], 2)/$this-> getPoidsFacture($reponse['ref_fact']);
+
+					}else{
+
+						$reponse['avg_liquidation_usd_per_ton'] = 0;
+
+					}
 
 					$reponse['compteur'] = $compteur;
 					$reponse['montant'] = number_format($this-> getMontantFactureGlobale($reponse['ref_fact'])+(( ($this-> getMontantFactureDebours($reponse['ref_fact'], 27)*$this-> getFactureGlobale($reponse['ref_fact'])['taux_commission']) - $this-> getMontantFactureDebours($reponse['ref_fact'], 27))), 2, ',', ' ');
