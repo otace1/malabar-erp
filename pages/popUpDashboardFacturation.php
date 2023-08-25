@@ -91,6 +91,7 @@
                       <th>Qty(Mt)</th>
                       <th>LIQ AMT CDF</th>
                       <th>Rate(CDF/USD) BCC</th>
+                      <th>AVG Ton Per USD</th>
                       <th>Ton Per USD</th>
                       <th>LIQ AMT/USD</th>
                       <th>RIE-Ton Per USD</th>
@@ -446,6 +447,10 @@
           },
           {"data":"roe_decl",
             className: 'dt-body-right'
+          },
+          {"data":"avg_liquidation_usd_per_ton",
+            render: DataTable.render.number( null, null, 2, null ),
+            className: 'dt-body-right text-primary'
           },
           {"data":"liquidation_usd_per_ton",
             render: DataTable.render.number( null, null, 2, null ),
