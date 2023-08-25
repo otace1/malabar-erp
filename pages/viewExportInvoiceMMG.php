@@ -138,7 +138,8 @@ $totalAll = $maClasse-> getTotalFactureMMGExport($_GET['ref_fact']);
 $total = $maClasse-> getTotalForFacturePartielle($_GET['ref_fact']);
 $arsp = $maClasse-> getARSPForFacturePartielle($_GET['ref_fact']);
 
-$taux =  number_format($maClasse-> getTauxFacture($_GET['ref_fact'])['roe_decl'], 4, ',', '.');
+$roe_decl =  number_format($maClasse-> getTauxFacture($_GET['ref_fact'])['roe_decl'], 4, ',', '.');
+$roe_liq =  number_format($maClasse-> getTauxFacture($_GET['ref_fact'])['roe_liq'], 4, ',', '.');
 $totalHT = number_format($maClasse-> getTotalHTFacture($_GET['ref_fact']), 2, ',', ' ');
 $totalTVA = number_format($maClasse-> getTotalTVAFacture($_GET['ref_fact']), 2, ',', ' ');
 $totalTTC = number_format(($maClasse-> getTotalTVAFacture($_GET['ref_fact'])+$maClasse-> getTotalHTFacture($_GET['ref_fact'])), 2, ',', ' ');
@@ -339,6 +340,7 @@ $sub_totat_tva_25 = number_format($maClasse-> getMontantFactureDossierDebours3($
 $total_25 = number_format($maClasse-> getMontantFactureDossierDeboursWithTVA($_GET['ref_fact'], 21), 2, ',', ' ');
 
 $sub_total_3 = $maClasse-> getTotalFactureMMGExport_3($_GET['ref_fact']);
+$nom_banq = $maClasse-> getDataBancaire($maClasse-> getDataDossiersMultipleInvoice($_GET['ref_fact'])['id_bank_liq'])['nom_banq'];
 
 $banque = '<tr>
 			<td width="10%" style="border-top: 1px solid black; border-left: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;INTITULE</td>
@@ -439,8 +441,10 @@ $tbl = <<<EOD
 		</tr>
 		<tr>
 			<td width="15%" style="text-align: left; "></td>
-			<td width="18%" style="text-align: left; border: 0.3px solid black; font-size: 7px;">&nbsp;Rate(CDF/USD) BCC: </td>
-			<td width="22%" style="text-align: center; border: 0.3px solid black; font-size: 7px; font-weight: bold;">$taux</td>
+			<td width="8%" style="text-align: left; border: 0.3px solid black; font-size: 7px;">&nbsp;Bank: </td>
+			<td width="16%" style="text-align: center; border: 0.3px solid black; font-size: 7px; font-weight: bold;">$nom_banq</td>
+			<td width="8%" style="text-align: left; border: 0.3px solid black; font-size: 7px;">&nbsp;Bank Rate: </td>
+			<td width="8%" style="text-align: center; border: 0.3px solid black; font-size: 7px; font-weight: bold;">$roe_decl</td>
 		</tr>
 		<tr>
 			<td width="15%" style="text-align: left; "></td>
@@ -764,7 +768,7 @@ $tbl = <<<EOD
 			<td width="100%" style="border: 1px solid black; text-align: center; font-size: 7px;">Thank you for you business!</td>
 		</tr>
 	</table>
-	</bodystyle="font-weight: bold;">
+	</body>
 	</html>
         
 EOD;
@@ -800,7 +804,6 @@ $tbl = <<<EOD
 			<td width="83%" style="">DETAILS - EXPORT CLEARING $marchandise LOADS</td>
 		</tr>
 		<tr>
-			<td width="5%" style=""></td>
 			<td width="3%" style="text-align: center; border: 1 solid black; font-weight: bold;"><span><br>#<br></span></td>
 			<td width="10%" style="text-align: center; border: 1 solid black; font-weight: bold;"><span><br>MCA File No<br></span></td>
 			<td width="9%" style="text-align: center; border: 1 solid black; font-weight: bold;"><span><br>Destination<br></span></td>
@@ -811,9 +814,10 @@ $tbl = <<<EOD
 			<td width="9%" style="text-align: center; border: 1 solid black; font-weight: bold;"><span><br>Lot. No.<br></span></td>
 			<td width="7%" style="text-align: center; border: 1 solid black; font-weight: bold;"><span><br>Qty(Mt)<br></span></td>
 			<td width="7%" style="text-align: center; border: 1 solid black; font-weight: bold;"><span><br>Loading Date</span></td>
+			<td width="7%" style="text-align: center; border: 1 solid black; font-weight: bold;"><span><br>Quittance Date</span></td>
 			<td width="10%" style="text-align: center; border: 1 solid black; font-weight: bold;"><span><br>Clearing Completed Date</span></td>
 			<td width="7%" style="text-align: center; border: 1 solid black; font-weight: bold;"><span><br>CLEARED<br></span></td>
-			<td width="5%" style=""></td>
+			
 		</tr>
 		$dossiers
 		<br>

@@ -138,7 +138,8 @@ $totalAll = $maClasse-> getTotalFactureExportSingle($_GET['ref_fact']);
 $total = $maClasse-> getTotalForFacturePartielle($_GET['ref_fact']);
 $arsp = $maClasse-> getARSPForFacturePartielle($_GET['ref_fact']);
 
-$taux =  number_format($maClasse-> getTauxFacture($_GET['ref_fact'])['roe_decl'], 4, ',', '.');
+$roe_decl =  number_format($maClasse-> getTauxFacture($_GET['ref_fact'])['roe_decl'], 4, ',', '.');
+$roe_liq =  number_format($maClasse-> getTauxFacture($_GET['ref_fact'])['roe_liq'], 4, ',', '.');
 $totalHT = number_format($maClasse-> getTotalHTFacture($_GET['ref_fact']), 2, ',', ' ');
 $totalTVA = number_format($maClasse-> getTotalTVAFacture($_GET['ref_fact']), 2, ',', ' ');
 $totalTTC = number_format(($maClasse-> getTotalTVAFacture($_GET['ref_fact'])+$maClasse-> getTotalHTFacture($_GET['ref_fact'])), 2, ',', ' ');
@@ -179,7 +180,7 @@ $horse = $maClasse-> getDataDossiersMultipleInvoice($_GET['ref_fact'])['horse'];
 $trailer_1 = $maClasse-> getDataDossiersMultipleInvoice($_GET['ref_fact'])['trailer_1'];
 $trailer_2 = $maClasse-> getDataDossiersMultipleInvoice($_GET['ref_fact'])['trailer_2'];
 $num_lic = $maClasse-> getDataDossiersMultipleInvoice($_GET['ref_fact'])['num_lic'];
-$roe_decl = number_format($maClasse-> getDataDossiersMultipleInvoice($_GET['ref_fact'])['roe_decl'], 4, ',', ' ');
+// $roe_decl = number_format($maClasse-> getDataDossiersMultipleInvoice($_GET['ref_fact'])['roe_decl'], 4, ',', ' ');
 $fob = number_format($maClasse-> getDataDossiersMultipleInvoice($_GET['ref_fact'])['fob'], 2, ',', ' ');
 $fret = number_format($maClasse-> getDataDossiersMultipleInvoice($_GET['ref_fact'])['fret'], 2, ',', ' ');
 $assurance = number_format($maClasse-> getDataDossiersMultipleInvoice($_GET['ref_fact'])['assurance'], 2, ',', ' ');
@@ -191,6 +192,7 @@ $nom_banq = $maClasse-> getDataCompteBancaire($num_cmpt)['nom_banq'];
 $adr_banq = $maClasse-> getDataCompteBancaire($num_cmpt)['adr_banq'];
 $intitule_cmpt = $maClasse-> getDataCompteBancaire($num_cmpt)['intitule_cmpt'];
 $swift_banq = $maClasse-> getDataCompteBancaire($num_cmpt)['swift_banq'];
+$nom_banq = $maClasse-> getDataBancaire($maClasse-> getDataDossiersMultipleInvoice($_GET['ref_fact'])['id_bank_liq'])['nom_banq'];
 
 $banque = '<tr>
 			<td width="10%" style="border-top: 1px solid black; border-left: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;INTITULE</td>
@@ -395,8 +397,10 @@ $tbl = <<<EOD
 		</tr>
 		<tr>
 			<td width="15%" style="text-align: left; "></td>
-			<td width="18%" style="text-align: left; border: 0.3px solid black; font-size: 7px;">&nbsp;Rate(CDF/USD) BCC: </td>
-			<td width="22%" style="text-align: center; border: 0.3px solid black; font-size: 7px; font-weight: bold;">$taux</td>
+			<td width="8%" style="text-align: left; border: 0.3px solid black; font-size: 7px;">&nbsp;Bank: </td>
+			<td width="16%" style="text-align: center; border: 0.3px solid black; font-size: 7px; font-weight: bold;">$nom_banq</td>
+			<td width="8%" style="text-align: left; border: 0.3px solid black; font-size: 7px;">&nbsp;Bank Rate: </td>
+			<td width="8%" style="text-align: center; border: 0.3px solid black; font-size: 7px; font-weight: bold;">$roe_decl</td>
 		</tr>
 		<tr>
 			<td width="15%" style="text-align: left; "></td>
@@ -539,7 +543,6 @@ $tbl = <<<EOD
 			<td width="83%" style="">DETAILS - EXPORT CLEARING $marchandise LOADS</td>
 		</tr>
 		<tr>
-			<td width="5%" style=""></td>
 			<td width="3%" style="text-align: center; border: 1 solid black; font-weight: bold;"><span><br>#<br></span></td>
 			<td width="10%" style="text-align: center; border: 1 solid black; font-weight: bold;"><span><br>MCA File No<br></span></td>
 			<td width="9%" style="text-align: center; border: 1 solid black; font-weight: bold;"><span><br>Destination<br></span></td>
@@ -550,9 +553,9 @@ $tbl = <<<EOD
 			<td width="9%" style="text-align: center; border: 1 solid black; font-weight: bold;"><span><br>Lot. No.<br></span></td>
 			<td width="7%" style="text-align: center; border: 1 solid black; font-weight: bold;"><span><br>Qty(Mt)<br></span></td>
 			<td width="7%" style="text-align: center; border: 1 solid black; font-weight: bold;"><span><br>Loading Date</span></td>
+			<td width="7%" style="text-align: center; border: 1 solid black; font-weight: bold;"><span><br>Quittance Date</span></td>
 			<td width="10%" style="text-align: center; border: 1 solid black; font-weight: bold;"><span><br>Clearing Completed Date</span></td>
 			<td width="7%" style="text-align: center; border: 1 solid black; font-weight: bold;"><span><br>CLEARED<br></span></td>
-			<td width="5%" style=""></td>
 		</tr>
 		$dossiers
 		<br>
