@@ -6077,8 +6077,7 @@
 				$total_poids+=$reponse['poids'];
 
 				$tbl .= '
-						<tr>				
-							<td width="5%" style=""></td>
+						<tr>
 							<td width="3%" style="text-align: center; border: 1 solid black;">'.$compteur.'</td>
 							<td width="10%" style="text-align: center; border: 1 solid black;">'.$reponse['ref_dos'].'</td>
 							<td width="9%" style="text-align: center; border: 1 solid black;">'.$reponse['destination'].'</td>
@@ -6089,9 +6088,9 @@
 							<td width="9%" style="text-align: center; border: 1 solid black;">'.$reponse['num_lot'].'</td>
 							<td width="7%" style="text-align: center; border: 1 solid black;">'.$reponse['poids'].'</td>
 							<td width="7%" style="text-align: center; border: 1 solid black;">'.$reponse['load_date'].'</td>
+							<td width="7%" style="text-align: center; border: 1 solid black;">'.$reponse['exit_drc'].'</td>
 							<td width="10%" style="text-align: center; border: 1 solid black;">'.$reponse['exit_drc'].'</td>
 							<td width="7%" style="text-align: center; border: 1 solid black;">'.$reponse['cleared'].'</td>
-							<td width="5%" style=""></td>
 						</tr>
 					';
 
@@ -6099,13 +6098,12 @@
 
 			$tbl .= '
 					<tr>				
-						<td width="5%" style=""></td>
 						<td width="61%" style="text-align: center; border: 1 solid black;"></td>
 						<td width="7%" style="text-align: center; border: 1 solid black;">'.$total_poids.'</td>
 						<td width="7%" style="text-align: center; border: 1 solid black;"></td>
+						<td width="7%" style="text-align: center; border: 1 solid black;"></td>
 						<td width="10%" style="text-align: center; border: 1 solid black;"></td>
 						<td width="7%" style="text-align: center; border: 1 solid black;"></td>
-						<td width="5%" style=""></td>
 					</tr>
 				';
 
@@ -13253,7 +13251,14 @@
 												WHERE id_banq = ?");
 			$requete-> execute(array($entree['id_banq']));
 			$reponse = $requete-> fetch();
-			return $reponse;
+			if ($reponse) {
+				return $reponse;
+			}else{
+				$reponse['id_banq'] = null;
+				$reponse['nom_banq'] = '-';
+				return $reponse;
+			}
+			
 		}
 
 		public function getRangDossierFacture($ref_fact){
