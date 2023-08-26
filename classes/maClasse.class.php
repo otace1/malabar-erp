@@ -6095,8 +6095,8 @@
 							<td width="5%" style="text-align: center; border: 1 solid black; font-size: 7px;">'.$reponse['ref_liq'].'</td>
 							<td width="5%" style="text-align: center; border: 1 solid black; font-size: 7px;">'.$reponse['date_liq'].'</td>
 							<td width="5%" style="text-align: center; border: 1 solid black; font-size: 7px;">'.$reponse['ref_quit'].'</td>
-							<td width="5%" style="text-align: center; border: 1 solid black; font-size: 7px;">'.number_format($reponse['roe_decl'], 4, ',', '.').'</td>
 							<td width="5%" style="text-align: center; border: 1 solid black; font-size: 7px;">'.$reponse['exit_drc'].'</td>
+							<td width="5%" style="text-align: center; border: 1 solid black; font-size: 7px;">'.number_format($reponse['roe_decl'], 4, ',', '.').'</td>
 							<td width="7%" style="text-align: center; border: 1 solid black; font-size: 7px;">'.$reponse['exit_drc'].'</td>
 							<td width="6%" style="text-align: center; border: 1 solid black; font-size: 7px;">'.$reponse['cleared'].'</td>
 						</tr>
