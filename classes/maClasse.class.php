@@ -6060,7 +6060,11 @@
 													dos.trailer_2 AS trailer_2,
 													dos.num_lot AS num_lot,
 													dos.poids AS poids,
+													dos.ref_liq AS ref_liq,
+													dos.ref_quit AS ref_quit,
+													dos.roe_decl AS roe_decl,
 													DATE_FORMAT(dos.load_date, "%d/%m/%Y") AS load_date,
+													DATE_FORMAT(dos.date_liq, "%d/%m/%Y") AS date_liq,
 													DATE_FORMAT(dos.date_quit, "%d/%m/%Y") AS exit_drc,
 													-- IF(dos.cleared="1",
 													-- 	"CLEARED",
@@ -6078,19 +6082,23 @@
 
 				$tbl .= '
 						<tr>
-							<td width="3%" style="text-align: center; border: 1 solid black;">'.$compteur.'</td>
-							<td width="10%" style="text-align: center; border: 1 solid black;">'.$reponse['ref_dos'].'</td>
-							<td width="9%" style="text-align: center; border: 1 solid black;">'.$reponse['destination'].'</td>
-							<td width="9%" style="text-align: center; border: 1 solid black;">'.$reponse['transporter'].'</td>
-							<td width="7%" style="text-align: center; border: 1 solid black;">'.$reponse['horse'].'</td>
-							<td width="7%" style="text-align: center; border: 1 solid black;">'.$reponse['trailer_1'].'</td>
-							<td width="7%" style="text-align: center; border: 1 solid black;">'.$reponse['trailer_2'].'</td>
-							<td width="9%" style="text-align: center; border: 1 solid black;">'.$reponse['num_lot'].'</td>
-							<td width="7%" style="text-align: center; border: 1 solid black;">'.$reponse['poids'].'</td>
-							<td width="7%" style="text-align: center; border: 1 solid black;">'.$reponse['load_date'].'</td>
-							<td width="7%" style="text-align: center; border: 1 solid black;">'.$reponse['exit_drc'].'</td>
-							<td width="10%" style="text-align: center; border: 1 solid black;">'.$reponse['exit_drc'].'</td>
-							<td width="7%" style="text-align: center; border: 1 solid black;">'.$reponse['cleared'].'</td>
+							<td width="2%" style="text-align: center; border: 1 solid black; font-size: 7px;">'.$compteur.'</td>
+							<td width="9%" style="text-align: center; border: 1 solid black; font-size: 7px;">'.$reponse['ref_dos'].'</td>
+							<td width="7%" style="text-align: center; border: 1 solid black; font-size: 7px;">'.$reponse['destination'].'</td>
+							<td width="7%" style="text-align: center; border: 1 solid black; font-size: 7px;">'.$reponse['transporter'].'</td>
+							<td width="7%" style="text-align: center; border: 1 solid black; font-size: 7px;">'.$reponse['horse'].'</td>
+							<td width="5%" style="text-align: center; border: 1 solid black; font-size: 7px;">'.$reponse['trailer_1'].'</td>
+							<td width="5%" style="text-align: center; border: 1 solid black; font-size: 7px;">'.$reponse['trailer_2'].'</td>
+							<td width="9%" style="text-align: center; border: 1 solid black; font-size: 7px;">'.$reponse['num_lot'].'</td>
+							<td width="5%" style="text-align: center; border: 1 solid black; font-size: 7px;">'.number_format($reponse['poids'], 3, ',', '.').'</td>
+							<td width="5%" style="text-align: center; border: 1 solid black; font-size: 7px;">'.$reponse['load_date'].'</td>
+							<td width="5%" style="text-align: center; border: 1 solid black; font-size: 7px;">'.$reponse['ref_liq'].'</td>
+							<td width="5%" style="text-align: center; border: 1 solid black; font-size: 7px;">'.$reponse['date_liq'].'</td>
+							<td width="5%" style="text-align: center; border: 1 solid black; font-size: 7px;">'.$reponse['ref_quit'].'</td>
+							<td width="5%" style="text-align: center; border: 1 solid black; font-size: 7px;">'.number_format($reponse['roe_decl'], 4, ',', '.').'</td>
+							<td width="5%" style="text-align: center; border: 1 solid black; font-size: 7px;">'.$reponse['exit_drc'].'</td>
+							<td width="7%" style="text-align: center; border: 1 solid black; font-size: 7px;">'.$reponse['exit_drc'].'</td>
+							<td width="6%" style="text-align: center; border: 1 solid black; font-size: 7px;">'.$reponse['cleared'].'</td>
 						</tr>
 					';
 
@@ -6098,12 +6106,9 @@
 
 			$tbl .= '
 					<tr>				
-						<td width="61%" style="text-align: center; border: 1 solid black;"></td>
-						<td width="7%" style="text-align: center; border: 1 solid black;">'.$total_poids.'</td>
-						<td width="7%" style="text-align: center; border: 1 solid black;"></td>
-						<td width="7%" style="text-align: center; border: 1 solid black;"></td>
-						<td width="10%" style="text-align: center; border: 1 solid black;"></td>
-						<td width="7%" style="text-align: center; border: 1 solid black;"></td>
+						<td width="51%" style="text-align: center; border: 1 solid black; font-size: 7px;"></td>
+						<td width="5%" style="text-align: center; border: 1 solid black; font-size: 7px;">'.number_format($total_poids, 3, ',', '.').'</td>
+						<td width="43%" style="text-align: center; border: 1 solid black; font-size: 7px;"></td>
 					</tr>
 				';
 
@@ -18268,6 +18273,12 @@
 			                <a href="dossier.php?id_cli=<?php echo $reponse['id_cli'];?>&amp;id_mod_trac=<?php echo $id_mod_lic;?>&amp;id_mod_trans=1&commodity=&id_march=7" class="nav-link" <?php echo $style;?>>
 			                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="far fa-circle nav-icon"></i>
 			                  <p>SODIUM ROUTE</p>
+			                </a>
+			            </li>
+		              	<li class="nav-item">
+			                <a href="dossier.php?id_cli=<?php echo $reponse['id_cli'];?>&amp;id_mod_trac=<?php echo $id_mod_lic;?>&amp;id_mod_trans=1&commodity=&id_march=23" class="nav-link" <?php echo $style;?>>
+			                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="far fa-circle nav-icon"></i>
+			                  <p>MAGNESIUM OXIDE ROUTE</p>
 			                </a>
 			            </li>
 		              	<?php
