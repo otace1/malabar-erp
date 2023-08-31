@@ -2053,6 +2053,8 @@
   		$maClasse-> creerTauxBanque($id_taux_bcc, 2, $_POST['date_taux'], $_POST['rawbank']);
   		//equity
   		$maClasse-> creerTauxBanque($id_taux_bcc, 3, $_POST['date_taux'], $_POST['equity']);
+  		//access
+  		$maClasse-> creerTauxBanque($id_taux_bcc, 10, $_POST['date_taux'], $_POST['access']);
 		
 		$maClasse-> appliquer_taux($id_taux_bcc);
 		

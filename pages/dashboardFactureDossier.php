@@ -250,8 +250,11 @@
                               <th style=" text-align: center;" colspan="2">RAWBANK</th>
                               <th style=" text-align: center;" colspan="2">EQUITY BCDC</th>
                               <th style=" text-align: center;" colspan="2">ECOBANK</th>
+                              <th style=" text-align: center;" colspan="2">ACCESS BANK</th>
                             </tr>
                             <tr class="">
+                              <th style=" text-align: center;">Amt</th>
+                              <th style=" text-align: center;">Diff</th>
                               <th style=" text-align: center;">Amt</th>
                               <th style=" text-align: center;">Diff</th>
                               <th style=" text-align: center;">Amt</th>
@@ -362,6 +365,10 @@ if(isset($_GET['id_mod_lic_fact']) && isset($_GET['id_mod_lic_fact'])){
         <div class="form-group">
           <label for="x_card_code" class="control-label mb-1">ECOBANK</label>
           <input name="ecobank" type="number" min="0" step="0.000001" class="form-control form-control-sm cc-exp">
+        </div>
+        <div class="form-group">
+          <label for="x_card_code" class="control-label mb-1">ACCESS BANK</label>
+          <input name="access" type="number" min="0" step="0.000001" class="form-control form-control-sm cc-exp">
         </div>
       </div>
       <div class="modal-footer justify-content-between">
