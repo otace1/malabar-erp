@@ -16696,6 +16696,7 @@
 			$ecobank_preced = 0;
 			$rawbank_preced = 0;
 			$equity_preced = 0;
+			$access_preced = 0;
 
 			$requete = $connexion-> query("SELECT * FROM (
 												SELECT * FROM taux_bcc ORDER BY date_taux DESC LIMIT 0, 20
@@ -16708,6 +16709,7 @@
 				$reste_ecobank = $this-> getMontantTauxBanque(5, $reponse['id'])-$reponse['montant'];
 				$reste_rawbank = $this-> getMontantTauxBanque(2, $reponse['id'])-$reponse['montant'];
 				$reste_equity = $this-> getMontantTauxBanque(3, $reponse['id'])-$reponse['montant'];
+				$reste_access = $this-> getMontantTauxBanque(10, $reponse['id'])-$reponse['montant'];
 
 				if ($ecobank_preced > $reste_ecobank) {
 					$arrow_ecobank = '<i class="fa fa-arrow-down text-danger"></i>';
@@ -16733,6 +16735,14 @@
 					$arrow_equity = '<i class="fa fa-minus text-info"></i>';
 				}
 
+				if ($access_preced > $reste_access) {
+					$arrow_access = '<i class="fa fa-arrow-down text-danger"></i>';
+				}else if ($access_preced < $reste_access) {
+					$arrow_access = '<i class="fa fa-arrow-up text-success"></i>';
+				}else{
+					$arrow_access = '<i class="fa fa-minus text-info"></i>';
+				}
+
 				$tbl .= '<tr>
 							<td class="" style="text-align: center;" class="">
 								'.$compteur.'
@@ -16747,6 +16757,8 @@
 							<td class="" style="text-align: right;" class="">'.$arrow_equity.number_format($reste_equity, 3, ',', '.').'</td>
 							<td class="" style="text-align: right;" class="">'.number_format($this-> getMontantTauxBanque(5, $reponse['id']), 3, ',', '.').'</td>
 							<td class="" style="text-align: right;" class="">'.$arrow_ecobank.number_format($reste_ecobank, 3, ',', '.').'</td>
+							<td class="" style="text-align: right;" class="">'.number_format($this-> getMontantTauxBanque(10, $reponse['id']), 3, ',', '.').'</td>
+							<td class="" style="text-align: right;" class="">'.$arrow_access.number_format($reste_access, 3, ',', '.').'</td>
 							<td>
 								<a href="#" onclick="delete_taux_banque('.$reponse['id'].')"><i class="fa fa-times text-danger"></i></a>
 								<a href="#" onclick="appliquer_taux('.$reponse['id'].')"><i class="fa fa-check text-sucess"></i></a>
@@ -16882,6 +16894,7 @@
 			$requete = $connexion-> prepare("SELECT ref_dos, id_dos, num_lot, 
 													horse, trailer_1, trailer_2, 
 													poids, roe_decl, id_bank_liq,
+													roe_liq,
 													CONCAT(ref_decl, ' ', DATE_FORMAT(date_decl, '%d/%m/%Y')) AS declaration,
 													CONCAT(ref_liq, ' ', DATE_FORMAT(date_liq, '%d/%m/%Y')) AS liquidation,
 													CONCAT(ref_quit, ' ', DATE_FORMAT(date_quit, '%d/%m/%Y')) AS quittance,
@@ -16943,8 +16956,11 @@
 		                ?>
 		              </select>
 				</td>
-				<td onload="getBank(<?php echo $reponse['id_bank_liq'];?>, <?php echo $compteur;?>); alert('<?php echo $compteur;?>');">
+				<td>
 					<input type="number" min="0" step="0.000001" style="text-align: center; width: 8em;" onblur="calculDDE(<?php echo $compteur;?>);" id="roe_decl_<?php echo $compteur;?>" name="roe_decl_<?php echo $compteur;?>" value="<?php echo $reponse['roe_decl'];?>" class="bg bg-dark">
+				</td>
+				<td>
+					<input type="number" min="0" step="0.000001" style="text-align: center; width: 8em;" onblur="maj_roe_liq(<?php echo $reponse['id_dos'];?>, this.value, <?php echo $compteur;?>)" id="roe_liq_<?php echo $compteur;?>" name="roe_liq_<?php echo $compteur;?>" value="<?php echo $reponse['roe_liq'];?>" class="bg bg-dark">
 				</td>
 				<td>
 					<input type="number" min="0" style="text-align: center; width: 8em;" onblur="calculDDE(<?php echo $compteur;?>);" id="dde_<?php echo $compteur;?>" name="dde_<?php echo $compteur;?>" class="bg bg-dark">
