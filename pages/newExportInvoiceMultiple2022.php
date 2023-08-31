@@ -102,7 +102,8 @@
                   <th>Qty(Mt)</th>
                   <th>Action</th>
                   <th>Bank</th>
-                  <th>Exchange Rate</th>
+                  <th>Bank Rate</th>
+                  <th>BCC Rate</th>
                   <th>DDE(CDF)</th>
                   <th>RIE(CDF)</th>
                   <th>RLS(CDF)</th>
@@ -201,6 +202,28 @@
           window.location="../deconnexion.php";
         }else{
           $('#roe_decl_'+compteur).val(data.roe_decl);
+        }
+      },
+      complete: function () {
+          $('#spinner-div').hide();//Request is complete so hide spinner
+      }
+    });
+
+  }
+
+  function maj_roe_liq(id_dos, roe_liq, compteur){
+    $('#spinner-div').show();
+    $.ajax({
+      type: 'post',
+      url: 'ajax.php',
+      data: {id_dos: id_dos, roe_liq: roe_liq, operation: 'maj_roe_liq'},
+      dataType: 'json',
+      success:function(data){
+        if (data.logout) {
+          alert(data.logout);
+          window.location="../deconnexion.php";
+        }else{
+          $('#roe_liq_'+compteur).val(roe_liq);
         }
       },
       complete: function () {
