@@ -2243,7 +2243,8 @@
 		public function creerDossierIBAcid($ref_dos, $id_cli, $ref_fact, $t1, $poids, 
 											$num_lic, $id_mod_lic, $id_march, $id_mod_trans, 
 											$id_util, $horse, $trailer_1, $trailer_2, $klsa_arriv, 
-											$crossing_date, $wiski_arriv, $wiski_dep, $ref_crf, $date_crf){
+											$crossing_date, $wiski_arriv, $wiski_dep, $ref_crf, 
+											$date_crf, $fob){
 			include('connexion.php');
 
 			/*echo '<br> ref_dos = '.$ref_dos;echo '<br> id_cli = '.$id_cli;
@@ -2263,7 +2264,7 @@
 			$entree['id_util'] = $id_util; $entree['horse'] = $horse; $entree['trailer_1'] = $trailer_1; 
 			$entree['trailer_2'] = $trailer_2; $entree['klsa_arriv'] = $klsa_arriv; $entree['crossing_date'] = $crossing_date; 
 			$entree['wiski_arriv'] = $wiski_arriv; $entree['wiski_dep'] = $wiski_dep; 
-			$entree['ref_crf'] = $ref_crf; $entree['date_crf'] = $date_crf; 
+			$entree['ref_crf'] = $ref_crf; $entree['date_crf'] = $date_crf; ; $entree['fob'] = $fob; 
 
 			if($entree['klsa_arriv'] == '' || (!isset($entree['klsa_arriv'])) ){
 				$entree['klsa_arriv'] = NULL;
@@ -2292,16 +2293,16 @@
 			$requete = $connexion-> prepare('INSERT INTO dossier(ref_dos, id_cli, ref_fact, t1, poids, 
 														num_lic, id_mod_lic, id_march, id_mod_trans, 
 														id_util, horse, trailer_1, trailer_2, klsa_arriv, 
-														crossing_date, wiski_arriv, wiski_dep, ref_crf, date_crf)
+														crossing_date, wiski_arriv, wiski_dep, ref_crf, date_crf, fob)
 												VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 
-														?, ?, ?, ?, ?, ?, ?)');
+														?, ?, ?, ?, ?, ?, ?, ?)');
 			$requete-> execute(array($entree['ref_dos'], $entree['id_cli'], $entree['ref_fact'], 
 									$entree['t1'], $entree['poids'], $entree['num_lic'], 
 									$entree['id_mod_lic'], $entree['id_march'], $entree['id_mod_trans'], 
 									$entree['id_util'], $entree['horse'], $entree['trailer_1'], 
 									$entree['trailer_2'], $entree['klsa_arriv'], $entree['crossing_date'], 
 									$entree['wiski_arriv'], $entree['wiski_dep'], 
-									$entree['ref_crf'], $entree['date_crf']));
+									$entree['ref_crf'], $entree['date_crf'], $entree['fob']));
 		}
 			
 		public function creerDossierIB2($ref_dos, $id_cli, $ref_fact, $fob, 
@@ -12379,7 +12380,7 @@
 				return $reponse;
 			}else{
 				$reponse['montant'] = NULL;
-				$reponse['tva'] = NULL;
+				$reponse['tva'] = '0';
 				return $reponse;
 			}
 		}
@@ -13247,6 +13248,12 @@
 													DATE_FORMAT(dos.date_quit, '%d/%m/%Y') AS date_quit,
 													DATE_FORMAT(dos.load_date, '%d/%m/%Y') AS load_date,
 													DATE_FORMAT(dos.exit_drc, '%d/%m/%Y') AS exit_drc,
+													dos.date_quit AS date_quit2,
+													-- IF(dos.date_quit<='2023-08-19',
+													IF(DATEDIFF(dos.date_quit,'2023-08-24')<=0,
+														'BCC',
+														'Bank'
+													) AS text_banq,
 													(IF(dos.fob IS NULL, 0, dos.fob) +IF(dos.fret IS NULL, 0, dos.fret)+IF(dos.assurance IS NULL, 0, dos.assurance)+IF(dos.autre_frais IS NULL, 0, dos.autre_frais)) AS cif,
 													(IF(dos.fob_usd IS NULL, 0, dos.fob_usd) +IF(dos.fret_usd IS NULL, 0, dos.fret_usd)+IF(dos.assurance_usd IS NULL, 0, dos.assurance_usd)+IF(dos.autre_frais_usd IS NULL, 0, dos.autre_frais_usd)) AS cif_usd,
 													((IF(dos.fob_usd IS NULL, 0, dos.fob_usd) +IF(dos.fret_usd IS NULL, 0, dos.fret_usd)+IF(dos.assurance_usd IS NULL, 0, dos.assurance_usd)+IF(dos.autre_frais_usd IS NULL, 0, dos.autre_frais_usd)))*dos.roe_inv AS cif_cdf,
@@ -35264,11 +35271,40 @@
 			return $reponse['nbre'];
 		}
 
+		public function getNombreMcaFileAcide($id_cli, $id_mod_trans, $id_march, $id_mod_lic){
+			include('connexion.php');
+
+			$entree['id_cli'] = $id_cli;
+			$entree['id_mod_trans'] = $id_mod_trans;
+			$entree['id_march'] = $id_march;
+			$entree['id_mod_lic'] = $id_mod_lic;
+			$entree['annee'] = date('Y');
+
+			$requete = $connexion-> prepare("SELECT COUNT(id_dos) AS nbre 
+												FROM dossier
+												WHERE id_cli = ?
+													AND id_mod_trans = ?
+													AND id_march = ?
+													AND id_mod_lic = ?
+													AND YEAR(date_creat_dos) = ?");
+			$requete-> execute(array($entree['id_cli'], $entree['id_mod_trans'], 
+									$entree['id_march'], $entree['id_mod_lic'], $entree['annee']));
+
+			$reponse = $requete-> fetch();
+
+			return $reponse['nbre'];
+		}
+
 		public function getMcaFileExport($id_cli, $id_mod_trans, $id_march, $id_mod_lic, $compteur, $step=NULL){
 			include('connexion.php');
 			$entree['id_cli'] = $id_cli;
 			$code = '';
-			$nbre = $this-> getNombreMcaFileExport($id_cli, $id_mod_trans, $id_march, $id_mod_lic);
+			if ($id_cli==869 && $id_mod_lic==2) {
+				$nbre = $this-> getNombreMcaFileAcide($id_cli, $id_mod_trans, $id_march, $id_mod_lic);
+			}else{
+				$nbre = $this-> getNombreMcaFileExport($id_cli, $id_mod_trans, $id_march, $id_mod_lic);
+			}
+			
 			if ($nbre > 20) {
 				
 					$i = $nbre-10;
@@ -35317,6 +35353,7 @@
 				if ($id_cli == 869 && $id_mod_lic == 2) {
 					$a = $this-> getTailleCompteur2($i);
 					$code = $this-> codePourClient($id_cli).'-'.$code_marchandise.'-'.date('y').'-'.$cod_mod_trans.$a;
+					// return $code;
 				}else{
 					if ( ($id_cli == '845') && ($id_mod_lic == '1') && (date('Y')=='2021') && ($id_march == '13') ) {
 						$a = $this-> getTailleCompteur2($i);
@@ -41971,6 +42008,57 @@
 
 				$reponse['compteur'] = $compteur;
 				$reponse['dossier'] = '<a href="#" onclick="select_dossier(\''.$reponse['id_dos'].'\', \''.$reponse['ref_dos'].'\')">'.$reponse['ref_dos'].'</a>';
+				$row[] = $reponse;
+
+			}$requete-> closeCursor();
+
+			return $row;
+
+		}
+
+		public function nouveauDossierLicence($id_cli, $id_mod_lic){
+			include("connexion.php");
+			$entree['id_cli'] = $id_cli;
+			$entree['id_mod_lic'] = $id_mod_lic;
+			$compteur=0;
+
+			$row = array();
+
+			$requete = $connexion-> prepare("SELECT l.num_lic AS num_lic,
+													l.commodity AS commodity,
+													l.fob AS fob_lic,
+													l.poids AS poids_lic,
+													SUM(
+														IF(dos.fob IS NULL, 0, dos.fob)
+													) AS sum_fob,
+													SUM(
+														IF(dos.poids IS NULL, 0, dos.poids)
+													) AS sum_poids,
+													(
+														l.fob - SUM(
+															IF(dos.fob IS NULL, 0, dos.fob)
+														) 
+													)AS solde_fob,
+													(
+														l.poids - SUM(
+															IF(dos.poids IS NULL, 0, dos.poids)
+														) 
+													)AS solde_poids
+											FROM licence l
+												LEFT JOIN dossier dos
+													ON l.num_lic = dos.num_lic
+											WHERE l.id_cli = ?
+												AND l.id_mod_lic = ?
+												AND l.num_lic IN (SELECT num_lic FROM expiration_licence WHERE date_exp >= DATE(CURRENT_DATE))
+											GROUP BY l.num_lic
+											ORDER BY l.date_val DESC");
+			$requete-> execute(array($entree['id_cli'], $entree['id_mod_lic']));
+			while ($reponse = $requete-> fetch()) {
+				$compteur++;
+
+				$reponse['compteur'] = $compteur;
+				$reponse['date_exp'] = $this-> getLastEpirationLicence2($reponse['num_lic']);
+				$reponse['btn_action'] = '<a href="#" class="" onclick="modal_nouveauDossierAcid(\''.$reponse['num_lic'].'\', \''.$id_cli.'\', \''.$id_mod_lic.'\')"><i class="fa fa-calculator"></i></a>';
 				$row[] = $reponse;
 
 			}$requete-> closeCursor();
