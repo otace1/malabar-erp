@@ -62,13 +62,13 @@ if($_GET['id_cli'] == 869 && $_GET['id_mod_trac'] == 2){
           <div class="col-md-12">
             
             <div class="card-body table-responsive p-0">
-                <table id="user_data_2" cellspacing="0" width="100%" class="table table-hover text-nowrap table-sm">
-                  <thead>
+                <table id="user_data_2" cellspacing="0" width="100%" class="tableau-de-donnees  table table-hover text-nowrap table-sm">
+                  <thead class="bg bg-dark">
                     <tr class="">
-                      <th style="">
+                      <th class="col_1" style="">
                         #
                       </th>
-                      <th style="">
+                      <th class="col_6" style="">
                         MCA File REF
                       </th>
                       <th style="">Licence Number</th>
