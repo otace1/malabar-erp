@@ -155,6 +155,8 @@ $num_tva = $maClasse-> getClient($maClasse-> getDataDossiersMultipleInvoice($_GE
 $nom_mod_trans = $maClasse-> getModeTransport($maClasse-> getDataDossiersMultipleInvoice($_GET['ref_fact'])['id_mod_trans'])['nom_mod_trans'];
 $reg_dgda = $maClasse-> getDataDossiersMultipleInvoice($_GET['ref_fact'])['reg_dgda'];
 $load_date = $maClasse-> getDataDossiersMultipleInvoice($_GET['ref_fact'])['load_date'];
+
+
 $exit_drc = $maClasse-> getDataDossiersMultipleInvoice($_GET['ref_fact'])['exit_drc'];
 $bur_douane = $maClasse-> getDataDossiersMultipleInvoice($_GET['ref_fact'])['bur_douane'];
 $commodity = $maClasse-> getDataDossiersMultipleInvoice($_GET['ref_fact'])['commodity'];
@@ -193,6 +195,8 @@ $adr_banq = $maClasse-> getDataCompteBancaire($num_cmpt)['adr_banq'];
 $intitule_cmpt = $maClasse-> getDataCompteBancaire($num_cmpt)['intitule_cmpt'];
 $swift_banq = $maClasse-> getDataCompteBancaire($num_cmpt)['swift_banq'];
 $nom_banq = $maClasse-> getDataBancaire($maClasse-> getDataDossiersMultipleInvoice($_GET['ref_fact'])['id_bank_liq'])['nom_banq'];
+
+$text_bank = $maClasse-> getDataDossiersMultipleInvoice($_GET['ref_fact'])['text_banq'];
 
 $banque = '<tr>
 			<td width="10%" style="border-top: 1px solid black; border-left: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;INTITULE</td>
@@ -543,7 +547,7 @@ $tbl = <<<EOD
 			<td width="83%" style="">DETAILS - EXPORT CLEARING $marchandise LOADS</td>
 		</tr>
 		<tr>
-			<td width="2%" style="text-align: center; border: 1 solid black; font-weight: bold; font-size: 7px;"><span><br>#<br></span></td>
+			<td width="2%" style="text-align: center; border: 1 solid black; font-weight: bold; font-size: 5px;"><span><br>#<br></span></td>
 			<td width="9%" style="text-align: center; border: 1 solid black; font-weight: bold; font-size: 6px;"><span><br>MCA File No<br></span></td>
 			<td width="7%" style="text-align: center; border: 1 solid black; font-weight: bold; font-size: 6px;"><span><br>Destination<br></span></td>
 			<td width="7%" style="text-align: center; border: 1 solid black; font-weight: bold; font-size: 6px;"><span><br>Transporter<br></span></td>
@@ -558,7 +562,7 @@ $tbl = <<<EOD
 			<td width="5%" style="text-align: center; border: 1 solid black; font-weight: bold; font-size: 6px;"><span><br>Liq. Amt. CDF</span></td>
 			<td width="4%" style="text-align: center; border: 1 solid black; font-weight: bold; font-size: 6px;"><span><br>Quittance Ref.</span></td>
 			<td width="4%" style="text-align: center; border: 1 solid black; font-weight: bold; font-size: 6px;"><span><br>Quittance Date</span></td>
-			<td width="5%" style="text-align: center; border: 1 solid black; font-weight: bold; font-size: 6px;"><span><br>Bank Rate</span></td>
+			<td width="5%" style="text-align: center; border: 1 solid black; font-weight: bold; font-size: 6px;"><span><br>$text_bank Rate</span></td>
 			<td width="5%" style="text-align: center; border: 1 solid black; font-weight: bold; font-size: 6px;"><span><br>Liq. Amt. USD</span></td>
 			<td width="7%" style="text-align: center; border: 1 solid black; font-weight: bold; font-size: 6px;"><span><br>Clearing Completed Date</span></td>
 			<td width="5%" style="text-align: center; border: 1 solid black; font-weight: bold; font-size: 6px;"><span><br>CLEARED<br></span></td>

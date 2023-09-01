@@ -112,7 +112,7 @@
           </div>
           <div class="col-md-2">
             <div class="form-group">
-              <label for="inputEmail3" class="col-form-label">BCDC Rate</label>
+              <label for="inputEmail3" class="col-form-label">BCC Rate</label>
               <input type="number" step="0.0001" class="form-control form-control-sm" name="roe_liq" id="roe_liq" onblur="maj_roe_liq(id_dos.value, this.value)">
             </div>
           </div>

@@ -342,6 +342,8 @@ $total_25 = number_format($maClasse-> getMontantFactureDossierDeboursWithTVA($_G
 $sub_total_3 = $maClasse-> getTotalFactureMMGExport_3($_GET['ref_fact']);
 $nom_banq = $maClasse-> getDataBancaire($maClasse-> getDataDossiersMultipleInvoice($_GET['ref_fact'])['id_bank_liq'])['nom_banq'];
 
+$text_bank = $maClasse-> getDataDossiersMultipleInvoice($_GET['ref_fact'])['text_banq'];
+
 $banque = '<tr>
 			<td width="10%" style="border-top: 1px solid black; border-left: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;INTITULE</td>
 			<td width="35%" style="border-top: 1px solid black; border-right: 1px solid black;  font-size: 7px;">&nbsp;MALABAR CLEARING AGENCY SARL</td>
@@ -779,7 +781,7 @@ $pdf->AddPage('L', 'A4');
 if ( ($maClasse-> getFactureGlobale($_GET['ref_fact'])['validation']) == '0' ) {
 	$pdf->Image('../images/no_valid.jpg', 150, 2, 30, '', '', '', '', false, 300);
 }else{
-	$pdf->Image('../images/signature_facture/'.$maClasse-> getDataUtilisateur($maClasse-> getFactureGlobale($_GET['ref_fact'])['id_util_validation'])['signature_facture'], 200, 150, 55, '', '', '', '', false, 300);
+	$pdf->Image('../images/signature_facture/'.$maClasse-> getDataUtilisateur($maClasse-> getFactureGlobale($_GET['ref_fact'])['id_util_validation'])['signature_facture'], 200, 150, $maClasse-> getDataUtilisateur($maClasse-> getFactureGlobale($_GET['ref_fact'])['id_util_validation'])['size_signature_facture_2'], '', '', '', '', false, 300);
 	
 }
 
@@ -819,7 +821,7 @@ $tbl = <<<EOD
 			<td width="5%" style="text-align: center; border: 1 solid black; font-weight: bold; font-size: 6px;"><span><br>Liq. Amt. CDF</span></td>
 			<td width="4%" style="text-align: center; border: 1 solid black; font-weight: bold; font-size: 6px;"><span><br>Quittance Ref.</span></td>
 			<td width="4%" style="text-align: center; border: 1 solid black; font-weight: bold; font-size: 6px;"><span><br>Quittance Date</span></td>
-			<td width="5%" style="text-align: center; border: 1 solid black; font-weight: bold; font-size: 6px;"><span><br>Bank Rate</span></td>
+			<td width="5%" style="text-align: center; border: 1 solid black; font-weight: bold; font-size: 6px;"><span><br>$text_bank Rate</span></td>
 			<td width="5%" style="text-align: center; border: 1 solid black; font-weight: bold; font-size: 6px;"><span><br>Liq. Amt. USD</span></td>
 			<td width="7%" style="text-align: center; border: 1 solid black; font-weight: bold; font-size: 6px;"><span><br>Clearing Completed Date</span></td>
 			<td width="5%" style="text-align: center; border: 1 solid black; font-weight: bold; font-size: 6px;"><span><br>CLEARED<br></span></td>

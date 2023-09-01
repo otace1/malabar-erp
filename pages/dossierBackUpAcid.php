@@ -1,5 +1,5 @@
 <?php
-  include("tetePopCDN.php");
+  include("tete.php");
   include("menuHaut.php");
   include("menuGauche.php");
   //include('dossierExcel.php');
@@ -734,7 +734,7 @@ for ($i=1; $i <= 15 ; $i++) {
                                                         $_POST['trailer_2_'.$i], $_POST['klsa_arriv_'.$i], 
                                                         $_POST['crossing_date_'.$i], 
                                                         $_POST['wiski_arriv_'.$i], $_POST['wiski_dep_'.$i],
-                                                        $_POST['ref_crf_'.$i], $_POST['date_crf_'.$i], $_POST['fob_'.$i]);
+                                                        $_POST['ref_crf_'.$i], $_POST['date_crf_'.$i]);
                               }
 
                             }
@@ -850,7 +850,7 @@ for ($i=1; $i <= 15 ; $i++) {
                 }else if($_GET['id_mod_trac'] == '2'){
                   if ($_GET['id_cli'] == 869 && $_GET['id_march'] != '11' && $_SESSION['id_role'] != '7' && $_SESSION['id_role'] != '8' && $_SESSION['id_role'] != '9' && $_SESSION['id_role'] != '10') {
                     ?>
-                  <button class="btn btn-xs btn-info square-btn-adjust" data-toggle="modal" onclick="modal_nouveauDossierLicence();" <?php echo $maClasse-> getDataUtilisateur($_SESSION['id_util'])['tracking_enab']?>>
+                  <button class="btn btn-xs btn-info square-btn-adjust" data-toggle="modal" data-target=".nouveauDossierAcid" <?php echo $maClasse-> getDataUtilisateur($_SESSION['id_util'])['tracking_enab']?>>
                       <i class="fa fa-plus"></i> Nouveau Dossier
                   </button>
                     <?php
@@ -1096,6 +1096,9 @@ for ($i=1; $i <= 15 ; $i++) {
                                                 $premiere_entree, $nombre_dossier_par_page, $_GET['id_march'], 
                                                 $_GET['statut'], $_GET['num_lic'], $_GET['cleared']);
 
+                        /*$maClasse-> afficherDossierClientModeTransportModeLicence2($_GET['id_cli'], 
+                                                $_GET['id_mod_trans'], $_GET['id_mod_trac'], $_GET['commodity'], 
+                                                $premiere_entree, $nombre_dossier_par_page);*/
 
                     ?>
                       </tbody>
@@ -2280,7 +2283,6 @@ if(isset($_GET['id_mod_trac']) && isset($_GET['id_mod_trac'])){
 
   $modele = $maClasse-> getElementModeleLicence($_GET['id_mod_trac']);
   //$marchandise = $maClasse-> getElementMarchandise($_GET['id_march']);
-  /*
 ?>
 
 <div class="modal fade update" id="modal-default">
@@ -2339,7 +2341,7 @@ if(isset($_GET['id_mod_trac']) && isset($_GET['id_mod_trac'])){
 </div>
 
 <?php
-*/
+
 }
 ?>
 <?php
@@ -2383,6 +2385,3 @@ if (($maClasse-> verifierRegimeSuspensionSansDateExtreme($_GET['id_cli'], $_GET[
 <?php
 }
 ?>
-
-<script type="text/javascript">
-</script>

@@ -538,7 +538,7 @@
 	  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 29, $_POST['bank_'.$i], $_POST['bank_tva_'.$i], '1');
 	  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 30, $_POST['kisanga_'.$i], $_POST['kisanga_tva_'.$i], '1');
 	  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 31, $_POST['transfert_'.$i], $_POST['transfert_tva_'.$i], '1');
-	  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 20, $_POST['preclarence_'.$i], $_POST['preclarence_tva_'.$i], '1');
+	  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 19, $_POST['preclarence_'.$i], $_POST['preclarence_tva_'.$i], '1');
 	  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 20, $_POST['cost_intern_'.$i], $_POST['cost_intern_tva_'.$i], '1');
 	  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 58, $_POST['other_service_'.$i], $_POST['other_service_tva_'.$i], '1');
 	  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 21, $_POST['frais_agence_'.$i], $_POST['frais_agence_tva_'.$i], '1');
@@ -2097,6 +2097,43 @@
   		$maClasse-> appliquer_taux($_POST['id']);
   		$reponse['msg'] = 'Done!';
   		echo json_encode($reponse);
+
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='nouveauDossierLicence'){ 
+
+		echo json_encode($maClasse-> nouveauDossierLicence($_POST['id_cli'], $_POST['id_mod_lic']));
+
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='tableau_creation_dossiers_lot'){ 
+
+		$ref_dos = $maClasse-> getMcaFileExport($_POST['id_cli'], $_POST['id_mod_trans'], $_POST['id_march'], $_POST['id_mod_lic'], 1);
+
+		$response['tableau_creation_dossiers_lot'] = '';
+		for ($i=1; $i <= $_POST['nbre'] ; $i++) { 
+			
+			$response['tableau_creation_dossiers_lot'] .= '<tr>
+										<td class="col_1">'.$i.'</td>
+										<td class="col_6"><input type="text" name="ref_dos_'.$i.'" id="ref_dos_'.$i.'" value="'.$ref_dos.'"></td>
+										<td><input type="text" name="num_lic_'.$i.'" id="num_lic_'.$i.'" value="'.$_POST['num_lic'].'"></td>
+										<td><input type="text" name="t1_'.$i.'" id="t1_'.$i.'"></td>
+										<td><input type="number" step="0.001" name="poids_'.$i.'" id="poids_'.$i.'"></td>
+										<td><input type="number" step="0.001" name="fob_'.$i.'" id="fob_'.$i.'"></td>
+										<td><input type="text" name="ref_fact_'.$i.'" id="ref_fact_'.$i.'"></td>
+										<td><input type="text" name="horse_'.$i.'" id="horse_'.$i.'"></td>
+										<td><input type="text" name="trailer_1_'.$i.'" id="trailer_1_'.$i.'"></td>
+										<td><input type="text" name="trailer_2_'.$i.'" id="trailer_2_'.$i.'"></td>
+											<td><input type="date" name="klsa_arriv_'.$i.'" id="klsa_arriv_'.$i.'"></td>
+										<td><input type="date" name="crossing_date_'.$i.'" id="crossing_date_'.$i.'"></td>
+										<td><input type="date" name="wiski_arriv_'.$i.'" id="wiski_arriv_'.$i.'"></td>
+										<td><input type="date" name="wiski_dep_'.$i.'" id="wiski_dep_'.$i.'"></td>
+										<td><input type="text" name="ref_crf_'.$i.'" id="ref_crf_'.$i.'"></td>
+										<td><input type="date" name="date_crf_'.$i.'" id="date_crf_'.$i.'"></td>
+									</tr>';
+
+			$ref_dos++;
+
+		}
+		$response['tableau_creation_dossiers_lot'] .='<input type="hidden" name="nbre" value="'.$i.'">';
+
+		echo json_encode($response);
 
 	}
 ?>
