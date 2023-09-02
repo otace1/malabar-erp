@@ -13250,7 +13250,7 @@
 													DATE_FORMAT(dos.exit_drc, '%d/%m/%Y') AS exit_drc,
 													dos.date_quit AS date_quit2,
 													-- IF(dos.date_quit<='2023-08-19',
-													IF(DATEDIFF(dos.date_quit,'2023-08-24')<=0,
+													IF(DATEDIFF(dos.date_quit,'2023-08-21')<=0,
 														'BCC',
 														'Bank'
 													) AS text_banq,
