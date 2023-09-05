@@ -4095,7 +4095,8 @@
 														AND pres.date_pres IS NULL
 														AND pres.id = doc.id
 														AND doc.id_etap = etap.id_etap
-														AND sen.id_sen = doc.id_sen");
+														AND sen.id_sen = doc.id_sen
+														AND sen.id_sen <> 13");
 				while ($reponse = $requete-> fetch()) {
 					$compteur++;
 
@@ -4117,7 +4118,8 @@
 														AND DATEDIFF(pres.date_prevu, CURRENT_DATE()) <= 10
 														AND pres.id = doc.id
 														AND doc.id_etap = etap.id_etap
-														AND sen.id_sen = doc.id_sen");
+														AND sen.id_sen = doc.id_sen
+														AND sen.id_sen <> 13");
 				while ($reponse = $requete-> fetch()) {
 					$compteur++;
 
@@ -41178,9 +41180,12 @@
 												DATE_FORMAT(dos.date_doc, '%d/%m/%Y') AS date_doc,
 												DATE_FORMAT(prd.date_prevu, '%d/%m/%Y') AS date_prevu,
 												dos.id AS id,
-												IF(prd.date_pres IS NOT NULL,
+												IF(sen.id_sen=13,
 													'',
-													DATEDIFF(prd.date_prevu, CURRENT_DATE())
+													IF(prd.date_pres IS NOT NULL,
+														'',
+														DATEDIFF(prd.date_prevu, CURRENT_DATE())
+													)
 												) AS delai
 											FROM dossier_risque_douane dos
 												LEFT JOIN bureau_douane bur 
@@ -41336,9 +41341,11 @@
 			// $entree['id_pres'] = $id_pres;
 
 			$requete = $connexion-> query("SELECT COUNT(*) AS nbre_not_pres 
-												FROM presentation_risque_douane
-												WHERE date_prevu IS NOT NULL
-													AND date_pres IS NULL");
+												FROM presentation_risque_douane pres, dossier_risque_douane dos
+												WHERE pres.date_prevu IS NOT NULL
+													AND pres.date_pres IS NULL
+													AND pres.id = dos.id
+													AND dos.id_sen <> 13");
 			// $requete-> execute(array($entree['id_pres']));
 
 			$reponse = $requete-> fetch();
@@ -41351,10 +41358,12 @@
 			// $entree['id_pres'] = $id_pres;
 
 			$requete = $connexion-> query("SELECT COUNT(*) AS nbre_not_pres_10
-												FROM presentation_risque_douane
-												WHERE date_prevu IS NOT NULL
-													AND date_pres IS NULL
-													AND DATEDIFF(date_prevu, CURRENT_DATE()) <= 10");
+												FROM presentation_risque_douane pres, dossier_risque_douane dos
+												WHERE pres.date_prevu IS NOT NULL
+													AND pres.date_pres IS NULL
+													AND DATEDIFF(pres.date_prevu, CURRENT_DATE()) <= 10
+													AND pres.id = dos.id
+													AND dos.id_sen <> 13");
 			// $requete-> execute(array($entree['id_pres']));
 
 			$reponse = $requete-> fetch();
