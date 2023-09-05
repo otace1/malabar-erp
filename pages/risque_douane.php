@@ -886,12 +886,16 @@
     ],
     'rowCallback': function(row, data, index){
       
-      if($(row).find('td:eq(5)').text()<0){
+      if($(row).find('td:eq(7)').text()=='Cloturé'){
+        console.log($(row).find('td:eq(7)').text());
+          $(row).find('td:eq(7)').addClass('bg bg-primary');
+          $(row).addClass('text-primary');
+        }else if($(row).find('td:eq(5)').text()<0){
         console.log($(row).find('td:eq(5)').text());
           $(row).find('td:eq(5)').addClass('bg bg-danger');
           $(row).addClass('text-danger');
         }
-      },
+    },
   "paging": true,
   "lengthChange": true,
   "searching": true,
@@ -1106,6 +1110,7 @@
                 });
 
                 $('#file_data_dossier_risque_douane').DataTable().ajax.reload();
+                getNombreDossierRisqueDouane();
                 alert(data.message);
               }
             },
@@ -1229,6 +1234,7 @@
                 window.location="../deconnexion.php";
               }else{
                 $('#file_data_dossier_risque_douane').DataTable().ajax.reload();
+                getNombreDossierRisqueDouane();
                 alert(data.message);
               }
             },
