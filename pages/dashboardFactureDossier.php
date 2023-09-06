@@ -23,6 +23,9 @@
                 echo 'TABLEAU DE BORD FACTURE '.$maClasse-> getNomModeleLicence($_GET['id_mod_lic_fact']);
               }
             ?>
+            <span class="float-right">
+              <button class="btn btn-xs btn-info" onclick="window.open('popFilesInvoicingStatus.php?statut=Factures&amp;id_mod_lic=<?php echo $_GET['id_mod_lic_fact']?>','pop1','width=1200,height=700');"><i class="fa fa-list"></i> View all files</button>
+            </span>
           </h5>
           <div class="pull-right">
             <!-- <button class="btn btn-xs btn-dark square-btn-adjust" data-toggle="modal" data-target=".rechercheClient">

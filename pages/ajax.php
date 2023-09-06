@@ -2135,5 +2135,12 @@
 
 		echo json_encode($response);
 
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='popFilesInvoicingStatus'){
+		$id_mod_lic = NULL;
+		if (isset($_POST['id_mod_lic'])&&($_POST['id_mod_lic']!='')) {
+			$id_mod_lic = $_POST['id_mod_lic'];
+		}
+		echo json_encode($maClasse-> popFilesInvoicingStatus($_POST['id_mod_lic']));
+		
 	}
 ?>
