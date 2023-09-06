@@ -223,6 +223,46 @@ while ($reponseModeTransport = $requeteModeTransport-> fetch()) {
 			}$requete-> closeCursor();
 
 			
+			$excel-> getActiveSheet()
+				-> setCellValue($col.$row, 'Liq. Amount');
+			cellColor($col.$row, '000000');
+			alignement($col.$row);
+			$excel->getActiveSheet()
+				->getStyle($col.$row)->applyFromArray($styleHeader);
+			$col++;
+
+			$excel-> getActiveSheet()
+				-> setCellValue($col.$row, 'Inv. Status');
+			cellColor($col.$row, '000000');
+			alignement($col.$row);
+			$excel->getActiveSheet()
+				->getStyle($col.$row)->applyFromArray($styleHeader);
+			$col++;
+
+			$excel-> getActiveSheet()
+				-> setCellValue($col.$row, 'MCA Inv. Ref.');
+			cellColor($col.$row, '000000');
+			alignement($col.$row);
+			$excel->getActiveSheet()
+				->getStyle($col.$row)->applyFromArray($styleHeader);
+			$col++;
+
+			$excel-> getActiveSheet()
+				-> setCellValue($col.$row, 'MCA Inv. Date);
+			cellColor($col.$row, '000000');
+			alignement($col.$row);
+			$excel->getActiveSheet()
+				->getStyle($col.$row)->applyFromArray($styleHeader);
+			$col++;
+
+			$excel-> getActiveSheet()
+				-> setCellValue($col.$row, 'MCA Inv. Amount');
+			cellColor($col.$row, '000000');
+			alignement($col.$row);
+			$excel->getActiveSheet()
+				->getStyle($col.$row)->applyFromArray($styleHeader);
+			$col++;
+
 			//----------- Récuperation des dossiers ------------
 
 			if (isset($_GET['commodity']) && ($_GET['commodity'] != '')) {
@@ -318,7 +358,7 @@ while ($reponseModeTransport = $requeteModeTransport-> fetch()) {
 				alignement('A'.$row);
 				alignement('B'.$row);
 
-				afficherRowTableauExcel($id_mod_lic, $id_cli, $id_mod_trans, $reponse['id_dos'], $compteur, $col, $excel, $row, $styleHeader, $reponse['statut']);
+				afficherRowTableauExcel($id_mod_lic, $id_cli, $id_mod_trans, $reponse['id_dos'], $compteur, $col, $excel, $row, $styleHeader, $reponse['statut'], NULL, NULL, NULL, $reponse['montant_liq'], $maClasse-> getMontantFacturePourDossier($reponse['id_dos'])['statut_invoice'], $maClasse-> getMontantFacturePourDossier($reponse['id_dos'])['ref_fact'], $maClasse-> getMontantFacturePourDossier($reponse['id_dos'])['date_fact'], $maClasse-> getMontantFacturePourDossier($reponse['id_dos'])['montant_usd']);
 
 				$row++;
 
@@ -1079,7 +1119,46 @@ while ($reponseModeTransport = $requeteModeTransport-> fetch()) {
 			
 		}$requete-> closeCursor();
 
-		
+		$excel-> getActiveSheet()
+			-> setCellValue($col.$row, 'Liq. Amount');
+		cellColor($col.$row, '000000');
+		alignement($col.$row);
+		$excel->getActiveSheet()
+			->getStyle($col.$row)->applyFromArray($styleHeader);
+		$col++;
+
+		$excel-> getActiveSheet()
+			-> setCellValue($col.$row, 'Inv. Status');
+		cellColor($col.$row, '000000');
+		alignement($col.$row);
+		$excel->getActiveSheet()
+			->getStyle($col.$row)->applyFromArray($styleHeader);
+		$col++;
+
+		$excel-> getActiveSheet()
+			-> setCellValue($col.$row, 'MCA Inv. Ref.');
+		cellColor($col.$row, '000000');
+		alignement($col.$row);
+		$excel->getActiveSheet()
+			->getStyle($col.$row)->applyFromArray($styleHeader);
+		$col++;
+
+		$excel-> getActiveSheet()
+			-> setCellValue($col.$row, 'MCA Inv. Date');
+		cellColor($col.$row, '000000');
+		alignement($col.$row);
+		$excel->getActiveSheet()
+			->getStyle($col.$row)->applyFromArray($styleHeader);
+		$col++;
+
+		$excel-> getActiveSheet()
+			-> setCellValue($col.$row, 'MCA Inv. Amount');
+		cellColor($col.$row, '000000');
+		alignement($col.$row);
+		$excel->getActiveSheet()
+			->getStyle($col.$row)->applyFromArray($styleHeader);
+		$col++;
+
 		//----------- Récuperation des dossiers ------------
 
 		if (isset($_GET['commodity']) && ($_GET['commodity'] != '')) {
@@ -1267,7 +1346,7 @@ while ($reponseModeTransport = $requeteModeTransport-> fetch()) {
 			alignement('A'.$row);
 			alignement('B'.$row);
 
-			afficherRowTableauExcel($id_mod_lic, $id_cli, $id_mod_trans, $reponse['id_dos'], $compteur, $col, $excel, $row, $styleHeader, $reponse['statut'], $reponse['klsa_status'], $reponse['amicongo_status'], $reponse['kzi_status']);
+			afficherRowTableauExcel($id_mod_lic, $id_cli, $id_mod_trans, $reponse['id_dos'], $compteur, $col, $excel, $row, $styleHeader, $reponse['statut'], $reponse['klsa_status'], $reponse['amicongo_status'], $reponse['kzi_status'], $reponse['montant_liq'], $maClasse-> getMontantFacturePourDossier($reponse['id_dos'])['statut_invoice'], $maClasse-> getMontantFacturePourDossier($reponse['id_dos'])['ref_fact'], $maClasse-> getMontantFacturePourDossier($reponse['id_dos'])['date_fact'], $maClasse-> getMontantFacturePourDossier($reponse['id_dos'])['montant_usd']);
 
 			$row++;
 

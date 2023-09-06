@@ -5,7 +5,7 @@
   return $date;
 };
 
-function afficherRowTableauExcel($id_mod_lic, $id_cli, $id_mod_trans, $id_dos, $compteur, $col, $excel, $row, $styleHeader, $statut=NULL, $klsa_status=NULL, $amicongo_status=NULL, $kzi_status=NULL){
+function afficherRowTableauExcel($id_mod_lic, $id_cli, $id_mod_trans, $id_dos, $compteur, $col, $excel, $row, $styleHeader, $statut=NULL, $klsa_status=NULL, $amicongo_status=NULL, $kzi_status=NULL, $montant_liq, $statut_invoice, $ref_fact, $date_fact, $montant_fact){
 	include('../classes/connexion.php');
 
 	$maClasse = new MaClasse();
@@ -328,6 +328,18 @@ function afficherRowTableauExcel($id_mod_lic, $id_cli, $id_mod_trans, $id_dos, $
 				$excel-> getActiveSheet()
 					-> setCellValue($col.$row, $maClasse-> getDataRow($reponse['champ_col'], $id_dos));
 			}
+			// Liq. Amount
+			$excel-> getActiveSheet()
+				-> setCellValue($col.$row, $maClasse-> getDataRow($montant_liq, $id_dos));
+			// Inv Status
+			$excel-> getActiveSheet()
+				-> setCellValue($col.$row, $maClasse-> getDataRow($statut_invoice, $id_dos));
+			// Inv. Ref.
+			$excel-> getActiveSheet()
+				-> setCellValue($col.$row, $maClasse-> getDataRow($ref_fact, $id_dos));
+			// Inv. Amount
+			$excel-> getActiveSheet()
+				-> setCellValue($col.$row, $maClasse-> getDataRow($montant_fact, $id_dos));
 
 		}
 
