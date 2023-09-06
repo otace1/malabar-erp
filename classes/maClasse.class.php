@@ -38012,7 +38012,80 @@
 								                dos.id_mod_lic AS id_mod_lic,
 								                dos.id_cli AS id_cli,
 								                dos.id_mod_trans AS id_mod_trans,
-								                dos.id_march AS id_march
+								                dos.id_march AS id_march,
+								                IF(dos.id_mod_lic='2' AND dos.id_mod_trans='1',
+														IF(dos.date_crf IS NULL AND dos.date_ad IS NULL AND dos.date_assurance IS NULL,
+													      'AWAITING CRF/AD/INSURANCE',
+													      IF(dos.date_crf IS NULL AND dos.date_ad IS NULL AND dos.date_assurance IS NOT NULL,
+													        'AWAITING CRF/AD',
+													          IF(dos.date_crf IS NULL AND dos.date_ad IS NOT NULL AND dos.date_assurance IS NULL,
+													            'AWAITING CRF/INSURANCE',
+													            IF(dos.date_crf IS NULL AND dos.date_ad IS NOT NULL AND dos.date_assurance IS NOT NULL,
+													              'AWAITING CRF', 
+													              IF(dos.date_crf IS NOT NULL AND dos.date_ad IS NULL AND dos.date_assurance IS NULL,
+													                'AWAITING AD/INSURANCE',
+													                IF(dos.date_crf IS NOT NULL AND dos.date_ad IS NULL AND dos.date_assurance IS NOT NULL,
+													                  'AWAITING AD',
+													                    IF(dos.date_crf IS NOT NULL AND dos.date_ad IS NOT NULL AND dos.date_assurance IS NULL,
+													                      'AWAITING INSURANCE',
+
+													                      IF(dos.date_decl IS NULL AND dos.ref_decl IS NULL, 'UNDER PREPARATION',
+													                        IF(dos.date_liq IS NULL AND dos.ref_liq IS NULL, 'AWAITING LIQUIDATION',
+													                          IF(dos.date_quit IS NULL AND dos.ref_quit IS NULL, 'AWAITING QUITTANCE',
+													                            IF(dos.date_quit IS NOT NULL AND dos.ref_quit IS NOT NULL AND dos.dgda_out IS NULL, 'AWAITING BAE/BS', 
+													                              IF(dos.dgda_out IS NOT NULL AND dos.dispatch_deliv IS NOT NULL, 'CLEARING COMPLETED', '')
+													                              )
+													                            )
+													                          )
+													                        )
+													                      
+													                      )
+													                  )
+													                )
+													              )
+													            )
+													          )
+													      )
+														,
+														IF(dos.id_mod_lic='1', 
+															IF(dos.load_date IS NOT NULL AND dos.ceec_in IS NULL,
+																'LOADED',
+																IF(dos.ceec_in IS NOT NULL AND dos.ceec_out IS NULL, 'AT CEEC',
+																	IF(dos.ceec_out IS NOT NULL AND dos.min_div_in IS NULL, 'CEEC OUT',
+																		IF(dos.min_div_in IS NOT NULL AND dos.min_div_out IS NULL, 'AT MINE DIVISION',
+																			IF(dos.min_div_out IS NOT NULL AND dos.ref_decl IS NULL, 'MINE DIVISION OUT',
+																				IF(dos.ref_decl IS NOT NULL AND dos.ref_liq IS NULL, 'DECLARATION',
+																					IF(dos.ref_liq IS NOT NULL AND dos.ref_quit IS NULL, 'LIQUIDATED',
+																						IF(dos.ref_quit IS NOT NULL AND dos.gov_in IS  NULL, 'DGDA OUT',
+																							IF(dos.gov_in IS NOT NULL AND dos.gov_out IS NULL, 'AT GOVERNOR\'S OFFICE',
+																								IF(dos.gov_out IS NOT NULL AND dos.dispatch_date IS NULL, 'GOVERNOR\'S OFFICE OUT',
+																									IF(dos.dispatch_date IS NOT NULL AND dos.klsa_arriv IS NULL,
+																										'DISPATCHED', 
+																											IF(dos.klsa_arriv IS NOT NULL AND dos.end_form IS NULL, 'AT BORDER',
+																												IF(dos.end_form IS NOT NULL AND dos.exit_drc IS NULL, 'UNDER FORMALITIES',
+																													IF(dos.exit_drc IS NOT NULL, 'EXIT DRC', '')
+																													)
+																												)
+																										)
+																									)
+																								)
+																							)
+																						)
+																					)
+																				)
+																			)
+																		)
+																	)
+																)
+															, dos.statut )
+													) AS statut,
+								                IF(dos.cleared='0',
+								                	'Transit',
+								                	IF(dos.cleared='1',
+								                		'Cleared',
+								                		'Cancelled'
+								                	)
+								                ) AS cleared_status
 											FROM dossier dos 
 												LEFT JOIN client cl
 													ON dos.id_cli = cl.id_cli
