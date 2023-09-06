@@ -104,6 +104,7 @@ $logo = '<img src="../images/malabar2.png" width="250px">';
 	
 $facture = $maClasse-> getDataFactureGlobale($_GET['ref_fact']);
 $dossiers = $maClasse-> getDossierFactureExportSingle($_GET['ref_fact']);
+$dossiers2 = $maClasse-> getDossierFactureExportSingle2($_GET['ref_fact']);
 
 $ref_fact = $_GET['ref_fact'];//$maClasse-> getNumFactureEnCours($_GET['facture']);
 $date_fact = $maClasse-> getFactureGlobale($_GET['ref_fact'])['date_fact'];//$maClasse-> getDateFactureEnCours($_GET['facture']);
@@ -568,6 +569,29 @@ $tbl = <<<EOD
 			<td width="5%" style="text-align: center; border: 1 solid black; font-weight: bold; font-size: 6px;"><span><br>CLEARED<br></span></td>
 		</tr>
 		$dossiers
+		<br>
+		<br>
+		<tr>
+			<td width="2%" style="text-align: center; border: 1 solid black; font-weight: bold; font-size: 5px;"><span><br>#<br></span></td>
+			<td width="9%" style="text-align: center; border: 1 solid black; font-weight: bold; font-size: 6px;"><span><br>MCA File No<br></span></td>
+			<td width="7%" style="text-align: center; border: 1 solid black; font-weight: bold; font-size: 6px;"><span><br>Destination<br></span></td>
+			<td width="7%" style="text-align: center; border: 1 solid black; font-weight: bold; font-size: 6px;"><span><br>Transporter<br></span></td>
+			<td width="6%" style="text-align: center; border: 1 solid black; font-weight: bold; font-size: 6px;"><span><br>Horse/Wagon<br></span></td>
+			<td width="5%" style="text-align: center; border: 1 solid black; font-weight: bold; font-size: 6px;"><span><br>Trailer 1<br></span></td>
+			<td width="5%" style="text-align: center; border: 1 solid black; font-weight: bold; font-size: 6px;"><span><br>Trailer 2<br></span></td>
+			<td width="7%" style="text-align: center; border: 1 solid black; font-weight: bold; font-size: 6px;"><span><br>Lot. No.<br></span></td>
+			<td width="4%" style="text-align: center; border: 1 solid black; font-weight: bold; font-size: 6px;"><span><br>Qty(Mt)<br></span></td>
+			<td width="4%" style="text-align: center; border: 1 solid black; font-weight: bold; font-size: 6px;"><span><br>Loading Date</span></td>
+			<td width="4%" style="text-align: center; border: 1 solid black; font-weight: bold; font-size: 6px;"><span><br>Declaration Ref.</span></td>
+			<td width="4%" style="text-align: center; border: 1 solid black; font-weight: bold; font-size: 6px;"><span><br>Declaration Date</span></td>
+			<td width="5%" style="text-align: center; border: 1 solid black; font-weight: bold; font-size: 6px;"><span><br>BCDC Rate</span></td>
+			<td width="4%" style="text-align: center; border: 1 solid black; font-weight: bold; font-size: 6px;"><span><br>Liquidation Ref.</span></td>
+			<td width="4%" style="text-align: center; border: 1 solid black; font-weight: bold; font-size: 6px;"><span><br>Liquidation Date</span></td>
+			<td width="4%" style="text-align: center; border: 1 solid black; font-weight: bold; font-size: 6px;"><span><br>Quittance Ref.</span></td>
+			<td width="4%" style="text-align: center; border: 1 solid black; font-weight: bold; font-size: 6px;"><span><br>Quittance Date</span></td>
+			<td width="10%" style="text-align: center; border: 1 solid black; font-weight: bold; font-size: 6px;"><span><br>Bank</span></td>
+		</tr>
+		$dossiers2
 		<br>
 		<br>
 		<br>
