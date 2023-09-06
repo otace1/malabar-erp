@@ -328,19 +328,6 @@ function afficherRowTableauExcel($id_mod_lic, $id_cli, $id_mod_trans, $id_dos, $
 				$excel-> getActiveSheet()
 					-> setCellValue($col.$row, $maClasse-> getDataRow($reponse['champ_col'], $id_dos));
 			}
-			// Liq. Amount
-			$excel-> getActiveSheet()
-				-> setCellValue($col.$row, $montant_liq);
-			// Inv Status
-			$excel-> getActiveSheet()
-				-> setCellValue($col.$row, $statut_invoice);
-			// Inv. Ref.
-			$excel-> getActiveSheet()
-				-> setCellValue($col.$row, $ref_fact);
-			// Inv. Amount
-			$excel-> getActiveSheet()
-				-> setCellValue($col.$row, $montant_fact);
-
 		}
 
 		$excel-> getActiveSheet()-> getStyle($col.$row)-> applyFromArray(
@@ -355,6 +342,24 @@ function afficherRowTableauExcel($id_mod_lic, $id_cli, $id_mod_trans, $id_dos, $
 
 		alignement($col.$row);
 		$col++;
+	
+		// Liq. Amount
+		$excel-> getActiveSheet()
+			-> setCellValue($col.$row, $montant_liq);
+		$col++;
+		// Inv Status
+		$excel-> getActiveSheet()
+			-> setCellValue($col.$row, $statut_invoice);
+		$col++;
+		// Inv. Ref.
+		$excel-> getActiveSheet()
+			-> setCellValue($col.$row, $ref_fact);
+		$col++;
+		// Inv. Amount
+		$excel-> getActiveSheet()
+			-> setCellValue($col.$row, $montant_fact);
+		$col++;
+
 
 	}$requete-> closeCursor();
 }
