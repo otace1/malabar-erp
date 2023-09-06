@@ -51,6 +51,8 @@
                       <th>#</th>
                       <th>Notre Nº Ref #</th>
                       <th>Client</th>
+                      <th>Clearing Status</th>
+                      <th>General Status</th>
                       <th>Decl. Ref.</th>
                       <th>Decl. Date</th>
                       <th>Liq. Ref.</th>
@@ -152,6 +154,8 @@
           {"data":"compteur"},
           {"data":"ref_dos"},
           {"data":"nom_cli"},
+          {"data":"cleared_status"},
+          {"data":"statut"},
           {"data":"ref_decl",
             className: 'dt-body-center'},
           {"data":"date_decl",
