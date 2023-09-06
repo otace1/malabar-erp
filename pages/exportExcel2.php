@@ -248,7 +248,7 @@ while ($reponseModeTransport = $requeteModeTransport-> fetch()) {
 			$col++;
 
 			$excel-> getActiveSheet()
-				-> setCellValue($col.$row, 'MCA Inv. Date);
+				-> setCellValue($col.$row, 'MCA Inv. Date');
 			cellColor($col.$row, '000000');
 			alignement($col.$row);
 			$excel->getActiveSheet()
