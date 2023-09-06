@@ -14426,17 +14426,23 @@
 														)
 													) AS montant_usd,
 													det.ref_fact AS ref_fact,
-													fact.date_fact AS date_fact
+													fact.date_fact AS date_fact,
+													"Invoiced" AS statut_invoice
+
 												FROM debours d, detail_facture_dossier det, dossier dos, facture_dossier fact
 												WHERE det.id_deb = d.id_deb
 													AND det.ref_fact = fact.ref_fact
 													AND det.id_dos = dos.id_dos
-													AND dos.id_dos = ?');
+													AND dos.id_dos = ?
+												GROUP BY dos.id_dos');
 			$requete-> execute(array($entree['id_dos']));
 			$reponse = $requete-> fetch();
 
+			if ($reponse['statut_invoice']!='Invoiced') {
+				$reponse['statut_invoice'] = 'Pending';
+			}
+
 			if ($reponse) {
-				$reponse['statut_invoice'] = 'Invoiced';
 				return $reponse;
 			}else{
 				$reponse['statut_invoice'] = 'Pending';
@@ -37937,6 +37943,149 @@
 				return $rows;
 				
 			}
+
+		}
+
+		public function popFilesInvoicingStatus($id_mod_lic){
+			include('connexion.php');
+			$entree['id_mod_lic'] = $id_mod_lic;
+
+			// $sqlClient = "";
+			// if (isset($id_cli) && ($id_cli != '')) {
+			// 	$sqlClient = ' AND dos.id_cli = "'.$id_cli.'" ';
+			// }
+
+			$compteur = 0;
+
+			$requete = $connexion-> prepare("SELECT dos.ref_dos AS ref_dos, 
+												fd.ref_fact AS ref_fact, 
+												dos.po_ref AS po_ref,
+												dos.roe_decl AS roe_decl,
+												IF(dos.poids>1,
+													dos.poids,
+													1
+													) AS poids,
+												dos.id_dos AS id_dos,
+												dos.ref_liq AS ref_liq,
+												dos.montant_liq AS montant_liq,
+												dos.ref_decl AS ref_decl,
+												dos.date_decl AS date_decl,
+												dos.date_liq AS date_liq,
+												dos.ref_quit AS ref_quit,
+												dos.date_quit AS date_quit,
+												dos.montant_liq AS montant_liq,
+												-- DATE_FORMAT(dos.date_liq, '%d/%m/%Y') AS date_liq,
+												-- DATE_FORMAT(fd.date_fact, '%d/%m/%Y') AS date_fact,
+												cl.nom_cli AS nom_cli,
+								                SUM(
+													IF(det.usd='0', 
+														IF(det.tva='1',
+															IF(det.montant_tva>0,
+																(det.montant_tva+det.montant)/dos.roe_decl,
+																(det.montant*0.16)/dos.roe_decl
+																),
+															det.montant/dos.roe_decl
+														), 
+														IF(det.tva='1',
+															det.montant*1.16,
+															det.montant
+														)
+													)
+												) AS montant_total,
+												fd.date_fact AS date_fact,
+												IF(fd.validation='0',
+													'Pending Validation',
+													IF(fd.date_mail IS NULL,
+														'Awaiting to send',
+														IF(fd.ref_paie IS NULL,
+															'Pending Payment',
+															'Payed'
+															)
+														)
+													) AS statut,
+												CONCAT(CONCAT('<a href=\"#\" onclick=\"window.open(\'',mf.view_page,'?ref_fact=',fd.ref_fact,'\',\'pop3\',\'width=1000,height=800\');\" title=\"View invoice\">
+								                    <i class=\"fas fa-eye\"></i> 
+								                </a>'),' ',
+								                CONCAT('<a href=\"#\" class=\"text-success\" onclick=\"window.location.replace(\'',mf.excel,'?ref_fact=',fd.ref_fact,'\',\'pop4\',\'width=1000,height=800\');\" title=\"Export Annex\">
+								                    <i class=\"fas fa-file-excel\"></i> 
+								                </a>')) AS view_page,
+								                dos.id_mod_lic AS id_mod_lic,
+								                dos.id_cli AS id_cli,
+								                dos.id_mod_trans AS id_mod_trans,
+								                dos.id_march AS id_march
+											FROM dossier dos 
+												LEFT JOIN client cl
+													ON dos.id_cli = cl.id_cli
+												LEFT JOIN detail_facture_dossier det
+													ON dos.id_dos = det.id_dos
+												LEFT JOIN facture_dossier fd
+													ON fd.ref_fact = det.ref_fact
+												LEFT JOIN debours deb
+													ON deb.id_deb = det.id_deb
+												LEFT JOIN modele_facture mf
+													ON mf.id_mod_fact = fd.id_mod_fact
+											WHERE dos.id_mod_lic = ?
+												AND YEAR(dos.date_creat_dos) > 2021
+											GROUP BY dos.id_dos
+											ORDER BY dos.id_dos DESC");
+			$requete-> execute(array($entree['id_mod_lic']));
+			while($reponse = $requete-> fetch()){
+				$compteur++;
+
+				$reponse['compteur'] = $compteur;
+				// $reponse['commodity'] = $this-> getMarchandiseFacture($reponse['ref_fact'])['nom_march'];
+				// $reponse['nbre_dossier'] = $this-> getNombreDossierFacture2($reponse['ref_fact']);
+				// $reponse['liste_dossier'] = $this-> getRangDossierFacture($reponse['ref_fact']);
+				// $reponse['feri'] = $this-> getMontantDeboursFactureDossier2($reponse['ref_fact'], 5, $reponse['id_dos']);
+				// $reponse['feri_per_ton'] = $this-> getMontantDeboursFactureDossier2($reponse['ref_fact'], 5, $reponse['id_dos'])/$reponse['poids'];
+				// $reponse['lmc'] = $this-> getMontantDeboursFactureDossier2($reponse['ref_fact'], 6, $reponse['id_dos']);
+				// $reponse['lmc_per_ton'] = $this-> getMontantDeboursFactureDossier2($reponse['ref_fact'], 6, $reponse['id_dos'])/$reponse['poids'];
+				// $reponse['voirie'] = $this-> getMontantDeboursFactureDossier2($reponse['ref_fact'], 7, $reponse['id_dos']);
+				// $reponse['voirie_per_ton'] = $this-> getMontantDeboursFactureDossier2($reponse['ref_fact'], 7, $reponse['id_dos'])/$reponse['poids'];
+				// if ($this-> getMontantDeboursFactureDossier2($reponse['ref_fact'], 11, $reponse['id_dos'])>0) {
+				// 	$reponse['ceec'] = $this-> getMontantDeboursFactureDossier2($reponse['ref_fact'], 11, $reponse['id_dos']);
+				// }else{
+				// 	$reponse['ceec'] = $this-> getMontantDeboursFactureDossier2($reponse['ref_fact'], 12, $reponse['id_dos']);
+				// }
+
+				// if ($this-> getMontantDeboursFactureDossier2($reponse['ref_fact'], 54, $reponse['id_dos'])>0) {
+				// 	$reponse['finance_cost'] = $this-> getMontantDeboursFactureDossier2($reponse['ref_fact'], 54, $reponse['id_dos']);
+				// }else{
+				// 	$reponse['finance_cost'] = $this-> getMontantDeboursFactureDossier2($reponse['ref_fact'], 101, $reponse['id_dos']);
+				// }
+
+				// if ($reponse['roe_decl']>1) {
+				// 	$reponse['roe_decl'] = $reponse['roe_decl'];
+				// }else{
+				// 	$reponse['roe_decl'] = 1;
+				// }
+
+				// $reponse['rie'] = ($this-> getMontantDeboursFactureDossier2($reponse['ref_fact'], 1, $reponse['id_dos']))/$reponse['roe_decl'];
+				// $reponse['rie_per_ton'] = ($this-> getMontantDeboursFactureDossier2($reponse['ref_fact'], 1, $reponse['id_dos'])/$reponse['poids'])/$reponse['roe_decl'];
+				// $reponse['rls'] = ($this-> getMontantDeboursFactureDossier2($reponse['ref_fact'], 3, $reponse['id_dos']))/$reponse['roe_decl'];
+				// $reponse['rls_per_ton'] = ($this-> getMontantDeboursFactureDossier2($reponse['ref_fact'], 3, $reponse['id_dos'])/$reponse['poids'])/$reponse['roe_decl'];
+				// $reponse['fsr'] = ($this-> getMontantDeboursFactureDossier2($reponse['ref_fact'], 4, $reponse['id_dos']))/$reponse['roe_decl'];
+				// $reponse['fsr_per_ton'] = ($this-> getMontantDeboursFactureDossier2($reponse['ref_fact'], 4, $reponse['id_dos'])/$reponse['poids'])/$reponse['roe_decl'];
+				
+				// $reponse['occ_sample'] = $this-> getMontantDeboursFactureDossier2($reponse['ref_fact'], 9, $reponse['id_dos']);
+				// $reponse['cgea'] = $this-> getMontantDeboursFactureDossier2($reponse['ref_fact'], 10, $reponse['id_dos']);
+				// $reponse['dgda_seal'] = $this-> getMontantDeboursFactureDossier2($reponse['ref_fact'], 13, $reponse['id_dos']);
+				// $reponse['assay'] = $this-> getMontantDeboursFactureDossier2($reponse['ref_fact'], 15, $reponse['id_dos']);
+				// if ($this-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport2(45, $reponse['id_mod_lic'], $reponse['id_cli'], $reponse['id_march'], $reponse['id_mod_trans'])['montant']>1) {
+				// 	$reponse['nbre_scelle'] = $this-> getMontantDeboursFactureDossier2($reponse['ref_fact'], 45, $reponse['id_dos'])/$this-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport2(45, $reponse['id_mod_lic'], $reponse['id_cli'], $reponse['id_march'], $reponse['id_mod_trans'])['montant'];
+				// }else{
+				// 	$reponse['nbre_scelle'] = $this-> getMontantDeboursFactureDossier2($reponse['ref_fact'], 45, $reponse['id_dos'])/35;
+				// }
+				
+				// $reponse['scelle'] = $this-> getMontantDeboursFactureDossier2($reponse['ref_fact'], 45, $reponse['id_dos']);
+				// $reponse['tresco'] = $this-> getMontantDeboursFactureDossier2($reponse['ref_fact'], 94, $reponse['id_dos']);
+
+				$rows[] = $reponse;
+			}$requete-> closeCursor();
+			
+			return $rows;
+			
+
 
 		}
 
