@@ -344,7 +344,7 @@ function afficherRowTableauExcel($id_mod_lic, $id_cli, $id_mod_trans, $id_dos, $
 
 
 	}$requete-> closeCursor();
-	
+
 		// Liq. Amount
 		$excel-> getActiveSheet()
 			-> setCellValue($col.$row, $montant_liq);
@@ -359,6 +359,15 @@ function afficherRowTableauExcel($id_mod_lic, $id_cli, $id_mod_trans, $id_dos, $
 		$excel-> getActiveSheet()
 			-> setCellValue($col.$row, $ref_fact);
 		alignement($col.$row);
+		$col++;
+		// Inv. Date.
+		$excel-> getActiveSheet()
+			-> setCellValue($col.$row, $date_fact);
+		alignement($col.$row);
+		$excel-> getActiveSheet()
+			->setCellValue($col.$row, PHPExcel_Shared_Date::PHPToExcel(convert_date(  $date_fact )));
+		$excel->getActiveSheet()->getStyle($col.$row)->getNumberFormat()
+         ->setFormatCode('dd/mm/yyyy');
 		$col++;
 		// Inv. Amount
 		$excel-> getActiveSheet()
