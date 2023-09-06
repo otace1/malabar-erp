@@ -14272,6 +14272,52 @@
 			return round($sommeHT,3);
 		}
 
+		public function getMontantFacturePourDossier($id_dos){
+			include('connexion.php');
+			$entree['id_dos'] = $id_dos;
+
+
+			$sommeTVA = 0;
+			$sommeHT = 0;
+			$sommeTTC = 0;
+
+
+			$requete = $connexion-> prepare('SELECT SUM(
+														IF(det.usd='0', 
+															IF(det.tva='1',
+																IF(det.montant_tva>0,
+																	(det.montant_tva+det.montant)/dos.roe_decl,
+																	(det.montant*0.16)/dos.roe_decl
+																	),
+																det.montant/dos.roe_decl
+															), 
+															IF(det.tva='1',
+																det.montant*1.16,
+																det.montant
+															)
+														)
+													) AS montant_usd,
+													det.ref_fact AS ref_fact,
+													fact.date_fact AS date_fact
+												FROM debours d, detail_facture_dossier det, dossier dos, facture_dossier fact
+												WHERE det.id_deb = d.id_deb
+													AND det.ref_fact = fact.ref_fact
+													AND det.id_dos = dos.id_dos
+													AND dos.id_dos = ?');
+			$requete-> execute(array($entree['id_dos']));
+			$reponse = $requete-> fetch();
+
+			if ($reponse) {
+				$reponse['statut_invoice'] = 'Invoiced';
+				return $reponse;
+			}else{
+				$reponse['statut_invoice'] = 'Pending';
+				$reponse['montant_usd'] = null;
+				$reponse['ref_fact'] = null;
+				return $reponse;
+			}
+		}
+
 		public function getMontantFactureDebours($ref_fact, $id_deb){
 			include('connexion.php');
 			$entree['ref_fact'] = $ref_fact;
