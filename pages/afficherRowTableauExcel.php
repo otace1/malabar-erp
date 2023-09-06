@@ -330,16 +330,16 @@ function afficherRowTableauExcel($id_mod_lic, $id_cli, $id_mod_trans, $id_dos, $
 			}
 			// Liq. Amount
 			$excel-> getActiveSheet()
-				-> setCellValue($col.$row, $maClasse-> getDataRow($montant_liq, $id_dos));
+				-> setCellValue($col.$row, $montant_liq);
 			// Inv Status
 			$excel-> getActiveSheet()
-				-> setCellValue($col.$row, $maClasse-> getDataRow($statut_invoice, $id_dos));
+				-> setCellValue($col.$row, $statut_invoice);
 			// Inv. Ref.
 			$excel-> getActiveSheet()
-				-> setCellValue($col.$row, $maClasse-> getDataRow($ref_fact, $id_dos));
+				-> setCellValue($col.$row, $ref_fact);
 			// Inv. Amount
 			$excel-> getActiveSheet()
-				-> setCellValue($col.$row, $maClasse-> getDataRow($montant_fact, $id_dos));
+				-> setCellValue($col.$row, $montant_fact);
 
 		}
 
