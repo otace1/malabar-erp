@@ -366,6 +366,16 @@ function afficherRowTableauExcel($id_mod_lic, $id_cli, $id_mod_trans, $id_dos, $
 		alignement($col.$row);
 		$col++;
 
+		$excel-> getActiveSheet()-> getStyle($col.$row)-> applyFromArray(
+			array(
+				'borders' => array(
+					'allborders' => array(
+						'style' => PHPExcel_Style_Border::BORDER_THIN
+					)
+				)
+			)
+		);
+
 }
 
 function afficherRowTableauExcelKBP($id_mod_lic, $id_mod_trans, $id_dos, $compteur, $col, $excel, $row, $styleHeader, $statut=NULL, $klsa_status=NULL, $amicongo_status=NULL, $kzi_status=NULL){
