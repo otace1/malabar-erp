@@ -5,7 +5,7 @@
   return $date;
 };
 
-function afficherRowTableauExcel($id_mod_lic, $id_cli, $id_mod_trans, $id_dos, $compteur, $col, $excel, $row, $styleHeader, $statut=NULL, $klsa_status=NULL, $amicongo_status=NULL, $kzi_status=NULL, $montant_liq, $statut_invoice, $ref_fact, $date_fact, $montant_fact){
+function afficherRowTableauExcel($id_mod_lic, $id_cli, $id_mod_trans, $id_dos, $compteur, $col, $excel, $row, $styleHeader, $statut=NULL, $klsa_status=NULL, $amicongo_status=NULL, $kzi_status=NULL){
 	include('../classes/connexion.php');
 
 	$maClasse = new MaClasse();
@@ -328,6 +328,7 @@ function afficherRowTableauExcel($id_mod_lic, $id_cli, $id_mod_trans, $id_dos, $
 				$excel-> getActiveSheet()
 					-> setCellValue($col.$row, $maClasse-> getDataRow($reponse['champ_col'], $id_dos));
 			}
+
 		}
 
 		$excel-> getActiveSheet()-> getStyle($col.$row)-> applyFromArray(
@@ -340,51 +341,10 @@ function afficherRowTableauExcel($id_mod_lic, $id_cli, $id_mod_trans, $id_dos, $
 			)
 		);
 
+		alignement($col.$row);
 		$col++;
-
 
 	}$requete-> closeCursor();
-
-		// Liq. Amount
-		$excel-> getActiveSheet()
-			-> setCellValue($col.$row, $montant_liq);
-		alignement($col.$row);
-		$col++;
-		// Inv Status
-		$excel-> getActiveSheet()
-			-> setCellValue($col.$row, $statut_invoice);
-		alignement($col.$row);
-		$col++;
-		// Inv. Ref.
-		$excel-> getActiveSheet()
-			-> setCellValue($col.$row, $ref_fact);
-		alignement($col.$row);
-		$col++;
-		// Inv. Date.
-		$excel-> getActiveSheet()
-			-> setCellValue($col.$row, $date_fact);
-		alignement($col.$row);
-		$excel-> getActiveSheet()
-			->setCellValue($col.$row, PHPExcel_Shared_Date::PHPToExcel(convert_date(  $date_fact )));
-		$excel->getActiveSheet()->getStyle($col.$row)->getNumberFormat()
-         ->setFormatCode('dd/mm/yyyy');
-		$col++;
-		// Inv. Amount
-		$excel-> getActiveSheet()
-			-> setCellValue($col.$row, $montant_fact);
-		alignement($col.$row);
-		$col++;
-
-		$excel-> getActiveSheet()-> getStyle($col.$row)-> applyFromArray(
-			array(
-				'borders' => array(
-					'allborders' => array(
-						'style' => PHPExcel_Style_Border::BORDER_THIN
-					)
-				)
-			)
-		);
-
 }
 
 function afficherRowTableauExcelKBP($id_mod_lic, $id_mod_trans, $id_dos, $compteur, $col, $excel, $row, $styleHeader, $statut=NULL, $klsa_status=NULL, $amicongo_status=NULL, $kzi_status=NULL){
