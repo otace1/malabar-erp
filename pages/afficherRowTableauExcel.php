@@ -340,28 +340,32 @@ function afficherRowTableauExcel($id_mod_lic, $id_cli, $id_mod_trans, $id_dos, $
 			)
 		);
 
-		alignement($col.$row);
-		$col++;
-	
-		// Liq. Amount
-		$excel-> getActiveSheet()
-			-> setCellValue($col.$row, $montant_liq);
-		$col++;
-		// Inv Status
-		$excel-> getActiveSheet()
-			-> setCellValue($col.$row, $statut_invoice);
-		$col++;
-		// Inv. Ref.
-		$excel-> getActiveSheet()
-			-> setCellValue($col.$row, $ref_fact);
-		$col++;
-		// Inv. Amount
-		$excel-> getActiveSheet()
-			-> setCellValue($col.$row, $montant_fact);
 		$col++;
 
 
 	}$requete-> closeCursor();
+	
+		// Liq. Amount
+		$excel-> getActiveSheet()
+			-> setCellValue($col.$row, $montant_liq);
+		alignement($col.$row);
+		$col++;
+		// Inv Status
+		$excel-> getActiveSheet()
+			-> setCellValue($col.$row, $statut_invoice);
+		alignement($col.$row);
+		$col++;
+		// Inv. Ref.
+		$excel-> getActiveSheet()
+			-> setCellValue($col.$row, $ref_fact);
+		alignement($col.$row);
+		$col++;
+		// Inv. Amount
+		$excel-> getActiveSheet()
+			-> setCellValue($col.$row, $montant_fact);
+		alignement($col.$row);
+		$col++;
+
 }
 
 function afficherRowTableauExcelKBP($id_mod_lic, $id_mod_trans, $id_dos, $compteur, $col, $excel, $row, $styleHeader, $statut=NULL, $klsa_status=NULL, $amicongo_status=NULL, $kzi_status=NULL){

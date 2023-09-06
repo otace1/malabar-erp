@@ -414,6 +414,23 @@ while ($reponseModeTransport = $requeteModeTransport-> fetch()) {
 
 			}$requete-> closeCursor();
 
+		$excel->getActiveSheet()
+	        ->getColumnDimension($col)
+	        ->setAutoSize(true);
+	    $col++;
+		$excel->getActiveSheet()
+	        ->getColumnDimension($col)
+	        ->setAutoSize(true);
+	    $col++;
+		$excel->getActiveSheet()
+	        ->getColumnDimension($col)
+	        ->setAutoSize(true);
+	    $col++;
+		$excel->getActiveSheet()
+	        ->getColumnDimension($col)
+	        ->setAutoSize(true);
+	    $col++;
+	    
 			//Bordure des Cellules
 			$excel-> getActiveSheet()-> getStyle('A2:'.$col.($row-1))-> applyFromArray(
 				array(
@@ -1422,6 +1439,23 @@ while ($reponseModeTransport = $requeteModeTransport-> fetch()) {
 
 		}$requete-> closeCursor();
 
+		$excel->getActiveSheet()
+	        ->getColumnDimension($col)
+	        ->setAutoSize(true);
+	    $col++;
+		$excel->getActiveSheet()
+	        ->getColumnDimension($col)
+	        ->setAutoSize(true);
+	    $col++;
+		$excel->getActiveSheet()
+	        ->getColumnDimension($col)
+	        ->setAutoSize(true);
+	    $col++;
+		$excel->getActiveSheet()
+	        ->getColumnDimension($col)
+	        ->setAutoSize(true);
+	    $col++;
+	    
 		     $excel->getActiveSheet()->getStyle('B:'.$col)->getAlignment()->applyFromArray(
 		             array(
 		                 'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
