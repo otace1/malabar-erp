@@ -14283,15 +14283,15 @@
 
 
 			$requete = $connexion-> prepare('SELECT SUM(
-														IF(det.usd='0', 
-															IF(det.tva='1',
+														IF(det.usd="0", 
+															IF(det.tva="1",
 																IF(det.montant_tva>0,
 																	(det.montant_tva+det.montant)/dos.roe_decl,
 																	(det.montant*0.16)/dos.roe_decl
 																	),
 																det.montant/dos.roe_decl
 															), 
-															IF(det.tva='1',
+															IF(det.tva="1",
 																det.montant*1.16,
 																det.montant
 															)
