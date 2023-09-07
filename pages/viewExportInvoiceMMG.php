@@ -103,8 +103,10 @@ if(isset($_GET['ref_fact'])){
 $logo = '<img src="../images/malabar2.png" width="250px">';
 	
 $facture = $maClasse-> getDataFactureGlobale($_GET['ref_fact']);
-$dossiers = $maClasse-> getDossierFactureExportSingle($_GET['ref_fact']);
-$dossiers2 = $maClasse-> getDossierFactureExportSingle2($_GET['ref_fact']);
+// $dossiers = $maClasse-> getDossierFactureExportSingle($_GET['ref_fact']);
+$dossiers3 = $maClasse-> getDossierFactureExportSingle3($_GET['ref_fact']);
+// $dossiers2 = $maClasse-> getDossierFactureExportSingle2($_GET['ref_fact']);
+$dossiers4 = $maClasse-> getDossierFactureExportSingle4($_GET['ref_fact']);
 
 $ref_fact = $_GET['ref_fact'];//$maClasse-> getNumFactureEnCours($_GET['facture']);
 $date_fact = $maClasse-> getFactureGlobale($_GET['ref_fact'])['date_fact'];//$maClasse-> getDateFactureEnCours($_GET['facture']);
@@ -444,16 +446,15 @@ $tbl = <<<EOD
 		</tr>
 		<tr>
 			<td width="15%" style="text-align: left; "></td>
-			<td width="8%" style="text-align: left; border: 0.3px solid black; font-size: 7px;">&nbsp;Bank: </td>
-			<td width="16%" style="text-align: center; border: 0.3px solid black; font-size: 7px; font-weight: bold;">$nom_banq</td>
-			<td width="8%" style="text-align: left; border: 0.3px solid black; font-size: 7px;">&nbsp;Bank Rate: </td>
-			<td width="8%" style="text-align: center; border: 0.3px solid black; font-size: 7px; font-weight: bold;">$roe_decl</td>
+			<td width="18%" style="text-align: left; border: 0.3px solid black; font-size: 7px;">&nbsp;Nombre de Dossier(s): </td>
+			<td width="22%" style="text-align: center; border: 0.3px solid black; font-size: 7px; font-weight: bold;">$nbre_dos</td>
 		</tr>
 		<tr>
 			<td width="15%" style="text-align: left; "></td>
-			<td width="18%" style="text-align: left; border: 0.3px solid black; font-size: 7px;">&nbsp;Nombre de Trucks: </td>
-			<td width="22%" style="text-align: center; border: 0.3px solid black; font-size: 7px; font-weight: bold;">$nbre_dos</td>
+			<td width="18%" style="text-align: left;"></td>
+			<td width="22%" style="text-align: center; font-weight: bold;"></td>
 		</tr>
+
 		<tr>
 			<td width="15%" style="text-align: left; "></td>
 			<td width="18%" style="text-align: left;"></td>
@@ -782,7 +783,7 @@ $pdf->AddPage('L', 'A4');
 if ( ($maClasse-> getFactureGlobale($_GET['ref_fact'])['validation']) == '0' ) {
 	$pdf->Image('../images/no_valid.jpg', 150, 2, 30, '', '', '', '', false, 300);
 }else{
-	$pdf->Image('../images/signature_facture/'.$maClasse-> getDataUtilisateur($maClasse-> getFactureGlobale($_GET['ref_fact'])['id_util_validation'])['signature_facture'], 200, 150, $maClasse-> getDataUtilisateur($maClasse-> getFactureGlobale($_GET['ref_fact'])['id_util_validation'])['size_signature_facture_2'], '', '', '', '', false, 300);
+	$pdf->Image('../images/signature_facture/'.$maClasse-> getDataUtilisateur($maClasse-> getFactureGlobale($_GET['ref_fact'])['id_util_validation'])['signature_facture'], 200, 152, $maClasse-> getDataUtilisateur($maClasse-> getFactureGlobale($_GET['ref_fact'])['id_util_validation'])['size_signature_facture_2'], '', '', '', '', false, 300);
 	
 }
 
@@ -807,50 +808,40 @@ $tbl = <<<EOD
 			<td width="83%" style="">DETAILS - EXPORT CLEARING $marchandise LOADS</td>
 		</tr>
 		<tr>
-			<td width="2%" style="text-align: center; border: 1 solid black; font-weight: bold; font-size: 7px;"><span><br>#<br></span></td>
-			<td width="9%" style="text-align: center; border: 1 solid black; font-weight: bold; font-size: 6px;"><span><br>MCA File No<br></span></td>
-			<td width="7%" style="text-align: center; border: 1 solid black; font-weight: bold; font-size: 6px;"><span><br>Destination<br></span></td>
-			<td width="7%" style="text-align: center; border: 1 solid black; font-weight: bold; font-size: 6px;"><span><br>Transporter<br></span></td>
-			<td width="6%" style="text-align: center; border: 1 solid black; font-weight: bold; font-size: 6px;"><span><br>Horse/Wagon<br></span></td>
-			<td width="5%" style="text-align: center; border: 1 solid black; font-weight: bold; font-size: 6px;"><span><br>Trailer 1<br></span></td>
-			<td width="5%" style="text-align: center; border: 1 solid black; font-weight: bold; font-size: 6px;"><span><br>Trailer 2<br></span></td>
-			<td width="7%" style="text-align: center; border: 1 solid black; font-weight: bold; font-size: 6px;"><span><br>Lot. No.<br></span></td>
-			<td width="4%" style="text-align: center; border: 1 solid black; font-weight: bold; font-size: 6px;"><span><br>Qty(Mt)<br></span></td>
-			<td width="4%" style="text-align: center; border: 1 solid black; font-weight: bold; font-size: 6px;"><span><br>Loading Date</span></td>
-			<td width="4%" style="text-align: center; border: 1 solid black; font-weight: bold; font-size: 6px;"><span><br>Liquidation Ref.</span></td>
-			<td width="4%" style="text-align: center; border: 1 solid black; font-weight: bold; font-size: 6px;"><span><br>Liquidation Date</span></td>
-			<td width="5%" style="text-align: center; border: 1 solid black; font-weight: bold; font-size: 6px;"><span><br>Liq. Amt. CDF</span></td>
-			<td width="4%" style="text-align: center; border: 1 solid black; font-weight: bold; font-size: 6px;"><span><br>Quittance Ref.</span></td>
-			<td width="4%" style="text-align: center; border: 1 solid black; font-weight: bold; font-size: 6px;"><span><br>Quittance Date</span></td>
-			<td width="5%" style="text-align: center; border: 1 solid black; font-weight: bold; font-size: 6px;"><span><br>$text_bank Rate</span></td>
-			<td width="5%" style="text-align: center; border: 1 solid black; font-weight: bold; font-size: 6px;"><span><br>Liq. Amt. USD</span></td>
-			<td width="7%" style="text-align: center; border: 1 solid black; font-weight: bold; font-size: 6px;"><span><br>Clearing Completed Date</span></td>
-			<td width="5%" style="text-align: center; border: 1 solid black; font-weight: bold; font-size: 6px;"><span><br>CLEARED<br></span></td>
+			<td width="3%" style="text-align: center; border: 1 solid black; font-weight: bold; font-size: 7px;"><span><br>#<br></span></td>
+			<td width="11%" style="text-align: center; border: 1 solid black; font-weight: bold; font-size: 7px;"><span><br>MCA File No<br></span></td>
+			<td width="10%" style="text-align: center; border: 1 solid black; font-weight: bold; font-size: 7px;"><span><br>Destination<br></span></td>
+			<td width="10%" style="text-align: center; border: 1 solid black; font-weight: bold; font-size: 7px;"><span><br>Transporter<br></span></td>
+			<td width="9%" style="text-align: center; border: 1 solid black; font-weight: bold; font-size: 7px;"><span><br>Horse/Wagon<br></span></td>
+			<td width="8%" style="text-align: center; border: 1 solid black; font-weight: bold; font-size: 7px;"><span><br>Trailer 1<br></span></td>
+			<td width="8%" style="text-align: center; border: 1 solid black; font-weight: bold; font-size: 7px;"><span><br>Trailer 2<br></span></td>
+			<td width="10%" style="text-align: center; border: 1 solid black; font-weight: bold; font-size: 7px;"><span><br>Lot. No.<br></span></td>
+			<td width="7%" style="text-align: center; border: 1 solid black; font-weight: bold; font-size: 7px;"><span><br>Qty(Mt)<br></span></td>
+			<td width="7%" style="text-align: center; border: 1 solid black; font-weight: bold; font-size: 7px;"><span><br>Loading Date</span></td>
+			<td width="10%" style="text-align: center; border: 1 solid black; font-weight: bold; font-size: 7px;"><span><br>Clearing Completed Date</span></td>
+			<td width="7%" style="text-align: center; border: 1 solid black; font-weight: bold; font-size: 7px;"><span><br>CLEARED<br></span></td>
 		</tr>
-		$dossiers
+		$dossiers3
 		<br>
 		<br>
 		<tr>
-			<td width="2%" style="text-align: center; border: 1 solid black; font-weight: bold; font-size: 5px;"><span><br>#<br></span></td>
-			<td width="9%" style="text-align: center; border: 1 solid black; font-weight: bold; font-size: 6px;"><span><br>MCA File No<br></span></td>
-			<td width="7%" style="text-align: center; border: 1 solid black; font-weight: bold; font-size: 6px;"><span><br>Destination<br></span></td>
-			<td width="7%" style="text-align: center; border: 1 solid black; font-weight: bold; font-size: 6px;"><span><br>Transporter<br></span></td>
-			<td width="6%" style="text-align: center; border: 1 solid black; font-weight: bold; font-size: 6px;"><span><br>Horse/Wagon<br></span></td>
-			<td width="5%" style="text-align: center; border: 1 solid black; font-weight: bold; font-size: 6px;"><span><br>Trailer 1<br></span></td>
-			<td width="5%" style="text-align: center; border: 1 solid black; font-weight: bold; font-size: 6px;"><span><br>Trailer 2<br></span></td>
-			<td width="7%" style="text-align: center; border: 1 solid black; font-weight: bold; font-size: 6px;"><span><br>Lot. No.<br></span></td>
-			<td width="4%" style="text-align: center; border: 1 solid black; font-weight: bold; font-size: 6px;"><span><br>Qty(Mt)<br></span></td>
-			<td width="4%" style="text-align: center; border: 1 solid black; font-weight: bold; font-size: 6px;"><span><br>Loading Date</span></td>
-			<td width="4%" style="text-align: center; border: 1 solid black; font-weight: bold; font-size: 6px;"><span><br>Declaration Ref.</span></td>
-			<td width="4%" style="text-align: center; border: 1 solid black; font-weight: bold; font-size: 6px;"><span><br>Declaration Date</span></td>
-			<td width="5%" style="text-align: center; border: 1 solid black; font-weight: bold; font-size: 6px;"><span><br>BCDC Rate</span></td>
-			<td width="4%" style="text-align: center; border: 1 solid black; font-weight: bold; font-size: 6px;"><span><br>Liquidation Ref.</span></td>
-			<td width="4%" style="text-align: center; border: 1 solid black; font-weight: bold; font-size: 6px;"><span><br>Liquidation Date</span></td>
-			<td width="4%" style="text-align: center; border: 1 solid black; font-weight: bold; font-size: 6px;"><span><br>Quittance Ref.</span></td>
-			<td width="4%" style="text-align: center; border: 1 solid black; font-weight: bold; font-size: 6px;"><span><br>Quittance Date</span></td>
-			<td width="10%" style="text-align: center; border: 1 solid black; font-weight: bold; font-size: 6px;"><span><br>Bank</span></td>
+			<td width="3%" style="text-align: center; border: 1 solid black; font-weight: bold; font-size: 7px;"><span><br>#<br></span></td>
+			<td width="9%" style="text-align: center; border: 1 solid black; font-weight: bold; font-size: 7px;"><span><br>MCA File No<br></span></td>
+			<td width="6%" style="text-align: center; border: 1 solid black; font-weight: bold; font-size: 7px;"><span><br>Qty(Mt)<br></span></td>
+			<td width="6%" style="text-align: center; border: 1 solid black; font-weight: bold; font-size: 7px;"><span><br>Loading Date</span></td>
+			<td width="6%" style="text-align: center; border: 1 solid black; font-weight: bold; font-size: 7px;"><span><br>Declaration Ref.</span></td>
+			<td width="6%" style="text-align: center; border: 1 solid black; font-weight: bold; font-size: 7px;"><span><br>Declaration Date</span></td>
+			<td width="7%" style="text-align: center; border: 1 solid black; font-weight: bold; font-size: 7px;"><span><br>BCC Rate</span></td>
+			<td width="6%" style="text-align: center; border: 1 solid black; font-weight: bold; font-size: 7px;"><span><br>Liquidation Ref.</span></td>
+			<td width="6%" style="text-align: center; border: 1 solid black; font-weight: bold; font-size: 7px;"><span><br>Liquidation Date</span></td>
+			<td width="7%" style="text-align: center; border: 1 solid black; font-weight: bold; font-size: 7px;"><span><br>Liq. Amt. CDF</span></td>
+			<td width="6%" style="text-align: center; border: 1 solid black; font-weight: bold; font-size: 7px;"><span><br>Quittance Ref.</span></td>
+			<td width="6%" style="text-align: center; border: 1 solid black; font-weight: bold; font-size: 7px;"><span><br>Quittance Date</span></td>
+			<td width="12%" style="text-align: center; border: 1 solid black; font-weight: bold; font-size: 7px;"><span><br>Bank</span></td>
+			<td width="7%" style="text-align: center; border: 1 solid black; font-weight: bold; font-size: 7px;"><span><br>Bank Rate</span></td>
+			<td width="7%" style="text-align: center; border: 1 solid black; font-weight: bold; font-size: 7px;"><span><br>Liq. Amt. USD</span></td>
 		</tr>
-		$dossiers2
+		$dossiers4
 		<br>
 		<br>
 		<br>
