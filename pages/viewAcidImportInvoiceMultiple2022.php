@@ -61,7 +61,7 @@ if (@file_exists(dirname(__FILE__).'/lang/eng.php')) {
 
 
 // set font
-$pdf->SetFont('helvetica', 'N', 8);
+$pdf->SetFont('helvetica', 'N', 7);
 // $pdf->SetFont('times', 'N', 8);
 // $pdf->SetFont('courier', 'N', 8);
 $pdf->setPrintHeader(false);
@@ -238,7 +238,7 @@ $tbl = <<<EOD
 		<tr>
 			<td width="15%" style="text-align: left; "></td>
 			<td width="40%"rowspan="2" colspan="2" style="text-align: left; border: 0.3px solid black; font-size: 7px;">&nbsp;<u>Dossier(s):</u> <br>
-			<b>$liste_dossiers</b></td>
+			<b><span>$liste_dossiers</span></b></td>
 		</tr>
 		<tr>
 			<td width="15%" style="text-align: left; "></td>
