@@ -563,6 +563,54 @@ $tbl = <<<EOD
 		<br>
 		<br>
 		<tr>
+			<td width="5%" style=""></td>
+			<td width="90%" style="text-align: right;">Details INV No. $ref_fact du $date_fact</td>
+			<td width="5%" style=""></td>
+		</tr>
+		<br>
+		<br>
+		<tr>
+			<td width="5%" style=""></td>
+			<td width="90%" style="text-align: center;"></td>
+			<td width="5%" style=""></td>
+		</tr>
+	</table>
+	</bodystyle="font-weight: bold;">
+	</html>
+        
+EOD;
+$pdf->writeHTML($tbl, true, false, false, false, '');
+
+// add a page
+$pdf->AddPage('L', 'A4');
+if ( ($maClasse-> getFactureGlobale($_GET['ref_fact'])['validation']) == '0' ) {
+	$pdf->Image('../images/no_valid.jpg', 150, 2, 30, '', '', '', '', false, 300);
+}else{
+	$pdf->Image('../images/signature_facture/'.$maClasse-> getDataUtilisateur($maClasse-> getFactureGlobale($_GET['ref_fact'])['id_util_validation'])['signature_facture'], 200, 152, $maClasse-> getDataUtilisateur($maClasse-> getFactureGlobale($_GET['ref_fact'])['id_util_validation'])['size_signature_facture_2'], '', '', '', '', false, 300);
+	
+}
+
+$tbl = <<<EOD
+    <html>
+    <head>
+        <meta http-equiv = " content-type " content = " text/html; charset=utf-8" />
+    </head>
+    <body style="font-weight: bold;" style="">
+	<table>
+		<br>
+		<br>
+		<br>
+		<tr>
+			<td width="5%" style=""></td>
+			<td width="80%" style="">$logo</td>
+			<td width="5%" style=""></td>
+		</tr>
+		<br>
+		<tr>
+			<td width="5%" style=""></td>
+			<td width="83%" style="">DETAILS - EXPORT CLEARING $marchandise LOADS</td>
+		</tr>
+		<tr>
 			<td width="3%" style="text-align: center; border: 1 solid black; font-weight: bold; font-size: 7px;"><span><br>#<br></span></td>
 			<td width="9%" style="text-align: center; border: 1 solid black; font-weight: bold; font-size: 7px;"><span><br>MCA File No<br></span></td>
 			<td width="6%" style="text-align: center; border: 1 solid black; font-weight: bold; font-size: 7px;"><span><br>Qty(Mt)<br></span></td>
