@@ -580,7 +580,8 @@ $tbl = <<<EOD
         
 EOD;
 $pdf->writeHTML($tbl, true, false, false, false, '');
-
+if ($facture['id_cli']!=845) {
+	
 // add a page
 $pdf->AddPage('L', 'A4');
 if ( ($maClasse-> getFactureGlobale($_GET['ref_fact'])['validation']) == '0' ) {
@@ -650,6 +651,7 @@ $tbl = <<<EOD
 EOD;
 $pdf->writeHTML($tbl, true, false, false, false, '');
 
+}
 // Clean any content of the output buffer
 ob_end_clean();
 
