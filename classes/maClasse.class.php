@@ -22906,7 +22906,7 @@
 			return $liste;
 		}
 
-		public function afficherRowTableau($id_mod_lic, $id_cli, $id_mod_trans, $id_dos, $compteur, $statut=NULL, $klsa_status=NULL, $amicongo_status=NULL, $kzi_status=NULL){
+		public function afficherRowTableau($id_mod_lic, $id_cli, $id_mod_trans, $id_dos, $compteur, $statut=NULL, $klsa_status=NULL, $amicongo_status=NULL, $kzi_status=NULL, $clignoteDos=NULL){
 			include('connexion.php');
 			$entree['id_mod_lic'] = $id_mod_lic;
 			if ($id_cli == 869 && $_GET['id_march'] == 11) {
@@ -30483,7 +30483,7 @@
                       </span>
 					</td>
 					<?php
-					$this-> afficherRowTableau($id_mod_lic, $id_cli, $id_mod_trans, $reponse['id_dos'], $compteur, $reponse['statut'], $reponse['klsa_status'], $reponse['amicongo_status'], $reponse['kzi_status']);
+					$this-> afficherRowTableau($id_mod_lic, $id_cli, $id_mod_trans, $reponse['id_dos'], $compteur, $reponse['statut'], $reponse['klsa_status'], $reponse['amicongo_status'], $reponse['kzi_status'], $clignoteDos);
 						/*if ($id_mod_trans == '1') {
 							include('importRouteRow.php');
 						}else if ($id_mod_trans == '3') {
@@ -35715,7 +35715,8 @@
 			if ($id_cli==869 && $id_mod_lic==2) {
 				$nbre = $this-> getNombreMcaFileAcide($id_cli, $id_mod_trans, $id_march, $id_mod_lic);
 			}else{
-				$nbre = $this-> getNombreMcaFileExport($id_cli, $id_mod_trans, $id_march, $id_mod_lic);
+				$nbre = $this-> getNombreMcaFileAcide($id_cli, $id_mod_trans, $id_march, $id_mod_lic);
+				// $nbre = $this-> getNombreMcaFileExport($id_cli, $id_mod_trans, $id_march, $id_mod_lic);
 			}
 			
 			if ($nbre > 20) {
@@ -42693,10 +42694,16 @@
 														l.poids - SUM(
 															IF(dos.poids IS NULL, 0, dos.poids)
 														) 
-													)AS solde_poids
+													)AS solde_poids,
+													IF(march.id_march IS NULL,
+														l.commodity,
+														march.nom_march
+													) AS commodity
 											FROM licence l
 												LEFT JOIN dossier dos
 													ON l.num_lic = dos.num_lic
+												LEFT JOIN marchandise march
+													ON l.id_march = march.id_march
 											WHERE l.id_cli = ?
 												AND l.id_mod_lic = ?
 												AND l.num_lic IN (SELECT num_lic FROM expiration_licence WHERE date_exp >= DATE(CURRENT_DATE))
