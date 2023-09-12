@@ -837,7 +837,10 @@ for ($i=1; $i <= 15 ; $i++) {
                 <?php
                 if($_GET['id_mod_trac'] == '1' && $_SESSION['id_role'] != '7' && $_SESSION['id_role'] != '8' && $_SESSION['id_role'] != '9' && $_SESSION['id_role'] != '10' && $_GET['id_march'] != '18'){
                   ?>
-                <button class="btn btn-xs btn-info square-btn-adjust" data-toggle="modal" data-target=".nouveauDossierExport" <?php echo $maClasse-> getDataUtilisateur($_SESSION['id_util'])['tracking_enab']?>>
+                <!-- <button class="btn btn-xs btn-info square-btn-adjust" data-toggle="modal" data-target=".nouveauDossierExport" <?php echo $maClasse-> getDataUtilisateur($_SESSION['id_util'])['tracking_enab']?>>
+                    <i class="fa fa-plus"></i> Nouveau Dossier
+                </button> -->
+                <button class="btn btn-xs btn-info square-btn-adjust" onclick="modal_nouveauDossierLicence();" <?php echo $maClasse-> getDataUtilisateur($_SESSION['id_util'])['tracking_enab']?>>
                     <i class="fa fa-plus"></i> Nouveau Dossier
                 </button>
                   <?php
@@ -1199,7 +1202,7 @@ for ($i=1; $i <= 15 ; $i++) {
     <!-- /.content -->
   </div>
   <?php include("pied.php");?>
-  <?php include("script.php");?>
+  <?php //include("script.php");?>
 
 <?php
 if(isset($_GET['id_mod_trac'])){
@@ -2280,7 +2283,7 @@ if(isset($_GET['id_mod_trac']) && isset($_GET['id_mod_trac'])){
 
   $modele = $maClasse-> getElementModeleLicence($_GET['id_mod_trac']);
   //$marchandise = $maClasse-> getElementMarchandise($_GET['id_march']);
-  /*
+  
 ?>
 
 <div class="modal fade update" id="modal-default">
@@ -2339,7 +2342,7 @@ if(isset($_GET['id_mod_trac']) && isset($_GET['id_mod_trac'])){
 </div>
 
 <?php
-*/
+
 }
 ?>
 <?php

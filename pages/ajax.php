@@ -2105,32 +2105,101 @@
 	}elseif(isset($_POST['operation']) && $_POST['operation']=='tableau_creation_dossiers_lot'){ 
 
 		$ref_dos = $maClasse-> getMcaFileExport($_POST['id_cli'], $_POST['id_mod_trans'], $_POST['id_march'], $_POST['id_mod_lic'], 1);
-
+		$site = $maClasse-> getClient($_POST['id_cli'])['site'];
 		$response['tableau_creation_dossiers_lot'] = '';
-		for ($i=1; $i <= $_POST['nbre'] ; $i++) { 
+		if ($_POST['id_mod_lic']==1) {
+
+			if ($_POST['id_mod_trans'] == '1') {
+				$maxPoids = 'max=40';
+			}else{
+				$maxPoids = 'max=50';
+			}
+
+			for ($i=1; $i <= $_POST['nbre'] ; $i++) { 
 			
-			$response['tableau_creation_dossiers_lot'] .= '<tr>
-										<td class="col_1">'.$i.'</td>
-										<td class="col_6"><input type="text" name="ref_dos_'.$i.'" id="ref_dos_'.$i.'" value="'.$ref_dos.'"></td>
-										<td><input type="text" name="num_lic_'.$i.'" id="num_lic_'.$i.'" value="'.$_POST['num_lic'].'"></td>
-										<td><input type="text" name="t1_'.$i.'" id="t1_'.$i.'"></td>
-										<td><input type="number" step="0.001" name="poids_'.$i.'" id="poids_'.$i.'"></td>
-										<td><input type="number" step="0.001" name="fob_'.$i.'" id="fob_'.$i.'"></td>
-										<td><input type="text" name="ref_fact_'.$i.'" id="ref_fact_'.$i.'"></td>
-										<td><input type="text" name="horse_'.$i.'" id="horse_'.$i.'"></td>
-										<td><input type="text" name="trailer_1_'.$i.'" id="trailer_1_'.$i.'"></td>
-										<td><input type="text" name="trailer_2_'.$i.'" id="trailer_2_'.$i.'"></td>
-											<td><input type="date" name="klsa_arriv_'.$i.'" id="klsa_arriv_'.$i.'"></td>
-										<td><input type="date" name="crossing_date_'.$i.'" id="crossing_date_'.$i.'"></td>
-										<td><input type="date" name="wiski_arriv_'.$i.'" id="wiski_arriv_'.$i.'"></td>
-										<td><input type="date" name="wiski_dep_'.$i.'" id="wiski_dep_'.$i.'"></td>
-										<td><input type="text" name="ref_crf_'.$i.'" id="ref_crf_'.$i.'"></td>
-										<td><input type="date" name="date_crf_'.$i.'" id="date_crf_'.$i.'"></td>
-									</tr>';
+				$response['tableau_creation_dossiers_lot'] .= '<tr>
+											<td class="col_1">'.$i.'</td>
+											<td class="col_6"><input type="text" name="ref_dos_'.$i.'" id="ref_dos_'.$i.'" value="'.$ref_dos.'"></td>
+											<td><input type="text" name="num_lic_'.$i.'" id="num_lic_'.$i.'" value="'.$_POST['num_lic'].'"></td>
+				<td style="border: 0.5px solid black;">
+					<input type="date" style="width: 10em;" class="form-control cc-exp form-control-sm" name="load_date_'.$i.'">
+				</td>
+				<td style="border: 0.5px solid black;">
+					<input type="text" value="'.$site.'" style="width: 10em;" class="form-control cc-exp form-control-sm" name="site_load_'.$i.'">
+				</td>
+				<td style="border: 0.5px solid black;">
+					<input type="text" style="width: 10em;" class="form-control cc-exp form-control-sm" name="destination_'.$i.'">
+				</td>
+				<td style="border: 0.5px solid black;">
+					<input type="text" style="width: 10em;" class="form-control cc-exp form-control-sm" name="horse_'.$i.'">
+				</td>';
+				if ($_POST['id_mod_trans'] != '4') {
+					$response['tableau_creation_dossiers_lot'] .= '
+						<td style="border: 0.5px solid black;">
+							<input type="text" style="width: 10em;" class="form-control cc-exp form-control-sm" name="trailer_1_'.$i.'">
+						</td>
+						<td style="border: 0.5px solid black;">
+							<input type="text" style="width: 10em;" class="form-control cc-exp form-control-sm" name="trailer_2_'.$i.'">
+						</td>';
+				} else {
+					$response['tableau_creation_dossiers_lot'] .= '
+						<input type="hidden" style="width: 10em;" class="form-control cc-exp form-control-sm" name="trailer_1_'.$i.'">
+						<input type="hidden" style="width: 10em;" class="form-control cc-exp form-control-sm" name="trailer_2_'.$i.'">';
+				}
+				$response['tableau_creation_dossiers_lot'] .= '
+				<td style="border: 0.5px solid black;">
+					<input type="text" style="width: 10em;" class="form-control cc-exp form-control-sm" name="nbr_bags_'.$i.'">
+				</td>
+				<td style="border: 0.5px solid black;">
+					<input type="number" step="0.001" style="width: 10em;" '.$maxPoids.' class="form-control cc-exp form-control-sm" name="poids_'.$i.'">
+				</td>
+				<td style="border: 0.5px solid black;">
+					<input type="text" style="width: 10em;" class="form-control cc-exp form-control-sm" name="num_lot_'.$i.'">
+				</td>
+				<td style="border: 0.5px solid black;">
+					<input type="text" style="width: 10em;" class="form-control cc-exp form-control-sm" name="dgda_seal_'.$i.'">
+				</td>';
+				if ($_POST['id_mod_trans'] != '4') {
+					$response['tableau_creation_dossiers_lot'] .= '
+						<td style="border: 0.5px solid black;">
+							<input type="text" style="width: 10em;" class="form-control cc-exp form-control-sm" name="transporter_'.$i.'">
+						</td>';
+				} else {
+					$response['tableau_creation_dossiers_lot'] .= '
+						<input type="hidden" style="width: 10em;" class="form-control cc-exp form-control-sm" name="transporter_'.$i.'">';
+				}
+				$response['tableau_creation_dossiers_lot'] .= '</tr>';
 
-			$ref_dos++;
+				$ref_dos++;
 
+			}
+		}else{
+			for ($i=1; $i <= $_POST['nbre'] ; $i++) { 
+			
+				$response['tableau_creation_dossiers_lot'] .= '<tr>
+											<td class="col_1">'.$i.'</td>
+											<td class="col_6"><input type="text" name="ref_dos_'.$i.'" id="ref_dos_'.$i.'" value="'.$ref_dos.'"></td>
+											<td><input type="text" name="num_lic_'.$i.'" id="num_lic_'.$i.'" value="'.$_POST['num_lic'].'"></td>
+											<td><input type="text" name="t1_'.$i.'" id="t1_'.$i.'"></td>
+											<td><input type="number" step="0.001" name="poids_'.$i.'" id="poids_'.$i.'"></td>
+											<td><input type="number" step="0.001" name="fob_'.$i.'" id="fob_'.$i.'"></td>
+											<td><input type="text" name="ref_fact_'.$i.'" id="ref_fact_'.$i.'"></td>
+											<td><input type="text" name="horse_'.$i.'" id="horse_'.$i.'"></td>
+											<td><input type="text" name="trailer_1_'.$i.'" id="trailer_1_'.$i.'"></td>
+											<td><input type="text" name="trailer_2_'.$i.'" id="trailer_2_'.$i.'"></td>
+												<td><input type="date" name="klsa_arriv_'.$i.'" id="klsa_arriv_'.$i.'"></td>
+											<td><input type="date" name="crossing_date_'.$i.'" id="crossing_date_'.$i.'"></td>
+											<td><input type="date" name="wiski_arriv_'.$i.'" id="wiski_arriv_'.$i.'"></td>
+											<td><input type="date" name="wiski_dep_'.$i.'" id="wiski_dep_'.$i.'"></td>
+											<td><input type="text" name="ref_crf_'.$i.'" id="ref_crf_'.$i.'"></td>
+											<td><input type="date" name="date_crf_'.$i.'" id="date_crf_'.$i.'"></td>
+										</tr>';
+
+				$ref_dos++;
+
+			}
 		}
+		
 		$response['tableau_creation_dossiers_lot'] .='<input type="hidden" name="nbre" value="'.$i.'">';
 
 		echo json_encode($response);
