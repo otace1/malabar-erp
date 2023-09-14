@@ -38031,6 +38031,8 @@
 													fd.ref_fact AS ref_fact, 
 													dos.po_ref AS po_ref,
 													dos.roe_decl AS roe_decl,
+													dos.container AS container,
+													dos.pied_container AS pied_container,
 													IF(dos.poids>1,
 														dos.poids,
 														1
@@ -38126,6 +38128,12 @@
 															0
 														)
 													) AS ops_fee,
+													SUM(
+														IF(deb.id_deb='196' OR deb.id_deb='197' OR deb.id_deb='198',
+															det.montant,
+															0
+														)
+													) AS ogefrem_contenair,
 													SUM(
 														IF(deb.id_t_deb='3' AND det.usd='1' AND det.tva='1',
 															det.montant*0.16,
