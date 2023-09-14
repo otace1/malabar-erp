@@ -7502,7 +7502,7 @@
 												FROM debours d, detail_facture_dossier det, dossier dos
 												WHERE det.ref_fact = ?
 													AND det.id_deb = d.id_deb
-													AND (d.id_deb = 2 OR d.id_deb = 7 OR d.id_deb = 5 OR d.id_deb = 6 OR d.id_deb = 9 OR d.id_deb = 10 OR d.id_deb = 11 OR d.id_deb = 12 OR d.id_deb = 13)
+													AND (d.id_deb = 2 OR d.id_deb = 7 OR d.id_deb = 5 OR d.id_deb = 6 OR d.id_deb = 9 OR d.id_deb = 10 OR d.id_deb = 11 OR d.id_deb = 12 OR d.id_deb = 13 OR d.id_deb = 196 OR d.id_deb = 197 OR d.id_deb = 198)
 													AND det.id_dos = dos.id_dos
 												GROUP BY d.id_deb');
 			$requete-> execute(array($entree['ref_fact']));
