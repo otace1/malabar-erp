@@ -204,14 +204,6 @@ for ($i=1; $i <= 15 ; $i++) {
         $maClasse-> MAJ_trailer_2($_POST['id_dos_'.$i], $_POST['trailer_2_'.$i]);
       }
       
-      if (isset($_POST['pied_container_'.$i]) && ($_POST['pied_container_'.$i] != '')) {
-        $maClasse-> MAJ_pied_container($_POST['id_dos_'.$i], $_POST['pied_container_'.$i]);
-      }
-      
-      if (isset($_POST['container_'.$i]) && ($_POST['container_'.$i] != '')) {
-        $maClasse-> MAJ_container($_POST['id_dos_'.$i], $_POST['container_'.$i]);
-      }
-      
       if (isset($_POST['crossing_date_'.$i]) && ($_POST['crossing_date_'.$i] != '')) {
         $maClasse-> MAJ_crossing_date($_POST['id_dos_'.$i], $_POST['crossing_date_'.$i]);
       }
@@ -819,8 +811,7 @@ for ($i=1; $i <= 15 ; $i++) {
                                                       $_POST['trailer_2_'.$i], $_POST['site_load_'.$i], 
                                                       $_POST['destination_'.$i], $_POST['transporter_'.$i], 
                                                       $_POST['nbr_bags_'.$i], $_POST['poids_'.$i], 
-                                                      $_POST['load_date_'.$i], $_POST['dgda_seal_'.$i], 
-                                                      $_POST['container_'.$i], $_POST['pied_container_'.$i]);
+                                                      $_POST['load_date_'.$i], $_POST['dgda_seal_'.$i]);
 
                               }
 

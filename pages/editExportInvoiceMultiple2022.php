@@ -107,6 +107,9 @@
                   <th>GOVERNORS TAX($)</th>
                   <th>CONCENTRATE TAX($)</th>
                   <th>FERE($)</th>
+                  <th>Container 10'($)</th>
+                  <th>Container 20'($)</th>
+                  <th>Container 40'($)</th>
                   <th>LMC($)</th>
                   <th>OCC : SAMPLING($)</th>
                   <th>OCC/CGEA($)</th>

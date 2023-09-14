@@ -104,7 +104,7 @@ $logo = '<img src="../images/malabar2.png" width="250px">';
 	
 $facture = $maClasse-> getDataFactureGlobale($_GET['ref_fact']);
 // $dossiers = $maClasse-> getDossierFactureExportSingle($_GET['ref_fact']);
-$dossiers3 = $maClasse-> getDossierFactureExportSingle3($_GET['ref_fact']);
+$dossiers5 = $maClasse-> getDossierFactureExportSingle5($_GET['ref_fact']);
 // $dossiers2 = $maClasse-> getDossierFactureExportSingle2($_GET['ref_fact']);
 $dossiers4 = $maClasse-> getDossierFactureExportSingle4($_GET['ref_fact']);
 
@@ -171,6 +171,7 @@ $ref_quit = $maClasse-> getDataDossiersMultipleInvoice($_GET['ref_fact'])['ref_q
 $date_quit = $maClasse-> getDataDossiersMultipleInvoice($_GET['ref_fact'])['date_quit'];
 $ref_crf = $maClasse-> getDataDossiersMultipleInvoice($_GET['ref_fact'])['ref_crf'];
 $poids = number_format($maClasse-> getPoidsFacture($_GET['ref_fact']), 2, ',', ' ');
+$poids_fere = number_format($maClasse-> getPoidsFactureFERE($_GET['ref_fact']), 2, ',', ' ');
 $road_manif = $maClasse-> getDataDossiersMultipleInvoice($_GET['ref_fact'])['road_manif'];
 
 $liste_dossiers = $maClasse-> getRangDossierFacture($_GET['ref_fact']);
@@ -210,7 +211,7 @@ $cost_2 = number_format($maClasse-> getMontantFactureDossierDebours3($_GET['ref_
 $sub_totat_2 = number_format($maClasse-> getMontantFactureDossierDebours3($_GET['ref_fact'], 7), 2, ',', ' ');
 $total_2 = number_format($maClasse-> getMontantFactureDossierDeboursWithTVA($_GET['ref_fact'], 7), 2, ',', ' ');
 
-$cost_3 = number_format($maClasse-> getMontantFactureDossierDebours3($_GET['ref_fact'], 5)/$maClasse-> getPoidsFacture($_GET['ref_fact']), 2, ',', ' ');
+$cost_3 = number_format($maClasse-> getMontantFactureDossierDebours3($_GET['ref_fact'], 5)/$maClasse-> getPoidsFactureFERE($_GET['ref_fact']), 2, ',', ' ');
 $sub_totat_3 = number_format($maClasse-> getMontantFactureDossierDebours3($_GET['ref_fact'], 5), 2, ',', ' ');
 $total_3 = number_format($maClasse-> getMontantFactureDossierDeboursWithTVA($_GET['ref_fact'], 5), 2, ',', ' ');
 
@@ -241,6 +242,11 @@ $nbre_dos_debours_9 = $maClasse-> getDataDossiersFactureDebours($_GET['ref_fact'
 $cost_9 = number_format($maClasse-> getMontantDeboursDetailFacture($_GET['ref_fact'], 13), 2, ',', ' ');
 $sub_totat_9 = number_format($maClasse-> getMontantFactureDossierDebours3($_GET['ref_fact'], 13), 2, ',', ' ');
 $total_9 = number_format($maClasse-> getMontantFactureDossierDeboursWithTVA($_GET['ref_fact'], 13), 2, ',', ' ');
+
+$nbre_dos_debours_ogefrem_40 = $maClasse-> getDataDossiersFactureDebours($_GET['ref_fact'], 198)['nbre_dos'];
+$cost_ogefrem_40 = number_format($maClasse-> getMontantDeboursDetailFacture($_GET['ref_fact'], 198), 2, ',', ' ');
+$sub_totat_ogefrem_40 = number_format($maClasse-> getMontantFactureDossierDebours3($_GET['ref_fact'], 198), 2, ',', ' ');
+$total_ogefrem_40 = number_format($maClasse-> getMontantFactureDossierDeboursWithTVA($_GET['ref_fact'], 198), 2, ',', ' ');
 
 $sub_total_1 = $maClasse-> getTotalFactureMMGExport_1($_GET['ref_fact']);
 
@@ -502,11 +508,19 @@ $tbl = <<<EOD
 		</tr>
 		<tr>
 			<td style="text-align: left; border-left: 1px solid black; border-right: 0.5px solid black; font-size: 6.5px;" colspan="2" width="49%">&nbsp;&nbsp;FICHE ELECTRONIQUE DE RENSEIGNEMENT A L'EXPORTATION</td>
-			<td style="text-align: center; border-right: 0.5px solid black; font-size: 6.5px;" width="6%">$poids</td>
+			<td style="text-align: center; border-right: 0.5px solid black; font-size: 6.5px;" width="6%">$poids_fere</td>
 			<td style="text-align: center; border-right: 0.5px solid black; font-size: 6.5px;" width="11%">$cost_3</td>
 			<td style="text-align: right; border-right: 0.5px solid black; font-size: 6.5px;" width="11%">$sub_totat_3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
 			<td style="text-align: right; border-right: 0.5px solid black; font-size: 6.5px;" width="11.5%">0,00&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
 			<td style="text-align: right; border-right: 1px solid black; font-size: 6.5px;" width="11.5%">$total_3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+		</tr>
+		<tr>
+			<td style="text-align: left; border-left: 1px solid black; border-right: 0.5px solid black; font-size: 6.5px;" colspan="2" width="49%">&nbsp;&nbsp;OGEFREM 40''</td>
+			<td style="text-align: center; border-right: 0.5px solid black; font-size: 6.5px;" width="6%">$nbre_dos_debours_ogefrem_40</td>
+			<td style="text-align: center; border-right: 0.5px solid black; font-size: 6.5px;" width="11%">$cost_ogefrem_40</td>
+			<td style="text-align: right; border-right: 0.5px solid black; font-size: 6.5px;" width="11%">$sub_totat_ogefrem_40&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+			<td style="text-align: right; border-right: 0.5px solid black; font-size: 6.5px;" width="11.5%">0,00&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+			<td style="text-align: right; border-right: 1px solid black; font-size: 6.5px;" width="11.5%">$total_ogefrem_40&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
 		</tr>
 		<tr>
 			<td style="text-align: left; border-left: 1px solid black; border-right: 0.5px solid black; font-size: 6.5px;" colspan="2" width="49%">&nbsp;&nbsp;LIGNE MARITIME CONGOLAISE (LMC)</td>
@@ -808,20 +822,22 @@ $tbl = <<<EOD
 			<td width="83%" style="">DETAILS - EXPORT CLEARING $marchandise LOADS</td>
 		</tr>
 		<tr>
-			<td width="3%" style="text-align: center; border: 1 solid black; font-weight: bold; font-size: 7px;"><span><br>#<br></span></td>
-			<td width="11%" style="text-align: center; border: 1 solid black; font-weight: bold; font-size: 7px;"><span><br>MCA File No<br></span></td>
-			<td width="10%" style="text-align: center; border: 1 solid black; font-weight: bold; font-size: 7px;"><span><br>Destination<br></span></td>
-			<td width="10%" style="text-align: center; border: 1 solid black; font-weight: bold; font-size: 7px;"><span><br>Transporter<br></span></td>
-			<td width="9%" style="text-align: center; border: 1 solid black; font-weight: bold; font-size: 7px;"><span><br>Horse/Wagon<br></span></td>
-			<td width="8%" style="text-align: center; border: 1 solid black; font-weight: bold; font-size: 7px;"><span><br>Trailer 1<br></span></td>
-			<td width="8%" style="text-align: center; border: 1 solid black; font-weight: bold; font-size: 7px;"><span><br>Trailer 2<br></span></td>
-			<td width="10%" style="text-align: center; border: 1 solid black; font-weight: bold; font-size: 7px;"><span><br>Lot. No.<br></span></td>
-			<td width="7%" style="text-align: center; border: 1 solid black; font-weight: bold; font-size: 7px;"><span><br>Qty(Mt)<br></span></td>
-			<td width="7%" style="text-align: center; border: 1 solid black; font-weight: bold; font-size: 7px;"><span><br>Loading Date</span></td>
-			<td width="10%" style="text-align: center; border: 1 solid black; font-weight: bold; font-size: 7px;"><span><br>Clearing Completed Date</span></td>
-			<td width="7%" style="text-align: center; border: 1 solid black; font-weight: bold; font-size: 7px;"><span><br>CLEARED<br></span></td>
+			<td width="2%" style="text-align: center; border: 1 solid black; font-weight: bold; font-size: 7px;"><span><br>#<br></span></td>
+			<td width="10%" style="text-align: center; border: 1 solid black; font-weight: bold; font-size: 7px;"><span><br>MCA File No<br></span></td>
+			<td width="9%" style="text-align: center; border: 1 solid black; font-weight: bold; font-size: 7px;"><span><br>Destination<br></span></td>
+			<td width="9%" style="text-align: center; border: 1 solid black; font-weight: bold; font-size: 7px;"><span><br>Transporter<br></span></td>
+			<td width="8%" style="text-align: center; border: 1 solid black; font-weight: bold; font-size: 7px;"><span><br>Horse/Wagon<br></span></td>
+			<td width="7%" style="text-align: center; border: 1 solid black; font-weight: bold; font-size: 7px;"><span><br>Trailer 1<br></span></td>
+			<td width="7%" style="text-align: center; border: 1 solid black; font-weight: bold; font-size: 7px;"><span><br>Trailer 2<br></span></td>
+			<td width="8%" style="text-align: center; border: 1 solid black; font-weight: bold; font-size: 7px;"><span><br>Container<br></span></td>
+			<td width="4%" style="text-align: center; border: 1 solid black; font-weight: bold; font-size: 7px;"><span><br>Feet<br></span></td>
+			<td width="9%" style="text-align: center; border: 1 solid black; font-weight: bold; font-size: 7px;"><span><br>Lot. No.<br></span></td>
+			<td width="6%" style="text-align: center; border: 1 solid black; font-weight: bold; font-size: 7px;"><span><br>Qty(Mt)<br></span></td>
+			<td width="6%" style="text-align: center; border: 1 solid black; font-weight: bold; font-size: 7px;"><span><br>Loading Date</span></td>
+			<td width="9%" style="text-align: center; border: 1 solid black; font-weight: bold; font-size: 7px;"><span><br>Clearing Completed Date</span></td>
+			<td width="6%" style="text-align: center; border: 1 solid black; font-weight: bold; font-size: 7px;"><span><br>CLEARED<br></span></td>
 		</tr>
-		$dossiers3
+		$dossiers5
 		<br>
 		<br>
 		<tr>

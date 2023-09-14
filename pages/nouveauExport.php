@@ -164,6 +164,8 @@ if(isset($_GET['id_mod_trac']) && $_GET['id_mod_trac'] == 1){
                       <th style="">Horse</th>
                       <th style="">Trailer 1</th>
                       <th style="">Trailer 2</th>
+                      <th style="">Contenair</th>
+                      <th style="">Feet Contenair</th>
                         <?php
                       }
                       ?>
