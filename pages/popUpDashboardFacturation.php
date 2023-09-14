@@ -125,6 +125,9 @@
                       <th>Total Invoice</th>
                       <th>Status</th>
                       <th></th>
+                      <th>Container</th>
+                      <th>Feet</th>
+                      <th>Amount</th>
                       <?php
                       }else if ($_GET['statut']=='Dossiers Facturés' && $_GET['id_mod_lic']=='2') {
                       ?>
@@ -577,7 +580,13 @@
             className: 'dt-body-right'
           },
           {"data":"statut"},
-          {"data":"view_page"}
+          {"data":"view_page"},
+          {"data":"container"},
+          {"data":"pied_container"},
+          {"data":"ogefrem_contenair",
+            render: DataTable.render.number( null, null, 2, null ),
+            className: 'dt-body-right'
+          }
         ] 
             <?php
           }else if ($_GET['statut']=='Dossiers Non Facturés'){
