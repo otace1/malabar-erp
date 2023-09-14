@@ -13348,7 +13348,8 @@
 				return $reponse;
 			}else if ($id_deb == 11) {
 				if ($this-> getDossier($id_dos)['poids']<=30) {
-					$reponse['montant'] = 125;
+					// $reponse['montant'] = 125;
+					$reponse['montant'] = 300;
 				}else{
 					$reponse['montant'] = 0;
 				}
@@ -13356,7 +13357,8 @@
 				return $reponse;
 			}else if ($id_deb == 12) {
 				if ($this-> getDossier($id_dos)['poids']>30) {
-					$reponse['montant'] = 250;
+					// $reponse['montant'] = 250;
+					$reponse['montant'] = 450;
 				}else{
 					$reponse['montant'] = 0;
 				}
@@ -13420,7 +13422,8 @@
 				return $reponse;
 			}else if ($id_deb == 11) {
 				if ($this-> getDossier($id_dos)['poids']<=30) {
-					$reponse['montant'] = 125;
+					// $reponse['montant'] = 125;
+					$reponse['montant'] = 300;
 				}else{
 					$reponse['montant'] = 0;
 				}
@@ -13428,7 +13431,8 @@
 				return $reponse;
 			}else if ($id_deb == 12) {
 				if ($this-> getDossier($id_dos)['poids']>30) {
-					$reponse['montant'] = 250;
+					// $reponse['montant'] = 250;
+					$reponse['montant'] = 450;
 				}else{
 					$reponse['montant'] = 0;
 				}
