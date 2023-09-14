@@ -1921,7 +1921,8 @@
 		public function creerDossierEB($ref_dos, $id_cli, $num_lic, $id_march, $id_mod_lic, 
 										$id_mod_trans, $id_util, $num_lot, $horse, $trailer_1, 
 										$trailer_2, $site_load, $destination, $transporter, 
-										$nbr_bags, $poids, $load_date, $dgda_seal){
+										$nbr_bags, $poids, $load_date, $dgda_seal, $container, 
+										$pied_container){
 			include('connexion.php');
 
 			$entree['ref_dos'] = $ref_dos;
@@ -1942,6 +1943,8 @@
 			$entree['poids'] = $poids;
 			$entree['load_date'] = $load_date;
 			$entree['dgda_seal'] = $dgda_seal;
+			$entree['container'] = $container;
+			$entree['pied_container'] = $pied_container;
 
 			/*echo '<br>ref_dos = '.$ref_dos;
 			echo '<br>id_cli = '.$id_cli;
@@ -1979,14 +1982,16 @@
 																		id_mod_lic, id_mod_trans, id_util, 
 																		num_lot, horse, trailer_1, trailer_2, 
 																		site_load, destination, transporter, 
-																		nbr_bags, poids, load_date, dgda_seal)
-													VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
+																		nbr_bags, poids, load_date, dgda_seal,
+																		container, pied_container)
+													VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
 				$requete-> execute(array($entree['ref_dos'], $entree['id_cli'], $entree['num_lic'], 
 										$entree['id_march'], $entree['id_mod_lic'], $entree['id_mod_trans'], 
 										$entree['id_util'], $entree['num_lot'], $entree['horse'], 
 										$entree['trailer_1'], $entree['trailer_2'], $entree['site_load'], 
 										$entree['destination'], $entree['transporter'], $entree['nbr_bags'], 
-										$entree['poids'], $entree['load_date'], $entree['dgda_seal']));
+										$entree['poids'], $entree['load_date'], $entree['dgda_seal'], $entree['container'], 
+										$entree['pied_container']));
 			}
 
 		}
@@ -6265,6 +6270,116 @@
 						<td width="69%" style="text-align: center; border: 1 solid black; font-size: 7px;"></td>
 						<td width="7%" style="text-align: center; border: 1 solid black; font-size: 7px;">'.number_format($total_poids, 3, ',', '.').'</td>
 						<td width="24%" style="text-align: center; border: 1 solid black; font-size: 7px;"></td>
+					</tr>
+				';
+
+			return $tbl;
+		}
+
+		public function getDossierFactureExportSingle5($ref_fact){
+			include('connexion.php');
+			$entree['ref_fact'] = $ref_fact;
+
+			$tbl = '';
+			$compteur=0;
+			$liquidation_usd=0;
+			$liquidation_cdf=0;
+			$total_poids = 0;
+			$requete = $connexion-> prepare('SELECT dos.ref_dos AS ref_dos,
+													dos.destination AS destination,
+													dos.transporter AS transporter,
+													dos.horse AS horse,
+													dos.trailer_1 AS trailer_1,
+													dos.trailer_2 AS trailer_2,
+													dos.container AS container,
+													dos.pied_container AS pied_container,
+													dos.num_lot AS num_lot,
+													dos.poids AS poids,
+													dos.ref_liq AS ref_liq,
+													dos.ref_quit AS ref_quit,
+													dos.roe_decl AS roe_decl,
+													dos.montant_liq AS montant_liq,
+													DATE_FORMAT(dos.load_date, "%d/%m/%Y") AS load_date,
+													DATE_FORMAT(dos.date_liq, "%d/%m/%Y") AS date_liq,
+													DATE_FORMAT(dos.date_quit, "%d/%m/%Y") AS exit_drc,
+													-- IF(dos.cleared="1",
+													-- 	"CLEARED",
+													-- 	"TRANSIT") AS cleared
+													"CLEARED" AS cleared,
+													SUM(
+														IF(det.usd="0" AND d.id_t_deb="1", 
+															IF(det.tva="1",
+																IF(det.montant_tva>0,
+																	(det.montant_tva+det.montant),
+																	(det.montant*0.16)
+																),
+																det.montant
+															), 
+															0
+														)
+													) AS liquidation_cdf,
+													SUM(
+														IF(det.usd="0" AND d.id_t_deb="1", 
+															IF(det.tva="1",
+																IF(det.montant_tva>0,
+																	(det.montant_tva+det.montant)/dos.roe_decl,
+																	(det.montant*0.16)/dos.roe_decl
+																),
+																det.montant/dos.roe_decl
+															), 
+															0
+														)
+													) AS liquidation_usd,
+													SUM(
+														IF(det.usd="0" AND d.id_t_deb="1", 
+															IF(det.tva="1",
+																IF(det.montant_tva>0,
+																	((det.montant_tva+det.montant)/dos.roe_decl)/dos.poids,
+																	(det.montant*0.16)/dos.roe_decl
+																),
+																(det.montant/dos.roe_decl)/dos.poids
+															), 
+															0
+														)
+													) AS liquidation_usd_per_ton
+												FROM debours d, detail_facture_dossier det, dossier dos
+												WHERE det.ref_fact = ?
+													AND det.id_deb = d.id_deb
+													AND det.id_dos = dos.id_dos
+												GROUP BY dos.id_dos');
+			$requete-> execute(array($entree['ref_fact']));
+			while($reponse = $requete-> fetch()){
+				$compteur++;
+				$total_poids+=$reponse['poids'];
+				$liquidation_usd+=$reponse['liquidation_usd'];
+				$liquidation_cdf+=$reponse['liquidation_cdf'];
+
+				$tbl .= '
+						<tr>
+							<td width="2%" style="text-align: center; border: 1 solid black; font-size: 7px;">'.$compteur.'</td>
+							<td width="10%" style="text-align: center; border: 1 solid black; font-size: 7px;">'.$reponse['ref_dos'].'</td>
+							<td width="9%" style="text-align: center; border: 1 solid black; font-size: 7px;">'.$reponse['destination'].'</td>
+							<td width="9%" style="text-align: center; border: 1 solid black; font-size: 7px;">'.$reponse['transporter'].'</td>
+							<td width="8%" style="text-align: center; border: 1 solid black; font-size: 7px;">'.$reponse['horse'].'</td>
+							<td width="7%" style="text-align: center; border: 1 solid black; font-size: 7px;">'.$reponse['trailer_1'].'</td>
+							<td width="7%" style="text-align: center; border: 1 solid black; font-size: 7px;">'.$reponse['trailer_2'].'</td>
+							<td width="8%" style="text-align: center; border: 1 solid black; font-size: 7px;">'.$reponse['container'].'</td>
+							<td width="4%" style="text-align: center; border: 1 solid black; font-size: 7px;">'.$reponse['pied_container'].'</td>
+							<td width="9%" style="text-align: center; border: 1 solid black; font-size: 7px;">'.$reponse['num_lot'].'</td>
+							<td width="6%" style="text-align: center; border: 1 solid black; font-size: 7px;">'.number_format($reponse['poids'], 3, ',', '.').'</td>
+							<td width="6%" style="text-align: center; border: 1 solid black; font-size: 7px;">'.$reponse['load_date'].'</td>
+							<td width="9%" style="text-align: center; border: 1 solid black; font-size: 7px;">'.$reponse['exit_drc'].'</td>
+							<td width="6%" style="text-align: center; border: 1 solid black; font-size: 7px;">'.$reponse['cleared'].'</td>
+						</tr>
+					';
+
+			}$requete-> closeCursor();
+
+			$tbl .= '
+					<tr>				
+						<td width="73%" style="text-align: center; border: 1 solid black; font-size: 7px;"></td>
+						<td width="6%" style="text-align: center; border: 1 solid black; font-size: 7px;">'.number_format($total_poids, 3, ',', '.').'</td>
+						<td width="21%" style="text-align: center; border: 1 solid black; font-size: 7px;"></td>
 					</tr>
 				';
 
@@ -13199,8 +13314,24 @@
 				$reponse['montant'] = $this-> getDossier($id_dos)['poids']*50;
 				$reponse['tva'] = '0';
 				return $reponse;
-			}else if ($id_deb == 5) {
+			}else if ($id_deb == 5 && empty($this-> getDossier($id_dos)['pied_container'])) { // FERE
 				$reponse['montant'] = $this-> getDossier($id_dos)['poids']*3;
+				$reponse['tva'] = '0';
+				return $reponse;
+			}else if ($id_deb == 5 && !empty($this-> getDossier($id_dos)['pied_container'])) { // FERE
+				$reponse['montant'] = 0;
+				$reponse['tva'] = '0';
+				return $reponse;
+			}else if ($id_deb == 196 && $this-> getDossier($id_dos)['pied_container']=='10') { // Container 10'
+				$reponse['montant'] = 25;
+				$reponse['tva'] = '0';
+				return $reponse;
+			}else if ($id_deb == 197 && $this-> getDossier($id_dos)['pied_container']=='20') { // Container 20'
+				$reponse['montant'] = 50;
+				$reponse['tva'] = '0';
+				return $reponse;
+			}else if ($id_deb == 198 && $this-> getDossier($id_dos)['pied_container']=='40') { // Container 40'
+				$reponse['montant'] = 100;
 				$reponse['tva'] = '0';
 				return $reponse;
 			}else if ($id_deb == 6 && $id_march == 13) {
@@ -17418,6 +17549,18 @@
 					<input type="hidden" style="text-align: center; width: 8em;" name="fere_tva_<?php echo $compteur;?>" id="tva_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport(5, $id_mod_lic, $id_cli, $id_march, $id_mod_trans, $reponse['id_dos'])['tva'];?>" class="bg bg-dark">
 				</td>
 				<td style="text-align: center;">
+					<input type="number" step="0.001" min="0" style="text-align: center; width: 8em;" id="ogefrem_10_<?php echo $compteur;?>" name="ogefrem_10_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport(196, $id_mod_lic, $id_cli, $id_march, $id_mod_trans, $reponse['id_dos'])['montant'];?>" class="bg bg-dark">
+					<input type="hidden" style="text-align: center; width: 8em;" name="ogefrem_10_tva_<?php echo $compteur;?>" id="tva_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport(196, $id_mod_lic, $id_cli, $id_march, $id_mod_trans, $reponse['id_dos'])['tva'];?>" class="bg bg-dark">
+				</td>
+				<td style="text-align: center;">
+					<input type="number" step="0.001" min="0" style="text-align: center; width: 8em;" id="ogefrem_20_<?php echo $compteur;?>" name="ogefrem_20_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport(197, $id_mod_lic, $id_cli, $id_march, $id_mod_trans, $reponse['id_dos'])['montant'];?>" class="bg bg-dark">
+					<input type="hidden" style="text-align: center; width: 8em;" name="ogefrem_20_tva_<?php echo $compteur;?>" id="tva_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport(197, $id_mod_lic, $id_cli, $id_march, $id_mod_trans, $reponse['id_dos'])['tva'];?>" class="bg bg-dark">
+				</td>
+				<td style="text-align: center;">
+					<input type="number" step="0.001" min="0" style="text-align: center; width: 8em;" id="ogefrem_40_<?php echo $compteur;?>" name="ogefrem_40_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport(198, $id_mod_lic, $id_cli, $id_march, $id_mod_trans, $reponse['id_dos'])['montant'];?>" class="bg bg-dark">
+					<input type="hidden" style="text-align: center; width: 8em;" name="ogefrem_40_tva_<?php echo $compteur;?>" id="tva_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport(198, $id_mod_lic, $id_cli, $id_march, $id_mod_trans, $reponse['id_dos'])['tva'];?>" class="bg bg-dark">
+				</td>
+				<td style="text-align: center;">
 					<input type="number" step="0.001" min="0" style="text-align: center; width: 8em;" id="lmc_<?php echo $compteur;?>" name="lmc_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport(6, $id_mod_lic, $id_cli, $id_march, $id_mod_trans, $reponse['id_dos'])['montant'];?>" class="bg bg-dark">
 					<input type="hidden" style="text-align: center; width: 8em;" name="lmc_tva_<?php echo $compteur;?>" id="tva_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport(6, $id_mod_lic, $id_cli, $id_march, $id_mod_trans, $reponse['id_dos'])['tva'];?>" class="bg bg-dark">
 				</td>
@@ -18160,6 +18303,18 @@
 				<td style="text-align: center;">
 					<input type="number" step="0.001" min="0" style="text-align: center; width: 8em;" id="fere_<?php echo $compteur;?>" name="fere_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDataDetailFacture($ref_fact, $reponse['id_dos'], 5)['montant'];?>" class="bg bg-dark">
 					<input type="hidden" style="text-align: center; width: 8em;" name="fere_tva_<?php echo $compteur;?>" id="tva_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDataDetailFacture($ref_fact, $reponse['id_dos'], 5)['tva'];?>" class="bg bg-dark">
+				</td>
+				<td style="text-align: center;">
+					<input type="number" step="0.001" min="0" style="text-align: center; width: 8em;" id="ogefrem_10_<?php echo $compteur;?>" name="ogefrem_10_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDataDetailFacture($ref_fact, $reponse['id_dos'], 196)['montant'];?>" class="bg bg-dark">
+					<input type="hidden" style="text-align: center; width: 8em;" name="ogefrem_10_tva_<?php echo $compteur;?>" id="tva_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDataDetailFacture($ref_fact, $reponse['id_dos'], 196)['tva'];?>" class="bg bg-dark">
+				</td>
+				<td style="text-align: center;">
+					<input type="number" step="0.001" min="0" style="text-align: center; width: 8em;" id="ogefrem_20_<?php echo $compteur;?>" name="ogefrem_20_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDataDetailFacture($ref_fact, $reponse['id_dos'], 197)['montant'];?>" class="bg bg-dark">
+					<input type="hidden" style="text-align: center; width: 8em;" name="ogefrem_20_tva_<?php echo $compteur;?>" id="tva_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDataDetailFacture($ref_fact, $reponse['id_dos'], 197)['tva'];?>" class="bg bg-dark">
+				</td>
+				<td style="text-align: center;">
+					<input type="number" step="0.001" min="0" style="text-align: center; width: 8em;" id="ogefrem_40_<?php echo $compteur;?>" name="ogefrem_40_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDataDetailFacture($ref_fact, $reponse['id_dos'], 198)['montant'];?>" class="bg bg-dark">
+					<input type="hidden" style="text-align: center; width: 8em;" name="ogefrem_40_tva_<?php echo $compteur;?>" id="tva_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDataDetailFacture($ref_fact, $reponse['id_dos'], 198)['tva'];?>" class="bg bg-dark">
 				</td>
 				<td style="text-align: center;">
 					<input type="number" step="0.001" min="0" style="text-align: center; width: 8em;" id="lmc_<?php echo $compteur;?>" name="lmc_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDataDetailFacture($ref_fact, $reponse['id_dos'], 6)['montant'];?>" class="bg bg-dark">
@@ -36256,6 +36411,23 @@
 			}
 		}
 
+		public function getPoidsFactureFERE($ref_fact){
+			include('connexion.php');
+			$entree['ref_fact'] = $ref_fact;
+
+			$requete = $connexion-> prepare("SELECT SUM(dossier.poids) AS poids
+												FROM detail_facture_dossier, dossier
+												WHERE detail_facture_dossier.ref_fact = ?
+													AND detail_facture_dossier.id_dos = dossier.id_dos
+													AND (dossier.pied_container IS NULL OR dossier.pied_container = '')
+												GROUP BY detail_facture_dossier.id_deb");
+			$requete-> execute(array($entree['ref_fact']));
+			$reponse = $requete-> fetch();
+			if($reponse){
+				return $reponse['poids'];
+			}
+		}
+
 		public function getDataAv($cod){
 			include('connexion.php');
 			$entree['cod'] = $cod;
@@ -46416,6 +46588,25 @@
 			$requete = $connexion-> prepare("UPDATE dossier SET trailer_2 = ?
 												WHERE id_dos = ?");
 			$requete-> execute(array($entree['trailer_2'], $entree['id_dos']));
+
+		}  
+
+		public function MAJ_pied_container($id_dos, $pied_container){
+			
+			//Log
+			if ($this-> getDossier($id_dos)['pied_container'] != $pied_container) {
+				
+				$colonne = $this-> getNomColonneClient('pied_container', $_GET['id_cli'], $_GET['id_mod_trans'], $_GET['id_mod_trac']);
+				$this-> creerLogDossier($colonne, $pied_container, $id_dos, $_SESSION['id_util']);
+
+			}
+
+			include('connexion.php');
+			$entree['id_dos'] = $id_dos;
+			$entree['pied_container'] = $pied_container;
+			$requete = $connexion-> prepare("UPDATE dossier SET pied_container = ?
+												WHERE id_dos = ?");
+			$requete-> execute(array($entree['pied_container'], $entree['id_dos']));
 
 		}  
 
