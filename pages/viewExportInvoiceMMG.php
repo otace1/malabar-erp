@@ -515,7 +515,7 @@ $tbl = <<<EOD
 			<td style="text-align: right; border-right: 1px solid black; font-size: 6.5px;" width="11.5%">$total_3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
 		</tr>
 		<tr>
-			<td style="text-align: left; border-left: 1px solid black; border-right: 0.5px solid black; font-size: 6.5px;" colspan="2" width="49%">&nbsp;&nbsp;OGEFREM 40''</td>
+			<td style="text-align: left; border-left: 1px solid black; border-right: 0.5px solid black; font-size: 6.5px;" colspan="2" width="49%">&nbsp;&nbsp;OGEFREM: Container 40''</td>
 			<td style="text-align: center; border-right: 0.5px solid black; font-size: 6.5px;" width="6%">$nbre_dos_debours_ogefrem_40</td>
 			<td style="text-align: center; border-right: 0.5px solid black; font-size: 6.5px;" width="11%">$cost_ogefrem_40</td>
 			<td style="text-align: right; border-right: 0.5px solid black; font-size: 6.5px;" width="11%">$sub_totat_ogefrem_40&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
