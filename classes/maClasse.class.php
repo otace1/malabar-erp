@@ -18560,7 +18560,7 @@
 			$active = '';
 			$open = '';
 			$reponse['id_cli'] = '';
-			if($_SESSION['id_role'] == '1' || $_SESSION['id_role'] == '6' || $_SESSION['id_role'] == '7' || $_SESSION['id_role'] == '8' || $_SESSION['id_role'] == '9' || $_SESSION['id_role'] == '10' || $_SESSION['id_role'] == '11'){
+			if($_SESSION['id_role'] == '1' || $_SESSION['id_role'] == '6' || $_SESSION['id_role'] == '7' || $_SESSION['id_role'] == '8' || $_SESSION['id_role'] == '9' || $_SESSION['id_role'] == '10' || $_SESSION['id_role'] == '11' || $_SESSION['id_role'] == '14'){
 				$sql = "SELECT id_mod_lic, 
 							nom_mod_lic,
 							sigle_mod_lic
@@ -19346,7 +19346,7 @@
 
             }
 
-			if ($_SESSION['id_role'] != '7' && $_SESSION['id_role'] != '8' && $_SESSION['id_role'] != '9' && $_SESSION['id_role'] != '10') {
+			if ($_SESSION['id_role'] != '7' && $_SESSION['id_role'] != '8' && $_SESSION['id_role'] != '9' && $_SESSION['id_role'] != '10' && $_SESSION['id_role'] != '14') {
 				
 			$requete = $connexion-> prepare("SELECT c.titre_col AS titre_col, c.id_col AS id_col
 												FROM colonne c, client cl, affectation_colonne_client_modele_licence af
@@ -23077,7 +23077,7 @@
 			$entree['id_mod_trans'] = $id_mod_trans;
 			$bg = '';
 
-			if ($_SESSION['id_role'] != '7' && $_SESSION['id_role'] != '8' && $_SESSION['id_role'] != '9' && $_SESSION['id_role'] != '10') {
+			if ($_SESSION['id_role'] != '7' && $_SESSION['id_role'] != '8' && $_SESSION['id_role'] != '9' && $_SESSION['id_role'] != '10' && $_SESSION['id_role'] != '14') {
 				
 			$requete = $connexion-> prepare("SELECT c.champ_col AS champ_col, 
 													c.type_col AS type_col, 
