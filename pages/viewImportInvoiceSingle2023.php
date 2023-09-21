@@ -261,7 +261,7 @@ if ($facture['id_cli']==878 || $facture['id_cli']==876) {
 					, R.D. CONGO</td>
 					<td width="10%"></td>
 				</tr>';
-}else if ($facture['id_cli']==864 || $facture['id_cli']==899 || $facture['id_cli']==916 || $facture['id_cli']==906 || $facture['id_cli']==901 || $facture['id_cli']==932 || $facture['id_cli']==856 || $facture['id_cli']==923 || $facture['id_cli']==905 || $facture['id_cli']==912 || $facture['id_cli']==927 || $facture['id_cli']==869 || $facture['id_cli']==919 || $facture['id_cli']==922 || $facture['id_cli']==934 || $facture['id_cli']==879 || $facture['id_cli']==859 || $facture['id_cli']==938 || $facture['id_cli']==903 || $facture['id_cli']==918) {
+}else if ($facture['id_cli']==864 || $facture['id_cli']==899 || $facture['id_cli']==916 || $facture['id_cli']==906 || $facture['id_cli']==901 || $facture['id_cli']==932 || $facture['id_cli']==856 || $facture['id_cli']==923 || $facture['id_cli']==905 || $facture['id_cli']==912 || $facture['id_cli']==927 || $facture['id_cli']==869 || $facture['id_cli']==919 || $facture['id_cli']==922 || $facture['id_cli']==934 || $facture['id_cli']==879 || $facture['id_cli']==859 || $facture['id_cli']==938 || $facture['id_cli']==903 || $facture['id_cli']==918 || $facture['id_cli']==925) {
 	$banque = '<tr>
 					<td width="10%" style="border-top: 1px solid black; border-left: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;INTITULE</td>
 					<td width="35%" style="border-top: 1px solid black; border-right: 1px solid black;  font-size: 7px;">&nbsp;MALABAR RDC SARL</td>
