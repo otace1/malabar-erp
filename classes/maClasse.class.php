@@ -4298,7 +4298,7 @@
 			$compteur=0;
 
 
-			$requete = $connexion-> prepare("SELECT *
+			$requete = $connexion-> prepare("SELECT *, DATE_ADD(date_log, INTERVAL 2 HOUR) AS date_log
 												FROM log_dossier
 												WHERE id_dos = ?
 													AND colonne LIKE ?
