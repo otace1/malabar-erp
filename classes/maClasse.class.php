@@ -5678,7 +5678,7 @@
 												FROM detail_facture_dossier det, facture_dossier fact
 													WHERE det.id_dos = ?
 														AND det.ref_fact = fact.ref_fact
-														AND fact.note_debit = '0");
+														AND fact.note_debit = '0'");
 			$requete-> execute(array($entree['id_dos']));
 			$reponse=$requete-> fetch();
 			if ($reponse) {
