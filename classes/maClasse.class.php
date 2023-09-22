@@ -5670,6 +5670,25 @@
 			
 		}
 
+		public function getDossierFacture2($id_dos){
+			include('connexion.php');
+			$entree['id_dos'] = $id_dos;
+
+			$requete = $connexion-> prepare("SELECT *
+												FROM detail_facture_dossier det, facture_dossier fact
+													WHERE det.id_dos = ?
+														AND det.ref_fact = fact.ref_fact
+														AND fact.note_debit = '0");
+			$requete-> execute(array($entree['id_dos']));
+			$reponse=$requete-> fetch();
+			if ($reponse) {
+				return $reponse['id_dos'];
+			}else{
+				return false;
+			}
+			
+		}
+
 		public function getFournisseurFacture($ref_fact){
 			include('connexion.php');
 			$entree['ref_fact'] = $ref_fact;
@@ -29829,7 +29848,7 @@
 					<td class="<?php echo $class;?> <?php echo $bg;?>" style=" border-right: 1px solid black; vertical-align: middle; text-align: left; padding: 0.6rem; border-top: 1px solid black; <?php echo $color;?>"><span class="<?php echo $clignoteDos;?>" style="<?php echo $couleurDos?>"><?php echo $reponse['ref_dos'];?></span>
 					 <?php 
 					  if(!isset($this-> getDataUtilisateur($_SESSION['id_util'])['tracking_enab'])){
-					  	if($this-> getDossierFacture($reponse['id_dos'])==false){
+					  	if($this-> getDossierFacture2($reponse['id_dos'])==false){
 					  ?>
 						<span title="Edit File" onclick="window.location.replace('editFile.php?id_cli=<?php echo $_GET['id_cli']; ?>&id_mod_trans=<?php echo $_GET['id_mod_trans']; ?>&id_mod_trac=<?php echo $_GET['id_mod_trac']; ?>&commodity=<?php echo $_GET['commodity']; ?>&statut=<?php echo $_GET['statut'];?>&id_march=<?php echo $_GET['id_march'];?>&page=<?php echo $page;?>&id_dos=<?php echo $reponse['id_dos'];?>','pop1','width=80,height=80');">&nbsp;&nbsp;&nbsp;<i class="fa fa-edit bg bg-warning" style="padding: 3px; border-radius: 5px;"></i></span>
 
