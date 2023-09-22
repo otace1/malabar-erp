@@ -4290,6 +4290,34 @@
 
 		}
 
+		public function getLastEncodingDateDataInLog($id_dos, $colonne){
+			include("connexion.php");
+
+			$entree['id_dos'] = $id_dos;
+			$entree['colonne'] = "%$colonne%";
+			$compteur=0;
+
+
+			$requete = $connexion-> prepare("SELECT *
+												FROM log_dossier
+												WHERE id_dos = ?
+													AND colonne LIKE ?
+												ORDER BY id_log DESC
+												LIMIT 0, 1");
+			$requete-> execute(array($entree['id_dos'], $entree['colonne']));
+			$reponse = $requete-> fetch();
+			if ($reponse) {
+				return $reponse;
+			}else{
+				$reponse['date_log'] = NULL;
+				$reponse['colonne'] = NULL;
+				$reponse['valeur'] = NULL;
+				return $reponse;
+			}
+			
+
+		}
+
 		public function getMontantTresorerie($id_tres){
 			include("connexion.php");
 
@@ -38327,6 +38355,7 @@
 
 				$requete = $connexion-> query("SELECT dos.ref_dos AS ref_dos,
 													cl.nom_cli AS nom_cli, 
+													dos.id_dos AS id_dos,
 													dos.po_ref AS po_ref,
 													dos.horse AS horse,
 													dos.trailer_1 AS trailer_1,
@@ -38379,6 +38408,7 @@
 					$compteur++;
 
 					$reponse['compteur'] = $compteur;
+					$reponse['date_log'] = $this-> getLastEncodingDateDataInLog($reponse['id_dos'], 'Quit')['date_log'];
 					$reponse['truck'] = $reponse['horse'].' / '.$reponse['trailer_1'].' / '.$reponse['trailer_2'];
 					$rows[] = $reponse;
 				}$requete-> closeCursor();
