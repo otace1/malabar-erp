@@ -24393,7 +24393,7 @@
 			$requete-> execute(array($entree['id_cli'], $entree['id_mod_trans'], $entree['id_mod_lic']));
 			while ($reponse = $requete-> fetch()) {
 				//getDataRow($champ_col, $id_dos)
-				if (($reponse['id_col'] != '18' && $reponse['id_col'] != '50' && $reponse['id_col'] != '54' && $reponse['id_col'] != '71' && $reponse['id_col'] != '74' && $reponse['id_col'] != '36' && $reponse['id_col'] != '88' && $reponse['id_col'] != '80' && $reponse['id_col'] != '38' && $reponse['id_col'] != '42' && $reponse['id_col'] != '40') && ($this-> getDossierFacture($id_dos)!=false && ($reponse['champ_col']=='poids' || $reponse['champ_col']=='horse' || $reponse['champ_col']=='trailer_1' || $reponse['champ_col']=='trailer_2'))) {
+				if (($reponse['id_col'] != '18' && $reponse['id_col'] != '50' && $reponse['id_col'] != '54' && $reponse['id_col'] != '71' && $reponse['id_col'] != '74' && $reponse['id_col'] != '36' && $reponse['id_col'] != '88' && $reponse['id_col'] != '80' && $reponse['id_col'] != '38' && $reponse['id_col'] != '42' && $reponse['id_col'] != '40') && ($this-> getDossierFacture2($id_dos)!=false && ($reponse['champ_col']=='poids' || $reponse['champ_col']=='horse' || $reponse['champ_col']=='trailer_1' || $reponse['champ_col']=='trailer_2'))) {
 					?>
 
 			          <div class="col-md-3">
