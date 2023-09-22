@@ -212,6 +212,12 @@ $sub_totat_2 = number_format($maClasse-> getMontantFactureDossierDebours3($_GET[
 $total_2 = number_format($maClasse-> getMontantFactureDossierDeboursWithTVA($_GET['ref_fact'], 7), 2, ',', ' ');
 
 $cost_3 = number_format($maClasse-> getMontantFactureDossierDebours3($_GET['ref_fact'], 5)/$maClasse-> getPoidsFactureFERE($_GET['ref_fact']), 2, ',', ' ');
+if($cost_3>1){
+	$cost_3 = number_format($maClasse-> getMontantFactureDossierDebours3($_GET['ref_fact'], 5)/$maClasse-> getPoidsFactureFERE($_GET['ref_fact']), 2, ',', ' ');
+}else{
+	$cost_3 = 3;
+}
+
 $sub_totat_3 = number_format($maClasse-> getMontantFactureDossierDebours3($_GET['ref_fact'], 5), 2, ',', ' ');
 $total_3 = number_format($maClasse-> getMontantFactureDossierDeboursWithTVA($_GET['ref_fact'], 5), 2, ',', ' ');
 
