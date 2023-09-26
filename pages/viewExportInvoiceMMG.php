@@ -249,8 +249,38 @@ $cost_9 = number_format($maClasse-> getMontantDeboursDetailFacture($_GET['ref_fa
 $sub_totat_9 = number_format($maClasse-> getMontantFactureDossierDebours3($_GET['ref_fact'], 13), 2, ',', ' ');
 $total_9 = number_format($maClasse-> getMontantFactureDossierDeboursWithTVA($_GET['ref_fact'], 13), 2, ',', ' ');
 
-$nbre_dos_debours_ogefrem_40 = $maClasse-> getDataDossiersFactureDebours($_GET['ref_fact'], 198)['nbre_dos'];
-$cost_ogefrem_40 = number_format($maClasse-> getMontantDeboursDetailFacture($_GET['ref_fact'], 198), 2, ',', ' ');
+$nbre_dos_debours_ogefrem_10 = number_format($maClasse-> getDataDossiersFactureDebours($_GET['ref_fact'], 196)['nbre_dos'], 0, ',', '');
+
+if ($maClasse-> getMontantDeboursDetailFacture($_GET['ref_fact'], 196)>0) {
+	$cost_ogefrem_10 = number_format($maClasse-> getMontantDeboursDetailFacture($_GET['ref_fact'], 196), 2, ',', ' ');
+}else{
+	$cost_ogefrem_10 = number_format(25, 2, ',', ' ');
+}
+
+$sub_totat_ogefrem_10 = number_format($maClasse-> getMontantFactureDossierDebours3($_GET['ref_fact'], 196), 2, ',', ' ');
+$total_ogefrem_10 = number_format($maClasse-> getMontantFactureDossierDeboursWithTVA($_GET['ref_fact'], 196), 2, ',', ' ');
+
+$nbre_dos_debours_ogefrem_20 = number_format($maClasse-> getDataDossiersFactureDebours($_GET['ref_fact'], 197)['nbre_dos'], 0, ',', '');
+
+if ($maClasse-> getMontantDeboursDetailFacture($_GET['ref_fact'], 197)>0) {
+	$cost_ogefrem_20 = number_format($maClasse-> getMontantDeboursDetailFacture($_GET['ref_fact'], 197), 2, ',', ' ');
+}else{
+	$cost_ogefrem_20 = number_format(50, 2, ',', ' ');
+}
+
+// $cost_ogefrem_20 = number_format($maClasse-> getMontantDeboursDetailFacture($_GET['ref_fact'], 197), 2, ',', ' ');
+$sub_totat_ogefrem_20 = number_format($maClasse-> getMontantFactureDossierDebours3($_GET['ref_fact'], 197), 2, ',', ' ');
+$total_ogefrem_20 = number_format($maClasse-> getMontantFactureDossierDeboursWithTVA($_GET['ref_fact'], 197), 2, ',', ' ');
+
+$nbre_dos_debours_ogefrem_40 = number_format($maClasse-> getDataDossiersFactureDebours($_GET['ref_fact'], 198)['nbre_dos'], 0, ',', '');
+
+if ($maClasse-> getMontantDeboursDetailFacture($_GET['ref_fact'], 198)>0) {
+	$cost_ogefrem_40 = number_format($maClasse-> getMontantDeboursDetailFacture($_GET['ref_fact'], 198), 2, ',', ' ');
+}else{
+	$cost_ogefrem_40 = number_format(100, 2, ',', ' ');
+}
+
+// $cost_ogefrem_40 = number_format($maClasse-> getMontantDeboursDetailFacture($_GET['ref_fact'], 198), 2, ',', ' ');
 $sub_totat_ogefrem_40 = number_format($maClasse-> getMontantFactureDossierDebours3($_GET['ref_fact'], 198), 2, ',', ' ');
 $total_ogefrem_40 = number_format($maClasse-> getMontantFactureDossierDeboursWithTVA($_GET['ref_fact'], 198), 2, ',', ' ');
 
@@ -519,6 +549,22 @@ $tbl = <<<EOD
 			<td style="text-align: right; border-right: 0.5px solid black; font-size: 6.5px;" width="11%">$sub_totat_3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
 			<td style="text-align: right; border-right: 0.5px solid black; font-size: 6.5px;" width="11.5%">0,00&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
 			<td style="text-align: right; border-right: 1px solid black; font-size: 6.5px;" width="11.5%">$total_3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+		</tr>
+		<tr>
+			<td style="text-align: left; border-left: 1px solid black; border-right: 0.5px solid black; font-size: 6.5px;" colspan="2" width="49%">&nbsp;&nbsp;OGEFREM: Container 10''</td>
+			<td style="text-align: center; border-right: 0.5px solid black; font-size: 6.5px;" width="6%">$nbre_dos_debours_ogefrem_10</td>
+			<td style="text-align: center; border-right: 0.5px solid black; font-size: 6.5px;" width="11%">$cost_ogefrem_10</td>
+			<td style="text-align: right; border-right: 0.5px solid black; font-size: 6.5px;" width="11%">$sub_totat_ogefrem_10&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+			<td style="text-align: right; border-right: 0.5px solid black; font-size: 6.5px;" width="11.5%">0,00&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+			<td style="text-align: right; border-right: 1px solid black; font-size: 6.5px;" width="11.5%">$total_ogefrem_10&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+		</tr>
+		<tr>
+			<td style="text-align: left; border-left: 1px solid black; border-right: 0.5px solid black; font-size: 6.5px;" colspan="2" width="49%">&nbsp;&nbsp;OGEFREM: Container 20''</td>
+			<td style="text-align: center; border-right: 0.5px solid black; font-size: 6.5px;" width="6%">$nbre_dos_debours_ogefrem_20</td>
+			<td style="text-align: center; border-right: 0.5px solid black; font-size: 6.5px;" width="11%">$cost_ogefrem_20</td>
+			<td style="text-align: right; border-right: 0.5px solid black; font-size: 6.5px;" width="11%">$sub_totat_ogefrem_20&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+			<td style="text-align: right; border-right: 0.5px solid black; font-size: 6.5px;" width="11.5%">0,00&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+			<td style="text-align: right; border-right: 1px solid black; font-size: 6.5px;" width="11.5%">$total_ogefrem_20&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
 		</tr>
 		<tr>
 			<td style="text-align: left; border-left: 1px solid black; border-right: 0.5px solid black; font-size: 6.5px;" colspan="2" width="49%">&nbsp;&nbsp;OGEFREM: Container 40''</td>
