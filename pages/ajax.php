@@ -2228,5 +2228,41 @@
 		}
 		echo json_encode($maClasse-> popFilesInvoicingStatus($_POST['id_mod_lic']));
 		
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='statut_dossier_air'){ 
+
+		echo json_encode($maClasse-> statut_dossier_air($_POST['id_cli'], $_POST['id_mod_lic'], $_POST['statut']));
+
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='modal_edit_statut_dossier_air'){ 
+
+		$response = $maClasse-> getDossier($_POST['id_dos']);
+
+		echo json_encode($response);
+
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='edit_statut_dossier_air'){ 
+
+		// $response = $maClasse-> getDossier($_POST['id_dos']);
+		$_GET['id_cli'] = $maClasse-> getDossier($_POST['id_dos'])['id_cli'];
+		$_GET['id_mod_trans'] = $maClasse-> getDossier($_POST['id_dos'])['id_mod_trans'];
+		$_GET['id_mod_trac'] = $maClasse-> getDossier($_POST['id_dos'])['id_mod_lic'];
+		
+	    if (isset($_POST['klsa_arriv']) && ($_POST['klsa_arriv'] != '')) {
+	        $maClasse-> MAJ_klsa_arriv($_POST['id_dos'], $_POST['klsa_arriv']);
+	    }
+      
+	    if (isset($_POST['wiski_arriv']) && ($_POST['wiski_arriv'] != '')) {
+	        $maClasse-> MAJ_wiski_arriv($_POST['id_dos'], $_POST['wiski_arriv']);
+	    }
+      
+	    if (isset($_POST['wiski_dep']) && ($_POST['wiski_dep'] != '')) {
+	        $maClasse-> MAJ_wiski_dep($_POST['id_dos'], $_POST['wiski_dep']);
+	    }
+      
+	    if (isset($_POST['dispatch_klsa']) && ($_POST['dispatch_klsa'] != '')) {
+	        $maClasse-> MAJ_dispatch_klsa($_POST['id_dos'], $_POST['dispatch_klsa']);
+	    }
+      
+	    $response['message'] = 'Done!';
+		echo json_encode($response);
+
 	}
 ?>

@@ -167,6 +167,12 @@
             include("dashboardKzi.php");
 
           }
+
+          if (($_SESSION['id_role']=='1' || $_SESSION['id_role']=='11' || $_SESSION['id_role']=='2' || $_SESSION['id_role']=='8') && ($_GET['id_mod_trans']=='3')) {
+
+            include("dashboardAir.php");
+
+          }
         ?>
       </div><!-- /.container-fluid -->
     </section>
