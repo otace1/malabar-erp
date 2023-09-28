@@ -15613,6 +15613,97 @@
 			return $reponse;
 		}
 
+		public function nbreStatutDossierAir($id_mod_lic, $id_cli, $statut){
+			include('connexion.php');
+			$entree['id_mod_lic'] = $id_mod_lic;
+			$entree['statut'] = $statut;
+
+			if (isset($id_cli) && ($id_cli != '')) {
+				$sql = ' AND id_cli = '.$id_cli;
+			}else{
+				$sql = '';
+			}
+
+			if (isset($statut) && ($statut == 'EXPECTED ARRIVAL')) {
+				$sqlStatut = ' AND klsa_arriv IS NULL ';
+			}else if (isset($statut) && ($statut == 'AWAITING ENTRY TO WAREHOUSE')) {
+				$sqlStatut = ' AND wiski_arriv IS NULL  AND klsa_arriv IS NOT NULL ';
+			}else if (isset($statut) && ($statut == 'AWAITING TO LEAVE THE WAREHOUSE')) {
+				$sqlStatut = ' AND wiski_dep IS NULL  AND wiski_arriv IS NOT NULL';
+			}else if (isset($statut) && ($statut == 'AWAITING DISPATCH FROM THE BORDER')) {
+				$sqlStatut = ' AND dispatch_klsa IS NULL AND wiski_dep IS NOT NULL ';
+			}
+
+			$requete = $connexion-> prepare("SELECT COUNT(ref_dos) AS nbre
+											FROM dossier
+											WHERE id_mod_lic = ?
+												AND id_mod_trans = 3
+												AND ref_dos <> 'test'
+												AND cleared = '0'
+												$sql
+												$sqlStatut");
+			$requete-> execute(array($entree['id_mod_lic']));
+			$reponse = $requete-> fetch();
+
+			if($reponse){
+				return $reponse['nbre'];
+			}
+
+		}
+
+		public function statut_dossier_air($id_cli, $id_mod_lic, $statut){
+			include('connexion.php');
+			$entree['id_mod_lic'] = $id_mod_lic;
+			$entree['statut'] = $statut;
+
+			if (isset($id_cli) && ($id_cli != '')) {
+				$sql = ' AND id_cli = '.$id_cli;
+			}else{
+				$sql = '';
+			}
+
+			$compteur = 0;
+			$rows = array();
+
+			$sqlStatut = '';
+
+			if (isset($statut) && ($statut == 'EXPECTED ARRIVAL')) {
+				$sqlStatut = ' AND klsa_arriv IS NULL ';
+			}else if (isset($statut) && ($statut == 'AWAITING ENTRY TO WAREHOUSE')) {
+				$sqlStatut = ' AND wiski_arriv IS NULL  AND klsa_arriv IS NOT NULL ';
+			}else if (isset($statut) && ($statut == 'AWAITING TO LEAVE THE WAREHOUSE')) {
+				$sqlStatut = ' AND wiski_dep IS NULL  AND wiski_arriv IS NOT NULL';
+			}else if (isset($statut) && ($statut == 'AWAITING DISPATCH FROM THE BORDER')) {
+				$sqlStatut = ' AND dispatch_klsa IS NULL AND wiski_dep IS NOT NULL ';
+			}
+
+			$requete = $connexion-> prepare("SELECT *,
+													CONCAT('<button class=\"btn btn-xs bg-warning square-btn-adjust\" onclick=\"modal_edit_statut_dossier_air(\'',id_dos,'\');\">
+									                    <i class=\"fas fa-edit\"></i> 
+									                </button>') AS btn_action 
+											FROM dossier
+											WHERE id_mod_lic = ?
+												AND id_mod_trans = 3
+												AND ref_dos <> 'test'
+												AND cleared = '0'
+												$sql
+												$sqlStatut");
+			$requete-> execute(array($entree['id_mod_lic']));
+			while ($reponse = $requete-> fetch()) {
+				$compteur++;
+
+				// $reponse['btn_action'] .= '<a href="file:///'.$this-> getPathArchive($reponse['id_dos']).'/'.$reponse['ref_dos'].'">Find Support Documents</a>';
+
+				$reponse['compteur'] = $compteur;
+
+				$rows[] = $reponse;
+			}$requete-> closeCursor();
+
+
+			return $rows;
+
+		}
+
 		public function nbreDossierFacturesModeleLicence($id_mod_lic, $id_cli){
 			include('connexion.php');
 			$entree['id_mod_lic'] = $id_mod_lic;
