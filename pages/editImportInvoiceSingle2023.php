@@ -154,7 +154,7 @@
               <th>Rate (CDF/<span id="label_mon_fob"></span>) INV.</th>
               <th><input style="text-align: center; width: 9em;" id="roe_inv" name="roe_inv" onblur="maj_roe_inv(id_dos.value, this.value);calculCIF();" type="number" step="0.000001" min="1" required></th>
               <th>Rate(CDF/USD) BCC</th>
-              <th><input style="text-align: center; width: 9em;" id="roe_liq" name="roe_liq" onblur="maj_roe_decl(id_dos.value, this.value);calculCIF();" type="number" step="0.000001" min="1" required></th>
+              <th><input style="text-align: center; width: 9em;" id="roe_liq" name="roe_liq" onblur="maj_roe_liq(id_dos.value, this.value);calculCIF();" type="number" step="0.000001" min="1" required></th>
             </tr>
             <tr>
               <th>CIF (USD)</th>
