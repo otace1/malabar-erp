@@ -15639,7 +15639,7 @@
 											WHERE id_mod_lic = ?
 												AND id_mod_trans = 3
 												AND ref_dos <> 'test'
-												AND cleared = '0'
+												-- AND cleared = '0'
 												$sql
 												$sqlStatut");
 			$requete-> execute(array($entree['id_mod_lic']));
@@ -15685,7 +15685,7 @@
 											WHERE id_mod_lic = ?
 												AND id_mod_trans = 3
 												AND ref_dos <> 'test'
-												AND cleared = '0'
+												-- AND cleared = '0'
 												$sql
 												$sqlStatut");
 			$requete-> execute(array($entree['id_mod_lic']));
@@ -36632,7 +36632,28 @@
 														IF(trailer_2 IS NOT NULL AND REPLACE(trailer_2, ' ', '') NOT LIKE '',
 															CONCAT(' / ', trailer_2),
 															'')
-													) AS truck
+													) AS truck,
+													IF(wiski_arriv IS NOT NULL,
+														wiski_arriv,
+														IF(klsa_arriv IS NOT NULL AND dispatch_klsa IS NOT NULL,
+															klsa_arriv,
+															'<span class=\'clignoteb text-sm \'>TBC</span>'
+														)
+													) AS wareh_arriv,
+													IF(wiski_dep IS NOT NULL,
+														wiski_dep,
+														IF(dispatch_klsa IS NOT NULL ,
+															dispatch_klsa,
+															'<span class=\'clignoteb text-sm \'>TBC</span>'
+														)
+													) AS wareh_dep,
+													IF(wiski_arriv IS NOT NULL AND wiski_dep IS NOT NULL,
+														DATEDIFF(wiski_dep, wiski_arriv),
+														IF(klsa_arriv IS NOT NULL AND dispatch_klsa IS NOT NULL,
+															DATEDIFF(dispatch_klsa, wiski_dep),
+															'-'
+														)
+													) AS wareh_delay
 												FROM dossier
 												WHERE id_dos = ?");
 			$requete-> execute(array($entree['id_dos']));
