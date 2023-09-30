@@ -844,7 +844,7 @@ for ($i=1; $i <= 15 ; $i++) {
                     <i class="fa fa-plus"></i>
                 </button>-->
                 <?php
-                if($_GET['id_mod_trac'] == '1' && $_SESSION['id_role'] != '7' && $_SESSION['id_role'] != '8' && $_SESSION['id_role'] != '9' && $_SESSION['id_role'] != '10' && $_GET['id_march'] != '18'){
+                if($_GET['id_mod_trac'] == '1' && $_SESSION['id_role'] != '7' && $_SESSION['id_role'] != '8' && $_SESSION['id_role'] != '9' && $_SESSION['id_role'] != '10' && $_GET['id_march'] != '18' && $_GET['id_march'] != '21' && $_GET['id_march'] != '22'){
                   ?>
                 <!-- <button class="btn btn-xs btn-info square-btn-adjust" data-toggle="modal" data-target=".nouveauDossierExport" <?php echo $maClasse-> getDataUtilisateur($_SESSION['id_util'])['tracking_enab']?>>
                     <i class="fa fa-plus"></i> Nouveau Dossier
@@ -853,7 +853,7 @@ for ($i=1; $i <= 15 ; $i++) {
                     <i class="fa fa-plus"></i> Nouveau Dossier
                 </button>
                   <?php
-                }else if($_GET['id_mod_trac'] == '1' && $_SESSION['id_role'] != '7' && $_SESSION['id_role'] != '8' && $_SESSION['id_role'] != '9' && $_SESSION['id_role'] != '10' && $_GET['id_march'] == '18'){
+                }else if($_GET['id_mod_trac'] == '1' && $_SESSION['id_role'] != '7' && $_SESSION['id_role'] != '8' && $_SESSION['id_role'] != '9' && $_SESSION['id_role'] != '10' && ($_GET['id_march'] == '18' || $_GET['id_march'] == '21' || $_GET['id_march'] = '22')){
                   ?>
                 <button class="btn btn-xs btn-info square-btn-adjust" data-toggle="modal" data-target=".nouveauDossier" <?php echo $maClasse-> getDataUtilisateur($_SESSION['id_util'])['tracking_enab']?>>
                     <i class="fa fa-plus"></i> Nouveau Dossier
