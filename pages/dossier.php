@@ -765,7 +765,7 @@ for ($i=1; $i <= 15 ; $i++) {
                           }
 
                         }
-                        else if($_GET['id_mod_trac'] == '1' && $_GET['id_march'] == '18'){
+                        else if($_GET['id_mod_trac'] == '1' && ($_GET['id_march'] == '18' || $_GET['id_march'] == '21' || $_GET['id_march'] == '22')){
                           $maClasse-> creerDossierIB($_POST['ref_dos'], $_GET['id_cli'], $_POST['ref_fact'], 
                                                       $_POST['fob'],$_POST['fret'], $_POST['assurance'], 
                                                       $_POST['autre_frais'], $_POST['num_lic'], $_GET['id_mod_trac'], 
@@ -1956,7 +1956,7 @@ if( isset($_GET['id_mod_trac']) && ($_GET['id_mod_trac']=='2' && $_GET['id_cli']
 </div>
 
 <?php
-}else if(isset($_GET['id_mod_trac']) && $_GET['id_mod_trac']=='1' && $_GET['id_march']=='18' && $_GET['id_cli']!='869'){
+}else if(isset($_GET['id_mod_trac']) && $_GET['id_mod_trac']=='1' && ($_GET['id_march'] == '18' || $_GET['id_march'] == '21' || $_GET['id_march'] == '22') && $_GET['id_cli']!='869'){
 
   $modele = $maClasse-> getElementModeleLicence($_GET['id_mod_trac']);
 ?>
