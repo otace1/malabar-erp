@@ -1198,6 +1198,12 @@
     }
     $('#unite_frais_bancaire').val(unite_frais_bancaire);
 
+    if (parseFloat($('#montant_min').val()) > 0 ) {
+      montant_min = parseFloat($('#montant_min').val());
+    }else{
+      montant_min=0;
+    }
+
     if (parseFloat($('#fpi').val()) > 0 ) {
       fpi = parseFloat($('#fpi').val());
     }else{
@@ -1248,6 +1254,12 @@
     // console.log(autres_taxes);
 
     frais_bancaire = (montant_liq/roe_decl)*(unite_frais_bancaire/100);
+
+    if(frais_bancaire > montant_min){
+      frais_bancaire = (montant_liq/roe_decl)*(unite_frais_bancaire/100);
+    }else{
+      frais_bancaire = montant_min;
+    }
 
 
 
