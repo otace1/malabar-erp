@@ -15909,11 +15909,17 @@
 							<div>';
 				?>
 				<?php 
-				$requeteDebours = $connexion-> prepare("SELECT deb.abr_deb AS abr_deb, UPPER(REPLACE(deb.nom_deb, '\'', '')) AS nom_deb, 
+				$requeteDebours = $connexion-> prepare("SELECT deb.abr_deb AS abr_deb, 
+														-- UPPER(REPLACE(deb.nom_deb, '\'', '')) AS nom_deb, 
+														IF(af.montant_min > 0,
+															CONCAT(UPPER(REPLACE(deb.nom_deb, '\'', '')), ' (',af.montant_min,'$ min)'),
+															UPPER(REPLACE(deb.nom_deb, '\'', ''))
+														) AS nom_deb, 
 														deb.id_deb AS id_deb,
 														af.tva AS tva, af.usd AS usd, af.montant AS montant,
 														af.detail AS detail,
-														af.unite AS unite
+														af.unite AS unite,
+														af.montant_min AS montant_min
 													FROM debours deb, affectation_debours_client_modele_licence af
 													WHERE deb.id_t_deb = ?
 														AND deb.id_deb = af.id_deb
@@ -16009,7 +16015,7 @@
 					}else if ($reponseDebours['id_deb']=='29') {
 
 						$unite_input = '<input type="number" step="0.001" style="text-align: center; width: 5em;" class="" name="" id="unite_frais_bancaire" value="'.$reponseDebours['montant'].'" onblur="calculDroit();">';
-						$montant_input = '<input type="number" step="0.001" style="text-align: center;" name="montant_'.$compteur.'" id="frais_bancaire" value="">';
+						$montant_input = '<input type="number" step="0.001" style="text-align: center;" name="montant_'.$compteur.'" id="frais_bancaire" value=""><input type="hidden" id="montant_min" name="montant_min" value="'.$reponseDebours['montant_min'].'">';
 						
 					}else if ($reponseDebours['id_deb']=='94') {
 
@@ -16143,11 +16149,16 @@
 							<div>';
 				?>
 				<?php 
-				$requeteDebours = $connexion-> prepare("SELECT deb.abr_deb AS abr_deb, UPPER(REPLACE(deb.nom_deb, '\'', '')) AS nom_deb, 
+				$requeteDebours = $connexion-> prepare("SELECT deb.abr_deb AS abr_deb, 
+														IF(af.montant_min > 0,
+															CONCAT(UPPER(REPLACE(deb.nom_deb, '\'', '')), ' (',af.montant_min,'$ min)'),
+															UPPER(REPLACE(deb.nom_deb, '\'', ''))
+														) AS nom_deb, 
 														deb.id_deb AS id_deb,
-														af.tva AS tva, af.usd AS usd, af.montant AS montant,
+														af.tva AS tva, af.usd AS usd, af.montant AS montant_deb,
 														af.detail AS detail,
-														af.unite AS unite
+														af.unite AS unite,
+														af.montant_min AS montant_min
 													FROM debours deb, affectation_debours_client_modele_licence af
 													WHERE deb.id_t_deb = ?
 														AND deb.id_deb = af.id_deb
@@ -16241,8 +16252,8 @@
 						
 					}else if ($reponseDebours['id_deb']=='29') {
 
-						$unite_input = '<input type="number" step="0.001" style="text-align: center; width: 5em;" class="" name="" id="unite_frais_bancaire" value="" onblur="calculDroit2();">';
-						$montant_input = '<input type="number" step="0.001" style="text-align: center;" class="bg-dark" name="montant_'.$compteur.'" id="frais_bancaire" value="'.$reponseDebours['montant'].'">';
+						$unite_input = '<input type="number" step="0.001" style="text-align: center; width: 5em;" class="" name="" id="unite_frais_bancaire"  value="'.$reponseDebours['montant_deb'].'" onblur="calculDroit2();">';
+						$montant_input = '<input type="number" step="0.001" style="text-align: center;" class="bg-dark" name="montant_'.$compteur.'" id="frais_bancaire" value="'.$reponseDebours['montant'].'"><input type="hidden" id="montant_min" name="montant_min" value="'.$reponseDebours['montant_min'].'">';
 						
 					}else{
 
