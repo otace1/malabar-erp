@@ -205,91 +205,91 @@ $roe_liq =  number_format($maClasse-> getDataDossiersMultipleInvoice($_GET['ref_
 $nom_banq = $maClasse-> getDataBancaire($maClasse-> getDataDossiersMultipleInvoice($_GET['ref_fact'])['id_bank_liq'])['nom_banq'];
 
 $banque = '<tr>
-			<td width="10%" style="border-top: 1px solid black; border-left: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;INTITULE</td>
-			<td width="35%" style="border-top: 1px solid black; border-right: 1px solid black;  font-size: 7px;">&nbsp;MALABAR CLEARING AGENCY SARL</td>
+			<td width="10%" style="border-top: 1px solid black; border-left: 1px solid black; text-align: left;  font-size: 6.5px;">&nbsp;INTITULE</td>
+			<td width="35%" style="border-top: 1px solid black; border-right: 1px solid black;  font-size: 6.5px;">&nbsp;MALABAR CLEARING AGENCY SARL</td>
 			<td width="10%"></td>
-			<td width="10%" style="border-top: 1px solid black; border-left: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;INTITULE</td>
-			<td width="35%" style="border-top: 1px solid black; border-right: 1px solid black;  font-size: 7px;">&nbsp;MALABAR CLEARING AGENCY SARL</td>
+			<td width="10%" style="border-top: 1px solid black; border-left: 1px solid black; text-align: left;  font-size: 6.5px;">&nbsp;INTITULE</td>
+			<td width="35%" style="border-top: 1px solid black; border-right: 1px solid black;  font-size: 6.5px;">&nbsp;MALABAR CLEARING AGENCY SARL</td>
 		</tr>
 		<tr>
-			<td width="10%" style="border-left: 1px solid black;  font-size: 7px;">&nbsp;N.COMPTE</td>
-			<td width="35%" style="border-right: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;00130-00001020614-41</td>
+			<td width="10%" style="border-left: 1px solid black;  font-size: 6.5px;">&nbsp;N.COMPTE</td>
+			<td width="35%" style="border-right: 1px solid black; text-align: left;  font-size: 6.5px;">&nbsp;00130-00001020614-41</td>
 			<td width="10%"></td>
-			<td width="10%" style="border-left: 1px solid black;  font-size: 7px;">&nbsp;N.COMPTE</td>
-			<td width="35%" style="border-right: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;05100-05130-01003333601-20</td>
+			<td width="10%" style="border-left: 1px solid black;  font-size: 6.5px;">&nbsp;N.COMPTE</td>
+			<td width="35%" style="border-right: 1px solid black; text-align: left;  font-size: 6.5px;">&nbsp;05100-05130-01003333601-20</td>
 		</tr>
 		<tr>
-			<td width="10%" style="border-left: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;SWIFT</td>
-			<td width="35%" style="border-right: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;PRCBCDKI</td>
+			<td width="10%" style="border-left: 1px solid black; text-align: left;  font-size: 6.5px;">&nbsp;SWIFT</td>
+			<td width="35%" style="border-right: 1px solid black; text-align: left;  font-size: 6.5px;">&nbsp;PRCBCDKI</td>
 			<td width="10%"></td>
-			<td width="10%" style="border-left: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;SWIFT</td>
-			<td width="35%" style="border-right: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;RAWBCDKIXXX</td>
+			<td width="10%" style="border-left: 1px solid black; text-align: left;  font-size: 6.5px;">&nbsp;SWIFT</td>
+			<td width="35%" style="border-right: 1px solid black; text-align: left;  font-size: 6.5px;">&nbsp;RAWBCDKIXXX</td>
 		</tr>
 		<tr>
-			<td width="10%" style="border-bottom: 1px solid black; border-left: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;BANQUE</td>
-			<td width="35%" style="border-bottom: 1px solid black; border-right: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;EQUITY BANK CONGO SA		
+			<td width="10%" style="border-bottom: 1px solid black; border-left: 1px solid black; text-align: left;  font-size: 6.5px;">&nbsp;BANQUE</td>
+			<td width="35%" style="border-bottom: 1px solid black; border-right: 1px solid black; text-align: left;  font-size: 6.5px;">&nbsp;EQUITY BANK CONGO SA		
 			<br>&nbsp;LUBUMBASHI		
 			, R.D. CONGO</td>
 			<td width="10%"></td>
-			<td width="10%" style="border-bottom: 1px solid black; border-left: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;BANQUE</td>
-			<td width="35%" style="border-bottom: 1px solid black; border-right: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;RAWBANK
+			<td width="10%" style="border-bottom: 1px solid black; border-left: 1px solid black; text-align: left;  font-size: 6.5px;">&nbsp;BANQUE</td>
+			<td width="35%" style="border-bottom: 1px solid black; border-right: 1px solid black; text-align: left;  font-size: 6.5px;">&nbsp;RAWBANK
 			<br>&nbsp;LUBUMBASHI		
 			, R.D. CONGO</td>
 		</tr>';
 
 if ($facture['id_cli']==878 || $facture['id_cli']==876) {
 	$banque = '<tr>
-					<td width="10%" style="border-top: 1px solid black; border-left: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;INTITULE</td>
-					<td width="35%" style="border-top: 1px solid black; border-right: 1px solid black;  font-size: 7px;">&nbsp;MALABAR RDC SARL</td>
+					<td width="10%" style="border-top: 1px solid black; border-left: 1px solid black; text-align: left;  font-size: 6.5px;">&nbsp;INTITULE</td>
+					<td width="35%" style="border-top: 1px solid black; border-right: 1px solid black;  font-size: 6.5px;">&nbsp;MALABAR RDC SARL</td>
 					<td width="10%"></td>
 				</tr>
 				<tr>
-					<td width="10%" style="border-left: 1px solid black;  font-size: 7px;">&nbsp;N.COMPTE</td>
-					<td width="35%" style="border-right: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;00011-00130-00001020614-41</td>
+					<td width="10%" style="border-left: 1px solid black;  font-size: 6.5px;">&nbsp;N.COMPTE</td>
+					<td width="35%" style="border-right: 1px solid black; text-align: left;  font-size: 6.5px;">&nbsp;00011-00130-00001020614-41</td>
 					<td width="10%"></td>
 				</tr>
 				<tr>
-					<td width="10%" style="border-left: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;SWIFT</td>
-					<td width="35%" style="border-right: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;BCDCCDKI</td>
+					<td width="10%" style="border-left: 1px solid black; text-align: left;  font-size: 6.5px;">&nbsp;SWIFT</td>
+					<td width="35%" style="border-right: 1px solid black; text-align: left;  font-size: 6.5px;">&nbsp;BCDCCDKI</td>
 					<td width="10%"></td>
 				</tr>
 				<tr>
-					<td width="10%" style="border-bottom: 1px solid black; border-left: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;BANQUE</td>
-					<td width="35%" style="border-bottom: 1px solid black; border-right: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;BCDC		
+					<td width="10%" style="border-bottom: 1px solid black; border-left: 1px solid black; text-align: left;  font-size: 6.5px;">&nbsp;BANQUE</td>
+					<td width="35%" style="border-bottom: 1px solid black; border-right: 1px solid black; text-align: left;  font-size: 6.5px;">&nbsp;BCDC		
 					<br>&nbsp;LUBUMBASHI		
 					, R.D. CONGO</td>
 					<td width="10%"></td>
 				</tr>';
 }else if ($facture['id_cli']==864 || $facture['id_cli']==899 || $facture['id_cli']==916 || $facture['id_cli']==906 || $facture['id_cli']==901 || $facture['id_cli']==932 || $facture['id_cli']==856 || $facture['id_cli']==923 || $facture['id_cli']==905 || $facture['id_cli']==912 || $facture['id_cli']==927 || $facture['id_cli']==869) {
 	$banque = '<tr>
-					<td width="10%" style="border-top: 1px solid black; border-left: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;INTITULE</td>
-					<td width="35%" style="border-top: 1px solid black; border-right: 1px solid black;  font-size: 7px;">&nbsp;MALABAR RDC SARL</td>
+					<td width="10%" style="border-top: 1px solid black; border-left: 1px solid black; text-align: left;  font-size: 6.5px;">&nbsp;INTITULE</td>
+					<td width="35%" style="border-top: 1px solid black; border-right: 1px solid black;  font-size: 6.5px;">&nbsp;MALABAR RDC SARL</td>
 					<td width="10%"></td>
-					<td width="10%" style="border-top: 1px solid black; border-left: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;INTITULE</td>
-					<td width="35%" style="border-top: 1px solid black; border-right: 1px solid black;  font-size: 7px;">&nbsp;MALABAR CLEARING AGENCY SARL</td>
+					<td width="10%" style="border-top: 1px solid black; border-left: 1px solid black; text-align: left;  font-size: 6.5px;">&nbsp;INTITULE</td>
+					<td width="35%" style="border-top: 1px solid black; border-right: 1px solid black;  font-size: 6.5px;">&nbsp;MALABAR CLEARING AGENCY SARL</td>
 				</tr>
 				<tr>
-					<td width="10%" style="border-left: 1px solid black;  font-size: 7px;">&nbsp;N.COMPTE</td>
-					<td width="35%" style="border-right: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;00011-00130-00001020614-41</td>
+					<td width="10%" style="border-left: 1px solid black;  font-size: 6.5px;">&nbsp;N.COMPTE</td>
+					<td width="35%" style="border-right: 1px solid black; text-align: left;  font-size: 6.5px;">&nbsp;00011-00130-00001020614-41</td>
 					<td width="10%"></td>
-					<td width="10%" style="border-left: 1px solid black;  font-size: 7px;">&nbsp;N.COMPTE</td>
-					<td width="35%" style="border-right: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;05100-05130-01003333601-20</td>
+					<td width="10%" style="border-left: 1px solid black;  font-size: 6.5px;">&nbsp;N.COMPTE</td>
+					<td width="35%" style="border-right: 1px solid black; text-align: left;  font-size: 6.5px;">&nbsp;05100-05130-01003333601-20</td>
 				</tr>
 				<tr>
-					<td width="10%" style="border-left: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;SWIFT</td>
-					<td width="35%" style="border-right: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;BCDCCDKI</td>
+					<td width="10%" style="border-left: 1px solid black; text-align: left;  font-size: 6.5px;">&nbsp;SWIFT</td>
+					<td width="35%" style="border-right: 1px solid black; text-align: left;  font-size: 6.5px;">&nbsp;BCDCCDKI</td>
 					<td width="10%"></td>
-					<td width="10%" style="border-left: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;SWIFT</td>
-					<td width="35%" style="border-right: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;RAWBCDKIXXX</td>
+					<td width="10%" style="border-left: 1px solid black; text-align: left;  font-size: 6.5px;">&nbsp;SWIFT</td>
+					<td width="35%" style="border-right: 1px solid black; text-align: left;  font-size: 6.5px;">&nbsp;RAWBCDKIXXX</td>
 				</tr>
 				<tr>
-					<td width="10%" style="border-bottom: 1px solid black; border-left: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;BANQUE</td>
-					<td width="35%" style="border-bottom: 1px solid black; border-right: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;BCDC		
+					<td width="10%" style="border-bottom: 1px solid black; border-left: 1px solid black; text-align: left;  font-size: 6.5px;">&nbsp;BANQUE</td>
+					<td width="35%" style="border-bottom: 1px solid black; border-right: 1px solid black; text-align: left;  font-size: 6.5px;">&nbsp;BCDC		
 					<br>&nbsp;LUBUMBASHI		
 					, R.D. CONGO</td>
 					<td width="10%"></td>
-					<td width="10%" style="border-bottom: 1px solid black; border-left: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;BANQUE</td>
-					<td width="35%" style="border-bottom: 1px solid black; border-right: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;RAWBANK
+					<td width="10%" style="border-bottom: 1px solid black; border-left: 1px solid black; text-align: left;  font-size: 6.5px;">&nbsp;BANQUE</td>
+					<td width="35%" style="border-bottom: 1px solid black; border-right: 1px solid black; text-align: left;  font-size: 6.5px;">&nbsp;RAWBANK
 					<br>&nbsp;LUBUMBASHI		
 					, R.D. CONGO</td>
 				</tr>';
@@ -318,7 +318,7 @@ $tbl = <<<EOD
 		</tr>
 		<br>
 		<tr>
-			<td width="45%" rowspan="7" style="text-align: left; border: 0.3px solid black; font-size: 7px;"><span><u>CLIENT</u></span>
+			<td width="45%" rowspan="7" style="text-align: left; border: 0.3px solid black; font-size: 6.5px;"><span><u>CLIENT</u></span>
 			<br><b><font size="8px">$nom_complet</font> </b>
 			<span style="font-size: 6px;"><br>$adresse_client
 			<br>No.RCCM: $rccm_cli
@@ -327,107 +327,107 @@ $tbl = <<<EOD
 			<br>No.IMPORT/EXPORT: $num_imp_exp
 			<br>No.TVA: $num_tva</span></td>
 			<td width="15%" style="text-align: center;"></td>
-			<td width="15%" style="text-align: left; border: 0.3px solid black; font-size: 7px; font-weight: bold;">&nbsp;FACTURE Nº</td>
-			<td width="25%" style="text-align: center; border: 0.3px solid black; font-weight: bold; font-size: 7px;">$ref_fact</td>
+			<td width="15%" style="text-align: left; border: 0.3px solid black; font-size: 6.5px; font-weight: bold;">&nbsp;FACTURE Nº</td>
+			<td width="25%" style="text-align: center; border: 0.3px solid black; font-weight: bold; font-size: 6.5px;">$ref_fact</td>
 		</tr>
 		<tr>
 			<td width="15%" style="text-align: center;"></td>
-			<td width="15%" style="text-align: left; border: 0.3px solid black; font-size: 7px;">&nbsp;Date</td>
-			<td width="25%" style="text-align: center; border: 0.3px solid black; font-size: 7px;">$date_fact</td>
-		</tr>
-
-		<tr>
-			<td width="15%" style="text-align: center;"></td>
-			<td width="15%" style="text-align: left; border: 0.3px solid black; font-size: 7px;">&nbsp;Moyen de Transport</td>
-			<td width="25%" style="text-align: center; border: 0.3px solid black; font-size: 7px;">$nom_mod_trans</td>
+			<td width="15%" style="text-align: left; border: 0.3px solid black; font-size: 6.5px;">&nbsp;Date</td>
+			<td width="25%" style="text-align: center; border: 0.3px solid black; font-size: 6.5px;">$date_fact</td>
 		</tr>
 
 		<tr>
 			<td width="15%" style="text-align: center;"></td>
-			<td width="15%" style="text-align: left; border: 0.3px solid black; font-size: 7px;">&nbsp;Truck/Trailer No.</td>
-			<td width="25%" style="text-align: center; border: 0.3px solid black; font-size: 7px;">$truck</td>
+			<td width="15%" style="text-align: left; border: 0.3px solid black; font-size: 6.5px;">&nbsp;Moyen de Transport</td>
+			<td width="25%" style="text-align: center; border: 0.3px solid black; font-size: 6.5px;">$nom_mod_trans</td>
+		</tr>
+
+		<tr>
+			<td width="15%" style="text-align: center;"></td>
+			<td width="15%" style="text-align: left; border: 0.3px solid black; font-size: 6.5px;">&nbsp;Truck/Trailer No.</td>
+			<td width="25%" style="text-align: center; border: 0.3px solid black; font-size: 6.5px;">$truck</td>
 		</tr>
 
 		<tr>
 			<td width="15%" style="text-align: left; "></td>
-			<td width="8%" style="text-align: left; border: 0.3px solid black; font-size: 7px;">&nbsp;Facture/PFI: </td>
+			<td width="8%" style="text-align: left; border: 0.3px solid black; font-size: 6.5px;">&nbsp;Facture/PFI: </td>
 			<td width="13%" style="text-align: center; border: 0.3px solid black; font-size: 6px; font-weight: bold;">$ref_fact_dos</td>
-			<td width="6%" style="text-align: left; border: 0.3px solid black; font-size: 7px;">&nbsp;PO Four.: </td>
+			<td width="6%" style="text-align: left; border: 0.3px solid black; font-size: 6.5px;">&nbsp;PO Four.: </td>
 			<td width="13%" style="text-align: center; border: 0.3px solid black; font-size: 6px; font-weight: bold;">$po_ref</td>
 		</tr>
 
 		<tr>
 			<td width="15%" style="text-align: left; "></td>
-			<td width="8%" style="text-align: left; border: 0.3px solid black; font-size: 7px;">&nbsp;Produit: </td>
-			<td width="32%" style="text-align: center; border: 0.3px solid black; font-size: 7px;">$commodity</td>
+			<td width="8%" style="text-align: left; border: 0.3px solid black; font-size: 6.5px;">&nbsp;Produit: </td>
+			<td width="32%" style="text-align: center; border: 0.3px solid black; font-size: 6.5px;">$commodity</td>
 		</tr>
 		<tr>
 			<td width="15%" style="text-align: left; "></td>
-			<td width="8%" style="text-align: left; border: 0.3px solid black; font-size: 7px;">&nbsp;BIVAC Insp.: </td>
+			<td width="8%" style="text-align: left; border: 0.3px solid black; font-size: 6.5px;">&nbsp;BIVAC Insp.: </td>
 			<td width="13%" style="text-align: center; border: 0.3px solid black; font-size: 6px; font-weight: bold;">$ref_crf</td>
-			<td width="6%" style="text-align: left; border: 0.3px solid black; font-size: 7px;">&nbsp;License: </td>
+			<td width="6%" style="text-align: left; border: 0.3px solid black; font-size: 6.5px;">&nbsp;License: </td>
 			<td width="13%" style="text-align: center; border: 0.3px solid black; font-size: 6px; font-weight: bold;">$num_lic</td>
 		</tr>
 		<tr>
 			<td width="60%"></td>
-			<td width="15%" style="text-align: left; border: 0.3px solid black; font-size: 7px;">&nbsp;Tariff Code Client: </td>
-			<td width="25%" style="text-align: center; border: 0.3px solid black; font-size: 7px;">$code_tarif</td>
+			<td width="15%" style="text-align: left; border: 0.3px solid black; font-size: 6.5px;">&nbsp;Tariff Code Client: </td>
+			<td width="25%" style="text-align: center; border: 0.3px solid black; font-size: 6.5px;">$code_tarif</td>
 		</tr>
 		<tr>
-			<td width="23%" style="text-align: left; border: 0.3px solid black; font-size: 7px;">&nbsp;Poids (Kg): </td>
-			<td width="22%" style="text-align: center; border: 0.3px solid black; font-size: 7px;">$poids</td>
+			<td width="23%" style="text-align: left; border: 0.3px solid black; font-size: 6.5px;">&nbsp;Poids (Kg): </td>
+			<td width="22%" style="text-align: center; border: 0.3px solid black; font-size: 6.5px;">$poids</td>
 			<td width="15%" style="text-align: left; "></td>
-			<td width="15%" style="text-align: left; border: 0.3px solid black; font-size: 7px; font-weight: bold;">&nbsp;Notre Nº Ref #: </td>
-			<td width="25%" style="text-align: center; border: 0.3px solid black; font-size: 7px; font-weight: bold;">$ref_dos</td>
+			<td width="15%" style="text-align: left; border: 0.3px solid black; font-size: 6.5px; font-weight: bold;">&nbsp;Notre Nº Ref #: </td>
+			<td width="25%" style="text-align: center; border: 0.3px solid black; font-size: 6.5px; font-weight: bold;">$ref_dos</td>
 		</tr>
 		<tr>
-			<td width="23%" style="text-align: left; border: 0.3px solid black; font-size: 7px;">&nbsp;FOB/$id_mon_fob: </td>
-			<td width="22%" style="text-align: center; border: 0.3px solid black; font-size: 7px;">$fob_usd</td>
+			<td width="23%" style="text-align: left; border: 0.3px solid black; font-size: 6.5px;">&nbsp;FOB/$id_mon_fob: </td>
+			<td width="22%" style="text-align: center; border: 0.3px solid black; font-size: 6.5px;">$fob_usd</td>
 			<td width="15%" style="text-align: left; "></td>
-			<td width="15%" style="text-align: left; border: 0.3px solid black; font-size: 7px;">&nbsp;Exoneration/Code: </td>
-			<td width="25%" style="text-align: center; border: 0.3px solid black; font-size: 7px;">$num_exo</td>
+			<td width="15%" style="text-align: left; border: 0.3px solid black; font-size: 6.5px;">&nbsp;Exoneration/Code: </td>
+			<td width="25%" style="text-align: center; border: 0.3px solid black; font-size: 6.5px;">$num_exo</td>
 		</tr>
 		<tr>
-			<td width="23%" style="text-align: left; border: 0.3px solid black; font-size: 7px;">&nbsp;Fret/$id_mon_fret: </td>
-			<td width="22%" style="text-align: center; border: 0.3px solid black; font-size: 7px;">$fret_usd</td>
+			<td width="23%" style="text-align: left; border: 0.3px solid black; font-size: 6.5px;">&nbsp;Fret/$id_mon_fret: </td>
+			<td width="22%" style="text-align: center; border: 0.3px solid black; font-size: 6.5px;">$fret_usd</td>
 			<td width="15%" style="text-align: left; "></td>
-			<td width="13%" style="text-align: left; border: 0.3px solid black; font-size: 7px;">&nbsp;Rate(CDF/USD) BCC: </td>
-			<td width="8.5%" style="text-align: center; border: 0.3px solid black; font-size: 7px;">$roe_liq</td>
-			<td width="12%" style="text-align: left; border: 0.3px solid black; font-size: 7px;">&nbsp;Rate(CDF/$id_mon_fob) Inv.</td>
-			<td width="6.5%" style="text-align: center; border: 0.3px solid black; font-size: 7px;">$roe_inv</td>
+			<td width="13%" style="text-align: left; border: 0.3px solid black; font-size: 6.5px;">&nbsp;Rate(CDF/USD) BCC: </td>
+			<td width="8.5%" style="text-align: center; border: 0.3px solid black; font-size: 6.5px;">$roe_liq</td>
+			<td width="12%" style="text-align: left; border: 0.3px solid black; font-size: 6.5px;">&nbsp;Rate(CDF/$id_mon_fob) Inv.</td>
+			<td width="6.5%" style="text-align: center; border: 0.3px solid black; font-size: 6.5px;">$roe_inv</td>
 		</tr>
 		<tr>
-			<td width="23%" style="text-align: left; border: 0.3px solid black; font-size: 7px;">&nbsp;Autres Charges/$id_mon_autre_frais: </td>
-			<td width="22%" style="text-align: center; border: 0.3px solid black; font-size: 7px;">$autre_frais_usd</td>
+			<td width="23%" style="text-align: left; border: 0.3px solid black; font-size: 6.5px;">&nbsp;Autres Charges/$id_mon_autre_frais: </td>
+			<td width="22%" style="text-align: center; border: 0.3px solid black; font-size: 6.5px;">$autre_frais_usd</td>
 			<td width="15%" style="text-align: left; "></td>
-			<td width="8%" style="text-align: left; border: 0.3px solid black; font-size: 7px;">&nbsp;Bank: </td>
-			<td width="16%" style="text-align: center; border: 0.3px solid black; font-size: 7px; font-weight: bold;">$nom_banq</td>
-			<td width="8%" style="text-align: left; border: 0.3px solid black; font-size: 7px;">&nbsp;Bank Rate: </td>
-			<td width="8%" style="text-align: center; border: 0.3px solid black; font-size: 7px; font-weight: bold;">$roe_decl</td>
+			<td width="8%" style="text-align: left; border: 0.3px solid black; font-size: 6.5px;">&nbsp;Bank: </td>
+			<td width="16%" style="text-align: center; border: 0.3px solid black; font-size: 6.5px; font-weight: bold;">$nom_banq</td>
+			<td width="8%" style="text-align: left; border: 0.3px solid black; font-size: 6.5px;">&nbsp;Bank Rate: </td>
+			<td width="8%" style="text-align: center; border: 0.3px solid black; font-size: 6.5px; font-weight: bold;">$roe_decl</td>
 		</tr>
 		<tr>
-			<td width="23%" style="text-align: left; border: 0.3px solid black; font-size: 7px;">&nbsp;Assurance/$id_mon_assurance: </td>
-			<td width="22%" style="text-align: center; border: 0.3px solid black; font-size: 7px;">$assurance_usd</td>
+			<td width="23%" style="text-align: left; border: 0.3px solid black; font-size: 6.5px;">&nbsp;Assurance/$id_mon_assurance: </td>
+			<td width="22%" style="text-align: center; border: 0.3px solid black; font-size: 6.5px;">$assurance_usd</td>
 			<td width="15%" style="text-align: left; "></td>
-			<td width="15%" style="text-align: left; border: 0.3px solid black; font-size: 7px;">&nbsp;Declaration: </td>
-			<td width="12.5%" style="text-align: center; border: 0.3px solid black; font-size: 7px; font-weight: bold;">$ref_decl</td>
-			<td width="12.5%" style="text-align: center; border: 0.3px solid black; font-size: 7px; font-weight: bold;">$date_decl</td>
+			<td width="15%" style="text-align: left; border: 0.3px solid black; font-size: 6.5px;">&nbsp;Declaration: </td>
+			<td width="12.5%" style="text-align: center; border: 0.3px solid black; font-size: 6.5px; font-weight: bold;">$ref_decl</td>
+			<td width="12.5%" style="text-align: center; border: 0.3px solid black; font-size: 6.5px; font-weight: bold;">$date_decl</td>
 		</tr>
 		<tr>
-			<td width="23%" style="text-align: left; border: 0.3px solid black; font-size: 7px; font-weight: bold;">&nbsp;CIF/$id_mon_fob: </td>
+			<td width="23%" style="text-align: left; border: 0.3px solid black; font-size: 6.5px; font-weight: bold;">&nbsp;CIF/$id_mon_fob: </td>
 			<td width="22%" style="text-align: center; border: 0.3px solid black; font-size: 7.5px; font-weight: bold;">$cif_usd</td>
 			<td width="15%" style="text-align: left; "></td>
-			<td width="15%" style="text-align: left; border: 0.3px solid black; font-size: 7px;">&nbsp;Liquidation: </td>
-			<td width="12.5%" style="text-align: center; border: 0.3px solid black; font-size: 7px; font-weight: bold;">$ref_liq</td>
-			<td width="12.5%" style="text-align: center; border: 0.3px solid black; font-size: 7px; font-weight: bold;">$date_liq</td>
+			<td width="15%" style="text-align: left; border: 0.3px solid black; font-size: 6.5px;">&nbsp;Liquidation: </td>
+			<td width="12.5%" style="text-align: center; border: 0.3px solid black; font-size: 6.5px; font-weight: bold;">$ref_liq</td>
+			<td width="12.5%" style="text-align: center; border: 0.3px solid black; font-size: 6.5px; font-weight: bold;">$date_liq</td>
 		</tr>
 		<tr>
-			<td width="23%" style="text-align: left; border: 0.3px solid black; font-size: 7px; font-weight: bold;">&nbsp;CIF/CDF: </td>
+			<td width="23%" style="text-align: left; border: 0.3px solid black; font-size: 6.5px; font-weight: bold;">&nbsp;CIF/CDF: </td>
 			<td width="22%" style="text-align: center; border: 0.3px solid black; font-size: 7.5px; font-weight: bold;">$cif_cdf</td>
 			<td width="15%" style="text-align: left; "></td>
-			<td width="15%" style="text-align: left; border: 0.3px solid black; font-size: 7px;">&nbsp;Quiittance: </td>
-			<td width="12.5%" style="text-align: center; border: 0.3px solid black; font-size: 7px; font-weight: bold;">$ref_quit</td>
-			<td width="12.5%" style="text-align: center; border: 0.3px solid black; font-size: 7px; font-weight: bold;">$date_quit</td>
+			<td width="15%" style="text-align: left; border: 0.3px solid black; font-size: 6.5px;">&nbsp;Quiittance: </td>
+			<td width="12.5%" style="text-align: center; border: 0.3px solid black; font-size: 6.5px; font-weight: bold;">$ref_quit</td>
+			<td width="12.5%" style="text-align: center; border: 0.3px solid black; font-size: 6.5px; font-weight: bold;">$date_quit</td>
 		</tr>
 
 		<tr>
@@ -435,60 +435,60 @@ $tbl = <<<EOD
 		</tr>
 
 		<tr>
-			<td width="100%" style="font-weight: bold; border: 1px solid black; font-size: 7px;">&nbsp;<u>CUSTOMS CLEARANCE FEES / FRAIS DEDOUANEMENT</u></td>
+			<td width="100%" style="font-weight: bold; border: 1px solid black; font-size: 6.5px;">&nbsp;<u>CUSTOMS CLEARANCE FEES / FRAIS DEDOUANEMENT</u></td>
 		</tr>
 		<tr>
-			<td width="49%" style="font-weight: bold; border: 1px solid black; background-color: rgb(220,220,220); font-size: 7px; text-align: center;">&nbsp;<u>Description</u></td>
-			<td width="9%" style="font-weight: bold; border: 1px solid black; background-color: rgb(220,220,220); font-size: 7px;text-align: center;">Unit</td>
-			<td width="8%" style="font-weight: bold; border: 1px solid black; background-color: rgb(220,220,220); font-size: 7px;text-align: center;">%</td>
-			<td width="11%" style="font-weight: bold; border: 1px solid black; background-color: rgb(220,220,220); font-size: 7px;text-align: center;">Rate/USD</td>
-			<td width="11.5%" style="font-weight: bold; border: 1px solid black; background-color: rgb(220,220,220); font-size: 7px;text-align: center;">VAT/USD</td>
-			<td width="11.5%" style="font-weight: bold; border: 1px solid black; background-color: rgb(220,220,220); font-size: 7px;text-align: center;">Total/USD</td>
+			<td width="49%" style="font-weight: bold; border: 1px solid black; background-color: rgb(220,220,220); font-size: 6.5px; text-align: center;">&nbsp;<u>Description</u></td>
+			<td width="9%" style="font-weight: bold; border: 1px solid black; background-color: rgb(220,220,220); font-size: 6.5px;text-align: center;">Unit</td>
+			<td width="8%" style="font-weight: bold; border: 1px solid black; background-color: rgb(220,220,220); font-size: 6.5px;text-align: center;">%</td>
+			<td width="11%" style="font-weight: bold; border: 1px solid black; background-color: rgb(220,220,220); font-size: 6.5px;text-align: center;">Rate/USD</td>
+			<td width="11.5%" style="font-weight: bold; border: 1px solid black; background-color: rgb(220,220,220); font-size: 6.5px;text-align: center;">VAT/USD</td>
+			<td width="11.5%" style="font-weight: bold; border: 1px solid black; background-color: rgb(220,220,220); font-size: 6.5px;text-align: center;">Total/USD</td>
 		</tr>
 		$taxe
 		<tr>
 			<td colspan="4"></td>
 		</tr>
 		<tr>
-			<td width="100%" style="font-weight: bold; border: 1px solid black; font-size: 7px;">&nbsp;<u>OTHER CHARGES / AUTRES FRAIS </u></td>
+			<td width="100%" style="font-weight: bold; border: 1px solid black; font-size: 6.5px;">&nbsp;<u>OTHER CHARGES / AUTRES FRAIS </u></td>
 		</tr>
 		<tr>
-			<td width="49%" style="font-weight: bold; border: 1px solid black; background-color: rgb(220,220,220); font-size: 7px; text-align: center;">&nbsp;<u>Description</u></td>
-			<td width="9%" style="font-weight: bold; border: 1px solid black; background-color: rgb(220,220,220); font-size: 7px;text-align: center;">Unit</td>
-			<td width="8%" style="font-weight: bold; border: 1px solid black; background-color: rgb(220,220,220); font-size: 7px;text-align: center;">Qty</td>
-			<td width="11%" style="font-weight: bold; border: 1px solid black; background-color: rgb(220,220,220); font-size: 7px;text-align: center;">Taux/USD</td>
-			<td width="11.5%" style="font-weight: bold; border: 1px solid black; background-color: rgb(220,220,220); font-size: 7px;text-align: center;">TVA/USD</td>
-			<td width="11.5%" style="font-weight: bold; border: 1px solid black; background-color: rgb(220,220,220); font-size: 7px;text-align: center;">TOTAL  EN USD</td>
+			<td width="49%" style="font-weight: bold; border: 1px solid black; background-color: rgb(220,220,220); font-size: 6.5px; text-align: center;">&nbsp;<u>Description</u></td>
+			<td width="9%" style="font-weight: bold; border: 1px solid black; background-color: rgb(220,220,220); font-size: 6.5px;text-align: center;">Unit</td>
+			<td width="8%" style="font-weight: bold; border: 1px solid black; background-color: rgb(220,220,220); font-size: 6.5px;text-align: center;">Qty</td>
+			<td width="11%" style="font-weight: bold; border: 1px solid black; background-color: rgb(220,220,220); font-size: 6.5px;text-align: center;">Taux/USD</td>
+			<td width="11.5%" style="font-weight: bold; border: 1px solid black; background-color: rgb(220,220,220); font-size: 6.5px;text-align: center;">TVA/USD</td>
+			<td width="11.5%" style="font-weight: bold; border: 1px solid black; background-color: rgb(220,220,220); font-size: 6.5px;text-align: center;">TOTAL  EN USD</td>
 		</tr>
 		$autres_charges
 		<tr>
 			<td width="100%"></td>
 		</tr>
 		<tr>
-			<td width="100%" style="font-weight: bold; border: 1px solid black; font-size: 7px;">&nbsp;<u>OPERATIONAL COSTS / COUT OPERATIONEL</u></td>
+			<td width="100%" style="font-weight: bold; border: 1px solid black; font-size: 6.5px;">&nbsp;<u>OPERATIONAL COSTS / COUT OPERATIONEL</u></td>
 		</tr>
 		<tr>
-			<td width="49%" style="font-weight: bold; border: 1px solid black; background-color: rgb(220,220,220); font-size: 7px; text-align: center;">&nbsp;<u>Description</u></td>
-			<td width="9%" style="font-weight: bold; border: 1px solid black; background-color: rgb(220,220,220); font-size: 7px;text-align: center;">Unit</td>
-			<td width="8%" style="font-weight: bold; border: 1px solid black; background-color: rgb(220,220,220); font-size: 7px;text-align: center;">Qty</td>
-			<td width="11%" style="font-weight: bold; border: 1px solid black; background-color: rgb(220,220,220); font-size: 7px;text-align: center;">Taux/USD</td>
-			<td width="11.5%" style="font-weight: bold; border: 1px solid black; background-color: rgb(220,220,220); font-size: 7px;text-align: center;">TVA/USD</td>
-			<td width="11.5%" style="font-weight: bold; border: 1px solid black; background-color: rgb(220,220,220); font-size: 7px;text-align: center;">TOTAL  EN USD</td>
+			<td width="49%" style="font-weight: bold; border: 1px solid black; background-color: rgb(220,220,220); font-size: 6.5px; text-align: center;">&nbsp;<u>Description</u></td>
+			<td width="9%" style="font-weight: bold; border: 1px solid black; background-color: rgb(220,220,220); font-size: 6.5px;text-align: center;">Unit</td>
+			<td width="8%" style="font-weight: bold; border: 1px solid black; background-color: rgb(220,220,220); font-size: 6.5px;text-align: center;">Qty</td>
+			<td width="11%" style="font-weight: bold; border: 1px solid black; background-color: rgb(220,220,220); font-size: 6.5px;text-align: center;">Taux/USD</td>
+			<td width="11.5%" style="font-weight: bold; border: 1px solid black; background-color: rgb(220,220,220); font-size: 6.5px;text-align: center;">TVA/USD</td>
+			<td width="11.5%" style="font-weight: bold; border: 1px solid black; background-color: rgb(220,220,220); font-size: 6.5px;text-align: center;">TOTAL  EN USD</td>
 		</tr>
 		$operational_cost
 		<tr>
 			<td width="100%"></td>
 		</tr>
 		<tr>
-			<td width="100%" style="font-weight: bold; border: 1px solid black; font-size: 7px;">&nbsp;<u>SERVICE FEE / SERVICES</u></td>
+			<td width="100%" style="font-weight: bold; border: 1px solid black; font-size: 6.5px;">&nbsp;<u>SERVICE FEE / SERVICES</u></td>
 		</tr>
 		<tr>
-			<td width="49%" style="font-weight: bold; border: 1px solid black; background-color: rgb(220,220,220); font-size: 7px; text-align: center;">&nbsp;<u>Description</u></td>
-			<td width="9%" style="font-weight: bold; border: 1px solid black; background-color: rgb(220,220,220); font-size: 7px;text-align: center;">Unit</td>
-			<td width="8%" style="font-weight: bold; border: 1px solid black; background-color: rgb(220,220,220); font-size: 7px;text-align: center;">Qty</td>
-			<td width="11%" style="font-weight: bold; border: 1px solid black; background-color: rgb(220,220,220); font-size: 7px;text-align: center;">Taux/USD</td>
-			<td width="11.5%" style="font-weight: bold; border: 1px solid black; background-color: rgb(220,220,220); font-size: 7px;text-align: center;">TVA/USD</td>
-			<td width="11.5%" style="font-weight: bold; border: 1px solid black; background-color: rgb(220,220,220); font-size: 7px;text-align: center;">TOTAL  EN USD</td>
+			<td width="49%" style="font-weight: bold; border: 1px solid black; background-color: rgb(220,220,220); font-size: 6.5px; text-align: center;">&nbsp;<u>Description</u></td>
+			<td width="9%" style="font-weight: bold; border: 1px solid black; background-color: rgb(220,220,220); font-size: 6.5px;text-align: center;">Unit</td>
+			<td width="8%" style="font-weight: bold; border: 1px solid black; background-color: rgb(220,220,220); font-size: 6.5px;text-align: center;">Qty</td>
+			<td width="11%" style="font-weight: bold; border: 1px solid black; background-color: rgb(220,220,220); font-size: 6.5px;text-align: center;">Taux/USD</td>
+			<td width="11.5%" style="font-weight: bold; border: 1px solid black; background-color: rgb(220,220,220); font-size: 6.5px;text-align: center;">TVA/USD</td>
+			<td width="11.5%" style="font-weight: bold; border: 1px solid black; background-color: rgb(220,220,220); font-size: 6.5px;text-align: center;">TOTAL  EN USD</td>
 		</tr>
 		$service_fee
 		<tr>
@@ -523,7 +523,7 @@ $tbl = <<<EOD
 			<td width="100%"></td>
 		</tr>
 		<tr>
-			<td width="100%" style="border: 1px solid black; text-align: center; font-size: 7px;">Thank you for you business!</td>
+			<td width="100%" style="border: 1px solid black; text-align: center; font-size: 6.5px;">Thank you for you business!</td>
 		</tr>
 	</table>
 	</bodystyle="font-weight: bold;">
