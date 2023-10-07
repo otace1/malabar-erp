@@ -447,9 +447,6 @@ $tbl = <<<EOD
 		</tr>
 		$taxe
 		<tr>
-			<td colspan="4"></td>
-		</tr>
-		<tr>
 			<td width="100%" style="font-weight: bold; border: 1px solid black; font-size: 6.5px;">&nbsp;<u>OTHER CHARGES / AUTRES FRAIS </u></td>
 		</tr>
 		<tr>
@@ -462,9 +459,6 @@ $tbl = <<<EOD
 		</tr>
 		$autres_charges
 		<tr>
-			<td width="100%"></td>
-		</tr>
-		<tr>
 			<td width="100%" style="font-weight: bold; border: 1px solid black; font-size: 6.5px;">&nbsp;<u>OPERATIONAL COSTS / COUT OPERATIONEL</u></td>
 		</tr>
 		<tr>
@@ -476,9 +470,6 @@ $tbl = <<<EOD
 			<td width="11.5%" style="font-weight: bold; border: 1px solid black; background-color: rgb(220,220,220); font-size: 6.5px;text-align: center;">TOTAL  EN USD</td>
 		</tr>
 		$operational_cost
-		<tr>
-			<td width="100%"></td>
-		</tr>
 		<tr>
 			<td width="100%" style="font-weight: bold; border: 1px solid black; font-size: 6.5px;">&nbsp;<u>SERVICE FEE / SERVICES</u></td>
 		</tr>

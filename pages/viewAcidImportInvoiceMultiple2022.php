@@ -61,7 +61,7 @@ if (@file_exists(dirname(__FILE__).'/lang/eng.php')) {
 
 
 // set font
-$pdf->SetFont('helvetica', 'N', 8);
+$pdf->SetFont('helvetica', 'N', 7);
 // $pdf->SetFont('times', 'N', 8);
 // $pdf->SetFont('courier', 'N', 8);
 $pdf->setPrintHeader(false);
@@ -278,9 +278,6 @@ $tbl = <<<EOD
 		</tr>
 		$taxe
 		<tr>
-			<td colspan="4"></td>
-		</tr>
-		<tr>
 			<td width="100%" style="font-weight: bold; border: 1px solid black;">&nbsp;<u>OTHER CHARGES / AUTRES FRAIS </u></td>
 		</tr>
 		<tr>
@@ -292,9 +289,6 @@ $tbl = <<<EOD
 			<td width="11.5%" style="font-weight: bold; border: 1px solid black; background-color: rgb(220,220,220);text-align: center;">TOTAL  EN USD</td>
 		</tr>
 		$autres_charges
-		<tr>
-			<td width="100%"></td>
-		</tr>
 		<tr>
 			<td width="100%" style="font-weight: bold; border: 1px solid black;">&nbsp;<u>OPERATIONAL COSTS / COUT OPERATIONEL</u></td>
 		</tr>
@@ -308,9 +302,6 @@ $tbl = <<<EOD
 		</tr>
 		$operational_cost
 		<tr>
-			<td width="100%"></td>
-		</tr>
-		<tr>
 			<td width="100%" style="font-weight: bold; border: 1px solid black;">&nbsp;<u>SERVICE FEE / SERVICES</u></td>
 		</tr>
 		<tr>
@@ -322,9 +313,6 @@ $tbl = <<<EOD
 			<td width="11.5%" style="font-weight: bold; border: 1px solid black; background-color: rgb(220,220,220);text-align: center;">TOTAL  EN USD</td>
 		</tr>
 		$service_fee
-		<tr>
-			<td width="100%"></td>
-		</tr>
 		$totalAll
 		<tr>
 			<td><br></td>
