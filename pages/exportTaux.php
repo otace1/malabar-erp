@@ -175,6 +175,12 @@ $compteur = 0;
 		$col++;
 
 		$excel-> getActiveSheet()
+			-> setCellValue($col.$row, $reponse['montant']);
+		$excel->getActiveSheet()->getStyle($col.$row)->getNumberFormat()->setFormatCode('# ### ##0.00');
+		alignement($col.$row);
+		$col++;
+
+		$excel-> getActiveSheet()
 			-> setCellValue($col.$row, $maClasse-> getMontantTauxBanque(2, $reponse['id']));
 		$excel->getActiveSheet()->getStyle($col.$row)->getNumberFormat()->setFormatCode('# ### ##0.00');
 		alignement($col.$row);
