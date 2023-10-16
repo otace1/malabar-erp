@@ -249,6 +249,7 @@
                           Rate of exchange management
                         </h5>
                         <div class="float-right">
+                          <button class="btn btn-success btn-xs"onclick="window.location.replace('exportTaux.php','pop1','width=80,height=80');"><i class="fa fa-file-excel"></i> Export to Excel File</button>
                           <button class="btn btn-primary btn-xs" onclick="modal_creation_taux_banque();"><i class="fa fa-plus"></i> New Rate</button>
                         </div>
                       </div>    
