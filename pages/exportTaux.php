@@ -170,46 +170,54 @@ $compteur = 0;
 
 		$excel-> getActiveSheet()
 			-> setCellValue($col.$row, $reponse['date_taux']);
+		$excel->getActiveSheet()->getStyle($col.$row)->getNumberFormat()->setFormatCode('# ### ##0.00');
 		alignement($col.$row);
 		$col++;
 
 		$excel-> getActiveSheet()
 			-> setCellValue($col.$row, $maClasse-> getMontantTauxBanque(2, $reponse['id']));
+		$excel->getActiveSheet()->getStyle($col.$row)->getNumberFormat()->setFormatCode('# ### ##0.00');
 		alignement($col.$row);
 		$col++;
 
 		$excel-> getActiveSheet()
 			-> setCellValue($col.$row, $reste_rawbank);
+		$excel->getActiveSheet()->getStyle($col.$row)->getNumberFormat()->setFormatCode('# ### ##0.00');
 		alignement($col.$row);
 		$col++;
 
 		$excel-> getActiveSheet()
 			-> setCellValue($col.$row, $maClasse-> getMontantTauxBanque(3, $reponse['id']));
-		alignement($col.$row);
+		$excel->getActiveSheet()->getStyle($col.$row)->getNumberFormat()->setFormatCode('# ### ##0.00');
 		$col++;
 
 		$excel-> getActiveSheet()
 			-> setCellValue($col.$row, $reste_equity);
+		$excel->getActiveSheet()->getStyle($col.$row)->getNumberFormat()->setFormatCode('# ### ##0.00');
 		alignement($col.$row);
 		$col++;
 
 		$excel-> getActiveSheet()
 			-> setCellValue($col.$row, $maClasse-> getMontantTauxBanque(5, $reponse['id']));
+		$excel->getActiveSheet()->getStyle($col.$row)->getNumberFormat()->setFormatCode('# ### ##0.00');
 		alignement($col.$row);
 		$col++;
 
 		$excel-> getActiveSheet()
 			-> setCellValue($col.$row, $reste_ecobank);
+		$excel->getActiveSheet()->getStyle($col.$row)->getNumberFormat()->setFormatCode('# ### ##0.00');
 		alignement($col.$row);
 		$col++;
 
 		$excel-> getActiveSheet()
 			-> setCellValue($col.$row, $maClasse-> getMontantTauxBanque(10, $reponse['id']));
+		$excel->getActiveSheet()->getStyle($col.$row)->getNumberFormat()->setFormatCode('# ### ##0.00');
 		alignement($col.$row);
 		$col++;
 
 		$excel-> getActiveSheet()
 			-> setCellValue($col.$row, $reste_access);
+		$excel->getActiveSheet()->getStyle($col.$row)->getNumberFormat()->setFormatCode('# ### ##0.00');
 		alignement($col.$row);
 		$col++;
 
