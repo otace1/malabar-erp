@@ -38542,9 +38542,10 @@
 
 		}
 
-		public function popFilesInvoicingStatus($id_mod_lic){
+		public function popFilesInvoicingStatus($id_mod_lic, $annee){
 			include('connexion.php');
 			$entree['id_mod_lic'] = $id_mod_lic;
+			$entree['annee'] = $annee;
 
 			// $sqlClient = "";
 			// if (isset($id_cli) && ($id_cli != '')) {
@@ -38694,10 +38695,10 @@
 												LEFT JOIN modele_facture mf
 													ON mf.id_mod_fact = fd.id_mod_fact
 											WHERE dos.id_mod_lic = ?
-												AND YEAR(dos.date_creat_dos) > 2021
+												AND YEAR(dos.date_creat_dos) = ?
 											GROUP BY dos.id_dos
-											ORDER BY dos.id_dos DESC");
-			$requete-> execute(array($entree['id_mod_lic']));
+											ORDER BY dos.id_dos ASC");
+			$requete-> execute(array($entree['id_mod_lic'], $entree['annee']));
 			while($reponse = $requete-> fetch()){
 				$compteur++;
 
