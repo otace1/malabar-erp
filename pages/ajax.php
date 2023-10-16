@@ -2226,7 +2226,7 @@
 		if (isset($_POST['id_mod_lic'])&&($_POST['id_mod_lic']!='')) {
 			$id_mod_lic = $_POST['id_mod_lic'];
 		}
-		echo json_encode($maClasse-> popFilesInvoicingStatus($_POST['id_mod_lic']));
+		echo json_encode($maClasse-> popFilesInvoicingStatus($_POST['id_mod_lic'], $_POST['annee']));
 		
 	}elseif(isset($_POST['operation']) && $_POST['operation']=='statut_dossier_air'){ 
 

@@ -147,6 +147,7 @@
           },
           "data": {
               "id_mod_lic": "<?php echo $id_mod_lic;?>",
+              "annee": "<?php echo $_GET['annee'];?>",
               "operation": "popFilesInvoicingStatus"
           }
         },

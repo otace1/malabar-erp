@@ -24,7 +24,19 @@
               }
             ?>
             <span class="float-right">
-              <button class="btn btn-xs btn-info" onclick="window.open('popFilesInvoicingStatus.php?statut=Factures&amp;id_mod_lic=<?php echo $_GET['id_mod_lic_fact']?>','pop1','width=1200,height=700');"><i class="fa fa-list"></i> View all files</button>
+              <!-- <button class="btn btn-xs btn-info" ></button> -->
+              <div class="btn-group">
+                <button type="button" class="btn btn-xs btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  <i class="fa fa-list"></i> View all files
+                </button>
+                <div class="dropdown-menu">
+                  <?php
+                    for ($i=2022; $i <= date('Y') ; $i++) { 
+                  ?><a class="dropdown-item" href="#" onclick="window.open('popFilesInvoicingStatus.php?statut=Factures&amp;id_mod_lic=<?php echo $_GET['id_mod_lic_fact']?>&annee=<?php echo $i;?>','pop1','width=1200,height=700');"><?php echo $i;?> Files</a><?php
+                    }
+                  ?>
+                </div>
+              </div>
             </span>
           </h5>
           <div class="pull-right">
