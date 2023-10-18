@@ -51,6 +51,7 @@
                       <th>#</th>
                       <th>Notre Nº Ref #</th>
                       <th>Client</th>
+                      <th>Invoicing Status</th>
                       <th>Clearing Status</th>
                       <th>General Status</th>
                       <th>Decl. Ref.</th>
@@ -60,7 +61,7 @@
                       <th>LIQ AMT CDF</th>
                       <th>Quit. Ref.</th>
                       <th>Quit. Date</th>
-                      <th>Invoicing Status</th>
+                      <th>OPS Remark</th>
                       <!-- <th>MCA Inv. Nº</th>
                       <th>MCA Inv. DATE</th>
                     </tr> -->
@@ -156,6 +157,7 @@
           {"data":"compteur"},
           {"data":"ref_dos"},
           {"data":"nom_cli"},
+          {"data":"invoicing_status"},
           {"data":"cleared_status"},
           {"data":"statut"},
           {"data":"ref_decl",
@@ -173,7 +175,7 @@
             className: 'dt-body-center'},
           {"data":"date_quit",
             className: 'dt-body-center'},
-          {"data":"invoicing_status"}
+          {"data":"remarque"}
           // {"data":"ref_fact"},
           // {"data":"date_fact"}
         ] 
