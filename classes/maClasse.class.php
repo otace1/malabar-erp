@@ -38551,7 +38551,7 @@
 			// if (isset($id_cli) && ($id_cli != '')) {
 			// 	$sqlClient = ' AND dos.id_cli = "'.$id_cli.'" ';
 			// }
-
+			$rows = array();
 			$compteur = 0;
 
 			$requete = $connexion-> prepare("SELECT dos.ref_dos AS ref_dos, 
@@ -38682,7 +38682,11 @@
 								                		'Cleared',
 								                		'Cancelled'
 								                	)
-								                ) AS cleared_status
+								                ) AS cleared_status,
+								                IF(dos.not_fact='0',
+								                	'Enable',
+								                	'Disabled'
+								                ) AS invoicing_status
 											FROM dossier dos 
 												LEFT JOIN client cl
 													ON dos.id_cli = cl.id_cli
@@ -38696,6 +38700,16 @@
 													ON mf.id_mod_fact = fd.id_mod_fact
 											WHERE dos.id_mod_lic = ?
 												AND YEAR(dos.date_creat_dos) = ?
+												AND dos.id_dos NOT IN (SELECT id_dos FROM detail_facture_dossier GROUP BY id_dos)
+												AND dos.id_dos NOT IN (
+														SELECT id_dos
+															FROM dossier
+															WHERE date_quit IS NOT NULL
+																AND ref_quit IS NOT NULL
+																AND not_fact='0'
+													)
+												AND dos.id_cli <> 1
+												AND dos.cleared <= 1
 											GROUP BY dos.id_dos
 											ORDER BY dos.id_dos ASC");
 			$requete-> execute(array($entree['id_mod_lic'], $entree['annee']));
