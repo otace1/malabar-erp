@@ -38686,7 +38686,8 @@
 								                IF(dos.not_fact='0',
 								                	'Enable',
 								                	'Disabled'
-								                ) AS invoicing_status
+								                ) AS invoicing_status,
+								                dos.remarque AS remarque
 											FROM dossier dos 
 												LEFT JOIN client cl
 													ON dos.id_cli = cl.id_cli
