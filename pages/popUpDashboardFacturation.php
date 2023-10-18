@@ -176,8 +176,8 @@
                       <th style="">L.Amount</th>
                       <th style="">Q.Ref.</th>
                       <th style="">Q.Date</th>
-                      <th style="">Q.Encoding Date</th>
                       <th style="">Delay</th>
+                      <th style="">Q.Encoding Date</th>
                       <?php
                       }
                       ?>
@@ -613,8 +613,8 @@
           },
           {"data":"ref_quit"},
           {"data":"date_quit"},
-          {"data":"date_log"},
-          {"data":"delay"}
+          {"data":"delay"},
+          {"data":"date_log"}
         ] 
             <?php
           }
