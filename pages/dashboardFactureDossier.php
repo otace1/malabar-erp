@@ -31,7 +31,7 @@
                 </button>
                 <div class="dropdown-menu">
                   <?php
-                    for ($i=2022; $i <= date('Y') ; $i++) { 
+                    for ($i=date('Y'); $i >= 2020 ; $i--) { 
                   ?><a class="dropdown-item" href="#" onclick="window.open('popFilesInvoicingStatus.php?statut=Factures&amp;id_mod_lic=<?php echo $_GET['id_mod_lic_fact']?>&annee=<?php echo $i;?>','pop1','width=1200,height=700');"><?php echo $i;?> Files</a><?php
                     }
                   ?>

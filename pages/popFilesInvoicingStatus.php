@@ -60,9 +60,10 @@
                       <th>LIQ AMT CDF</th>
                       <th>Quit. Ref.</th>
                       <th>Quit. Date</th>
-                      <th>MCA Inv. Nº</th>
+                      <th>Invoicing Status</th>
+                      <!-- <th>MCA Inv. Nº</th>
                       <th>MCA Inv. DATE</th>
-                    </tr>
+                    </tr> -->
                   </thead>
                   <tbody>
                     <?php
@@ -172,8 +173,9 @@
             className: 'dt-body-center'},
           {"data":"date_quit",
             className: 'dt-body-center'},
-          {"data":"ref_fact"},
-          {"data":"date_fact"}
+          {"data":"invoicing_status"}
+          // {"data":"ref_fact"},
+          // {"data":"date_fact"}
         ] 
       });
       $('#spinner-div').hide();
