@@ -2264,5 +2264,31 @@
 	    $response['message'] = 'Done!';
 		echo json_encode($response);
 
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='transmis_apurement'){ 
+
+		echo json_encode($maClasse-> transmis_apurement($_POST['id_cli'], $_POST['id_mod_lic']));
+
+	}else if (isset($_POST['modifierTransmissionApurement'])) {
+	    
+	    if (isset($_FILES['fichier_trans_ap']['name'])) {
+
+	      $fichier_trans_ap = $_FILES['fichier_trans_ap']['name'];
+	      $tmp = $_FILES['fichier_trans_ap']['tmp_name'];
+
+	      $maClasse-> uploadAccuseeRecpetionTransmissionApurement($_POST['id_trans_ap'], $fichier_trans_ap, $tmp);
+
+	    }else{
+	      $fichier_trans_ap = NULL;
+	      $tmp = NULL;
+	    }
+
+	    $response['message'] = '
+	    				<div class="alert alert-success alert-dismissible" role="alert">
+		                  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+		                  <strong>Opération reussie!</strong> 
+		                </div>';
+		echo json_encode($response);
+
 	}
+
 ?>
