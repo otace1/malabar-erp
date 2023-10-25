@@ -15704,6 +15704,73 @@
 
 		}
 
+		public function transmis_apurement($id_cli, $id_mod_lic){
+			include('connexion.php');
+			$entree['id_mod_lic'] = $id_mod_lic;
+
+			if (isset($id_cli) && ($id_cli != '')) {
+				$sql = ' AND dos.id_cli = '.$id_cli;
+			}else{
+				$sql = '';
+			}
+
+			$compteur = 0;
+			$rows = array();
+
+			$requete = $connexion-> prepare("SELECT trans.ref_trans_ap AS ref_trans_ap,
+													DATE_FORMAT(trans.date_trans_ap, '%d/%m/%Y') AS date_trans_ap,
+													trans.date_depot AS date_depot,
+													trans.banque AS banque,
+													COUNT(det.id_dos) AS nbre_dos,
+													COUNT(DISTINCT(dos.num_lic)) AS nbre_lic,
+													cl.nom_cli AS nom_cli,
+													trans.id_trans_ap AS id_trans_ap,
+													trans.fichier_trans_ap AS fichier_trans_ap
+											-- FROM transmission_apurement trans
+											-- 	LEFT JOIN detail_apurement det
+											-- 		ON det.id_trans_ap = trans.id_trans_ap
+											-- 	LEFT JOIN dossier dos
+											-- 		ON dos.id_dos = det.id_dos
+											-- 	LEFT JOIN client cl
+											-- 		ON dos.id_cli = cl.id_cli
+											-- WHERE trans.id_mod_lic = ?
+											FROM transmission_apurement trans, detail_apurement det,  dossier dos, client cl
+											WHERE  det.id_trans_ap = trans.id_trans_ap
+												AND dos.id_dos = det.id_dos
+												AND dos.id_cli = cl.id_cli
+												$sql
+												AND trans.id_mod_lic = ?
+											GROUP BY trans.id_trans_ap
+											ORDER BY trans.id_trans_ap DESC");
+			$requete-> execute(array($entree['id_mod_lic']));
+			while ($reponse = $requete-> fetch()) {
+				$compteur++;
+
+				// $reponse['btn_action'] .= '<a href="file:///'.$this-> getPathArchive($reponse['id_dos']).'/'.$reponse['ref_dos'].'">Find Support Documents</a>';
+
+				$reponse['compteur'] = $compteur;
+				$reponse['btn_action'] = $this-> checkArchivedFile($reponse['id_trans_ap'], $reponse['fichier_trans_ap'], $reponse['ref_trans_ap']);
+
+				$rows[] = $reponse;
+			}$requete-> closeCursor();
+
+
+			return $rows;
+
+		}
+
+		public function checkArchivedFile($id_trans_ap, $fichier_trans_ap, $ref_trans_ap){
+			if(file_exists('../transmision_apurements/'.$id_trans_ap.'/'.$fichier_trans_ap)){
+				return '<button class="btn btn-xs bg bg-info square-btn-adjust" onclick="window.open(\'../transmision_apurements/'.$id_trans_ap.'/'.$fichier_trans_ap.'\',\'pop1\',\'width=1900,height=900\');">
+		                    <i class="fas fa-file"></i> Accusée de réception
+		                </button>';
+			}else{
+				return '<button class="btn btn-xs btn-dark square-btn-adjust" onclick="modal_archive_transmis_apurement('.$id_trans_ap.',\''.$ref_trans_ap.'\');">
+		                    <i class="fa fa-upload"></i> Loger Accusée de réception
+		                </button>';
+			}
+		}
+
 		public function nbreDossierFacturesModeleLicence($id_mod_lic, $id_cli){
 			include('connexion.php');
 			$entree['id_mod_lic'] = $id_mod_lic;
@@ -26567,7 +26634,7 @@
 													AND d.id_dos NOT IN(
 														SELECT id_dos FROM detail_apurement
 													)
-
+													AND (d.id_cli <> 869 AND d.id_cli <> 929 AND d.id_cli <> 927 AND d.id_cli <> 870 AND d.id_cli <> 902 AND d.id_cli <> 873 AND d.id_cli <> 871 AND d.id_cli <> 872)
 
 											ORDER BY d.ref_dos DESC;");
 			$requete-> execute(array($entree['id_mod_lic']));
@@ -37853,6 +37920,7 @@
 															FROM dossier 
 															WHERE ref_dos LIKE '%RF20-%' OR ref_dos LIKE '%AW20-%' OR ref_dos LIKE '%-ACID-%' OR ref_dos LIKE '%-SUL%'
 														)
+													AND (id_cli <> 869 AND id_cli <> 929 AND id_cli <> 927 AND id_cli <> 870 AND id_cli <> 902 AND id_cli <> 873 AND id_cli <> 871 AND id_cli <> 872)
 													AND id_dos NOT IN(
 														SELECT id_dos FROM detail_apurement
 													)");
@@ -38213,14 +38281,21 @@
 													dos.roe_decl AS roe_decl,
 													dos.container AS container,
 													dos.pied_container AS pied_container,
+									                IF(dos.roe_liq IS NOT NULL,
+									                	dos.roe_liq,
+									                	dos.roe_decl
+									                ) AS roe_liq,
 													IF(dos.poids>1,
 														dos.poids,
 														1
 														) AS poids,
 													dos.id_dos AS id_dos,
 													dos.ref_liq AS ref_liq,
+													dos.ref_quit AS ref_quit,
+													dos.id_bank_liq AS id_bank_liq,
 													dos.montant_liq AS montant_liq,
 													DATE_FORMAT(dos.date_liq, '%d/%m/%Y') AS date_liq,
+													DATE_FORMAT(dos.date_quit, '%d/%m/%Y') AS date_quit,
 													DATE_FORMAT(fd.date_fact, '%d/%m/%Y') AS date_fact,
 													cl.nom_cli AS nom_cli,
 													SUM(
@@ -38463,6 +38538,7 @@
 					
 					$reponse['scelle'] = $this-> getMontantDeboursFactureDossier2($reponse['ref_fact'], 45, $reponse['id_dos']);
 					$reponse['tresco'] = $this-> getMontantDeboursFactureDossier2($reponse['ref_fact'], 94, $reponse['id_dos']);
+					$reponse['nom_banq'] = $this-> getDataBancaire($reponse['id_bank_liq'])['nom_banq'];
 
 					$rows[] = $reponse;
 				}$requete-> closeCursor();
@@ -43764,6 +43840,7 @@
 												AND num_lic <> 'N/A'
 												AND num_lic <> 'UNDER VALUE'
 												AND num_lic <> 'UNDERVALUE'
+												AND (id_cli <> 869 AND id_cli <> 929 AND id_cli <> 927 AND id_cli <> 870 AND id_cli <> 902 AND id_cli <> 873 AND id_cli <> 871 AND id_cli <> 872)
 												AND id_dos NOT IN (
 													SELECT id_dos 
 														FROM dossier 
