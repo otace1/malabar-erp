@@ -86,13 +86,15 @@
                       <th>Liquidation Date</th>
                       <th>Quittance Ref.</th>
                       <th>Quittance Date</th>
+                      <th>Bank</th>
+                      <th>Bank Rate</th>
                       <th>FACTURE Nº</th>
                       <th>INV. DATE</th>
                       <th>Nombre de Trucks</th>
                       <th>Dossier(s):</th>
                       <th>Qty(Mt)</th>
                       <th>LIQ AMT CDF</th>
-                      <th>Rate(CDF/USD)</th>
+                      <th>Rate(CDF/USD) BCC</th>
                       <th>AVG Ton Per USD</th>
                       <th>Ton Per USD</th>
                       <th>LIQ AMT/USD</th>
@@ -144,11 +146,13 @@
                       <th>Liquidation Date</th>
                       <th>Quittance Ref.</th>
                       <th>Quittance Date</th>
+                      <th>Bank</th>
+                      <th>Bank Rate</th>
                       <th style="">FACTURE Nº</th>
                       <th style="">INV. DATE</th>
                       <th style="">PO REF #</th>
                       <th style="">LIQ AMT CDF</th>
-                      <th style="">Rate(CDF/USD)</th>
+                      <th style="">Rate(CDF/USD) BCC</th>
                       <th style="">LIQ AMT/USD</th>
                       <th style="">OTHER CHARGES / AUTRES FRAIS</th>
                       <th style="">TVA/USD</th>
@@ -373,6 +377,11 @@
           {"data":"date_liq"},
           {"data":"ref_quit"},
           {"data":"date_quit"},
+          {"data":"nom_banq"},
+          {"data":"roe_decl",
+            render: DataTable.render.number( null, null, 4, null ),
+            className: 'dt-body-right'
+          },
           {"data":"ref_fact"},
           {"data":"date_fact"},
           {"data":"po_ref"},
@@ -380,7 +389,7 @@
             render: DataTable.render.number( null, null, 2, null ),
             className: 'dt-body-right'
           },
-          {"data":"roe_decl",
+          {"data":"roe_liq",
             // render: DataTable.render.number( null, null, 4, null ),
             className: 'dt-body-right',
             render: DataTable.render.number( null, null, 4, null )
@@ -443,6 +452,11 @@
           {"data":"date_liq"},
           {"data":"ref_quit"},
           {"data":"date_quit"},
+          {"data":"nom_banq"},
+          {"data":"roe_decl",
+            render: DataTable.render.number( null, null, 4, null ),
+            className: 'dt-body-right'
+          },
           {"data":"ref_fact"},
           {"data":"date_fact"},
           {"data":"nbre_dossier",
@@ -458,7 +472,7 @@
             render: DataTable.render.number( null, null, 2, null ),
             className: 'dt-body-right'
           },
-          {"data":"roe_decl",
+          {"data":"roe_liq",
             className: 'dt-body-right',
             render: DataTable.render.number( null, null, 4, null )
           },
