@@ -6663,6 +6663,129 @@
 							<td width="6%" style="text-align: center; border: 1 solid black; font-size: 7px;">'.$reponse['load_date'].'</td>
 							<td width="6%" style="text-align: center; border: 1 solid black; font-size: 7px;">'.$reponse['ref_decl'].'</td>
 							<td width="6%" style="text-align: center; border: 1 solid black; font-size: 7px;">'.$reponse['date_decl'].'</td>
+							<td width="7%" style="text-align: center; border: 1 solid black; font-size: 7px;">'.number_format($reponse['roe_decl'], 3, ',', '.').'</td>
+							<td width="6%" style="text-align: center; border: 1 solid black; font-size: 7px;">'.$reponse['ref_liq'].'</td>
+							<td width="6%" style="text-align: center; border: 1 solid black; font-size: 7px;">'.$reponse['date_liq'].'</td>
+							<td width="7%" style="text-align: center; border: 1 solid black; font-size: 7px;">'.number_format($reponse['liquidation_cdf'], 0, ',', '.').'</td>
+							<td width="6%" style="text-align: center; border: 1 solid black; font-size: 7px;">'.$reponse['ref_quit'].'</td>
+							<td width="6%" style="text-align: center; border: 1 solid black; font-size: 7px;">'.$reponse['date_quit'].'</td>
+							<td width="7%" style="text-align: center; border: 1 solid black; font-size: 7px;">'.number_format($reponse['liquidation_usd'], 2, ',', '.').'</td>
+						</tr>
+					';
+
+			}$requete-> closeCursor();
+
+			// $tbl .= '
+			// 		<tr>				
+			// 			<td width="48%" style="text-align: center; border: 1 solid black; font-size: 6px;"></td>
+			// 			<td width="4%" style="text-align: center; border: 1 solid black; font-size: 6px;">'.number_format($total_poids, 3, ',', '.').'</td>
+			// 			<td width="12%" style="text-align: center; border: 1 solid black; font-size: 6px;"></td>
+			// 			<td width="5%" style="text-align: center; border: 1 solid black; font-size: 6px;">'.number_format($liquidation_cdf, 0, ',', '.').'</td>
+			// 			<td width="13%" style="text-align: center; border: 1 solid black; font-size: 6px;"></td>
+			// 			<td width="5%" style="text-align: center; border: 1 solid black; font-size: 6px;">'.number_format($liquidation_usd, 2, ',', '.').'</td>
+			// 			<td width="12%" style="text-align: center; border: 1 solid black; font-size: 6px;"></td>
+			// 		</tr>
+			// 	';
+
+			return $tbl;
+		}
+
+		public function getDossierFactureExportSingle4Backup_28_10_23($ref_fact){
+			include('connexion.php');
+			$entree['ref_fact'] = $ref_fact;
+
+			$tbl = '';
+			$compteur=0;
+			$liquidation_usd=0;
+			$liquidation_cdf=0;
+			$total_poids = 0;
+			$requete = $connexion-> prepare('SELECT dos.ref_dos AS ref_dos,
+													dos.destination AS destination,
+													dos.transporter AS transporter,
+													dos.horse AS horse,
+													dos.trailer_1 AS trailer_1,
+													dos.trailer_2 AS trailer_2,
+													dos.num_lot AS num_lot,
+													dos.poids AS poids,
+													dos.ref_liq AS ref_liq,
+													dos.ref_quit AS ref_quit,
+													dos.roe_decl AS roe_decl,
+													dos.roe_liq AS roe_liq,
+													dos.id_bank_liq AS id_bank_liq,
+													dos.montant_liq AS montant_liq,
+													DATE_FORMAT(dos.date_decl, "%d/%m/%Y") AS date_decl,
+													dos.ref_decl AS ref_decl,
+													dos.ref_liq AS ref_liq,
+													dos.ref_quit AS ref_quit,
+													dos.date_decl AS date_decl2,
+													DATE_FORMAT(dos.load_date, "%d/%m/%Y") AS load_date,
+													DATE_FORMAT(dos.date_liq, "%d/%m/%Y") AS date_liq,
+													DATE_FORMAT(dos.date_quit, "%d/%m/%Y") AS date_quit,
+													-- IF(dos.cleared="1",
+													-- 	"CLEARED",
+													-- 	"TRANSIT") AS cleared
+													"CLEARED" AS cleared,
+													SUM(
+														IF(det.usd="0" AND d.id_t_deb="1", 
+															IF(det.tva="1",
+																IF(det.montant_tva>0,
+																	(det.montant_tva+det.montant),
+																	(det.montant*0.16)
+																),
+																det.montant
+															), 
+															0
+														)
+													) AS liquidation_cdf,
+													SUM(
+														IF(det.usd="0" AND d.id_t_deb="1", 
+															IF(det.tva="1",
+																IF(det.montant_tva>0,
+																	(det.montant_tva+det.montant)/dos.roe_decl,
+																	(det.montant*0.16)/dos.roe_decl
+																),
+																det.montant/dos.roe_decl
+															), 
+															0
+														)
+													) AS liquidation_usd,
+													SUM(
+														IF(det.usd="0" AND d.id_t_deb="1", 
+															IF(det.tva="1",
+																IF(det.montant_tva>0,
+																	((det.montant_tva+det.montant)/dos.roe_decl)/dos.poids,
+																	(det.montant*0.16)/dos.roe_decl
+																),
+																(det.montant/dos.roe_decl)/dos.poids
+															), 
+															0
+														)
+													) AS liquidation_usd_per_ton
+												FROM debours d, detail_facture_dossier det, dossier dos
+												WHERE det.ref_fact = ?
+													AND det.id_deb = d.id_deb
+													AND det.id_dos = dos.id_dos
+												GROUP BY dos.id_dos');
+			$requete-> execute(array($entree['ref_fact']));
+			while($reponse = $requete-> fetch()){
+				$compteur++;
+
+				$total_poids+=$reponse['poids'];
+				$liquidation_usd+=$reponse['liquidation_usd'];
+				$liquidation_cdf+=$reponse['liquidation_cdf'];
+
+				if ($reponse['roe_liq']<0 || empty($reponse['roe_liq'])) {
+					$reponse['roe_liq'] = $this-> getDataDeclaration($reponse['date_decl2'])['roe_liq'];
+				}
+
+				$tbl .= '
+						<tr>
+							<td width="3%" style="text-align: center; border: 1 solid black; font-size: 7px;">'.$compteur.'</td>
+							<td width="9%" style="text-align: center; border: 1 solid black; font-size: 7px;">'.$reponse['ref_dos'].'</td>
+							<td width="6%" style="text-align: center; border: 1 solid black; font-size: 7px;">'.number_format($reponse['poids'], 3, ',', '.').'</td>
+							<td width="6%" style="text-align: center; border: 1 solid black; font-size: 7px;">'.$reponse['load_date'].'</td>
+							<td width="6%" style="text-align: center; border: 1 solid black; font-size: 7px;">'.$reponse['ref_decl'].'</td>
+							<td width="6%" style="text-align: center; border: 1 solid black; font-size: 7px;">'.$reponse['date_decl'].'</td>
 							<td width="7%" style="text-align: center; border: 1 solid black; font-size: 7px;">'.number_format($reponse['roe_liq'], 3, ',', '.').'</td>
 							<td width="6%" style="text-align: center; border: 1 solid black; font-size: 7px;">'.$reponse['ref_liq'].'</td>
 							<td width="6%" style="text-align: center; border: 1 solid black; font-size: 7px;">'.$reponse['date_liq'].'</td>
