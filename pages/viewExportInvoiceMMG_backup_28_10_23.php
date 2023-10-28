@@ -493,8 +493,8 @@ $tbl = <<<EOD
 		</tr>
 		<tr>
 			<td width="15%" style="text-align: left; "></td>
-			<td width="18%" style="text-align: left; border: 0.3px solid black; font-size: 7px;">&nbsp;Taux: </td>
-			<td width="22%" style="text-align: center; border: 0.3px solid black; font-size: 7px; font-weight: bold;">$roe_decl</td>
+			<td width="18%" style="text-align: left;"></td>
+			<td width="22%" style="text-align: center; font-weight: bold;"></td>
 		</tr>
 
 		<tr>
@@ -890,6 +890,27 @@ $tbl = <<<EOD
 			<td width="6%" style="text-align: center; border: 1 solid black; font-weight: bold; font-size: 7px;"><span><br>CLEARED<br></span></td>
 		</tr>
 		$dossiers5
+		<br>
+		<br>
+		<tr>
+			<td width="3%" style="text-align: center; border: 1 solid black; font-weight: bold; font-size: 7px;"><span><br>#<br></span></td>
+			<td width="9%" style="text-align: center; border: 1 solid black; font-weight: bold; font-size: 7px;"><span><br>MCA File No<br></span></td>
+			<td width="6%" style="text-align: center; border: 1 solid black; font-weight: bold; font-size: 7px;"><span><br>Qty(Mt)<br></span></td>
+			<td width="6%" style="text-align: center; border: 1 solid black; font-weight: bold; font-size: 7px;"><span><br>Loading Date</span></td>
+			<td width="6%" style="text-align: center; border: 1 solid black; font-weight: bold; font-size: 7px;"><span><br>Declaration Ref.</span></td>
+			<td width="6%" style="text-align: center; border: 1 solid black; font-weight: bold; font-size: 7px;"><span><br>Declaration Date</span></td>
+			<td width="7%" style="text-align: center; border: 1 solid black; font-weight: bold; font-size: 7px;"><span><br>BCC Rate</span></td>
+			<td width="6%" style="text-align: center; border: 1 solid black; font-weight: bold; font-size: 7px;"><span><br>Liquidation Ref.</span></td>
+			<td width="6%" style="text-align: center; border: 1 solid black; font-weight: bold; font-size: 7px;"><span><br>Liquidation Date</span></td>
+			<td width="7%" style="text-align: center; border: 1 solid black; font-weight: bold; font-size: 7px;"><span><br>Liq. Amt. CDF</span></td>
+			<td width="6%" style="text-align: center; border: 1 solid black; font-weight: bold; font-size: 7px;"><span><br>Quittance Ref.</span></td>
+			<td width="6%" style="text-align: center; border: 1 solid black; font-weight: bold; font-size: 7px;"><span><br>Quittance Date</span></td>
+			<td width="12%" style="text-align: center; border: 1 solid black; font-weight: bold; font-size: 7px;"><span><br>Bank</span></td>
+			<td width="7%" style="text-align: center; border: 1 solid black; font-weight: bold; font-size: 7px;"><span><br>Bank Rate</span></td>
+			<td width="7%" style="text-align: center; border: 1 solid black; font-weight: bold; font-size: 7px;"><span><br>Liq. Amt. USD</span></td>
+		</tr>
+		$dossiers4
+		<br>
 		<br>
 		<br>
 		<tr>

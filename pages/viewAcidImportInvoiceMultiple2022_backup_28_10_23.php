@@ -245,8 +245,10 @@ $tbl = <<<EOD
 		</tr>
 		<tr>
 			<td width="15%" style="text-align: left; "></td>
-			<td width="18%" style="text-align: left; border: 0.3px solid black; font-size: 7px;">&nbsp;Rate: </td>
-			<td width="22%" style="text-align: center; border: 0.3px solid black; font-size: 7px; font-weight: bold;">$roe_decl</td>
+			<td width="8%" style="text-align: left; border: 0.3px solid black; font-size: 7px;">&nbsp;Bank: </td>
+			<td width="16%" style="text-align: center; border: 0.3px solid black; font-size: 7px; font-weight: bold;">$nom_banq</td>
+			<td width="8%" style="text-align: left; border: 0.3px solid black; font-size: 7px;">&nbsp;Bank Rate: </td>
+			<td width="8%" style="text-align: center; border: 0.3px solid black; font-size: 7px; font-weight: bold;">$roe_decl</td>
 		</tr>
 		<tr>
 			<td width="15%" style="text-align: left; "></td>
