@@ -17726,18 +17726,7 @@
 					<input type="checkbox" id="check_<?php echo $compteur;?>" name="check_<?php echo $compteur;?>" class="bg bg-dark">
 				</td>
 				<td>
-					<select style="text-align: center; width: 8em;" name="id_bank_liq_<?php echo $compteur;?>" id="id_bank_liq_<?php echo $compteur;?>" onchange="maj_id_bank_liq(<?php echo $reponse['id_dos'];?>, this.value, <?php echo $compteur;?>)">
-		                <option></option>
-		                <?php
-		                  $this-> selectionnerBanqueLiquidation();
-		                ?>
-		              </select>
-				</td>
-				<td>
 					<input type="number" min="0" step="0.000001" style="text-align: center; width: 8em;" onblur="calculDDE(<?php echo $compteur;?>);" id="roe_decl_<?php echo $compteur;?>" name="roe_decl_<?php echo $compteur;?>" value="<?php echo $reponse['roe_decl'];?>" class="bg bg-dark">
-				</td>
-				<td>
-					<input type="number" min="0" step="0.000001" style="text-align: center; width: 8em;" onblur="maj_roe_liq(<?php echo $reponse['id_dos'];?>, this.value, <?php echo $compteur;?>)" id="roe_liq_<?php echo $compteur;?>" name="roe_liq_<?php echo $compteur;?>" value="<?php echo $reponse['roe_liq'];?>" class="bg bg-dark">
 				</td>
 				<td>
 					<input type="number" min="0" style="text-align: center; width: 8em;" onblur="calculDDE(<?php echo $compteur;?>);" id="dde_<?php echo $compteur;?>" name="dde_<?php echo $compteur;?>" class="bg bg-dark">
