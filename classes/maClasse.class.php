@@ -6663,7 +6663,7 @@
 							<td width="6%" style="text-align: center; border: 1 solid black; font-size: 7px;">'.$reponse['load_date'].'</td>
 							<td width="6%" style="text-align: center; border: 1 solid black; font-size: 7px;">'.$reponse['ref_decl'].'</td>
 							<td width="6%" style="text-align: center; border: 1 solid black; font-size: 7px;">'.$reponse['date_decl'].'</td>
-							<td width="7%" style="text-align: center; border: 1 solid black; font-size: 7px;">'.number_format($reponse['roe_decl'], 3, ',', '.').'</td>
+							<td width="7%" style="text-align: center; border: 1 solid black; font-size: 7px;">'.number_format($reponse['roe_decl'], 4, ',', '.').'</td>
 							<td width="6%" style="text-align: center; border: 1 solid black; font-size: 7px;">'.$reponse['ref_liq'].'</td>
 							<td width="6%" style="text-align: center; border: 1 solid black; font-size: 7px;">'.$reponse['date_liq'].'</td>
 							<td width="7%" style="text-align: center; border: 1 solid black; font-size: 7px;">'.number_format($reponse['liquidation_cdf'], 0, ',', '.').'</td>
