@@ -9607,14 +9607,12 @@
 						<td width="100%"></td>
 					</tr>
 					<tr>
-						<td style="text-align: right; border: 0.5px solid black; font-size: 8px;" width="49%">ARSP Tax &nbsp;&nbsp;
+						<td style="text-align: right; border: 0.5px solid black; font-size: 8px;" width="66%">ARSP Tax (1.2%  on the Agency Fees without TVA )&nbsp;&nbsp;
 						</td>
-						<td style="text-align: center; border: 0.5px solid black; font-size: 8px;" width="6%">
-						
-						</td>
-						<td style="text-align: center; border: 0.5px solid black;" width="11%"></td>
-						<td style="text-align: right; border: 0.5px solid black;" width="11%"></td>
-						<td style="text-align: right; border: 0.5px solid black;" width="11.5%"></td>
+						<td style="text-align: right; border: 0.5px solid black;" width="11%">'
+							.number_format($reponse['base_arsp'], 2, ',', '.').
+						'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+						<td style="text-align: right; border: 0.5px solid black;" width="11.5%">1.2% &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
 						<td style="text-align: right; border: 0.5px solid black; " width="11.5%">'
 							.number_format($reponse['arsp'], 2, ',', '.').
 						'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
@@ -9623,7 +9621,7 @@
 						<td width="100%"></td>
 					</tr>
 					<tr>
-						<td style="text-align: right; border: 0.5px solid black; font-weight: bold; background-color: rgb(220,220,220); font-size: 8px;" width="49%">NET PAYABLE AMOUNT USD&nbsp;&nbsp;
+						<td style="text-align: right; border: 0.5px solid black; font-weight: bold; background-color: rgb(220,220,220); font-size: 8px;" width="49%">NET PAYABLE AMOUNT EN USD&nbsp;&nbsp;
 						</td>
 						<td style="text-align: right; border: 0.5px solid black; font-weight: bold; background-color: rgb(220,220,220); font-size: 8px;" width="6%">
 						</td>
