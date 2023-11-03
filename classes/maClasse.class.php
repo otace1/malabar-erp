@@ -9394,14 +9394,7 @@
 			$cost = 0;
 
 			$tbl = '
-					<tr>
-						<td style="text-align: left; font-weight: bold; border-left: 1px solid black; border-right: 0.5px solid black; border-top: 0.5px solid black;" colspan="2" width="49%"></td>
-						<td style="text-align: center; border-right: 0.5px solid black; border-top: 0.5px solid black;" colspan="2" width="5%"></td>
-						<td style="text-align: right; border-right: 0.5px solid black; border-top: 0.5px solid black;" width="11.5%"></td>
-						<td style="text-align: right; border-right: 0.5px solid black; border-top: 0.5px solid black;" width="11.5%"></td>
-						<td style="text-align: right; border-right: 0.5px solid black; border-top: 0.5px solid black;" width="11.5%"></td>
-						<td style="text-align: right; border-right: 1px solid black; border-top: 0.5px solid black;" width="11.5%"></td>
-					</tr>
+					
 					';
 
 			$requete = $connexion-> prepare('SELECT d.nom_deb AS nom_deb, d.id_deb AS id_deb,
@@ -9469,17 +9462,31 @@
 															)
 														)
 													) AS tva_usd,
+													SUM(
+														IF(det.usd="1" AND det.tva="1",
+															det.montant*0.012,
+															0
+														)
+													) AS arsp,
+													SUM(
+														IF(det.usd="1" AND det.tva="1",
+															det.montant,
+															0
+														)
+													) AS base_arsp,
 													IF(det.detail IS NOT NULL, 
 														CONCAT(": ", det.detail),
 														""
 													) AS detail,
 													det.unite AS unite,
 													COUNT(DISTINCT(dos.ref_decl)) AS qte,
-													dos.poids AS poids
-												FROM debours d, detail_facture_dossier det, dossier dos
+													dos.poids AS poids,
+													fact.id_cli AS id_cli
+												FROM debours d, detail_facture_dossier det, dossier dos, facture_dossier fact
 												WHERE det.ref_fact = ?
 													AND det.id_deb = d.id_deb
 													AND det.id_dos = dos.id_dos
+													AND det.ref_fact = fact.ref_fact
 												GROUP BY det.ref_fact');
 			$requete-> execute(array($entree['ref_fact']));
 			$reponse = $requete-> fetch();
@@ -9516,13 +9523,21 @@
 				$total_tva = $reponse['tva_usd'];
 				$total_gen = $reponse['ttc_usd'];
 
-			$tbl .= '
+			if($reponse['id_cli']!='946'){
+				$tbl .= '<tr>
+						<td style="text-align: left; font-weight: bold; border-left: 1px solid black; border-right: 0.5px solid black; border-top: 0.5px solid black;" colspan="2" width="49%"></td>
+						<td style="text-align: center; border-right: 0.5px solid black; border-top: 0.5px solid black;" colspan="2" width="5.5%"></td>
+						<td style="text-align: right; border-right: 0.5px solid black; border-top: 0.5px solid black;" width="11%"></td>
+						<td style="text-align: right; border-right: 0.5px solid black; border-top: 0.5px solid black;" width="11.5%"></td>
+						<td style="text-align: right; border-right: 0.5px solid black; border-top: 0.5px solid black;" width="11.5%"></td>
+						<td style="text-align: right; border-right: 1px solid black; border-top: 0.5px solid black;" width="11.5%"></td>
+					</tr>
 					<tr>
 						<td style="text-align: right; border-right: 0.5px solid black; border-left: 0.5px solid black; font-weight: bold; font-size: 8px;" width="49%">TOTAL CLEARING COST IN USD / COUT TOTAL EN USD &nbsp;&nbsp;
 						</td>
-						<td style="text-align: right; border-right: 0.5px solid black; border-left: 0.5px solid black; font-weight: bold; font-size: 8px;" width="5%">
+						<td style="text-align: right; border-right: 0.5px solid black; border-left: 0.5px solid black; font-weight: bold; font-size: 8px;" width="5.5%">
 						</td>
-						<td style="text-align: center; border-right: 0.5px solid black; font-weight: bold;" width="11.5%">'
+						<td style="text-align: center; border-right: 0.5px solid black; font-weight: bold;" width="11%">'
 							.number_format($total_cost, 2, ',', '.').
 						'&nbsp;&nbsp;</td>
 						<td style="text-align: center; border-right: 0.5px solid black; font-weight: bold;" width="11.5%">'
@@ -9537,16 +9552,16 @@
 					</tr>
 					<tr>
 						<td style="text-align: left; border-left: 1px solid black; border-right: 0.5px solid black; border-bottom: 0.5px solid black; font-size: 8px;" width="49%"></td>
-						<td style="text-align: center; border-bottom: 0.5px solid black; font-size: 7px; border-right: 0.5px solid black;" colspan="2" width="5%"></td>
-						<td style="text-align: right; border-right: 0.5px solid black; border-bottom: 0.5px solid black; font-size: 8px;" width="11.5%"></td>
+						<td style="text-align: center; border-bottom: 0.5px solid black; font-size: 7px; border-right: 0.5px solid black;" colspan="2" width="5.5%"></td>
+						<td style="text-align: right; border-right: 0.5px solid black; border-bottom: 0.5px solid black; font-size: 8px;" width="11%"></td>
 						<td style="text-align: right; border-right: 0.5px solid black; border-bottom: 0.5px solid black; font-size: 8px;" width="11.5%"></td>
 						<td style="text-align: right; border-right: 0.5px solid black; border-bottom: 0.5px solid black; font-size: 8px;" width="11.5%"></td>
 						<td style="text-align: right; border-right: 1px solid black; border-bottom: 0.5px solid black; font-size: 7px;" width="11.5%"></td>
 					</tr>
 					<tr>
 						<td style="text-align: left; font-size: 8px;" width="49%"></td>
-						<td style="text-align: center;" colspan="2" width="5%"></td>
-						<td style="text-align: right; font-size: 8px;" width="11.5%"></td>
+						<td style="text-align: center;" colspan="2" width="5.5%"></td>
+						<td style="text-align: right; font-size: 8px;" width="11%"></td>
 						<td style="text-align: right; font-size: 8px;" width="11.5%"></td>
 						<td style="text-align: right; border: 1px solid black; font-size: 8px; font-weight: bold;" width="23%">CDF &nbsp;&nbsp;'
 							// .number_format($total_gen*$reponse['roe_decl'], 2, ',', '.').
@@ -9555,6 +9570,77 @@
 					</tr>
 					';
 
+			}else {
+				$tbl .= '
+					<tr>
+						<td style="text-align: left; border: 0.5px solid black; font-size: 8px;" width="49%">&nbsp;&nbsp;ARSP Fee 
+						</td>
+						<td style="text-align: center; border: 0.5px solid black; font-size: 8px;" width="5.5%">
+						0,012
+						</td>
+						<td style="text-align: center; border: 0.5px solid black;" width="11%">'.number_format($reponse['base_arsp'], 2, ',', '.').'</td>
+						<td style="text-align: right; border: 0.5px solid black;" width="11.5%">'
+							.number_format($reponse['arsp'], 2, ',', '.').
+						'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+						<td style="text-align: right; border: 0.5px solid black;" width="11.5%">'
+							.number_format(0, 2, ',', '.').
+						'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+						<td style="text-align: right; border: 0.5px solid black; " width="11.5%">'
+							.number_format($reponse['arsp'], 2, ',', '.').
+						'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+					</tr>
+					<tr>
+						<td width="100%"></td>
+					</tr>
+					<tr>
+						<td style="text-align: left; font-weight: bold; border-left: 1px solid black; border-right: 0.5px solid black; border-top: 0.5px solid black;" colspan="2" width="49%"></td>
+						<td style="text-align: center; border-right: 0.5px solid black; border-top: 0.5px solid black;" colspan="2" width="5.5%"></td>
+						<td style="text-align: right; border-right: 0.5px solid black; border-top: 0.5px solid black;" width="11%"></td>
+						<td style="text-align: right; border-right: 0.5px solid black; border-top: 0.5px solid black;" width="11.5%"></td>
+						<td style="text-align: right; border-right: 0.5px solid black; border-top: 0.5px solid black;" width="11.5%"></td>
+						<td style="text-align: right; border-right: 1px solid black; border-top: 0.5px solid black;" width="11.5%"></td>
+					</tr>
+					<tr>
+						<td style="text-align: right; border-right: 0.5px solid black; border-left: 0.5px solid black; font-weight: bold; font-size: 8px;" width="49%">TOTAL CLEARING COST IN USD / COUT TOTAL EN USD &nbsp;&nbsp;
+						</td>
+						<td style="text-align: right; border-right: 0.5px solid black; border-left: 0.5px solid black; font-weight: bold; font-size: 8px;" width="5.5%">
+						</td>
+						<td style="text-align: center; border-right: 0.5px solid black; font-weight: bold;" width="11%">'
+							.number_format($total_cost, 2, ',', '.').
+						'&nbsp;&nbsp;</td>
+						<td style="text-align: center; border-right: 0.5px solid black; font-weight: bold;" width="11.5%">'
+							.number_format($sub_total-$reponse['arsp'], 2, ',', '.').
+						'&nbsp;&nbsp;</td>
+						<td style="text-align: center; border-right: 0.5px solid black; font-weight: bold;" width="11.5%">'
+							.number_format($total_tva, 2, ',', '.').
+						'&nbsp;&nbsp;</td>
+						<td style="text-align: right; border-right: 1px solid black; font-weight: bold; " width="11.5%">'
+							.number_format($total_gen-$reponse['arsp'], 2, ',', '.').
+						'&nbsp;&nbsp;</td>
+					</tr>
+					<tr>
+						<td style="text-align: left; border-left: 1px solid black; border-right: 0.5px solid black; border-bottom: 0.5px solid black; font-size: 8px;" width="49%"></td>
+						<td style="text-align: center; border-bottom: 0.5px solid black; font-size: 7px; border-right: 0.5px solid black;" colspan="2" width="5.5%"></td>
+						<td style="text-align: right; border-right: 0.5px solid black; border-bottom: 0.5px solid black; font-size: 8px;" width="11%"></td>
+						<td style="text-align: right; border-right: 0.5px solid black; border-bottom: 0.5px solid black; font-size: 8px;" width="11.5%"></td>
+						<td style="text-align: right; border-right: 0.5px solid black; border-bottom: 0.5px solid black; font-size: 8px;" width="11.5%"></td>
+						<td style="text-align: right; border-right: 1px solid black; border-bottom: 0.5px solid black; font-size: 7px;" width="11.5%"></td>
+					</tr>
+					<tr>
+						<td style="text-align: left; font-size: 8px;" width="49%"></td>
+						<td style="text-align: center;" colspan="2" width="5.5%"></td>
+						<td style="text-align: right; font-size: 8px;" width="11%"></td>
+						<td style="text-align: right; font-size: 8px;" width="11.5%"></td>
+						<td style="text-align: right; border: 1px solid black; font-size: 8px; font-weight: bold;" width="23%">CDF &nbsp;&nbsp;'
+							// .number_format($total_gen*$reponse['roe_decl'], 2, ',', '.').
+							.number_format(($total_gen-$reponse['arsp'])*$this-> getTauxFacture($entree['ref_fact'])['roe_decl'], 2, ',', '.').
+						'&nbsp;&nbsp;</td>
+					</tr>
+					';
+
+			}
+
+			
 			return $tbl;
 		}
 
