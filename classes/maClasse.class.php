@@ -9594,18 +9594,27 @@
 						<td width="100%"></td>
 					</tr>
 					<tr>
+						<td style="text-align: left; font-size: 8px;" width="49%"></td>
+						<td style="text-align: center;" colspan="2" width="5.5%"></td>
+						<td style="text-align: right; font-size: 8px;" width="11%"></td>
+						<td style="text-align: right; font-size: 8px;" width="11.5%"></td>
+						<td style="text-align: right; border: 1px solid black; font-size: 8px; font-weight: bold;" width="23%">CDF &nbsp;&nbsp;'
+							// .number_format($total_gen*$reponse['roe_decl'], 2, ',', '.').
+							.number_format(($total_gen-$reponse['arsp'])*$this-> getTauxFacture($entree['ref_fact'])['roe_decl'], 2, ',', '.').
+						'&nbsp;&nbsp;</td>
+					</tr>
+					<tr>
+						<td width="100%"></td>
+					</tr>
+					<tr>
 						<td style="text-align: right; border: 0.5px solid black; font-size: 8px;" width="49%">ARSP Tax &nbsp;&nbsp;
 						</td>
 						<td style="text-align: center; border: 0.5px solid black; font-size: 8px;" width="6%">
-						0,012
+						
 						</td>
-						<td style="text-align: center; border: 0.5px solid black;" width="11%">'.number_format($reponse['base_arsp'], 2, ',', '.').'</td>
-						<td style="text-align: right; border: 0.5px solid black;" width="11%">'
-							.number_format($reponse['arsp'], 2, ',', '.').
-						'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-						<td style="text-align: right; border: 0.5px solid black;" width="11.5%">'
-							.number_format(0, 2, ',', '.').
-						'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+						<td style="text-align: center; border: 0.5px solid black;" width="11%"></td>
+						<td style="text-align: right; border: 0.5px solid black;" width="11%"></td>
+						<td style="text-align: right; border: 0.5px solid black;" width="11.5%"></td>
 						<td style="text-align: right; border: 0.5px solid black; " width="11.5%">'
 							.number_format($reponse['arsp'], 2, ',', '.').
 						'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
@@ -9614,7 +9623,7 @@
 						<td width="100%"></td>
 					</tr>
 					<tr>
-						<td style="text-align: right; border: 0.5px solid black; font-weight: bold; background-color: rgb(220,220,220); font-size: 8px;" width="49%">GRAND TOTAL USD&nbsp;&nbsp;
+						<td style="text-align: right; border: 0.5px solid black; font-weight: bold; background-color: rgb(220,220,220); font-size: 8px;" width="49%">NET PAYABLE AMOUNT USD&nbsp;&nbsp;
 						</td>
 						<td style="text-align: right; border: 0.5px solid black; font-weight: bold; background-color: rgb(220,220,220); font-size: 8px;" width="6%">
 						</td>
@@ -9630,19 +9639,6 @@
 						<td style="text-align: right; border: 0.5px solid black; font-weight: bold;  background-color: rgb(220,220,220);" width="11.5%">'
 							.number_format($total_gen-$reponse['arsp'], 2, ',', '.').
 						'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-					</tr>
-					<tr>
-						<td width="100%"></td>
-					</tr>
-					<tr>
-						<td style="text-align: left; font-size: 8px;" width="49%"></td>
-						<td style="text-align: center;" colspan="2" width="5.5%"></td>
-						<td style="text-align: right; font-size: 8px;" width="11%"></td>
-						<td style="text-align: right; font-size: 8px;" width="11.5%"></td>
-						<td style="text-align: right; border: 1px solid black; font-size: 8px; font-weight: bold;" width="23%">CDF &nbsp;&nbsp;'
-							// .number_format($total_gen*$reponse['roe_decl'], 2, ',', '.').
-							.number_format(($total_gen-$reponse['arsp'])*$this-> getTauxFacture($entree['ref_fact'])['roe_decl'], 2, ',', '.').
-						'&nbsp;&nbsp;</td>
 					</tr>
 					';
 
