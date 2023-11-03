@@ -9621,19 +9621,8 @@
 						<td width="100%"></td>
 					</tr>
 					<tr>
-						<td style="text-align: right; border: 0.5px solid black; font-weight: bold; background-color: rgb(220,220,220); font-size: 8px;" width="49%">NET PAYABLE AMOUNT EN USD&nbsp;&nbsp;
+						<td style="text-align: right; border: 0.5px solid black; font-weight: bold; background-color: rgb(220,220,220); font-size: 8px;" width="88.5%">NET PAYABLE AMOUNT EN USD&nbsp;&nbsp;
 						</td>
-						<td style="text-align: right; border: 0.5px solid black; font-weight: bold; background-color: rgb(220,220,220); font-size: 8px;" width="6%">
-						</td>
-						<td style="text-align: center; border: 0.5px solid black; font-weight: bold; background-color: rgb(220,220,220);" width="11%">'
-							.number_format($total_cost, 2, ',', '.').
-						'&nbsp;&nbsp;</td>
-						<td style="text-align: right; border: 0.5px solid black; font-weight: bold; background-color: rgb(220,220,220);" width="11%">'
-							.number_format($sub_total-$reponse['arsp'], 2, ',', '.').
-						'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-						<td style="text-align: right; border: 0.5px solid black; font-weight: bold; background-color: rgb(220,220,220);" width="11.5%">'
-							.number_format($total_tva, 2, ',', '.').
-						'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
 						<td style="text-align: right; border: 0.5px solid black; font-weight: bold;  background-color: rgb(220,220,220);" width="11.5%">'
 							.number_format($total_gen-$reponse['arsp'], 2, ',', '.').
 						'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
