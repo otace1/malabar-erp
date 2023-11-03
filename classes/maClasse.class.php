@@ -9573,13 +9573,34 @@
 			}else {
 				$tbl .= '
 					<tr>
-						<td style="text-align: left; border: 0.5px solid black; font-size: 8px;" width="49%">&nbsp;&nbsp;ARSP Fee 
+						<td style="text-align: right; border: 0.5px solid black; font-weight: bold; background-color: rgb(220,220,220); font-size: 8px;" width="49%">TOTAL CLEARING COST IN USD / COUT TOTAL EN USD&nbsp;&nbsp;
 						</td>
-						<td style="text-align: center; border: 0.5px solid black; font-size: 8px;" width="5.5%">
+						<td style="text-align: right; border: 0.5px solid black; font-weight: bold; background-color: rgb(220,220,220); font-size: 8px;" width="6%">
+						</td>
+						<td style="text-align: center; border: 0.5px solid black; font-weight: bold; background-color: rgb(220,220,220);" width="11%">'
+							.number_format($total_cost, 2, ',', '.').
+						'&nbsp;&nbsp;</td>
+						<td style="text-align: right; border: 0.5px solid black; font-weight: bold; background-color: rgb(220,220,220);" width="11%">'
+							.number_format($sub_total, 2, ',', '.').
+						'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+						<td style="text-align: right; border: 0.5px solid black; font-weight: bold; background-color: rgb(220,220,220);" width="11.5%">'
+							.number_format($total_tva, 2, ',', '.').
+						'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+						<td style="text-align: right; border: 0.5px solid black; font-weight: bold;  background-color: rgb(220,220,220);" width="11.5%">'
+							.number_format($total_gen, 2, ',', '.').
+						'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+					</tr>
+					<tr>
+						<td width="100%"></td>
+					</tr>
+					<tr>
+						<td style="text-align: right; border: 0.5px solid black; font-size: 8px;" width="49%">ARSP Tax &nbsp;&nbsp;
+						</td>
+						<td style="text-align: center; border: 0.5px solid black; font-size: 8px;" width="6%">
 						0,012
 						</td>
 						<td style="text-align: center; border: 0.5px solid black;" width="11%">'.number_format($reponse['base_arsp'], 2, ',', '.').'</td>
-						<td style="text-align: right; border: 0.5px solid black;" width="11.5%">'
+						<td style="text-align: right; border: 0.5px solid black;" width="11%">'
 							.number_format($reponse['arsp'], 2, ',', '.').
 						'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
 						<td style="text-align: right; border: 0.5px solid black;" width="11.5%">'
@@ -9593,38 +9614,25 @@
 						<td width="100%"></td>
 					</tr>
 					<tr>
-						<td style="text-align: left; font-weight: bold; border-left: 1px solid black; border-right: 0.5px solid black; border-top: 0.5px solid black;" colspan="2" width="49%"></td>
-						<td style="text-align: center; border-right: 0.5px solid black; border-top: 0.5px solid black;" colspan="2" width="5.5%"></td>
-						<td style="text-align: right; border-right: 0.5px solid black; border-top: 0.5px solid black;" width="11%"></td>
-						<td style="text-align: right; border-right: 0.5px solid black; border-top: 0.5px solid black;" width="11.5%"></td>
-						<td style="text-align: right; border-right: 0.5px solid black; border-top: 0.5px solid black;" width="11.5%"></td>
-						<td style="text-align: right; border-right: 1px solid black; border-top: 0.5px solid black;" width="11.5%"></td>
-					</tr>
-					<tr>
-						<td style="text-align: right; border-right: 0.5px solid black; border-left: 0.5px solid black; font-weight: bold; font-size: 8px;" width="49%">TOTAL CLEARING COST IN USD / COUT TOTAL EN USD &nbsp;&nbsp;
+						<td style="text-align: right; border: 0.5px solid black; font-weight: bold; background-color: rgb(220,220,220); font-size: 8px;" width="49%">GRAND TOTAL USD&nbsp;&nbsp;
 						</td>
-						<td style="text-align: right; border-right: 0.5px solid black; border-left: 0.5px solid black; font-weight: bold; font-size: 8px;" width="5.5%">
+						<td style="text-align: right; border: 0.5px solid black; font-weight: bold; background-color: rgb(220,220,220); font-size: 8px;" width="6%">
 						</td>
-						<td style="text-align: center; border-right: 0.5px solid black; font-weight: bold;" width="11%">'
+						<td style="text-align: center; border: 0.5px solid black; font-weight: bold; background-color: rgb(220,220,220);" width="11%">'
 							.number_format($total_cost, 2, ',', '.').
 						'&nbsp;&nbsp;</td>
-						<td style="text-align: center; border-right: 0.5px solid black; font-weight: bold;" width="11.5%">'
+						<td style="text-align: right; border: 0.5px solid black; font-weight: bold; background-color: rgb(220,220,220);" width="11%">'
 							.number_format($sub_total-$reponse['arsp'], 2, ',', '.').
-						'&nbsp;&nbsp;</td>
-						<td style="text-align: center; border-right: 0.5px solid black; font-weight: bold;" width="11.5%">'
+						'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+						<td style="text-align: right; border: 0.5px solid black; font-weight: bold; background-color: rgb(220,220,220);" width="11.5%">'
 							.number_format($total_tva, 2, ',', '.').
-						'&nbsp;&nbsp;</td>
-						<td style="text-align: right; border-right: 1px solid black; font-weight: bold; " width="11.5%">'
+						'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+						<td style="text-align: right; border: 0.5px solid black; font-weight: bold;  background-color: rgb(220,220,220);" width="11.5%">'
 							.number_format($total_gen-$reponse['arsp'], 2, ',', '.').
-						'&nbsp;&nbsp;</td>
+						'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
 					</tr>
 					<tr>
-						<td style="text-align: left; border-left: 1px solid black; border-right: 0.5px solid black; border-bottom: 0.5px solid black; font-size: 8px;" width="49%"></td>
-						<td style="text-align: center; border-bottom: 0.5px solid black; font-size: 7px; border-right: 0.5px solid black;" colspan="2" width="5.5%"></td>
-						<td style="text-align: right; border-right: 0.5px solid black; border-bottom: 0.5px solid black; font-size: 8px;" width="11%"></td>
-						<td style="text-align: right; border-right: 0.5px solid black; border-bottom: 0.5px solid black; font-size: 8px;" width="11.5%"></td>
-						<td style="text-align: right; border-right: 0.5px solid black; border-bottom: 0.5px solid black; font-size: 8px;" width="11.5%"></td>
-						<td style="text-align: right; border-right: 1px solid black; border-bottom: 0.5px solid black; font-size: 7px;" width="11.5%"></td>
+						<td width="100%"></td>
 					</tr>
 					<tr>
 						<td style="text-align: left; font-size: 8px;" width="49%"></td>
