@@ -2740,7 +2740,7 @@
 		//FIN Methodes permettant de créer
 	
 		//Methodes permettant d'afficher
-		public function afficherMenuLicence(){
+		public function afficherMenuLicence($id_type_lic){
 			include("connexion.php");
 			if(!isset($_GET['id_mod_lic'])){
 				$_GET['id_mod_lic'] = '';
@@ -2768,7 +2768,7 @@
 				?>
 				<li class="nav-item has-treeview <?php echo $open;?>">
 			        <a href="#" class="nav-link  <?php echo $active;?>">
-			          <i class="nav-icon fas fa-file"></i>
+			          &nbsp;&nbsp;&nbsp;&nbsp;<i class="nav-icon fas fa-file"></i>
 			          <p>
 			            <?php echo $reponse['nom_mod_lic'];?>
 			            <i class="right fas fa-angle-left"></i>
@@ -2776,8 +2776,8 @@
 			        </a>
 		            <ul class="nav nav-treeview">
 		              <li class="nav-item">
-		                <a href="dashboard.php?id_mod_lic=<?php echo $reponse['id_mod_lic'];?>&amp;id_cli=<?php echo $id_cli;?>" class="nav-link">
-		                  &nbsp;&nbsp;&nbsp;&nbsp;<i class="nav-icon fas fa-tachometer-alt"></i>
+		                <a href="dashboard.php?id_mod_lic=<?php echo $reponse['id_mod_lic'];?>&amp;id_cli=<?php echo $id_cli;?>&amp;id_type_lic=<?php echo $id_type_lic;?>" class="nav-link">
+		                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="nav-icon fas fa-tachometer-alt"></i>
 		                  <p>Dashboard</p>
 		                </a>
 		              </li>
@@ -2785,8 +2785,8 @@
 		              if($reponse['id_mod_lic']=='2'){
 		              	?>
 		              <li class="nav-item">
-		                <a href="dashboardAv.php?id_mod_lic=<?php echo $reponse['id_mod_lic'];?>&amp;id_cli=<?php echo $id_cli;?>" class="nav-link">
-		                  &nbsp;&nbsp;&nbsp;&nbsp;<i class="nav-icon fas fa-tachometer-alt"></i>
+		                <a href="dashboardAv.php?id_mod_lic=<?php echo $reponse['id_mod_lic'];?>&amp;id_cli=<?php echo $id_cli;?>&amp;id_type_lic=<?php echo $id_type_lic;?>" class="nav-link">
+		                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="nav-icon fas fa-tachometer-alt"></i>
 		                  <p>Dashboard AV / Partielle</p>
 		                </a>
 		              </li>
@@ -2794,14 +2794,14 @@
 		              }
 		              ?>
 		              <li class="nav-item">
-		                <a href="licence.php?id_mod_lic=<?php echo $reponse['id_mod_lic'];?>&amp;id_cli=<?php echo $id_cli;?>" class="nav-link">
-		                  &nbsp;&nbsp;&nbsp;&nbsp;<i class="far fa-circle nav-icon"></i>
+		                <a href="licence.php?id_mod_lic=<?php echo $reponse['id_mod_lic'];?>&amp;id_cli=<?php echo $id_cli;?>&amp;id_type_lic=<?php echo $id_type_lic;?>" class="nav-link">
+		                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="far fa-circle nav-icon"></i>
 		                  <p>Synthèse <?php echo $reponse['sigle_mod_lic'];?></p>
 		                </a>
 		              </li>
 		              <li class="nav-item">
 		                <a href="facture.php?id_mod_lic=<?php echo $reponse['id_mod_lic'];?>&amp;id_cli=<?php echo $id_cli;?>&etat=" class="nav-link">
-		                  &nbsp;&nbsp;&nbsp;&nbsp;<i class="far fa-file nav-icon"></i>
+		                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="far fa-file nav-icon"></i>
 		                  <p>Facture</p>
 		                </a>
 		              </li>
@@ -2826,7 +2826,7 @@
 		              </li> -->
 		              <li class="nav-item">
 		                <a href="apurementLicence.php?id_mod_lic=<?php echo $reponse['id_mod_lic'];?>&amp;id_cli=<?php echo $id_cli;?>" class="nav-link">
-		                  &nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-check nav-icon"></i>
+		                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-check nav-icon"></i>
 		                  <p>Tansmis Apurement</p>
 		                </a>
 		              </li>
@@ -2945,7 +2945,7 @@
 			$entree['id_cli'] = $id_cli;
 			$entree['id_mod_lic'] = $id_mod_lic;
 
-			$option = '<select id=\'ref_fact\' onchange=\'getDataFacture(this.value);\' class=\'form-control form-control-sm cc-exp\'><option></option>';
+			$option = '<select id=\'ref_fact\' name=\'ref_fact\' onchange=\'getDataFacture(this.value);\' class=\'form-control form-control-sm cc-exp\'><option></option>';
 			
 			$requete = $connexion-> prepare("SELECT *
 												FROM facture_licence
@@ -15919,13 +15919,18 @@
 
 			$requete = $connexion-> prepare("SELECT trans.ref_trans_ap AS ref_trans_ap,
 													DATE_FORMAT(trans.date_trans_ap, '%d/%m/%Y') AS date_trans_ap,
-													trans.date_depot AS date_depot,
+													DATE_FORMAT(trans.date_depot, '%d/%m/%Y') AS date_depot,
+													-- trans.date_depot AS date_depot,
 													trans.banque AS banque,
 													COUNT(det.id_dos) AS nbre_dos,
 													COUNT(DISTINCT(dos.num_lic)) AS nbre_lic,
 													cl.nom_cli AS nom_cli,
 													trans.id_trans_ap AS id_trans_ap,
-													trans.fichier_trans_ap AS fichier_trans_ap
+													trans.fichier_trans_ap AS fichier_trans_ap,
+													IF(trans.date_depot IS NOT NULL,
+														'1',
+														'0'
+													) AS status
 											-- FROM transmission_apurement trans
 											-- 	LEFT JOIN detail_apurement det
 											-- 		ON det.id_trans_ap = trans.id_trans_ap
@@ -15950,6 +15955,9 @@
 
 				$reponse['compteur'] = $compteur;
 				$reponse['btn_action'] = $this-> checkArchivedFile($reponse['id_trans_ap'], $reponse['fichier_trans_ap'], $reponse['ref_trans_ap']);
+				$reponse['btn_action'] .= ' <button class="btn btn-xs bg bg-warning square-btn-adjust" onclick="modal_modifier_transmis('.$reponse['id_trans_ap'].');">
+							                    <i class="fas fa-edit"></i> 
+							                </button>';
 
 				$rows[] = $reponse;
 			}$requete-> closeCursor();
@@ -15960,13 +15968,13 @@
 		}
 
 		public function checkArchivedFile($id_trans_ap, $fichier_trans_ap, $ref_trans_ap){
-			if(file_exists('../transmision_apurements/'.$id_trans_ap.'/'.$fichier_trans_ap)){
-				return '<button class="btn btn-xs bg bg-info square-btn-adjust" onclick="window.open(\'../transmision_apurements/'.$id_trans_ap.'/'.$fichier_trans_ap.'\',\'pop1\',\'width=1900,height=900\');">
-		                    <i class="fas fa-file"></i> Accusée de réception
+			if(isset($fichier_trans_ap) && ($fichier_trans_ap!="") && file_exists('../transmision_apurements/'.$id_trans_ap.'/'.$fichier_trans_ap)){
+				return '<button class="btn btn-xs bg bg-info square-btn-adjust" title="Accusée de réception" onclick="window.open(\'../transmision_apurements/'.$id_trans_ap.'/'.$fichier_trans_ap.'\',\'pop1\',\'width=900,height=700\');">
+		                    <i class="fas fa-file"></i>
 		                </button>';
 			}else{
-				return '<button class="btn btn-xs btn-dark square-btn-adjust" onclick="modal_archive_transmis_apurement('.$id_trans_ap.',\''.$ref_trans_ap.'\');">
-		                    <i class="fa fa-upload"></i> Loger Accusée de réception
+				return '<button class="btn btn-xs btn-dark square-btn-adjust" title="Loger Accusée de réception" onclick="modal_archive_transmis_apurement('.$id_trans_ap.',\''.$ref_trans_ap.'\');">
+		                    <i class="fa fa-upload"></i>
 		                </button>';
 			}
 		}
@@ -27231,7 +27239,7 @@
 
 				if( ($reponse['fob'] <= $this-> getSommeFobAppureLicence($reponse['num_lic'])) || (($reponse['fob']-$this-> getSommeFobAppureLicence($reponse['num_lic']))<1) ){
 
-					$reponse['statut'] = '<span class="text-xs badge badge-success">Totalement Apurée</span>';
+					$reponse['statut'] = 'Totalement Apurée';
 
 				}else if( ($reponse['fob'] < $this-> getSommeFobLicence($reponse['num_lic'])) && ($reponse['fob'] != $this-> getSommeFobAppureLicence($reponse['num_lic'])) ){
 
@@ -32339,7 +32347,7 @@
 						<?php echo $reponse['cod'];?>
 					</td>
 					<td class=" <?php echo $bg;?>" style="text-align: right; ">
-						<?php echo number_format($reponse['montant_av'], 2, ',', ' ');?>
+						<?php echo number_format($reponse['montant_decl'], 2, ',', ' ');?>
 					</td>
 					<td class=" <?php echo $bg;?>" style="text-align: center; ">
 						<?php echo $reponse['ref_decl'];?>
@@ -32367,6 +32375,9 @@
 					</td>
 					<td class=" <?php echo $bg;?>" style="text-align: center; ">
 						<?php echo $ok_apurement;?>
+					</td>
+					<td class=" <?php echo $bg;?>" style="text-align: center; ">
+						<?php echo $this-> getDataApurementDossier($reponse['id_dos']);?>
 					</td>
 				</tr>
 			<?php
@@ -35015,7 +35026,8 @@
 
 			$requete = $connexion-> prepare("SELECT ref_trans_ap, DATE_FORMAT(date_trans_ap, '%d/%m/%Y') AS date_trans_ap, 
 													DATE_FORMAT(date_trans_ap, '%d-%m-%Y') AS date_trans_ap2, 
-													UPPER(banque) AS banque
+													UPPER(banque) AS banque,
+													date_depot
 												FROM transmission_apurement
 												WHERE id_trans_ap = ?");
 			$requete-> execute(array($entree['id_trans_ap']));
@@ -36050,13 +36062,33 @@
 			include('connexion.php');
 			$entree['id_dos'] = $id_dos;
 
-			$requete = $connexion-> prepare("SELECT id_dos
-												FROM detail_apurement
-													WHERE id_dos = ?");
+			$requete = $connexion-> prepare("SELECT det.id_dos
+												FROM detail_apurement det, transmission_apurement tr
+													WHERE det.id_dos = ?
+														AND det.id_trans_ap = tr.id_trans_ap
+														AND tr.fichier_trans_ap IS NOT NULL");
 			$requete-> execute(array($entree['id_dos']));
 			$reponse=$requete-> fetch();
 			if($reponse){
 				return true;
+			}
+		}
+
+		public function getDataApurementDossier($id_dos){
+			include('connexion.php');
+			$entree['id_dos'] = $id_dos;
+
+			$requete = $connexion-> prepare("SELECT *, DATE_FORMAT(tr.date_trans_ap, '%d/%m/%Y') AS date_trans_ap
+												FROM detail_apurement det, transmission_apurement tr
+													WHERE det.id_dos = ?
+														AND det.id_trans_ap = tr.id_trans_ap");
+			$requete-> execute(array($entree['id_dos']));
+			$reponse=$requete-> fetch();
+
+			if($reponse){
+				return $reponse['ref_trans_ap'].' du '.$reponse['date_trans_ap'];
+			}else{
+				return null;
 			}
 		}
 
@@ -37397,10 +37429,12 @@
 			$entree['num_lic'] = $num_lic;
 
 			$requete = $connexion-> prepare("SELECT SUM(d.fob) AS fob
-												FROM dossier d, detail_apurement ap
+												FROM dossier d, detail_apurement ap, transmission_apurement tr
 												WHERE d.num_lic = ?
-													AND d.id_dos = ap.id_dos
 													AND d.cleared <> '2'
+													AND d.id_dos = ap.id_dos
+													AND ap.id_trans_ap = tr.id_trans_ap
+													AND tr.fichier_trans_ap IS NOT NULL
 												");
 			$requete-> execute(array($entree['num_lic']));
 			$reponse = $requete-> fetch();
@@ -45412,6 +45446,37 @@
 			$requete = $connexion-> prepare("UPDATE transmission_apurement SET fichier_trans_ap= ?	
 												WHERE id_trans_ap = ?");
 			$requete-> execute(array($entree['fichier_trans_ap'], $entree['id_trans_ap']));
+
+
+
+		} 
+
+		public function annuler_accuser_reception_transmis_apurement($id_trans_ap){
+
+			include('connexion.php');
+			$entree['id_trans_ap'] = $id_trans_ap;
+
+			$requete = $connexion-> prepare("UPDATE transmission_apurement SET fichier_trans_ap= NULL
+												WHERE id_trans_ap = ?");
+			$requete-> execute(array($entree['id_trans_ap']));
+
+
+
+		} 
+
+		public function update_date_depot_transmis($id_trans_ap, $date_depot){
+
+			include('connexion.php');
+			$entree['id_trans_ap'] = $id_trans_ap;
+			$entree['date_depot'] = $date_depot;
+
+			if ($entree['date_depot'] == '') {
+				$entree['date_depot'] = NULL;
+			}
+
+			$requete = $connexion-> prepare("UPDATE transmission_apurement SET date_depot= ?	
+												WHERE id_trans_ap = ?");
+			$requete-> execute(array($entree['date_depot'], $entree['id_trans_ap']));
 
 
 
