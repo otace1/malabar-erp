@@ -8416,18 +8416,60 @@
 															(det.montant/dos.roe_decl)
 														) 
 													) AS ht_usd,
+													-- SUM(
+													-- 	IF(det.usd="1", 
+													-- 		IF(det.tva="1",
+													-- 			det.montant*1.16,
+													-- 			det.montant
+													-- 		), 
+													-- 		IF(det.tva="1",
+													-- 			(det.montant/dos.roe_decl)*1.16,
+													-- 			(det.montant/dos.roe_decl)
+													-- 		)
+													-- 	)
+													-- ) AS ttc_usd,
 													SUM(
-														IF(det.usd="1", 
+														IF(det.usd="0", 
+															IF(det.tva="1",
+																IF(det.montant_tva>0,
+																	(det.montant_tva+det.montant)/dos.roe_decl,
+																	(det.montant*0.16)/dos.roe_decl
+																	),
+																det.montant/dos.roe_decl
+															), 
 															IF(det.tva="1",
 																det.montant*1.16,
 																det.montant
-															), 
-															IF(det.tva="1",
-																(det.montant/dos.roe_decl)*1.16,
-																(det.montant/dos.roe_decl)
 															)
 														)
 													) AS ttc_usd,
+													SUM(
+														IF(det.usd="0", 
+															IF(det.tva="1",
+																IF(det.montant_tva>0,
+																	(det.montant_tva+det.montant),
+																	(det.montant*0.16)
+																	),
+																det.montant
+															), 
+															IF(det.tva="1",
+																(det.montant*1.16)*dos.roe_decl,
+																(det.montant)*dos.roe_decl
+															)
+														)
+													) AS ttc_cdf,
+													-- SUM(
+													-- 	IF(det.usd="1", 
+													-- 		IF(det.tva="1",
+													-- 			det.montant*0.16,
+													-- 			0
+													-- 		), 
+													-- 		IF(det.tva="1",
+													-- 			(det.montant/dos.roe_decl)*0.16,
+													-- 			0
+													-- 		)
+													-- 	)
+													-- ) AS tva_usd,
 													SUM(
 														IF(det.usd="1", 
 															IF(det.tva="1",
@@ -8435,11 +8477,35 @@
 																0
 															), 
 															IF(det.tva="1",
-																(det.montant/dos.roe_decl)*0.16,
+																IF(det.montant_tva/dos.roe_decl > 0,
+																	det.montant_tva/dos.roe_decl,
+																	(det.montant/dos.roe_decl)*0.016
+																	),
 																0
 															)
 														)
 													) AS tva_usd,
+													SUM(
+														IF(d.id_t_deb=1,
+															IF(det.usd="0", 
+																IF(det.tva="1",
+																	IF(det.montant_tva > 0,
+																		det.montant_tva,
+																		det.montant_tva*0.16
+																		),
+																	0
+																), 
+																IF(det.tva="1",
+																	(det.montant*dos.roe_decl)*0.16,
+																	0
+																)
+															),
+															IF(det.tva="1",
+																(det.montant*dos.roe_decl)*0.16,
+																0
+															)
+														)
+													) AS tva_cdf,
 													IF(det.detail IS NOT NULL, 
 														CONCAT(": ", det.detail),
 														""
@@ -8453,12 +8519,14 @@
 														) AS rls,
 													dos.id_dos AS id_dos,
 													det.pourcentage_qte AS pourcentage_qte,
-													(det.montant/dos.roe_decl) AS montant_tax_usd
-												FROM debours d, detail_facture_dossier det, dossier dos
+													(det.montant/dos.roe_decl) AS montant_tax_usd,
+													fact.font_size AS font_size
+												FROM debours d, detail_facture_dossier det, dossier dos, facture_dossier fact
 												WHERE det.ref_fact = ?
 													AND det.id_deb = d.id_deb
 													AND d.id_t_deb = ?
 													AND det.id_dos = dos.id_dos
+													AND det.ref_fact = fact.ref_fact
 												GROUP BY d.id_deb
 												ORDER BY d.rang, d.id_deb');
 			$requete-> execute(array($entree['ref_fact'], $entree['id_t_deb']));
@@ -8555,7 +8623,8 @@
 				$cost = $reponse['ht_usd']/$unite_2;
 				
 				$total_cost += $cost;
-				$sub_total_cdf += $reponse['ht_cdf'];
+				// $sub_total_cdf += $reponse['ht_cdf'];
+				$sub_total_cdf += $reponse['ttc_cdf'];
 				$total_tva += $reponse['tva_usd'];
 				$total_gen += $reponse['ttc_usd'];
 
@@ -8563,24 +8632,24 @@
 				$sub_total += $reponse['ht_usd'];
 					$tbl .= '
 						<tr>
-							<td style="text-align: left; border-left: 1px solid black; border-right: 0.5px solid black; font-size: 7px;" colspan="2" width="49%">&nbsp;&nbsp;'
+							<td style="text-align: left; border-left: 1px solid black; border-right: 0.5px solid black; font-size: '.$reponse['font_size'].'px;" colspan="2" width="49%">&nbsp;&nbsp;'
 								.$reponse['nom_deb'].
 							'</td>
-							<td style="text-align: center; border-right: 0.5px solid black; font-size: 7px;" width="9%">'
+							<td style="text-align: center; border-right: 0.5px solid black; font-size: '.$reponse['font_size'].'px;" width="9%">'
 								.$unite.
 							'
 							</td>
-							<td style="text-align: center; border-right: 0.5px solid black; font-size: 7px;" width="8%">'
+							<td style="text-align: center; border-right: 0.5px solid black; font-size: '.$reponse['font_size'].'px;" width="8%">'
 								.$cost_2.
 							'&nbsp;&nbsp;</td>
-							<td style="text-align: center; border-right: 0.5px solid black; font-size: 7px;" width="11%">'
+							<td style="text-align: center; border-right: 0.5px solid black; font-size: '.$reponse['font_size'].'px;" width="11%">'
 								.number_format($reponse['ht_usd'], 2, ',', '.').
 							'&nbsp;&nbsp;</td>
-							<td style="text-align: center; border-right: 0.5px solid black; font-size: 7px;" width="11.5%">'
-								.number_format($reponse['tva_cdf'], 2, ',', '.').
+							<td style="text-align: center; border-right: 0.5px solid black; font-size: '.$reponse['font_size'].'px;" width="11.5%">'
+								.number_format($reponse['tva_usd'], 2, ',', '.').
 							'&nbsp;&nbsp;</td>
-							<td style="text-align: right; border-right: 1px solid black; font-size: 7px;" width="11.5%">'
-								.number_format($reponse['ht_usd'], 2, ',', '.').
+							<td style="text-align: right; border-right: 1px solid black; font-size: '.$reponse['font_size'].'px;" width="11.5%">'
+								.number_format($reponse['ttc_usd'], 2, ',', '.').
 							'&nbsp;&nbsp;</td>
 						</tr>
 					';
@@ -8588,23 +8657,23 @@
 					$sub_total += $this-> getDataAffectationDeboursClientModeleLicence($reponse['id_deb'], $data_dossier['id_cli'], $data_dossier['id_mod_lic'], $data_dossier['id_march'], $data_dossier['id_mod_trans'])['montant'];
 					$tbl .= '
 						<tr>
-							<td style="text-align: left; border-left: 1px solid black; border-right: 0.5px solid black; font-size: 7px;" colspan="2" width="49%">&nbsp;&nbsp;'
+							<td style="text-align: left; border-left: 1px solid black; border-right: 0.5px solid black; font-size: '.$reponse['font_size'].'px;" colspan="2" width="49%">&nbsp;&nbsp;'
 								.$reponse['nom_deb'].
 							'</td>
-							<td style="text-align: center; border-right: 0.5px solid black; font-size: 7px;" width="9%">'
+							<td style="text-align: center; border-right: 0.5px solid black; font-size: '.$reponse['font_size'].'px;" width="9%">'
 								.$unite.
 							'
 							</td>
-							<td style="text-align: center; border-right: 0.5px solid black; font-size: 7px;" width="8%">'
+							<td style="text-align: center; border-right: 0.5px solid black; font-size: '.$reponse['font_size'].'px;" width="8%">'
 								.$cost_2.
 							'&nbsp;&nbsp;</td>
-							<td style="text-align: center; border-right: 0.5px solid black; font-size: 7px;" width="11%">'
+							<td style="text-align: center; border-right: 0.5px solid black; font-size: '.$reponse['font_size'].'px;" width="11%">'
 								.number_format($this-> getDataAffectationDeboursClientModeleLicence($reponse['id_deb'], $data_dossier['id_cli'], $data_dossier['id_mod_lic'], $data_dossier['id_march'], $data_dossier['id_mod_trans'])['montant'], 2, ',', '.').
 							'&nbsp;&nbsp;</td>
-							<td style="text-align: center; border-right: 0.5px solid black; font-size: 7px;" width="11.5%">'
+							<td style="text-align: center; border-right: 0.5px solid black; font-size: '.$reponse['font_size'].'px;" width="11.5%">'
 								.number_format($reponse['tva_usd'], 2, ',', '.').
 							'&nbsp;&nbsp;</td>
-							<td style="text-align: right; border-right: 1px solid black; font-size: 7px;" width="11.5%">'
+							<td style="text-align: right; border-right: 1px solid black; font-size: '.$reponse['font_size'].'px;" width="11.5%">'
 								.number_format($reponse['ttc_usd'], 2, ',', '.').
 							'&nbsp;&nbsp;</td>
 						</tr>
@@ -8613,23 +8682,23 @@
 					$sub_total += $reponse['ht_usd'];
 					$tbl .= '
 						<tr>
-							<td style="text-align: left; border-left: 1px solid black; border-right: 0.5px solid black; font-size: 7px;" colspan="2" width="49%">&nbsp;&nbsp;'
+							<td style="text-align: left; border-left: 1px solid black; border-right: 0.5px solid black; font-size: '.$reponse['font_size'].'px;" colspan="2" width="49%">&nbsp;&nbsp;'
 								.$reponse['nom_deb'].
 							'</td>
-							<td style="text-align: center; border-right: 0.5px solid black; font-size: 7px;" width="9%">'
+							<td style="text-align: center; border-right: 0.5px solid black; font-size: '.$reponse['font_size'].'px;" width="9%">'
 								.$unite.
 							'
 							</td>
-							<td style="text-align: center; border-right: 0.5px solid black; font-size: 7px;" width="8%">'
+							<td style="text-align: center; border-right: 0.5px solid black; font-size: '.$reponse['font_size'].'px;" width="8%">'
 								.$cost_2.
 							'&nbsp;&nbsp;</td>
-							<td style="text-align: center; border-right: 0.5px solid black; font-size: 7px;" width="11%">'
+							<td style="text-align: center; border-right: 0.5px solid black; font-size: '.$reponse['font_size'].'px;" width="11%">'
 								.number_format($reponse['ht_usd'], 2, ',', '.').
 							'&nbsp;&nbsp;</td>
-							<td style="text-align: center; border-right: 0.5px solid black; font-size: 7px;" width="11.5%">'
+							<td style="text-align: center; border-right: 0.5px solid black; font-size: '.$reponse['font_size'].'px;" width="11.5%">'
 								.number_format($reponse['tva_usd'], 2, ',', '.').
 							'&nbsp;&nbsp;</td>
-							<td style="text-align: right; border-right: 1px solid black; font-size: 7px;" width="11.5%">'
+							<td style="text-align: right; border-right: 1px solid black; font-size: '.$reponse['font_size'].'px;" width="11.5%">'
 								.number_format($reponse['ttc_usd'], 2, ',', '.').
 							'&nbsp;&nbsp;</td>
 						</tr>
@@ -8640,11 +8709,11 @@
 			$tbl .='
 					<tr>
 						<td style="text-align: left; border-left: 1px solid black; border-right: 0.5px solid black; border-bottom: 0.5px solid black; font-size: 8px;" width="49%"></td>
-						<td style="text-align: center; border-bottom: 0.5px solid black; font-size: 7px; border-right: 0.5px solid black;" colspan="2" width="9%"></td>
+						<td style="text-align: center; border-bottom: 0.5px solid black; font-size: '.$reponse['font_size'].'px; border-right: 0.5px solid black;" colspan="2" width="9%"></td>
 						<td style="text-align: right; border-right: 0.5px solid black; border-bottom: 0.5px solid black; font-size: 8px;" width="8%"></td>
 						<td style="text-align: right; border-right: 0.5px solid black; border-bottom: 0.5px solid black; font-size: 8px;" width="11%"></td>
 						<td style="text-align: right; border-right: 0.5px solid black; border-bottom: 0.5px solid black; font-size: 8px;" width="11.5%"></td>
-						<td style="text-align: right; border-right: 1px solid black; border-bottom: 0.5px solid black; font-size: 7px;" width="11.5%"></td>
+						<td style="text-align: right; border-right: 1px solid black; border-bottom: 0.5px solid black; font-size: '.$reponse['font_size'].'px;" width="11.5%"></td>
 					</tr>
 					';
 			if($entree['id_t_deb']=='1'){
@@ -8680,7 +8749,7 @@
 			}else{
 				$tbl .= '
 					<tr>
-						<td style="text-align: right; border-right: 0.5px solid black; border: 0.5px solid black; font-weight: bold; background-color: rgb(220,220,220); font-size: 7px;" width="49%">SUB-TOTAL / SOUS-TOTAL &nbsp;&nbsp;
+						<td style="text-align: right; border-right: 0.5px solid black; border: 0.5px solid black; font-weight: bold; background-color: rgb(220,220,220); font-size: '.$reponse['font_size'].'px;" width="49%">SUB-TOTAL / SOUS-TOTAL &nbsp;&nbsp;
 						</td>
 						<td style="text-align: right; border-right: 0.5px solid black; border: 0.5px solid black; font-weight: bold; background-color: rgb(220,220,220); font-size: 8px;" width="9%">
 						</td>
@@ -8902,12 +8971,14 @@
 														0
 														) AS rls,
 													dos.id_dos AS id_dos,
-													det.pourcentage_qte AS pourcentage_qte
-												FROM debours d, detail_facture_dossier det, dossier dos
+													det.pourcentage_qte AS pourcentage_qte,
+													fact.font_size AS font_size
+												FROM debours d, detail_facture_dossier det, dossier dos, facture_dossier fact
 												WHERE det.ref_fact = ?
 													AND det.id_deb = d.id_deb
 													AND d.id_t_deb = ?
 													AND det.id_dos = dos.id_dos
+													AND det.ref_fact = fact.ref_fact
 												GROUP BY d.id_deb
 												ORDER BY d.rang, d.id_deb');
 			$requete-> execute(array($entree['ref_fact'], $entree['id_t_deb']));
@@ -9018,27 +9089,27 @@
 				$sub_total += $reponse['ht_usd'];
 					$tbl .= '
 						<tr>
-							<td style="text-align: left; border-left: 1px solid black; border-right: 0.5px solid black; font-size: 6.5px;" colspan="2" width="40%">&nbsp;&nbsp;'
+							<td style="text-align: left; border-left: 1px solid black; border-right: 0.5px solid black; font-size: '.$reponse['font_size'].'px;" colspan="2" width="40%">&nbsp;&nbsp;'
 								.$reponse['nom_deb'].
 							'</td>
-							<td style="text-align: center; border-right: 0.5px solid black; font-size: 6.5px;" width="9%">'
+							<td style="text-align: center; border-right: 0.5px solid black; font-size: '.$reponse['font_size'].'px;" width="9%">'
 								.$unite.
 							'
 							</td>
-							<td style="text-align: center; border-right: 0.5px solid black; font-size: 6.5px;" width="9%">'
+							<td style="text-align: center; border-right: 0.5px solid black; font-size: '.$reponse['font_size'].'px;" width="9%">'
 								.$cif_split.
 							'
 							</td>
-							<td style="text-align: center; border-right: 0.5px solid black; font-size: 6.5px;" width="8%">'
+							<td style="text-align: center; border-right: 0.5px solid black; font-size: '.$reponse['font_size'].'px;" width="8%">'
 								.$cost_2.
 							'&nbsp;&nbsp;</td>
-							<td style="text-align: center; border-right: 0.5px solid black; font-size: 6.5px;" width="11%">'
+							<td style="text-align: center; border-right: 0.5px solid black; font-size: '.$reponse['font_size'].'px;" width="11%">'
 								.number_format($reponse['ht_cdf'], 0, ',', '.').
 							'&nbsp;&nbsp;</td>
-							<td style="text-align: center; border-right: 0.5px solid black; font-size: 6.5px;" width="11.5%">'
+							<td style="text-align: center; border-right: 0.5px solid black; font-size: '.$reponse['font_size'].'px;" width="11.5%">'
 								.number_format($reponse['tva_cdf'], 0, ',', '.').
 							'&nbsp;&nbsp;</td>
-							<td style="text-align: right; border-right: 1px solid black; font-size: 6.5px;" width="11.5%">'
+							<td style="text-align: right; border-right: 1px solid black; font-size: '.$reponse['font_size'].'px;" width="11.5%">'
 								.number_format($reponse['ttc_cdf'], 0, ',', '.').
 							'&nbsp;&nbsp;</td>
 						</tr>
@@ -9047,23 +9118,23 @@
 					$sub_total += $this-> getDataAffectationDeboursClientModeleLicence($reponse['id_deb'], $data_dossier['id_cli'], $data_dossier['id_mod_lic'], $data_dossier['id_march'], $data_dossier['id_mod_trans'])['montant'];
 					$tbl .= '
 						<tr>
-							<td style="text-align: left; border-left: 1px solid black; border-right: 0.5px solid black; font-size: 7px;" colspan="2" width="49%">&nbsp;&nbsp;'
+							<td style="text-align: left; border-left: 1px solid black; border-right: 0.5px solid black; font-size: '.$reponse['font_size'].'px;" colspan="2" width="49%">&nbsp;&nbsp;'
 								.$reponse['nom_deb'].
 							'</td>
-							<td style="text-align: center; border-right: 0.5px solid black; font-size: 7px;" width="9%">'
+							<td style="text-align: center; border-right: 0.5px solid black; font-size: '.$reponse['font_size'].'px;" width="9%">'
 								.$unite.
 							'
 							</td>
-							<td style="text-align: center; border-right: 0.5px solid black; font-size: 7px;" width="8%">'
+							<td style="text-align: center; border-right: 0.5px solid black; font-size: '.$reponse['font_size'].'px;" width="8%">'
 								.$cost_2.
 							'&nbsp;&nbsp;</td>
-							<td style="text-align: center; border-right: 0.5px solid black; font-size: 7px;" width="11%">'
+							<td style="text-align: center; border-right: 0.5px solid black; font-size: '.$reponse['font_size'].'px;" width="11%">'
 								.number_format($this-> getDataAffectationDeboursClientModeleLicence($reponse['id_deb'], $data_dossier['id_cli'], $data_dossier['id_mod_lic'], $data_dossier['id_march'], $data_dossier['id_mod_trans'])['montant'], 2, ',', '.').
 							'&nbsp;&nbsp;</td>
-							<td style="text-align: center; border-right: 0.5px solid black; font-size: 7px;" width="11.5%">'
+							<td style="text-align: center; border-right: 0.5px solid black; font-size: '.$reponse['font_size'].'px;" width="11.5%">'
 								.number_format($reponse['tva_usd'], 2, ',', '.').
 							'&nbsp;&nbsp;</td>
-							<td style="text-align: right; border-right: 1px solid black; font-size: 7px;" width="11.5%">'
+							<td style="text-align: right; border-right: 1px solid black; font-size: '.$reponse['font_size'].'px;" width="11.5%">'
 								.number_format($reponse['ttc_usd'], 2, ',', '.').
 							'&nbsp;&nbsp;</td>
 						</tr>
@@ -9072,23 +9143,23 @@
 					$sub_total += $reponse['ht_usd'];
 					$tbl .= '
 						<tr>
-							<td style="text-align: left; border-left: 1px solid black; border-right: 0.5px solid black; font-size: 7px;" colspan="2" width="49%">&nbsp;&nbsp;'
+							<td style="text-align: left; border-left: 1px solid black; border-right: 0.5px solid black; font-size: '.$reponse['font_size'].'px;" colspan="2" width="49%">&nbsp;&nbsp;'
 								.$reponse['nom_deb'].
 							'</td>
-							<td style="text-align: center; border-right: 0.5px solid black; font-size: 7px;" width="9%">'
+							<td style="text-align: center; border-right: 0.5px solid black; font-size: '.$reponse['font_size'].'px;" width="9%">'
 								.$unite.
 							'
 							</td>
-							<td style="text-align: center; border-right: 0.5px solid black; font-size: 7px;" width="8%">'
+							<td style="text-align: center; border-right: 0.5px solid black; font-size: '.$reponse['font_size'].'px;" width="8%">'
 								.$cost_2.
 							'&nbsp;&nbsp;</td>
-							<td style="text-align: center; border-right: 0.5px solid black; font-size: 7px;" width="11%">'
+							<td style="text-align: center; border-right: 0.5px solid black; font-size: '.$reponse['font_size'].'px;" width="11%">'
 								.number_format($reponse['ht_usd'], 2, ',', '.').
 							'&nbsp;&nbsp;</td>
-							<td style="text-align: center; border-right: 0.5px solid black; font-size: 7px;" width="11.5%">'
+							<td style="text-align: center; border-right: 0.5px solid black; font-size: '.$reponse['font_size'].'px;" width="11.5%">'
 								.number_format($reponse['tva_usd'], 2, ',', '.').
 							'&nbsp;&nbsp;</td>
-							<td style="text-align: right; border-right: 1px solid black; font-size: 7px;" width="11.5%">'
+							<td style="text-align: right; border-right: 1px solid black; font-size: '.$reponse['font_size'].'px;" width="11.5%">'
 								.number_format($reponse['ttc_usd'], 2, ',', '.').
 							'&nbsp;&nbsp;</td>
 						</tr>
@@ -9099,11 +9170,11 @@
 			$tbl .='
 					<tr>
 						<td style="text-align: left; border-left: 1px solid black; border-right: 0.5px solid black; border-bottom: 0.5px solid black; font-size: 8px;" width="49%"></td>
-						<td style="text-align: center; border-bottom: 0.5px solid black; font-size: 7px; border-right: 0.5px solid black;" colspan="2" width="9%"></td>
+						<td style="text-align: center; border-bottom: 0.5px solid black; font-size: '.$reponse['font_size'].'px; border-right: 0.5px solid black;" colspan="2" width="9%"></td>
 						<td style="text-align: right; border-right: 0.5px solid black; border-bottom: 0.5px solid black; font-size: 8px;" width="8%"></td>
 						<td style="text-align: right; border-right: 0.5px solid black; border-bottom: 0.5px solid black; font-size: 8px;" width="11%"></td>
 						<td style="text-align: right; border-right: 0.5px solid black; border-bottom: 0.5px solid black; font-size: 8px;" width="11.5%"></td>
-						<td style="text-align: right; border-right: 1px solid black; border-bottom: 0.5px solid black; font-size: 7px;" width="11.5%"></td>
+						<td style="text-align: right; border-right: 1px solid black; border-bottom: 0.5px solid black; font-size: '.$reponse['font_size'].'px;" width="11.5%"></td>
 					</tr>
 					';
 			if($entree['id_t_deb']=='1'){
@@ -9143,7 +9214,7 @@
 			}else{
 				$tbl .= '
 					<tr>
-						<td style="text-align: right; border-right: 0.5px solid black; border: 0.5px solid black; font-weight: bold; background-color: rgb(220,220,220); font-size: 7px;" width="49%">SUB-TOTAL / SOUS-TOTAL &nbsp;&nbsp;
+						<td style="text-align: right; border-right: 0.5px solid black; border: 0.5px solid black; font-weight: bold; background-color: rgb(220,220,220); font-size: '.$reponse['font_size'].'px;" width="49%">SUB-TOTAL / SOUS-TOTAL &nbsp;&nbsp;
 						</td>
 						<td style="text-align: right; border-right: 0.5px solid black; border: 0.5px solid black; font-weight: bold; background-color: rgb(220,220,220); font-size: 8px;" width="9%">
 						</td>
@@ -36842,6 +36913,20 @@
 			}
 		}
 
+		public function getDataFacture2($ref_fact){
+			include('connexion.php');
+			$entree['ref_fact'] = $ref_fact;
+
+			$requete = $connexion-> prepare("SELECT *
+												FROM facture_dossier
+												WHERE ref_fact = ?");
+			$requete-> execute(array($entree['ref_fact']));
+			$reponse = $requete-> fetch();
+			if($reponse){
+				return $reponse;
+			}
+		}
+
 		public function getPoidsFacture($ref_fact){
 			include('connexion.php');
 			$entree['ref_fact'] = $ref_fact;
@@ -38143,7 +38228,7 @@
 															FROM dossier 
 															WHERE ref_dos LIKE '%RF20-%' OR ref_dos LIKE '%AW20-%' OR ref_dos LIKE '%-ACID-%' OR ref_dos LIKE '%-SUL%'
 														)
-													AND (id_cli <> 869 AND id_cli <> 929 AND id_cli <> 927 AND id_cli <> 870 AND id_cli <> 902 AND id_cli <> 873 AND id_cli <> 871 AND id_cli <> 872)
+													AND (id_cli <> 869 AND id_cli <> 929 AND id_cli <> 927 AND id_cli <> 870 AND id_cli <> 902 AND id_cli <> 873 AND id_cli <> 871 AND id_cli <> 872 AND id_cli <> 905)
 													AND id_dos NOT IN(
 														SELECT id_dos FROM detail_apurement
 													)");
@@ -44063,7 +44148,7 @@
 												AND num_lic <> 'N/A'
 												AND num_lic <> 'UNDER VALUE'
 												AND num_lic <> 'UNDERVALUE'
-												AND (id_cli <> 869 AND id_cli <> 929 AND id_cli <> 927 AND id_cli <> 870 AND id_cli <> 902 AND id_cli <> 873 AND id_cli <> 871 AND id_cli <> 872)
+												AND (id_cli <> 869 AND id_cli <> 929 AND id_cli <> 927 AND id_cli <> 870 AND id_cli <> 902 AND id_cli <> 873 AND id_cli <> 871 AND id_cli <> 872 AND id_cli <> 905)
 												AND id_dos NOT IN (
 													SELECT id_dos 
 														FROM dossier 
