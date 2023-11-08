@@ -74,7 +74,7 @@
     <section class="content-header">
       <div class="container-fluid">
         <div class="header">
-          <h3><i class="far fa-eye nav-icon"></i> SYNTHESE LICENCES <?php echo $modele['nom_mod_lic'].' ('.$modele['sigle_mod_lic'].')'.$client;?></h3>
+          <h3><i class="far fa-eye nav-icon"></i> SYNTHESE LICENCES <?php echo $modele['nom_mod_lic'].' ('.$modele['sigle_mod_lic'].')'.$client.' | '.$maClasse-> getNomTypeLicence($_GET['id_type_lic']);?></h3>
         </div>
 
       </div><!-- /.container-fluid -->
@@ -872,10 +872,9 @@ if(isset($_GET['id_mod_lic'])){
           <div class="col-md-3">
             <label for="x_card_code" class="control-label mb-1">TYPE</label>
             <select name="id_type_lic" onchange="" class="form-control cc-exp" required>
-              <option value=""></option>
-                <?php
-                  $maClasse->selectionnerTypeLicence();
-                ?>
+              <option value="<?php echo $_GET['id_type_lic'];?>">
+                <?php echo $maClasse-> getNomTypeLicence($_GET['id_type_lic']); ?>
+              </option>
             </select>
           </div>
 
@@ -952,7 +951,7 @@ if(isset($_GET['id_mod_lic']) && isset($_GET['id_mod_lic'])){
 ?>
 
 <div class="modal fade rechercheClient" id="modal-default">
-  <div class="modal-dialog modal-lg">
+  <div class="modal-dialog modal-md">
     <form id="demo-form2" method="POST" action="" data-parsley-validate enctype="multipart/form-data">
     <div class="modal-content">
       <div class="modal-header ">
@@ -964,7 +963,9 @@ if(isset($_GET['id_mod_lic']) && isset($_GET['id_mod_lic'])){
       <div class="modal-body">
         <div class="row">
 
-          <div class="col-md-6">
+          <input type="hidden" name="id_type_lic" value="<?php echo $_GET['id_type_lic'];?>">
+
+          <div class="col-md-12">
             <label for="x_card_code" class="control-label mb-1">CLIENT</label>
             <select name="id_cli" onchange="" class="form-control cc-exp">
               <option value=''>ALL</option>
@@ -973,7 +974,7 @@ if(isset($_GET['id_mod_lic']) && isset($_GET['id_mod_lic'])){
                 ?>
             </select>
           </div>
-
+<!-- 
           <div class="col-md-6">
             <label for="x_card_code" class="control-label mb-1">TYPE</label>
             <select name="id_type_lic" onchange="" class="form-control cc-exp">
@@ -982,7 +983,7 @@ if(isset($_GET['id_mod_lic']) && isset($_GET['id_mod_lic'])){
                   $maClasse->selectionnerTypeLicence();
                 ?>
             </select>
-          </div>
+          </div> -->
 
         </div>
       </div>

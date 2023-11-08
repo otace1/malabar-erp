@@ -2289,6 +2289,110 @@
 		                </div>';
 		echo json_encode($response);
 
+	}else if (isset($_POST['operation']) && $_POST['operation']=='nouvelle_licence_import') {
+
+
+        if(!isset($_POST['num_lic']) || ($_POST['num_lic'] == '')){
+          $_POST['num_lic'] = 'INVOICE '.$_POST['ref_fact'];
+        }
+
+        if (isset($_FILES['fichier_lic']['name'])) {
+
+          $fichier_lic = $_FILES['fichier_lic']['name'];
+          $tmp = $_FILES['fichier_lic']['tmp_name'];
+
+        }else{
+          $fichier_lic = NULL;
+          $tmp = NULL;
+        }
+
+        if (isset($_FILES['fichier_fact']['name'])) {
+
+          $fichier_fact = $_FILES['fichier_fact']['name'];
+          $tmp_fact = $_FILES['fichier_fact']['tmp_name'];
+
+        }else{
+          $fichier_fact = NULL;
+          $tmp_fact = NULL;
+        }
+    
+
+      if ( $maClasse-> getLicence($_POST['num_lic']) == null ){
+      	$_POST['id_post'] = NULL;
+      	$_POST['id_mod_trans'] = 1;
+      	$_POST['tonnage'] = $_POST['consommable'];
+        $maClasse-> creerLicenceIB2($_POST['id_banq'], $_POST['num_lic'], $_POST['id_cli'], 
+                                  $_POST['id_post'], $_POST['id_mon'], $_POST['fob'], 
+                                  $_POST['assurance'], $_POST['fret'], $_POST['autre_frais'], 
+                                  $_POST['fsi'], $_POST['aur'], 
+                                  $_POST['id_mod_trans'], $_POST['ref_fact'], $_POST['date_fact'], 
+                                  $_POST['fournisseur'], $_POST['date_val'], $_POST['date_exp'], 
+                                  NULL, $_POST['id_mod_lic'], $_SESSION['id_util'], 
+                                  $fichier_lic, $tmp, $fichier_fact, $tmp_fact, 
+                                  $_POST['id_type_lic'], $_POST['id_mod_paie'], 
+                                  $_POST['id_sous_type_paie'], $_POST['provenance'],
+                                  $_POST['commodity'], $_POST['tonnage'], 
+                                  $_POST['poids'], $_POST['unit_mes'], $_POST['cod'], $_POST['consommable']);
+        	$response['message'] = 'Done!';
+        }else{
+
+          $response['message'] = 'Erreur!! Impossible de créer la licence '.$_POST['num_lic'].' car il existe déjà une licence ayant ce numéro';
+
+        }
+
+		echo json_encode($response);
+
+	}else if (isset($_POST['operation']) && $_POST['operation']=='modal_modifier_transmis') {
+
+		$response = $maClasse-> getTransmissionApurement($_POST['id_trans_ap']);
+
+		echo json_encode($response);
+
+	}else if (isset($_POST['operation']) && $_POST['operation']=='modifier_transmis_apurement') {
+
+		$maClasse-> update_date_depot_transmis($_POST['id_trans_ap'], $_POST['date_depot']);
+
+		$response['message'] = 'Done!';
+
+		echo json_encode($response);
+
+	}else if (isset($_POST['operation']) && $_POST['operation']=='archive_transmis_apurement') {
+
+		if (isset($_FILES['fichier_trans_ap']['name'])) {
+
+	      $fichier_trans_ap = $_FILES['fichier_trans_ap']['name'];
+	      $tmp = $_FILES['fichier_trans_ap']['tmp_name'];
+
+	      $maClasse-> uploadAccuseeRecpetionTransmissionApurement($_POST['id_trans_ap'], $fichier_trans_ap, $tmp);
+
+	    }else{
+	      $fichier_trans_ap = NULL;
+	      $tmp = NULL;
+	    }
+
+		$response['message'] = 'Done!';
+
+		echo json_encode($response);
+
+	}else if (isset($_POST['operation']) && $_POST['operation']=='annuler_accuser_reception_transmis_apurement') {
+
+		$maClasse-> annuler_accuser_reception_transmis_apurement($_POST['id_trans_ap']);
+
+		$response['message'] = 'Done!';
+
+		echo json_encode($response);
+
+	}else if (isset($_POST['operation']) && $_POST['operation']=='build_reference_transmis') {
+
+		$response['ref_trans_ap'] = $maClasse-> buildReferenceTransmissionApurementModeleLicence($_POST['id_mod_lic']);
+		
+		$response['dossier_a_apures'] = '';
+		for ($i=1; $i <= 50 ; $i++) { 
+			$response['dossier_a_apures'] .= '<tr><td style=\'text-align: center;\'><?php echo $i;?></td>td><select name=\'id_dos_'.$i.'\' id=\'id_dos_'.$i.'\' onchange=\'xajax_afficherDetailsDossierMutliple(this.value, '.$i.');\' class=\'form-control cc-exp\'><option></option>'.$maClasse->selectionnerDossierEnAttenteApurement($_POST['id_cli'], $_POST['id_mod_lic']).'</select></td><td style=\'text-align: center;\'><span id=\'num_lic'.$i.'\'></span></td>';
+          }
+
+		echo json_encode($response);
+
 	}
 
 ?>

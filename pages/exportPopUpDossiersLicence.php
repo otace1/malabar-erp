@@ -627,6 +627,17 @@ $indiceSheet = 0;
 		        ->setAutoSize(true);
 			$col++;
 
+			$excel-> getActiveSheet()
+				-> setCellValue($col.$row, $maClasse-> getDataApurementDossier($reponse['id_dos']));
+            
+			cellColor($col.$row, $couleur);
+            alignement($col.$row);
+
+			$excel->getActiveSheet()
+		        ->getColumnDimension($col)
+		        ->setAutoSize(true);
+			$col++;
+
 			$compteur++;
 			$row++;
 

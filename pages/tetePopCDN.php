@@ -63,6 +63,12 @@
   <link rel="stylesheet" href="../plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
 
 
+
+
+  <!-- Toastr -->
+  <!-- <link rel="stylesheet" href="../../plugins/toastr/toastr.min.css"> -->
+
+  
     <!-- Bootstrap Core Css -->
     <!-- <link href="../plugins/bootstrap/css/bootstrap.css" rel="stylesheet"> -->
 
@@ -78,6 +84,10 @@
 
   <link rel="icon" href="../images/logo.jpeg" type="image/x-icon">
 <style type="text/css">
+
+  .bg_rouge{
+    background-color: #FA8072;
+  }
   
       .clignote {
         animation: clignote 1.5s linear infinite;
@@ -374,11 +384,11 @@
 table.dataTable tbody tr:hover {
   background-color: #eddfdf;
 }
-
+/*
 table.dataTable tbody tr:hover > .sorting_1 {
   background-color: #eddfdf;
 }
-
+*/
 </style>
 </head>
 <body>

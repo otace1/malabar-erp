@@ -319,10 +319,34 @@
               </p></span>
             </a>
           </li>
-
-            <?php
-              $maClasse-> afficherMenuLicence();
-            ?>
+          <li class="nav-item">
+            <a href="#" class="nav-link">
+              <i class="nav-icon fas fa-circle"></i>
+              <p>
+                Definitives
+                <i class="right fas fa-angle-left"></i>
+              </p>
+            </a>
+            <ul class="nav nav-treeview">
+              <?php
+                $maClasse-> afficherMenuLicence(1);
+              ?>
+            </ul>
+          </li>
+          <li class="nav-item">
+            <a href="#" class="nav-link">
+              <i class="nav-icon fas fa-circle"></i>
+              <p>
+                Temporaire
+                <i class="right fas fa-angle-left"></i>
+              </p>
+            </a>
+            <ul class="nav nav-treeview">
+              <?php
+                $maClasse-> afficherMenuLicence(2);
+              ?>
+            </ul>
+          </li>
             <hr>
             <?php
             }

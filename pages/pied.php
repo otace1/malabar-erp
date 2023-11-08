@@ -25,6 +25,10 @@
 <!-- AdminLTE for demo purposes -->
 <script src="../dist/js/demo.js"></script>
 
+  <!-- Toastr -->
+  <script src="../plugins/toastr/toastr.min.js"></script>
+  <!-- /Toastr -->
+
 
 <script src="../plugins/datatables/jquery.dataTables.min.js"></script>
 <script src="../plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
@@ -80,6 +84,35 @@
       });
 
 
+    }
+
+    function deroulerMenuLicence(id_mod_lic){
+
+      $('#spinner-div').show();
+      $.ajax({
+        type: "POST",
+        url: "ajax.php",
+        data: { id_mod_lic: id_mod_lic, operation: 'deroulerMenuLicence'},
+        dataType:"json",
+        success:function(data){
+          if (data.logout) {
+            alert(data.logout);
+            window.location="../deconnexion.php";
+          }else{
+            $('#menuLicence_'+id_mod_lic).html(data.menuLicence);
+          }
+        },
+        complete: function () {
+            $('#spinner-div').hide();//Request is complete so hide spinner
+        }
+      });
+
+
+    }
+
+    function messageSuccess(message){
+      // toastr.success('Lorem ipsum dolor sit amet, consetetur sadipscing elitr.');
+      toastr.success(message);
     }
 
 </script>
