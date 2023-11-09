@@ -44169,6 +44169,80 @@
 			}$requete-> closeCursor();
 		}
 
+		public function getDossierEnAttenteApurementAjax($id_cli, $id_mod_lic){
+			include('connexion.php');
+
+			$sqlClient = "";
+			if (isset($id_cli) && ($id_cli != '')) {
+				$sqlClient = ' AND id_cli = "'.$id_cli.'"';
+			}
+
+			$entree['id_mod_lic'] = $id_mod_lic;
+
+			$tbl = '';
+			$compteur = 0;
+
+			$requete = $connexion-> prepare("SELECT *,
+													dossier.ref_decl AS ref_decl,
+													DATE_FORMAT(dossier.date_decl, '%d/%m/%Y') AS date_decl,
+													dossier.ref_liq AS ref_liq,
+													DATE_FORMAT(dossier.date_liq, '%d/%m/%Y') AS date_liq,
+													dossier.ref_quit AS ref_quit,
+													DATE_FORMAT(dossier.date_quit, '%d/%m/%Y') AS date_quit,
+													IF(fob_usd > 0,
+														fob_usd,
+														fob
+													) AS fob_usd
+													
+											FROM dossier
+											WHERE id_mod_lic = ?
+												AND id_dos NOT IN (
+													SELECT id_dos 
+														FROM detail_apurement
+													)
+												AND ref_quit IS NOT NULL
+												AND ref_quit <> ''
+												-- AND LENGTH(ref_quit) > 2
+												AND ref_decl IS NOT NULL
+												AND ref_decl <> ''
+												-- AND LENGTH(ref_decl) > 2
+												AND num_lic <> 'N/A'
+												AND num_lic <> 'UNDER VALUE'
+												AND num_lic <> 'UNDERVALUE'
+												AND (id_cli <> 869 AND id_cli <> 929 AND id_cli <> 927 AND id_cli <> 870 AND id_cli <> 902 AND id_cli <> 873 AND id_cli <> 871 AND id_cli <> 872 AND id_cli <> 905)
+												AND id_dos NOT IN (
+													SELECT id_dos 
+														FROM dossier 
+														WHERE ref_dos LIKE '%RF20-%' OR ref_dos LIKE '%AW20-%' OR ref_dos LIKE '%-ACID-%' OR ref_dos LIKE '%-SUL%'
+													)
+												$sqlClient
+											ORDER BY id_dos");
+
+			$requete-> execute(array($entree['id_mod_lic']));
+
+			while($reponse = $requete-> fetch()){
+
+				$compteur++;
+
+				$tbl .= '<tr>
+							<td>'.$compteur.'</td>
+							<td class="text-center">'.$reponse['ref_dos'].'</td>
+							<td class="text-center">'.$reponse['num_lic'].'</td>
+							<td class="text-right">'.number_format($reponse['fob_usd'], 2, ',', ' ').'</td>
+							<td class="text-center">'.$reponse['ref_decl'].'</td>
+							<td class="text-center">'.$reponse['date_decl'].'</td>
+							<td class="text-center">'.$reponse['ref_liq'].'</td>
+							<td class="text-center">'.$reponse['date_liq'].'</td>
+							<td class="text-center">'.$reponse['ref_quit'].'</td>
+							<td class="text-center">'.$reponse['date_quit'].'</td>
+							<td style="text-align: center;"><input class="" type="checkbox" id="check_'.$compteur.'" name="check_'.$compteur.'"></td>
+						</tr>';
+
+			}$requete-> closeCursor();
+
+			return $tbl;
+		}
+
 		public function selectionnerClientPourFactureModeleLicence($id_mod_lic){
 			include('connexion.php');
 
