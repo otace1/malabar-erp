@@ -47,7 +47,7 @@ function afficherDossierEnAttenteApurementExcel($id_cli, $id_mod_lic, $row, $exc
 													AND d.id_dos NOT IN(
 															SELECT id_dos FROM detail_apurement
 														)
-													AND (d.id_cli <> 869 AND d.id_cli <> 929 AND d.id_cli <> 927 AND d.id_cli <> 870 AND d.id_cli <> 902 AND d.id_cli <> 873 AND d.id_cli <> 871 AND d.id_cli <> 872)
+													AND (d.id_cli <> 869 AND d.id_cli <> 929 AND d.id_cli <> 927 AND d.id_cli <> 870 AND d.id_cli <> 902 AND d.id_cli <> 873 AND d.id_cli <> 871 AND d.id_cli <> 872 AND d.id_cli <> 905)
 												ORDER BY d.ref_dos DESC");
 	$requeteDossier-> execute(array($entree['id_mod_lic']));
 	while ($reponseDossier = $requeteDossier-> fetch()) {

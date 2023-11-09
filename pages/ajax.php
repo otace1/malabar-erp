@@ -2386,10 +2386,7 @@
 
 		$response['ref_trans_ap'] = $maClasse-> buildReferenceTransmissionApurementModeleLicence($_POST['id_mod_lic']);
 		
-		$response['dossier_a_apures'] = '';
-		for ($i=1; $i <= 50 ; $i++) { 
-			$response['dossier_a_apures'] .= '<tr><td style=\'text-align: center;\'><?php echo $i;?></td>td><select name=\'id_dos_'.$i.'\' id=\'id_dos_'.$i.'\' onchange=\'xajax_afficherDetailsDossierMutliple(this.value, '.$i.');\' class=\'form-control cc-exp\'><option></option>'.$maClasse->selectionnerDossierEnAttenteApurement($_POST['id_cli'], $_POST['id_mod_lic']).'</select></td><td style=\'text-align: center;\'><span id=\'num_lic'.$i.'\'></span></td>';
-          }
+		$response['dossier_a_apures'] = $maClasse-> getDossierEnAttenteApurementAjax($_POST['id_cli'], $_POST['id_mod_lic']);
 
 		echo json_encode($response);
 
