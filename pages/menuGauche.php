@@ -395,6 +395,7 @@
               </p></span>
             </a>
           </li>
+          <li class="nav-header font-weight-bold font-weight-light">Clearing Invoicing</li>
           <li class="nav-item">
             <a href="pending_report.php" class="nav-link">
               &nbsp;<img src="../images/calculator.png" width="25px">
@@ -410,11 +411,14 @@
             <?php
               $maClasse-> afficherMenuFacturation();
             ?>
+          <li class="nav-header font-weight-bold font-weight-light">Debit Note</li>
+            <?php
+              $maClasse-> afficherMenuFacturationDebitNote();
+            ?>
             <hr>
             <?php
             }
             ?>
-            <hr>
           <?php
           if($_SESSION['id_role'] == '1'){
           ?>

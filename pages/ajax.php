@@ -2390,6 +2390,117 @@
 
 		echo json_encode($response);
 
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='afficherMonitoringNoteDebit'){
+
+		$reponse['nbre_note_debit'] = $maClasse-> getNbreNoteDebit($_POST['id_mod_lic'], NULL, $_POST['debut'], $_POST['fin']);
+		$reponse['nbre_depenses'] = $maClasse-> getNbreDepenseNoteDebit($_POST['id_mod_lic'], NULL, $_POST['debut'], $_POST['fin']);
+		$reponse['btn_info_depense'] = '<span onclick="window.open(\'popUpDashboardDepense.php?statut=Depenses&amp;id_mod_lic='.$_POST['id_mod_lic'].'&amp;debut='.$_POST['debut'].'&amp;fin='.$_POST['fin'].'\',\'pop1\',\'width=900,height=700\');">
+                Details <i class="fas fa-arrow-circle-right"></i>
+              </span>';
+		// $reponse['btn_info_dossiers_factures'] = '<span onclick="window.open(\'popUpDashboardFacturation.php?statut=Dossiers Facturés&amp;id_mod_lic='.$_POST['id_mod_lic'].'&amp;debut='.$_POST['debut'].'&amp;fin='.$_POST['fin'].'\',\'pop1\',\'width=1200,height=700\');">
+        //         Details <i class="fas fa-arrow-circle-right"></i>
+        //       </span>';
+
+  		echo json_encode($reponse);
+
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='upload_depense'){
+      
+      $fichier = $_FILES['fichier']['tmp_name'];
+
+      require('../PHPExcel-1.8/Classes/PHPExcel.php');
+      require_once('../PHPExcel-1.8/Classes/PHPExcel/IOFactory.php');
+
+      $objExcel = PHPExcel_IOFactory::load($fichier);
+
+      foreach ($objExcel->getWorksheetIterator() AS $worsheet) {
+        $highestRow = $worsheet-> getHighestRow();
+        for ($row=2; $row <= $highestRow ; $row++) { 
+          
+
+            $ref_dos = $worsheet-> getCellByColumnAndRow(0, $row)-> getValue();
+            $date_dep = $worsheet-> getCellByColumnAndRow(1, $row)-> getFormattedValue();
+            $montant = $worsheet-> getCellByColumnAndRow(2, $row)-> getValue();
+            $assigned_to = $worsheet-> getCellByColumnAndRow(3, $row)-> getValue();
+
+            $id_dos = $maClasse-> getDossierRefDos($ref_dos)['id_dos'];
+            echo '<br> id_dos  = '.$id_dos;
+            if (isset($id_dos)) {
+              
+              $maClasse-> creerDepenseDossier($_POST['id_dep'], $id_dos, $date_dep, $montant, $assigned_to);
+
+            }
+
+        }
+        $response['message'] = 'Done !';
+      }
+
+
+  		echo json_encode($reponse);
+
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='popUpDepense'){ // On Recupere les data pour rapport facturation Popup
+		$id_mod_lic = NULL;
+		if (isset($_POST['id_mod_lic'])&&($_POST['id_mod_lic']!='')) {
+			$id_mod_lic = $_POST['id_mod_lic'];
+		}
+		$id_util = NULL;
+		if (isset($_POST['id_util'])&&($_POST['id_util']!='')) {
+			$id_util = $_POST['id_util'];
+		}
+		$debut = NULL;
+		if (isset($_POST['debut'])&&($_POST['debut']!='')) {
+			$debut = $_POST['debut'];
+		}
+		$fin = NULL;
+		if (isset($_POST['fin'])&&($_POST['fin']!='')) {
+			$fin = $_POST['fin'];
+		}
+		echo json_encode($maClasse-> getListeDepense($_POST['statut'], $_POST['id_mod_lic'], $id_util, $debut, $fin));
+		
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='client_note_debit'){
+
+		echo json_encode($maClasse-> client_note_debit($_POST['id_mod_lic']));
+
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='kamoa_nd'){
+
+		$response['tableau_kamoa_nd'] = $maClasse-> kamoa_nd($_POST['id_mod_lic'], $_POST['id_cli']);
+
+		echo json_encode($response);
+
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='creer_note_debit'){
+
+		$maClasse-> creerNoteDebit($_POST['ref_note'], $_POST['id_model_nd'], $_POST['id_cli'], $_SESSION['id_util'], $_POST['id_mod_lic'], $_POST['libelle']);
+		for ($i=1; $i <= $_POST['nbre'] ; $i++) { 
+
+			$maClasse-> creerDetailNoteDebit($_POST['ref_note'], $_POST['id_dep_dos_'.$i], $_POST['montant_'.$i], $_POST['tva_'.$i]);
+			
+		}
+
+  		$response = array('message' => 'Invoice Created');
+
+  		echo json_encode($response);
+
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='getAllNoteDebit'){// On recupere les donnees du dossier a facturer 
+
+  		$reponse['invoice_pending_validation'] = $maClasse-> getInvoicePendingValidation($_POST['id_cli'], $_POST['id_mod_lic']);
+  		$reponse['nbre_invoice_pending_validation'] = $maClasse-> getNombreFactureDossierEnAttenteValidation($_POST['id_cli'], $_POST['id_mod_lic']);
+  		$reponse['invoice_waiting_to_send'] = $maClasse-> getInvoiceAwaitingToSend($_POST['id_cli'], $_POST['id_mod_lic']);
+  		$reponse['nbre_invoice_waiting_to_send'] = $maClasse-> getNombreFactureDossierEnAttenteEnvoie($_POST['id_cli'], $_POST['id_mod_lic']);
+  		$reponse['invoice_send'] = $maClasse-> getInvoiceSended($_POST['id_cli'], $_POST['id_mod_lic']);
+  		$reponse['nbre_invoice_send'] = $maClasse-> getNombreFactureDossierEnvoyee($_POST['id_cli'], $_POST['id_mod_lic']);
+  		$reponse['invoice_payed'] = $maClasse-> getInvoicePayed($_POST['id_cli'], $_POST['id_mod_lic']);
+
+  		echo json_encode($reponse);
+
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='getNoteDebitAjax'){ // On Recupere les factures CDN
+
+		echo json_encode($maClasse-> getNoteDebitAjax($_POST['id_cli'], $_POST['id_mod_lic'], $_POST['statut']));
+
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='validerNoteDebit'){ 
+
+		$maClasse-> MAJ_validation_note_debit($_POST['ref_note'], '1');
+		$reponse['msg'] = 'Done!';
+  		echo json_encode($reponse);
+
 	}
 
 ?>
