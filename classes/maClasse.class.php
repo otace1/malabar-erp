@@ -24302,6 +24302,44 @@
 					</select>
 				</td>
 				<?php
+				}else if ($reponse['champ_col'] == 'ir_crf') {
+					
+				?>
+				<td class=" <?php echo $bg;?>" style="border: 1px solid black; text-align: center;">
+					<select style="width: 7em;" name="<?php echo $reponse['champ_col'];?>_<?php echo $compteur;?>" <?php echo $this-> getDataUtilisateur($_SESSION['id_util'])['tracking_enab'];?>>
+					<?php
+					$getDataRow = $this-> getDataRow($reponse['champ_col'], $id_dos);
+					if ( ($getDataRow == 'IR') ) {
+						$clignoteCleared = true;
+						?>
+							<option>IR</option>
+							<option value="CRF">CRF</option>
+							<option value="ARA">ARA</option>
+						<?php
+					}else if ( ($getDataRow == 'CRF') ) {
+						?>
+							<option>CRF</option>
+							<option value="IR">IR</option>
+							<option value="ARA">ARA</option>
+						<?php
+					}else if ( ($getDataRow == 'ARA') ) {
+						?>
+							<option>ARA</option>
+							<option value="IR">IR</option>
+							<option value="CRF">CRF</option>
+						<?php
+					}else{
+						?>
+							<option></option>
+							<option value="IR">IR</option>
+							<option value="CRF">CRF</option>
+							<option value="ARA">ARA</option>
+						<?php
+					}
+					?>
+					</select>
+				</td>
+				<?php
 				}else if ($reponse['id_col'] == '49') {
 					
 				?>
@@ -37563,7 +37601,14 @@
 															DATEDIFF(dispatch_klsa, wiski_dep),
 															'-'
 														)
-													) AS wareh_delay
+													) AS wareh_delay,
+													IF(klsa_arriv IS NOT NULL AND dispatch_deliv IS NOT NULL,
+														DATEDIFF(dispatch_deliv, klsa_arriv),
+														IF(klsa_arriv IS NOT NULL AND dispatch_klsa IS NOT NULL,
+															DATEDIFF(dispatch_klsa, dispatch_deliv),
+															'-'
+														)
+													) AS dispatch_delay
 												FROM dossier
 												WHERE id_dos = ?");
 			$requete-> execute(array($entree['id_dos']));
@@ -48139,6 +48184,25 @@
 			$requete = $connexion-> prepare("UPDATE dossier SET date_crf  = ?
 												WHERE id_dos = ?");
 			$requete-> execute(array($entree['date_crf'], $entree['id_dos']));
+
+		}  
+
+		public function MAJ_ir_crf($id_dos, $ir_crf){
+			
+			//Log
+			if ($this-> getDossier($id_dos)['ir_crf'] != $ir_crf) {
+				
+				$colonne = $this-> getNomColonneClient('ir_crf', $_GET['id_cli'], $_GET['id_mod_trans'], $_GET['id_mod_trac']);
+				$this-> creerLogDossier($colonne, $ir_crf, $id_dos, $_SESSION['id_util']);
+
+			}
+
+			include('connexion.php');
+			$entree['id_dos'] = $id_dos;
+			$entree['ir_crf'] = $ir_crf;
+			$requete = $connexion-> prepare("UPDATE dossier SET ir_crf  = ?
+												WHERE id_dos = ?");
+			$requete-> execute(array($entree['ir_crf'], $entree['id_dos']));
 
 		}  
 
