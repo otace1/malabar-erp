@@ -100,14 +100,14 @@
             <table class=" table table-dark table-sm small ">
               <thead>
                 <tr>
-                  <th>Wareh. Arriv.</th>
-                  <th>Wareh. Depart.</th>
+                  <th>Arrival Date</th>
+                  <th>Dispatch Date</th>
                   <th>Delai</th>
                 </tr>
                 <tr>
-                  <td class="text-center"><span id="wareh_arriv"></span></td>
-                  <td class="text-center"><span id="wareh_dep"></span></td>
-                  <td class="text-center"><span id="wareh_delay"></span><input type="hidden" id="wareh_delay_input"></td>
+                  <td class="text-center"><span id="klsa_arriv"></span></td>
+                  <td class="text-center"><span id="dispatch_deliv"></span></td>
+                  <td class="text-center"><span id="dispatch_delay"></span><input type="hidden" id="dispatch_delay_input"></td>
                 </tr>
               </thead>
             </table>
@@ -527,10 +527,10 @@
           $('#montant_liq').val(Math.round((data.montant_liq*1000))/1000);
           calculCIF();
 
-          $('#wareh_arriv').html(data.wareh_arriv);
-          $('#wareh_dep').html(data.wareh_dep);
-          $('#wareh_delay').html(data.wareh_delay);
-          $('#wareh_delay_input').val(data.wareh_delay);
+          $('#klsa_arriv').html(data.klsa_arriv);
+          $('#dispatch_deliv').html(data.dispatch_deliv);
+          $('#dispatch_delay').html(data.dispatch_delay);
+          $('#dispatch_delay_input').val(data.dispatch_delay);
           //Items ------------
           $('#debours').html(data.debours);
           calculTresco();
@@ -1528,11 +1528,11 @@
 
   function calculTresco(){
 
-    console.log(parseFloat($('#wareh_delay_input').val()));
+    console.log(parseFloat($('#dispatch_delay_input').val()));
 
-    if (parseFloat($('#wareh_delay_input').val()) > 7 ) {
+    if (parseFloat($('#dispatch_delay_input').val()) > 7 ) {
 
-      wareh_delay = parseFloat($('#wareh_delay_input').val());
+      dispatch_delay = parseFloat($('#dispatch_delay_input').val());
 
       if (parseFloat($('#poids').val()) > 0 ) {
         poids = parseFloat($('#poids').val());
@@ -1540,7 +1540,7 @@
         poids=0;
       }
 
-      tresco = ((wareh_delay-7)*0.003*poids)+((poids*0.5)+15);
+      tresco = ((dispatch_delay-7)*0.003*poids)+((poids*0.5)+15);
 
     }else{
 

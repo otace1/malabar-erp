@@ -232,6 +232,10 @@ for ($i=1; $i <= 15 ; $i++) {
         $maClasse-> MAJ_date_crf($_POST['id_dos_'.$i], $_POST['date_crf_'.$i]);
       }
 
+      if (isset($_POST['ir_crf_'.$i]) && ($_POST['ir_crf_'.$i] != '')) {
+        $maClasse-> MAJ_ir_crf($_POST['id_dos_'.$i], $_POST['ir_crf_'.$i]);
+      }
+
       if (isset($_POST['date_ad_'.$i]) && ($_POST['date_ad_'.$i] != '')) {
         $maClasse-> MAJ_date_ad($_POST['id_dos_'.$i], $_POST['date_ad_'.$i]);
       }
