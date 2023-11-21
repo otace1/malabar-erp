@@ -1,5 +1,5 @@
 <?php
-  include("tetePopCDN.php");
+  include("tete.php");
   include("menuHaut.php");
   include("menuGauche.php");
   //include("licenceExcel.php");
@@ -23,13 +23,13 @@
     $client = '';
   }
 
-  /*if( isset($_POST['appurement']) ){
+  if( isset($_POST['appurement']) ){
     ?>
     <script type="text/javascript">
       window.open('appurement.php?num_lic=<?php echo $_POST['num_lic']; ?>','pop1','width=800,height=800');
     </script>
     <?php
-  }*/
+  }
 
   if (isset($_POST['modifierTransmissionApurement'])) {
     
@@ -90,12 +90,11 @@
 
     $id_trans_ap = $maClasse-> verifierTransmissionApurement($_POST['ref_trans_ap'], $_POST['date_trans_ap'], $_POST['banque']);
 
-    for ($i=1; $i <= $_POST['nbre'] ; $i++) { 
+    for ($i=1; $i <= 50 ; $i++) { 
       
       if (isset($_POST['id_dos_'.$i]) && ($_POST['id_dos_'.$i]!='')) {
         
         $maClasse-> creerDetailApurement($id_trans_ap, $_POST['id_dos_'.$i]);
-        // echo $id_trans_ap.' '.$_POST['id_dos_'.$i].'<br>';
 
       }
 
@@ -417,25 +416,173 @@
               ?>
               <!-- /.card-header -->
               <div class="card-body table-responsive p-0">
-                <table id="afficherApurementAjax" cellspacing="0" width="100%" class="table table-bordered table-striped table-sm small text-nowrap">
+                <div class="row">
+                  <div class="col-md-6">
+                    <form method="POST" action="">
+                        <div class="input-group input-group-sm">
+                          <input type="text" name="num_lic" class="form-control float-right" placeholder="Récherche Licence / Dossier">
+
+                          <div class="input-group-append">
+                            <button type="submit" name="rech" class="btn btn-info"><i class="fas fa-search"></i></button>
+                          </div>
+                        </div>
+                    </form>
+                  </div>
+                  <div class="col-md-6">
+                    <form method="POST" action="">
+                        <div class="input-group input-group-sm">
+                          <input type="text" name="num_lic" class="form-control float-right" placeholder="Récherche par Licence">
+
+                          <div class="input-group-append">
+                            <button type="submit" name="rech2" class="btn btn-info"><i class="fas fa-search"></i></button>
+                          </div>
+                        </div>
+                    </form>
+                  </div>
+                </div>
+                </table>
+                <hr>
+                <table class=" table  table-bordered table-hover text-nowrap table-sm">
                   <thead>
-                    <tr>
-                      <th>#</th>
-                      <th>Client</th>
-                      <th>Reference</th>
-                      <th>Date Creation</th>
-                      <th>Date Depot</th>
-                      <th>Banque</th>
-                      <th>Nbre. Licences</th>
-                      <th>Nbre. Dossiers</th>
-                      <th></th>
+                    <tr class="bg bg-dark">
+                      <th style="text-align: center;">#</th>
+                      <th style="text-align: center;">CLIENT</th>
+                      <th style="border: 1px solid white; text-align: center;">N<sup>o</sup></th>
+                      <th style="border: 1px solid white; text-align: center;">DATE</th>
+                      <th style="border: 1px solid white; text-align: center;">BANQUE</th>
+                      <th style="border: 1px solid white; text-align: center;">Nbre. LICENCES</th>
+                      <th style="border: 1px solid white; text-align: center;">Nbre. DOSSIERS</th>
+                      <th style="border: 1px solid white; text-align: center;"></th>
                     </tr>
                   </thead>
                   <tbody>
-                   
+                    <?php
+                      if( isset($_GET['id_cli']) && isset($_GET['id_type_lic']) ){
+                        //$_GET['id_cli'] = null;
+
+
+                        if (isset($_POST['rech'])) {
+
+                          $maClasse-> afficherApurementLicenceDossier($_GET['id_cli'], $_GET['id_mod_lic'], $_POST['num_lic']);
+
+                        }
+
+                        /*if(isset($_POST['rech'])){
+                          $maClasse-> afficherLicenceRecherche($_GET['id_mod_lic'], $_GET['id_cli'], 
+                                                      $_GET['id_type_lic'], $_POST['num_lic']);
+                        }*/
+
+                        $nombre_dossier_par_page = 15;
+                        $debut_affichage_pagination = 1;
+
+                        $nombre_total_dossier = $maClasse-> getNombreDocumentApurement($_GET['id_cli'], $_GET['id_mod_lic']);
+
+                        $nombre_de_pages = ceil($nombre_total_dossier/$nombre_dossier_par_page);
+
+                        if(isset($_GET['page'])) // Si la variable $_GET['page'] existe...
+                        {
+                           $page_actuelle=intval($_GET['page']);
+
+                           if($page_actuelle>$nombre_de_pages) // Si la valeur de $page_actuelle (le numéro de la page) est plus grande que $nombreDePages...
+                           {
+                              $page_actuelle = $nombre_de_pages ;
+                           }
+
+                        }
+                        else
+                        {
+                           $page_actuelle=1; // La page actuelle est la n°1
+                        }
+                        $premiere_entree=($page_actuelle-1)*$nombre_dossier_par_page; // On calcul la première entrée à lire
+                        
+                        $maClasse-> afficherApurement($_GET['id_cli'], $_GET['id_mod_lic'], $premiere_entree, $nombre_dossier_par_page);
+                        
+                      }else{
+                        $page_actuelle = 1;
+                        $nombre_dossier_par_page = 15;
+                        $debut_affichage_pagination = 1;
+                        $nombre_total_dossier = 1;
+                        $nombre_de_pages = ceil($nombre_total_dossier/$nombre_dossier_par_page);
+
+                      }
+                      
+                    ?>
                   </tbody>
                 </table>
               </div>
+              <ul class="pagination pull-right card-tools">
+                  <?php
+                  if ($page_actuelle > 1)
+                  {
+                  ?>
+                    <li class="page-item">
+                      <a class="page-link" href="apurementLicence.php?id_cli=<?php echo $_GET['id_cli'];?>&id_mod_lic=<?php echo $_GET['id_mod_lic'];?>&id_type_lic=<?php echo $_GET['id_type_lic'];?>&page=<?php echo $page_actuelle - 1; ?>">Page pr&eacute;c&eacute;dente</a>
+                    </li>
+                  <?php
+                  }
+
+                  //Début calcul affichage boucle de pagination
+                  if($page_actuelle <= 1)
+                  {
+                    $debut_affichage_pagination = 1;
+                  }
+                  else if($page_actuelle == 2)
+                  {
+                    $debut_affichage_pagination = $page_actuelle - 1;
+                  }
+                  else if($page_actuelle == 3)
+                  {
+                    $debut_affichage_pagination = $page_actuelle - 2;
+                  }
+                  else
+                  {
+                    $debut_affichage_pagination = $page_actuelle - 3;
+                  }
+                  //Fin calcul affichage boucle de pagination
+
+                  if(($page_actuelle+6) <= $nombre_de_pages)
+                  {
+                    $pagination_limite = $page_actuelle+6;
+                  }
+                  else
+                  {
+                    $pagination_limite = $nombre_de_pages;
+                  }
+
+                  for($i=$debut_affichage_pagination; $i<=$pagination_limite; $i++)
+                  {
+
+                   //On va faire notre condition
+                   if($i==$page_actuelle) //Si il s'agit de la page actuelle...
+                   {
+                  ?>
+                    <li class="page-item" class="active">
+                      <a class="page-link" ><?php echo $i; ?></a>
+                    </li>
+                  <?php
+                   }
+                   else
+                   {
+                  ?>
+                    <li class="page-item">
+                      <a class="page-link" href="apurementLicence.php?id_cli=<?php echo $_GET['id_cli'];?>&id_mod_lic=<?php echo $_GET['id_mod_lic'];?>&id_type_lic=<?php echo $_GET['id_type_lic'];?>&page=<?php echo $i; ?>"><?php echo $i; ?></a>
+                    </li>
+
+                  <?php
+                   }
+                  }
+
+                  if ($page_actuelle < $nombre_de_pages)
+                  {
+                  ?>
+                    <li class="page-item">
+                      <a class="page-link" href="apurementLicence.php?id_cli=<?php echo $_GET['id_cli'];?>&id_mod_lic=<?php echo $_GET['id_mod_lic'];?>&id_type_lic=<?php echo $_GET['id_type_lic'];?>&page=<?php echo $page_actuelle + 1; ?>">Page suivante</a>
+                    </li>
+                  <?php
+                  }
+
+                  ?>
+            </ul>
               <!-- /.card-body -->
             </div>
             <!-- /.card -->
@@ -511,7 +658,7 @@ if(isset($_GET['id_mod_lic']) && isset($_GET['id_mod_lic'])){
 ?>
 
 <?php
-/*if(isset($_GET['id_mod_lic']) && isset($_GET['id_mod_lic'])){
+if(isset($_GET['id_mod_lic']) && isset($_GET['id_mod_lic'])){
 
   $modele = $maClasse-> getElementModeleLicence($_GET['id_mod_lic']);
   //$marchandise = $maClasse-> getElementMarchandise($_GET['id_march']);
@@ -625,360 +772,5 @@ if(isset($_GET['id_mod_lic']) && isset($_GET['id_mod_lic'])){
 </div>
 
 <?php
-}*/
+}
 ?>
-
-<div class="modal fade creerTransmisionApurement" id="modal-default">
-  <div class="modal-dialog modal-xl">
-    <form id="demo-form2" method="POST" action="" data-parsley-validate enctype="multipart/form-data">
-    <div class="modal-content">
-      <div class="modal-header ">
-        <h4 class="modal-title"><i class="fa fa-plus"></i> Nouvelle Transmission Apurement <?php echo $modele['sigle_mod_lic'].$client;?>.</h4>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <div class="row">
-
-          <div class="col-md-3">
-            <label for="x_card_code" class="control-label mb-1">Banque</label>
-            <select name="banque" onchange="" class="form-control cc-exp" required>
-              <option></option>
-                <?php
-                  $maClasse->selectionnerNomBanque();
-                ?>
-            </select>
-          </div>
-
-          <div class="col-md-3">
-            <label for="x_card_code" class="control-label mb-1">Reference</label>
-            <input name="ref_trans_ap" type="text" value="<?php echo $maClasse-> buildReferenceTransmissionApurementModeleLicence($_GET['id_mod_lic']);?>" class="form-control cc-exp" required>
-          </div>
-
-          <div class="col-md-3">
-            <label for="x_card_code" class="control-label mb-1">Date</label>
-            <input name="date_trans_ap" type="date" value="" class="form-control cc-exp" required>
-          </div>
-
-          <div class="col-md-3">
-            <label for="x_card_code" class="control-label mb-1">Licence</label>
-            <select onchange="getDossierEnAttenteApurementLicenceAjax(this.value);" class="form-control cc-exp" required>
-              <option></option>
-                <?php
-                  $maClasse->selectionnerLicenceDossierEnAttenteApurement($_GET['id_cli'], $_GET['id_mod_lic']);
-                ?>
-            </select>
-          </div>
-
-          <div class="col-md-12">
-            <hr>
-          </div>
-
-          <div class="col-md-12">
-            <table class="table table-dark table-bordered table-striped table-sm small text-nowrap">
-              <thead>
-                <tr>
-                  <th>#</th>
-                  <th>MCA Ref.</th>
-                  <th>Licence</th>
-                  <th>Montant Decl.</th>
-                  <th>Ref. Decl.</th>
-                  <th>Ref. Liq.</th>
-                  <th>Ref. Quit.</th>
-                </tr>
-              </thead>
-              <tbody id="tableau_dossier">
-                
-              </tbody>
-            </table>
-          </div>
-          
-        </div>
-      </div>
-      <div class="modal-footer justify-content-between">
-        <button type="button" class="btn btn-danger" data-dismiss="modal">Annuler</button>
-        <button type="submit" name="appurement" class="btn btn-primary">Valider</button>
-      </div>
-    </div>
-    </form>
-    <!-- /.modal-content -->
-  </div>
-  <!-- /.modal-dialog -->
-</div>
-<?php
-
-?>
-<div class="modal fade" id="modal_upload_ar_transmit">
-  <div class="modal-dialog modal-lg">
-    <form id="demo-form2" method="POST" action="" data-parsley-validate enctype="multipart/form-data">
-      <input type="hidden" name="id_trans_ap" id="id_trans_ap_ar">
-    <div class="modal-content">
-      <div class="modal-header btn-warning">
-        <h4 class="modal-title"><i class="fa fa-upload"></i>Transmission Apurement <input type="text" id="label_ref_trans_ap_ar" disabled="disabled" style="color: white; background-color: black; text-align: center;" class="cc-exp"></h4>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <div class="row">
-
-          <div class="col-md-12">
-            <label for="x_card_code" class="control-label mb-1">ACCUSEE DE RECEPTION</label>
-            <input type="file" name="fichier_trans_ap" class="form-control cc-exp">
-          </div>
-
-        </div>
-      </div>
-      <div class="modal-footer justify-content-between">
-        <button type="button" class="btn btn-danger" data-dismiss="modal">Annuler</button>
-        <button type="submit" name="modifierTransmissionApurement" class="btn btn-primary">Valider</button>
-      </div>
-    </div>
-    </form>
-    <!-- /.modal-content -->
-  </div>
-  <!-- /.modal-dialog -->
-</div>
-
-<div class="modal fade" id="modal_edit_transmit">
-  <div class="modal-dialog modal-md">
-    <form id="form_edit_transmit" method="POST" action="" data-parsley-validate enctype="multipart/form-data">
-      <input type="hidden" name="id_trans_ap" id="id_trans_ap_edit">
-      <input type="hidden" name="operation" value="edit_transmit">
-    <div class="modal-content">
-      <div class="modal-header btn-warning">
-        <h4 class="modal-title"><i class="fa fa-edit"></i> Edit <input type="text" id="label_ref_trans_ap_edit" disabled="disabled" style="color: white; background-color: black; text-align: center;" class="cc-exp"></h4>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <div class="form-group">
-          <label for="x_card_code" class="control-label mb-1">Reference</label>
-          <input type="text" name="ref_trans_ap" id="ref_trans_ap_edit" class="form-control cc-exp form-control-sm">
-        </div>
-        <div class="form-group">
-          <label for="x_card_code" class="control-label mb-1">Date Depot</label>
-          <input type="date" name="date_depot" id="date_depot" class="form-control cc-exp form-control-sm">
-        </div>
-      </div>
-      <div class="modal-footer justify-content-between">
-        <button type="button" class="btn btn-danger" data-dismiss="modal">Annuler</button>
-        <button type="submit" class="btn btn-primary">Valider</button>
-      </div>
-    </div>
-    </form>
-    <!-- /.modal-content -->
-  </div>
-  <!-- /.modal-dialog -->
-</div>
-
-<script type="text/javascript">
-
-  $(document).ready(function(){
-
-    $('#form_edit_transmit').submit(function(e){
-
-      e.preventDefault();
-      
-      if(confirm('Do really you want to submit ?')) {
-
-        var fd = new FormData(this);
-        $('#spinner-div').show();
-        $('#modal_nouvelle_licence_import').modal('hide');
-
-
-        $.ajax({
-          type: 'post',
-          url: 'ajax.php',
-          processData: false,
-          contentType: false,
-          data: fd,
-          dataType: 'json',
-          success:function(data){
-            if (data.logout) {
-              alert(data.logout);
-              window.location="../deconnexion.php";
-            }else if(data.message){
-              $( '#form_edit_transmit' ).each(function(){
-                  this.reset();
-              });
-              $('#afficherApurementAjax').DataTable().ajax.reload();
-              $('#spinner-div').hide();//Request is complete so hide spinner
-              $('#modal_edit_transmit').modal('hide');
-              // alert(data.message);
-            }
-          },
-          complete: function () {
-              $('#spinner-div').hide();//Request is complete so hide spinner
-          }
-        });
-
-      }
-
-
-    });
-    
-  });
-
-  function modal_edit_transmit(id_trans_ap) {
-    
-    $('#spinner-div').show();
-    $.ajax({
-      type: "POST",
-      url: "ajax.php",
-      data: {id_trans_ap: id_trans_ap, operation: 'getTransmissionApurement'},
-      dataType:"json",
-      success:function(data){
-        if (data.logout) {
-          alert(data.logout);
-          window.location="../deconnexion.php";
-        }else{
-          $('#label_ref_trans_ap_edit').val(data.ref_trans_ap);
-          $('#id_trans_ap_edit').val(data.id_trans_ap);
-          $('#ref_trans_ap_edit').val(data.ref_trans_ap);
-          $('#date_depot').val(data.date_depot);
-          $('#modal_edit_transmit').modal('show');
-        }
-      },
-      complete: function () {
-          $('#spinner-div').hide();//Request is complete so hide spinner
-      }
-    });
-
-  }
-
-  function modal_upload_ar_transmit(id_trans_ap) {
-    
-    $('#spinner-div').show();
-    $.ajax({
-      type: "POST",
-      url: "ajax.php",
-      data: {id_trans_ap: id_trans_ap, operation: 'getTransmissionApurement'},
-      dataType:"json",
-      success:function(data){
-        if (data.logout) {
-          alert(data.logout);
-          window.location="../deconnexion.php";
-        }else{
-          $('#label_ref_trans_ap_ar').val(data.ref_trans_ap);
-          $('#id_trans_ap_ar').val(data.id_trans_ap);
-          $('#modal_upload_ar_transmit').modal('show');
-        }
-      },
-      complete: function () {
-          $('#spinner-div').hide();//Request is complete so hide spinner
-      }
-    });
-
-  }
-  $('#afficherApurementAjax').DataTable({
-     lengthMenu: [
-        [10, 20, 30, 50, 100, 500, -1],
-        [10, 20, 30, 50, 100, 500, 'All'],
-    ],
-    dom: 'Bfrtip',
-        // fixedColumns: {
-        //   left: 3
-        // },
-  buttons: [
-      {
-        extend: 'excel',
-        text: '<i class="fa fa-file-excel"></i>',
-        className: 'btn btn-success'
-      },
-      {
-        extend: 'pageLength',
-        text: '<i class="fa fa-list"></i>',
-        className: 'btn btn-dark'
-      }
-      // ,
-      // {
-      //   text: '<i class="fa fa-check"></i>',
-      //   className: 'btn btn-info bt',
-      //   action: function ( e, dt, node, config ) {
-      //       modal_edit_dossier();
-      //   }
-      // }
-  ],
-  
-      "paging": true,
-      "lengthChange": true,
-      "searching": true,
-      "ordering": true,
-      "info": true,
-      "autoWidth": true,
-    "ajax":{
-      "type": "GET",
-      "url":"ajax.php",
-      "method":"post",
-      "dataSrc":{
-          "id_cli": ""
-      },
-      "data": {
-          "id_cli": "<?php echo $_GET['id_cli'];?>",
-          "id_mod_lic": "<?php echo $_GET['id_mod_lic'];?>",
-          "operation": "afficherApurementAjax"
-      }
-    },
-    // rowGroup: {
-    //     dataSrc: "num_lic",
-
-    // },
-    "columns":[
-      {"data":"compteur"},
-      {"data":"nom_cli"},
-      {"data":"ref_trans_ap",
-        className: 'dt-body-center'
-      },
-      {"data":"date_trans_ap",
-        className: 'dt-body-center'
-      },
-      {"data":"date_depot",
-        className: 'dt-body-center'
-      },
-      {"data":"banque",
-        className: 'dt-body-center'
-      },
-      {"data":"nbre_dos",
-        className: 'dt-body-center'
-      },
-      {"data":"nbre_lic",
-        className: 'dt-body-center'
-      },
-      {"data":"btn_action",
-        className: 'dt-body-center'
-      }
-    ],
-      "createdRow": function( row, data, dataIndex ) {
-        if ( data['statut_fichier'] == "0") {
-          $(row).addClass('text text-danger');
-        }
-      }  
-  });
-
-  function getDossierEnAttenteApurementLicenceAjax(num_lic) {
-    
-    $('#spinner-div').show();
-    $.ajax({
-      type: "POST",
-      url: "ajax.php",
-      data: {num_lic: num_lic, operation: 'getDossierEnAttenteApurementLicenceAjax'},
-      dataType:"json",
-      success:function(data){
-        if (data.logout) {
-          alert(data.logout);
-          window.location="../deconnexion.php";
-        }else{
-          $('#tableau_dossier').html(data.tableau_dossier);
-        }
-      },
-      complete: function () {
-          $('#spinner-div').hide();//Request is complete so hide spinner
-      }
-    });
-
-  }
-
-</script>

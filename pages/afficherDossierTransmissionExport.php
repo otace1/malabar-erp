@@ -22,9 +22,12 @@ function afficherDossierLicenceTransmisionApurementExcel($num_lic, $id_trans_ap,
 
 
 	$requeteDossier = $connexion-> prepare("SELECT d.ref_dos AS ref_dos, d.fob AS fob,
-													d.ref_av AS ref_av, d.montant_av AS montant_av,
+													d.ref_crf AS ref_crf, d.montant_av AS montant_av,
 													d.ref_fact AS ref_fact, d.ref_decl AS ref_decl,
 													d.road_manif AS road_manif, 
+													d.ref_assurance AS ref_assurance, 
+													d.type_apurement AS type_apurement, 
+													d.remarque_apurement AS remarque_apurement, 
 													(d.fob+d.fret+d.assurance) AS cif
 												FROM dossier d, detail_apurement da
 												WHERE d.num_lic = ?
@@ -41,11 +44,14 @@ function afficherDossierLicenceTransmisionApurementExcel($num_lic, $id_trans_ap,
 			-> setCellValue('A'.$row, $compteur)
 			-> setCellValue('B'.$row, $reponseDossier['ref_dos'])
 			-> setCellValue('H'.$row, $reponseDossier['fob'])
-			-> setCellValue('I'.$row, $reponseDossier['ref_av'])
-			-> setCellValue('J'.$row, $reponseDossier['montant_av'])
+			-> setCellValue('I'.$row, $reponseDossier['ref_crf'])
+			-> setCellValue('J'.$row, $reponseDossier['fob'])
 			-> setCellValue('K'.$row, $reponseDossier['ref_fact'])
 			-> setCellValue('L'.$row, $reponseDossier['ref_decl'])
-			-> setCellValue('M'.$row, $reponseDossier['road_manif']);
+			-> setCellValue('M'.$row, $reponseDossier['ref_assurance'])
+			-> setCellValue('N'.$row, $reponseDossier['road_manif'])
+			-> setCellValue('O'.$row, $reponseDossier['type_apurement'])
+			-> setCellValue('P'.$row, $reponseDossier['remarque_apurement']);
 
 		alignement('A'.$row);
 		alignement('B'.$row);
@@ -54,7 +60,10 @@ function afficherDossierLicenceTransmisionApurementExcel($num_lic, $id_trans_ap,
 		alignement('J'.$row);
 		alignement('K'.$row);
 		alignement('L'.$row);
+		alignement('M'.$row);
 		alignement('N'.$row);
+		alignement('O'.$row);
+		alignement('P'.$row);
 
 		$row++;
 		$compteur++;

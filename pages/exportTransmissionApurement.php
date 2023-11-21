@@ -1,4 +1,3 @@
-
 <?php
 require('../PHPExcel-1.8/Classes/PHPExcel.php');
 require('../classes/maClasse.class.php');
@@ -125,13 +124,16 @@ $indiceSheet = 0;
 			-> setCellValue('H1', 'Lubumbashi, le '.$maClasse-> getTransmissionApurement($_GET['id_trans_ap'])['date_trans_ap']);
 
 		$excel-> getActiveSheet()
-			-> setCellValue('H3', 'charles@malabar-group.com');
+			-> setCellValue('H3', 'cina@malabar-group.com');
 
 		$excel-> getActiveSheet()
 			-> setCellValue('H4', 'Tél.: +243 81 403 0796');
 
 		$excel-> getActiveSheet()
-			-> setCellValue('H5', 'Tél.: +243 81 403 0796');
+			-> setCellValue('H5', 'Licence.depart2@malabar-group.com');
+
+		$excel-> getActiveSheet()
+			-> setCellValue('H6', 'Tel.: +243 81 465 8850');
 
 		//Fusionner les cellules
 		/*$excel-> getActiveSheet()
@@ -151,8 +153,10 @@ $indiceSheet = 0;
 			-> setCellValue('J7', 'MONTANT AV')
 			-> setCellValue('K7', 'REF. FACTURE')
 			-> setCellValue('L7', 'REF. DECLARATION')
-			-> setCellValue('M7', 'BL/LTA')
-			-> setCellValue('N7', 'TYPE PAIEMENT');
+			-> setCellValue('M7', 'REF. ASSURANCE')
+			-> setCellValue('N7', 'BL/LTA')
+			-> setCellValue('O7', 'TYPE PAIEMENT')
+			-> setCellValue('P7', 'REMARQUE');
 
 
 		cellColor('A'.$row, '000000');
@@ -169,6 +173,8 @@ $indiceSheet = 0;
 		cellColor('L'.$row, '000000');
 		cellColor('M'.$row, '000000');
 		cellColor('N'.$row, '000000');
+		cellColor('O'.$row, '000000');
+		cellColor('P'.$row, '000000');
 
 
 		alignement('A'.$row);
@@ -185,6 +191,8 @@ $indiceSheet = 0;
 		alignement('L'.$row);
 		alignement('M'.$row);
 		alignement('N'.$row);
+		alignement('O'.$row);
+		alignement('P'.$row);
 
 		$excel->getActiveSheet()
 			->getStyle('A'.$row)->applyFromArray($styleHeader);
@@ -214,8 +222,12 @@ $indiceSheet = 0;
 			->getStyle('M'.$row)->applyFromArray($styleHeader);
 		$excel->getActiveSheet()
 			->getStyle('N'.$row)->applyFromArray($styleHeader);
+		$excel->getActiveSheet()
+			->getStyle('O'.$row)->applyFromArray($styleHeader);
+		$excel->getActiveSheet()
+			->getStyle('P'.$row)->applyFromArray($styleHeader);
 
-		$excel-> getActiveSheet()-> getStyle('A'.$row.':N'.$row)-> applyFromArray(
+		$excel-> getActiveSheet()-> getStyle('A'.$row.':P'.$row)-> applyFromArray(
 			array(
 				'borders' => array(
 					'allborders' => array(
@@ -319,7 +331,7 @@ $indiceSheet = 0;
 		//----------- FIN Récuperation des LICENCES ------------
 
 		//Bordure des Cellules
-		$excel-> getActiveSheet()-> getStyle('A8:N'.($row-1))-> applyFromArray(
+		$excel-> getActiveSheet()-> getStyle('A8:P'.($row-1))-> applyFromArray(
 			array(
 				'borders' => array(
 					'allborders' => array(

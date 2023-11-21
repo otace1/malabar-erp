@@ -2393,7 +2393,11 @@
 	}elseif(isset($_POST['operation']) && $_POST['operation']=='afficherMonitoringNoteDebit'){
 
 		$reponse['nbre_note_debit'] = $maClasse-> getNbreNoteDebit($_POST['id_mod_lic'], NULL, $_POST['debut'], $_POST['fin']);
+		$reponse['nbre_note_debit_per_file'] = $maClasse-> getNbreNoteDebitFile($_POST['id_mod_lic'], NULL, $_POST['debut'], $_POST['fin']);
 		$reponse['nbre_depenses'] = $maClasse-> getNbreDepenseNoteDebit($_POST['id_mod_lic'], NULL, $_POST['debut'], $_POST['fin']);
+		$reponse['btn_info_note_debit_per_file'] = '<span onclick="window.open(\'popUpDashboardDepense.php?statut=REPORTING - AS PER FILES CLEARED&amp;id_mod_lic='.$_POST['id_mod_lic'].'&amp;debut='.$_POST['debut'].'&amp;fin='.$_POST['fin'].'\',\'pop1\',\'width=900,height=700\');">
+                Details <i class="fas fa-arrow-circle-right"></i>
+              </span>';
 		$reponse['btn_info_depense'] = '<span onclick="window.open(\'popUpDashboardDepense.php?statut=Depenses&amp;id_mod_lic='.$_POST['id_mod_lic'].'&amp;debut='.$_POST['debut'].'&amp;fin='.$_POST['fin'].'\',\'pop1\',\'width=900,height=700\');">
                 Details <i class="fas fa-arrow-circle-right"></i>
               </span>';
@@ -2501,6 +2505,104 @@
 		$reponse['msg'] = 'Done!';
   		echo json_encode($reponse);
 
+	}else if (isset($_POST['operation']) && $_POST['operation']=='creerEBTrackingAjax') {
+	    
+        if(!isset($_POST['num_lic']) || ($_POST['num_lic'] == '')){
+          $_POST['num_lic'] = 'INVOICE '.$_POST['ref_fact'];
+        }
+
+        if (isset($_FILES['fichier_lic']['name'])) {
+
+          $fichier_lic = $_FILES['fichier_lic']['name'];
+          $tmp = $_FILES['fichier_lic']['tmp_name'];
+
+        }else{
+          $fichier_lic = NULL;
+          $tmp = NULL;
+        }
+
+        if (isset($_FILES['fichier_fact']['name'])) {
+
+          $fichier_fact = $_FILES['fichier_fact']['name'];
+          $tmp_fact = $_FILES['fichier_fact']['tmp_name'];
+
+        }else{
+          $fichier_fact = NULL;
+          $tmp_fact = NULL;
+        }
+    
+	    $maClasse-> creerEBTrackingAjax($_POST['num_lic'], $_POST['date_val'], $_POST['poids'], 
+	                                $_POST['unit_mes'], $_POST['id_cli'], $_POST['id_march'], 
+	                                $_POST['date_exp'], $_SESSION['id_util'], $_POST['destination'], 
+	                                $_POST['acheteur'], $_POST['id_mod_trans'], $_POST['id_banq'], 
+	                                $_POST['fob'], $_POST['id_type_lic'], NULL,
+	                            	$fichier_lic, $tmp, $_POST['id_mon']);
+
+
+		$reponse['msg'] = 'Done!';
+  		echo json_encode($reponse);
+	}else if (isset($_POST['operation']) && $_POST['operation']=='getLicence') {
+	    
+		$reponse = $maClasse-> getLicence($_POST['num_lic']);
+		$reponse['date_exp'] = $maClasse-> getLastEpirationLicence2($_POST['num_lic']);
+  		echo json_encode($reponse);
+
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='afficherDossiersPretAEtreApuresAjax'){ 
+
+		echo json_encode($maClasse-> afficherDossiersPretAEtreApuresAjax($_POST['id_mod_lic'], $_POST['id_cli']));
+
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='getDossier'){ 
+
+		$response = $maClasse-> getDossier($_POST['id_dos']);
+
+		echo json_encode($response);
+
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='edit_dossier'){ 
+
+
+      	if (isset($_POST['ref_assurance']) && ($_POST['ref_assurance'] != '')) {
+        	$maClasse-> MAJ_ref_assurance($_POST['id_dos'], $_POST['ref_assurance']);
+      	}
+
+      	if (isset($_POST['type_apurement']) && ($_POST['type_apurement'] != '')) {
+        	$maClasse-> MAJ_type_apurement($_POST['id_dos'], $_POST['type_apurement']);
+      	}
+
+      	if (isset($_POST['remarque_apurement']) && ($_POST['remarque_apurement'] != '')) {
+        	$maClasse-> MAJ_remarque_apurement($_POST['id_dos'], $_POST['remarque_apurement']);
+      	}
+
+
+		$response['message'] = 'Done!';
+
+		echo json_encode($response);
+
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='getDossierEnAttenteApurementLicenceAjax'){ 
+
+		$response['tableau_dossier'] = $maClasse-> getDossierEnAttenteApurementLicenceAjax($_POST['num_lic']);
+
+		echo json_encode($response);
+
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='afficherApurementAjax'){ 
+
+		echo json_encode($maClasse-> afficherApurementAjax($_POST['id_cli'], $_POST['id_mod_lic']));
+
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='getTransmissionApurement'){ 
+
+		$response = $maClasse-> getTransmissionApurement($_POST['id_trans_ap']);
+
+		echo json_encode($response);
+
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='edit_transmit'){ 
+
+		$maClasse-> update_date_depot_transmis($_POST['id_trans_ap'], $_POST['date_depot']);
+		$maClasse-> update_ref_trans_ap($_POST['id_trans_ap'], $_POST['ref_trans_ap']);
+
+		$response['message'] = 'Done!';
+
+		echo json_encode($response);
+
 	}
+
 
 ?>
