@@ -330,6 +330,75 @@
 			}
 		}
 
+		public function creerEBTrackingAjax($num_lic, $date_val, $poids, $unit_mes, $id_cli, 
+										$id_march, $date_exp, $id_util, $destination, 
+										$acheteur, $id_mod_trans, $id_banq, $fob, $id_type_lic, $ref_fact=NULL, $fichier_lic=NULL, $tmp=NULL, $id_mon){
+			include('connexion.php');
+
+			$entree['num_lic'] = $num_lic;
+			$entree['date_val'] = $date_val;
+			$entree['poids'] = $poids;
+			$entree['unit_mes'] = $unit_mes;
+			$entree['id_cli'] = $id_cli;
+			$entree['id_march'] = $id_march;
+			$entree['id_util'] = $id_util;
+			$entree['destination'] = $destination;
+			$entree['acheteur'] = $acheteur;
+			$entree['id_mod_trans'] = $id_mod_trans;
+			$entree['id_banq'] = $id_banq;
+			$entree['ref_fact'] = $ref_fact;
+			$entree['fichier_lic'] = $fichier_lic;
+			$entree['fob'] = $fob;
+			// $entree['id_unit_mes'] = $id_unit_mes;
+			$entree['id_type_lic'] = $id_type_lic;
+			$entree['id_mon'] = $id_mon;
+
+			// echo "<br> num_lic = $num_lic";
+			// echo "<br> date_val = $date_val";
+			// echo "<br> poids = $poids";
+			// echo "<br> unit_mes = $unit_mes";
+			// echo "<br> id_cli = $id_cli";
+			// echo "<br> id_march = $id_march";
+			// echo "<br> id_util = $id_util";
+			// echo "<br> destination = $destination";
+			// echo "<br> acheteur = $acheteur";
+			// echo "<br> id_mod_trans = $id_mod_trans";
+			// echo "<br> id_banq = $id_banq";
+			// echo "<br> ref_fact = $ref_fact";
+			// echo "<br> fichier_lic = $fichier_lic";
+			// echo "<br> fob = $fob";
+			// echo "<br> id_type_lic = $id_type_lic";
+			// echo "<br> id_mon = $id_mon";
+
+			$requete = $connexion-> prepare("INSERT INTO licence(num_lic, date_val, tonnage, 
+																poids, unit_mes, id_cli, id_march, 
+																id_mod_lic, id_util,
+																destination, acheteur, id_mod_trans, 
+																ref_fact, fichier_lic, id_banq,
+																fob, id_type_lic, id_mon) 
+													VALUES(?, ?, '1', ?, ?, ?, ?, '1', ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+			$requete-> execute(array($entree['num_lic'], $entree['date_val'], $entree['poids'], 
+								$entree['unit_mes'], $entree['id_cli'], $entree['id_march'], $entree['id_util'], 
+								$entree['destination'], $entree['acheteur'], $entree['id_mod_trans'], 
+								$entree['ref_fact'], $entree['fichier_lic'], $entree['id_banq'], 
+								$entree['fob'], $entree['id_type_lic'], $entree['id_mon']));
+
+			if ($date_exp != null) {
+				$this-> creerDateExpirationLicence($num_lic, $date_exp);
+			}
+			
+			if ($tmp != null) {
+				$dossier = '../dossiers/'.$num_lic;
+
+				if(!is_dir($dossier)){
+					mkdir("../dossiers/$num_lic", 0777);
+				}
+
+				move_uploaded_file($tmp, '../dossiers/'.$num_lic.'/' . basename($fichier_lic));
+				//cmove_uploaded_file($tmp_fact, '../dossiers/'.$num_lic.'/' . basename($fichier_fact));
+			}
+		}
+
 		public function creerLicenceIBUpload($client, $fournisseur, $commodity, $po, $facture, 
 										$num_licence, $monnaie, $fob, $fret, 
 										$assurance, $autre_frais, $fsi, $aur, 
@@ -9962,7 +10031,7 @@
 				$total_tva = $reponse['tva_usd'];
 				$total_gen = $reponse['ttc_usd'];
 
-			if($reponse['id_cli']!='946'){
+			if($reponse['id_cli']!='946' && $reponse['id_cli']!='904'){
 				$tbl .= '<tr>
 						<td style="text-align: left; font-weight: bold; border-left: 1px solid black; border-right: 0.5px solid black; border-top: 0.5px solid black;" colspan="2" width="49%"></td>
 						<td style="text-align: center; border-right: 0.5px solid black; border-top: 0.5px solid black;" colspan="2" width="5.5%"></td>
@@ -10033,19 +10102,6 @@
 						<td width="100%"></td>
 					</tr>
 					<tr>
-						<td style="text-align: left; font-size: 8px;" width="49%"></td>
-						<td style="text-align: center;" colspan="2" width="5.5%"></td>
-						<td style="text-align: right; font-size: 8px;" width="11%"></td>
-						<td style="text-align: right; font-size: 8px;" width="11.5%"></td>
-						<td style="text-align: right; border: 1px solid black; font-size: 8px; font-weight: bold;" width="23%">CDF &nbsp;&nbsp;'
-							// .number_format($total_gen*$reponse['roe_decl'], 2, ',', '.').
-							.number_format(($total_gen-$reponse['arsp'])*$this-> getTauxFacture($entree['ref_fact'])['roe_decl'], 2, ',', '.').
-						'&nbsp;&nbsp;</td>
-					</tr>
-					<tr>
-						<td width="100%"></td>
-					</tr>
-					<tr>
 						<td style="text-align: right; border: 0.5px solid black; font-size: 8px;" width="66%">ARSP Tax (1.2%  on the Agency Fees without TVA )&nbsp;&nbsp;
 						</td>
 						<td style="text-align: right; border: 0.5px solid black;" width="11%">'
@@ -10065,6 +10121,20 @@
 						<td style="text-align: right; border: 0.5px solid black; font-weight: bold;  background-color: rgb(220,220,220);" width="11.5%">'
 							.number_format($total_gen-$reponse['arsp'], 2, ',', '.').
 						'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+					</tr>
+					<tr>
+						<td width="100%"></td>
+					</tr>
+					<tr>
+						<td style="text-align: left; font-size: 8px;" width="49%"></td>
+						<td style="text-align: center;" colspan="2" width="5.5%"></td>
+						<td style="text-align: right; font-size: 8px;" width="11%"></td>
+						<td style="text-align: right; font-size: 8px;" width="11.5%"></td>
+						<td style="text-align: right; border: 1px solid black; font-size: 8px; font-weight: bold;" width="23%">CDF &nbsp;&nbsp;'
+							// .number_format($total_gen*$reponse['roe_decl'], 2, ',', '.').
+							// .number_format(($total_gen-$reponse['arsp'])*$this-> getTauxFacture($entree['ref_fact'])['roe_decl'], 2, ',', '.').
+							.number_format(($total_gen-$reponse['arsp'])*$this-> getTauxFacture($entree['ref_fact'])['roe_decl'], 2, ',', '.').
+						'&nbsp;&nbsp;</td>
 					</tr>
 					';
 
@@ -25906,6 +25976,73 @@
 			}$requete-> closeCursor();
 		}
 
+		public function afficherApurementAjax($id_cli, $id_mod_lic){
+			include("connexion.php");
+			$entree['id_cli'] = $id_cli;
+			$entree['id_mod_lic'] = $id_mod_lic;
+			$compteur=0;
+
+			if (isset($id_cli) && ($id_cli!='')) {
+				$sqlClient = ' AND d.id_cli = "'.$id_cli.'"';
+			}else{
+				$sqlClient = '';
+			}
+
+			$row = array();
+
+			$requete = $connexion-> prepare("SELECT tr.id_trans_ap AS id_trans_ap, 
+													cl.nom_cli AS nom_cli,
+													tr.ref_trans_ap AS ref_trans_ap,
+													tr.id_trans_ap AS id_trans_ap,
+													DATE_FORMAT(tr.date_trans_ap, '%d/%m/%Y') AS date_trans_ap,
+													DATE_FORMAT(tr.date_depot, '%d/%m/%Y') AS date_depot,
+													tr.banque AS banque,
+													tr.fichier_trans_ap AS fichier_trans_ap,
+													IF(tr.fichier_trans_ap IS NULL,
+														'0',
+														'1'
+													) AS statut_fichier,
+													COUNT(d.id_dos) AS nbre_dos,
+													COUNT(DISTINCT(d.num_lic)) AS nbre_lic,
+													CONCAT(
+														IF(tr.fichier_trans_ap IS NOT NULL,
+															CONCAT('<button class=\"btn btn-xs btn-dark\" title=\"Edit Transmit\" onclick=\"window.open(\'../transmision_apurements/',tr.id_trans_ap,'/',tr.fichier_trans_ap,'\',\'pop1\',\'width=1900,height=900\')\">
+																<i class=\"fa fa-file\"></i> Accusée de réception
+															</button>'),
+															''
+														),
+
+														' <button class=\"btn btn-xs btn-success\" title=\"Edit Transmit\" onclick=\"window.location.replace(\'exportTransmissionApurement.php?id_cli=',cl.id_cli,'&id_trans_ap=',tr.id_trans_ap,'\',\'pop1\',\'width=80,height=80\');\">
+																<i class=\"fa fa-file-excel\"></i>
+															</button>
+															<button class=\"btn btn-xs bg-purple\" title=\"Upload accusée de réception\" onclick=\"modal_upload_ar_transmit(\'',tr.id_trans_ap,'\');\">
+																<i class=\"fa fa-upload\"></i>
+															</button>
+															<button class=\"btn btn-xs btn-warning\" title=\"Edit Transmit\" onclick=\"modal_edit_transmit(\'',tr.id_trans_ap,'\');\">
+																<i class=\"fa fa-edit\"></i>
+															</button>'
+													) AS btn_action
+												FROM client cl, transmission_apurement tr, detail_apurement dt, dossier d
+												WHERE cl.id_cli = d.id_cli
+													$sqlClient
+													AND d.id_mod_lic = ?
+													AND d.id_dos = dt.id_dos
+													AND dt.id_trans_ap = tr.id_trans_ap
+												GROUP BY tr.id_trans_ap
+												ORDER BY tr.id_trans_ap DESC");
+			$requete-> execute(array($entree['id_mod_lic']));
+			while ($reponse = $requete-> fetch()) {
+
+				$compteur++;
+				// include('modalEditTransmissionApurement.php');
+				$reponse['compteur'] = $compteur;
+				$row[] = $reponse;
+
+			}$requete-> closeCursor();
+
+			return $row;
+		}
+
 		public function afficherIrSansAv($id_cli, $premiere_entree, $nombre_dossier_par_page){
 			include("connexion.php");
 			$entree['id_cli'] = $id_cli;
@@ -27546,6 +27683,101 @@
 			}$requete-> closeCursor();
 		}
 
+		public function afficherDossiersPretAEtreApuresAjax($id_mod_lic, $id_cli){
+			include("connexion.php");
+			$entree['id_mod_lic'] = $id_mod_lic;
+
+			if (isset($id_cli) && ($id_cli!='')) {
+				$sqlClient = ' AND d.id_cli = "'.$id_cli.'"';
+			}else{
+				$sqlClient = '';
+			}
+
+			$compteur=0;
+			$row = array();
+
+			$requete = $connexion-> prepare("SELECT d.ref_dos AS ref_dos, d.num_lic AS num_lic, 
+													d.ref_fact,
+													d.fob AS fob, d.ref_av AS ref_av, d.montant_av AS montant_av,
+													d.ref_fact AS ref_fact, d.ref_decl AS ref_decl,
+													d.road_manif AS road_manif,
+													d.fob AS fob,
+													d.fret AS fret,
+													d.assurance AS assurance,
+													d.autre_frais AS autre_frais,
+													(
+														IF(d.fob > 0, d.fob, 0)+
+														IF(d.fret > 0, d.fret, 0)+
+														IF(d.autre_frais > 0, d.autre_frais, 0)+
+														IF(d.assurance > 0, d.assurance, 0)
+													) AS cif,
+													DATE_FORMAT(d.date_decl, '%d/%m/%Y') AS date_decl,
+													DATE_FORMAT(d.date_liq, '%d/%m/%Y') AS date_liq,
+													DATE_FORMAT(d.date_quit, '%d/%m/%Y') AS date_quit,
+													DATE_FORMAT(l.date_val, '%d/%m/%Y') AS date_val,
+													d.ref_decl AS ref_decl,
+													d.ref_liq AS ref_liq,
+													d.ref_quit AS ref_quit,
+													l.fob AS fob_lic,
+													(
+														IF(l.fob > 0, l.fob, 0)+
+														IF(l.fret > 0, l.fret, 0)+
+														IF(l.autre_frais > 0, l.autre_frais, 0)+
+														IF(l.assurance > 0, l.assurance, 0)
+													) AS cif_lic,
+													mon.sig_mon AS sig_mon,
+													d.ref_crf AS ref_crf,
+													d.fob AS fob,
+													d.ref_fact AS ref_fact,
+													IF(d.road_manif IS NOT NULL AND d.road_manif <> 'N/A',
+														d.road_manif,
+														d.horse
+													) AS road_manif,
+													d.ref_assurance AS ref_assurance,
+													d.remarque_apurement AS remarque_apurement,
+													d.type_apurement AS type_apurement,
+													CONCAT('<button class=\"btn btn-xs btn-warning\" title=\"Edit File\" onclick=\"modal_edit_dossier(\'',d.id_dos,'\');\">
+																<i class=\"fa fa-edit\"></i>
+															</button>') AS btn_action
+												FROM dossier d
+													LEFT JOIN licence l
+														ON l.num_lic = d.num_lic
+													LEFT JOIN monnaie mon
+														ON mon.id_mon = l.id_mon
+												WHERE d.id_mod_lic = ?
+													$sqlClient
+													AND d.ref_quit IS NOT NULL
+													AND d.ref_decl IS NOT NULL
+													AND d.ref_decl <> ''
+													AND d.ref_quit <> ''
+													AND d.num_lic <> 'N/A'
+													AND d.num_lic <> 'UNDER VALUE'
+													AND d.num_lic <> 'UNDERVALUE'
+													AND d.num_lic NOT LIKE '%UNDER%'
+													AND d.id_dos NOT IN (
+														SELECT id_dos 
+															FROM dossier 
+															WHERE ref_dos LIKE '%RF20-%' OR ref_dos LIKE '%AW20-%' OR ref_dos LIKE '%-ACID-%' OR ref_dos LIKE '%-SUL%'
+														)
+													AND d.id_dos NOT IN(
+														SELECT id_dos FROM detail_apurement
+													)
+													AND (d.id_cli <> 869 AND d.id_cli <> 929 AND d.id_cli <> 927 AND d.id_cli <> 870 AND d.id_cli <> 902 AND d.id_cli <> 873 AND d.id_cli <> 871 AND d.id_cli <> 872)
+
+											ORDER BY d.num_lic, d.ref_dos ASC;");
+			$requete-> execute(array($entree['id_mod_lic']));
+			while ($reponse = $requete-> fetch()) {
+
+				$compteur++;
+				$reponse['compteur'] = $compteur;
+				$reponse['date_exp'] = $this-> getDateExpirationLicence($reponse['num_lic']);
+				$row[] = $reponse;
+
+			}$requete-> closeCursor();
+
+			return $row;
+		}
+
 		public function afficherLicence($id_mod_lic, $id_cli, $id_type_lic, $premiere_entree, $nombre_dossier_par_page){
 			include("connexion.php");
 			$entree['id_mod_lic'] = $id_mod_lic;
@@ -27794,7 +28026,9 @@
 												m.id_mon AS id_mon,
 												l.qte_decl AS qte_decl,
 												l.fichier_lic AS fichier_lic,
-												l.cod AS cod,
+												CONCAT(l.cod,' <button class=\"btn btn-xs btn-info\" title=\"Dossiers affectés\" onclick=\"window.open(\'popUpPartielleLicence.php?num_lic=',l.num_lic,'&cod=',l.cod,'\',\'pop1\',\'width=1100,height=900\');\">
+														<i class=\"fa fa-folder-open\"></i>
+													</button>') AS cod,
 												l.consommable AS consommable,
 												IF(l.consommable='1', 'Consommable', 'Divers') AS label_consommable,
 												l.fret AS fret,
@@ -27813,21 +28047,30 @@
 												UPPER(t.nom_type_lic) AS nom_type_lic,
 												-- COUNT(dos.id_dos) AS nbre_dos,
 												SUM(IF(dos.fob IS NOT NULL, dos.fob, 0)) AS fob_dos,
+												SUM(IF(dos.poids IS NOT NULL, dos.poids, 0)) AS poids_dos,
 												(IF(l.fob IS NOT NULL, l.fob, 0)-SUM(IF(dos.fob IS NOT NULL, dos.fob, 0))) AS solde_fob,
 												IF((IF(l.fob IS NOT NULL, l.fob, 0)-SUM(IF(dos.fob IS NOT NULL, dos.fob, 0)))<0,
 													'bg bg-danger', 
 													''
 												) AS class_solde_fob,
+												(IF(l.poids IS NOT NULL, l.poids, 0)-SUM(IF(dos.poids IS NOT NULL, dos.poids, 0))) AS solde_poids,
+												IF((IF(l.poids IS NOT NULL, l.poids, 0)-SUM(IF(dos.poids IS NOT NULL, dos.poids, 0)))<0,
+													'bg bg-danger', 
+													''
+												) AS class_solde_poids,
 												DATE_FORMAT(l.date_fact, '%d/%m/%Y') AS date_fact,
 												l.poids AS poids_lic,
 												l.id_mod_trans AS id_mod_trans,
 												CONCAT(COUNT(dos.id_dos),' <button class=\"btn btn-xs btn-info\" title=\"Dossiers affectés\" onclick=\"window.open(\'popUpDossierLicence.php?num_lic=',l.num_lic,'\',\'pop1\',\'width=1100,height=900\');\">
 														<i class=\"fa fa-folder-open\"></i>
 													</button>') AS nbre_dos,
-												CONCAT(' <button class=\"btn btn-xs btn-info\" title=\"Fichier Licence\" onclick=\"window.open(\'../dossiers/',l.num_lic,'/',l.fichier_lic,'\',\'pop1\',\'width=1100,height=900\');\">
+												CONCAT(' <button class=\"btn btn-xs btn-warning\" title=\"Edit Licence\" onclick=\"modal_edit_licence(\'',l.num_lic,'\');\">
+														<i class=\"fa fa-edit\"></i>
+													</button><button class=\"btn btn-xs btn-info\" title=\"Fichier Licence\" onclick=\"window.open(\'../dossiers/',l.num_lic,'/',l.fichier_lic,'\',\'pop1\',\'width=1100,height=900\');\">
 														<i class=\"fa fa-file\"></i> Fichier Licence
 													</button>') AS fichier,
-												IF(l.consommable='1', 'Consommable', 'Autres/Divers') AS type_lic				
+												IF(l.consommable='1', 'Consommable', 'Autres/Divers') AS type_lic,
+												march.nom_march AS nom_march				
 											-- FROM licence l, monnaie m, client cl, banque b, type_licence t
 											-- WHERE l.id_mod_lic = ?
 											-- 	AND l.id_type_lic = t.id_type_lic
@@ -27848,6 +28091,8 @@
 												LEFT JOIN dossier dos
 													ON l.num_lic = dos.num_lic
 														AND dos.cleared <> '2'
+												LEFT JOIN marchandise march
+													ON l.id_march = march.id_march
 												
 												-- AND YEAR(l.date_val) >= YEAR(CURRENT_DATE())-1
 											WHERE l.id_mod_lic = ?
@@ -27870,6 +28115,7 @@
 				// }
 
 				$reponse['statut'] = '<span class="text-xs badge badge-light">unused</span>';
+				$reponse['statut_1'] = '0';
 				$reponse['date_exp'] = $this-> getLastEpirationLicence2($reponse['num_lic']);
 
 				if( ($reponse['fob'] <= $this-> getSommeFobAppureLicence($reponse['num_lic'])) || (($reponse['fob']-$this-> getSommeFobAppureLicence($reponse['num_lic']))<1) ){
@@ -27887,6 +28133,7 @@
 				}else if($reponse['date_exp'] < $reponse['aujourdhui']){
 
 					$reponse['statut'] = '<span class="text-xs badge badge-danger clignoteb">Expirée</span>';
+					$reponse['statut_1'] = '2';
 
 				}else if( ($this-> getDifferenceDate($reponse['date_exp'], $reponse['aujourdhui']) < 40) && ($this-> getDifferenceDate($reponse['date_exp'], $reponse['aujourdhui']) >= 0) ){
 
@@ -35659,7 +35906,8 @@
 			include('connexion.php');
 			$entree['id_trans_ap'] = $id_trans_ap;
 
-			$requete = $connexion-> prepare("SELECT ref_trans_ap, DATE_FORMAT(date_trans_ap, '%d/%m/%Y') AS date_trans_ap, 
+			$requete = $connexion-> prepare("SELECT ref_trans_ap, id_trans_ap, 
+													DATE_FORMAT(date_trans_ap, '%d/%m/%Y') AS date_trans_ap, 
 													DATE_FORMAT(date_trans_ap, '%d-%m-%Y') AS date_trans_ap2, 
 													UPPER(banque) AS banque,
 													date_depot
@@ -36732,9 +36980,11 @@
 			$entree['num_lic'] = $num_lic;
 
 			$requete = $connexion-> prepare("SELECT COUNT(da.id_dos) AS nbre
-												FROM dossier d, detail_apurement da
+												FROM dossier d, detail_apurement da, transmission_apurement tr
 													WHERE d.num_lic = ?
-														AND d.id_dos = da.id_dos");
+														AND d.id_dos = da.id_dos
+														AND da.id_trans_ap = tr.id_trans_ap
+														AND tr.fichier_trans_ap IS NOT NULL");
 			$requete-> execute(array($entree['num_lic']));
 			$reponse=$requete-> fetch();
 			if($reponse){
@@ -38937,6 +39187,46 @@
 			return $reponse['nbre'];
 		}
 
+		public function getNbreNoteDebitFile($id_mod_lic=NULL, $id_util=NULL, $debut=NULL, $fin=NULL){
+			include('connexion.php');
+			// $entree['id_mod_lic'] = $id_mod_lic;
+
+			$sqlTransit = "";
+			if (isset($id_mod_lic) && ($id_mod_lic != '')) {
+				$sqlTransit = ' AND id_mod_lic = "'.$id_mod_lic.'" ';
+			}
+
+			$sqlClient = "";
+			if (isset($id_cli) && ($id_cli != '')) {
+				$sqlClient = ' AND id_cli = "'.$id_cli.'" ';
+			}
+
+			$sqlUtilisateur = "";
+			if (isset($id_util) && ($id_util != '')) {
+				$sqlUtilisateur = ' AND id_util = "'.$id_util.'" ';
+			}
+
+			$sqlTime = "";
+			if (isset($debut) && ($debut != '') && isset($fin) && ($fin != '')) {
+				$sqlTime = ' AND DATE(date_fact) BETWEEN "'.$debut.'" AND "'.$fin.'"';
+			}
+
+			$compteur = 0;
+
+			$requete = $connexion-> query("SELECT COUNT(dos.id_dos) AS nbre
+												FROM detail_note_debit det, depense_dossier depdos, dossier dos
+												WHERE det.id_dep_dos = depdos.id_dep_dos
+													AND depdos.id_dos = dos.id_dos
+													$sqlTransit
+													$sqlClient
+													$sqlUtilisateur
+													$sqlTime");
+			// $requete-> execute(array($entree['id_mod_lic']));
+			$reponse = $requete-> fetch();
+			
+			return $reponse['nbre'];
+		}
+
 		public function getNbreDepenseNoteDebit($id_mod_lic=NULL, $id_util=NULL, $debut=NULL, $fin=NULL){
 			include('connexion.php');
 			// $entree['id_mod_lic'] = $id_mod_lic;
@@ -39626,6 +39916,53 @@
 													DATE_FORMAT(depdos.date_dep, '%d/%m/%Y') AS date_dep,
 													depdos.montant AS montant,
 													depdos.assigned_to AS assigned_to
+												FROM depense_dossier depdos, dossier dos, client cl, depense dep
+												WHERE depdos.id_dos = dos.id_dos
+													AND dos.id_mod_lic = ?
+													AND dos.id_cli = cl.id_cli
+													AND depdos.id_dep = dep.id_dep
+													AND depdos.id_dep_dos NOT IN (
+															SELECT id_dep_dos 
+															 FROM detail_note_debit 
+														)");
+				$requete-> execute(array($entree['id_mod_lic']));
+				while($reponse = $requete-> fetch()){
+					$compteur++;
+					$reponse['compteur'] = $compteur;
+					$rows[] = $reponse;
+				}$requete-> closeCursor();
+				
+				return $rows;
+
+			}else if($statut=='REPORTING - AS PER FILES CLEARED'){
+
+				$sqlTransit = "";
+				if (isset($id_mod_lic) && ($id_mod_lic != '')) {
+					$sqlTransit = ' AND fd.id_mod_lic = "'.$id_mod_lic.'" ';
+				}
+
+				$sqlUtilisateur = "";
+				if (isset($id_util) && ($id_util != '')) {
+					$sqlUtilisateur = ' AND fd.id_util = "'.$id_util.'" ';
+				}
+
+				$sqlTime = "";
+				if (isset($debut) && ($debut != '') && isset($fin) && ($fin != '')) {
+					$sqlTime = ' AND DATE(fd.date_fact) BETWEEN "'.$debut.'" AND "'.$fin.'"';
+				}
+
+				$requete = $connexion-> prepare("SELECT dos.id_dos AS id_dos,
+													dos.ref_dos AS ref_dos,
+													dos.po_ref AS po_ref,
+													dos.horse AS horse,
+													dos.trailer_1 AS trailer_1,
+													dos.trailer_2 AS trailer_2,
+													dos.road_manif AS road_manif,
+													CONCAT(dos.ref_dos, '(PO : ',dos.po_ref,')') AS debit_note_format,
+													det.montant AS montant,
+													note.ref_note AS ref_note,
+													DATE_FORMAT(note.date_create, '%d/%m/%Y') AS date_note,
+													util.nom_util AS nom_util
 												FROM depense_dossier depdos, dossier dos, client cl, depense dep
 												WHERE depdos.id_dos = dos.id_dos
 													AND dos.id_mod_lic = ?
@@ -44910,6 +45247,122 @@
 			}$requete-> closeCursor();
 		}
 
+		public function selectionnerLicenceDossierEnAttenteApurement($id_cli, $id_mod_lic){
+			include('connexion.php');
+
+			$sqlClient = "";
+			if (isset($id_cli) && ($id_cli != '')) {
+				$sqlClient = ' AND id_cli = "'.$id_cli.'"';
+			}
+
+			$entree['id_mod_lic'] = $id_mod_lic;
+
+			$requete = $connexion-> prepare("SELECT num_lic
+											FROM dossier
+											WHERE id_mod_lic = ?
+												AND id_dos NOT IN (
+													SELECT id_dos 
+														FROM detail_apurement
+													)
+												AND ref_quit IS NOT NULL
+												AND ref_quit <> ''
+												-- AND LENGTH(ref_quit) > 2
+												AND ref_decl IS NOT NULL
+												AND ref_decl <> ''
+												-- AND LENGTH(ref_decl) > 2
+												AND num_lic <> 'N/A'
+												AND num_lic <> 'UNDER VALUE'
+												AND num_lic <> 'UNDERVALUE'
+												AND (id_cli <> 869 AND id_cli <> 929 AND id_cli <> 927 AND id_cli <> 870 AND id_cli <> 902 AND id_cli <> 873 AND id_cli <> 871 AND id_cli <> 872 AND id_cli <> 905)
+												AND id_dos NOT IN (
+													SELECT id_dos 
+														FROM dossier 
+														WHERE ref_dos LIKE '%RF20-%' OR ref_dos LIKE '%AW20-%' OR ref_dos LIKE '%-ACID-%' OR ref_dos LIKE '%-SUL%'
+													)
+												$sqlClient
+											GROUP BY num_lic
+											ORDER BY num_lic");
+
+			$requete-> execute(array($entree['id_mod_lic']));
+
+			while($reponse = $requete-> fetch()){
+
+				?>
+				<option value="<?php echo $reponse['num_lic']; ?>">
+					<?php echo $reponse['num_lic']; ?>
+				</option>
+				<?php
+			}$requete-> closeCursor();
+		}
+
+		public function getDossierEnAttenteApurementLicenceAjax($num_lic){
+			include('connexion.php');
+
+			$entree['num_lic'] = $num_lic;
+
+			$tbl = '';
+			$compteur = 0;
+
+			$requete = $connexion-> prepare("SELECT *,
+													dossier.ref_decl AS ref_decl,
+													DATE_FORMAT(dossier.date_decl, '%d/%m/%Y') AS date_decl,
+													dossier.ref_liq AS ref_liq,
+													DATE_FORMAT(dossier.date_liq, '%d/%m/%Y') AS date_liq,
+													dossier.ref_quit AS ref_quit,
+													DATE_FORMAT(dossier.date_quit, '%d/%m/%Y') AS date_quit,
+													IF(fob_usd > 0,
+														fob_usd,
+														fob
+													) AS fob_usd
+													
+											FROM dossier
+											WHERE num_lic = ?
+												AND id_dos NOT IN (
+													SELECT id_dos 
+														FROM detail_apurement
+													)
+												AND ref_quit IS NOT NULL
+												AND ref_quit <> ''
+												-- AND LENGTH(ref_quit) > 2
+												AND ref_decl IS NOT NULL
+												AND ref_decl <> ''
+												-- AND LENGTH(ref_decl) > 2
+												AND num_lic <> 'N/A'
+												AND num_lic <> 'UNDER VALUE'
+												AND num_lic <> 'UNDERVALUE'
+												AND (id_cli <> 869 AND id_cli <> 929 AND id_cli <> 927 AND id_cli <> 870 AND id_cli <> 902 AND id_cli <> 873 AND id_cli <> 871 AND id_cli <> 872 AND id_cli <> 905)
+												AND id_dos NOT IN (
+													SELECT id_dos 
+														FROM dossier 
+														WHERE ref_dos LIKE '%RF20-%' OR ref_dos LIKE '%AW20-%' OR ref_dos LIKE '%-ACID-%' OR ref_dos LIKE '%-SUL%'
+													)
+											ORDER BY id_dos");
+
+			$requete-> execute(array($entree['num_lic']));
+
+			while($reponse = $requete-> fetch()){
+
+				$compteur++;
+
+				$tbl .= '
+						<input type="hidden" name="id_dos_'.$compteur.'" value="'.$reponse['id_dos'].'">
+						<tr>
+							<td>'.$compteur.'</td>
+							<td class="text-center">'.$reponse['ref_dos'].'</td>
+							<td class="text-center">'.$reponse['num_lic'].'</td>
+							<td class="text-right">'.number_format($reponse['fob_usd'], 2, ',', ' ').'</td>
+							<td class="text-center">'.$reponse['ref_decl'].'</td>
+							<td class="text-center">'.$reponse['ref_liq'].'</td>
+							<td class="text-center">'.$reponse['ref_quit'].'</td>
+						</tr>';
+
+			}$requete-> closeCursor();
+
+			$tbl .='<input type="hidden" name="nbre" value="'.$compteur.'">';
+
+			return $tbl;
+		}
+
 		public function getDossierEnAttenteApurementAjax($id_cli, $id_mod_lic){
 			include('connexion.php');
 
@@ -46382,6 +46835,20 @@
 
 		} 
 
+		public function update_ref_trans_ap($id_trans_ap, $ref_trans_ap){
+
+			include('connexion.php');
+			$entree['id_trans_ap'] = $id_trans_ap;
+			$entree['ref_trans_ap'] = $ref_trans_ap;
+
+			$requete = $connexion-> prepare("UPDATE transmission_apurement SET ref_trans_ap= ?	
+												WHERE id_trans_ap = ?");
+			$requete-> execute(array($entree['ref_trans_ap'], $entree['id_trans_ap']));
+
+
+
+		} 
+
 		public function updateMultipleFiles($debut, $fin, $klsa_arriv, 
 			                                  $crossing_date, $wiski_arriv, $wiski_dep, 
 			                                  $amicong_arriv, $insp_receiv, $ir, 
@@ -47786,6 +48253,63 @@
 			$requete = $connexion-> prepare("UPDATE dossier SET montant_decl = ?
 												WHERE id_dos = ?");
 			$requete-> execute(array($entree['montant_decl'], $entree['id_dos']));
+
+		} 
+
+		public function MAJ_ref_assurance($id_dos, $ref_assurance){
+			
+			//Log
+			if ($this-> getDossier($id_dos)['ref_assurance'] != $ref_assurance) {
+				
+				// $colonne = $this-> getNomColonneClient('ref_assurance', $_GET['id_cli'], $_GET['id_mod_trans'], $_GET['id_mod_trac']);
+				$this-> creerLogDossier('ref_assurance', $ref_assurance, $id_dos, $_SESSION['id_util']);
+
+			}
+
+			include('connexion.php');
+			$entree['id_dos'] = $id_dos;
+			$entree['ref_assurance'] = $ref_assurance;
+			$requete = $connexion-> prepare("UPDATE dossier SET ref_assurance = ?
+												WHERE id_dos = ?");
+			$requete-> execute(array($entree['ref_assurance'], $entree['id_dos']));
+
+		} 
+
+		public function MAJ_type_apurement($id_dos, $type_apurement){
+			
+			//Log
+			if ($this-> getDossier($id_dos)['type_apurement'] != $type_apurement) {
+				
+				// $colonne = $this-> getNomColonneClient('type_apurement', $_GET['id_cli'], $_GET['id_mod_trans'], $_GET['id_mod_trac']);
+				$this-> creerLogDossier('type_apurement', $type_apurement, $id_dos, $_SESSION['id_util']);
+
+			}
+
+			include('connexion.php');
+			$entree['id_dos'] = $id_dos;
+			$entree['type_apurement'] = $type_apurement;
+			$requete = $connexion-> prepare("UPDATE dossier SET type_apurement = ?
+												WHERE id_dos = ?");
+			$requete-> execute(array($entree['type_apurement'], $entree['id_dos']));
+
+		} 
+
+		public function MAJ_remarque_apurement($id_dos, $remarque_apurement){
+			
+			//Log
+			if ($this-> getDossier($id_dos)['remarque_apurement'] != $remarque_apurement) {
+				
+				// $colonne = $this-> getNomColonneClient('remarque_apurement', $_GET['id_cli'], $_GET['id_mod_trans'], $_GET['id_mod_trac']);
+				$this-> creerLogDossier('remarque_apurement', $remarque_apurement, $id_dos, $_SESSION['id_util']);
+
+			}
+
+			include('connexion.php');
+			$entree['id_dos'] = $id_dos;
+			$entree['remarque_apurement'] = $remarque_apurement;
+			$requete = $connexion-> prepare("UPDATE dossier SET remarque_apurement = ?
+												WHERE id_dos = ?");
+			$requete-> execute(array($entree['remarque_apurement'], $entree['id_dos']));
 
 		} 
 
