@@ -27738,12 +27738,15 @@
 													d.type_apurement AS type_apurement,
 													CONCAT('<button class=\"btn btn-xs btn-warning\" title=\"Edit File\" onclick=\"modal_edit_dossier(\'',d.id_dos,'\');\">
 																<i class=\"fa fa-edit\"></i>
-															</button>') AS btn_action
+															</button>') AS btn_action,
+													part.fob AS fob_part
 												FROM dossier d
 													LEFT JOIN licence l
 														ON l.num_lic = d.num_lic
 													LEFT JOIN monnaie mon
 														ON mon.id_mon = l.id_mon
+													LEFT JOIN partielle_av part
+														ON REPLACE(CONCAT(part.cod,part.num_part), ' ', '') = REPLACE(d.ref_crf, ' ', '')
 												WHERE d.id_mod_lic = ?
 													$sqlClient
 													AND d.ref_quit IS NOT NULL
@@ -31606,6 +31609,21 @@
 			}else{
 				return 0;
 			}
+		}
+
+		public function getPartielleCRF($cod){
+			$entree['cod'] = $cod;
+			// $entree['id_doc'] = $id_doc;
+			include('connexion.php');
+
+			$requete = $connexion-> prepare("SELECT *
+												FROM partielle_av
+												WHERE CONCAT(cod,num_part) = ?");
+			$requete-> execute(array($entree['cod']));
+
+			$reponse = $requete-> fetch();
+
+			return $reponse;
 		}
 
 		public function getPartielleID($id_part){
