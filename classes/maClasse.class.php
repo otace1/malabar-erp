@@ -31618,7 +31618,7 @@
 
 			$requete = $connexion-> prepare("SELECT *
 												FROM partielle_av
-												WHERE CONCAT(cod,num_part) = ?");
+												WHERE REPLACE(CONCAT(cod,num_part), ' ', '') = ?");
 			$requete-> execute(array($entree['cod']));
 
 			$reponse = $requete-> fetch();
