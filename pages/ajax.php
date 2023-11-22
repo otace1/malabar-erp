@@ -2602,6 +2602,26 @@
 
 		echo json_encode($response);
 
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='rapportAdvanceTransmitLicence'){ 
+
+		echo json_encode($maClasse-> rapportAdvanceTransmitLicence($_POST['id_mod_lic'], $_POST['id_cli']));
+
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='dossier_non_transmis_licence'){ 
+
+		echo json_encode($maClasse-> dossier_non_transmis_licence($_POST['num_lic']));
+
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='dossier_transmis_licence_sans_ar'){ 
+
+		echo json_encode($maClasse-> dossier_transmis_licence_sans_ar($_POST['num_lic']));
+
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='dossier_transmis_licence_avec_ar'){ 
+
+		echo json_encode($maClasse-> dossier_transmis_licence_avec_ar($_POST['num_lic']));
+
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='master_data_transmit'){ 
+
+		echo json_encode($maClasse-> master_data_transmit($_POST['id_mod_lic'], $_POST['id_cli']));
+
 	}
 
 

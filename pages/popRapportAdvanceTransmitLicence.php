@@ -20,10 +20,7 @@
                   <div class="card card-<?php echo $couleur;?>">
                     <div class="card-header">
                       <h3 class="card-title">
-                        <i class="fa fa-folder-open nav-icon"></i> DOSSIERS PRETS A ETRE APURES <?php echo $client.$modeleLicence;?>
-                        <button class="btn btn-default" onclick="window.location.replace('exportExcelDossierEnAttenteApurement.php?id_cli=<?php echo $_GET['id_cli']; ?>&id_mod_lic=<?php echo $_GET['id_mod_lic']; ?>','pop1','width=80,height=80');">
-                          <img src="../images/xls.png" width="30px">
-                        </button>
+                        <i class="fa fa-folder-open nav-icon"></i> Advanced Report | Licenses <?php echo $client.$modeleLicence;?>
                       </h3>
                     </div>
                     <!-- /.card-header -->
@@ -31,34 +28,14 @@
                         <div class="row">
                           <div class="col-sm-12">
                             <div class="card-body">
-                              <table id="afficherDossiersPretAEtreApuresAjax" cellspacing="0" width="100%" class="table table-bordered table-striped table-sm small text-nowrap table-responsive p-0">
+                              <table id="rapportAdvanceTransmitLicence" cellspacing="0" width="100%" class="table table-bordered table-striped table-sm small text-nowrap table-responsive p-0">
                                 <thead>
                                   <tr>
                                     <th style="text-align: center; ">#</th>
-                                    <th>NUM. LICENCE</th>
-                                    <th>MCA REF</th>
-                                    <th>FOB</th>
-                                    <th>FRET</th>
-                                    <th>ASSURANCE</th>
-                                    <th>AUTRES FRETS</th>
-                                    <th>CIF</th>
-                                    <th>REF. DECL.</th>
-                                    <th>DATE DECL.</th>
-                                    <th>REF. LIQUID.</th>
-                                    <th>DATE LIQUID.</th>
-                                    <th>REF. QUIT.</th>
-                                    <th>DATE QUIT.</th>
-                                    <th>MONNAIE</th>
-                                    <th>DATE VAL.</th>
-                                    <th>DATE ECH.</th>
-                                    <th>CIF LIC.</th>
-                                    <th>NUM. AV</th>
-                                    <th>MONTANT AV</th>
-                                    <th>ASS.REF.</th>
-                                    <th>FACTURE</th>
-                                    <th>BL/LTA</th>
-                                    <th>Type</th>
-                                    <th>Remarque</th>
+                                    <th>Num.Licence</th>
+                                    <th>Dossiers non-tranmis</th>
+                                    <th>Transmis sans AR</th>
+                                    <th>Transmis avec AR</th>
                                     <th></th>
                                   </tr>
                                 </thead>
@@ -164,7 +141,7 @@
               }
             },
             complete: function () {
-                $('#afficherDossiersPretAEtreApuresAjax').DataTable().ajax.reload();
+                $('#rapportAdvanceTransmitLicence').DataTable().ajax.reload();
                 $('#spinner-div').hide();//Request is complete so hide spinner
             }
           });
@@ -203,15 +180,15 @@
 
   }
 
-  $('#afficherDossiersPretAEtreApuresAjax').DataTable({
+  $('#rapportAdvanceTransmitLicence').DataTable({
      lengthMenu: [
         [15, 30, 50, 100, 500, -1],
         [15, 30, 50, 100, 500, 'All'],
     ],
     dom: 'Bfrtip',
-        fixedColumns: {
-          left: 3
-        },
+        // fixedColumns: {
+        //   left: 3
+        // },
   buttons: [
       {
         extend: 'excel',
@@ -249,7 +226,7 @@
       "data": {
           "id_cli": "<?php echo $_GET['id_cli'];?>",
           "id_mod_lic": "<?php echo $_GET['id_mod_lic'];?>",
-          "operation": "afficherDossiersPretAEtreApuresAjax"
+          "operation": "rapportAdvanceTransmitLicence"
       }
     },
     // rowGroup: {
@@ -261,78 +238,13 @@
       {"data":"num_lic",
         className: 'dt-body-left'
       },
-      {"data":"ref_dos"},
-      {"data":"fob",
-        render: DataTable.render.number( null, null, 2, null ),
-        className: 'dt-body-right'
-      },
-      {"data":"fret",
-        render: DataTable.render.number( null, null, 2, null ),
-        className: 'dt-body-right'
-      },
-      {"data":"assurance",
-        render: DataTable.render.number( null, null, 2, null ),
-        className: 'dt-body-right'
-      },
-      {"data":"autre_frais",
-        render: DataTable.render.number( null, null, 2, null ),
-        className: 'dt-body-right'
-      },
-      {"data":"cif",
-        render: DataTable.render.number( null, null, 2, null ),
-        className: 'dt-body-right'
-      },
-      {"data":"ref_decl",
+      {"data":"dos_non_trans",
         className: 'dt-body-center'
       },
-      {"data":"date_decl",
+      {"data":"dos_trans_sans_ar",
         className: 'dt-body-center'
       },
-      {"data":"ref_liq",
-        className: 'dt-body-center'
-      },
-      {"data":"date_liq",
-        className: 'dt-body-center'
-      },
-      {"data":"ref_quit",
-        className: 'dt-body-center'
-      },
-      {"data":"date_quit",
-        className: 'dt-body-center'
-      },
-      {"data":"sig_mon",
-        className: 'dt-body-center'
-      },
-      {"data":"date_val",
-        className: 'dt-body-center'
-      },
-      {"data":"date_exp",
-        className: 'dt-body-center'
-      },
-      {"data":"cif_lic",
-        render: DataTable.render.number( null, null, 2, null ),
-        className: 'dt-body-right'
-      },
-      {"data":"ref_crf",
-        className: 'dt-body-center'
-      },
-      {"data":"fob_part",
-        render: DataTable.render.number( null, null, 2, null ),
-        className: 'dt-body-right'
-      },
-      {"data":"ref_assurance",
-        className: 'dt-body-center'
-      },
-      {"data":"ref_fact",
-        className: 'dt-body-center'
-      },
-      {"data":"road_manif",
-        className: 'dt-body-center'
-      },
-      {"data":"type_apurement",
-        className: 'dt-body-center'
-      },
-      {"data":"remarque_apurement",
+      {"data":"dos_trans_avec_ar",
         className: 'dt-body-center'
       },
       {"data":"btn_action",

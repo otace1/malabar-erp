@@ -117,7 +117,24 @@
     <section class="content-header">
       <div class="container-fluid">
         <div class="header">
-          <h3><i class="fa fa-check nav-icon"></i> APUREMENT LICENCES <?php echo $modele['nom_mod_lic'].' ('.$modele['sigle_mod_lic'].')'.$client;?></h3>
+          <h3><i class="fa fa-check nav-icon"></i> APUREMENT LICENCES <?php echo $modele['nom_mod_lic'].' ('.$modele['sigle_mod_lic'].')'.$client;?>
+
+          <div class="float-right">
+           
+
+
+                  <div class="input-group-prepend">
+                    <button type="button" class="btn btn-dark btn-xs dropdown-toggle" data-toggle="dropdown">
+                     <i class="fa fa-table"></i> Advanced Report
+                    </button>
+                    <div class="dropdown-menu">
+                      <a class="dropdown-item" href="#" onclick="window.open('popRapportAdvanceTransmitLicence.php?id_mod_lic=<?php echo $_GET['id_mod_lic'];?>&id_cli=<?php echo $_GET['id_cli'];?>','Advanced Report License','width=800,height=500');">Licenses</a>
+                      <a class="dropdown-item" href="#" onclick="window.open('masterDataTransmissionApurement.php?id_mod_lic=<?php echo $_GET['id_mod_lic'];?>&id_cli=<?php echo $_GET['id_cli'];?>','Advanced Report License','width=1000,height=500');">Master Data</a>
+                    </div>
+                  </div>
+
+          </div>
+        </h3>
         </div>
 
       </div><!-- /.container-fluid -->
