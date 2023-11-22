@@ -27781,6 +27781,358 @@
 			return $row;
 		}
 
+		public function dossier_non_transmis_licence($num_lic){
+			include("connexion.php");
+			$entree['num_lic'] = $num_lic;
+
+			$compteur=0;
+			$row = array();
+
+			$requete = $connexion-> prepare("SELECT d.ref_dos AS ref_dos, d.num_lic AS num_lic, 
+													d.ref_fact,
+													d.fob AS fob, d.ref_av AS ref_av, d.montant_av AS montant_av,
+													d.ref_fact AS ref_fact, d.ref_decl AS ref_decl,
+													d.road_manif AS road_manif,
+													d.fob AS fob,
+													d.fret AS fret,
+													d.assurance AS assurance,
+													d.autre_frais AS autre_frais,
+													(
+														IF(d.fob > 0, d.fob, 0)+
+														IF(d.fret > 0, d.fret, 0)+
+														IF(d.autre_frais > 0, d.autre_frais, 0)+
+														IF(d.assurance > 0, d.assurance, 0)
+													) AS cif,
+													DATE_FORMAT(d.date_decl, '%d/%m/%Y') AS date_decl,
+													DATE_FORMAT(d.date_liq, '%d/%m/%Y') AS date_liq,
+													DATE_FORMAT(d.date_quit, '%d/%m/%Y') AS date_quit,
+													d.ref_decl AS ref_decl,
+													d.ref_liq AS ref_liq,
+													d.ref_quit AS ref_quit,
+													d.ref_crf AS ref_crf,
+													d.fob AS fob,
+													d.ref_fact AS ref_fact,
+													IF(d.road_manif IS NOT NULL AND d.road_manif <> 'N/A',
+														d.road_manif,
+														d.horse
+													) AS road_manif,
+													d.ref_assurance AS ref_assurance,
+													d.remarque_apurement AS remarque_apurement,
+													d.type_apurement AS type_apurement
+												FROM dossier d
+												WHERE d.num_lic = ?
+													AND d.ref_quit IS NOT NULL
+													AND d.ref_decl IS NOT NULL
+													AND d.ref_decl <> ''
+													AND d.ref_quit <> ''
+													AND (d.ref_dos NOT LIKE '%RF20-%' AND d.ref_dos NOT LIKE '%AW20-%' AND d.ref_dos NOT LIKE '%-ACID-%' AND d.ref_dos NOT LIKE '%-SUL%')
+													AND d.id_dos NOT IN(
+														SELECT id_dos FROM detail_apurement
+													)
+													AND (d.id_cli <> 869 AND d.id_cli <> 929 AND d.id_cli <> 927 AND d.id_cli <> 870 AND d.id_cli <> 902 AND d.id_cli <> 873 AND d.id_cli <> 871 AND d.id_cli <> 872)
+
+											ORDER BY d.id_dos ASC;");
+			$requete-> execute(array($entree['num_lic']));
+			while ($reponse = $requete-> fetch()) {
+
+				$compteur++;
+				$reponse['compteur'] = $compteur;
+				$row[] = $reponse;
+
+			}$requete-> closeCursor();
+
+			return $row;
+		}
+
+		public function dossier_transmis_licence_sans_ar($num_lic){
+			include("connexion.php");
+			$entree['num_lic'] = $num_lic;
+
+			$compteur=0;
+			$row = array();
+
+			$requete = $connexion-> prepare("SELECT d.ref_dos AS ref_dos, d.num_lic AS num_lic, 
+													d.ref_fact,
+													d.fob AS fob, d.ref_av AS ref_av, d.montant_av AS montant_av,
+													d.ref_fact AS ref_fact, d.ref_decl AS ref_decl,
+													d.road_manif AS road_manif,
+													d.fob AS fob,
+													d.fret AS fret,
+													d.assurance AS assurance,
+													d.autre_frais AS autre_frais,
+													(
+														IF(d.fob > 0, d.fob, 0)+
+														IF(d.fret > 0, d.fret, 0)+
+														IF(d.autre_frais > 0, d.autre_frais, 0)+
+														IF(d.assurance > 0, d.assurance, 0)
+													) AS cif,
+													DATE_FORMAT(d.date_decl, '%d/%m/%Y') AS date_decl,
+													DATE_FORMAT(d.date_liq, '%d/%m/%Y') AS date_liq,
+													DATE_FORMAT(d.date_quit, '%d/%m/%Y') AS date_quit,
+													DATE_FORMAT(tr.date_trans_ap, '%d/%m/%Y') AS date_trans_ap,
+													d.ref_decl AS ref_decl,
+													d.ref_liq AS ref_liq,
+													d.ref_quit AS ref_quit,
+													d.ref_crf AS ref_crf,
+													d.fob AS fob,
+													d.ref_fact AS ref_fact,
+													IF(d.road_manif IS NOT NULL AND d.road_manif <> 'N/A',
+														d.road_manif,
+														d.horse
+													) AS road_manif,
+													d.ref_assurance AS ref_assurance,
+													d.remarque_apurement AS remarque_apurement,
+													d.type_apurement AS type_apurement,
+													tr.ref_trans_ap AS ref_trans_ap
+												FROM dossier d, detail_apurement det, transmission_apurement tr
+												WHERE d.num_lic = ?
+													AND d.id_dos = det.id_dos
+													AND det.id_trans_ap = tr.id_trans_ap
+													AND tr.fichier_trans_ap IS NULL
+											ORDER BY d.id_dos ASC;");
+			$requete-> execute(array($entree['num_lic']));
+			while ($reponse = $requete-> fetch()) {
+
+				$compteur++;
+				$reponse['compteur'] = $compteur;
+				$row[] = $reponse;
+
+			}$requete-> closeCursor();
+
+			return $row;
+		}
+
+		public function dossier_transmis_licence_avec_ar($num_lic){
+			include("connexion.php");
+			$entree['num_lic'] = $num_lic;
+
+			$compteur=0;
+			$row = array();
+
+			$requete = $connexion-> prepare("SELECT d.ref_dos AS ref_dos, d.num_lic AS num_lic, 
+													d.ref_fact,
+													d.fob AS fob, d.ref_av AS ref_av, d.montant_av AS montant_av,
+													d.ref_fact AS ref_fact, d.ref_decl AS ref_decl,
+													d.road_manif AS road_manif,
+													d.fob AS fob,
+													d.fret AS fret,
+													d.assurance AS assurance,
+													d.autre_frais AS autre_frais,
+													(
+														IF(d.fob > 0, d.fob, 0)+
+														IF(d.fret > 0, d.fret, 0)+
+														IF(d.autre_frais > 0, d.autre_frais, 0)+
+														IF(d.assurance > 0, d.assurance, 0)
+													) AS cif,
+													DATE_FORMAT(d.date_decl, '%d/%m/%Y') AS date_decl,
+													DATE_FORMAT(d.date_liq, '%d/%m/%Y') AS date_liq,
+													DATE_FORMAT(d.date_quit, '%d/%m/%Y') AS date_quit,
+													DATE_FORMAT(tr.date_trans_ap, '%d/%m/%Y') AS date_trans_ap,
+													d.ref_decl AS ref_decl,
+													d.ref_liq AS ref_liq,
+													d.ref_quit AS ref_quit,
+													d.ref_crf AS ref_crf,
+													d.fob AS fob,
+													d.ref_fact AS ref_fact,
+													IF(d.road_manif IS NOT NULL AND d.road_manif <> 'N/A',
+														d.road_manif,
+														d.horse
+													) AS road_manif,
+													d.ref_assurance AS ref_assurance,
+													d.remarque_apurement AS remarque_apurement,
+													d.type_apurement AS type_apurement,
+													tr.ref_trans_ap AS ref_trans_ap,
+													CONCAT('<button class=\"btn btn-xs btn-dark\" title=\"Edit Transmit\" onclick=\"window.open(\'../transmision_apurements/',tr.id_trans_ap,'/',tr.fichier_trans_ap,'\',\'pop1\',\'width=1900,height=900\')\">
+																<i class=\"fa fa-file\"></i>
+															</button>') AS btn_action
+												FROM dossier d, detail_apurement det, transmission_apurement tr
+												WHERE d.num_lic = ?
+													AND d.id_dos = det.id_dos
+													AND det.id_trans_ap = tr.id_trans_ap
+													AND tr.fichier_trans_ap IS NOT NULL
+											ORDER BY d.id_dos ASC;");
+			$requete-> execute(array($entree['num_lic']));
+			while ($reponse = $requete-> fetch()) {
+
+				$compteur++;
+				$reponse['compteur'] = $compteur;
+				$row[] = $reponse;
+
+			}$requete-> closeCursor();
+
+			return $row;
+		}
+
+		public function master_data_transmit($id_mod_lic, $id_cli){
+			include("connexion.php");
+			$entree['id_mod_lic'] = $id_mod_lic;
+
+			$compteur=0;
+			$row = array();
+
+			if (isset($id_cli) && ($id_cli!='')) {
+				$sqlClient = ' AND d.id_cli = "'.$id_cli.'"';
+			}else{
+				$sqlClient = '';
+			}
+
+			$requete = $connexion-> prepare("SELECT d.ref_dos AS ref_dos, d.num_lic AS num_lic, 
+													d.ref_fact,
+													d.fob AS fob, d.ref_av AS ref_av, d.montant_av AS montant_av,
+													d.ref_fact AS ref_fact, d.ref_decl AS ref_decl,
+													d.road_manif AS road_manif,
+													d.fob AS fob,
+													d.fret AS fret,
+													d.assurance AS assurance,
+													d.autre_frais AS autre_frais,
+													(
+														IF(d.fob > 0, d.fob, 0)+
+														IF(d.fret > 0, d.fret, 0)+
+														IF(d.autre_frais > 0, d.autre_frais, 0)+
+														IF(d.assurance > 0, d.assurance, 0)
+													) AS cif,
+													DATE_FORMAT(d.date_decl, '%d/%m/%Y') AS date_decl,
+													DATE_FORMAT(d.date_liq, '%d/%m/%Y') AS date_liq,
+													DATE_FORMAT(d.date_quit, '%d/%m/%Y') AS date_quit,
+													DATE_FORMAT(tr.date_trans_ap, '%d/%m/%Y') AS date_trans_ap,
+													d.ref_decl AS ref_decl,
+													d.ref_liq AS ref_liq,
+													d.ref_quit AS ref_quit,
+													d.ref_crf AS ref_crf,
+													d.fob AS fob,
+													d.ref_fact AS ref_fact,
+													IF(d.road_manif IS NOT NULL AND d.road_manif <> 'N/A',
+														d.road_manif,
+														d.horse
+													) AS road_manif,
+													d.ref_assurance AS ref_assurance,
+													d.remarque_apurement AS remarque_apurement,
+													d.type_apurement AS type_apurement,
+													tr.ref_trans_ap AS ref_trans_ap,
+													CONCAT('<button class=\"btn btn-xs btn-dark\" title=\"Edit Transmit\" onclick=\"window.open(\'../transmision_apurements/',tr.id_trans_ap,'/',tr.fichier_trans_ap,'\',\'pop1\',\'width=1900,height=900\')\">
+																<i class=\"fa fa-file\"></i>
+															</button>') AS btn_action
+												FROM dossier d
+													LEFT JOIN detail_apurement det
+														ON d.id_dos = det.id_dos
+													LEFT JOIN transmission_apurement tr
+														ON det.id_trans_ap = tr.id_trans_ap
+												WHERE d.id_mod_lic = ?
+													AND d.ref_quit IS NOT NULL
+													AND d.ref_decl IS NOT NULL
+													AND d.ref_decl <> ''
+													AND d.ref_quit <> ''
+													AND d.num_lic <> 'N/A'
+													AND d.num_lic <> 'UNDER VALUE'
+													AND d.num_lic <> 'UNDERVALUE'
+													AND d.num_lic NOT LIKE '%UNDER%'
+													AND (d.ref_dos NOT LIKE '%RF20-%' AND d.ref_dos NOT LIKE '%AW20-%' AND d.ref_dos NOT LIKE '%-ACID-%' AND d.ref_dos NOT LIKE '%-SUL%')
+													AND (d.id_cli <> 869 AND d.id_cli <> 929 AND d.id_cli <> 927 AND d.id_cli <> 870 AND d.id_cli <> 902 AND d.id_cli <> 873 AND d.id_cli <> 871 AND d.id_cli <> 872)
+													$sqlClient
+											ORDER BY d.id_dos ASC;");
+			$requete-> execute(array($entree['id_mod_lic']));
+			while ($reponse = $requete-> fetch()) {
+
+				$compteur++;
+				$reponse['compteur'] = $compteur;
+				$row[] = $reponse;
+
+			}$requete-> closeCursor();
+
+			return $row;
+		}
+
+		public function rapportAdvanceTransmitLicence($id_mod_lic, $id_cli){
+			include("connexion.php");
+			$entree['id_mod_lic'] = $id_mod_lic;
+
+			if (isset($id_cli) && ($id_cli!='')) {
+				$sqlClient = ' AND l.id_cli = "'.$id_cli.'"';
+			}else{
+				$sqlClient = '';
+			}
+
+			$compteur=0;
+			$row = array();
+
+			$requete = $connexion-> prepare("SELECT l.num_lic AS num_lic,
+												CONCAT('<button class=\"btn btn-xs btn-info\" title=\"Dossiers affectés\" onclick=\"window.open(\'popRapportAdvanceTransmitDetailsLicence.php?num_lic=',l.num_lic,'\',\'popRapportAdvanceTransmitDetailsLicence\',\'width=1100,height=900\');\">
+														<i class=\"fa fa-folder-open\"></i>
+													</button>') AS btn_action
+												FROM licence l
+												WHERE l.id_mod_lic = ?
+														$sqlClient");
+			$requete-> execute(array($entree['id_mod_lic']));
+			while ($reponse = $requete-> fetch()) {
+
+				$compteur++;
+				$reponse['compteur'] = $compteur;
+				$reponse['dos_non_trans'] = $this-> getNombreDossierNonTransmisLicence($reponse['num_lic']);
+				$reponse['dos_trans_sans_ar'] = $this-> getNombreDossierTransmisLicenceSansAR($reponse['num_lic']);
+				$reponse['dos_trans_avec_ar'] = $this-> getNombreDossierTransmisLicenceAR($reponse['num_lic']);
+				$row[] = $reponse;
+
+			}$requete-> closeCursor();
+
+			return $row;
+		}
+
+		public function getNombreDossierNonTransmisLicence($num_lic){
+			include("connexion.php");
+			$entree['num_lic'] = $num_lic;
+
+			$requete = $connexion-> prepare("SELECT COUNT(id_dos) AS nbre_dos
+												FROM dossier
+												WHERE num_lic = ?
+													AND ref_quit IS NOT NULL
+													AND ref_decl IS NOT NULL
+													AND ref_decl <> ''
+													AND ref_quit <> ''
+													AND (ref_dos NOT LIKE '%RF20-%' AND ref_dos NOT LIKE '%AW20-%' AND ref_dos NOT LIKE '%-ACID-%' AND ref_dos NOT LIKE '%-SUL%')
+													AND id_dos NOT IN(
+														SELECT id_dos FROM detail_apurement
+													)
+													AND (id_cli <> 869 AND id_cli <> 929 AND id_cli <> 927 AND id_cli <> 870 AND id_cli <> 902 AND id_cli <> 873 AND id_cli <> 871 AND id_cli <> 872)
+
+													AND id_dos NOT IN (SELECT id_dos FROM detail_apurement)");
+			$requete-> execute(array($entree['num_lic']));
+			$reponse = $requete-> fetch();
+
+			return $reponse['nbre_dos'];
+		}
+
+		public function getNombreDossierTransmisLicenceSansAR($num_lic){
+			include("connexion.php");
+			$entree['num_lic'] = $num_lic;
+
+			$requete = $connexion-> prepare("SELECT COUNT(d.id_dos) AS nbre_dos
+												FROM detail_apurement da, transmission_apurement tr, dossier d
+												WHERE d.num_lic = ?
+													AND d.id_dos = da.id_dos
+													AND da.id_trans_ap = tr.id_trans_ap
+													AND tr.fichier_trans_ap IS NULL");
+			$requete-> execute(array($entree['num_lic']));
+			$reponse = $requete-> fetch();
+
+			return $reponse['nbre_dos'];
+		}
+
+		public function getNombreDossierTransmisLicenceAR($num_lic){
+			include("connexion.php");
+			$entree['num_lic'] = $num_lic;
+
+			$requete = $connexion-> prepare("SELECT COUNT(d.id_dos) AS nbre_dos
+												FROM detail_apurement da, transmission_apurement tr, dossier d
+												WHERE d.num_lic = ?
+													AND d.id_dos = da.id_dos
+													AND da.id_trans_ap = tr.id_trans_ap
+													AND tr.fichier_trans_ap IS NOT NULL");
+			$requete-> execute(array($entree['num_lic']));
+			$reponse = $requete-> fetch();
+
+			return $reponse['nbre_dos'];
+		}
+
 		public function afficherLicence($id_mod_lic, $id_cli, $id_type_lic, $premiere_entree, $nombre_dossier_par_page){
 			include("connexion.php");
 			$entree['id_mod_lic'] = $id_mod_lic;
