@@ -121,19 +121,19 @@ $indiceSheet = 0;
 			->getStyle('D4')->applyFromArray($styleHeader2);
 
 		$excel-> getActiveSheet()
-			-> setCellValue('H1', 'Lubumbashi, le '.$maClasse-> getTransmissionApurement($_GET['id_trans_ap'])['date_trans_ap']);
+			-> setCellValue('L1', 'Lubumbashi, le '.$maClasse-> getTransmissionApurement($_GET['id_trans_ap'])['date_trans_ap']);
 
 		$excel-> getActiveSheet()
-			-> setCellValue('H3', 'cina@malabar-group.com');
+			-> setCellValue('L3', 'cina@malabar-group.com');
 
 		$excel-> getActiveSheet()
-			-> setCellValue('H4', 'Tél.: +243 81 403 0796');
+			-> setCellValue('L4', 'Tél.: +243 81 403 0796');
 
 		$excel-> getActiveSheet()
-			-> setCellValue('H5', 'Licence.depart2@malabar-group.com');
+			-> setCellValue('L5', 'Licence.depart2@malabar-group.com');
 
 		$excel-> getActiveSheet()
-			-> setCellValue('H6', 'Tel.: +243 81 465 8850');
+			-> setCellValue('L6', 'Tel.: +243 81 465 8850');
 
 		//Fusionner les cellules
 		/*$excel-> getActiveSheet()

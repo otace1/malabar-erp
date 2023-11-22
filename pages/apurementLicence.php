@@ -941,10 +941,10 @@ if(isset($_GET['id_mod_lic']) && isset($_GET['id_mod_lic'])){
       {"data":"banque",
         className: 'dt-body-center'
       },
-      {"data":"nbre_dos",
+      {"data":"nbre_lic",
         className: 'dt-body-center'
       },
-      {"data":"nbre_lic",
+      {"data":"nbre_dos",
         className: 'dt-body-center'
       },
       {"data":"btn_action",

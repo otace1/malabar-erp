@@ -316,7 +316,7 @@
       {"data":"ref_crf",
         className: 'dt-body-center'
       },
-      {"data":"fob",
+      {"data":"fob_part",
         render: DataTable.render.number( null, null, 2, null ),
         className: 'dt-body-right'
       },

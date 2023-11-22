@@ -45,7 +45,7 @@ function afficherDossierLicenceTransmisionApurementExcel($num_lic, $id_trans_ap,
 			-> setCellValue('B'.$row, $reponseDossier['ref_dos'])
 			-> setCellValue('H'.$row, $reponseDossier['fob'])
 			-> setCellValue('I'.$row, $reponseDossier['ref_crf'])
-			-> setCellValue('J'.$row, $reponseDossier['fob'])
+			-> setCellValue('J'.$row, $maClasse-> getPartielleCRF($reponseDossier['ref_crf'])['fob'])
 			-> setCellValue('K'.$row, $reponseDossier['ref_fact'])
 			-> setCellValue('L'.$row, $reponseDossier['ref_decl'])
 			-> setCellValue('M'.$row, $reponseDossier['ref_assurance'])
