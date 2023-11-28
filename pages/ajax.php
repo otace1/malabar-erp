@@ -2622,6 +2622,10 @@
 
 		echo json_encode($maClasse-> master_data_transmit($_POST['id_mod_lic'], $_POST['id_cli']));
 
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='statut_licence'){ 
+
+		echo json_encode($maClasse-> statut_licence($_POST['id_cli'], $_POST['id_mod_lic']));
+
 	}
 
 

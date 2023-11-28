@@ -901,8 +901,19 @@ for ($i=1; $i <= 15 ; $i++) {
                   <?php
                 }*/
                 ?>
-                <button class="btn btn-xs btn-secondary square-btn-adjust" data-toggle="modal" data-target=".rechercheStatus">
+                <!-- <button class="btn btn-xs btn-secondary square-btn-adjust" data-toggle="modal" data-target=".rechercheStatus">
                     <i class="fa fa-filter"></i> File Status
+                </button> -->
+                <button class="btn btn-xs btn-secondary dropdown-toggle dropdown-icon" data-toggle="dropdown">
+                    <i class="fa fa-list"></i> Statut Licence
+                    <div class="dropdown-menu" role="menu">
+                      <a class="dropdown-item" href="#" onclick="window.open('popUpStatutLicence.php?id_cli=<?php echo $_GET['id_cli']; ?>&id_mod_lic=<?php echo $_GET['id_mod_trac']; ?>','popUpStatutLicence','width=1500,height=950');">
+                        <?php echo $maClasse-> getNomClient($_GET['id_cli']);?>
+                      </a>
+                      <a class="dropdown-item" href="#" onclick="window.open('popUpStatutLicence.php?id_cli=&id_mod_lic=<?php echo $_GET['id_mod_trac']; ?>','popUpStatutLicence2','width=1500,height=950');">
+                        Autres
+                      </a>
+                    </div>
                 </button>
                 <button class="btn btn-xs bg-olive square-btn-adjust" data-toggle="modal" data-target=".rechercheClearingStatus">
                     <i class="fa fa-filter"></i> Clearing Status
