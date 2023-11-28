@@ -16599,7 +16599,9 @@
 														IF(dos.poids IS NOT NULL, dos.poids, 0)
 													) AS poids_dossier,
 													l.poids-SUM(IF(dos.poids IS NOT NULL, dos.poids, 0)) AS balance_poids,
-													COUNT(dos.id_dos) AS nbre_dossier,
+													CONCAT(COUNT(dos.id_dos), ' <a href=\"#\" class=\"text-dark\" title=\"Dossiers affectés\" onclick=\"window.open(\'popUpDossierLicence.php?num_lic=',l.num_lic,'\',\'pop1\',\'width=1100,height=900\');\">
+														<i class=\"fa fa-folder-open\"></i>
+													</a>') AS nbre_dossier,
 													l.id_mod_lic AS id_mod_lic
 												FROM licence l
 													LEFT JOIN expiration_licence exp
