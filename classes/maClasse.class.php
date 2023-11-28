@@ -16571,6 +16571,64 @@
 
 		}
 
+		public function statut_licence($id_cli, $id_mod_lic){
+			include('connexion.php');
+			$entree['id_mod_lic'] = $id_mod_lic;
+
+			if (isset($id_cli) && ($id_cli != '')) {
+				$sqlClient = ' AND l.id_cli = '.$id_cli;
+			}else{
+				$sqlClient = '';
+			}
+
+			$compteur = 0;
+			$rows = array();
+
+			$requete = $connexion-> prepare("SELECT l.num_lic AS num_lic,
+													DATE_FORMAT(l.date_val, '%d/%m/%Y') AS date_val,
+													DATE_FORMAT(exp.date_exp, '%d/%m/%Y') AS date_exp,
+													DATEDIFF(exp.date_exp, CURRENT_DATE()) AS delai,
+													cli.nom_cli AS nom_cli,
+													l.fob AS fob_licence,
+													SUM(
+														IF(dos.fob IS NOT NULL, dos.fob, 0)
+													) AS fob_dossier,
+													l.fob-SUM(IF(dos.fob IS NOT NULL, dos.fob, 0)) AS balance_fob,
+													l.poids AS poids_licence,
+													SUM(
+														IF(dos.poids IS NOT NULL, dos.poids, 0)
+													) AS poids_dossier,
+													l.poids-SUM(IF(dos.poids IS NOT NULL, dos.poids, 0)) AS balance_poids,
+													COUNT(dos.id_dos) AS nbre_dossier,
+													l.id_mod_lic AS id_mod_lic
+												FROM licence l
+													LEFT JOIN expiration_licence exp
+														ON l.num_lic = exp.num_lic
+															AND exp.id_etat = '1'
+													LEFT JOIN dossier dos
+														ON dos.num_lic = l.num_lic
+													LEFT JOIN client cli
+														ON cli.id_cli = l.id_cli
+												WHERE l.id_mod_lic = ?
+												$sqlClient
+												GROUP BY l.num_lic
+												ORDER BY l.num_lic ASC");
+			$requete-> execute(array($entree['id_mod_lic']));
+			while ($reponse = $requete-> fetch()) {
+				$compteur++;
+
+				// $reponse['btn_action'] .= '<a href="file:///'.$this-> getPathArchive($reponse['id_dos']).'/'.$reponse['ref_dos'].'">Find Support Documents</a>';
+
+				$reponse['compteur'] = $compteur;
+
+				$rows[] = $reponse;
+			}$requete-> closeCursor();
+
+
+			return $rows;
+
+		}
+
 		public function transmis_apurement($id_cli, $id_mod_lic){
 			include('connexion.php');
 			$entree['id_mod_lic'] = $id_mod_lic;
