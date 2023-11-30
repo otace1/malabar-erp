@@ -10354,11 +10354,13 @@
 															0
 														)
 													) AS base_arsp,
-													dos.poids AS poids
-												FROM debours d, detail_facture_dossier det, dossier dos
+													dos.poids AS poids,
+													fact.id_cli AS id_cli
+												FROM debours d, detail_facture_dossier det, dossier dos, facture_dossier fact
 												WHERE det.ref_fact = ?
 													AND det.id_deb = d.id_deb
 													AND det.id_dos = dos.id_dos
+													AND det.ref_fact = fact.ref_fact
 												GROUP BY det.ref_fact');
 			$requete-> execute(array($entree['ref_fact']));
 			$reponse = $requete-> fetch();
@@ -10395,6 +10397,8 @@
 				$total_tva = $reponse['tva_usd'];
 				$total_gen = $reponse['ttc_usd'];
 
+			if ($reponse['id_cli']=='904') {
+				
 			$tbl .= '
 					<tr>
 						<td style="text-align: right; border: 0.5px solid black; font-weight: bold; font-size: 8px;" width="23%">Total excl. TVA &nbsp;&nbsp;
@@ -10440,6 +10444,39 @@
 					</tr>
 					';
 
+			}else{
+
+			$tbl .= '
+					<tr>
+						<td style="text-align: right; border: 0.5px solid black; font-weight: bold; font-size: 8px;" width="23%">Total excl. TVA &nbsp;&nbsp;
+						</td>
+						<td style="text-align: right; border: 0.5px solid black; font-weight: bold;" width="11.5%">$ '
+							.number_format($sub_total, 2, ',', '.').
+						'&nbsp;&nbsp;</td>
+					</tr>
+					<tr>
+						<td style="text-align: right; border: 0.5px solid black; font-weight: bold; font-size: 8px;" width="23%"> TVA 16% &nbsp;&nbsp;
+						</td>
+						<td style="text-align: right; border: 0.5px solid black; font-weight: bold;" width="11.5%">$ '
+							.number_format($total_tva, 2, ',', '.').
+						'&nbsp;&nbsp;</td>
+					</tr>
+					<tr>
+						<td style="text-align: right; border: 0.5px solid black; font-weight: bold; font-size: 10px; font-weight: bold; background-color: rgb(220,220,220);" width="23%">Grand Total &nbsp;&nbsp;
+						</td>
+						<td style="text-align: right; border: 0.5px solid black; font-weight: bold; font-size: 10px; background-color: rgb(220,220,220);" width="11.5%">$ '
+							.number_format($total_gen, 2, ',', '.').
+						'&nbsp;&nbsp;</td>
+					</tr>
+					<tr>
+						<td style="text-align: right; border: 0.5px solid black; font-weight: bold; font-size: 8px;" width="23%"> Equivalent en CDF &nbsp;&nbsp;
+						</td>
+						<td style="text-align: right; border: 0.5px solid black; font-weight: bold;" width="11.5%">'
+							.number_format($total_gen*$reponse['roe_decl'], 2, ',', '.').
+						'&nbsp;&nbsp;</td>
+					</tr>
+					';
+				}
 			return $tbl;
 		}
 
