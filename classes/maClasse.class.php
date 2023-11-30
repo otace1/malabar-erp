@@ -10355,7 +10355,11 @@
 														)
 													) AS base_arsp,
 													dos.poids AS poids,
-													fact.id_cli AS id_cli
+													fact.id_cli AS id_cli,
+													IF(fact.id_cli=904 AND DATE(fact.date_fact)>="2023-11-17",
+														"1",
+														"0"
+													) AS statut_arsp
 												FROM debours d, detail_facture_dossier det, dossier dos, facture_dossier fact
 												WHERE det.ref_fact = ?
 													AND det.id_deb = d.id_deb
@@ -10397,7 +10401,7 @@
 				$total_tva = $reponse['tva_usd'];
 				$total_gen = $reponse['ttc_usd'];
 
-			if ($reponse['id_cli']=='904') {
+			if ($reponse['id_cli']=='904' && $reponse['statut_arsp']=='1') {
 				
 			$tbl .= '
 					<tr>
