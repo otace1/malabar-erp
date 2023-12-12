@@ -5241,6 +5241,82 @@
     		 return $tableau;
 		}
 
+		public function tableau_dossier_pending_worksheet($id_mod_lic){
+			include('connexion.php');
+			// $entree['id_cli'] = $id_cli;
+			$entree['id_mod_lic'] = $id_mod_lic;
+			$compteur = 0;
+
+			$tableau = '';
+
+			$requete = $connexion-> prepare("SELECT cl.nom_cli AS nom_cli,
+													cl.id_cli AS id_cli
+												FROM client cl, affectation_client_modele_licence aff
+												WHERE cl.id_cli = aff.id_cli
+													AND aff.id_mod_lic = ?");
+    		$requete-> execute(array($entree['id_mod_lic']));
+    		while ($reponse = $requete-> fetch()) {
+    			$compteur++;
+    			$tableau .= '
+    						<tr onclick="window.location.replace(\'worksheet.php?id_mod_lic='.$id_mod_lic.'&id_cli='.$reponse['id_cli'].'\');">
+    							<td>'.$compteur.'</td>
+    							<td>'.$reponse['nom_cli'].'</td>
+    						</tr>
+    			';
+    		 }$requete-> closeCursor();
+
+    		 return $tableau;
+		}
+
+		public function tableau_client_worksheet($id_mod_lic){
+			include('connexion.php');
+			// $entree['id_cli'] = $id_cli;
+			$entree['id_mod_lic'] = $id_mod_lic;
+			$compteur = 0;
+
+			$tableau = '';
+
+			$requete = $connexion-> prepare("SELECT cl.nom_cli AS nom_cli,
+													cl.code_cli AS code_cli,
+													cl.id_cli AS id_cli
+												FROM client cl, affectation_client_modele_licence aff
+												WHERE cl.id_cli = aff.id_cli
+													AND aff.id_mod_lic = ?
+													ORDER BY cl.code_cli");
+    		$requete-> execute(array($entree['id_mod_lic']));
+    		while ($reponse = $requete-> fetch()) {
+    			$compteur++;
+    			$tableau .= '
+    						<tr onMouseOver="this.style.cursor=\'pointer\'" onclick="window.location.replace(\'worksheet.php?id_mod_lic='.$id_mod_lic.'&id_cli='.$reponse['id_cli'].'\');">
+    							<td>'.$compteur.'</td>
+    							<td>'.$reponse['code_cli'].'</td>
+    							<td>'.$reponse['nom_cli'].'</td>
+    							<td>'.$this-> dossier_awaiting_worksheet_client($id_mod_lic, $reponse['id_cli']).'</td>
+    						</tr>
+    			';
+    		 }$requete-> closeCursor();
+
+    		 return $tableau;
+		}
+
+		public function dossier_awaiting_worksheet_client($id_mod_lic, $id_cli){
+			include('connexion.php');
+			// $entree['id_cli'] = $id_cli;
+			$entree['id_mod_lic'] = $id_mod_lic;
+			$entree['id_cli'] = $id_cli;
+
+			$requete = $connexion-> prepare("SELECT COUNT(*) AS nbre
+												FROM dossier
+												WHERE id_mod_lic = ?
+													AND id_cli = ?
+													AND not_feuil_calc = '0'
+													AND id_feuil_calc IS NULL
+													AND date_feuil_calc IS NULL");
+    		$requete-> execute(array($entree['id_mod_lic'], $entree['id_cli']));
+    		$reponse = $requete-> fetch();
+    		 return $reponse['nbre'];
+		}
+
 		public function getModeleFacturationClient($id_cli){
 			include('connexion.php');
 			$entree['id_cli'] = $id_cli;
@@ -16698,6 +16774,132 @@
 
 		}
 
+		public function dossier_pending_worsheet($id_cli, $id_mod_lic){
+			include('connexion.php');
+			$entree['id_mod_lic'] = $id_mod_lic;
+
+			if (isset($id_cli) && ($id_cli != '')) {
+				$sqlClient = ' AND dos.id_cli = '.$id_cli;
+			}else{
+				$sqlClient = '';
+			}
+
+			$compteur = 0;
+			$rows = array();
+
+			$requete = $connexion-> prepare("SELECT dos.id_dos AS id_dos,
+													dos.ref_dos AS ref_dos,
+													cl.code_cli AS code_cli,
+													CONCAT('<button class=\"btn btn-xs btn-info\" title=\"Feuille de calcul\" onclick=\"modal_worksheet(',dos.id_dos,');\"><i class=\"fa fa-calculator\"></i></button>') AS btn_action
+												FROM dossier dos, client cl
+												WHERE dos.id_cli = cl.id_cli
+													AND dos.id_mod_lic = ?
+													AND dos.not_feuil_calc = '0'
+													AND dos.id_feuil_calc IS NULL
+													AND dos.date_feuil_calc IS NULL
+													$sqlClient");
+			$requete-> execute(array($entree['id_mod_lic']));
+			while ($reponse = $requete-> fetch()) {
+				$compteur++;
+
+				$reponse['compteur'] = $compteur;
+
+				$rows[] = $reponse;
+			}$requete-> closeCursor();
+
+
+			return $rows;
+
+		}
+
+		public function dossier_worsheet_waiting_validation($id_cli, $id_mod_lic){
+			include('connexion.php');
+			$entree['id_mod_lic'] = $id_mod_lic;
+
+			if (isset($id_cli) && ($id_cli != '')) {
+				$sqlClient = ' AND dos.id_cli = '.$id_cli;
+			}else{
+				$sqlClient = '';
+			}
+
+			$compteur = 0;
+			$rows = array();
+
+			$requete = $connexion-> prepare("SELECT dos.id_dos AS id_dos,
+													dos.ref_dos AS ref_dos,
+													cl.code_cli AS code_cli,
+													DATE_FORMAT(dos.date_feuil_calc, '%d/%m/%Y') AS date_feuil_calc,
+													CONCAT('<button class=\"btn btn-xs btn-info\" title=\"Feuille de calcul\" onclick=\"modal_worksheet(',dos.id_dos,');\"><i class=\"fa fa-calculator\"></i></button> 
+														<button class=\"btn btn-xs bg-secondary square-btn-adjust\" onclick=\"window.open(\'generateurWorksheet.php?id_dos=',dos.id_dos,'&ref_dos=',dos.ref_dos,'\',\'',dos.ref_dos,'\',\'width=1000,height=800\');\" title=\"View Worsheet\">
+										                    <i class=\"fas fa-eye\"></i> 
+										                </button> 
+										                <button class=\"btn btn-xs btn-primary\" title=\"Valider\" onclick=\"valider_worksheet(',dos.id_dos,');\"><i class=\"fa fa-check\"></i></button>') AS btn_action
+												FROM dossier dos, client cl
+												WHERE dos.id_cli = cl.id_cli
+													AND dos.id_mod_lic = ?
+													AND dos.not_feuil_calc = '0'
+													AND dos.id_feuil_calc IS NOT NULL
+													AND dos.date_feuil_calc IS NOT NULL
+													AND dos.id_verif_feuil_calc IS NULL
+													AND dos.date_verif_feuil_calc IS NULL
+													$sqlClient");
+			$requete-> execute(array($entree['id_mod_lic']));
+			while ($reponse = $requete-> fetch()) {
+				$compteur++;
+
+				$reponse['compteur'] = $compteur;
+
+				$rows[] = $reponse;
+			}$requete-> closeCursor();
+
+
+			return $rows;
+
+		}
+
+		public function dossier_worsheet_validated($id_cli, $id_mod_lic){
+			include('connexion.php');
+			$entree['id_mod_lic'] = $id_mod_lic;
+
+			if (isset($id_cli) && ($id_cli != '')) {
+				$sqlClient = ' AND dos.id_cli = '.$id_cli;
+			}else{
+				$sqlClient = '';
+			}
+
+			$compteur = 0;
+			$rows = array();
+
+			$requete = $connexion-> prepare("SELECT dos.id_dos AS id_dos,
+													dos.ref_dos AS ref_dos,
+													cl.code_cli AS code_cli,
+													DATE_FORMAT(dos.date_feuil_calc, '%d/%m/%Y') AS date_feuil_calc,
+													DATE_FORMAT(dos.date_verif_feuil_calc, '%d/%m/%Y') AS date_verif_feuil_calc,
+													CONCAT('<button class=\"btn btn-xs btn-info\" title=\"Feuille de calcul\" onclick=\"modal_worksheet(',dos.id_dos,');\"><i class=\"fa fa-calculator\"></i></button>  
+														<button class=\"btn btn-xs bg-secondary square-btn-adjust\" onclick=\"window.open(\'generateurWorksheet.php?id_dos=',dos.id_dos,'&ref_dos=',dos.ref_dos,'\',\'',dos.ref_dos,'\',\'width=1000,height=800\');\" title=\"View Worsheet\">
+										                    <i class=\"fas fa-eye\"></i> 
+										                </button> ') AS btn_action
+												FROM dossier dos, client cl
+												WHERE dos.id_cli = cl.id_cli
+													AND dos.id_mod_lic = ?
+													AND dos.not_feuil_calc = '0'
+													AND dos.id_verif_feuil_calc IS NOT NULL
+													AND dos.date_verif_feuil_calc IS NOT NULL
+													$sqlClient");
+			$requete-> execute(array($entree['id_mod_lic']));
+			while ($reponse = $requete-> fetch()) {
+				$compteur++;
+
+				$reponse['compteur'] = $compteur;
+
+				$rows[] = $reponse;
+			}$requete-> closeCursor();
+
+
+			return $rows;
+
+		}
+
 		public function transmis_apurement($id_cli, $id_mod_lic){
 			include('connexion.php');
 			$entree['id_mod_lic'] = $id_mod_lic;
@@ -16758,6 +16960,52 @@
 
 
 			return $rows;
+
+		}
+
+		public function check_file_transmis_apurement(){
+			include('connexion.php');
+
+
+			$compteur = 0;
+			$requete = $connexion-> query("SELECT id_trans_ap, ref_trans_ap, date_trans_ap, fichier_trans_ap
+												FROM transmission_apurement");
+			while ($reponse = $requete-> fetch()) {
+				$compteur++;
+				if(isset($reponse['fichier_trans_ap']) && ($reponse['fichier_trans_ap']!="") && file_exists('../transmision_apurements/'.$reponse['id_trans_ap'].'/'.$reponse['fichier_trans_ap'])){
+					echo '<tr>
+							<td>'.$compteur.'</td>
+							<td>'.$reponse['id_trans_ap'].'</td>
+							<td>'.$reponse['ref_trans_ap'].'</td>
+							<td>'.$reponse['date_trans_ap'].'</td>
+							<td>'.$reponse['fichier_trans_ap'].'</td>
+						</tr>';
+				}
+			}$requete-> closeCursor();
+
+
+		}
+
+		public function check_file_transmis_apurement2(){
+			include('connexion.php');
+
+
+			$compteur = 0;
+			$requete = $connexion-> query("SELECT id_trans_ap, ref_trans_ap, date_trans_ap, fichier_trans_ap
+												FROM transmission_apurement");
+			while ($reponse = $requete-> fetch()) {
+				$compteur++;
+				if(!file_exists('../transmision_apurements/'.$reponse['id_trans_ap'].'/'.$reponse['fichier_trans_ap'])){
+					echo '<tr>
+							<td>'.$compteur.'</td>
+							<td>'.$reponse['id_trans_ap'].'</td>
+							<td>'.$reponse['ref_trans_ap'].'</td>
+							<td>'.$reponse['date_trans_ap'].'</td>
+							<td>'.$reponse['fichier_trans_ap'].'</td>
+						</tr>';
+				}
+			}$requete-> closeCursor();
+
 
 		}
 
@@ -18431,6 +18679,28 @@
 			$requete = $connexion-> prepare("INSERT INTO taux_bcc(date_taux, montant, id_util)
 											VALUES(?, ?, ?)");
 			$requete-> execute(array($entree['date_taux'], $entree['montant'], $_SESSION['id_util']));
+			
+		}
+
+		public function creerWorksheet($id_dos, $nom_march, $num_av, $ref_fact, $code_tarif_march, $origine, $provenance, $code_add, $nbr_bags, $poids, $fob){
+			include('connexion.php');
+			$entree['id_dos'] = $id_dos;
+			$entree['nom_march'] = $nom_march;
+			$entree['num_av'] = $num_av;
+			$entree['ref_fact'] = $ref_fact;
+			$entree['code_tarif_march'] = $code_tarif_march;
+			$entree['origine'] = $origine;
+			$entree['provenance'] = $provenance;
+			$entree['code_add'] = $code_add;
+			$entree['nbr_bags'] = $nbr_bags;
+			$entree['poids'] = $poids;
+			$entree['fob'] = $fob;
+
+			$requete = $connexion-> prepare("INSERT INTO marchandise_dossier(id_dos, nom_march, num_av, ref_fact, code_tarif_march, origine, provenance, code_add, nbr_bags, poids, fob, id_util)
+											VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+			$requete-> execute(array($entree['id_dos'], $entree['nom_march'], $entree['num_av'], $entree['ref_fact'], $entree['code_tarif_march'], $entree['origine'], $entree['provenance'], $entree['code_add'], $entree['nbr_bags'], $entree['poids'], $entree['fob'], $_SESSION['id_util']));
+
+			$this-> MAJ_feuil_calc($id_dos);
 			
 		}
 
@@ -37256,7 +37526,17 @@
 			include('connexion.php');
 			$entree['id_dos'] = $id_dos;
 
-			$requete = $connexion-> prepare("SELECT *
+			$requete = $connexion-> prepare("SELECT *,
+													(
+														IF(fret IS NOT NULL,
+															fret, 0)+
+														IF(assurance IS NOT NULL,
+															assurance, 0)+
+														IF(autre_frais IS NOT NULL,
+															autre_frais, 0)
+													) AS cif_2,
+													DATE_FORMAT(date_feuil_calc, '%Y-%m-%d %H:%i:%s') AS date_feuil_calc_1,
+													DATE_FORMAT(date_verif_feuil_calc, '%Y-%m-%d %H:%i:%s') AS date_verif_feuil_calc_1
 												FROM dossier
 												WHERE id_dos = ?");
 			$requete-> execute(array($entree['id_dos']));
@@ -37264,6 +37544,159 @@
 			if($reponse){
 				return $reponse;
 			}
+		}
+
+		public function getMarchandiseDossier($id_dos){
+			include('connexion.php');
+			$entree['id_dos'] = $id_dos;
+			$table = '';
+			$compteur=0;
+			if ($this-> getFOBMarchandiseDossier($id_dos)>0) {
+				$fob_marchandise = $this-> getFOBMarchandiseDossier($id_dos);
+			}else{
+				$fob_marchandise = 1;
+			}
+			$coef = ($this-> getFOBMarchandiseDossier($id_dos)+$this-> getDossier($id_dos)['cif_2'])/$fob_marchandise;
+			$roe_feuil_calc = $this-> getDossier($id_dos)['roe_feuil_calc'];
+
+			$requete = $connexion-> prepare("SELECT *
+												FROM marchandise_dossier
+												WHERE id_dos = ?");
+			$requete-> execute(array($entree['id_dos']));
+			while($reponse=$requete-> fetch()){
+				$compteur++;
+				$table .='<tr>
+								<td>'.$compteur.'</td>
+								<td>'.$reponse['nom_march'].'</td>
+								<td>'.$reponse['num_av'].'</td>
+								<td>'.$reponse['ref_fact'].'</td>
+								<td>'.$reponse['code_tarif_march'].'</td>
+								<td>'.$reponse['origine'].'</td>
+								<td>'.$reponse['provenance'].'</td>
+								<td>'.$reponse['code_add'].'</td>
+								<td style="text-align: right;">'.number_format($reponse['nbr_bags'], 2, '.', ',').'</td>
+								<td style="text-align: right;">'.number_format($reponse['poids'], 2, '.', ',').'</td>
+								<td style="text-align: right;">'.number_format($reponse['fob'], 2, '.', ',').'</td>
+								<td style="text-align: right;">'.number_format($coef, 2, '.', ',').'</td>
+								<td style="text-align: right;">'.number_format($reponse['fob']*$coef, 2, '.', ',').'</td>
+								<td style="text-align: right;">'.number_format($reponse['fob']*$coef*(10/100)*$roe_feuil_calc, 0, '.', ',').'</td>
+								<td>
+									<button class="btn-xs btn-danger" onclick="supprimerMarchandiseDossier('.$reponse['id_march_dos'].', '.$reponse['id_dos'].');">
+										<span class="fa fa-times"></span>
+									</button>
+								</td>
+							</tr>';
+			}$requete-> closeCursor();
+
+			return $table;
+			
+		}
+
+		public function getMarchandiseDossier2($id_dos){
+			include('connexion.php');
+			$entree['id_dos'] = $id_dos;
+			$table = '';
+			$compteur=0;
+			$nbr_bags=0;
+			$poids=0;
+			$fob=0;
+			$cif_1=0;
+			$cif_2=0;
+
+			if ($this-> getFOBMarchandiseDossier($id_dos)>0) {
+				$fob_marchandise = $this-> getFOBMarchandiseDossier($id_dos);
+			}else{
+				$fob_marchandise = 1;
+			}
+			$coef = ($this-> getFOBMarchandiseDossier($id_dos)+$this-> getDossier($id_dos)['cif_2'])/$fob_marchandise;
+			$roe_feuil_calc = $this-> getDossier($id_dos)['roe_feuil_calc'];
+
+			$requete = $connexion-> prepare("SELECT *
+												FROM marchandise_dossier
+												WHERE id_dos = ?");
+			$requete-> execute(array($entree['id_dos']));
+			while($reponse=$requete-> fetch()){
+				$compteur++;
+				$nbr_bags+= $reponse['nbr_bags'];
+				$poids+= $reponse['poids'];
+				$fob+= $reponse['fob'];
+				$cif_1+= $reponse['fob']*$coef;
+				$cif_2+= $reponse['fob']*$coef*$roe_feuil_calc;
+				$table .='
+						<tr>
+							<td width="12%" style="text-align: center; border: 0.3px solid black; ">'.$reponse['nom_march'].'</td>
+							<td width="12%" style="text-align: center; border: 0.3px solid black; ">'.$reponse['num_av'].'</td>
+							<td width="12%" style="text-align: center; border: 0.3px solid black; ">'.$reponse['ref_fact'].'</td>
+							<td width="12%" style="text-align: center; border: 0.3px solid black; ">'.$reponse['code_tarif_march'].'</td>
+							<td width="5%" style="text-align: center; border: 0.3px solid black; ">'.$reponse['origine'].'</td>
+							<td width="5%" style="text-align: center; border: 0.3px solid black; ">'.$reponse['provenance'].'</td>
+							<td width="6%" style="text-align: center; border: 0.3px solid black; ">'.$reponse['code_add'].'</td>
+							<td width="6%" style="text-align: center; border: 0.3px solid black; ">'.number_format($reponse['nbr_bags'], 0, '.', ',').'</td>
+							<td width="6%" style="text-align: right; border: 0.3px solid black; ">'.number_format($reponse['poids'], 2, '.', ',').'</td>
+							<td width="8%" style="text-align: right; border: 0.3px solid black; ">'.number_format($reponse['fob'], 2, '.', ',').'</td>
+							<td width="8%" style="text-align: right; border: 0.3px solid black; ">'.number_format($reponse['fob']*$coef, 2, '.', ',').'</td>
+							<td width="8%" style="text-align: right; border: 0.3px solid black; ">'.number_format($reponse['fob']*$coef*(10/100)*$roe_feuil_calc, 0, '.', ',').'</td>
+						</tr>';
+			}$requete-> closeCursor();
+				$table .='
+						<tr>
+							<td width="12%" style="text-align: center; border: 0.3px solid black; "></td>
+							<td width="12%" style="text-align: center; border: 0.3px solid black; "></td>
+							<td width="12%" style="text-align: center; border: 0.3px solid black; "></td>
+							<td width="12%" style="text-align: center; border: 0.3px solid black; "></td>
+							<td width="5%" style="text-align: center; border: 0.3px solid black; "></td>
+							<td width="5%" style="text-align: center; border: 0.3px solid black; "></td>
+							<td width="6%" style="text-align: center; border: 0.3px solid black; "></td>
+							<td width="6%" style="text-align: center; border: 0.3px solid black; font-weight: bold;">'.number_format($nbr_bags, 0, '.', ',').'</td>
+							<td width="6%" style="text-align: right; border: 0.3px solid black; font-weight: bold;">'.number_format($poids, 2, '.', ',').'</td>
+							<td width="8%" style="text-align: right; border: 0.3px solid black; font-weight: bold;">'.number_format($fob, 2, '.', ',').'</td>
+							<td width="8%" style="text-align: right; border: 0.3px solid black; font-weight: bold;">'.number_format($cif_1, 2, '.', ',').'</td>
+							<td width="8%" style="text-align: right; border: 0.3px solid black; font-weight: bold;">'.number_format($cif_2, 0, '.', ',').'</td>
+						</tr>';
+
+			return $table;
+			
+		}
+
+		public function supprimerMarchandiseDossier($id_march_dos){
+			include('connexion.php');
+			$entree['id_march_dos'] = $id_march_dos;
+
+			$this-> MAJ_feuil_calc($this-> getDataMarchandiseDossier($id_march_dos)['id_dos']);
+			$requete = $connexion-> prepare("DELETE FROM marchandise_dossier
+												WHERE id_march_dos = ?");
+			$requete-> execute(array($entree['id_march_dos']));
+			
+		}
+
+		public function getDataMarchandiseDossier($id_march_dos){
+			include('connexion.php');
+			$entree['id_march_dos'] = $id_march_dos;
+			$table = '';
+			$compteur=0;
+
+			$requete = $connexion-> prepare("SELECT *
+												FROM marchandise_dossier
+												WHERE id_march_dos = ?");
+			$requete-> execute(array($entree['id_march_dos']));
+			$reponse=$requete-> fetch();
+			return $reponse;
+			
+		}
+
+		public function getFOBMarchandiseDossier($id_dos){
+			include('connexion.php');
+			$entree['id_dos'] = $id_dos;
+			$table = '';
+			$compteur=0;
+
+			$requete = $connexion-> prepare("SELECT SUM(fob) AS fob
+												FROM marchandise_dossier
+												WHERE id_dos = ?");
+			$requete-> execute(array($entree['id_dos']));
+			$reponse=$requete-> fetch();
+			return $reponse['fob'];
+			
 		}
 
 		public function getDossier2($id_dos){
@@ -47293,9 +47726,12 @@
 
 			move_uploaded_file($tmp, '../transmision_apurements/'.$id_trans_ap.'/' . basename($fichier_trans_ap));
 
-			$requete = $connexion-> prepare("UPDATE transmission_apurement SET fichier_trans_ap= ?	
+			if(file_exists('../transmision_apurements/'.$id_trans_ap.'/'.$fichier_trans_ap)){
+				$requete = $connexion-> prepare("UPDATE transmission_apurement SET fichier_trans_ap= ?	
 												WHERE id_trans_ap = ?");
-			$requete-> execute(array($entree['fichier_trans_ap'], $entree['id_trans_ap']));
+				$requete-> execute(array($entree['fichier_trans_ap'], $entree['id_trans_ap']));
+			}
+
 
 
 
@@ -48214,6 +48650,70 @@
 			$requete = $connexion-> prepare("UPDATE dossier SET ref_dos = ?
 												WHERE id_dos = ?");
 			$requete-> execute(array($entree['ref_dos'], $entree['id_dos']));
+
+		} 
+
+		public function maj_incoterm($id_dos, $incoterm){
+
+			//Log
+			if ($this-> getDossier($id_dos)['incoterm'] != $incoterm) {
+				
+				// $colonne = $this-> getNomColonneClient('incoterm', $_GET['id_cli'], $_GET['id_mod_trans'], $_GET['id_mod_trac']);
+				$this-> creerLogDossier('Incoterm', $incoterm, $id_dos, $_SESSION['id_util']);
+
+			}
+
+			include('connexion.php');
+			$entree['id_dos'] = $id_dos;
+			$entree['incoterm'] = $incoterm;
+			$requete = $connexion-> prepare("UPDATE dossier SET incoterm = ?
+												WHERE id_dos = ?");
+			$requete-> execute(array($entree['incoterm'], $entree['id_dos']));
+
+		} 
+
+		public function MAJ_feuil_calc($id_dos){
+
+			//Log
+			$this-> creerLogDossier('Worsheet', date('Y-m-d'), $id_dos, $_SESSION['id_util']);
+
+			include('connexion.php');
+			$entree['id_dos'] = $id_dos;
+			$requete = $connexion-> prepare("UPDATE dossier SET id_feuil_calc = ?, date_feuil_calc = NOW()
+												WHERE id_dos = ?");
+			$requete-> execute(array($_SESSION['id_util'], $entree['id_dos']));
+
+		} 
+
+		public function MAJ_verif_feuil_calc($id_dos){
+
+			//Log
+			$this-> creerLogDossier('Validation Worsheet', date('Y-m-d'), $id_dos, $_SESSION['id_util']);
+
+			include('connexion.php');
+			$entree['id_dos'] = $id_dos;
+			$requete = $connexion-> prepare("UPDATE dossier SET id_verif_feuil_calc = ?, date_verif_feuil_calc = NOW()
+												WHERE id_dos = ?");
+			$requete-> execute(array($_SESSION['id_util'], $entree['id_dos']));
+
+		} 
+
+		public function maj_roe_feuil_calc($id_dos, $roe_feuil_calc){
+
+			//Log
+			if ($this-> getDossier($id_dos)['roe_feuil_calc'] != $roe_feuil_calc) {
+				
+				// $colonne = $this-> getNomColonneClient('roe_feuil_calc', $_GET['id_cli'], $_GET['id_mod_trans'], $_GET['id_mod_trac']);
+				$this-> creerLogDossier('roe_feuil_calc', $roe_feuil_calc, $id_dos, $_SESSION['id_util']);
+
+			}
+
+			include('connexion.php');
+			$entree['id_dos'] = $id_dos;
+			$entree['roe_feuil_calc'] = $roe_feuil_calc;
+			$requete = $connexion-> prepare("UPDATE dossier SET roe_feuil_calc = ?
+												WHERE id_dos = ?");
+			$requete-> execute(array($entree['roe_feuil_calc'], $entree['id_dos']));
 
 		} 
 
