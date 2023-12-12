@@ -45,3 +45,41 @@
   </div>
   <!-- /.modal-dialog -->
 </div>
+
+<div class="modal fade" id="modal_client_worksheet">
+  <div class="modal-dialog modal-md">
+    <div class="modal-content">
+      <div class="modal-header btn-dark">
+        <h4 class="modal-title"><i class="fa fa-list"></i> Clients </h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+
+          <div class="col-md-12 table-responsive p-0 " style="height: 500px;">
+            <table class="table table-bordered table-striped text-nowrap table-hover table-sm small text-nowrap table-head-fixed table-dark">
+              <thead>
+                  <tr>
+                      <th>#</th>
+                      <th>Code</th>
+                      <th>Client</th>
+                  </tr>
+              </thead>
+              <tbody id="tableau_client_worksheet">
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <!-- <div class="modal-footer justify-content-between">
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Annuler</button>
+        <button type="submit" name="creerAV" class="btn btn-primary">Valider</button>
+      </div> -->
+    </div>
+    <!-- </form> -->
+    <!-- /.modal-content -->
+  </div>
+  <!-- /.modal-dialog -->
+</div>

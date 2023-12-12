@@ -84,7 +84,7 @@
               <img src="../images/gestion-des-risques.png" width="25px">
               <span class="">
               <p>
-                DOSSSIERS CONTENTIEUX<br>
+                DOSSIERS CONTENTIEUX<br>
               </p></span>
             </a>
           </li>
@@ -365,6 +365,42 @@
 
             <?php
               $maClasse-> afficherMenuTracking();
+            }
+        
+        if(!empty($maClasse-> getAffectationUtilisateurModule($_SESSION['id_util'], 13))){
+          ?>
+            <hr>
+          <li class="nav-item"  style="">
+            <a href="#" class="nav-link active bg bg-danger" style=" font-weight: bold;">
+              <!--<i class="nav-icon fas fa-tachometer-alt"></i>-->
+              <span class="">
+              <p style="">
+                <!-- <i class="fa fa-cogs"></i> -->
+                <?php
+                  if ($maClasse-> getUtilisateur($_SESSION['id_util'])['langue']=='ENG') {
+                    echo 'WORKSHEET';
+                  }else if ($maClasse-> getUtilisateur($_SESSION['id_util'])['langue']=='FR') {
+                    echo 'FEUILLE DE CALCUL';
+                  }
+                ?>
+                <br>
+              </p></span>
+            </a>
+          </li>
+          <li class="nav-item" onclick="modal_client_worksheet(2);">
+            <a href="#" class="nav-link">
+              &nbsp;<i class="fa fa-calculator"></i>
+              <p><?php
+                  if ($maClasse-> getUtilisateur($_SESSION['id_util'])['langue']=='ENG') {
+                    echo 'List Worksheet';
+                  }else if ($maClasse-> getUtilisateur($_SESSION['id_util'])['langue']=='FR') {
+                    echo 'Lister Feuille de calcul';
+                  }
+                ?></p>
+            </a>
+          </li>
+            <hr>
+            <?php
             }
 
             if($_SESSION['id_role'] == '1' || $_SESSION['id_role'] == '6' || $_SESSION['id_role'] == '7' || $_SESSION['id_role'] == '8' || $_SESSION['id_role'] == '9' || $_SESSION['id_role'] == '10' || $_SESSION['id_role'] == '11'){

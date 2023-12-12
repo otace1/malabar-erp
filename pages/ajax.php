@@ -2626,6 +2626,86 @@
 
 		echo json_encode($maClasse-> statut_licence($_POST['id_cli'], $_POST['id_mod_lic']));
 
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='modal_dossier_pending_worksheet'){ 
+
+		$response['tableau_dossier_pending_worksheet'] = $maClasse-> tableau_dossier_pending_worksheet($_POST['id_mod_lic']);
+
+		echo json_encode($response);
+
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='modal_client_worksheet'){ 
+
+		$response['tableau_client_worksheet'] = $maClasse-> tableau_client_worksheet($_POST['id_mod_lic']);
+
+		echo json_encode($response);
+
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='dossier_pending_worsheet'){ 
+
+		echo json_encode($maClasse-> dossier_pending_worsheet($_POST['id_cli'], $_POST['id_mod_lic']));
+
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='modal_worksheet'){ 
+
+		$response = $maClasse-> getDossier($_POST['id_dos']);
+		$response['marchandiseDossier'] = $maClasse-> getMarchandiseDossier($_POST['id_dos']);
+
+		echo json_encode($response);
+
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='creerWorksheet'){ 
+
+		$maClasse-> creerWorksheet($_POST['id_dos'], $_POST['nom_march'], $_POST['num_av'], $_POST['ref_fact'], $_POST['code_tarif_march'], $_POST['origine'], $_POST['provenance'], $_POST['code_add'], $_POST['nbr_bags'], $_POST['poids'], $_POST['fob']);
+		$response['marchandiseDossier'] = $maClasse-> getMarchandiseDossier($_POST['id_dos']);
+		// $response = $maClasse-> getDossier($_POST['id_dos']);
+
+		echo json_encode($response);
+
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='getSommeMarchandiseDossier'){ 
+
+		$response['fob'] = $maClasse-> getFOBMarchandiseDossier($_POST['id_dos']);
+		// $response = $maClasse-> getDossier($_POST['id_dos']);
+
+		echo json_encode($response);
+
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='maj_incoterm'){// MAJ Montant Decl
+
+  		// $reponse = $maClasse-> getDataDossier($_POST['id_dos']);
+  		$maClasse-> maj_incoterm($_POST['id_dos'], $_POST['incoterm']);
+  		$response['message'] = 'Done !';
+
+  		echo json_encode($response);
+
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='maj_roe_feuil_calc'){// MAJ Montant Decl
+
+  		// $reponse = $maClasse-> getDataDossier($_POST['id_dos']);
+  		$maClasse-> maj_roe_feuil_calc($_POST['id_dos'], $_POST['roe_feuil_calc']);
+		$response['marchandiseDossier'] = $maClasse-> getMarchandiseDossier($_POST['id_dos']);
+  		$response['message'] = 'Done !';
+
+  		echo json_encode($response);
+
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='supprimerMarchandiseDossier'){// MAJ Montant Decl
+
+  		// $reponse = $maClasse-> getDataDossier($_POST['id_dos']);
+  		$maClasse-> supprimerMarchandiseDossier($_POST['id_march_dos']);
+		$response['marchandiseDossier'] = $maClasse-> getMarchandiseDossier($_POST['id_dos']);
+  		$response['message'] = 'Done !';
+
+  		echo json_encode($response);
+
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='valider_worksheet'){// MAJ Montant Decl
+
+  		// $reponse = $maClasse-> getDataDossier($_POST['id_dos']);
+  		$maClasse-> MAJ_verif_feuil_calc($_POST['id_dos']);
+  		$response['message'] = 'Done !';
+
+  		echo json_encode($response);
+
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='dossier_worsheet_waiting_validation'){ 
+
+		echo json_encode($maClasse-> dossier_worsheet_waiting_validation($_POST['id_cli'], $_POST['id_mod_lic']));
+
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='dossier_worsheet_validated'){ 
+
+		echo json_encode($maClasse-> dossier_worsheet_validated($_POST['id_cli'], $_POST['id_mod_lic']));
+
 	}
 
 

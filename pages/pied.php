@@ -90,6 +90,48 @@
 
     }
 
+    function modal_dossier_pending_worksheet(id_mod_lic){
+
+      $.ajax({
+        type: "POST",
+        url: "ajax.php",
+        data: {id_mod_lic: id_mod_lic, operation: 'modal_dossier_pending_worksheet'},
+        dataType:"json",
+        success:function(data){
+          if (data.logout) {
+            alert(data.logout);
+            window.location="../deconnexion.php";
+          }else{
+            $('#tableau_dossier_pending_worksheet').html(data.tableau_dossier_pending_worksheet);
+            $('#modal_dossier_pending_worksheet').modal("show");
+          }
+        }
+      });
+
+
+    }
+
+    function modal_client_worksheet(id_mod_lic){
+
+      $.ajax({
+        type: "POST",
+        url: "ajax.php",
+        data: {id_mod_lic: id_mod_lic, operation: 'modal_client_worksheet'},
+        dataType:"json",
+        success:function(data){
+          if (data.logout) {
+            alert(data.logout);
+            window.location="../deconnexion.php";
+          }else{
+            $('#tableau_client_worksheet').html(data.tableau_client_worksheet);
+            $('#modal_client_worksheet').modal("show");
+          }
+        }
+      });
+
+
+    }
+
     function deroulerMenuLicence(id_mod_lic){
 
       $('#spinner-div').show();
