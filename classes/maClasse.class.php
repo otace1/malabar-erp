@@ -5287,13 +5287,26 @@
     		while ($reponse = $requete-> fetch()) {
     			$compteur++;
     			$tableau .= '
-    						<tr onMouseOver="this.style.cursor=\'pointer\'" onclick="window.location.replace(\'worksheet.php?id_mod_lic='.$id_mod_lic.'&id_cli='.$reponse['id_cli'].'\');">
+    						<tr>
     							<td>'.$compteur.'</td>
     							<td>'.$reponse['code_cli'].'</td>
     							<td>'.$reponse['nom_cli'].'</td>
-    							<td>'.$this-> dossier_awaiting_worksheet_client($id_mod_lic, $reponse['id_cli']).'</td>
+    							<td class="text-center text-light">
+    								<button class="btn btn-xs btn-warning" onclick="window.location.replace(\'file_pending_worksheet.php?id_mod_lic='.$id_mod_lic.'&id_cli='.$reponse['id_cli'].'\');">
+    									<i class="fa fa-exclamation"></i> Files Pending ('.$this-> dossier_awaiting_worksheet_client($id_mod_lic, $reponse['id_cli']).')
+    								</button> | 
+    								<button class="btn btn-xs bg-info" onclick="window.location.replace(\'list_worksheet.php?id_mod_lic='.$id_mod_lic.'&id_cli='.$reponse['id_cli'].'\');"><i class="fa fa-list"></i> Worsheet list</button>
+    							</td>
     						</tr>
     			';
+    			// $tableau .= '
+    			// 			<tr onMouseOver="this.style.cursor=\'pointer\'" onclick="window.location.replace(\'worksheet.php?id_mod_lic='.$id_mod_lic.'&id_cli='.$reponse['id_cli'].'\');">
+    			// 				<td>'.$compteur.'</td>
+    			// 				<td>'.$reponse['code_cli'].'</td>
+    			// 				<td>'.$reponse['nom_cli'].'</td>
+    			// 				<td>'.$this-> dossier_awaiting_worksheet_client($id_mod_lic, $reponse['id_cli']).'</td>
+    			// 			</tr>
+    			// ';
     		 }$requete-> closeCursor();
 
     		 return $tableau;
@@ -10432,7 +10445,7 @@
 													) AS base_arsp,
 													dos.poids AS poids,
 													fact.id_cli AS id_cli,
-													IF(fact.id_cli=904 AND DATE(fact.date_fact)>="2023-11-17",
+													IF((fact.id_cli=904 AND DATE(fact.date_fact)>="2023-11-17") OR (fact.statut_arsp="1"),
 														"1",
 														"0"
 													) AS statut_arsp
@@ -10478,6 +10491,53 @@
 				$total_gen = $reponse['ttc_usd'];
 
 			if ($reponse['id_cli']=='904' && $reponse['statut_arsp']=='1') {
+				
+			$tbl .= '
+					<tr>
+						<td style="text-align: right; border: 0.5px solid black; font-weight: bold; font-size: 8px;" width="23%">Total excl. TVA &nbsp;&nbsp;
+						</td>
+						<td style="text-align: right; border: 0.5px solid black; font-weight: bold;" width="11.5%">$ '
+							.number_format($sub_total, 2, ',', '.').
+						'&nbsp;&nbsp;</td>
+					</tr>
+					<tr>
+						<td style="text-align: right; border: 0.5px solid black; font-weight: bold; font-size: 8px;" width="23%"> TVA 16% &nbsp;&nbsp;
+						</td>
+						<td style="text-align: right; border: 0.5px solid black; font-weight: bold;" width="11.5%">$ '
+							.number_format($total_tva, 2, ',', '.').
+						'&nbsp;&nbsp;</td>
+					</tr>
+					<tr>
+						<td style="text-align: right; border: 0.5px solid black; font-weight: bold; font-size: 10px; font-weight: bold;" width="23%">Grand Total &nbsp;&nbsp;
+						</td>
+						<td style="text-align: right; border: 0.5px solid black; font-weight: bold; font-size: 10px;" width="11.5%">$ '
+							.number_format($total_gen, 2, ',', '.').
+						'&nbsp;&nbsp;</td>
+					</tr>
+					<tr>
+						<td style="text-align: right; border: 0.5px solid black; font-weight: bold; font-size: 8px;" width="23%"> ARSP Tax (1.2%) &nbsp;&nbsp;
+						</td>
+						<td style="text-align: right; border: 0.5px solid black; font-weight: bold;" width="11.5%">$ '
+							.number_format($reponse['arsp'], 2, ',', '.').
+						'&nbsp;&nbsp;</td>
+					</tr>
+					<tr>
+						<td style="text-align: right; border: 0.5px solid black; font-weight: bold; font-size: 10px; font-weight: bold; background-color: rgb(220,220,220);" width="23%">Net Payable &nbsp;&nbsp;
+						</td>
+						<td style="text-align: right; border: 0.5px solid black; font-weight: bold; font-size: 10px; background-color: rgb(220,220,220);" width="11.5%">$ '
+							.number_format($total_gen-$reponse['arsp'], 2, ',', '.').
+						'&nbsp;&nbsp;</td>
+					</tr>
+					<tr>
+						<td style="text-align: right; border: 0.5px solid black; font-weight: bold; font-size: 8px;" width="23%"> Equivalent en CDF &nbsp;&nbsp;
+						</td>
+						<td style="text-align: right; border: 0.5px solid black; font-weight: bold;" width="11.5%">'
+							.number_format(($total_gen-$reponse['arsp'])*$reponse['roe_decl'], 2, ',', '.').
+						'&nbsp;&nbsp;</td>
+					</tr>
+					';
+
+			}else if ($reponse['statut_arsp']=='1') {
 				
 			$tbl .= '
 					<tr>
@@ -16790,7 +16850,7 @@
 			$requete = $connexion-> prepare("SELECT dos.id_dos AS id_dos,
 													dos.ref_dos AS ref_dos,
 													cl.code_cli AS code_cli,
-													CONCAT('<button class=\"btn btn-xs btn-info\" title=\"Feuille de calcul\" onclick=\"modal_worksheet(',dos.id_dos,');\"><i class=\"fa fa-calculator\"></i></button>') AS btn_action
+													CONCAT('<button class=\"btn btn-xs btn-info\" title=\"Feuille de calcul\" onclick=\"window.location.replace(\'worksheet.php?id_dos=',dos.id_dos,'\');\"><i class=\"fa fa-calculator\"></i></button>') AS btn_action
 												FROM dossier dos, client cl
 												WHERE dos.id_cli = cl.id_cli
 													AND dos.id_mod_lic = ?
@@ -16799,6 +16859,28 @@
 													AND dos.date_feuil_calc IS NULL
 													$sqlClient");
 			$requete-> execute(array($entree['id_mod_lic']));
+			while ($reponse = $requete-> fetch()) {
+				$compteur++;
+
+				$reponse['compteur'] = $compteur;
+
+				$rows[] = $reponse;
+			}$requete-> closeCursor();
+
+
+			return $rows;
+
+		}
+
+		public function code_tarifaire_ajax(){
+			include('connexion.php');
+			
+			$compteur = 0;
+			$rows = array();
+
+			$requete = $connexion-> query("SELECT *
+												FROM code_tarifaire");
+			// $requete-> execute(array($entree['id_mod_lic']));
 			while ($reponse = $requete-> fetch()) {
 				$compteur++;
 
@@ -16829,7 +16911,12 @@
 													dos.ref_dos AS ref_dos,
 													cl.code_cli AS code_cli,
 													DATE_FORMAT(dos.date_feuil_calc, '%d/%m/%Y') AS date_feuil_calc,
-													CONCAT('<button class=\"btn btn-xs btn-info\" title=\"Feuille de calcul\" onclick=\"modal_worksheet(',dos.id_dos,');\"><i class=\"fa fa-calculator\"></i></button> 
+													-- CONCAT('<button class=\"btn btn-xs btn-info\" title=\"Feuille de calcul\" onclick=\"modal_worksheet(',dos.id_dos,');\"><i class=\"fa fa-calculator\"></i></button> 
+													-- 	<button class=\"btn btn-xs bg-secondary square-btn-adjust\" onclick=\"window.open(\'generateurWorksheet.php?id_dos=',dos.id_dos,'&ref_dos=',dos.ref_dos,'\',\'',dos.ref_dos,'\',\'width=1000,height=800\');\" title=\"View Worsheet\">
+										            --         <i class=\"fas fa-eye\"></i> 
+										            --     </button> 
+										            --     <button class=\"btn btn-xs btn-primary\" title=\"Valider\" onclick=\"valider_worksheet(',dos.id_dos,');\"><i class=\"fa fa-check\"></i></button>') AS btn_action,
+													CONCAT('<button class=\"btn btn-xs btn-info\" title=\"Feuille de calcul\" onclick=\"window.location.replace(\'worksheet.php?id_dos=',dos.id_dos,'\');\"><i class=\"fa fa-calculator\"></i></button>
 														<button class=\"btn btn-xs bg-secondary square-btn-adjust\" onclick=\"window.open(\'generateurWorksheet.php?id_dos=',dos.id_dos,'&ref_dos=',dos.ref_dos,'\',\'',dos.ref_dos,'\',\'width=1000,height=800\');\" title=\"View Worsheet\">
 										                    <i class=\"fas fa-eye\"></i> 
 										                </button> 
@@ -16875,8 +16962,7 @@
 													cl.code_cli AS code_cli,
 													DATE_FORMAT(dos.date_feuil_calc, '%d/%m/%Y') AS date_feuil_calc,
 													DATE_FORMAT(dos.date_verif_feuil_calc, '%d/%m/%Y') AS date_verif_feuil_calc,
-													CONCAT('<button class=\"btn btn-xs btn-info\" title=\"Feuille de calcul\" onclick=\"modal_worksheet(',dos.id_dos,');\"><i class=\"fa fa-calculator\"></i></button>  
-														<button class=\"btn btn-xs bg-secondary square-btn-adjust\" onclick=\"window.open(\'generateurWorksheet.php?id_dos=',dos.id_dos,'&ref_dos=',dos.ref_dos,'\',\'',dos.ref_dos,'\',\'width=1000,height=800\');\" title=\"View Worsheet\">
+													CONCAT('<button class=\"btn btn-xs bg-secondary square-btn-adjust\" onclick=\"window.open(\'generateurWorksheet.php?id_dos=',dos.id_dos,'&ref_dos=',dos.ref_dos,'\',\'',dos.ref_dos,'\',\'width=1000,height=800\');\" title=\"View Worsheet\">
 										                    <i class=\"fas fa-eye\"></i> 
 										                </button> ') AS btn_action
 												FROM dossier dos, client cl
@@ -37546,6 +37632,20 @@
 			}
 		}
 
+		public function getCode_tarif($code_tarif){
+			include('connexion.php');
+			$entree['code_tarif'] = $code_tarif;
+
+			$requete = $connexion-> prepare("SELECT *
+												FROM code_tarifaire
+												WHERE code_tarif = ?");
+			$requete-> execute(array($entree['code_tarif']));
+			$reponse=$requete-> fetch();
+			if($reponse){
+				return $reponse;
+			}
+		}
+
 		public function getMarchandiseDossier($id_dos){
 			include('connexion.php');
 			$entree['id_dos'] = $id_dos;
@@ -37556,7 +37656,7 @@
 			}else{
 				$fob_marchandise = 1;
 			}
-			$coef = ($this-> getFOBMarchandiseDossier($id_dos)+$this-> getDossier($id_dos)['cif_2'])/$fob_marchandise;
+			$coef = round(($this-> getFOBMarchandiseDossier($id_dos)+$this-> getDossier($id_dos)['cif_2'])/$fob_marchandise, 1);
 			$roe_feuil_calc = $this-> getDossier($id_dos)['roe_feuil_calc'];
 
 			$requete = $connexion-> prepare("SELECT *
@@ -37577,9 +37677,10 @@
 								<td style="text-align: right;">'.number_format($reponse['nbr_bags'], 2, '.', ',').'</td>
 								<td style="text-align: right;">'.number_format($reponse['poids'], 2, '.', ',').'</td>
 								<td style="text-align: right;">'.number_format($reponse['fob'], 2, '.', ',').'</td>
-								<td style="text-align: right;">'.number_format($coef, 2, '.', ',').'</td>
+								<td style="text-align: right;">'.number_format($coef, 1, '.', ',').'</td>
 								<td style="text-align: right;">'.number_format($reponse['fob']*$coef, 2, '.', ',').'</td>
-								<td style="text-align: right;">'.number_format($reponse['fob']*$coef*(10/100)*$roe_feuil_calc, 0, '.', ',').'</td>
+								<td style="text-align: right;">'.number_format($this-> getCode_tarif($reponse['code_tarif_march'])['DDI'], 2, '.', ',').'</td>
+								<td style="text-align: right;">'.number_format($reponse['fob']*$coef*($this-> getCode_tarif($reponse['code_tarif_march'])['DDI']/100)*$roe_feuil_calc, 0, '.', ',').'</td>
 								<td>
 									<button class="btn-xs btn-danger" onclick="supprimerMarchandiseDossier('.$reponse['id_march_dos'].', '.$reponse['id_dos'].');">
 										<span class="fa fa-times"></span>
@@ -37621,13 +37722,13 @@
 				$poids+= $reponse['poids'];
 				$fob+= $reponse['fob'];
 				$cif_1+= $reponse['fob']*$coef;
-				$cif_2+= $reponse['fob']*$coef*$roe_feuil_calc;
+				$ddi+= $reponse['fob']*($this-> getCode_tarif($reponse['code_tarif_march'])['DDI']/100)*$coef*$roe_feuil_calc;
 				$table .='
 						<tr>
 							<td width="12%" style="text-align: center; border: 0.3px solid black; ">'.$reponse['nom_march'].'</td>
-							<td width="12%" style="text-align: center; border: 0.3px solid black; ">'.$reponse['num_av'].'</td>
+							<td width="10%" style="text-align: center; border: 0.3px solid black; ">'.$reponse['num_av'].'</td>
 							<td width="12%" style="text-align: center; border: 0.3px solid black; ">'.$reponse['ref_fact'].'</td>
-							<td width="12%" style="text-align: center; border: 0.3px solid black; ">'.$reponse['code_tarif_march'].'</td>
+							<td width="10%" style="text-align: center; border: 0.3px solid black; ">'.$reponse['code_tarif_march'].'</td>
 							<td width="5%" style="text-align: center; border: 0.3px solid black; ">'.$reponse['origine'].'</td>
 							<td width="5%" style="text-align: center; border: 0.3px solid black; ">'.$reponse['provenance'].'</td>
 							<td width="6%" style="text-align: center; border: 0.3px solid black; ">'.$reponse['code_add'].'</td>
@@ -37635,15 +37736,16 @@
 							<td width="6%" style="text-align: right; border: 0.3px solid black; ">'.number_format($reponse['poids'], 2, '.', ',').'</td>
 							<td width="8%" style="text-align: right; border: 0.3px solid black; ">'.number_format($reponse['fob'], 2, '.', ',').'</td>
 							<td width="8%" style="text-align: right; border: 0.3px solid black; ">'.number_format($reponse['fob']*$coef, 2, '.', ',').'</td>
-							<td width="8%" style="text-align: right; border: 0.3px solid black; ">'.number_format($reponse['fob']*$coef*(10/100)*$roe_feuil_calc, 0, '.', ',').'</td>
+							<td width="4%" style="text-align: right; border: 0.3px solid black; ">'.number_format($this-> getCode_tarif($reponse['code_tarif_march'])['DDI'], 2, '.', ',').'</td>
+							<td width="8%" style="text-align: right; border: 0.3px solid black; ">'.number_format($reponse['fob']*$coef*($this-> getCode_tarif($reponse['code_tarif_march'])['DDI']/100)*$roe_feuil_calc, 0, '.', ',').'</td>
 						</tr>';
 			}$requete-> closeCursor();
 				$table .='
 						<tr>
 							<td width="12%" style="text-align: center; border: 0.3px solid black; "></td>
+							<td width="10%" style="text-align: center; border: 0.3px solid black; "></td>
 							<td width="12%" style="text-align: center; border: 0.3px solid black; "></td>
-							<td width="12%" style="text-align: center; border: 0.3px solid black; "></td>
-							<td width="12%" style="text-align: center; border: 0.3px solid black; "></td>
+							<td width="10%" style="text-align: center; border: 0.3px solid black; "></td>
 							<td width="5%" style="text-align: center; border: 0.3px solid black; "></td>
 							<td width="5%" style="text-align: center; border: 0.3px solid black; "></td>
 							<td width="6%" style="text-align: center; border: 0.3px solid black; "></td>
@@ -37651,7 +37753,8 @@
 							<td width="6%" style="text-align: right; border: 0.3px solid black; font-weight: bold;">'.number_format($poids, 2, '.', ',').'</td>
 							<td width="8%" style="text-align: right; border: 0.3px solid black; font-weight: bold;">'.number_format($fob, 2, '.', ',').'</td>
 							<td width="8%" style="text-align: right; border: 0.3px solid black; font-weight: bold;">'.number_format($cif_1, 2, '.', ',').'</td>
-							<td width="8%" style="text-align: right; border: 0.3px solid black; font-weight: bold;">'.number_format($cif_2, 0, '.', ',').'</td>
+							<td width="4%" style="text-align: center; border: 0.3px solid black; "></td>
+							<td width="8%" style="text-align: right; border: 0.3px solid black; font-weight: bold;">'.number_format($ddi, 0, '.', ',').'</td>
 						</tr>';
 
 			return $table;
@@ -48669,6 +48772,17 @@
 			$requete = $connexion-> prepare("UPDATE dossier SET incoterm = ?
 												WHERE id_dos = ?");
 			$requete-> execute(array($entree['incoterm'], $entree['id_dos']));
+
+		} 
+
+		public function maj_statut_arsp($ref_fact, $statut_arsp){
+
+			include('connexion.php');
+			$entree['ref_fact'] = $ref_fact;
+			$entree['statut_arsp'] = $statut_arsp;
+			$requete = $connexion-> prepare("UPDATE facture_dossier SET statut_arsp = ?
+												WHERE ref_fact = ?");
+			$requete-> execute(array($entree['statut_arsp'], $entree['ref_fact']));
 
 		} 
 
