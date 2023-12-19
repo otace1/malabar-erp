@@ -44,6 +44,7 @@
 	}elseif(isset($_POST['operation']) && $_POST['operation']=='getTableauImportInvoiceSingleEdit'){// On recupere les donnees du dossier a facturer 
 
   		$reponse = $maClasse-> getDataDossier($_POST['id_dos']);
+  		$reponse['statut_arsp'] = $maClasse-> getFactureGlobale($_POST['ref_fact'])['statut_arsp'];
   		$reponse['tax_duty_part'] = $maClasse-> getDataFactureDossier($_POST['id_dos'])['tax_duty_part'];
   		$reponse['debours'] = $maClasse-> getDeboursPourFactureClientModeleLicenceAjaxEdit($reponse['id_cli'], $reponse['id_mod_lic'], $reponse['id_march'], $reponse['id_mod_trans'], $_POST['id_dos'], $_POST['ref_fact']);
 
@@ -61,6 +62,13 @@
 
   		$reponse = $maClasse-> getDataDossier($_POST['id_dos']);
   		$maClasse-> maj_roe_liq($_POST['id_dos'], $_POST['roe_liq']);
+
+  		echo json_encode($reponse);
+
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='maj_statut_arsp'){// MAJ ARSP
+
+  		$maClasse-> maj_statut_arsp($_POST['ref_fact'], $_POST['statut_arsp']);
+  		$response['message'] = 'Done!';
 
   		echo json_encode($reponse);
 
@@ -780,6 +788,7 @@
   			try {
   			$maClasse-> creerFactureDossier($_POST['ref_fact'], $_POST['id_mod_fact'], $_POST['id_cli'], $_SESSION['id_util'], $_POST['id_mod_lic'], 'partielle', NULL);
   			$maClasse-> MAJ_tax_duty_part_facture_dossier($_POST['ref_fact'], $_POST['tax_duty_part']);
+  			$maClasse-> maj_statut_arsp($_POST['ref_fact'], $_POST['statut_arsp']);
 
   			for ($i=1; $i <= $_POST['compteur'] ; $i++) { 
   				if (isset($_POST['montant_'.$i]) && $_POST['montant_'.$i] > 1) {
@@ -2705,6 +2714,10 @@
 	}elseif(isset($_POST['operation']) && $_POST['operation']=='dossier_worsheet_validated'){ 
 
 		echo json_encode($maClasse-> dossier_worsheet_validated($_POST['id_cli'], $_POST['id_mod_lic']));
+
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='code_tarifaire_ajax'){ 
+
+		echo json_encode($maClasse-> code_tarifaire_ajax());
 
 	}
 

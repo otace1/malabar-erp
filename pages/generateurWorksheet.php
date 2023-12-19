@@ -175,9 +175,9 @@ $tbl = <<<EOD
 	<tr><td><br></td></tr>
 		<tr>
 			<td width="12%" style="text-align: center; border: 0.3px solid black; font-weight: bold;">Description sur facture</td>
-			<td width="12%" style="text-align: center; border: 0.3px solid black; font-weight: bold;">N.BIVAC</td>
+			<td width="10%" style="text-align: center; border: 0.3px solid black; font-weight: bold;">N.BIVAC</td>
 			<td width="12%" style="text-align: center; border: 0.3px solid black; font-weight: bold;">N.Facture</td>
-			<td width="12%" style="text-align: center; border: 0.3px solid black; font-weight: bold;">Position Tarifaire</td>
+			<td width="10%" style="text-align: center; border: 0.3px solid black; font-weight: bold;">Position Tarifaire</td>
 			<td width="5%" style="text-align: center; border: 0.3px solid black; font-weight: bold;">ORG</td>
 			<td width="5%" style="text-align: center; border: 0.3px solid black; font-weight: bold;">PROV</td>
 			<td width="6%" style="text-align: center; border: 0.3px solid black; font-weight: bold;">Code Add.</td>
@@ -185,6 +185,7 @@ $tbl = <<<EOD
 			<td width="6%" style="text-align: center; border: 0.3px solid black; font-weight: bold;">Poids</td>
 			<td width="8%" style="text-align: center; border: 0.3px solid black; font-weight: bold;">FOB Par Article</td>
 			<td width="8%" style="text-align: center; border: 0.3px solid black; font-weight: bold;">CIF Par Article</td>
+			<td width="4%" style="text-align: center; border: 0.3px solid black; font-weight: bold;">Taux</td>
 			<td width="8%" style="text-align: center; border: 0.3px solid black; font-weight: bold;">DDI en CDF</td>
 		</tr>
 		$marchandise_dossier

@@ -47,7 +47,7 @@
 </div>
 
 <div class="modal fade" id="modal_client_worksheet">
-  <div class="modal-dialog modal-md">
+  <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-header btn-dark">
         <h4 class="modal-title"><i class="fa fa-list"></i> Clients </h4>
@@ -65,6 +65,8 @@
                       <th>#</th>
                       <th>Code</th>
                       <th>Client</th>
+                      <!-- <th>Pending Files</th> -->
+                      <th colspan="2">Action</th>
                   </tr>
               </thead>
               <tbody id="tableau_client_worksheet">

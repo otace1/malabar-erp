@@ -93,6 +93,18 @@
 
       </div>
 
+      <div class="col-md-2">
+        
+          <div class="form-group">
+            <label for="inputEmail3" class="col-form-label">ARSP:</label>
+            <select class="form-control form-control-sm" name="statut_arsp" id="statut_arsp" onchange="maj_statut_arsp('<?php echo $_GET['ref_fact'];?>', this.value);" required>
+              <option value="1">Enabled</option>
+              <option value="0">Disabled</option>
+            </select>
+          </div>
+
+      </div>
+
       <div class="col-md-12"></div>
       
       <div class="col-md-5">
@@ -492,6 +504,7 @@
         }else{
           $('#id_mon').html(data.id_mon);
           $('#tax_duty_part').val(data.tax_duty_part);
+          $('#statut_arsp').val(data.statut_arsp);
           $('#mon_fob').val(data.id_mon_fob);
           $('#mon_fret').val(data.id_mon_fret);
           $('#mon_assurance').val(data.id_mon_assurance);
@@ -668,6 +681,26 @@
       $('#cif_cdf').removeClass("badge badge-danger");
 
     }
+
+  }
+
+  function maj_statut_arsp(ref_fact, statut_arsp){
+    $('#spinner-div').show();
+    $.ajax({
+      type: 'post',
+      url: 'ajax.php',
+      data: {ref_fact: ref_fact, statut_arsp: statut_arsp, operation: 'maj_statut_arsp'},
+      dataType: 'json',
+      success:function(data){
+        if (data.logout) {
+          alert(data.logout);
+          window.location="../deconnexion.php";
+        }
+      },
+      complete: function () {
+          $('#spinner-div').hide();//Request is complete so hide spinner
+      }
+    });
 
   }
 
