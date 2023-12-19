@@ -293,6 +293,8 @@ $tbl = <<<EOD
 		<tr>
 			<td width="100%"></td>
 		</tr>
+	</table>
+	<table  cellpadding="3">
 
 		<tr>
 			<td width="50%" style="font-weight: bold; border: 1px solid black; background-color: rgb(220,220,220); font-size: 7px; text-align: center;">&nbsp;<u>Description</u></td>
@@ -301,7 +303,11 @@ $tbl = <<<EOD
 			<td width="10%" style="font-weight: bold; border: 1px solid black; background-color: rgb(220,220,220); font-size: 7px;text-align: center;">TVA/USD</td>
 			<td width="15%" style="font-weight: bold; border: 1px solid black; background-color: rgb(220,220,220); font-size: 7px;text-align: center;">Total/USD</td>
 		</tr>
+	</table>
+	<table  cellpadding="2">
 		$detail_note_debit
+	</table>
+	<table>
 		<tr>
 			<td width="100%"></td>
 		</tr>
