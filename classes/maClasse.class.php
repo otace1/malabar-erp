@@ -9865,21 +9865,7 @@
 
 			$tbl = '
 					<tr>
-						<td style="text-align: left; font-weight: bold; border-left: 1px solid black; border-right: 0.5px solid black;" colspan="2" width="50%"></td>
-						<td style="text-align: right; border-right: 0.5px solid black;" width="10%"></td>
-						<td style="text-align: right; border-right: 0.5px solid black;" width="15%"></td>
-						<td style="text-align: right; border-right: 0.5px solid black;" width="10%"></td>
-						<td style="text-align: right; border-right: 1px solid black;" width="15%"></td>
-					</tr>
-					<tr>
 						<td style="text-align: left; border-left: 1px solid black; border-right: 0.5px solid black;" colspan="2" width="50%">&nbsp;&nbsp;'.$this-> getNote($entree['ref_note'])['libelle'].'</td>
-						<td style="text-align: right; border-right: 0.5px solid black;" width="10%"></td>
-						<td style="text-align: right; border-right: 0.5px solid black;" width="15%"></td>
-						<td style="text-align: right; border-right: 0.5px solid black;" width="10%"></td>
-						<td style="text-align: right; border-right: 1px solid black;" width="15%"></td>
-					</tr>
-					<tr>
-						<td style="text-align: left; font-weight: bold; border-left: 1px solid black; border-right: 0.5px solid black;" colspan="2" width="50%"></td>
 						<td style="text-align: right; border-right: 0.5px solid black;" width="10%"></td>
 						<td style="text-align: right; border-right: 0.5px solid black;" width="15%"></td>
 						<td style="text-align: right; border-right: 0.5px solid black;" width="10%"></td>
@@ -9895,7 +9881,19 @@
 													IF(det.tva='1',
 														det.montant*1.16,
 														det.montant
-													) AS montant_ttc
+													) AS montant_ttc,
+													UPPER(CONCAT(
+														IF(dos.horse IS NOT NULL,
+															dos.horse,
+															NULL),
+														IF(dos.trailer_1 IS NOT NULL,
+															CONCAT(' / ',dos.trailer_1),
+															NULL),
+														IF(dos.trailer_1 IS NOT NULL,
+															CONCAT(' / ',dos.trailer_2),
+															NULL)
+														)) AS truck,
+													dos.road_manif AS road_manif
 												FROM dossier dos, detail_note_debit det, depense_dossier depdos
 												WHERE dos.id_dos = depdos.id_dos
 													AND depdos.id_dep_dos = det.id_dep_dos
@@ -9910,8 +9908,8 @@
 
 				$tbl .= '
 						<tr>
-							<td style="text-align: left; border-left: 1px solid black; border-right: 0.5px solid black; font-size: 6.5px;" colspan="2" width="50%">&nbsp;&nbsp;'
-								.$reponse['ref_dos'].
+							<td style="text-align: left; border-left: 1px solid black; border-right: 0.5px solid black; font-size: 6.5px;" colspan="2" width="50%">'
+								.$reponse['ref_dos'].'<br>Truck Ref.: '.$reponse['truck'].'<br>Manifest Ref.: '.$reponse['road_manif'].
 							'</td>
 							<td style="text-align: center; border-right: 0.5px solid black; font-size: 6.5px;" width="10%">1</td>
 							<td style="text-align: center; border-right: 0.5px solid black; font-size: 6.5px;" width="15%">'
