@@ -68,7 +68,7 @@
 	}elseif(isset($_POST['operation']) && $_POST['operation']=='maj_statut_arsp'){// MAJ ARSP
 
   		$maClasse-> maj_statut_arsp($_POST['ref_fact'], $_POST['statut_arsp']);
-  		$response['message'] = 'Done!';
+  		$reponse['message'] = 'Done!';
 
   		echo json_encode($reponse);
 
