@@ -9872,7 +9872,7 @@
 						<td style="text-align: right; border-right: 1px solid black;" width="15%"></td>
 					</tr>
 					';
-			$requete = $connexion-> prepare("SELECT CONCAT(dos.ref_dos, '(PO : ',dos.po_ref,')') AS ref_dos,
+			$requete = $connexion-> prepare("SELECT CONCAT('<b>',dos.ref_dos, '</b> | PO : <b>',dos.po_ref,'</b>') AS ref_dos,
 													det.montant AS montant_ht,
 													IF(det.tva='1',
 														det.montant*0.16,
@@ -9885,13 +9885,13 @@
 													UPPER(CONCAT(
 														IF(dos.horse IS NOT NULL,
 															dos.horse,
-															NULL),
+															''),
 														IF(dos.trailer_1 IS NOT NULL,
 															CONCAT(' / ',dos.trailer_1),
-															NULL),
+															''),
 														IF(dos.trailer_1 IS NOT NULL,
 															CONCAT(' / ',dos.trailer_2),
-															NULL)
+															'')
 														)) AS truck,
 													dos.road_manif AS road_manif
 												FROM dossier dos, detail_note_debit det, depense_dossier depdos
@@ -9908,9 +9908,9 @@
 
 				$tbl .= '
 						<tr>
-							<td style="text-align: left; border-left: 1px solid black; border-right: 0.5px solid black; font-size: 6.5px;" colspan="2" width="50%">'
-								.$reponse['ref_dos'].'<br>Truck Ref.: '.$reponse['truck'].'<br>Manifest Ref.: '.$reponse['road_manif'].
-							'</td>
+							<td style="text-align: left; border-left: 1px solid black; border-right: 0.5px solid black; font-size: 6px;" colspan="2" width="50%">'
+								.$reponse['ref_dos'].' | Truck Ref.: <b>'.$reponse['truck'].'</b> | Manifest Ref.: <b>'.$reponse['road_manif'].
+							'</b></td>
 							<td style="text-align: center; border-right: 0.5px solid black; font-size: 6.5px;" width="10%">1</td>
 							<td style="text-align: center; border-right: 0.5px solid black; font-size: 6.5px;" width="15%">'
 								.number_format($reponse['montant_ht'], 2, ',', '.').
