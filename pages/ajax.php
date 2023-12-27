@@ -308,6 +308,8 @@
 	  			}
 	  				
 	  			
+  				$maClasse-> maj_statut_arsp($_POST['ref_fact'], $_POST['statut_arsp']);
+  				
 
 	  			// $response['somme_taxe'] = $maClasse-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport(54, $_POST['id_mod_lic'], $_POST['id_cli'], $_POST['id_march'], $_POST['id_mod_trans'])['id_deb'];
 	  			$response['message'] = 'Invoice Created';

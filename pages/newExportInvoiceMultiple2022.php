@@ -79,11 +79,23 @@
           <input class="form-control form-control-sm bg bg-dark" disabled value="<?php echo $maClasse-> getModeTransport($_GET['id_mod_trans'])['nom_mod_trans'];?>">
         </div>
       </div>
-      <div class="col-md-3">
+      <div class="col-md-2">
         <div class="form-group">
           <label for="inputEmail3" class="col-form-label">License: </label>
           <input class="form-control form-control-sm bg bg-dark" disabled value="<?php echo $_GET['num_lic'];?>">
         </div>
+      </div>
+
+      <div class="col-md-2">
+        
+          <div class="form-group">
+            <label for="inputEmail3" class="col-form-label">ARSP:</label>
+            <select class="form-control form-control-sm" name="statut_arsp" id="statut_arsp" onchange="maj_statut_arsp('<?php echo $_GET['ref_fact'];?>', this.value);" required>
+              <option value="0">Disabled</option>
+              <option value="1">Enabled</option>
+            </select>
+          </div>
+
       </div>
 
       <div class="col-12"></div>
