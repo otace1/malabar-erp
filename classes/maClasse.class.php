@@ -12075,7 +12075,8 @@
 															SELECT id_dep_dos 
 															 FROM detail_note_debit 
 														)
-												ORDER BY dos.id_dos");
+												ORDER BY dos.id_dos
+												LIMIT 0, 10");
 			$requete-> execute(array($entree['id_dep'], $entree['id_mod_lic'], $entree['id_cli'], $entree['po_ref_2']));
 			while ($reponse = $requete-> fetch()) {
 
