@@ -217,13 +217,13 @@
   <!-- /.modal-dialog -->
 </div>
 
-<div class="modal fade" id="modal_check_multiple">
-  <div class="modal-dialog modal-sm small">
-    <form id="modal_check_multiple_form" method="POST" action="" data-parsley-validate enctype="multipart/form-data">
-      <input type="hidden" name="operation" id="operation" value="check_multiple">
+<div class="modal fade" id="modal_edit_note_debit">
+  <div class="modal-dialog modal-md">
+    <!-- <form id="edit_note_debit_form" method="POST" action="" data-parsley-validate enctype="multipart/form-data"> -->
+      <input type="hidden" name="operation" id="operation" value="edit_note_debit">
     <div class="modal-content">
       <div class="modal-header ">
-        <h4 class="modal-title"><i class="fa fa-check"></i> Multiple Validation</h4>
+        <h4 class="modal-title"><i class="fa fa-edit"></i> Edit Debit Note</h4>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -231,29 +231,40 @@
       <div class="modal-body">
         <div class="row">
 
+          <div class="col-md-4">
+            <label for="x_card_code" class="control-label mb-1">Debit Note Ref.</label>
+            <input type="text" id="ref_note_edit" class="form-control form-control-sm cc-exp bg-dark" disabled>
+          </div>
+
           <div class="col-md-12">
-            <div class="card-body table-responsive p-0 small" style="height: 400px;">
-            <table class=" table table-dark table-bordered table-hover table-head-fixed  text-nowrap table-sm">
+            <hr>
+          </div>
+
+          <div class="col-md-12">
+            <div class="card-body table-responsive p-0 small" style="height: 500px;">
+            <table class=" table table-bordered table-hover table-head-fixed  text-nowrap table-sm">
               <thead>
-                <tr class="bg bg-dark">
+                <tr>
                   <th>#</th>
-                  <th>Reference</th>
-                  <th>Action</th>
+                  <th>MCA File Ref.</th>
+                  <th>Item</th>
+                  <th>Amount</th>
+                  <th></th>
                 </tr>
               </thead>
-              <tbody id="table_invoices_check_multiple">
+              <tbody id="detail_debit_note">
               </tbody>
             </table>
             </div>
           </div>
         </div>
       </div>
-      <div class="modal-footer justify-content-between">
+      <!-- <div class="modal-footer justify-content-between">
         <button type="button" class="btn-xs btn-danger" data-dismiss="modal">Cancelled</button>
         <button type="submit" name="ok" class="btn-xs btn-primary">Submit</button>
-      </div>
+      </div> -->
     </div>
-    </form>
+    <!-- </form> -->
     <!-- /.modal-content -->
   </div>
   <!-- /.modal-dialog -->
@@ -261,16 +272,82 @@
 
 <script type="text/javascript">
   
+  function edit_detail_depense(ref_note, id_dep_dos, montant){
+    // if(confirm('Do really you want to remove this data ?')) {
+      $.ajax({
+        type: 'post',
+        url: 'ajax.php',
+        data: {ref_note: ref_note, id_dep_dos: id_dep_dos, montant: montant, operation: "edit_detail_depense"},
+        dataType: 'json',
+        success:function(data){
+          if (data.logout) {
+            alert(data.logout);
+            window.location="../deconnexion.php";
+          }else{
+            $('#debit_note_validated').DataTable().ajax.reload();
+            $('#debit_note_pending_validation').DataTable().ajax.reload();
+          }
+        }
+      });
+    // }
+  }
+
+  function delete_detail_depense(ref_note, id_dep_dos){
+    if(confirm('Do really you want to remove this data ?')) {
+      $.ajax({
+        type: 'post',
+        url: 'ajax.php',
+        data: {ref_note: ref_note, id_dep_dos: id_dep_dos, operation: "delete_detail_depense"},
+        dataType: 'json',
+        success:function(data){
+          if (data.logout) {
+            alert(data.logout);
+            window.location="../deconnexion.php";
+          }else{
+            $('#detail_debit_note').html(data.detail_debit_note);
+            $('#debit_note_validated').DataTable().ajax.reload();
+            $('#debit_note_pending_validation').DataTable().ajax.reload();
+          }
+        }
+      });
+    }
+  }
+
+  function modal_edit_note_debit(ref_note){
+
+    $('#spinner-div').show();
+    $.ajax({
+      type: "POST",
+      url: "ajax.php",
+      data: {ref_note: ref_note, operation: 'modal_edit_note_debit'},
+      dataType:"json",
+      success:function(data){
+        if (data.logout) {
+          alert(data.logout);
+          window.location="../deconnexion.php";
+        }else{
+          $('#ref_note_edit').val(ref_note);
+          $('#detail_debit_note').html(data.detail_debit_note);
+          $('#modal_edit_note_debit').modal('show');
+        }
+      },
+      complete: function () {
+          $('#spinner-div').hide();//Request is complete so hide spinner
+      }
+    });
+
+  }
+
   $(document).ready(function(){
 
-      $('#modal_check_multiple_form').submit(function(e){
+      $('#edit_note_debit_form').submit(function(e){
 
               e.preventDefault();
 
         if(confirm('Do really you want to submit ?')) {
 
           var fd = new FormData(this);
-          $('#modal_check_multiple').modal('hide');
+          $('#modal_edit_note_debit').modal('hide');
           $('#spinner-div').show();
 
           $.ajax({
@@ -284,21 +361,13 @@
               if (data.logout) {
                 alert(data.logout);
                 window.location="../deconnexion.php";
-              }else if(data.message){
-                // $('#ref_fact').val(data.ref_fact);
-                // $('#id_dos').html(data.ref_dos);
-                $('#spinner-div').hide();//Request is complete so hide spinner
-                alert(data.message);
               }else{
-                // $('#ref_fact').val(data.ref_fact);
-                // $('#id_dos').html(data.ref_dos);
-                alert(data.compteur+' invoices validated!');
-                // alert('Done!');
+
               }
             },
             complete: function () {
                 // $('#dossiers_facture').DataTable().ajax.reload();
-                $('#invoice_waiting_to_send').DataTable().ajax.reload();
+                $('#debit_note_validated').DataTable().ajax.reload();
                 $('#debit_note_pending_validation').DataTable().ajax.reload();
                 $('#spinner-div').hide();//Request is complete so hide spinner
             }
@@ -309,30 +378,6 @@
       });
     
   });
-
-  function modal_check_multiple(){
-
-    $('#spinner-div').show();
-    $.ajax({
-      type: "POST",
-      url: "ajax.php",
-      data: {id_cli:<?php echo $_GET['id_cli'];?>, id_mod_lic:<?php echo $_GET['id_mod_lic'];?>, operation: 'modal_check_multiple'},
-      dataType:"json",
-      success:function(data){
-        if (data.logout) {
-          alert(data.logout);
-          window.location="../deconnexion.php";
-        }else{
-          $('#table_invoices_check_multiple').html(data.table_invoices_check_multiple);
-          $('#modal_check_multiple').modal('show');
-        }
-      },
-      complete: function () {
-          $('#spinner-div').hide();//Request is complete so hide spinner
-      }
-    });
-
-  }
 
   function remove_file_invoice(id_dos){
     if(confirm('Do really you want to remove this file ?')) {
