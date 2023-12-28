@@ -12262,6 +12262,45 @@
 
 		}
 
+		public function detail_debit_note($ref_note){
+			include("connexion.php");
+			$entree['ref_note'] = $ref_note;
+			//$entree['type_fact'] = $type_fact;
+			$compteur=0;
+
+			$tableau = '';
+
+			$debut = $compteur;
+
+			$requete = $connexion-> prepare("SELECT det.ref_note AS ref_note,
+													ROUND(det.montant, 2) AS montant,
+													dos.ref_dos AS ref_dos,
+													depdos.id_dep_dos AS id_dep_dos,
+													dep.nom_dep AS nom_dep
+												FROM dossier dos, detail_note_debit det, depense_dossier depdos, depense dep
+												WHERE det.ref_note = ?
+													AND det.id_dep_dos = depdos.id_dep_dos
+													AND depdos.id_dos = dos.id_dos
+													AND dep.id_dep = depdos.id_dep");
+			$requete-> execute(array($entree['ref_note']));
+			while ($reponse = $requete-> fetch()) {
+				$compteur++;
+
+				$tableau .='
+    						<tr>
+    							<td>'.$compteur.'</td>
+    							<td>'.$reponse['ref_dos'].'</td>
+    							<td>'.$reponse['nom_dep'].'</td>
+    							<td style="text-align: center;"><input type="number" class="text-right" id="montant_'.$compteur.'" value="'.$reponse['montant'].'" onblur="edit_detail_depense(\''.$reponse['ref_note'].'\', '.$reponse['id_dep_dos'].', this.value)"></td>
+    							<td style="text-align: center;"><span class="btn btn-xs btn-danger" onclick="delete_detail_depense(\''.$reponse['ref_note'].'\', '.$reponse['id_dep_dos'].')"><i class="fa fa-times"></i></span></td>
+    						</tr>';
+			}$requete-> closeCursor();
+
+
+			return $tableau;
+
+		}
+
 		public function getInvoicePendingValidationCDN($id_cli, $id_mod_lic){
 			include("connexion.php");
 			$entree['id_cli'] = $id_cli;
@@ -19677,6 +19716,36 @@
 													AND id_cli = ?");
 
 			$requete-> execute(array($entree['id_util'], $entree['id_mod_lic'], $entree['id_cli']));
+			
+
+		}
+
+		public function delete_detail_depense($ref_note, $id_dep_dos){
+			include("connexion.php");
+			$entree['ref_note'] = $ref_note;
+			$entree['id_dep_dos'] = $id_dep_dos;
+
+			$requete = $connexion-> prepare("DELETE FROM detail_note_debit
+												WHERE ref_note = ? 
+													AND id_dep_dos = ?");
+
+			$requete-> execute(array($entree['ref_note'], $entree['id_dep_dos']));
+			
+
+		}
+
+		public function edit_detail_depense($ref_note, $id_dep_dos, $montant){
+			include("connexion.php");
+			$entree['ref_note'] = $ref_note;
+			$entree['id_dep_dos'] = $id_dep_dos;
+			$entree['montant'] = $montant;
+
+			$requete = $connexion-> prepare("UPDATE detail_note_debit
+												SET montant = ?
+												WHERE ref_note = ? 
+													AND id_dep_dos = ?");
+
+			$requete-> execute(array($entree['montant'], $entree['ref_note'], $entree['id_dep_dos']));
 			
 
 		}
@@ -51803,7 +51872,10 @@
 									                </button> <button class=\"btn btn-xs bg-primary square-btn-adjust\" onclick=\"validerNoteDebit(\'',note.ref_note,'\');\" title=\"Validate\">
 									                    <i class=\"fas fa-check\"></i> 
 									                </button> 
-									                </button> <button class=\"btn btn-xs bg-danger square-btn-adjust\" onclick=\"supprimerFacture(\'',note.ref_note,'\');\" title=\"Delete\">
+									                <button class=\"btn btn-xs bg-warning square-btn-adjust\" onclick=\"modal_edit_note_debit(\'',note.ref_note,'\');\" title=\"Edit\">
+									                    <i class=\"fas fa-edit\"></i> 
+									                </button>
+									                <button class=\"btn btn-xs bg-danger square-btn-adjust\" onclick=\"supprimerFacture(\'',note.ref_note,'\');\" title=\"Delete\">
 									                    <i class=\"fas fa-times\"></i> 
 									                </button>') AS action,
 													SUM(IF(det.tva='1',
@@ -51827,7 +51899,10 @@
 													dep.nom_dep AS nom_dep,
 													CONCAT('<button class=\"btn btn-xs bg-info square-btn-adjust\" onclick=\"window.open(\'',mnd.view_note,'?ref_note=',note.ref_note,'\',\'pop3\',\'width=1000,height=800\');\" title=\"View note\">
 											                    <i class=\"fas fa-eye\"></i> 
-											                </button>') AS action,
+											                </button>
+									                <button class=\"btn btn-xs bg-warning square-btn-adjust\" onclick=\"modal_edit_note_debit(\'',note.ref_note,'\');\" title=\"Edit\">
+									                    <i class=\"fas fa-edit\"></i> 
+									                </button>') AS action,
 													SUM(IF(det.tva='1',
 														det.montant*1.16,
 														det.montant
