@@ -19528,6 +19528,104 @@
 			return $rows;
 		}
 		
+		public function getDepense($id_dep){
+			include('connexion.php');
+
+			$entree['id_dep'] = $id_dep;
+
+			$requete = $connexion-> prepare("SELECT *
+												FROM depense
+												WHERE id_dep = ?");
+
+			$requete-> execute(array($entree['id_dep']));
+
+			$reponse = $requete-> fetch();
+
+			return $reponse;
+		}
+		
+		public function monitoring_depenses($id_mod_lic){
+			include('connexion.php');
+
+			$entree['id_mod_lic'] = $id_mod_lic;
+			$rows = array();
+			$compteur = 0;
+
+			$requete = $connexion-> prepare("SELECT dep.nom_dep AS nom_dep, 
+													dep.id_dep AS id_dep
+												FROM depense dep, depense_dossier depdos, dossier dos
+												WHERE dep.id_dep = depdos.id_dep
+													AND depdos.id_dos = dos.id_dos
+													AND dos.id_mod_lic = ?
+												GROUP BY dep.id_dep
+												ORDER BY dep.nom_dep
+												");
+
+			$requete-> execute(array($entree['id_mod_lic']));
+
+			while($reponse = $requete-> fetch()){
+				$compteur++;
+				$reponse['compteur'] = $compteur;
+				$reponse['pending'] = $this-> get_monitoring_depenses_pending($reponse['id_dep'], $id_mod_lic);
+				$reponse['invoiced'] = $this-> get_monitoring_depenses_invoiced($reponse['id_dep'], $id_mod_lic);
+
+				$rows[] = $reponse;
+
+			}$requete-> closeCursor();
+
+			return $rows;
+		}
+		
+		public function get_monitoring_depenses_pending($id_dep, $id_mod_lic){
+			include('connexion.php');
+
+			$entree['id_dep'] = $id_dep;
+			$entree['id_mod_lic'] = $id_mod_lic;
+			$rows = array();
+			$compteur = 0;
+
+			$requete = $connexion-> prepare("SELECT COUNT(*) AS nbre
+												FROM depense dep, depense_dossier depdos, dossier dos
+												WHERE dep.id_dep = ?
+													AND dep.id_dep = depdos.id_dep
+													AND depdos.id_dep_dos NOT IN (SELECT id_dep_dos FROM detail_note_debit)
+													AND depdos.id_dos = dos.id_dos
+													AND dos.id_mod_lic = ?
+												GROUP BY dep.id_dep
+												");
+
+			$requete-> execute(array($entree['id_dep'], $entree['id_mod_lic']));
+
+			$reponse = $requete-> fetch();
+
+			return $reponse['nbre'];
+		}
+		
+		public function get_monitoring_depenses_invoiced($id_dep, $id_mod_lic){
+			include('connexion.php');
+
+			$entree['id_dep'] = $id_dep;
+			$entree['id_mod_lic'] = $id_mod_lic;
+			$rows = array();
+			$compteur = 0;
+
+			$requete = $connexion-> prepare("SELECT COUNT(*) AS nbre
+												FROM depense dep, depense_dossier depdos, dossier dos, detail_note_debit det
+												WHERE dep.id_dep = ?
+													AND dep.id_dep = depdos.id_dep
+													AND depdos.id_dep_dos = det.id_dep_dos
+													AND depdos.id_dos = dos.id_dos
+													AND dos.id_mod_lic = ?
+												GROUP BY dep.id_dep
+												");
+
+			$requete-> execute(array($entree['id_dep'], $entree['id_mod_lic']));
+
+			$reponse = $requete-> fetch();
+
+			return $reponse['nbre'];
+		}
+		
 		public function pending_report(){
 			include('connexion.php');
 
@@ -41113,27 +41211,16 @@
 					$sqlTime = ' AND DATE(fd.date_fact) BETWEEN "'.$debut.'" AND "'.$fin.'"';
 				}
 
-				$requete = $connexion-> prepare("SELECT dos.id_dos AS id_dos,
-													dos.ref_dos AS ref_dos,
-													dos.po_ref AS po_ref,
-													dos.horse AS horse,
-													dos.trailer_1 AS trailer_1,
-													dos.trailer_2 AS trailer_2,
-													dos.road_manif AS road_manif,
-													CONCAT(dos.ref_dos, '(PO : ',dos.po_ref,')') AS debit_note_format,
-													det.montant AS montant,
-													note.ref_note AS ref_note,
-													DATE_FORMAT(note.date_create, '%d/%m/%Y') AS date_note,
-													util.nom_util AS nom_util
-												FROM depense_dossier depdos, dossier dos, client cl, depense dep
-												WHERE depdos.id_dos = dos.id_dos
-													AND dos.id_mod_lic = ?
-													AND dos.id_cli = cl.id_cli
-													AND depdos.id_dep = dep.id_dep
-													AND depdos.id_dep_dos NOT IN (
-															SELECT id_dep_dos 
-															 FROM detail_note_debit 
-														)");
+				$requete = $connexion-> prepare("SELECT dos.ref_dos AS ref_dos,
+														dos.po_ref AS po_ref,
+														dos.horse AS horse,
+														dos.trailer_1 AS trailer_1,
+														dos.trailer_2 AS trailer_2,
+														dos.road_manif AS road_manif
+													FROM dossier dos, depense_dossier depdos, detail_note_debit det
+													WHERE dos.id_mod_lic = ?
+														AND dos.id_dos = depdos.id_dos
+														AND depdos.id_dep_dos = det.id_dep_dos");
 				$requete-> execute(array($entree['id_mod_lic']));
 				while($reponse = $requete-> fetch()){
 					$compteur++;
@@ -41144,6 +41231,108 @@
 				return $rows;
 
 			}
+
+		}
+
+		public function depense_pending_invoicing($id_dep, $id_mod_lic){
+			include('connexion.php');
+			$entree['id_dep'] = $id_dep;
+			$entree['id_mod_lic'] = $id_mod_lic;
+			$compteur = 0;
+
+			$rows = array();
+
+			$requete = $connexion-> prepare("SELECT dos.id_dos AS id_dos,
+												dos.ref_dos AS ref_dos,
+												cl.nom_cli AS nom_cli,
+												dep.nom_dep AS nom_dep,
+												DATE_FORMAT(depdos.date_dep, '%d/%m/%Y') AS date_dep,
+												depdos.montant AS montant,
+												depdos.assigned_to AS assigned_to
+											FROM depense_dossier depdos, dossier dos, client cl, depense dep
+											WHERE depdos.id_dos = dos.id_dos
+												AND dos.id_mod_lic = ?
+												AND dos.id_cli = cl.id_cli
+												AND depdos.id_dep = dep.id_dep
+												AND depdos.id_dep_dos NOT IN (
+														SELECT id_dep_dos 
+														 FROM detail_note_debit 
+													)
+												AND dep.id_dep = ?");
+			$requete-> execute(array($entree['id_mod_lic'], $entree['id_dep']));
+			while($reponse = $requete-> fetch()){
+				$compteur++;
+				$reponse['compteur'] = $compteur;
+				$rows[] = $reponse;
+			}$requete-> closeCursor();
+			
+			return $rows;
+
+		}
+
+		public function depense_invoiced($id_dep, $id_mod_lic){
+			include('connexion.php');
+			$entree['id_dep'] = $id_dep;
+			$entree['id_mod_lic'] = $id_mod_lic;
+			$compteur = 0;
+
+			$rows = array();
+
+			$requete = $connexion-> prepare("SELECT dos.id_dos AS id_dos,
+												dos.ref_dos AS ref_dos,
+												dos.po_ref AS po_ref,
+												dos.horse AS horse,
+												dos.trailer_1 AS trailer_1,
+												dos.trailer_2 AS trailer_2,
+												dos.road_manif AS road_manif,
+												det.ref_note AS ref_note,
+												cl.nom_cli AS nom_cli,
+												det.montant AS montant,
+												note_debit.date_create AS date_create,
+												util.nom_util AS nom_util
+											FROM depense_dossier depdos, dossier dos, client cl, depense dep, detail_note_debit det, note_debit, utilisateur util
+											WHERE depdos.id_dos = dos.id_dos
+												AND dos.id_mod_lic = ?
+												AND dos.id_cli = cl.id_cli
+												AND depdos.id_dep = dep.id_dep
+												AND depdos.id_dep_dos = det.id_dep_dos
+												AND det.ref_note = note_debit.ref_note
+												AND note_debit.id_util = util.id_util
+												AND dep.id_dep = ?");
+			$requete-> execute(array($entree['id_mod_lic'], $entree['id_dep']));
+			while($reponse = $requete-> fetch()){
+				$compteur++;
+				$reponse['compteur'] = $compteur;
+				$rows[] = $reponse;
+			}$requete-> closeCursor();
+			
+			return $rows;
+
+		}
+
+		public function popUpRapportNoteDebit($id_mod_lic){
+			include('connexion.php');
+			$entree['id_mod_lic'] = $id_mod_lic;
+			$compteur = 0;
+
+			$requete = $connexion-> prepare("SELECT dos.ref_dos AS ref_dos,
+													dos.po_ref AS po_ref,
+													dos.horse AS horse,
+													dos.trailer_1 AS trailer_1,
+													dos.trailer_2 AS trailer_2,
+													dos.road_manif AS road_manif
+												FROM dossier dos, depense_dossier depdos, detail_note_debit det
+												WHERE dos.id_mod_lic = ?
+													AND dos.id_dos = depdos.id_dos
+													AND depdos.id_dep_dos = det.id_dep_dos");
+			$requete-> execute(array($entree['id_mod_lic']));
+			while($reponse = $requete-> fetch()){
+				$compteur++;
+				$reponse['compteur'] = $compteur;
+				$rows[] = $reponse;
+			}$requete-> closeCursor();
+			
+			return $rows;
 
 		}
 
