@@ -2406,7 +2406,7 @@
 		$reponse['nbre_note_debit'] = $maClasse-> getNbreNoteDebit($_POST['id_mod_lic'], NULL, $_POST['debut'], $_POST['fin']);
 		$reponse['nbre_note_debit_per_file'] = $maClasse-> getNbreNoteDebitFile($_POST['id_mod_lic'], NULL, $_POST['debut'], $_POST['fin']);
 		$reponse['nbre_depenses'] = $maClasse-> getNbreDepenseNoteDebit($_POST['id_mod_lic'], NULL, $_POST['debut'], $_POST['fin']);
-		$reponse['btn_info_note_debit_per_file'] = '<span onclick="window.open(\'popUpDashboardDepense.php?statut=REPORTING - AS PER FILES CLEARED&amp;id_mod_lic='.$_POST['id_mod_lic'].'&amp;debut='.$_POST['debut'].'&amp;fin='.$_POST['fin'].'\',\'pop1\',\'width=900,height=700\');">
+		$reponse['btn_info_note_debit_per_file'] = '<span onclick="window.open(\'popUpRapportNoteDebit.php?id_mod_lic='.$_POST['id_mod_lic'].'\',\'pop1\',\'width=900,height=700\');">
                 Details <i class="fas fa-arrow-circle-right"></i>
               </span>';
 		$reponse['btn_info_depense'] = '<span onclick="window.open(\'popUpDashboardDepense.php?statut=Depenses&amp;id_mod_lic='.$_POST['id_mod_lic'].'&amp;debut='.$_POST['debut'].'&amp;fin='.$_POST['fin'].'\',\'pop1\',\'width=900,height=700\');">
@@ -2741,6 +2741,26 @@
   		$reponse['message'] = 'Done!';
 
   		echo json_encode($reponse);
+
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='popUpRapportNoteDebit'){ // On Recupere les data pour rapport facturation Popup
+		$id_mod_lic = NULL;
+		if (isset($_POST['id_mod_lic'])&&($_POST['id_mod_lic']!='')) {
+			$id_mod_lic = $_POST['id_mod_lic'];
+		}
+		
+		echo json_encode($maClasse-> popUpRapportNoteDebit($_POST['id_mod_lic']));
+		
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='monitoring_depenses'){ 
+
+		echo json_encode($maClasse-> monitoring_depenses($_POST['id_mod_lic']));
+
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='depense_pending_invoicing'){ 
+
+		echo json_encode($maClasse-> depense_pending_invoicing($_POST['id_dep'], $_POST['id_mod_lic']));
+
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='depense_invoiced'){ 
+
+		echo json_encode($maClasse-> depense_invoiced($_POST['id_dep'], $_POST['id_mod_lic']));
 
 	}
 
