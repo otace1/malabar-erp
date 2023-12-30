@@ -45,6 +45,38 @@
             <!-- /.card -->
           </div>
 
+          <div class="col-6">
+            <div class="card">
+              <div class="card-header">
+                <h5><i class="fa fa-folder-open nav-icon"></i> 
+                  <?php 
+                    echo $maClasse-> getDepense($_GET['id_dep'])['nom_dep'].'Reporting - Debit Notes Summary ';
+                  ?>
+                </h5>
+
+                <div class="card-tools">
+                </div>
+              </div>    
+              <!-- /.card-header -->
+              <div class="card-body table-responsive p-0">
+                <table id="depense_note_debit" cellspacing="0" width="100%" class="table table-bordered table-striped table-sm small text-nowrap">
+                  <thead>
+                    <th>#</th>
+                    <th>Debit Note Ref</th>
+                    <th>Date</th>
+                    <th>Expense Charged Back</th>
+                    <th>Amount In USD</th>
+                    <th>Raised By</th>
+                  </thead>
+                  <tbody>
+                  </tbody>
+                </table>
+              </div>
+              <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+          </div>
+
           <div class="col-12">
             <div class="card">
               <div class="card-header">
@@ -119,6 +151,60 @@
       var today   = new Date();
 
     $('#spinner-div').show();
+      $('#depense_note_debit').DataTable({
+         lengthMenu: [
+            [10, 100, 500, -1],
+            [10, 100, 500, 'All'],
+        ],
+        dom: 'Bfrtip',
+        buttons: [
+            'excel',
+            'pageLength', 'colvis'
+        ],
+        // fixedColumns: {
+        //   left: 2
+        // },
+        paging: false,
+        scrollCollapse: true,
+        scrollX: true,
+        // scrollY: 300,
+
+      "paging": true,
+      "lengthChange": true,
+      "searching": true,
+      "ordering": true,
+      "info": true,
+      "autoWidth": true,
+      // "responsive": true,
+        "ajax":{
+          "type": "GET",
+          "url":"ajax.php",
+          "method":"post",
+          "dataSrc":{
+              "id_cli": ""
+          },
+          "data": {
+              "id_cli": "",
+              "id_dep": "<?php echo $_GET['id_dep'];?>",
+              "id_mod_lic": "<?php echo $_GET['id_mod_lic'];?>",
+              "operation": "depense_note_debit"
+          }
+        },
+        "columns":[
+          {"data":"compteur"},
+          {"data":"ref_note"},
+          {"data":"nom_dep"},
+          {"data":"date_create",
+            className: 'dt-body-center'},
+          {"data":"montant",
+            render: DataTable.render.number( null, null, 2, null ),
+            className: 'dt-body-right'},
+          {"data":"nom_util",
+            className: 'dt-body-center'}
+        ] 
+      });
+
+    $('#spinner-div').show();
       $('#depense_pending_invoicing').DataTable({
          lengthMenu: [
             [10, 100, 500, -1],
@@ -129,9 +215,9 @@
             'excel',
             'pageLength', 'colvis'
         ],
-        fixedColumns: {
-          left: 2
-        },
+        // fixedColumns: {
+        //   left: 2
+        // },
         paging: false,
         scrollCollapse: true,
         scrollX: true,

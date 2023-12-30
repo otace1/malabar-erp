@@ -1,7 +1,7 @@
 <?php
   include("tetePopCDN.php");
   include("menuHaut.php");
-  // include("menuGauche.php");
+  include("menuGauche.php");
 
 ?>
   <!-- /.navbar -->
@@ -67,6 +67,7 @@
                     <th>Items</th>
                     <th>Pending Invoicing</th>
                     <th>Invoiced</th>
+                    <th>Debit Note</th>
                   </tr>
                   </thead>
                   <tbody>
@@ -155,11 +156,11 @@
 
        }
 
-       if ( data['invoiced'] >= 1) {        
-         // $(row).addClass('text-danger');
-         $('td:eq(3)', row).addClass('text-sm font-weight-bold bg bg-info');
+       // if ( data['invoiced'] >= 1) {        
+       //   // $(row).addClass('text-danger');
+       //   $('td:eq(3)', row).addClass('text-sm font-weight-bold bg bg-info');
 
-       }
+       // }
 
     },
 
@@ -171,6 +172,10 @@
           className: 'dt-body-center'
         },
         {"data":"invoiced",
+          render: DataTable.render.number( null, null, 0, null ),
+          className: 'dt-body-center'
+        },
+        {"data":"debite_note",
           render: DataTable.render.number( null, null, 0, null ),
           className: 'dt-body-center'
         }

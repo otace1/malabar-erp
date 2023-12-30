@@ -2762,6 +2762,10 @@
 
 		echo json_encode($maClasse-> depense_invoiced($_POST['id_dep'], $_POST['id_mod_lic']));
 
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='depense_note_debit'){ 
+
+		echo json_encode($maClasse-> depense_note_debit($_POST['id_dep'], $_POST['id_mod_lic']));
+
 	}
 
 
