@@ -19568,6 +19568,7 @@
 				$reponse['compteur'] = $compteur;
 				$reponse['pending'] = $this-> get_monitoring_depenses_pending($reponse['id_dep'], $id_mod_lic);
 				$reponse['invoiced'] = $this-> get_monitoring_depenses_invoiced($reponse['id_dep'], $id_mod_lic);
+				$reponse['debite_note'] = $this-> get_nbre_debit_note($reponse['id_dep'], $id_mod_lic);
 
 				$rows[] = $reponse;
 
@@ -19617,6 +19618,30 @@
 													AND depdos.id_dos = dos.id_dos
 													AND dos.id_mod_lic = ?
 												GROUP BY dep.id_dep
+												");
+
+			$requete-> execute(array($entree['id_dep'], $entree['id_mod_lic']));
+
+			$reponse = $requete-> fetch();
+
+			return $reponse['nbre'];
+		}
+		
+		public function get_nbre_debit_note($id_dep, $id_mod_lic){
+			include('connexion.php');
+
+			$entree['id_dep'] = $id_dep;
+			$entree['id_mod_lic'] = $id_mod_lic;
+			$rows = array();
+			$compteur = 0;
+
+			$requete = $connexion-> prepare("SELECT COUNT(DISTINCT(det.ref_note)) AS nbre
+												FROM depense dep, depense_dossier depdos, dossier dos, detail_note_debit det
+												WHERE dep.id_dep = ?
+													AND dep.id_dep = depdos.id_dep
+													AND depdos.id_dep_dos = det.id_dep_dos
+													AND depdos.id_dos = dos.id_dos
+													AND dos.id_mod_lic = ?
 												");
 
 			$requete-> execute(array($entree['id_dep'], $entree['id_mod_lic']));
@@ -41288,7 +41313,7 @@
 												det.ref_note AS ref_note,
 												cl.nom_cli AS nom_cli,
 												det.montant AS montant,
-												note_debit.date_create AS date_create,
+												DATE(note_debit.date_create) AS date_create,
 												util.nom_util AS nom_util
 											FROM depense_dossier depdos, dossier dos, client cl, depense dep, detail_note_debit det, note_debit, utilisateur util
 											WHERE depdos.id_dos = dos.id_dos
@@ -41299,6 +41324,42 @@
 												AND det.ref_note = note_debit.ref_note
 												AND note_debit.id_util = util.id_util
 												AND dep.id_dep = ?");
+			$requete-> execute(array($entree['id_mod_lic'], $entree['id_dep']));
+			while($reponse = $requete-> fetch()){
+				$compteur++;
+				$reponse['compteur'] = $compteur;
+				$rows[] = $reponse;
+			}$requete-> closeCursor();
+			
+			return $rows;
+
+		}
+
+		public function depense_note_debit($id_dep, $id_mod_lic){
+			include('connexion.php');
+			$entree['id_dep'] = $id_dep;
+			$entree['id_mod_lic'] = $id_mod_lic;
+			$compteur = 0;
+
+			$rows = array();
+
+			$requete = $connexion-> prepare("SELECT 
+												det.ref_note AS ref_note,
+												cl.nom_cli AS nom_cli,
+												SUM(det.montant) AS montant,
+												DATE(note_debit.date_create) AS date_create,
+												util.nom_util AS nom_util,
+												dep.nom_dep AS nom_dep
+											FROM depense_dossier depdos, dossier dos, client cl, depense dep, detail_note_debit det, note_debit, utilisateur util
+											WHERE depdos.id_dos = dos.id_dos
+												AND dos.id_mod_lic = ?
+												AND dos.id_cli = cl.id_cli
+												AND depdos.id_dep = dep.id_dep
+												AND depdos.id_dep_dos = det.id_dep_dos
+												AND det.ref_note = note_debit.ref_note
+												AND note_debit.id_util = util.id_util
+												AND dep.id_dep = ?
+											GROUP BY det.ref_note");
 			$requete-> execute(array($entree['id_mod_lic'], $entree['id_dep']));
 			while($reponse = $requete-> fetch()){
 				$compteur++;
