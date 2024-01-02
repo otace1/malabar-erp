@@ -40422,7 +40422,7 @@
 
 			$requete = $connexion-> query("SELECT COUNT(ref_fact) AS nbre
 												FROM facture_dossier
-												WHERE YEAR(date_fact) = YEAR(CURRENT_DATE())
+												WHERE ref_fact IS NOT NULL
 													$sqlTransit
 													$sqlClient
 													$sqlUtilisateur
@@ -40779,8 +40779,7 @@
 															)
 														) AS service_vat
 												FROM facture_dossier fd, modele_facture mf, client cl, detail_facture_dossier det, dossier dos, debours
-												WHERE YEAR(fd.date_fact) = YEAR(CURRENT_DATE())
-													AND fd.id_mod_fact = mf.id_mod_fact
+												WHERE fd.id_mod_fact = mf.id_mod_fact
 													AND fd.id_cli = cl.id_cli
 													AND fd.ref_fact = det.ref_fact
 													AND debours.id_deb = det.id_deb
@@ -41011,8 +41010,7 @@
 									                dos.id_mod_trans AS id_mod_trans,
 									                dos.id_march AS id_march
 												FROM facture_dossier fd, modele_facture mf, client cl, dossier dos, detail_facture_dossier det, debours deb
-												WHERE YEAR(fd.date_fact) = YEAR(CURRENT_DATE())
-													AND fd.id_mod_fact = mf.id_mod_fact
+												WHERE fd.id_mod_fact = mf.id_mod_fact
 													AND fd.note_debit = '0'
 													AND fd.ref_fact = det.ref_fact
 													AND det.id_dos = dos.id_dos
@@ -41142,8 +41140,7 @@
 													AND dos.id_dos NOT IN (
 														SELECT DISTINCT(dos.id_dos) 
 															FROM facture_dossier fd, detail_facture_dossier det, dossier dos
-															WHERE YEAR(fd.date_fact) = YEAR(CURRENT_DATE())
-																AND fd.ref_fact = det.ref_fact
+															WHERE fd.ref_fact = det.ref_fact
 																AND fd.note_debit = '0'
 																AND det.id_dos = dos.id_dos
 													)
@@ -42241,8 +42238,7 @@
 
 			$requete = $connexion-> query("SELECT COUNT(DISTINCT(dos.id_dos)) AS nbre
 												FROM facture_dossier fd, detail_facture_dossier det, dossier dos
-												WHERE YEAR(fd.date_fact) = YEAR(CURRENT_DATE())
-													AND fd.ref_fact = det.ref_fact
+												WHERE fd.ref_fact = det.ref_fact
 													AND fd.note_debit = '0'
 													AND det.id_dos = dos.id_dos
 													$sqlClient
@@ -42319,8 +42315,7 @@
 												AND id_dos NOT IN (
 													SELECT DISTINCT(dos.id_dos) 
 														FROM facture_dossier fd, detail_facture_dossier det, dossier dos
-														WHERE YEAR(fd.date_fact) = YEAR(CURRENT_DATE())
-															AND fd.ref_fact = det.ref_fact
+														WHERE fd.ref_fact = det.ref_fact
 															AND fd.note_debit = '0'
 															AND det.id_dos = dos.id_dos
 												)
