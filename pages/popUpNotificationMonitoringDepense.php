@@ -193,9 +193,9 @@
         "columns":[
           {"data":"compteur"},
           {"data":"ref_note"},
-          {"data":"nom_dep"},
           {"data":"date_create",
             className: 'dt-body-center'},
+          {"data":"nom_dep"},
           {"data":"montant",
             render: DataTable.render.number( null, null, 2, null ),
             className: 'dt-body-right'},
