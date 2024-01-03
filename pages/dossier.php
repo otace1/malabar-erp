@@ -1008,6 +1008,9 @@ for ($i=1; $i <= 15 ; $i++) {
                           Export All Files
                         </a>
                         <a class="dropdown-item" href="#"><hr></a>-->
+                        <a class="dropdown-item"onclick="window.location.replace('exportExcel2.php?id_cli=<?php echo $_GET['id_cli']; ?>&id_mod_trans=<?php echo $_GET['id_mod_trans']; ?>&id_mod_trac=<?php echo $_GET['id_mod_trac']; ?>&commodity=<?php echo $_GET['commodity']; ?>&statut=<?php echo $_GET['statut'];?>&id_march=<?php echo $_GET['id_march'];?>&annee=2024','pop1','width=80,height=80');">
+                          Export 2024 Files
+                        </a>
                         <a class="dropdown-item"onclick="window.location.replace('exportExcel2.php?id_cli=<?php echo $_GET['id_cli']; ?>&id_mod_trans=<?php echo $_GET['id_mod_trans']; ?>&id_mod_trac=<?php echo $_GET['id_mod_trac']; ?>&commodity=<?php echo $_GET['commodity']; ?>&statut=<?php echo $_GET['statut'];?>&id_march=<?php echo $_GET['id_march'];?>&annee=2023','pop1','width=80,height=80');">
                           Export 2023 Files
                         </a>
