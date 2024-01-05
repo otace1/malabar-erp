@@ -2662,7 +2662,7 @@
 
 	}elseif(isset($_POST['operation']) && $_POST['operation']=='creerWorksheet'){ 
 
-		$maClasse-> creerWorksheet($_POST['id_dos'], $_POST['nom_march'], $_POST['num_av'], $_POST['ref_fact'], $_POST['code_tarif_march'], $_POST['origine'], $_POST['provenance'], $_POST['code_add'], $_POST['nbr_bags'], $_POST['poids'], $_POST['fob']);
+		$maClasse-> creerWorksheet($_POST['id_dos'], $_POST['nom_march'], $_POST['num_av'], $_POST['ref_fact'], $_POST['code_tarif_march'], $_POST['position_av'], $_POST['origine'], $_POST['provenance'], $_POST['code_add'], $_POST['nbr_bags'], $_POST['qte'], $_POST['poids'], $_POST['fob']);
 		$response['marchandiseDossier'] = $maClasse-> getMarchandiseDossier($_POST['id_dos']);
 		// $response = $maClasse-> getDossier($_POST['id_dos']);
 
@@ -2709,6 +2709,14 @@
 
   		echo json_encode($response);
 
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='valider_worksheet_ops'){// MAJ Montant Decl
+
+  		// $reponse = $maClasse-> getDataDossier($_POST['id_dos']);
+  		$maClasse-> MAJ_verif_feuil_calc_ops($_POST['id_dos']);
+  		$response['message'] = 'Done !';
+
+  		echo json_encode($response);
+
 	}elseif(isset($_POST['operation']) && $_POST['operation']=='dossier_worsheet_waiting_validation'){ 
 
 		echo json_encode($maClasse-> dossier_worsheet_waiting_validation($_POST['id_cli'], $_POST['id_mod_lic']));
@@ -2716,6 +2724,10 @@
 	}elseif(isset($_POST['operation']) && $_POST['operation']=='dossier_worsheet_validated'){ 
 
 		echo json_encode($maClasse-> dossier_worsheet_validated($_POST['id_cli'], $_POST['id_mod_lic']));
+
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='dossier_worsheet_validated_ops'){ 
+
+		echo json_encode($maClasse-> dossier_worsheet_validated_ops($_POST['id_cli'], $_POST['id_mod_lic']));
 
 	}elseif(isset($_POST['operation']) && $_POST['operation']=='code_tarifaire_ajax'){ 
 
@@ -2765,6 +2777,40 @@
 	}elseif(isset($_POST['operation']) && $_POST['operation']=='depense_note_debit'){ 
 
 		echo json_encode($maClasse-> depense_note_debit($_POST['id_dep'], $_POST['id_mod_lic']));
+
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='MAJ_fret'){// MAJ Fret
+
+  		$maClasse-> MAJ_fret($_POST['id_dos'], $_POST['fret']);
+  		$reponse['message'] = 'Done!';
+		$reponse['marchandiseDossier'] = $maClasse-> getMarchandiseDossier($_POST['id_dos']);
+  		echo json_encode($reponse);
+
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='MAJ_assurance'){// MAJ Assurance
+
+  		$maClasse-> MAJ_assurance($_POST['id_dos'], $_POST['assurance']);
+  		$reponse['message'] = 'Done!';
+		$reponse['marchandiseDossier'] = $maClasse-> getMarchandiseDossier($_POST['id_dos']);
+  		echo json_encode($reponse);
+
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='MAJ_autre_frais'){// MAJ autre_frais
+
+  		$maClasse-> MAJ_autre_frais($_POST['id_dos'], $_POST['autre_frais']);
+  		$reponse['message'] = 'Done!';
+		$reponse['marchandiseDossier'] = $maClasse-> getMarchandiseDossier($_POST['id_dos']);
+  		echo json_encode($reponse);
+
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='MAJ_duree_loyer'){// MAJ duree_loyer
+
+  		$maClasse-> MAJ_duree_loyer($_POST['id_dos'], $_POST['duree_loyer']);
+  		$reponse['message'] = 'Done!';
+		$reponse['marchandiseDossier'] = $maClasse-> getMarchandiseDossier($_POST['id_dos']);
+  		echo json_encode($reponse);
+
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='grouper_marchandise'){
+
+  		$maClasse-> grouper_marchandise($_POST['id_dos']);
+		$reponse['marchandiseDossier'] = $maClasse-> getMarchandiseDossier($_POST['id_dos']);
+  		echo json_encode($reponse);
 
 	}
 

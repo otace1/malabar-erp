@@ -47,9 +47,9 @@
                 </h5>
 
                 <div class="float-right">
-                  <button class="btn btn-dark btn-xs" onclick="window.open('generateurWorksheet.php?id_dos=<?php echo $_GET['id_dos'];?>&ref_dos=<?php echo $maClasse-> getDossier($_GET['id_dos'])['ref_dos'];?>','Feuille de calcul <?php echo $maClasse-> getDossier($_GET['id_dos'])['ref_dos'];?>', 'width=1000,height=800');"><i class="fa fa-file"></i> Afficher la Feuille de calcul</button>
-                  <!-- <button class="btn btn-warning btn-xs" onclick="window.location.replace('file_pending_worksheet.php?id_cli=<?php echo $maClasse-> getDossier($_GET['id_dos'])['id_cli'];?>&id_mod_lic=<?php echo $maClasse-> getDossier($_GET['id_dos'])['id_mod_lic'];?>');"><i class="fa fa-exclamation-triangle"></i> Pending Files</button> -->
-                  <button class="btn btn-dark btn-xs" onclick="window.location.replace('list_worksheet.php?id_cli=<?php echo $maClasse-> getDossier($_GET['id_dos'])['id_cli'];?>&id_mod_lic=<?php echo $maClasse-> getDossier($_GET['id_dos'])['id_mod_lic'];?>');"><i class="fa fa-list"></i> Worksheet List</button>
+                  <button class="btn btn-primary btn-sm" onclick="window.open('generateurWorksheet.php?id_dos=<?php echo $_GET['id_dos'];?>&ref_dos=<?php echo $maClasse-> getDossier($_GET['id_dos'])['ref_dos'];?>','Feuille de calcul <?php echo $maClasse-> getDossier($_GET['id_dos'])['ref_dos'];?>', 'width=1000,height=800');"><i class="fa fa-file"></i> Feuille de calcul</button>
+                  <button class="btn btn-warning btn-sm" onclick="window.location.replace('file_pending_worksheet.php?id_cli=<?php echo $maClasse-> getDossier($_GET['id_dos'])['id_cli'];?>&id_mod_lic=<?php echo $maClasse-> getDossier($_GET['id_dos'])['id_mod_lic'];?>');"><i class="fa fa-exclamation-triangle"></i> Pending Files</button>
+                  <button class="btn btn-info btn-sm" onclick="window.location.replace('list_worksheet.php?id_cli=<?php echo $maClasse-> getDossier($_GET['id_dos'])['id_cli'];?>&id_mod_lic=<?php echo $maClasse-> getDossier($_GET['id_dos'])['id_mod_lic'];?>');"><i class="fa fa-list"></i> Worksheet List</button>
                 </div>
 
               </div>    
@@ -77,22 +77,6 @@
                       <td>Regime</td>
                       <td><span id="regime"></span></td>
                     </tr>
-                    <?php
-                        if (!empty($maClasse-> checkRegimeSuspens($_GET['id_dos']))) {
-                      ?>
-                    <tr>
-                      <td>Duree Loyer</td>
-                      <td>
-                        <select id="duree_loyer" name="duree_loyer" onchange="MAJ_duree_loyer(id_dos_worsheet.value, this.value)">
-                          <option value="0">0</option>
-                          <option value="6">6</option>
-                          <option value="12">12</option>
-                        </select>
-                      </td>
-                    </tr>
-                      <?php
-                        }
-                      ?>
                   </tbody>
                 </table>
               </div>
@@ -106,27 +90,18 @@
                    </tr>
                    <tr>
                      <td>Fret</td>
-                     <!-- <td><span id="fret_worsheet"></span></td>
-                     <input type="hidden" id="fret"> -->
-                     <td>
-                       <input type="number" step="0.01" name="fret" id="fret" onblur="MAJ_fret(id_dos_worsheet.value, this.value);">
-                     </td>
+                     <td><span id="fret_worsheet"></span></td>
+                     <input type="hidden" id="fret">
                    </tr>
                    <tr>
                      <td>Autres Charges</td>
-                     <!-- <td><span id="autre_frais_worsheet"></span></td>
-                     <input type="hidden" id="autre_frais"> -->
-                     <td>
-                       <input type="number" step="0.01" name="autre_frais" id="autre_frais" onblur="MAJ_autre_frais(id_dos_worsheet.value, this.value);">
-                     </td>
+                     <td><span id="autre_frais_worsheet"></span></td>
+                     <input type="hidden" id="autre_frais">
                    </tr>
                    <tr>
                      <td>Assurance</td>
-                     <!-- <td><span id="assurance_worksheet"></span></td>
-                     <input type="hidden" id="assurance"> -->
-                     <td>
-                       <input type="number" step="0.01" name="assurance" id="assurance" onblur="MAJ_assurance(id_dos_worsheet.value, this.value);">
-                     </td>
+                     <td><span id="assurance_worksheet"></span></td>
+                     <input type="hidden" id="assurance">
                    </tr>
                    <tr>
                      <td>CIF</td>
@@ -153,13 +128,6 @@
 
           </div>
 
-          <div class="col-md-2">
-            <button class="btn btn-xs btn-primary" onclick="grouper_marchandise(id_dos_worsheet.value);">
-              <i class="fa fa-object-group"></i> Grouper par Code Tarifaire
-            </button>
-            <hr>
-          </div>
-
           <div class="col-md-12 table-responsive p-0">
             <table class="table table-bordered table-striped text-nowrap table-hover table-sm text-nowrap table-head-fixed ">
               <thead>
@@ -170,27 +138,18 @@
                       <th>N.Facture</th>
                       <!-- <th>N.</th> -->
                       <th>Position Tarifaire</th>
-                      <th>AV</th>
+                      <!-- <th>AV</th> -->
                       <th>ORG</th>
-                      <th>Derniere PROV</th>
+                      <th>PROV</th>
                       <th>Code Add</th>
                       <th>Colis</th>
                       <!-- <th>Qte</th> -->
-                      <th>Qte</th>
                       <th>Poids</th>
                       <th>FOB Par Article</th>
                       <th>Coef</th>
                       <th>CIF Par Article</th>
                       <th>Taux DDI</th>
                       <th>DDI en CDF</th>
-                      <?php
-                        if (!empty($maClasse-> checkRegimeSuspens($_GET['id_dos']))) {
-                      ?>
-                      <th>TVA</th>
-                      <th>Loyer <span id="label_duree_loyer"></span> mois</th>
-                      <?php
-                        }
-                      ?>
                   </tr>
               </thead>
               <tbody id="marchandiseDossier">
@@ -206,16 +165,13 @@
                         <td><input type="text" placeholder="N° BIVAC" name="num_av" id="ref_crf" required></td>
                         <td><input type="text" placeholder="N° Facture" name="ref_fact" id="ref_fact" style="width: 15em;" required></td>
                         <td>
-                          <input type="hidden" style="width: 15em;" name="code_tarif_march" id="code_tarif_march" required>
+                          <input type="text" placeholder="Position Tarifaire" style="width: 15em;" name="code_tarif_march" id="code_tarif_march" required>
                           <span onclick="$('#modal_code_tarifaire').modal('show');"><i class="fa fa-search"></i></span>
-                          <span id="label_code_tarif_march"></span>
                         </td>
-                        <td><input type="text" placeholder="Position AV" style="width: 8em;" name="position_av" required></td>
                         <td><input type="text" placeholder="Origine" style="width: 8em;" name="origine" required></td>
                         <td><input type="text" placeholder="Provenance" style="width: 8em;" name="provenance" required></td>
                         <td><input type="text" placeholder="Code Additionnel" style="width: 8em;" name="code_add" required></td>
-                        <td><input type="number" placeholder="Colis" style="width: 5em;" name="nbr_bags" step="0.01" required></td>
-                        <td><input type="number" placeholder="Qte" style="width: 5em;" name="qte" step="0.01" required></td>
+                        <td><input type="number" placeholder="Qte" style="width: 5em;" name="nbr_bags" step="0.01" required></td>
                         <td><input type="number" placeholder="Poids" style="width: 8em;" name="poids" step="0.01" required></td>
                         <td><input type="number" placeholder="FOB" style="width: 8em;" name="fob" step="0.01" required></td>
                         <td><button class="btn btn-xs btn-primary" type="submit"><i class="fa fa-check"></i></button></td>
@@ -283,125 +239,6 @@
 </div>
 
 <script type="text/javascript">
-  function grouper_marchandise(id_dos){
-
-    if(confirm('This operation is irreversible, do really you want to submit ?')) {
-
-      $.ajax({
-        type: 'post',
-        url: 'ajax.php',
-        data: {operation: 'grouper_marchandise', id_dos: id_dos},
-        dataType: 'json',
-        success:function(data){
-          if (data.logout) {
-            alert(data.logout);
-            window.location="../deconnexion.php";
-          }else{
-            $('#marchandiseDossier').html(data.marchandiseDossier);
-            getSommeMarchandiseDossier(id_dos);
-          }
-        },
-        complete: function () {
-            $('#spinner-div').hide();//Request is complete so hide spinner
-        }
-      });
-
-    }
-
-  }
-  
-  function MAJ_duree_loyer(id_dos, duree_loyer){
-
-    $.ajax({
-      type: 'post',
-      url: 'ajax.php',
-      data: {operation: 'MAJ_duree_loyer', id_dos: id_dos, duree_loyer: duree_loyer},
-      dataType: 'json',
-      success:function(data){
-        if (data.logout) {
-          alert(data.logout);
-          window.location="../deconnexion.php";
-        }else{
-          $('#marchandiseDossier').html(data.marchandiseDossier);
-          getSommeMarchandiseDossier(id_dos);
-          $('#label_duree_loyer').html(duree_loyer);
-        }
-      },
-      complete: function () {
-          $('#spinner-div').hide();//Request is complete so hide spinner
-      }
-    });
-
-  }
-
-  function MAJ_fret(id_dos, fret){
-
-    $.ajax({
-      type: 'post',
-      url: 'ajax.php',
-      data: {operation: 'MAJ_fret', id_dos: id_dos, fret: fret},
-      dataType: 'json',
-      success:function(data){
-        if (data.logout) {
-          alert(data.logout);
-          window.location="../deconnexion.php";
-        }else{
-          $('#marchandiseDossier').html(data.marchandiseDossier);
-          getSommeMarchandiseDossier(id_dos);
-        }
-      },
-      complete: function () {
-          $('#spinner-div').hide();//Request is complete so hide spinner
-      }
-    });
-
-  }
-
-  function MAJ_autre_frais(id_dos, autre_frais){
-
-    $.ajax({
-      type: 'post',
-      url: 'ajax.php',
-      data: {operation: 'MAJ_autre_frais', id_dos: id_dos, autre_frais: autre_frais},
-      dataType: 'json',
-      success:function(data){
-        if (data.logout) {
-          alert(data.logout);
-          window.location="../deconnexion.php";
-        }else{
-          $('#marchandiseDossier').html(data.marchandiseDossier);
-          getSommeMarchandiseDossier(id_dos);
-        }
-      },
-      complete: function () {
-          $('#spinner-div').hide();//Request is complete so hide spinner
-      }
-    });
-
-  }
-
-  function MAJ_assurance(id_dos, assurance){
-
-    $.ajax({
-      type: 'post',
-      url: 'ajax.php',
-      data: {operation: 'MAJ_assurance', id_dos: id_dos, assurance: assurance},
-      dataType: 'json',
-      success:function(data){
-        if (data.logout) {
-          alert(data.logout);
-          window.location="../deconnexion.php";
-        }else{
-          $('#marchandiseDossier').html(data.marchandiseDossier);
-          getSommeMarchandiseDossier(id_dos);
-        }
-      },
-      complete: function () {
-          $('#spinner-div').hide();//Request is complete so hide spinner
-      }
-    });
-
-  }
 
   $('#code_tarifaire_ajax').DataTable({
      lengthMenu: [
@@ -465,7 +302,6 @@ let table = new DataTable('#code_tarifaire_ajax');
 table.on('click', 'tbody tr', function () {
     let data = table.row(this).data();
     $('#code_tarif_march').val(data['code_tarif']);
-    $('#label_code_tarif_march').html(data['code_tarif']);
     $('#modal_code_tarifaire').modal('hide');
 });
 
@@ -499,7 +335,6 @@ table.on('click', 'tbody tr', function () {
 
                 $('#ref_crf').val(fd.get('num_av'));
                 $('#ref_fact').val(fd.get('ref_fact'));
-                $('#label_code_tarif_march').html('');
 
                 getSommeMarchandiseDossier(fd.get('id_dos'));
               }
@@ -614,38 +449,27 @@ table.on('click', 'tbody tr', function () {
           $('#fob_worksheet').addClass('text-primary font-weight-bold');
 
           fob=data.fob;
-          if (data.fob > 0 ) {
-            fob = data.fob;
-          }else{
-            fob=0;
-          }
-          if (parseFloat($('#fret').val()) > 0 ) {
-            fret = parseFloat($('#fret').val());
+          if (parseFloat($('#fret').text()) > 0 ) {
+            fret = parseFloat($('#fret').text());
           }else{
             fret=0;
           }
-          if (parseFloat($('#assurance').val()) > 0 ) {
-            assurance = parseFloat($('#assurance').val());
+          if (parseFloat($('#assurance').text()) > 0 ) {
+            assurance = parseFloat($('#assurance').text());
           }else{
             assurance=0;
           }
-          if (parseFloat($('#autre_frais').val()) > 0 ) {
-            autre_frais = parseFloat($('#autre_frais').val());
+          if (parseFloat($('#autre_frais').text()) > 0 ) {
+            autre_frais = parseFloat($('#autre_frais').text());
           }else{
             autre_frais=0;
           }
 
           cif = parseFloat(fob) + parseFloat(fret) + parseFloat(assurance) + parseFloat(autre_frais);
-          if (fob>0) {
-            coef = cif / parseFloat(fob);
-          }else{
-            coef = '';
-          }
-          
+          coef = cif / parseFloat(fob);
           $('#coef').val(coef);
 
           console.log(cif);
-          console.log(coef);
 
           $('#cif_worsheet').html(new Intl.NumberFormat('en-US').format(Math.round(cif*1000)/1000));
           $('#cif_worsheet').addClass('text-success font-weight-bold');
@@ -685,12 +509,10 @@ table.on('click', 'tbody tr', function () {
           $('#fret_worsheet').html(new Intl.NumberFormat('en-US').format(Math.round(data.fret*1000)/1000));
           $('#assurance_worksheet').html(new Intl.NumberFormat('en-US').format(Math.round(data.assurance*1000)/1000));
           $('#autre_frais_worsheet').html(new Intl.NumberFormat('en-US').format(Math.round(data.autre_frais*1000)/1000));
-          $('#fret').val(data.fret);
-          $('#assurance').val(data.assurance);
-          $('#autre_frais').val(data.autre_frais);
+          $('#fret').html(data.fret);
+          $('#assurance').html(data.assurance);
+          $('#autre_frais').html(data.autre_frais);
           $('#marchandiseDossier').html(data.marchandiseDossier);
-          $('#duree_loyer').val(data.duree_loyer);
-          $('#label_duree_loyer').html(data.duree_loyer);
           getSommeMarchandiseDossier(<?php echo $_GET['id_dos'];?>);
         }
       },

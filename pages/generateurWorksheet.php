@@ -26,7 +26,7 @@ require_once('../tcpdf/tcpdf.php');
 $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
 
 // set margins
-$pdf->SetMargins(4,3 ,3);
+$pdf->SetMargins(5,3 ,4);
 
 
 // set document information
@@ -46,7 +46,7 @@ if (@file_exists(dirname(__FILE__).'/lang/eng.php')) {
 
 
 // set font
-$pdf->SetFont('helvetica', 'N', 8);
+$pdf->SetFont('helvetica', 'N', 7);
 // $pdf->SetFont('times', 'N', 8);
 // $pdf->SetFont('courier', 'N', 8);
 $pdf->setPrintHeader(false);
@@ -55,7 +55,7 @@ $pdf->AddPage('L', 'A4');
 
 $pdf->Image('../images/malabar2.png', 4, 10, 110, '', '', '', '', false, 300);
 $sceau='';
-if ( empty($maClasse-> getDossier($_GET['id_dos'])['id_verif_feuil_calc']) ) {
+if ( empty($maClasse-> getDossier($_GET['id_dos'])['id_verif_feuil_calc_ops']) ) {
 	$pdf->Image('../images/no_valid.jpg', 150, 2, 30, '', '', '', '', false, 300);
 }else{
 	// $pdf->Image('../images/sceau_mca.png', 120, 235, 50, '', '', '', '', false, 300);
@@ -79,6 +79,8 @@ $date_feuil_calc = $maClasse-> getDossier($_GET['id_dos'])['date_feuil_calc_1'];
 $util_feuil_calc = $maClasse-> getUtilisateur($maClasse-> getDossier($_GET['id_dos'])['id_feuil_calc'])['nom_util'];
 $util_verif_feuil_calc = $maClasse-> getUtilisateur($maClasse-> getDossier($_GET['id_dos'])['id_verif_feuil_calc'])['nom_util'];
 $date_verif_feuil_calc = $maClasse-> getDossier($_GET['id_dos'])['date_verif_feuil_calc'];
+$util_verif_feuil_calc_ops = $maClasse-> getUtilisateur($maClasse-> getDossier($_GET['id_dos'])['id_verif_feuil_calc_ops'])['nom_util'];
+$date_verif_feuil_calc_ops = $maClasse-> getDossier($_GET['id_dos'])['date_verif_feuil_calc_ops'];
 $marchandise_dossier = $maClasse-> getMarchandiseDossier2($_GET['id_dos']);
 
 
@@ -177,29 +179,37 @@ $tbl = <<<EOD
 			<td width="12%" style="text-align: center; border: 0.3px solid black; font-weight: bold;">Description sur facture</td>
 			<td width="10%" style="text-align: center; border: 0.3px solid black; font-weight: bold;">N.BIVAC</td>
 			<td width="12%" style="text-align: center; border: 0.3px solid black; font-weight: bold;">N.Facture</td>
-			<td width="10%" style="text-align: center; border: 0.3px solid black; font-weight: bold;">Position Tarifaire</td>
-			<td width="5%" style="text-align: center; border: 0.3px solid black; font-weight: bold;">ORG</td>
-			<td width="5%" style="text-align: center; border: 0.3px solid black; font-weight: bold;">PROV</td>
+			<td width="2%" style="text-align: center; border: 0.3px solid black; font-weight: bold;">N.</td>
+			<td width="8%" style="text-align: center; border: 0.3px solid black; font-weight: bold;">Position Tarifaire</td>
+			<td width="3%" style="text-align: center; border: 0.3px solid black; font-weight: bold;">AV</td>
+			<td width="4%" style="text-align: center; border: 0.3px solid black; font-weight: bold;">ORG</td>
+			<td width="4%" style="text-align: center; border: 0.3px solid black; font-weight: bold;">PROV</td>
 			<td width="6%" style="text-align: center; border: 0.3px solid black; font-weight: bold;">Code Add.</td>
-			<td width="6%" style="text-align: center; border: 0.3px solid black; font-weight: bold;">Colis</td>
+			<td width="3%" style="text-align: center; border: 0.3px solid black; font-weight: bold;">Colis</td>
+			<td width="3%" style="text-align: center; border: 0.3px solid black; font-weight: bold;">Qte</td>
 			<td width="6%" style="text-align: center; border: 0.3px solid black; font-weight: bold;">Poids</td>
 			<td width="8%" style="text-align: center; border: 0.3px solid black; font-weight: bold;">FOB Par Article</td>
 			<td width="8%" style="text-align: center; border: 0.3px solid black; font-weight: bold;">CIF Par Article</td>
-			<td width="4%" style="text-align: center; border: 0.3px solid black; font-weight: bold;">Taux</td>
+			<td width="3%" style="text-align: center; border: 0.3px solid black; font-weight: bold;">Taux</td>
 			<td width="8%" style="text-align: center; border: 0.3px solid black; font-weight: bold;">DDI en CDF</td>
 		</tr>
 		$marchandise_dossier
 		<br>
 		<tr>
-			<td width="50%" style="text-align: center;">
+			<td width="33%" style="text-align: center;">
 			To be recorded by<br>
 			<br>$util_feuil_calc
 			<br>$date_feuil_calc
 			</td>
-			<td width="50%" style="text-align: center;">
+			<td width="34%" style="text-align: center;">
 			OPS Coordonator Approval<br>
 			<br>$util_verif_feuil_calc
 			<br>$date_verif_feuil_calc
+			</td>
+			<td width="33%" style="text-align: center;">
+			OPS Manager Approval<br>
+			<br>$util_verif_feuil_calc_ops
+			<br>$date_verif_feuil_calc_ops
 			</td>
 		</tr>
 	</table>

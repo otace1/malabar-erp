@@ -55,7 +55,37 @@
             <div class="card">
               <div class="card-header">
                 <h5 class="card-title" style="font-weight: bold;">
-                 <span style="color: #CCCC00;" class="badge " id="nbre_invoice_pending_validation"></span> Awaiting Validation
+                 <span style="color: #CCCC00;" class="badge " id="nbre_invoice_pending_validation"></span> Pending
+                </h5>
+
+              </div>    
+
+              <!-- /.card-header -->
+              <div class="card-body table-responsive p-0 small">
+                <table id="dossier_pending_worsheet" class=" table table-dark table-bordered table-hover text-nowrap table-head-fixed">
+                  <thead>
+                    <tr class="">
+                      <th style="" width="5px">#</th>
+                      <th style="">Ref.Dossier</th>
+                      <th style="">Client</th>
+                      <th style="">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                   
+                  </tbody>
+                </table>
+              </div>
+              <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+          </div>
+
+          <div class="col-6">
+            <div class="card">
+              <div class="card-header">
+                <h5 class="card-title" style="font-weight: bold;">
+                 <span style="color: #CCCC00;" class="badge " id="nbre_invoice_pending_validation"></span> Awaiting OPS Coordonator Approval
                 </h5>
 
               </div>    
@@ -86,7 +116,7 @@
             <div class="card">
               <div class="card-header">
                 <h5 class="card-title" style="font-weight: bold;">
-                 <span style="color: #CCCC00;" class="badge " id="nbre_invoice_pending_validation"></span> Approved
+                 <span style="color: #CCCC00;" class="badge " id="nbre_invoice_pending_validation"></span> OPS Manager Approval
                 </h5>
 
               </div>    
@@ -101,6 +131,38 @@
                       <th style="">Client</th>
                       <th style="">Recorded Date</th>
                       <th style="">Approved Date</th>
+                      <th style="">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                   
+                  </tbody>
+                </table>
+              </div>
+              <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+          </div>
+
+          <div class="col-6">
+            <div class="card">
+              <div class="card-header">
+                <h5 class="card-title" style="font-weight: bold;">
+                 <span style="color: #CCCC00;" class="badge " id="nbre_invoice_pending_validation"></span> Approved
+                </h5>
+
+              </div>    
+
+              <!-- /.card-header -->
+              <div class="card-body table-responsive p-0 small">
+                <table id="dossier_worsheet_validated_ops" class=" table table-dark table-bordered table-hover text-nowrap table-sm">
+                  <thead>
+                    <tr>
+                      <th style="" width="5px">#</th>
+                      <th style="">Ref.Dossier</th>
+                      <th style="">Client</th>
+                      <th style="text-align: center;">Recorded Date</th>
+                      <th style="text-align: center;">Approved Date</th>
                       <th style="">Action</th>
                     </tr>
                   </thead>
@@ -267,6 +329,34 @@
 </div>
 <script type="text/javascript">
 
+  function valider_worksheet_ops(id_dos){
+
+    if(confirm('Do really you want to submit ?')) {
+
+      $.ajax({
+        type: 'post',
+        url: 'ajax.php',
+        data: {operation: 'valider_worksheet_ops', id_dos: id_dos},
+        dataType: 'json',
+        success:function(data){
+          if (data.logout) {
+            alert(data.logout);
+            window.location="../deconnexion.php";
+          }else{
+            $('#dossier_pending_worsheet').DataTable().ajax.reload();
+            $('#dossier_worsheet_waiting_validation').DataTable().ajax.reload();
+            $('#dossier_worsheet_validated_ops').DataTable().ajax.reload();
+            $('#dossier_worsheet_validated').DataTable().ajax.reload();
+          }
+        },
+        complete: function () {
+            $('#spinner-div').hide();//Request is complete so hide spinner
+        }
+      });
+
+    }
+  }
+
   function valider_worksheet(id_dos){
 
     if(confirm('Do really you want to submit ?')) {
@@ -283,6 +373,7 @@
           }else{
             $('#dossier_pending_worsheet').DataTable().ajax.reload();
             $('#dossier_worsheet_waiting_validation').DataTable().ajax.reload();
+            $('#dossier_worsheet_validated_ops').DataTable().ajax.reload();
             $('#dossier_worsheet_validated').DataTable().ajax.reload();
           }
         },
@@ -313,6 +404,7 @@
             getSommeMarchandiseDossier(id_dos);
             $('#dossier_pending_worsheet').DataTable().ajax.reload();
             $('#dossier_worsheet_waiting_validation').DataTable().ajax.reload();
+            $('#dossier_worsheet_validated_ops').DataTable().ajax.reload();
             $('#dossier_worsheet_validated').DataTable().ajax.reload();
           }
         },
@@ -636,6 +728,55 @@
       {"data":"code_cli"},
       {"data":"date_feuil_calc"},
       {"data":"date_verif_feuil_calc"},
+      {"data":"btn_action",
+        className: 'dt-body-center'
+      }
+    ] 
+  });
+
+  $('#dossier_worsheet_validated_ops').DataTable({
+     lengthMenu: [
+        [10, 20, 50, -1],
+        [10, 20, 50, 500, 'All'],
+    ],
+    dom: 'Bfrtip',
+    buttons: [
+        {
+          extend: 'excel',
+          text: '<i class="fa fa-file-excel"></i>',
+          className: 'btn btn-success'
+        }
+    ],
+  "paging": true,
+  "lengthChange": true,
+  "searching": true,
+  "ordering": true,
+  "info": true,
+  "autoWidth": true,
+  // "responsive": true,
+    "ajax":{
+      "type": "GET",
+      "url":"ajax.php",
+      "method":"post",
+      "dataSrc":{
+          "id_cli": ""
+      },
+      "data": {
+          "id_cli": "<?php echo $_GET['id_cli'];?>",
+          "id_mod_lic": "<?php echo $_GET['id_mod_lic'];?>",
+          "operation": "dossier_worsheet_validated_ops"
+      }
+    },
+    "columns":[
+      {"data":"compteur"},
+      {"data":"ref_dos"},
+      {"data":"code_cli"},
+      {"data":"date_feuil_calc",
+        className: 'dt-body-center'
+      },
+      {"data":"date_verif_feuil_calc",
+        className: 'dt-body-center'
+      },
       {"data":"btn_action",
         className: 'dt-body-center'
       }
