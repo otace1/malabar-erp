@@ -3982,6 +3982,27 @@
 
 		}
 
+		public function checkRegimeSuspens($id_dos){
+			include("connexion.php");
+
+			$entree['id_dos'] = $id_dos;
+
+			$requete = $connexion-> prepare("SELECT *
+											FROM dossier dos
+											WHERE dos.id_dos = ?
+												AND (REPLACE(dos.regime, ' ', '') LIKE '%IM5%'
+													OR dos.temporelle='1')
+											");
+			$requete-> execute(array($entree['id_dos']));
+			$reponse = $requete-> fetch();
+			if ($reponse) {
+				return $reponse;
+			}else{
+				return null;
+			}
+
+		}
+
 		public function checkFileInvoicedLicense($num_lic){
 			include("connexion.php");
 
@@ -5286,17 +5307,25 @@
     		$requete-> execute(array($entree['id_mod_lic']));
     		while ($reponse = $requete-> fetch()) {
     			$compteur++;
+    			// $tableau .= '
+    			// 			<tr>
+    			// 				<td>'.$compteur.'</td>
+    			// 				<td>'.$reponse['code_cli'].'</td>
+    			// 				<td>'.$reponse['nom_cli'].'</td>
+    			// 				<td class="text-center text-light">
+    			// 					<button class="btn btn-xs btn-warning" onclick="window.location.replace(\'file_pending_worksheet.php?id_mod_lic='.$id_mod_lic.'&id_cli='.$reponse['id_cli'].'\');">
+    			// 						<i class="fa fa-exclamation"></i> Files Pending ('.$this-> dossier_awaiting_worksheet_client($id_mod_lic, $reponse['id_cli']).')
+    			// 					</button> | 
+    			// 					<button class="btn btn-xs bg-info" onclick="window.location.replace(\'list_worksheet.php?id_mod_lic='.$id_mod_lic.'&id_cli='.$reponse['id_cli'].'\');"><i class="fa fa-list"></i> Worsheet list</button>
+    			// 				</td>
+    			// 			</tr>
+    			// ';
     			$tableau .= '
-    						<tr>
+    						<tr onMouseOver="this.style.cursor=\'pointer\'" onclick="window.location.replace(\'list_worksheet.php?id_mod_lic='.$id_mod_lic.'&id_cli='.$reponse['id_cli'].'\');">
     							<td>'.$compteur.'</td>
     							<td>'.$reponse['code_cli'].'</td>
     							<td>'.$reponse['nom_cli'].'</td>
-    							<td class="text-center text-light">
-    								<button class="btn btn-xs btn-warning" onclick="window.location.replace(\'file_pending_worksheet.php?id_mod_lic='.$id_mod_lic.'&id_cli='.$reponse['id_cli'].'\');">
-    									<i class="fa fa-exclamation"></i> Files Pending ('.$this-> dossier_awaiting_worksheet_client($id_mod_lic, $reponse['id_cli']).')
-    								</button> | 
-    								<button class="btn btn-xs bg-info" onclick="window.location.replace(\'list_worksheet.php?id_mod_lic='.$id_mod_lic.'&id_cli='.$reponse['id_cli'].'\');"><i class="fa fa-list"></i> Worsheet list</button>
-    							</td>
+    							<td>'.$this-> dossier_awaiting_worksheet_client($id_mod_lic, $reponse['id_cli']).'</td>
     						</tr>
     			';
     			// $tableau .= '
@@ -17028,6 +17057,8 @@
 													AND dos.date_feuil_calc IS NOT NULL
 													AND dos.id_verif_feuil_calc IS NULL
 													AND dos.date_verif_feuil_calc IS NULL
+													AND dos.id_verif_feuil_calc_ops IS NULL
+													AND dos.date_verif_feuil_calc_ops IS NULL
 													$sqlClient");
 			$requete-> execute(array($entree['id_mod_lic']));
 			while ($reponse = $requete-> fetch()) {
@@ -17061,15 +17092,62 @@
 													cl.code_cli AS code_cli,
 													DATE_FORMAT(dos.date_feuil_calc, '%d/%m/%Y') AS date_feuil_calc,
 													DATE_FORMAT(dos.date_verif_feuil_calc, '%d/%m/%Y') AS date_verif_feuil_calc,
-													CONCAT('<button class=\"btn btn-xs bg-secondary square-btn-adjust\" onclick=\"window.open(\'generateurWorksheet.php?id_dos=',dos.id_dos,'&ref_dos=',dos.ref_dos,'\',\'',dos.ref_dos,'\',\'width=1000,height=800\');\" title=\"View Worsheet\">
+													CONCAT('<button class=\"btn btn-xs btn-info\" title=\"Feuille de calcul\" onclick=\"window.location.replace(\'worksheet.php?id_dos=',dos.id_dos,'\');\"><i class=\"fa fa-calculator\"></i></button>
+														<button class=\"btn btn-xs bg-secondary square-btn-adjust\" onclick=\"window.open(\'generateurWorksheet.php?id_dos=',dos.id_dos,'&ref_dos=',dos.ref_dos,'\',\'',dos.ref_dos,'\',\'width=1000,height=800\');\" title=\"View Worsheet\">
 										                    <i class=\"fas fa-eye\"></i> 
-										                </button> ') AS btn_action
+										                </button>
+										                <button class=\"btn btn-xs btn-primary\" title=\"Valider\" onclick=\"valider_worksheet_ops(',dos.id_dos,');\"><i class=\"fa fa-check\"></i></button> ') AS btn_action
 												FROM dossier dos, client cl
 												WHERE dos.id_cli = cl.id_cli
 													AND dos.id_mod_lic = ?
 													AND dos.not_feuil_calc = '0'
 													AND dos.id_verif_feuil_calc IS NOT NULL
 													AND dos.date_verif_feuil_calc IS NOT NULL
+													AND dos.id_verif_feuil_calc_ops IS NULL
+													AND dos.date_verif_feuil_calc_ops IS NULL
+													$sqlClient");
+			$requete-> execute(array($entree['id_mod_lic']));
+			while ($reponse = $requete-> fetch()) {
+				$compteur++;
+
+				$reponse['compteur'] = $compteur;
+
+				$rows[] = $reponse;
+			}$requete-> closeCursor();
+
+
+			return $rows;
+
+		}
+
+		public function dossier_worsheet_validated_ops($id_cli, $id_mod_lic){
+			include('connexion.php');
+			$entree['id_mod_lic'] = $id_mod_lic;
+
+			if (isset($id_cli) && ($id_cli != '')) {
+				$sqlClient = ' AND dos.id_cli = '.$id_cli;
+			}else{
+				$sqlClient = '';
+			}
+
+			$compteur = 0;
+			$rows = array();
+
+			$requete = $connexion-> prepare("SELECT dos.id_dos AS id_dos,
+													dos.ref_dos AS ref_dos,
+													cl.code_cli AS code_cli,
+													DATE_FORMAT(dos.date_feuil_calc, '%d/%m/%Y') AS date_feuil_calc,
+													DATE_FORMAT(dos.date_verif_feuil_calc, '%d/%m/%Y') AS date_verif_feuil_calc,
+													CONCAT('<button class=\"btn btn-xs btn-info\" title=\"Feuille de calcul\" onclick=\"window.location.replace(\'worksheet.php?id_dos=',dos.id_dos,'\');\"><i class=\"fa fa-calculator\"></i></button>
+														<button class=\"btn btn-xs bg-secondary square-btn-adjust\" onclick=\"window.open(\'generateurWorksheet.php?id_dos=',dos.id_dos,'&ref_dos=',dos.ref_dos,'\',\'',dos.ref_dos,'\',\'width=1000,height=800\');\" title=\"View Worsheet\">
+										                    <i class=\"fas fa-eye\"></i> 
+										                </button> ') AS btn_action
+												FROM dossier dos, client cl
+												WHERE dos.id_cli = cl.id_cli
+													AND dos.id_mod_lic = ?
+													AND dos.not_feuil_calc = '0'
+													AND dos.id_verif_feuil_calc_ops IS NOT NULL
+													AND dos.date_verif_feuil_calc_ops IS NOT NULL
 													$sqlClient");
 			$requete-> execute(array($entree['id_mod_lic']));
 			while ($reponse = $requete-> fetch()) {
@@ -18867,23 +18945,25 @@
 			
 		}
 
-		public function creerWorksheet($id_dos, $nom_march, $num_av, $ref_fact, $code_tarif_march, $origine, $provenance, $code_add, $nbr_bags, $poids, $fob){
+		public function creerWorksheet($id_dos, $nom_march, $num_av, $ref_fact, $code_tarif_march, $position_av, $origine, $provenance, $code_add, $nbr_bags, $qte, $poids, $fob){
 			include('connexion.php');
 			$entree['id_dos'] = $id_dos;
 			$entree['nom_march'] = $nom_march;
 			$entree['num_av'] = $num_av;
 			$entree['ref_fact'] = $ref_fact;
 			$entree['code_tarif_march'] = $code_tarif_march;
+			$entree['position_av'] = $position_av;
 			$entree['origine'] = $origine;
 			$entree['provenance'] = $provenance;
 			$entree['code_add'] = $code_add;
 			$entree['nbr_bags'] = $nbr_bags;
+			$entree['qte'] = $qte;
 			$entree['poids'] = $poids;
 			$entree['fob'] = $fob;
 
-			$requete = $connexion-> prepare("INSERT INTO marchandise_dossier(id_dos, nom_march, num_av, ref_fact, code_tarif_march, origine, provenance, code_add, nbr_bags, poids, fob, id_util)
-											VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-			$requete-> execute(array($entree['id_dos'], $entree['nom_march'], $entree['num_av'], $entree['ref_fact'], $entree['code_tarif_march'], $entree['origine'], $entree['provenance'], $entree['code_add'], $entree['nbr_bags'], $entree['poids'], $entree['fob'], $_SESSION['id_util']));
+			$requete = $connexion-> prepare("INSERT INTO marchandise_dossier(id_dos, nom_march, num_av, ref_fact, code_tarif_march, position_av, origine, provenance, code_add, nbr_bags, qte, poids, fob, id_util)
+											VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+			$requete-> execute(array($entree['id_dos'], $entree['nom_march'], $entree['num_av'], $entree['ref_fact'], $entree['code_tarif_march'], $entree['position_av'], $entree['origine'], $entree['provenance'], $entree['code_add'], $entree['nbr_bags'], $entree['qte'], $entree['poids'], $entree['fob'], $_SESSION['id_util']));
 
 			$this-> MAJ_feuil_calc($id_dos);
 			
@@ -37902,44 +37982,89 @@
 			include('connexion.php');
 			$entree['id_dos'] = $id_dos;
 			$table = '';
+			$ddi = 0;
+			$tva = 0;
+			$loyer = 0;
+			$duree_loyer = $this-> getDossier($id_dos)['duree_loyer'];
 			$compteur=0;
 			if ($this-> getFOBMarchandiseDossier($id_dos)>0) {
 				$fob_marchandise = $this-> getFOBMarchandiseDossier($id_dos);
 			}else{
 				$fob_marchandise = 1;
 			}
-			$coef = round(($this-> getFOBMarchandiseDossier($id_dos)+$this-> getDossier($id_dos)['cif_2'])/$fob_marchandise, 1);
+			// $coef = round(($this-> getFOBMarchandiseDossier($id_dos)+$this-> getDossier($id_dos)['cif_2'])/$fob_marchandise, 1);
+			$coef = ($this-> getFOBMarchandiseDossier($id_dos)+$this-> getDossier($id_dos)['cif_2'])/$fob_marchandise;
 			$roe_feuil_calc = $this-> getDossier($id_dos)['roe_feuil_calc'];
 
 			$requete = $connexion-> prepare("SELECT *
 												FROM marchandise_dossier
 												WHERE id_dos = ?");
 			$requete-> execute(array($entree['id_dos']));
-			while($reponse=$requete-> fetch()){
-				$compteur++;
-				$table .='<tr>
-								<td>'.$compteur.'</td>
-								<td>'.$reponse['nom_march'].'</td>
-								<td>'.$reponse['num_av'].'</td>
-								<td>'.$reponse['ref_fact'].'</td>
-								<td>'.$reponse['code_tarif_march'].'</td>
-								<td>'.$reponse['origine'].'</td>
-								<td>'.$reponse['provenance'].'</td>
-								<td>'.$reponse['code_add'].'</td>
-								<td style="text-align: right;">'.number_format($reponse['nbr_bags'], 2, '.', ',').'</td>
-								<td style="text-align: right;">'.number_format($reponse['poids'], 2, '.', ',').'</td>
-								<td style="text-align: right;">'.number_format($reponse['fob'], 2, '.', ',').'</td>
-								<td style="text-align: right;">'.number_format($coef, 1, '.', ',').'</td>
-								<td style="text-align: right;">'.number_format($reponse['fob']*$coef, 2, '.', ',').'</td>
-								<td style="text-align: right;">'.number_format($this-> getCode_tarif($reponse['code_tarif_march'])['DDI'], 2, '.', ',').'</td>
-								<td style="text-align: right;">'.number_format($reponse['fob']*$coef*($this-> getCode_tarif($reponse['code_tarif_march'])['DDI']/100)*$roe_feuil_calc, 0, '.', ',').'</td>
-								<td>
-									<button class="btn-xs btn-danger" onclick="supprimerMarchandiseDossier('.$reponse['id_march_dos'].', '.$reponse['id_dos'].');">
-										<span class="fa fa-times"></span>
-									</button>
-								</td>
-							</tr>';
-			}$requete-> closeCursor();
+			if (!empty($this-> checkRegimeSuspens($id_dos))) {
+				
+				while($reponse=$requete-> fetch()){
+					$compteur++;
+					$ddi = $reponse['fob']*$coef*($this-> getCode_tarif($reponse['code_tarif_march'])['DDI']/100)*$roe_feuil_calc;
+					$tva = ($ddi+($reponse['fob']*$coef)*$roe_feuil_calc)*0.16;
+					$loyer = ($ddi+$tva)*0.03*$duree_loyer;
+					$table .='<tr>
+									<td>'.$compteur.'</td>
+									<td>'.$reponse['nom_march'].'</td>
+									<td>'.$reponse['num_av'].'</td>
+									<td>'.$reponse['ref_fact'].'</td>
+									<td>'.$reponse['code_tarif_march'].'</td>
+									<td>'.$reponse['position_av'].'</td>
+									<td>'.$reponse['origine'].'</td>
+									<td>'.$reponse['provenance'].'</td>
+									<td>'.$reponse['code_add'].'</td>
+									<td style="text-align: right;">'.number_format($reponse['nbr_bags'], 2, '.', ',').'</td>
+									<td style="text-align: right;">'.number_format($reponse['qte'], 2, '.', ',').'</td>
+									<td style="text-align: right;">'.number_format($reponse['poids'], 2, '.', ',').'</td>
+									<td style="text-align: right;">'.number_format($reponse['fob'], 2, '.', ',').'</td>
+									<td style="text-align: right;">'.number_format($coef, 1, '.', ',').'</td>
+									<td style="text-align: right;">'.number_format($reponse['fob']*$coef, 2, '.', ',').'</td>
+									<td style="text-align: right;">'.number_format($this-> getCode_tarif($reponse['code_tarif_march'])['DDI'], 2, '.', ',').'</td>
+									<td style="text-align: right;">'.number_format($ddi, 0, '.', ',').'</td>
+									<td style="text-align: right;">'.number_format($tva, 0, '.', ',').'</td>
+									<td style="text-align: right;">'.number_format($loyer, 0, '.', ',').'</td>
+									<td>
+										<button class="btn-xs btn-danger" onclick="supprimerMarchandiseDossier('.$reponse['id_march_dos'].', '.$reponse['id_dos'].');">
+											<span class="fa fa-times"></span>
+										</button>
+									</td>
+								</tr>';
+				}$requete-> closeCursor();
+
+			}else{
+
+				while($reponse=$requete-> fetch()){
+					$compteur++;
+					$table .='<tr>
+									<td>'.$compteur.'</td>
+									<td>'.$reponse['nom_march'].'</td>
+									<td>'.$reponse['num_av'].'</td>
+									<td>'.$reponse['ref_fact'].'</td>
+									<td>'.$reponse['code_tarif_march'].'</td>
+									<td>'.$reponse['position_av'].'</td>
+									<td>'.$reponse['origine'].'</td>
+									<td>'.$reponse['provenance'].'</td>
+									<td>'.$reponse['code_add'].'</td>
+									<td style="text-align: right;">'.number_format($reponse['nbr_bags'], 2, '.', ',').'</td>
+									<td style="text-align: right;">'.number_format($reponse['qte'], 2, '.', ',').'</td>
+									<td style="text-align: right;">'.number_format($reponse['poids'], 2, '.', ',').'</td>
+									<td style="text-align: right;">'.number_format($reponse['fob'], 2, '.', ',').'</td>
+									<td style="text-align: right;">'.number_format($coef, 1, '.', ',').'</td>
+									<td style="text-align: right;">'.number_format($reponse['fob']*$coef, 2, '.', ',').'</td>
+									<td style="text-align: right;">'.number_format($this-> getCode_tarif($reponse['code_tarif_march'])['DDI'], 2, '.', ',').'</td>
+									<td style="text-align: right;">'.number_format($reponse['fob']*$coef*($this-> getCode_tarif($reponse['code_tarif_march'])['DDI']/100)*$roe_feuil_calc, 0, '.', ',').'</td>
+									<td>
+										<button class="btn-xs btn-danger" onclick="supprimerMarchandiseDossier('.$reponse['id_march_dos'].', '.$reponse['id_dos'].');">
+											<span class="fa fa-times"></span>
+										</button>
+									</td>
+								</tr>';
+				}$requete-> closeCursor();
+			}
 
 			return $table;
 			
@@ -37951,6 +38076,7 @@
 			$table = '';
 			$compteur=0;
 			$nbr_bags=0;
+			$qte=0;
 			$poids=0;
 			$fob=0;
 			$cif_1=0;
@@ -37970,6 +38096,7 @@
 			$requete-> execute(array($entree['id_dos']));
 			while($reponse=$requete-> fetch()){
 				$compteur++;
+				$qte+= $reponse['qte'];
 				$nbr_bags+= $reponse['nbr_bags'];
 				$poids+= $reponse['poids'];
 				$fob+= $reponse['fob'];
@@ -37980,15 +38107,18 @@
 							<td width="12%" style="text-align: center; border: 0.3px solid black; ">'.$reponse['nom_march'].'</td>
 							<td width="10%" style="text-align: center; border: 0.3px solid black; ">'.$reponse['num_av'].'</td>
 							<td width="12%" style="text-align: center; border: 0.3px solid black; ">'.$reponse['ref_fact'].'</td>
-							<td width="10%" style="text-align: center; border: 0.3px solid black; ">'.$reponse['code_tarif_march'].'</td>
-							<td width="5%" style="text-align: center; border: 0.3px solid black; ">'.$reponse['origine'].'</td>
-							<td width="5%" style="text-align: center; border: 0.3px solid black; ">'.$reponse['provenance'].'</td>
+							<td width="2%" style="text-align: center; border: 0.3px solid black; ">'.$compteur.'</td>
+							<td width="8%" style="text-align: center; border: 0.3px solid black; ">'.$reponse['code_tarif_march'].'</td>
+							<td width="3%" style="text-align: center; border: 0.3px solid black; ">'.$reponse['position_av'].'</td>
+							<td width="4%" style="text-align: center; border: 0.3px solid black; ">'.$reponse['origine'].'</td>
+							<td width="4%" style="text-align: center; border: 0.3px solid black; ">'.$reponse['provenance'].'</td>
 							<td width="6%" style="text-align: center; border: 0.3px solid black; ">'.$reponse['code_add'].'</td>
-							<td width="6%" style="text-align: center; border: 0.3px solid black; ">'.number_format($reponse['nbr_bags'], 0, '.', ',').'</td>
+							<td width="3%" style="text-align: center; border: 0.3px solid black; ">'.number_format($reponse['nbr_bags'], 0, '.', ',').'</td>
+							<td width="3%" style="text-align: center; border: 0.3px solid black; ">'.number_format($reponse['qte'], 0, '.', ',').'</td>
 							<td width="6%" style="text-align: right; border: 0.3px solid black; ">'.number_format($reponse['poids'], 2, '.', ',').'</td>
 							<td width="8%" style="text-align: right; border: 0.3px solid black; ">'.number_format($reponse['fob'], 2, '.', ',').'</td>
 							<td width="8%" style="text-align: right; border: 0.3px solid black; ">'.number_format($reponse['fob']*$coef, 2, '.', ',').'</td>
-							<td width="4%" style="text-align: right; border: 0.3px solid black; ">'.number_format($this-> getCode_tarif($reponse['code_tarif_march'])['DDI'], 2, '.', ',').'</td>
+							<td width="3%" style="text-align: right; border: 0.3px solid black; ">'.number_format($this-> getCode_tarif($reponse['code_tarif_march'])['DDI'], 2, '.', ',').'</td>
 							<td width="8%" style="text-align: right; border: 0.3px solid black; ">'.number_format($reponse['fob']*$coef*($this-> getCode_tarif($reponse['code_tarif_march'])['DDI']/100)*$roe_feuil_calc, 0, '.', ',').'</td>
 						</tr>';
 			}$requete-> closeCursor();
@@ -37997,15 +38127,18 @@
 							<td width="12%" style="text-align: center; border: 0.3px solid black; "></td>
 							<td width="10%" style="text-align: center; border: 0.3px solid black; "></td>
 							<td width="12%" style="text-align: center; border: 0.3px solid black; "></td>
-							<td width="10%" style="text-align: center; border: 0.3px solid black; "></td>
-							<td width="5%" style="text-align: center; border: 0.3px solid black; "></td>
-							<td width="5%" style="text-align: center; border: 0.3px solid black; "></td>
+							<td width="2%" style="text-align: center; border: 0.3px solid black; "></td>
+							<td width="8%" style="text-align: center; border: 0.3px solid black; "></td>
+							<td width="3%" style="text-align: center; border: 0.3px solid black; "></td>
+							<td width="4%" style="text-align: center; border: 0.3px solid black; "></td>
+							<td width="4%" style="text-align: center; border: 0.3px solid black; "></td>
 							<td width="6%" style="text-align: center; border: 0.3px solid black; "></td>
-							<td width="6%" style="text-align: center; border: 0.3px solid black; font-weight: bold;">'.number_format($nbr_bags, 0, '.', ',').'</td>
+							<td width="3%" style="text-align: center; border: 0.3px solid black; font-weight: bold;">'.number_format($nbr_bags, 0, '.', ',').'</td>
+							<td width="3%" style="text-align: center; border: 0.3px solid black; font-weight: bold;">'.number_format($qte, 0, '.', ',').'</td>
 							<td width="6%" style="text-align: right; border: 0.3px solid black; font-weight: bold;">'.number_format($poids, 2, '.', ',').'</td>
 							<td width="8%" style="text-align: right; border: 0.3px solid black; font-weight: bold;">'.number_format($fob, 2, '.', ',').'</td>
 							<td width="8%" style="text-align: right; border: 0.3px solid black; font-weight: bold;">'.number_format($cif_1, 2, '.', ',').'</td>
-							<td width="4%" style="text-align: center; border: 0.3px solid black; "></td>
+							<td width="3%" style="text-align: center; border: 0.3px solid black; "></td>
 							<td width="8%" style="text-align: right; border: 0.3px solid black; font-weight: bold;">'.number_format($ddi, 0, '.', ',').'</td>
 						</tr>';
 
@@ -49186,6 +49319,20 @@
 
 		} 
 
+
+		public function MAJ_verif_feuil_calc_ops($id_dos){
+
+			//Log
+			$this-> creerLogDossier('Validation OPS Manager', date('Y-m-d'), $id_dos, $_SESSION['id_util']);
+
+			include('connexion.php');
+			$entree['id_dos'] = $id_dos;
+			$requete = $connexion-> prepare("UPDATE dossier SET id_verif_feuil_calc_ops = ?, date_verif_feuil_calc_ops = NOW()
+												WHERE id_dos = ?");
+			$requete-> execute(array($_SESSION['id_util'], $entree['id_dos']));
+
+		} 
+
 		public function maj_roe_feuil_calc($id_dos, $roe_feuil_calc){
 
 			//Log
@@ -50780,13 +50927,8 @@
 
 		public function MAJ_fret($id_dos, $fret){
 			
-			//Log
-			if ($this-> getDossier($id_dos)['fret'] != $fret) {
-				
-				$colonne = $this-> getNomColonneClient('fret', $_GET['id_cli'], $_GET['id_mod_trans'], $_GET['id_mod_trac']);
-				$this-> creerLogDossier($colonne, $fret, $id_dos, $_SESSION['id_util']);
-
-			}
+			
+			$this-> creerLogDossier('Fret', $fret, $id_dos, $_SESSION['id_util']);
 
 			include('connexion.php');
 			$entree['id_dos'] = $id_dos;
@@ -50800,12 +50942,8 @@
 		public function MAJ_assurance($id_dos, $assurance){
 			
 			//Log
-			if ($this-> getDossier($id_dos)['assurance'] != $assurance) {
-				
-				$colonne = $this-> getNomColonneClient('assurance', $_GET['id_cli'], $_GET['id_mod_trans'], $_GET['id_mod_trac']);
-				$this-> creerLogDossier($colonne, $assurance, $id_dos, $_SESSION['id_util']);
-
-			}
+						
+			$this-> creerLogDossier('Assurance', $assurance, $id_dos, $_SESSION['id_util']);
 
 			include('connexion.php');
 			$entree['id_dos'] = $id_dos;
@@ -50819,12 +50957,9 @@
 		public function MAJ_autre_frais($id_dos, $autre_frais){
 			
 			//Log
-			if ($this-> getDossier($id_dos)['autre_frais'] != $autre_frais) {
-				
-				$colonne = $this-> getNomColonneClient('autre_frais', $_GET['id_cli'], $_GET['id_mod_trans'], $_GET['id_mod_trac']);
-				$this-> creerLogDossier($colonne, $autre_frais, $id_dos, $_SESSION['id_util']);
+						
+			$this-> creerLogDossier('Autre frais', $autre_frais, $id_dos, $_SESSION['id_util']);
 
-			}
 
 			include('connexion.php');
 			$entree['id_dos'] = $id_dos;
@@ -50832,6 +50967,55 @@
 			$requete = $connexion-> prepare("UPDATE dossier SET autre_frais = ?
 												WHERE id_dos = ?");
 			$requete-> execute(array($entree['autre_frais'], $entree['id_dos']));
+
+		} 
+
+		public function MAJ_duree_loyer($id_dos, $duree_loyer){
+			
+			//Log
+						
+			$this-> creerLogDossier('Loyer', $duree_loyer, $id_dos, $_SESSION['id_util']);
+
+
+			include('connexion.php');
+			$entree['id_dos'] = $id_dos;
+			$entree['duree_loyer'] = $duree_loyer;
+			$requete = $connexion-> prepare("UPDATE dossier SET duree_loyer = ?
+												WHERE id_dos = ?");
+			$requete-> execute(array($entree['duree_loyer'], $entree['id_dos']));
+
+		} 
+
+		public function grouper_marchandise($id_dos){
+			
+			include('connexion.php');
+			$entree['id_dos'] = $id_dos;
+
+			$requete1 = $connexion-> prepare("SELECT nom_march, num_av, ref_fact, 
+													code_tarif_march, position_av, origine, 
+													provenance, code_add, 
+													SUM(nbr_bags) AS nbr_bags, 
+													SUM(qte) AS qte, 
+													SUM(poids) AS poids, 
+													SUM(fob) AS fob
+												FROM marchandise_dossier
+												WHERE id_dos = ?
+												GROUP BY code_tarif_march");
+			$requete1-> execute(array($entree['id_dos']));
+			while($reponse1 = $requete1-> fetch()){
+
+				//Suppression
+				$requete_suppression = $connexion-> prepare("DELETE FROM marchandise_dossier
+																WHERE id_dos = ?
+																	AND code_tarif_march = ?");
+				$requete_suppression-> execute(array($entree['id_dos'], $reponse1['code_tarif_march']));
+
+				//insertion
+				$requete_insertion = $connexion-> prepare("INSERT INTO marchandise_dossier(id_dos, nom_march, num_av, ref_fact, code_tarif_march, position_av, origine, provenance, code_add, nbr_bags, qte, poids, fob, id_util)
+												VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+				$requete_insertion-> execute(array($entree['id_dos'], $reponse1['nom_march'], $reponse1['num_av'], $reponse1['ref_fact'], $reponse1['code_tarif_march'], $reponse1['position_av'], $reponse1['origine'], $reponse1['provenance'], $reponse1['code_add'], $reponse1['nbr_bags'], $reponse1['qte'], $reponse1['poids'], $reponse1['fob'], $_SESSION['id_util']));
+
+			}$requete1-> closeCursor();
 
 		} 
 
