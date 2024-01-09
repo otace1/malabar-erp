@@ -22098,23 +22098,25 @@
 			return $reponseVerifier['nbre'];
 		}
 
-		public function check_camion($horse, $trailer_1, $trailer_2){
+		public function check_camion($horse, $trailer_1, $trailer_2, $road_manif){
 			include('connexion.php');
 
 			$entree['horse'] = $horse;
 			$entree['trailer_1'] = $trailer_1;
 			$entree['trailer_2'] = $trailer_2;
+			$entree['road_manif'] = $road_manif;
 
 			$requete = $connexion-> prepare("SELECT ref_dos, DATE_ADD(date_creat_dos, INTERVAL 2 HOUR) AS date_creat_dos, DATEDIFF(CURRENT_DATE(), DATE(date_creat_dos)) AS delai
 														FROM dossier
 														WHERE horse = ?
 															AND trailer_1 = ?
-															AND trailer_2 = ?
+															-- AND trailer_2 = ?
+															AND road_manif = ?
 															AND DATEDIFF(CURRENT_DATE(), DATE(date_creat_dos))<30
 															AND id_mod_lic = 2
 														ORDER BY id_dos DESC
 														LIMIT 0, 1");
-			$requete-> execute(array($entree['horse'], $entree['trailer_1'], $entree['trailer_2']));
+			$requete-> execute(array($entree['horse'], $entree['trailer_1'], /*$entree['trailer_2'], */$entree['road_manif']));
 			$reponse = $requete-> fetch();
 			if ($reponse) {
 				return $reponse;
