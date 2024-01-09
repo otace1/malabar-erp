@@ -5807,6 +5807,22 @@
 			return $reponse;
 		}
 
+		public function scriptBackUp($annee){
+			include('connexion.php');
+			$entree['annee'] = $annee;
+
+			$requete = $connexion-> prepare("SELECT fact.ref_fact AS ref_fact,
+													fact.id_mod_fact AS id_mod_fact
+												FROM facture_dossier fact
+												WHERE year(fact.date_fact) = ? and fact.id_util = 130
+													AND fact.id_mod_fact = 2");
+			$requete-> execute(array($entree['annee']));
+			while($reponseFacture = $requete-> fetch()){
+				// $_POST['ref_fact'] = $reponseFacture['id_mod_fact'];
+				include($this-> getDataModeleFacture($reponseFacture['id_mod_fact'])['save']);
+			}$requete-> closeCursor();
+		}
+
 		public function getNote($ref_note){
 			include('connexion.php');
 			$entree['ref_note'] = $ref_note;
@@ -10143,7 +10159,7 @@
 			// 	$total_tva += $reponse['tva_usd'];
 			// 	$total_gen += $reponse['ttc_usd'];
 
-				$total_cost = '';//$reponse['total_cost'];
+				$total_cost = 0;//$reponse['total_cost'];
 				$sub_total = $reponse['ht_usd'];
 				$total_tva = $reponse['tva_usd'];
 				$total_gen = $reponse['ttc_usd'];
@@ -22080,6 +22096,30 @@
 			$requeteVerifier-> execute(array($entree['id_cli'], $entree['id_mod_trans'], $entree['id_mod_lic']));
 			$reponseVerifier = $requeteVerifier-> fetch();
 			return $reponseVerifier['nbre'];
+		}
+
+		public function check_camion($horse, $trailer_1, $trailer_2){
+			include('connexion.php');
+
+			$entree['horse'] = $horse;
+			$entree['trailer_1'] = $trailer_1;
+			$entree['trailer_2'] = $trailer_2;
+
+			$requete = $connexion-> prepare("SELECT ref_dos, DATE_ADD(date_creat_dos, INTERVAL 2 HOUR) AS date_creat_dos, DATEDIFF(CURRENT_DATE(), DATE(date_creat_dos)) AS delai
+														FROM dossier
+														WHERE horse = ?
+															AND trailer_1 = ?
+															AND trailer_2 = ?
+															AND DATEDIFF(CURRENT_DATE(), DATE(date_creat_dos))<30
+															AND id_mod_lic = 2
+														ORDER BY id_dos DESC
+														LIMIT 0, 1");
+			$requete-> execute(array($entree['horse'], $entree['trailer_1'], $entree['trailer_2']));
+			$reponse = $requete-> fetch();
+			if ($reponse) {
+				return $reponse;
+			}
+			
 		}
 
 		public function verifierSouscriptionLicence($id_cli, $id_mod_lic){
@@ -39296,7 +39336,13 @@
 													AND roe_liq > 0");
 			$requete-> execute(array($entree['date_decl']));
 			$reponse = $requete-> fetch();
-			return $reponse;
+			if ($reponse) {
+				return $reponse;
+			}else {
+				$reponse['roe_liq'] = null;
+				return $reponse;
+			}
+			
 			
 		}
 
