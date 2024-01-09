@@ -2814,18 +2814,18 @@
 
 	}elseif(isset($_POST['operation']) && $_POST['operation']=='check_camion'){
 		
-		if (!empty($maClasse-> check_camion($_POST['horse'], $_POST['trailer_1'], $_POST['trailer_2']))) {
+		if (!empty($maClasse-> check_camion($_POST['horse'], $_POST['trailer_1'], $_POST['trailer_2'], $_POST['road_manif']))) {
 			$reponse['msg_check_camion'] = '<span>
 												<div class="alert alert-warning alert-dismissible fade show" role="alert">
 												  <strong>Alert Doublon Camion!</strong><br>
-												  Le dossier '.$maClasse-> check_camion($_POST['horse'], $_POST['trailer_1'], $_POST['trailer_2'])['ref_dos'].' creee le  '.$maClasse-> check_camion($_POST['horse'], $_POST['trailer_1'], $_POST['trailer_2'])['date_creat_dos'].' contient les information de ce camion.
+												  Le dossier <b>'.$maClasse-> check_camion($_POST['horse'], $_POST['trailer_1'], $_POST['trailer_2'], $_POST['road_manif'])['ref_dos'].'</b> cree le  '.$maClasse-> check_camion($_POST['horse'], $_POST['trailer_1'], $_POST['trailer_2'], $_POST['road_manif'])['date_creat_dos'].' contient les information de ce camion.
 												  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
 												    <span aria-hidden="true">&times;</span>
 												  </button>
 												</div>
 											</span>';
 
-			$reponse['delai'] = $maClasse-> check_camion($_POST['horse'], $_POST['trailer_1'], $_POST['trailer_2'])['delai'];
+			$reponse['delai'] = $maClasse-> check_camion($_POST['horse'], $_POST['trailer_1'], $_POST['trailer_2'], $_POST['road_manif'])['delai'];
 		}else{
 			$reponse['message'] = 'Done!';
 		}

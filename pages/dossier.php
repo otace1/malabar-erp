@@ -1867,22 +1867,22 @@ if( isset($_GET['id_mod_trac']) && ($_GET['id_mod_trac']=='2' && $_GET['id_cli']
 
                       <div class="col-md-3">
                         <label for="x_card_code" class="control-label mb-1">ROAD MANIF</label>
-                        <input type="text" name="road_manif" class="form-control form-control-sm cc-exp">
+                        <input type="text" name="road_manif" class="form-control form-control-sm cc-exp" onblur="check_camion(horse.value, trailer_1.value, trailer_2.value, this.value);">
                       </div>
 
                       <div class="col-md-3">
                         <label for="x_card_code" class="control-label mb-1">HORSE</label>
-                        <input type="text" name="horse" id="horse" class="form-control form-control-sm cc-exp" onblur="check_camion(this.value, trailer_1.value, trailer_2.value);">
+                        <input type="text" name="horse" id="horse" class="form-control form-control-sm cc-exp" onblur="check_camion(this.value, trailer_1.value, trailer_2.value, road_manif.value);">
                       </div>
 
                       <div class="col-md-3">
                         <label for="x_card_code" class="control-label mb-1">TRAILER 1</label>
-                        <input type="text" name="trailer_1" id="trailer_1" class="form-control form-control-sm cc-exp" onblur="check_camion(horse.value, this.value, trailer_2.value);">
+                        <input type="text" name="trailer_1" id="trailer_1" class="form-control form-control-sm cc-exp" onblur="check_camion(horse.value, this.value, trailer_2.value, road_manif.value);">
                       </div>
 
                       <div class="col-md-3">
                         <label for="x_card_code" class="control-label mb-1">TRAILER 2/CONTAINER</label>
-                        <input type="text" name="trailer_2" id="trailer_2" class="form-control form-control-sm cc-exp" onblur="check_camion(horse.value, trailer_1.value, this.value);">
+                        <input type="text" name="trailer_2" id="trailer_2" class="form-control form-control-sm cc-exp" onblur="check_camion(horse.value, trailer_1.value, this.value, road_manif.value);">
                       </div>
 
                         <?php
@@ -2418,14 +2418,14 @@ if (($maClasse-> verifierRegimeSuspensionSansDateExtreme($_GET['id_cli'], $_GET[
 ?>
 
 <script type="text/javascript">
-  function check_camion(horse, trailer_1, trailer_2){
+  function check_camion(horse, trailer_1, trailer_2, road_manif){
 
     if ($('#horse').val()===null && $('#horse').val()==='' ) {}else{
 
       $.ajax({
         type: "POST",
         url: "ajax.php",
-        data: { horse: horse, trailer_1: trailer_1, trailer_2: trailer_2, operation: 'check_camion'},
+        data: { horse: horse, trailer_1: trailer_1, trailer_2: trailer_2, road_manif: road_manif, operation: 'check_camion'},
         dataType:"json",
         success:function(data){
           if (data.logout) {
