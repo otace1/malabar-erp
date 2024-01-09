@@ -1586,6 +1586,9 @@ if( isset($_GET['id_mod_trac']) && ($_GET['id_mod_trac']=='2' && $_GET['id_cli']
         <div class="row">
 <!-- ------------------------------------------------------------------ -->
         <div class="col-md-12">
+          <span id="msg_check_camion"></span>
+        </div>
+        <div class="col-md-12">
           
             <div class="card">
               <div class="card-header d-flex p-0">
@@ -1869,17 +1872,17 @@ if( isset($_GET['id_mod_trac']) && ($_GET['id_mod_trac']=='2' && $_GET['id_cli']
 
                       <div class="col-md-3">
                         <label for="x_card_code" class="control-label mb-1">HORSE</label>
-                        <input type="text" name="horse" class="form-control form-control-sm cc-exp">
+                        <input type="text" name="horse" id="horse" class="form-control form-control-sm cc-exp" onblur="check_camion(this.value, trailer_1.value, trailer_2.value);">
                       </div>
 
                       <div class="col-md-3">
                         <label for="x_card_code" class="control-label mb-1">TRAILER 1</label>
-                        <input type="text" name="trailer_1" class="form-control form-control-sm cc-exp">
+                        <input type="text" name="trailer_1" id="trailer_1" class="form-control form-control-sm cc-exp" onblur="check_camion(horse.value, this.value, trailer_2.value);">
                       </div>
 
                       <div class="col-md-3">
                         <label for="x_card_code" class="control-label mb-1">TRAILER 2/CONTAINER</label>
-                        <input type="text" name="trailer_2" class="form-control form-control-sm cc-exp">
+                        <input type="text" name="trailer_2" id="trailer_2" class="form-control form-control-sm cc-exp" onblur="check_camion(horse.value, trailer_1.value, this.value);">
                       </div>
 
                         <?php
@@ -2415,4 +2418,31 @@ if (($maClasse-> verifierRegimeSuspensionSansDateExtreme($_GET['id_cli'], $_GET[
 ?>
 
 <script type="text/javascript">
+  function check_camion(horse, trailer_1, trailer_2){
+
+    if ($('#horse').val()===null && $('#horse').val()==='' ) {}else{
+
+      $.ajax({
+        type: "POST",
+        url: "ajax.php",
+        data: { horse: horse, trailer_1: trailer_1, trailer_2: trailer_2, operation: 'check_camion'},
+        dataType:"json",
+        success:function(data){
+          if (data.logout) {
+            alert(data.logout);
+            window.location="../deconnexion.php";
+          }else if (data.msg_check_camion) {
+            $('#msg_check_camion').html(data.msg_check_camion);
+          }else{
+            $('#msg_check_camion').html('');
+          }
+        },
+        complete: function () {
+            // $('#spinner-div').hide();//Request is complete so hide spinner
+        }
+      });
+
+    }
+
+  }
 </script>
