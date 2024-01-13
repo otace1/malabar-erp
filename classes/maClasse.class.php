@@ -20527,13 +20527,14 @@
 		            ?>
 		              <?php
 		              	//$this-> afficherMenuMarchandiseModeleLicence($reponse['id_mod_lic']);
-		              if ($reponse['id_mod_lic'] == '1') {
-		              	// code...
-		              	$this-> afficherMenuClientModeleLicenceExport($reponse['id_mod_lic']);
-		              }else if ($reponse['id_mod_lic'] == '2') {
-		              	# code...
-		              	$this-> afficherMenuClientModeleLicence($reponse['id_mod_lic']);
-		              }
+		              $this-> afficherMenuClientModeleLicenceExport($reponse['id_mod_lic']);
+		              // if ($reponse['id_mod_lic'] == '1') {
+		              // 	// code...
+		              // 	$this-> afficherMenuClientModeleLicenceExport($reponse['id_mod_lic']);
+		              // }else if ($reponse['id_mod_lic'] == '2') {
+		              // 	# code...
+		              // 	$this-> afficherMenuClientModeleLicence($reponse['id_mod_lic']);
+		              // }
 		              	
 		              ?>
 		              <li class="nav-item">
@@ -38506,7 +38507,7 @@
 			}
 		}
 
-		public function getMcaFile($id_cli, $id_mod_trans){
+		public function getMcaFile_backup11012024($id_cli, $id_mod_trans){
 			include('connexion.php');
 			$entree['id_cli'] = $id_cli;
 			$code = '';
@@ -38545,6 +38546,39 @@
 			return $code;
 		}
 
+		public function getMcaFile($id_cli, $id_mod_trans){
+			include('connexion.php');
+			$entree['id_cli'] = $id_cli;
+			$code = '';
+
+			$nbre = $this->  getNbreMcaFile($id_cli, $id_mod_trans, '2');
+			if ($nbre > 20) {
+				$i = $nbre-10;
+			}else{
+				$i = 1;
+			}
+			
+			//$i = $nbre;
+
+			$a = $this-> getTailleCompteur($i);
+			$code_cli = $this-> codePourClient($id_cli);
+			$code_mod_lic = $this-> getElementModeleLicence($_GET['id_mod_trac'])['code_1'];
+			$code_mod_trans = $this-> getCodeModeTransport_1($_GET['id_mod_trans']);
+			$code_march = $this-> getElementMarchandise($_GET['id_march'])['code'];
+
+			$ref_dos = $code_cli.'-'.$code_mod_lic.date('y').'-'.$code_mod_trans.'-'.$code_march.'-'.$a;
+
+			while($this-> verifierExistanceMCAFile($code) == true){
+				$i++;
+
+				$a = $this-> getTailleCompteur($i);
+
+				$ref_dos = $code_cli.'-'.$code_mod_lic.date('y').'-'.$code_mod_trans.'-'.$code_march.'-'.$a;
+			}
+
+			return $ref_dos;
+		}
+//<br /><b>Notice</b>:  Undefined index: code_march in <b>/Applications/XAMPP/xamppfiles/htdocs/MALABAR/classes/maClasse.class.php</b> on line <b>38567</b><br />BMS-I24-R--001
 		public function getMcaFileLogistique($id_cli, $id_trans){
 			include('connexion.php');
 			$entree['id_cli'] = $id_cli;
@@ -38655,7 +38689,7 @@
 			return $reponse['nbre'];
 		}
 
-		public function getMcaFileExport($id_cli, $id_mod_trans, $id_march, $id_mod_lic, $compteur, $step=NULL){
+		public function getMcaFileExport_backup11012024($id_cli, $id_mod_trans, $id_march, $id_mod_lic, $compteur, $step=NULL){
 			include('connexion.php');
 			$entree['id_cli'] = $id_cli;
 			$code = '';
@@ -38771,6 +38805,144 @@
 			return $code;
 		}
 
+		public function getMcaFileExport($id_cli, $id_mod_trans, $id_march, $id_mod_lic, $compteur, $step=NULL){
+			include('connexion.php');
+			$entree['id_cli'] = $id_cli;
+			$code = '';
+			if ($id_cli==869 && $id_mod_lic==2) {
+				$nbre = $this-> getNombreMcaFileAcide($id_cli, $id_mod_trans, $id_march, $id_mod_lic);
+			}else{
+				$nbre = $this-> getNombreMcaFileAcide($id_cli, $id_mod_trans, $id_march, $id_mod_lic);
+				// $nbre = $this-> getNombreMcaFileExport($id_cli, $id_mod_trans, $id_march, $id_mod_lic);
+			}
+			
+			if ($nbre > 20) {
+				
+					$i = $nbre-10;
+				
+				
+			}else{
+				$i = $compteur;
+				
+			}
+			
+			//---------------------
+			// $nbre = $this->  getNbreMcaFile($id_cli, $id_mod_trans, '2');
+			// if ($nbre > 20) {
+			// 	$i = $nbre-10;
+			// }else{
+			// 	$i = 1;
+			// }
+			
+			//$i = $nbre;
+
+			$a = $this-> getTailleCompteur($i);
+			$code_cli = $this-> codePourClient($id_cli);
+			$code_mod_lic = $this-> getElementModeleLicence($id_mod_lic)['code_1'];
+			$code_mod_trans = $this-> getCodeModeTransport_1($id_mod_trans);
+			$code_march = $this-> getElementMarchandise($id_march)['code'];
+
+			$ref_dos = $code_cli.'-'.$code_mod_lic.date('y').'-'.$code_mod_trans.'-'.$code_march.'-'.$a;
+
+			while($this-> verifierExistanceMCAFile($ref_dos) == true){
+				$i++;
+				$a = $this-> getTailleCompteur($i);
+				$ref_dos = $code_cli.'-'.$code_mod_lic.date('y').'-'.$code_mod_trans.'-'.$code_march.'-'.$a;
+
+			}
+
+			// while($this-> verifierExistanceMCAFile($code) == true){
+			// 	$i++;
+
+			// 	$a = $this-> getTailleCompteur($i);
+
+			// 	$ref_dos = $code_cli.'-'.$code_mod_lic.date('y').'-'.$code_mod_trans.'-'.$code_march.'-'.$a;
+			// }
+
+			// return $ref_dos;
+			//---------------------
+
+
+			// $code_marchandise = $this-> getCodeModeMarchandise($id_cli, $id_mod_lic, $id_march);
+			// $code_2_marchandise = $this-> getCode2ModeMarchandise($id_cli, $id_mod_lic, $id_march);
+
+			// $cod_mod_trans = '';
+
+			// if ($id_mod_trans == '4') {
+			// 	$cod_mod_trans = $this-> getCodeModeTransport($id_mod_trans);
+			// }else if ($id_mod_trans == '5') {
+			// 	$cod_mod_trans = $this-> getCodeModeTransport($id_mod_trans);
+			// }
+
+			// if ($id_cli == 869 && $id_mod_lic == 2) {
+			// 	$a = $this-> getTailleCompteur2($i);
+			// 	$code = $this-> codePourClient($id_cli).'-'.$code_marchandise.'-'.date('y').'-'.$cod_mod_trans.$a;
+			// }else{
+			// 	if ( ($id_cli == '845') && ($id_mod_lic == '1') && (date('Y')=='2021') && ($id_march == '13') ) {
+			// 		$a = $this-> getTailleCompteur2($i);
+			// 	}else if ( ($id_cli == '864') && ($id_mod_lic == '1') && (date('Y')=='2021') && ($id_march == '13') ) {
+			// 		$a = $this-> getTailleCompteur2($i);
+			// 	}else{
+			// 		$a = $this-> getTailleCompteur($i);
+			// 	}
+			// 	if ($id_cli == 874) {
+			// 		$code = $this-> codePourClient($id_cli).'-'.$code_marchandise.'21'.'-'.$cod_mod_trans.$code_2_marchandise.$a;
+			// 	}else{
+			// 		$code = $this-> codePourClient($id_cli).'-'.$code_marchandise.date('y').'-'.$cod_mod_trans.$code_2_marchandise.$a;
+			// 	}
+				
+			// }
+
+			// while($this-> verifierExistanceMCAFile($code) == true){
+			// 	$i++;
+
+			// 	if ($id_cli == 869 && $id_mod_lic == 2) {
+			// 		$a = $this-> getTailleCompteur2($i);
+			// 		$code = $this-> codePourClient($id_cli).'-'.$code_marchandise.'-'.date('y').'-'.$cod_mod_trans.$a;
+			// 		// return $code;
+			// 	}else{
+			// 		if ( ($id_cli == '845') && ($id_mod_lic == '1') && (date('Y')=='2021') && ($id_march == '13') ) {
+			// 			$a = $this-> getTailleCompteur2($i);
+			// 		}else if ( ($id_cli == '864') && ($id_mod_lic == '1') && (date('Y')=='2021') && ($id_march == '13') ) {
+			// 			$a = $this-> getTailleCompteur2($i);
+			// 		}else{
+			// 			$a = $this-> getTailleCompteur($i);
+			// 		}
+					
+
+			// 		if ($id_cli == 874) {
+			// 			$code = $this-> codePourClient($id_cli).'-'.$code_marchandise.'21'.'-'.$cod_mod_trans.$code_2_marchandise.$a;
+			// 		}else{
+			// 			$code = $this-> codePourClient($id_cli).'-'.$code_marchandise.date('y').'-'.$cod_mod_trans.$code_2_marchandise.$a;
+			// 		}
+
+			// 	}
+
+			// }
+
+			if (isset($step)) {
+				//$a = $this-> getTailleCompteur($a+$step);
+				//$code = $this-> codePourClient($id_cli).'-'.$code_marchandise.date('y').'-'.$cod_mod_trans.$a;
+				if ($id_cli == 869 && $id_mod_lic == 2) {
+					$a = $this-> getTailleCompteur2($a+$step);
+					$ref_dos = $code_cli.'-'.$code_mod_lic.date('y').'-'.$code_mod_trans.'-'.$code_march.'-'.$a;
+					//$code = $this-> codePourClient($id_cli).'-'.$code_marchandise.'-'.date('y').'-'.$cod_mod_trans.$a;
+					// $code = $this-> codePourClient($id_cli).'-'.$code_marchandise.'-'.date('y').'-'.$cod_mod_trans.$a;
+					// if ($id_cli == 874) {
+					// 	$code = $this-> codePourClient($id_cli).'-'.$code_marchandise.'21'.'-'.$cod_mod_trans.$code_2_marchandise.$a;
+					// }else{
+					// 	$code = $this-> codePourClient($id_cli).'-'.$code_marchandise.date('y').'-'.$cod_mod_trans.$code_2_marchandise.$a;
+					// }
+
+				}else{
+					$ref_dos = $code_cli.'-'.$code_mod_lic.date('y').'-'.$code_mod_trans.'-'.$code_march.'-'.$a;
+				}
+
+			}
+
+			return $ref_dos;
+		}
+
 		/*public function getMcaFileExportData($id_cli, $id_mod_trans, $id_march, $id_mod_lic, $compteur){
 			include('connexion.php');
 			$entree['id_cli'] = $id_cli;
@@ -38812,6 +38984,20 @@
 			$reponse = $requete-> fetch();
 			if($reponse){
 				return $reponse['cod_mod_trans'];
+			}
+		}
+
+		public function getCodeModeTransport_1($id_mod_trans){
+			include('connexion.php');
+			$entree['id_mod_trans'] = $id_mod_trans;
+
+			$requete = $connexion-> prepare("SELECT SUBSTRING(cod_mod_trans, 1, 1) AS code_1
+												FROM mode_transport
+												WHERE id_mod_trans = ?");
+			$requete-> execute(array($entree['id_mod_trans']));
+			$reponse = $requete-> fetch();
+			if($reponse){
+				return $reponse['code_1'];
 			}
 		}
 
@@ -39984,7 +40170,8 @@
 
 			$requete = $connexion-> prepare('SELECT id_mod_lic, 
 													UPPER(nom_mod_lic) AS nom_mod_lic,
-													sigle_mod_lic
+													sigle_mod_lic,
+													SUBSTRING(nom_mod_lic, 1, 1) AS code_1
 												FROM modele_licence
 												WHERE id_mod_lic = ?');
 			$requete-> execute(array($entree['id_mod_lic']));
@@ -39999,7 +40186,8 @@
 			$entree['id_march'] = $id_march;
 
 			$requete = $connexion-> prepare('SELECT id_march, 
-													UPPER(nom_march) AS nom_march
+													UPPER(nom_march) AS nom_march,
+													code
 												FROM marchandise
 												WHERE id_march = ?');
 			$requete-> execute(array($entree['id_march']));
