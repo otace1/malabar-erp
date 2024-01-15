@@ -38568,7 +38568,7 @@
 
 			$ref_dos = $code_cli.'-'.$code_mod_lic.date('y').'-'.$code_mod_trans.'-'.$code_march.'-'.$a;
 
-			while($this-> verifierExistanceMCAFile($code) == true){
+			while($this-> verifierExistanceMCAFile($ref_dos) == true){
 				$i++;
 
 				$a = $this-> getTailleCompteur($i);
@@ -38578,7 +38578,7 @@
 
 			return $ref_dos;
 		}
-//<br /><b>Notice</b>:  Undefined index: code_march in <b>/Applications/XAMPP/xamppfiles/htdocs/MALABAR/classes/maClasse.class.php</b> on line <b>38567</b><br />BMS-I24-R--001
+		
 		public function getMcaFileLogistique($id_cli, $id_trans){
 			include('connexion.php');
 			$entree['id_cli'] = $id_cli;
