@@ -61,7 +61,7 @@ if (@file_exists(dirname(__FILE__).'/lang/eng.php')) {
 
 
 // set font
-$pdf->SetFont('helvetica', 'N', 8);
+$pdf->SetFont('helvetica', 'N', 7);
 // $pdf->SetFont('times', 'N', 8);
 // $pdf->SetFont('courier', 'N', 8);
 $pdf->setPrintHeader(false);
