@@ -1001,18 +1001,25 @@ for ($i=1; $i <= 15 ; $i++) {
                     <!-- <button class="btn btn-success square-btn-adjust" onclick="window.location.replace('exportExcel2.php?id_cli=<?php echo $_GET['id_cli']; ?>&id_mod_trans=<?php echo $_GET['id_mod_trans']; ?>&id_mod_trac=<?php echo $_GET['id_mod_trac']; ?>&commodity=<?php echo $_GET['commodity']; ?>&statut=<?php echo $_GET['statut'];?>&id_march=<?php echo $_GET['id_march'];?>','pop1','width=80,height=80');">
                       <i class="fas fa-file-excel"></i> Export
                     </button> -->
-                    <button type="button" class="btn btn-xs btn-success dropdown-toggle dropdown-icon" data-toggle="dropdown">
+                    <button type="button" class="btn btn-xs small btn-success dropdown-toggle dropdown-icon" data-toggle="dropdown">
                       <i class="fas fa-file-excel"></i> Export
-                      <div class="dropdown-menu" role="menu">
+                      <div class="dropdown-menu small" role="menu">
                         <!--<a class="dropdown-item"onclick="window.location.replace('exportExcelAll.php?id_cli=<?php echo $_GET['id_cli']; ?>&id_mod_trans=<?php echo $_GET['id_mod_trans']; ?>&id_mod_trac=<?php echo $_GET['id_mod_trac']; ?>&commodity=<?php echo $_GET['commodity']; ?>&statut=<?php echo $_GET['statut'];?>&id_march=<?php echo $_GET['id_march'];?>','pop1','width=80,height=80');">
                           Export All Files
                         </a>
                         <a class="dropdown-item" href="#"><hr></a>-->
+                        <a class="dropdown-item"onclick="window.location.replace('exportExcel2.php?id_cli=<?php echo $_GET['id_cli']; ?>&id_mod_trans=<?php echo $_GET['id_mod_trans']; ?>&id_mod_trac=<?php echo $_GET['id_mod_trac']; ?>&commodity=<?php echo $_GET['commodity']; ?>&statut=<?php echo $_GET['statut'];?>&id_march=&annee=2024','pop1','width=80,height=80');">
+                          Export All 2024 Files
+                        </a>
                         <a class="dropdown-item"onclick="window.location.replace('exportExcel2.php?id_cli=<?php echo $_GET['id_cli']; ?>&id_mod_trans=<?php echo $_GET['id_mod_trans']; ?>&id_mod_trac=<?php echo $_GET['id_mod_trac']; ?>&commodity=<?php echo $_GET['commodity']; ?>&statut=<?php echo $_GET['statut'];?>&id_march=<?php echo $_GET['id_march'];?>&annee=2024','pop1','width=80,height=80');">
-                          Export 2024 Files
+                          Export <?php echo $maClasse-> getMarchandise($_GET['id_march']);?> 2024 Files
+                        </a>
+                        <a class="dropdown-item" href="#"><hr></a>
+                        <a class="dropdown-item"onclick="window.location.replace('exportExcel2.php?id_cli=<?php echo $_GET['id_cli']; ?>&id_mod_trans=<?php echo $_GET['id_mod_trans']; ?>&id_mod_trac=<?php echo $_GET['id_mod_trac']; ?>&commodity=<?php echo $_GET['commodity']; ?>&statut=<?php echo $_GET['statut'];?>&id_march=&annee=2023','pop1','width=80,height=80');">
+                          Export All 2023 Files
                         </a>
                         <a class="dropdown-item"onclick="window.location.replace('exportExcel2.php?id_cli=<?php echo $_GET['id_cli']; ?>&id_mod_trans=<?php echo $_GET['id_mod_trans']; ?>&id_mod_trac=<?php echo $_GET['id_mod_trac']; ?>&commodity=<?php echo $_GET['commodity']; ?>&statut=<?php echo $_GET['statut'];?>&id_march=<?php echo $_GET['id_march'];?>&annee=2023','pop1','width=80,height=80');">
-                          Export 2023 Files
+                          Export <?php echo $maClasse-> getMarchandise($_GET['id_march']);?> 2023 Files
                         </a>
                         <a class="dropdown-item" href="#"><hr></a>
                         <a class="dropdown-item"onclick="window.location.replace('exportExcel2.php?id_cli=<?php echo $_GET['id_cli']; ?>&id_mod_trans=<?php echo $_GET['id_mod_trans']; ?>&id_mod_trac=<?php echo $_GET['id_mod_trac']; ?>&commodity=<?php echo $_GET['commodity']; ?>&statut=<?php echo $_GET['statut'];?>&id_march=<?php echo $_GET['id_march'];?>&annee=2022','pop1','width=80,height=80');">
