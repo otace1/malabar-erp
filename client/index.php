@@ -145,6 +145,10 @@
                           Export All Files
                         </a>
                         <a class="dropdown-item" href="#"><hr></a>
+                        <a class="dropdown-item"onclick="window.location.replace('../pages/exportExcel2.php?id_cli=<?php echo $maClasse-> getUtilisateurClientModeleLicence($_SESSION['id_util'], '2')['id_cli']; ?>&id_mod_trans=1&id_mod_trac=<?php echo $_GET['id_mod_trac']; ?>&commodity=&statut=&id_march=&annee=2024','pop1','width=80,height=80');">
+                          Export 2024 Files
+                        </a>
+                        <a class="dropdown-item" href="#"><hr></a>
                         <a class="dropdown-item"onclick="window.location.replace('../pages/exportExcel2.php?id_cli=<?php echo $maClasse-> getUtilisateurClientModeleLicence($_SESSION['id_util'], '2')['id_cli']; ?>&id_mod_trans=1&id_mod_trac=<?php echo $_GET['id_mod_trac']; ?>&commodity=&statut=&id_march=&annee=2023','pop1','width=80,height=80');">
                           Export 2023 Files
                         </a>
@@ -364,6 +368,10 @@
                       <div class="dropdown-menu" role="menu">
                         <a class="dropdown-item"onclick="window.location.replace('../pages/exportExcel2.php?id_cli=<?php echo $maClasse-> getUtilisateurClientModeleLicence($_SESSION['id_util'], '1')['id_cli']; ?>&id_mod_trans=1&id_mod_trac=<?php echo $_GET['id_mod_trac']; ?>&commodity=&statut=&id_march=','pop1','width=80,height=80');">
                           Export All Files
+                        </a>
+                        <a class="dropdown-item" href="#"><hr></a>
+                        <a class="dropdown-item"onclick="window.location.replace('../pages/exportExcel2.php?id_cli=<?php echo $maClasse-> getUtilisateurClientModeleLicence($_SESSION['id_util'], '1')['id_cli']; ?>&id_mod_trans=1&id_mod_trac=<?php echo $_GET['id_mod_trac']; ?>&commodity=&statut=&id_march=&annee=2024','pop1','width=80,height=80');">
+                          Export 2024 Files
                         </a>
                         <a class="dropdown-item" href="#"><hr></a>
                         <a class="dropdown-item"onclick="window.location.replace('../pages/exportExcel2.php?id_cli=<?php echo $maClasse-> getUtilisateurClientModeleLicence($_SESSION['id_util'], '1')['id_cli']; ?>&id_mod_trans=1&id_mod_trac=<?php echo $_GET['id_mod_trac']; ?>&commodity=&statut=&id_march=&annee=2023','pop1','width=80,height=80');">
