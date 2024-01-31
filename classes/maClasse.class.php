@@ -3216,10 +3216,10 @@
 			                </a>
 			            </li>
 						<li class="nav-item">
-			                <a href="client_note_debit.php?id_mod_lic_nd=<?php echo $reponse['id_mod_lic'];?>" class="nav-link">
+			                <!-- <a href="client_note_debit.php?id_mod_lic_nd=<?php echo $reponse['id_mod_lic'];?>" class="nav-link"> -->
+			                <a href="#" onclick="modal_depense_modele_licence('<?php echo $reponse['id_mod_lic'];?>');" class="nav-link">
 			                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-retweet nav-icon"></i>
-			                  <p>Transactions
-			                  </p>
+			                  <p>Transactions</p>
 			                </a>
 			            </li>
 			            <?php
@@ -5258,6 +5258,75 @@
     						</tr>
     			';
     		 }$requeteMarchandise-> closeCursor();
+
+    		 return $tableau;
+		}
+
+		public function tableau_client_depense_modele_licence($id_mod_lic){
+			include('connexion.php');
+			// $entree['id_cli'] = $id_cli;
+			$entree['id_mod_lic'] = $id_mod_lic;
+			$compteur = 0;
+
+			$tableau = '';
+
+			$requete = $connexion-> prepare("SELECT cl.nom_cli AS nom_cli,
+																cl.id_cli AS id_cli,
+																cl.code_cli AS code_cli
+															FROM client cl, affectation_client_modele_licence af
+															WHERE cl.id_cli = af.id_cli
+																AND af.id_mod_lic = ?");
+    		$requete-> execute(array($entree['id_mod_lic']));
+    		while ($reponse = $requete-> fetch()) {
+    			$compteur++;
+    			$tableau .= '
+    						<tr>
+    							<td>'.$compteur.'</td>
+    							<td>'.$reponse['code_cli'].'</td>
+    							<td>'.$reponse['nom_cli'].'</td>
+    							<td>
+    								<div class="btn-group">
+					                    <button type="button" class="btn btn-xs btn-default">Action</button>
+					                    <button type="button" class="btn btn-xs btn-default dropdown-toggle dropdown-icon" data-toggle="dropdown">
+					                      <span class="sr-only">Toggle Dropdown</span>
+					                    </button>
+					                    <div class="dropdown-menu" role="menu">
+					                      '.$this-> get_aff_nd_client($id_mod_lic, $reponse['id_cli']).'
+					                      	<a class="dropdown-item text-sm" href="listerNoteDebit.php?id_cli='.$reponse['id_cli'].'&id_mod_lic='.$id_mod_lic.'"><i class="fa fa-list"></i> View Note(s)</a>
+		                      				<div class="dropdown-divider"></div>
+					                    </div>
+					                </div>
+    							</td>
+    						</tr>
+    			';
+    		 }$requete-> closeCursor();
+
+    		 return $tableau;
+		}
+
+		public function get_aff_nd_client($id_mod_lic, $id_cli){
+			include('connexion.php');
+			$entree['id_cli'] = $id_cli;
+			$entree['id_mod_lic'] = $id_mod_lic;
+			$compteur = 0;
+
+			$tableau = '';
+
+			$requeteDepense = $connexion-> prepare("SELECT dep.nom_dep AS nom_dep, 
+																dep.id_dep AS id_dep,
+																mnd.view_note AS view_note,
+																mnd.view_note AS view_note
+															FROM affectation_modele_note_debit_client af, depense dep, modele_note_debit mnd
+															WHERE af.id_cli = ?
+																AND af.id_mod_lic = ?
+																AND af.id_dep = dep.id_dep
+																AND af.id_model_nd = mnd.id_model_nd");
+    		$requeteDepense-> execute(array($entree['id_cli'], $entree['id_mod_lic']));
+    		while ($reponseDepense = $requeteDepense-> fetch()) {
+    			$compteur++;
+    			$tableau .= '<a class="dropdown-item text-sm" href="create_note_debit_kamoa.php?id_cli='.$id_cli.'&id_mod_lic='.$id_mod_lic.'&id_dep='.$reponseDepense['id_dep'].'&nom_dep='.$reponseDepense['nom_dep'].'&id_mod_trans=&id_march="><i class="fa fa-plus"></i> Edit '.$reponseDepense['nom_dep'].'</a>
+    			';
+    		 }$requeteDepense-> closeCursor();
 
     		 return $tableau;
 		}
@@ -9907,6 +9976,7 @@
 
 			$unite = 0;
 			$cost = 0;
+			$compteur = 0;
 
 			$tbl = '
 					<tr>
@@ -9917,7 +9987,7 @@
 						<td style="text-align: right; border-right: 1px solid black;" width="15%"></td>
 					</tr>
 					';
-			$requete = $connexion-> prepare("SELECT CONCAT('<b>',dos.ref_dos, '</b> | PO : <b>',dos.po_ref,'</b>') AS ref_dos,
+			$requete = $connexion-> prepare("SELECT CONCAT('<b>',dos.ref_dos, '</b> (PO: ',dos.po_ref,')') AS ref_dos,
 													det.montant AS montant_ht,
 													IF(det.tva='1',
 														det.montant*0.16,
@@ -9938,6 +10008,17 @@
 															CONCAT(' / ',dos.trailer_2),
 															'')
 														)) AS truck,
+													-- UPPER(CONCAT(
+													-- 	IF(dos.horse IS NOT NULL,
+													-- 		dos.horse,
+													-- 		''),
+													-- 	IF(LENGTH(REPLACE(dos.trailer_1, ' ', ''))>5,
+													-- 		CONCAT(' / ',dos.trailer_1),
+													-- 		''),
+													-- 	IF(LENGTH(REPLACE(dos.trailer_1, ' ', ''))>5,
+													-- 		CONCAT(' / ',dos.trailer_2),
+													-- 		'')
+													-- 	)) AS truck,
 													dos.road_manif AS road_manif
 												FROM dossier dos, detail_note_debit det, depense_dossier depdos
 												WHERE dos.id_dos = depdos.id_dos
@@ -9949,12 +10030,12 @@
 				$montant_ht += $reponse['montant_ht'];
 				$tva += $reponse['tva'];
 				$montant_ttc += $reponse['montant_ttc'];
-
+				$compteur++;
 
 				$tbl .= '
 						<tr>
-							<td style="text-align: left; border-left: 1px solid black; border-right: 0.5px solid black; font-size: 6px;" colspan="2" width="50%">'
-								.$reponse['ref_dos'].' | Truck Ref.: <b>'.$reponse['truck'].'</b> | Manifest Ref.: <b>'.$reponse['road_manif'].
+							<td style="text-align: left; border-left: 1px solid black; border-right: 0.5px solid black; font-size: 6px;" colspan="2" width="50%">'.$compteur.') '
+								.$reponse['ref_dos'].'<br>&nbsp;&nbsp;&nbsp;Truck Ref.: <b>'.$reponse['truck'].'</b><br>&nbsp;&nbsp;&nbsp;Manifest Ref.: <b>'.$reponse['road_manif'].
 							'</b></td>
 							<td style="text-align: center; border-right: 0.5px solid black; font-size: 6.5px;" width="10%">1</td>
 							<td style="text-align: center; border-right: 0.5px solid black; font-size: 6.5px;" width="15%">'
@@ -12147,6 +12228,104 @@
 			?>
 			<input type="hidden" name="nbre" value="<?php echo $compteur;?>">
 			<?php
+
+		}
+
+		public function afficherDossierNewNoteDebitKamoa($id_cli, $id_mod_lic, $id_dep, $po_ref_2){
+			include("connexion.php");
+			$entree['id_mod_lic'] = $id_mod_lic;
+			$entree['id_cli'] = $id_cli;
+			$entree['id_dep'] = $id_dep;
+			$entree['po_ref_2'] = $po_ref_2;
+
+			$compteur=0;
+
+			$tableau = '';
+
+
+			$requete = $connexion-> prepare("SELECT dep.nom_dep AS nom_dep,
+													dos.po_ref AS po_ref,
+													dos.ref_dos AS ref_dos,
+													dep.nom_dep AS nom_dep,
+													depdos.id_dep_dos AS id_dep_dos,
+													ROUND(depdos.montant, 2) AS montant
+												FROM dossier dos, depense_dossier depdos, depense dep
+												WHERE dos.id_dos = depdos.id_dos
+													AND depdos.id_dep = dep.id_dep
+													AND dep.id_dep = ?
+													AND dos.id_mod_lic = ?
+													AND dos.id_cli = ?
+													AND SUBSTRING(dos.po_ref, 1, 3) = ?
+													AND depdos.id_dep_dos NOT IN (
+															SELECT id_dep_dos 
+															 FROM detail_note_debit 
+														)
+												ORDER BY dos.id_dos
+												LIMIT 0, 10");
+			$requete-> execute(array($entree['id_dep'], $entree['id_mod_lic'], $entree['id_cli'], $entree['po_ref_2']));
+			while ($reponse = $requete-> fetch()) {
+
+				$compteur++;
+				$tableau .='<tr>
+								<input type="hidden" name="id_dep_dos_'.$compteur.'" value="'.$reponse['id_dep_dos'].'">
+								<td>'.$compteur.'</td>
+								<td>'.$reponse['ref_dos'].'</td>
+								<td>'.$reponse['po_ref'].'</td>
+								<td>'.$reponse['nom_dep'].'</td>
+								<td class="text-center"><input type="number" step="0.001" class="text-right " name="montant_'.$compteur.'" value="'.$reponse['montant'].'"></td>
+								<td class="text-center">
+									<select  name="tva_'.$compteur.'"  id="tva_'.$compteur.'" class="">
+										<option value="0">NO</option>
+										<option value="1">YES</option>
+									</select>
+								</td>
+							</tr>';
+
+			}$requete-> closeCursor();
+
+			$tableau .='<input type="hidden" name="nbre" value="'.$compteur.'">';
+
+			return $tableau;
+
+		}
+
+		public function selectPONewNoteDebitKamoa($id_cli, $id_mod_lic, $id_dep){
+			include("connexion.php");
+			$entree['id_mod_lic'] = $id_mod_lic;
+			$entree['id_cli'] = $id_cli;
+			$entree['id_dep'] = $id_dep;
+			// $entree['po_ref_2'] = $po_ref_2;
+
+			$compteur=0;
+
+			$tableau = '<select class="form-control form-control-sm bg bg-dark" id="po_ref" onchange="afficherDossierNewNoteDebitKamoa(this.value)" required><option></option>';
+
+
+			$requete = $connexion-> prepare("SELECT SUBSTRING(dos.po_ref, 1, 3) AS ref_po,
+													COUNT(dos.id_dos) As nbre_dos
+												FROM dossier dos, depense_dossier depdos, depense dep
+												WHERE dos.id_dos = depdos.id_dos
+													AND depdos.id_dep = dep.id_dep
+													AND dep.id_dep = ?
+													AND dos.id_mod_lic = ?
+													AND dos.id_cli = ?
+													AND depdos.id_dep_dos NOT IN (
+															SELECT id_dep_dos 
+															 FROM detail_note_debit 
+														)
+												GROUP BY SUBSTRING(dos.po_ref, 1, 3)
+												ORDER BY SUBSTRING(dos.po_ref, 1, 3)");
+			$requete-> execute(array($entree['id_dep'], $entree['id_mod_lic'], $entree['id_cli']));
+			while ($reponse = $requete-> fetch()) {
+
+				$compteur++;
+				$tableau .='<option value="'.$reponse['ref_po'].'">'.$reponse['ref_po'].' ('.$reponse['nbre_dos'].')</option>';
+
+			}$requete-> closeCursor();
+
+			$tableau .='</select>';
+
+			return $tableau;
 
 		}
 
@@ -17061,9 +17240,17 @@
 										            --     </button> 
 										            --     <button class=\"btn btn-xs btn-primary\" title=\"Valider\" onclick=\"valider_worksheet(',dos.id_dos,');\"><i class=\"fa fa-check\"></i></button>') AS btn_action,
 													CONCAT('<button class=\"btn btn-xs btn-info\" title=\"Feuille de calcul\" onclick=\"window.location.replace(\'worksheet.php?id_dos=',dos.id_dos,'\');\"><i class=\"fa fa-calculator\"></i></button>
-														<button class=\"btn btn-xs bg-secondary square-btn-adjust\" onclick=\"window.open(\'generateurWorksheet.php?id_dos=',dos.id_dos,'&ref_dos=',dos.ref_dos,'\',\'',dos.ref_dos,'\',\'width=1000,height=800\');\" title=\"View Worsheet\">
-										                    <i class=\"fas fa-eye\"></i> 
-										                </button> 
+										                <div class=\"btn-group\">
+										                    <button type=\"button\" class=\"btn btn-secondary btn-xs dropdown-toggle dropdown-icon\" data-toggle=\"dropdown\">
+										                      <i class=\"fa fa-eye\"></i>
+										                      <span class=\"sr-only\">Toggle Dropdown</span>
+                    										</button>
+											                <div class=\"dropdown-menu\" role=\"menu\">
+										                      <a class=\"dropdown-item\" href=\"#\" onclick=\"window.open(\'generateurWorksheet.php?id_dos=',dos.id_dos,'&ref_dos=',dos.ref_dos,'&groupe=\',\'Feuille de calcul ',dos.ref_dos,'\', \'width=1000,height=800\');\"><i class=\"fa fa-list\"></i> Feuille Brute</a>
+										                      <a class=\"dropdown-item\" href=\"#\" onclick=\"window.open(\'generateurWorksheet.php?id_dos=',dos.id_dos,'&ref_dos=',dos.ref_dos,'&groupe=tarifaire\',\'Feuille de calcul ',dos.ref_dos,'\', \'width=1000,height=800\');\"><i class=\"fa fa-object-group\"></i> Gouper Par Position Parifaire</a>
+										                      <a class=\"dropdown-item\" href=\"#\" onclick=\"window.open(\'generateurWorksheet.php?id_dos=',dos.id_dos,'&ref_dos=',dos.ref_dos,'&groupe=code Additionnel\',\'Feuille de calcul ',dos.ref_dos,'\', \'width=1000,height=800\');\"><i class=\"fa fa-object-group\"></i> Gouper Par Code Additionnel</a>
+										                    </div>
+										                </div>
 										                <button class=\"btn btn-xs btn-primary\" title=\"Valider\" onclick=\"valider_worksheet(',dos.id_dos,');\"><i class=\"fa fa-check\"></i></button>') AS btn_action
 												FROM dossier dos, client cl
 												WHERE dos.id_cli = cl.id_cli
@@ -17109,9 +17296,19 @@
 													DATE_FORMAT(dos.date_feuil_calc, '%d/%m/%Y') AS date_feuil_calc,
 													DATE_FORMAT(dos.date_verif_feuil_calc, '%d/%m/%Y') AS date_verif_feuil_calc,
 													CONCAT('<button class=\"btn btn-xs btn-info\" title=\"Feuille de calcul\" onclick=\"window.location.replace(\'worksheet.php?id_dos=',dos.id_dos,'\');\"><i class=\"fa fa-calculator\"></i></button>
-														<button class=\"btn btn-xs bg-secondary square-btn-adjust\" onclick=\"window.open(\'generateurWorksheet.php?id_dos=',dos.id_dos,'&ref_dos=',dos.ref_dos,'\',\'',dos.ref_dos,'\',\'width=1000,height=800\');\" title=\"View Worsheet\">
-										                    <i class=\"fas fa-eye\"></i> 
-										                </button>
+														
+										                <div class=\"btn-group\">
+										                    <button type=\"button\" class=\"btn btn-secondary btn-xs dropdown-toggle dropdown-icon\" data-toggle=\"dropdown\">
+										                      <i class=\"fa fa-eye\"></i>
+										                      <span class=\"sr-only\">Toggle Dropdown</span>
+                    										</button>
+											                <div class=\"dropdown-menu\" role=\"menu\">
+										                      <a class=\"dropdown-item\" href=\"#\" onclick=\"window.open(\'generateurWorksheet.php?id_dos=',dos.id_dos,'&ref_dos=',dos.ref_dos,'&groupe=\',\'Feuille de calcul ',dos.ref_dos,'\', \'width=1000,height=800\');\"><i class=\"fa fa-list\"></i> Feuille Brute</a>
+										                      <a class=\"dropdown-item\" href=\"#\" onclick=\"window.open(\'generateurWorksheet.php?id_dos=',dos.id_dos,'&ref_dos=',dos.ref_dos,'&groupe=tarifaire\',\'Feuille de calcul ',dos.ref_dos,'\', \'width=1000,height=800\');\"><i class=\"fa fa-object-group\"></i> Gouper Par Position Parifaire</a>
+										                      <a class=\"dropdown-item\" href=\"#\" onclick=\"window.open(\'generateurWorksheet.php?id_dos=',dos.id_dos,'&ref_dos=',dos.ref_dos,'&groupe=code Additionnel\',\'Feuille de calcul ',dos.ref_dos,'\', \'width=1000,height=800\');\"><i class=\"fa fa-object-group\"></i> Gouper Par Code Additionnel</a>
+										                    </div>
+										                </div>
+
 										                <button class=\"btn btn-xs btn-primary\" title=\"Valider\" onclick=\"valider_worksheet_ops(',dos.id_dos,');\"><i class=\"fa fa-check\"></i></button> ') AS btn_action
 												FROM dossier dos, client cl
 												WHERE dos.id_cli = cl.id_cli
@@ -17155,9 +17352,18 @@
 													DATE_FORMAT(dos.date_feuil_calc, '%d/%m/%Y') AS date_feuil_calc,
 													DATE_FORMAT(dos.date_verif_feuil_calc, '%d/%m/%Y') AS date_verif_feuil_calc,
 													CONCAT('<button class=\"btn btn-xs btn-info\" title=\"Feuille de calcul\" onclick=\"window.location.replace(\'worksheet.php?id_dos=',dos.id_dos,'\');\"><i class=\"fa fa-calculator\"></i></button>
-														<button class=\"btn btn-xs bg-secondary square-btn-adjust\" onclick=\"window.open(\'generateurWorksheet.php?id_dos=',dos.id_dos,'&ref_dos=',dos.ref_dos,'\',\'',dos.ref_dos,'\',\'width=1000,height=800\');\" title=\"View Worsheet\">
-										                    <i class=\"fas fa-eye\"></i> 
-										                </button> ') AS btn_action
+														
+										                <div class=\"btn-group\">
+										                    <button type=\"button\" class=\"btn btn-secondary btn-xs dropdown-toggle dropdown-icon\" data-toggle=\"dropdown\">
+										                      <i class=\"fa fa-eye\"></i>
+										                      <span class=\"sr-only\">Toggle Dropdown</span>
+                    										</button>
+											                <div class=\"dropdown-menu\" role=\"menu\">
+										                      <a class=\"dropdown-item\" href=\"#\" onclick=\"window.open(\'generateurWorksheet.php?id_dos=',dos.id_dos,'&ref_dos=',dos.ref_dos,'&groupe=\',\'Feuille de calcul ',dos.ref_dos,'\', \'width=1000,height=800\');\"><i class=\"fa fa-list\"></i> Feuille Brute</a>
+										                      <a class=\"dropdown-item\" href=\"#\" onclick=\"window.open(\'generateurWorksheet.php?id_dos=',dos.id_dos,'&ref_dos=',dos.ref_dos,'&groupe=tarifaire\',\'Feuille de calcul ',dos.ref_dos,'\', \'width=1000,height=800\');\"><i class=\"fa fa-object-group\"></i> Gouper Par Position Parifaire</a>
+										                      <a class=\"dropdown-item\" href=\"#\" onclick=\"window.open(\'generateurWorksheet.php?id_dos=',dos.id_dos,'&ref_dos=',dos.ref_dos,'&groupe=code Additionnel\',\'Feuille de calcul ',dos.ref_dos,'\', \'width=1000,height=800\');\"><i class=\"fa fa-object-group\"></i> Gouper Par Code Additionnel</a>
+										                    </div>
+										                </div> ') AS btn_action
 												FROM dossier dos, client cl
 												WHERE dos.id_cli = cl.id_cli
 													AND dos.id_mod_lic = ?
@@ -19695,7 +19901,12 @@
 
 			$reponse = $requete-> fetch();
 
-			return $reponse['nbre'];
+			if ($reponse) {
+				return $reponse['nbre'];
+			}else{
+				return '0';
+			}
+
 		}
 		
 		public function get_monitoring_depenses_invoiced($id_dep, $id_mod_lic){
@@ -19720,7 +19931,13 @@
 
 			$reponse = $requete-> fetch();
 
-			return $reponse['nbre'];
+			if ($reponse) {
+				return $reponse['nbre'];
+			}else{
+				return '0';
+			}
+
+			
 		}
 		
 		public function get_nbre_debit_note($id_dep, $id_mod_lic){
@@ -38113,7 +38330,7 @@
 			
 		}
 
-		public function getMarchandiseDossier2($id_dos){
+		public function getMarchandiseDossier2($id_dos, $groupe){
 			include('connexion.php');
 			$entree['id_dos'] = $id_dos;
 			$table = '';
@@ -38125,6 +38342,13 @@
 			$cif_1=0;
 			$cif_2=0;
 
+			$sqlGroupe = ' GROUP BY id_march_dos ';
+			if ($groupe=='tarifaire') {
+				$sqlGroupe = ' GROUP BY code_tarif_march ';
+			}else if ($groupe=='code Additionnel') {
+				$sqlGroupe = ' GROUP BY code_add ';
+			}
+
 			if ($this-> getFOBMarchandiseDossier($id_dos)>0) {
 				$fob_marchandise = $this-> getFOBMarchandiseDossier($id_dos);
 			}else{
@@ -38133,9 +38357,15 @@
 			$coef = ($this-> getFOBMarchandiseDossier($id_dos)+$this-> getDossier($id_dos)['cif_2'])/$fob_marchandise;
 			$roe_feuil_calc = $this-> getDossier($id_dos)['roe_feuil_calc'];
 
-			$requete = $connexion-> prepare("SELECT *
+			$requete = $connexion-> prepare("SELECT *,
+													SUM(nbr_bags) AS nbr_bags,
+													SUM(qte) AS qte,
+													SUM(poids_brut) AS poids_brut,
+													SUM(poids) AS poids,
+													SUM(fob) AS fob
 												FROM marchandise_dossier
-												WHERE id_dos = ?");
+												WHERE id_dos = ?
+												$sqlGroupe");
 			$requete-> execute(array($entree['id_dos']));
 			while($reponse=$requete-> fetch()){
 				$compteur++;
@@ -52510,6 +52740,7 @@
 													AND note.validation = '0'
 													AND note.id_cli = aff.id_cli
 													AND aff.id_model_nd = mnd.id_model_nd
+													AND aff.id_dep = dep.id_dep
 													AND note.ref_note = det.ref_note
 													AND det.id_dep_dos = depdos.id_dep_dos
 													AND depdos.id_dep = dep.id_dep
