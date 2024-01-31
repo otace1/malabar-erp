@@ -2856,6 +2856,12 @@
 
   		echo json_encode($reponse);
 
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='afficherDossierNewNoteDebitOther'){
+
+  		$reponse['afficherDossierNewNoteDebitOther'] = $maClasse-> afficherDossierNewNoteDebitOther($_POST['id_cli'], $_POST['id_mod_lic'], $_POST['id_dep']);
+
+  		echo json_encode($reponse);
+
 	}
 
 
