@@ -5315,7 +5315,7 @@
 			$requeteDepense = $connexion-> prepare("SELECT dep.nom_dep AS nom_dep, 
 																dep.id_dep AS id_dep,
 																mnd.view_note AS view_note,
-																mnd.view_note AS view_note
+																mnd.new_note AS new_note
 															FROM affectation_modele_note_debit_client af, depense dep, modele_note_debit mnd
 															WHERE af.id_cli = ?
 																AND af.id_mod_lic = ?
@@ -5324,7 +5324,7 @@
     		$requeteDepense-> execute(array($entree['id_cli'], $entree['id_mod_lic']));
     		while ($reponseDepense = $requeteDepense-> fetch()) {
     			$compteur++;
-    			$tableau .= '<a class="dropdown-item text-sm" href="create_note_debit_kamoa.php?id_cli='.$id_cli.'&id_mod_lic='.$id_mod_lic.'&id_dep='.$reponseDepense['id_dep'].'&nom_dep='.$reponseDepense['nom_dep'].'&id_mod_trans=&id_march="><i class="fa fa-plus"></i> Edit '.$reponseDepense['nom_dep'].'</a>
+    			$tableau .= '<a class="dropdown-item text-sm" href="'.$reponseDepense['new_note'].'?id_cli='.$id_cli.'&id_mod_lic='.$id_mod_lic.'&id_dep='.$reponseDepense['id_dep'].'&nom_dep='.$reponseDepense['nom_dep'].'&id_mod_trans=&id_march="><i class="fa fa-plus"></i> Edit '.$reponseDepense['nom_dep'].'</a>
     			';
     		 }$requeteDepense-> closeCursor();
 
@@ -12263,6 +12263,64 @@
 												ORDER BY dos.id_dos
 												LIMIT 0, 10");
 			$requete-> execute(array($entree['id_dep'], $entree['id_mod_lic'], $entree['id_cli'], $entree['po_ref_2']));
+			while ($reponse = $requete-> fetch()) {
+
+				$compteur++;
+				$tableau .='<tr>
+								<input type="hidden" name="id_dep_dos_'.$compteur.'" value="'.$reponse['id_dep_dos'].'">
+								<td>'.$compteur.'</td>
+								<td>'.$reponse['ref_dos'].'</td>
+								<td>'.$reponse['po_ref'].'</td>
+								<td>'.$reponse['nom_dep'].'</td>
+								<td class="text-center"><input type="number" step="0.001" class="text-right " name="montant_'.$compteur.'" value="'.$reponse['montant'].'"></td>
+								<td class="text-center">
+									<select  name="tva_'.$compteur.'"  id="tva_'.$compteur.'" class="">
+										<option value="0">NO</option>
+										<option value="1">YES</option>
+									</select>
+								</td>
+							</tr>';
+
+			}$requete-> closeCursor();
+
+			$tableau .='<input type="hidden" name="nbre" value="'.$compteur.'">';
+
+			return $tableau;
+
+		}
+
+		public function afficherDossierNewNoteDebitOther($id_cli, $id_mod_lic, $id_dep){
+			include("connexion.php");
+			$entree['id_mod_lic'] = $id_mod_lic;
+			$entree['id_cli'] = $id_cli;
+			$entree['id_dep'] = $id_dep;
+			// $entree['po_ref_2'] = $po_ref_2;
+
+			$compteur=0;
+
+			$tableau = '';
+
+
+			$requete = $connexion-> prepare("SELECT dep.nom_dep AS nom_dep,
+													dos.po_ref AS po_ref,
+													dos.ref_dos AS ref_dos,
+													dep.nom_dep AS nom_dep,
+													depdos.id_dep_dos AS id_dep_dos,
+													ROUND(depdos.montant, 2) AS montant
+												FROM dossier dos, depense_dossier depdos, depense dep
+												WHERE dos.id_dos = depdos.id_dos
+													AND depdos.id_dep = dep.id_dep
+													AND dep.id_dep = ?
+													AND dos.id_mod_lic = ?
+													AND dos.id_cli = ?
+													-- AND SUBSTRING(dos.po_ref, 1, 3) = ?
+													AND depdos.id_dep_dos NOT IN (
+															SELECT id_dep_dos 
+															 FROM detail_note_debit 
+														)
+												ORDER BY dos.id_dos
+												LIMIT 0, 10");
+			$requete-> execute(array($entree['id_dep'], $entree['id_mod_lic'], $entree['id_cli']));
 			while ($reponse = $requete-> fetch()) {
 
 				$compteur++;
