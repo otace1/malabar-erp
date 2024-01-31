@@ -50,6 +50,23 @@
 
 <script>
 
+  function modal_depense_modele_licence(id_mod_lic){
+    $.ajax({
+      type: "POST",
+      url: "ajax.php",
+      data: {id_mod_lic: id_mod_lic, operation: 'modal_depense_modele_licence'},
+      dataType:"json",
+      success:function(data){
+        if (data.logout) {
+          alert(data.logout);
+          window.location="../deconnexion.php";
+        }else{
+          $('#tableau_client_depense_modele_licence').html(data.tableau_client_depense_modele_licence);
+          $('#modal_depense_modele_licence').modal("show");
+        }
+      }
+    });
+  }
 
     $(document).ready(function () {
         $('#txtCountry').typeahead({

@@ -81,7 +81,7 @@ $util_verif_feuil_calc = $maClasse-> getUtilisateur($maClasse-> getDossier($_GET
 $date_verif_feuil_calc = $maClasse-> getDossier($_GET['id_dos'])['date_verif_feuil_calc'];
 $util_verif_feuil_calc_ops = $maClasse-> getUtilisateur($maClasse-> getDossier($_GET['id_dos'])['id_verif_feuil_calc_ops'])['nom_util'];
 $date_verif_feuil_calc_ops = $maClasse-> getDossier($_GET['id_dos'])['date_verif_feuil_calc_ops'];
-$marchandise_dossier = $maClasse-> getMarchandiseDossier2($_GET['id_dos']);
+$marchandise_dossier = $maClasse-> getMarchandiseDossier2($_GET['id_dos'], $_GET['groupe']);
 
 
 $cif = number_format($maClasse-> getFOBMarchandiseDossier($_GET['id_dos'])+$maClasse-> getDossier($_GET['id_dos'])['fret']+$maClasse-> getDossier($_GET['id_dos'])['assurance']+$maClasse-> getDossier($_GET['id_dos'])['autre_frais'], 2, '.', ',');
@@ -183,7 +183,7 @@ $tbl = <<<EOD
 			<td width="8%" style="text-align: center; border: 0.3px solid black; font-weight: bold;">Position Tarifaire</td>
 			<td width="3%" style="text-align: center; border: 0.3px solid black; font-weight: bold;">AV</td>
 			<td width="4%" style="text-align: center; border: 0.3px solid black; font-weight: bold;">ORG</td>
-			<td width="4%" style="text-align: center; border: 0.3px solid black; font-weight: bold;">PROV</td>
+			<td width="4%" style="text-align: center; border: 0.3px solid black; font-weight: bold;"> Dern. Prov.</td>
 			<td width="6%" style="text-align: center; border: 0.3px solid black; font-weight: bold;">Code Add.</td>
 			<td width="3%" style="text-align: center; border: 0.3px solid black; font-weight: bold;">Colis</td>
 			<td width="3%" style="text-align: center; border: 0.3px solid black; font-weight: bold;">Qte</td>

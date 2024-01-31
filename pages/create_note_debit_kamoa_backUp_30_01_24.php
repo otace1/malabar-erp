@@ -21,18 +21,6 @@
                 echo 'Nouvelle Note de Debit';
               }
             ?>
-             <span class="badge badge-dark text-sm"><?php echo $_GET['nom_dep'];?></span>
-          <div class="btn-group float-center">
-            <button type="button" class="btn btn-xs btn-primary dropdown-toggle dropdown-icon" data-toggle="dropdown">
-              Navigation <span class="sr-only">Toggle Dropdown</span>
-            </button>
-            <div class="dropdown-menu" role="menu">
-              <?php echo $maClasse-> get_aff_nd_client($_GET['id_mod_lic'], $_GET['id_cli']);?>
-                <a class="dropdown-item text-sm" href="listerNoteDebit.php?id_cli=<?php echo $_GET['id_cli'];?>&id_mod_lic=<?php echo $_GET['id_mod_lic'];?>"><i class="fa fa-list"></i> View Note(s)</a>
-                <div class="dropdown-divider"></div>
-            </div>
-          </div>
-          
           </h5>
           <div class="pull-right">
             <!-- <button class="btn btn-xs btn-dark square-btn-adjust" data-toggle="modal" data-target=".rechercheClient">
@@ -83,7 +71,7 @@
                   
                       <div class="form-group">
                         <label for="inputEmail3" class="col-form-label">PO Ref.: </label>
-                        <span id="selectPONewNoteDebitKamoa"></span>
+                        <input class="form-control form-control-sm bg bg-dark" disabled value="<?php echo $_GET['po_ref'];?>" required>
                       </div>
 
                   </div>
@@ -120,8 +108,10 @@
                       <th>TVA</th>
                     </tr>
                   </thead>
-                  <tbody id="afficherDossierNewNoteDebitKamoa">
-                    
+                  <tbody>
+                    <?php
+                    $maClasse-> afficherDossierNewNoteDeDebitKamoa($_GET['id_cli'], $_GET['id_mod_lic_fact'], $_GET['id_dep'], $_GET['po_ref_2']);
+                    ?>
                   </tbody>
                 </table>
               </div>
@@ -184,57 +174,6 @@
 
 
 <script type="text/javascript">
-
-$(document).ready(function(){
-  selectPONewNoteDebitKamoa();
-});
-
-function afficherDossierNewNoteDebitKamoa(po_ref){
-  $('#spinner-div').show();
-  $.ajax({
-    type: 'post',
-    url: 'ajax.php',
-    data: {id_mod_lic: <?php echo $_GET['id_mod_lic'];?>, id_cli: <?php echo $_GET['id_cli'];?>, id_dep: <?php echo $_GET['id_dep'];?>, po_ref: po_ref, operation: 'afficherDossierNewNoteDebitKamoa'},
-    dataType: 'json',
-    success:function(data){
-      if (data.logout) {
-        alert(data.logout);
-        window.location="../deconnexion.php";
-      }else{
-        $('#afficherDossierNewNoteDebitKamoa').html(data.afficherDossierNewNoteDebitKamoa);
-        // $('#modal_kamoa_nd').modal('show');
-      }
-    },
-    complete: function () {
-        $('#spinner-div').hide();//Request is complete so hide spinner
-    }
-  });
-
-}
-
-function selectPONewNoteDebitKamoa(){
-  $('#spinner-div').show();
-  $.ajax({
-    type: 'post',
-    url: 'ajax.php',
-    data: {id_mod_lic: <?php echo $_GET['id_mod_lic'];?>, id_cli: <?php echo $_GET['id_cli'];?>, id_dep: <?php echo $_GET['id_dep'];?>, operation: 'selectPONewNoteDebitKamoa'},
-    dataType: 'json',
-    success:function(data){
-      if (data.logout) {
-        alert(data.logout);
-        window.location="../deconnexion.php";
-      }else{
-        $('#selectPONewNoteDebitKamoa').html(data.selectPONewNoteDebitKamoa);
-        // $('#modal_kamoa_nd').modal('show');
-      }
-    },
-    complete: function () {
-        $('#spinner-div').hide();//Request is complete so hide spinner
-    }
-  });
-
-}
-
 
   $(document).ready(function(){
 

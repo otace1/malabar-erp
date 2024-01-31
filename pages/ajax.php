@@ -2832,6 +2832,30 @@
 
   		echo json_encode($reponse);
 
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='modal_depense_modele_licence'){// On recupere les donnees du dossier a facturer 
+
+  		$reponse['tableau_client_depense_modele_licence'] = $maClasse-> tableau_client_depense_modele_licence($_POST['id_mod_lic']);
+
+  		echo json_encode($reponse);
+
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='modal_depense_modele_licence'){// On recupere les donnees du dossier a facturer 
+
+  		$reponse['tableau_client_depense_modele_licence'] = $maClasse-> tableau_client_depense_modele_licence($_POST['id_mod_lic']);
+
+  		echo json_encode($reponse);
+
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='selectPONewNoteDebitKamoa'){
+
+  		$reponse['selectPONewNoteDebitKamoa'] = $maClasse-> selectPONewNoteDebitKamoa($_POST['id_cli'], $_POST['id_mod_lic'], $_POST['id_dep']);
+
+  		echo json_encode($reponse);
+
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='afficherDossierNewNoteDebitKamoa'){
+
+  		$reponse['afficherDossierNewNoteDebitKamoa'] = $maClasse-> afficherDossierNewNoteDebitKamoa($_POST['id_cli'], $_POST['id_mod_lic'], $_POST['id_dep'], $_POST['po_ref']);
+
+  		echo json_encode($reponse);
+
 	}
 
 

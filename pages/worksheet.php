@@ -47,7 +47,17 @@
                 </h5>
 
                 <div class="float-right">
-                  <button class="btn btn-dark btn-xs" onclick="window.open('generateurWorksheet.php?id_dos=<?php echo $_GET['id_dos'];?>&ref_dos=<?php echo $maClasse-> getDossier($_GET['id_dos'])['ref_dos'];?>','Feuille de calcul <?php echo $maClasse-> getDossier($_GET['id_dos'])['ref_dos'];?>', 'width=1000,height=800');"><i class="fa fa-file"></i> Afficher la Feuille de calcul</button>
+                  <div class="btn-group">
+                    <button type="button" class="btn btn-dark btn-xs dropdown-toggle dropdown-icon" data-toggle="dropdown">
+                      <i class="fa fa-file"></i> Afficher la Feuille de calcul
+                      <span class="sr-only">Toggle Dropdown</span>
+                    </button>
+                    <div class="dropdown-menu" role="menu">
+                      <a class="dropdown-item" href="#" onclick="window.open('generateurWorksheet.php?id_dos=<?php echo $_GET['id_dos'];?>&ref_dos=<?php echo $maClasse-> getDossier($_GET['id_dos'])['ref_dos'];?>&groupe=','Feuille de calcul <?php echo $maClasse-> getDossier($_GET['id_dos'])['ref_dos'];?>', 'width=1000,height=800');"><i class="fa fa-list"></i> Feuille Brute</a>
+                      <a class="dropdown-item" href="#" onclick="window.open('generateurWorksheet.php?id_dos=<?php echo $_GET['id_dos'];?>&ref_dos=<?php echo $maClasse-> getDossier($_GET['id_dos'])['ref_dos'];?>&groupe=tarifaire','Feuille de calcul <?php echo $maClasse-> getDossier($_GET['id_dos'])['ref_dos'];?>', 'width=1000,height=800');"><i class="fa fa-object-group"></i> Gouper Par Position Parifaire</a>
+                      <a class="dropdown-item" href="#" onclick="window.open('generateurWorksheet.php?id_dos=<?php echo $_GET['id_dos'];?>&ref_dos=<?php echo $maClasse-> getDossier($_GET['id_dos'])['ref_dos'];?>&groupe=code Additionnel','Feuille de calcul <?php echo $maClasse-> getDossier($_GET['id_dos'])['ref_dos'];?>', 'width=1000,height=800');"><i class="fa fa-object-group"></i> Gouper Par Code Additionnel</a>
+                    </div>
+                  </div>
                   <!-- <button class="btn btn-warning btn-xs" onclick="window.location.replace('file_pending_worksheet.php?id_cli=<?php echo $maClasse-> getDossier($_GET['id_dos'])['id_cli'];?>&id_mod_lic=<?php echo $maClasse-> getDossier($_GET['id_dos'])['id_mod_lic'];?>');"><i class="fa fa-exclamation-triangle"></i> Pending Files</button> -->
                   <button class="btn btn-dark btn-xs" onclick="window.location.replace('list_worksheet.php?id_cli=<?php echo $maClasse-> getDossier($_GET['id_dos'])['id_cli'];?>&id_mod_lic=<?php echo $maClasse-> getDossier($_GET['id_dos'])['id_mod_lic'];?>');"><i class="fa fa-list"></i> Worksheet List</button>
                 </div>
@@ -152,14 +162,14 @@
             </div>
 
           </div>
-
+<!-- 
           <div class="col-md-2">
             <button class="btn btn-xs btn-primary" onclick="grouper_marchandise(id_dos_worsheet.value);">
               <i class="fa fa-object-group"></i> Grouper par Code Tarifaire
             </button>
             <hr>
           </div>
-
+ -->
           <div class="col-md-12 table-responsive p-0">
             <table class="table table-bordered table-striped text-nowrap table-hover table-sm text-nowrap table-head-fixed ">
               <thead>

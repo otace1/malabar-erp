@@ -224,7 +224,8 @@ table.on('click', 'tbody tr', function () {
               }
             },
             complete: function () {
-                afficherMonitoringNoteDebit(<?php echo $_GET['id_mod_lic_fact'];?>);
+                // afficherMonitoringNoteDebit(<?php echo $_GET['id_mod_lic_fact'];?>);
+                $('#monitoring_depenses').DataTable().ajax.reload();
                 $('#spinner-div').hide();//Request is complete so hide spinner
             }
           });

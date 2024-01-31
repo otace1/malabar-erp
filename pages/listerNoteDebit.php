@@ -35,7 +35,19 @@
     <section class="content-header">
       <div class="container-fluid">
         <div class="header">
-          <h5><i class="fa fa-copy nav-icon"></i> <?php echo $modele['nom_mod_lic'].' DEBIT NOTES '.$client;?></h5>
+          <h5><i class="fa fa-copy nav-icon"></i> <?php echo $modele['nom_mod_lic'].' DEBIT NOTES '.$client;?>
+          <div class="btn-group float-center">
+            <button type="button" class="btn btn-xs btn-primary dropdown-toggle dropdown-icon" data-toggle="dropdown">
+              Navigation <span class="sr-only">Toggle Dropdown</span>
+            </button>
+            <div class="dropdown-menu" role="menu">
+              <?php echo $maClasse-> get_aff_nd_client($_GET['id_mod_lic'], $_GET['id_cli']);?>
+                <a class="dropdown-item text-sm" href="listerNoteDebit.php?id_cli=<?php echo $_GET['id_cli'];?>&id_mod_lic=<?php echo $_GET['id_mod_lic'];?>"><i class="fa fa-list"></i> View Note(s)</a>
+                <div class="dropdown-divider"></div>
+            </div>
+          </div>
+          </h5>
+          
         </div>
 
       </div><!-- /.container-fluid -->
