@@ -5275,7 +5275,8 @@
 																cl.code_cli AS code_cli
 															FROM client cl, affectation_client_modele_licence af
 															WHERE cl.id_cli = af.id_cli
-																AND af.id_mod_lic = ?");
+																AND af.id_mod_lic = ?
+															ORDER BY cl.code_cli");
     		$requete-> execute(array($entree['id_mod_lic']));
     		while ($reponse = $requete-> fetch()) {
     			$compteur++;
@@ -38327,6 +38328,11 @@
 					$loyer = ($ddi+$tva)*0.03*$duree_loyer;
 					$table .='<tr>
 									<td>'.$compteur.'</td>
+										<td>
+											<a href="#" class="btn-xs btn-warning" onclick="modal_edit_marchandise_dossier('.$reponse['id_march_dos'].', '.$reponse['id_dos'].', '.$compteur.');"><span class="fa fa-edit"></span></a> 
+											
+											<a href="#" class="btn-xs btn-danger" onclick="supprimerMarchandiseDossier('.$reponse['id_march_dos'].', '.$reponse['id_dos'].', '.$compteur.');"><span class="fa fa-times"></span></a>
+										</td>
 									<td>'.$reponse['nom_march'].'</td>
 									<td>'.$reponse['num_av'].'</td>
 									<td>'.$reponse['ref_fact'].'</td>
@@ -38346,6 +38352,9 @@
 									<td style="text-align: right;">'.number_format($tva, 0, '.', ',').'</td>
 									<td style="text-align: right;">'.number_format($loyer, 0, '.', ',').'</td>
 									<td>
+										<button class="btn-xs btn-warning" onclick="modal_edit_marchandise_dossier('.$reponse['id_march_dos'].', '.$reponse['id_dos'].');">
+											<span class="fa fa-edit"></span>
+										</button> 
 										<button class="btn-xs btn-danger" onclick="supprimerMarchandiseDossier('.$reponse['id_march_dos'].', '.$reponse['id_dos'].');">
 											<span class="fa fa-times"></span>
 										</button>
@@ -38359,6 +38368,11 @@
 					$compteur++;
 					$table .='<tr>
 									<td>'.$compteur.'</td>
+										<td>
+											<a href="#" class="btn-xs btn-warning" onclick="modal_edit_marchandise_dossier('.$reponse['id_march_dos'].', '.$reponse['id_dos'].', '.$compteur.');"><span class="fa fa-edit"></span></a> 
+											
+											<a href="#" class="btn-xs btn-danger" onclick="supprimerMarchandiseDossier('.$reponse['id_march_dos'].', '.$reponse['id_dos'].', '.$compteur.');"><span class="fa fa-times"></span></a>
+										</td>
 									<td>'.$reponse['nom_march'].'</td>
 									<td>'.$reponse['num_av'].'</td>
 									<td>'.$reponse['ref_fact'].'</td>
@@ -38376,11 +38390,178 @@
 									<td style="text-align: right;">'.number_format($this-> getCode_tarif($reponse['code_tarif_march'])['DDI'], 2, '.', ',').'</td>
 									<td style="text-align: right;">'.number_format($reponse['fob']*$coef*($this-> getCode_tarif($reponse['code_tarif_march'])['DDI']/100)*$roe_feuil_calc, 0, '.', ',').'</td>
 									<td>
-										<button class="btn-xs btn-danger" onclick="supprimerMarchandiseDossier('.$reponse['id_march_dos'].', '.$reponse['id_dos'].');">
-											<span class="fa fa-times"></span>
-										</button>
+										<a href="#" class="btn-xs btn-warning" onclick="modal_edit_marchandise_dossier('.$reponse['id_march_dos'].', '.$reponse['id_dos'].', '.$compteur.');"><span class="fa fa-edit"></span></a> 
+										
+										<a href="#" class="btn-xs btn-danger" onclick="supprimerMarchandiseDossier('.$reponse['id_march_dos'].', '.$reponse['id_dos'].', '.$compteur.');"><span class="fa fa-times"></span></a>
 									</td>
 								</tr>';
+				}$requete-> closeCursor();
+			}
+
+			return $table;
+			
+		}
+
+		public function getMarchandiseDossierEdit($id_dos, $ligne){
+			include('connexion.php');
+			$entree['id_dos'] = $id_dos;
+			$table = '';
+			$ddi = 0;
+			$tva = 0;
+			$loyer = 0;
+			$duree_loyer = $this-> getDossier($id_dos)['duree_loyer'];
+			$compteur=0;
+			if ($this-> getFOBMarchandiseDossier($id_dos)>0) {
+				$fob_marchandise = $this-> getFOBMarchandiseDossier($id_dos);
+			}else{
+				$fob_marchandise = 1;
+			}
+			// $coef = round(($this-> getFOBMarchandiseDossier($id_dos)+$this-> getDossier($id_dos)['cif_2'])/$fob_marchandise, 1);
+			$coef = ($this-> getFOBMarchandiseDossier($id_dos)+$this-> getDossier($id_dos)['cif_2'])/$fob_marchandise;
+			$roe_feuil_calc = $this-> getDossier($id_dos)['roe_feuil_calc'];
+
+			$requete = $connexion-> prepare("SELECT *
+												FROM marchandise_dossier
+												WHERE id_dos = ?");
+			$requete-> execute(array($entree['id_dos']));
+			if (!empty($this-> checkRegimeSuspens($id_dos))) {
+				
+				while($reponse=$requete-> fetch()){
+					$compteur++;
+					$ddi = $reponse['fob']*$coef*($this-> getCode_tarif($reponse['code_tarif_march'])['DDI']/100)*$roe_feuil_calc;
+					$tva = ($ddi+($reponse['fob']*$coef)*$roe_feuil_calc)*0.16;
+					$loyer = ($ddi+$tva)*0.03*$duree_loyer;
+
+					if ($ligne == $compteur) {
+						
+						$table .='<tr>
+			                        <td>'.$compteur.'</td>
+			                        <td>
+			                        	<a href="#" class="btn-xs btn-success" onclick="reloadMarchandiseDossier('.$reponse['id_dos'].');"><span class="fa fa-check"></span></a>
+			                        </td>
+			                        <td><textarea class="form-control form-control-sm" name="nom_march" id="nom_march" onblur="maj_march_dos_nom_march('.$reponse['id_march_dos'].', this.value);" required>'.$reponse['nom_march'].'</textarea></td>
+			                        <td><input type="text" placeholder="N° BIVAC" name="num_av" onblur="maj_march_dos_num_av('.$reponse['id_march_dos'].', this.value);" id="ref_crf" value="'.$reponse['num_av'].'" required></td>
+			                        <td><input type="text" placeholder="N° Facture" name="ref_fact" id="ref_fact" onblur="maj_march_dos_ref_fact('.$reponse['id_march_dos'].', this.value);" value="'.$reponse['ref_fact'].'" style="width: 15em;" required></td>
+			                        <td>
+			                          '.$reponse['code_tarif_march'].'
+			                        </td>
+			                        <td><input type="text" placeholder="Position AV" style="width: 8em;" name="position_av" onblur="maj_march_dos_position_av('.$reponse['id_march_dos'].', this.value);" value="'.$reponse['position_av'].'" required></td>
+			                        <td><input type="text" placeholder="Origine" onblur="maj_march_dos_origine('.$reponse['id_march_dos'].', this.value);" value="'.$reponse['origine'].'" style="width: 8em;" name="origine" required></td>
+			                        <td><input type="text" placeholder="Provenance" style="width: 8em;" name="provenance" onblur="maj_march_dos_provenance('.$reponse['id_march_dos'].', this.value);" value="'.$reponse['provenance'].'" required></td>
+			                        <td><input type="text" placeholder="Code Additionnel" style="width: 8em;" name="code_add" onblur="maj_march_dos_code_add('.$reponse['id_march_dos'].', this.value);" value="'.$reponse['code_add'].'" required></td>
+			                        <td><input type="number" placeholder="Colis" style="width: 8em; text-align: right;" name="nbr_bags" onblur="maj_march_dos_nbr_bags('.$reponse['id_march_dos'].', this.value);" value="'.$reponse['nbr_bags'].'" step="0.01" required></td>
+			                        <td><input type="number" placeholder="Qte" style="width: 8em; text-align: right;" onblur="maj_march_dos_qte('.$reponse['id_march_dos'].', this.value);" name="qte" step="0.01" value="'.$reponse['qte'].'" required></td>
+			                        <td><input type="number" placeholder="Poids" onblur="maj_march_dos_poids('.$reponse['id_march_dos'].', this.value);" style="width: 8em; text-align: right;" name="poids" value="'.$reponse['poids'].'" step="0.01" required></td>
+			                        <td><input type="number" placeholder="FOB" style="width: 8em; text-align: right;" onblur="maj_march_dos_fob('.$reponse['id_march_dos'].', this.value);" name="fob" step="0.01" value="'.$reponse['fob'].'" required></td>
+			                        <td>
+			                        	<a href="#" class="btn-xs btn-success" onclick="reloadMarchandiseDossier('.$reponse['id_dos'].');"><span class="fa fa-check"></span></a>
+			                        </td>
+
+								</tr>';
+
+					}else{
+						
+						$table .='<tr>
+										<td>'.$compteur.'</td>
+										<td>
+											<a href="#" class="btn-xs btn-warning" onclick="modal_edit_marchandise_dossier('.$reponse['id_march_dos'].', '.$reponse['id_dos'].', '.$compteur.');"><span class="fa fa-edit"></span></a> 
+											
+											<a href="#" class="btn-xs btn-danger" onclick="supprimerMarchandiseDossier('.$reponse['id_march_dos'].', '.$reponse['id_dos'].', '.$compteur.');"><span class="fa fa-times"></span></a>
+										</td>
+										<td>'.$reponse['nom_march'].'</td>
+										<td>'.$reponse['num_av'].'</td>
+										<td>'.$reponse['ref_fact'].'</td>
+										<td>'.$reponse['code_tarif_march'].'</td>
+										<td>'.$reponse['position_av'].'</td>
+										<td>'.$reponse['origine'].'</td>
+										<td>'.$reponse['provenance'].'</td>
+										<td>'.$reponse['code_add'].'</td>
+										<td style="text-align: right;">'.number_format($reponse['nbr_bags'], 2, '.', ',').'</td>
+										<td style="text-align: right;">'.number_format($reponse['qte'], 2, '.', ',').'</td>
+										<td style="text-align: right;">'.number_format($reponse['poids'], 2, '.', ',').'</td>
+										<td style="text-align: right;">'.number_format($reponse['fob'], 2, '.', ',').'</td>
+										<td style="text-align: right;">'.number_format($coef, 1, '.', ',').'</td>
+										<td style="text-align: right;">'.number_format($reponse['fob']*$coef, 2, '.', ',').'</td>
+										<td style="text-align: right;">'.number_format($this-> getCode_tarif($reponse['code_tarif_march'])['DDI'], 2, '.', ',').'</td>
+										<td style="text-align: right;">'.number_format($ddi, 0, '.', ',').'</td>
+										<td style="text-align: right;">'.number_format($tva, 0, '.', ',').'</td>
+										<td style="text-align: right;">'.number_format($loyer, 0, '.', ',').'</td>
+										<td>
+											<a href="#" class="btn-xs btn-warning" onclick="modal_edit_marchandise_dossier('.$reponse['id_march_dos'].', '.$reponse['id_dos'].', '.$compteur.');"><span class="fa fa-edit"></span></a> 
+											
+											<a href="#" class="btn-xs btn-danger" onclick="supprimerMarchandiseDossier('.$reponse['id_march_dos'].', '.$reponse['id_dos'].', '.$compteur.');"><span class="fa fa-times"></span></a>
+										</td>
+									</tr>';
+									
+					}
+
+				}$requete-> closeCursor();
+
+			}else{
+
+				while($reponse=$requete-> fetch()){
+					$compteur++;
+
+					if ($ligne == $compteur) {
+						
+						$table .='<tr>
+			                        <td>'.$compteur.'</td>
+			                        <td>
+			                        	<a href="#" class="btn-xs btn-success" onclick="reloadMarchandiseDossier('.$reponse['id_dos'].');"><span class="fa fa-check"></span></a>
+			                        </td>
+			                        <td><textarea class="form-control form-control-sm" name="nom_march" id="nom_march" onblur="maj_march_dos_nom_march('.$reponse['id_march_dos'].', this.value);" required>'.$reponse['nom_march'].'</textarea></td>
+			                        <td><input type="text" placeholder="N° BIVAC" name="num_av" onblur="maj_march_dos_num_av('.$reponse['id_march_dos'].', this.value);" id="ref_crf" value="'.$reponse['num_av'].'" required></td>
+			                        <td><input type="text" placeholder="N° Facture" name="ref_fact" id="ref_fact" onblur="maj_march_dos_ref_fact('.$reponse['id_march_dos'].', this.value);" value="'.$reponse['ref_fact'].'" style="width: 15em;" required></td>
+			                        <td>
+			                          '.$reponse['code_tarif_march'].'
+			                        </td>
+			                        <td><input type="text" placeholder="Position AV" style="width: 8em;" name="position_av" onblur="maj_march_dos_position_av('.$reponse['id_march_dos'].', this.value);" value="'.$reponse['position_av'].'" required></td>
+			                        <td><input type="text" placeholder="Origine" onblur="maj_march_dos_origine('.$reponse['id_march_dos'].', this.value);" value="'.$reponse['origine'].'" style="width: 8em;" name="origine" required></td>
+			                        <td><input type="text" placeholder="Provenance" style="width: 8em;" name="provenance" onblur="maj_march_dos_provenance('.$reponse['id_march_dos'].', this.value);" value="'.$reponse['provenance'].'" required></td>
+			                        <td><input type="text" placeholder="Code Additionnel" style="width: 8em;" name="code_add" onblur="maj_march_dos_code_add('.$reponse['id_march_dos'].', this.value);" value="'.$reponse['code_add'].'" required></td>
+			                        <td><input type="number" placeholder="Colis" style="width: 8em; text-align: right;" name="nbr_bags" onblur="maj_march_dos_nbr_bags('.$reponse['id_march_dos'].', this.value);" value="'.$reponse['nbr_bags'].'" step="0.01" required></td>
+			                        <td><input type="number" placeholder="Qte" style="width: 8em; text-align: right;" onblur="maj_march_dos_qte('.$reponse['id_march_dos'].', this.value);" name="qte" step="0.01" value="'.$reponse['qte'].'" required></td>
+			                        <td><input type="number" placeholder="Poids" onblur="maj_march_dos_poids('.$reponse['id_march_dos'].', this.value);" style="width: 8em; text-align: right;" name="poids" value="'.$reponse['poids'].'" step="0.01" required></td>
+			                        <td><input type="number" placeholder="FOB" style="width: 8em; text-align: right;" onblur="maj_march_dos_fob('.$reponse['id_march_dos'].', this.value);" name="fob" step="0.01" value="'.$reponse['fob'].'" required></td>
+			                        <td>
+			                        	<a href="#" class="btn-xs btn-success" onclick="reloadMarchandiseDossier('.$reponse['id_dos'].');"><span class="fa fa-check"></span></a>
+			                        </td>
+
+								</tr>';
+
+					}else{
+							
+						$table .='<tr>
+										<td>'.$compteur.'</td>
+										<td>
+											<a href="#" class="btn-xs btn-warning" onclick="modal_edit_marchandise_dossier('.$reponse['id_march_dos'].', '.$reponse['id_dos'].', '.$compteur.');"><span class="fa fa-edit"></span></a> 
+											
+											<a href="#" class="btn-xs btn-danger" onclick="supprimerMarchandiseDossier('.$reponse['id_march_dos'].', '.$reponse['id_dos'].', '.$compteur.');"><span class="fa fa-times"></span></a>
+										</td>
+										<td>'.$reponse['nom_march'].'</td>
+										<td>'.$reponse['num_av'].'</td>
+										<td>'.$reponse['ref_fact'].'</td>
+										<td>'.$reponse['code_tarif_march'].'</td>
+										<td>'.$reponse['position_av'].'</td>
+										<td>'.$reponse['origine'].'</td>
+										<td>'.$reponse['provenance'].'</td>
+										<td>'.$reponse['code_add'].'</td>
+										<td style="text-align: right;">'.number_format($reponse['nbr_bags'], 2, '.', ',').'</td>
+										<td style="text-align: right;">'.number_format($reponse['qte'], 2, '.', ',').'</td>
+										<td style="text-align: right;">'.number_format($reponse['poids'], 2, '.', ',').'</td>
+										<td style="text-align: right;">'.number_format($reponse['fob'], 2, '.', ',').'</td>
+										<td style="text-align: right;">'.number_format($coef, 1, '.', ',').'</td>
+										<td style="text-align: right;">'.number_format($reponse['fob']*$coef, 2, '.', ',').'</td>
+										<td style="text-align: right;">'.number_format($this-> getCode_tarif($reponse['code_tarif_march'])['DDI'], 2, '.', ',').'</td>
+										<td style="text-align: right;">'.number_format($reponse['fob']*$coef*($this-> getCode_tarif($reponse['code_tarif_march'])['DDI']/100)*$roe_feuil_calc, 0, '.', ',').'</td>
+										<td>
+											<a href="#" class="btn-xs btn-warning" onclick="modal_edit_marchandise_dossier('.$reponse['id_march_dos'].', '.$reponse['id_dos'].', '.$compteur.');"><span class="fa fa-edit"></span></a> 
+											
+											<a href="#" class="btn-xs btn-danger" onclick="supprimerMarchandiseDossier('.$reponse['id_march_dos'].', '.$reponse['id_dos'].', '.$compteur.');"><span class="fa fa-times"></span></a>
+										</td>
+									</tr>';
+					}
+
 				}$requete-> closeCursor();
 			}
 
@@ -38485,6 +38666,149 @@
 			$requete = $connexion-> prepare("DELETE FROM marchandise_dossier
 												WHERE id_march_dos = ?");
 			$requete-> execute(array($entree['id_march_dos']));
+			
+		}
+
+		public function maj_march_dos_fob($id_march_dos, $fob){
+			include('connexion.php');
+			$entree['id_march_dos'] = $id_march_dos;
+			$entree['fob'] = $fob;
+
+			$this-> MAJ_feuil_calc($this-> getDataMarchandiseDossier($id_march_dos)['id_dos']);
+			$requete = $connexion-> prepare("UPDATE marchandise_dossier
+												SET fob = ?
+												WHERE id_march_dos = ?");
+			$requete-> execute(array($entree['fob'], $entree['id_march_dos']));
+			
+		}
+
+		public function maj_march_dos_nom_march($id_march_dos, $nom_march){
+			include('connexion.php');
+			$entree['id_march_dos'] = $id_march_dos;
+			$entree['nom_march'] = $nom_march;
+
+			$this-> MAJ_feuil_calc($this-> getDataMarchandiseDossier($id_march_dos)['id_dos']);
+			$requete = $connexion-> prepare("UPDATE marchandise_dossier
+												SET nom_march = ?
+												WHERE id_march_dos = ?");
+			$requete-> execute(array($entree['nom_march'], $entree['id_march_dos']));
+			
+		}
+
+		public function maj_march_dos_num_av($id_march_dos, $num_av){
+			include('connexion.php');
+			$entree['id_march_dos'] = $id_march_dos;
+			$entree['num_av'] = $num_av;
+
+			$this-> MAJ_feuil_calc($this-> getDataMarchandiseDossier($id_march_dos)['id_dos']);
+			$requete = $connexion-> prepare("UPDATE marchandise_dossier
+												SET num_av = ?
+												WHERE id_march_dos = ?");
+			$requete-> execute(array($entree['num_av'], $entree['id_march_dos']));
+			
+		}
+
+		public function maj_march_dos_ref_fact($id_march_dos, $ref_fact){
+			include('connexion.php');
+			$entree['id_march_dos'] = $id_march_dos;
+			$entree['ref_fact'] = $ref_fact;
+
+			$this-> MAJ_feuil_calc($this-> getDataMarchandiseDossier($id_march_dos)['id_dos']);
+			$requete = $connexion-> prepare("UPDATE marchandise_dossier
+												SET ref_fact = ?
+												WHERE id_march_dos = ?");
+			$requete-> execute(array($entree['ref_fact'], $entree['id_march_dos']));
+			
+		}
+
+		public function maj_march_dos_position_av($id_march_dos, $position_av){
+			include('connexion.php');
+			$entree['id_march_dos'] = $id_march_dos;
+			$entree['position_av'] = $position_av;
+
+			$this-> MAJ_feuil_calc($this-> getDataMarchandiseDossier($id_march_dos)['id_dos']);
+			$requete = $connexion-> prepare("UPDATE marchandise_dossier
+												SET position_av = ?
+												WHERE id_march_dos = ?");
+			$requete-> execute(array($entree['position_av'], $entree['id_march_dos']));
+			
+		}
+
+		public function maj_march_dos_origine($id_march_dos, $origine){
+			include('connexion.php');
+			$entree['id_march_dos'] = $id_march_dos;
+			$entree['origine'] = $origine;
+
+			$this-> MAJ_feuil_calc($this-> getDataMarchandiseDossier($id_march_dos)['id_dos']);
+			$requete = $connexion-> prepare("UPDATE marchandise_dossier
+												SET origine = ?
+												WHERE id_march_dos = ?");
+			$requete-> execute(array($entree['origine'], $entree['id_march_dos']));
+			
+		}
+
+		public function maj_march_dos_provenance($id_march_dos, $provenance){
+			include('connexion.php');
+			$entree['id_march_dos'] = $id_march_dos;
+			$entree['provenance'] = $provenance;
+
+			$this-> MAJ_feuil_calc($this-> getDataMarchandiseDossier($id_march_dos)['id_dos']);
+			$requete = $connexion-> prepare("UPDATE marchandise_dossier
+												SET provenance = ?
+												WHERE id_march_dos = ?");
+			$requete-> execute(array($entree['provenance'], $entree['id_march_dos']));
+			
+		}
+
+		public function maj_march_dos_code_add($id_march_dos, $code_add){
+			include('connexion.php');
+			$entree['id_march_dos'] = $id_march_dos;
+			$entree['code_add'] = $code_add;
+
+			$this-> MAJ_feuil_calc($this-> getDataMarchandiseDossier($id_march_dos)['id_dos']);
+			$requete = $connexion-> prepare("UPDATE marchandise_dossier
+												SET code_add = ?
+												WHERE id_march_dos = ?");
+			$requete-> execute(array($entree['code_add'], $entree['id_march_dos']));
+			
+		}
+
+		public function maj_march_dos_nbr_bags($id_march_dos, $nbr_bags){
+			include('connexion.php');
+			$entree['id_march_dos'] = $id_march_dos;
+			$entree['nbr_bags'] = $nbr_bags;
+
+			$this-> MAJ_feuil_calc($this-> getDataMarchandiseDossier($id_march_dos)['id_dos']);
+			$requete = $connexion-> prepare("UPDATE marchandise_dossier
+												SET nbr_bags = ?
+												WHERE id_march_dos = ?");
+			$requete-> execute(array($entree['nbr_bags'], $entree['id_march_dos']));
+			
+		}
+
+		public function maj_march_dos_qte($id_march_dos, $qte){
+			include('connexion.php');
+			$entree['id_march_dos'] = $id_march_dos;
+			$entree['qte'] = $qte;
+
+			$this-> MAJ_feuil_calc($this-> getDataMarchandiseDossier($id_march_dos)['id_dos']);
+			$requete = $connexion-> prepare("UPDATE marchandise_dossier
+												SET qte = ?
+												WHERE id_march_dos = ?");
+			$requete-> execute(array($entree['qte'], $entree['id_march_dos']));
+			
+		}
+
+		public function maj_march_dos_poids($id_march_dos, $poids){
+			include('connexion.php');
+			$entree['id_march_dos'] = $id_march_dos;
+			$entree['poids'] = $poids;
+
+			$this-> MAJ_feuil_calc($this-> getDataMarchandiseDossier($id_march_dos)['id_dos']);
+			$requete = $connexion-> prepare("UPDATE marchandise_dossier
+												SET poids = ?
+												WHERE id_march_dos = ?");
+			$requete-> execute(array($entree['poids'], $entree['id_march_dos']));
 			
 		}
 
