@@ -338,7 +338,7 @@
 <script type="text/javascript">
 
   function reloadMarchandiseDossier(id_dos){
-
+    $('#spinner-div').show();
     $.ajax({
       type: 'post',
       url: 'ajax.php',
@@ -613,7 +613,7 @@
   }
 
   function modal_edit_marchandise_dossier(id_march_dos, id_dos, ligne){
-
+    $('#spinner-div').show();
     $.ajax({
       type: 'post',
       url: 'ajax.php',
