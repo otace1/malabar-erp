@@ -175,6 +175,7 @@
               <thead>
                   <tr>
                       <th>#</th>
+                      <th></th>
                       <th>Description sur facture</th>
                       <th>N.BIVAC</th>
                       <th>N.Facture</th>
@@ -211,6 +212,7 @@
                     <input type="hidden" name="id_dos" id="id_dos_worsheet">
                     <input type="hidden" name="operation" value="creerWorksheet">
                     <tr>
+                        <td></td>
                         <td></td>
                         <td><textarea class="form-control form-control-sm" name="nom_march" id="nom_march" placeholder="Description sur la facture" required></textarea></td>
                         <td><input type="text" placeholder="N° BIVAC" name="num_av" id="ref_crf" required></td>
@@ -292,7 +294,371 @@
   <!-- /.modal-dialog -->
 </div>
 
+<div class="modal fade " id="modal_edit_marchandise_dossier">
+  <div class="modal-dialog modal-lg">
+    <!-- <form method="POST" id="form_" action="" data-parsley-validate enctype="multipart/form-data"> -->
+      <input type="hidden" name="operation" value="edit_marchandise_dossier">
+      <input type="hidden" id="id_march_dos_edit" name="id_march_dos">
+      <input type="hidden" id="id_dos_edit" name="id_dos">
+    <div class="modal-content">
+      
+      <div class="modal-body">
+    
+        <div class="card-body table-responsive p-0 small">
+          <table id="code_tarifaire_ajax" width="100%" class=" table table-bordered table-hover  table-sm">
+            <thead>
+              <tr>
+                <!-- <th style="" width="5%">#</th> -->
+                <th style="">Code</th>
+                <th style="">Description</th>
+                <th style="">DDI</th>
+                <th style="">TVA</th>
+                <th style="">DCI</th>
+                <th style="">DCL</th>
+                <th style="">TPI</th>
+              </tr>
+            </thead>
+            <tbody>
+             
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+      <div class="modal-footer justify-content-between">
+        <button type="button" class="btn-xs btn-danger" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+    <!-- </form> -->
+    <!-- /.modal-content -->
+  </div>
+  <!-- /.modal-dialog -->
+</div>
+
 <script type="text/javascript">
+
+  function reloadMarchandiseDossier(id_dos){
+
+    $.ajax({
+      type: 'post',
+      url: 'ajax.php',
+      data: {operation: 'reloadMarchandiseDossier', id_dos: id_dos},
+      dataType: 'json',
+      success:function(data){
+        if (data.logout) {
+          alert(data.logout);
+          window.location="../deconnexion.php";
+        }else{
+          $('#marchandiseDossier').html(data.marchandiseDossier);
+        }
+      },
+      complete: function () {
+          $('#spinner-div').hide();//Request is complete so hide spinner
+      }
+    });
+
+  }
+
+  function maj_march_dos_nom_march(id_march_dos, nom_march){
+
+    $.ajax({
+      type: 'post',
+      url: 'ajax.php',
+      data: {operation: 'maj_march_dos_nom_march', id_march_dos: id_march_dos, nom_march: nom_march},
+      dataType: 'json',
+      success:function(data){
+        if (data.logout) {
+          alert(data.logout);
+          window.location="../deconnexion.php";
+        }else{
+          // $('#marchandiseDossier').html(data.marchandiseDossier);
+          // $('#modal_edit_marchandise_dossier').modal('show');
+        }
+      },
+      complete: function () {
+          $('#spinner-div').hide();//Request is complete so hide spinner
+      }
+    });
+
+  }
+
+  function maj_march_dos_num_av(id_march_dos, num_av){
+
+    $.ajax({
+      type: 'post',
+      url: 'ajax.php',
+      data: {operation: 'maj_march_dos_num_av', id_march_dos: id_march_dos, num_av: num_av},
+      dataType: 'json',
+      success:function(data){
+        if (data.logout) {
+          alert(data.logout);
+          window.location="../deconnexion.php";
+        }else{
+          // $('#marchandiseDossier').html(data.marchandiseDossier);
+          // $('#modal_edit_marchandise_dossier').modal('show');
+        }
+      },
+      complete: function () {
+          $('#spinner-div').hide();//Request is complete so hide spinner
+      }
+    });
+
+  }
+
+  function maj_march_dos_ref_fact(id_march_dos, ref_fact){
+
+    $.ajax({
+      type: 'post',
+      url: 'ajax.php',
+      data: {operation: 'maj_march_dos_ref_fact', id_march_dos: id_march_dos, ref_fact: ref_fact},
+      dataType: 'json',
+      success:function(data){
+        if (data.logout) {
+          alert(data.logout);
+          window.location="../deconnexion.php";
+        }else{
+          // $('#marchandiseDossier').html(data.marchandiseDossier);
+          // $('#modal_edit_marchandise_dossier').modal('show');
+        }
+      },
+      complete: function () {
+          $('#spinner-div').hide();//Request is complete so hide spinner
+      }
+    });
+
+  }
+
+  function maj_march_dos_position_av(id_march_dos, position_av){
+
+    $.ajax({
+      type: 'post',
+      url: 'ajax.php',
+      data: {operation: 'maj_march_dos_position_av', id_march_dos: id_march_dos, position_av: position_av},
+      dataType: 'json',
+      success:function(data){
+        if (data.logout) {
+          alert(data.logout);
+          window.location="../deconnexion.php";
+        }else{
+          // $('#marchandiseDossier').html(data.marchandiseDossier);
+          // $('#modal_edit_marchandise_dossier').modal('show');
+        }
+      },
+      complete: function () {
+          $('#spinner-div').hide();//Request is complete so hide spinner
+      }
+    });
+
+  }
+
+  function maj_march_dos_origine(id_march_dos, origine){
+
+    $.ajax({
+      type: 'post',
+      url: 'ajax.php',
+      data: {operation: 'maj_march_dos_origine', id_march_dos: id_march_dos, origine: origine},
+      dataType: 'json',
+      success:function(data){
+        if (data.logout) {
+          alert(data.logout);
+          window.location="../deconnexion.php";
+        }else{
+          // $('#marchandiseDossier').html(data.marchandiseDossier);
+          // $('#modal_edit_marchandise_dossier').modal('show');
+        }
+      },
+      complete: function () {
+          $('#spinner-div').hide();//Request is complete so hide spinner
+      }
+    });
+
+  }
+
+  function maj_march_dos_provenance(id_march_dos, provenance){
+
+    $.ajax({
+      type: 'post',
+      url: 'ajax.php',
+      data: {operation: 'maj_march_dos_provenance', id_march_dos: id_march_dos, provenance: provenance},
+      dataType: 'json',
+      success:function(data){
+        if (data.logout) {
+          alert(data.logout);
+          window.location="../deconnexion.php";
+        }else{
+          // $('#marchandiseDossier').html(data.marchandiseDossier);
+          // $('#modal_edit_marchandise_dossier').modal('show');
+        }
+      },
+      complete: function () {
+          $('#spinner-div').hide();//Request is complete so hide spinner
+      }
+    });
+
+  }
+
+  function maj_march_dos_code_add(id_march_dos, code_add){
+
+    $.ajax({
+      type: 'post',
+      url: 'ajax.php',
+      data: {operation: 'maj_march_dos_code_add', id_march_dos: id_march_dos, code_add: code_add},
+      dataType: 'json',
+      success:function(data){
+        if (data.logout) {
+          alert(data.logout);
+          window.location="../deconnexion.php";
+        }else{
+          // $('#marchandiseDossier').html(data.marchandiseDossier);
+          // $('#modal_edit_marchandise_dossier').modal('show');
+        }
+      },
+      complete: function () {
+          $('#spinner-div').hide();//Request is complete so hide spinner
+      }
+    });
+
+  }
+
+  function maj_march_dos_nbr_bags(id_march_dos, nbr_bags){
+
+    $.ajax({
+      type: 'post',
+      url: 'ajax.php',
+      data: {operation: 'maj_march_dos_nbr_bags', id_march_dos: id_march_dos, nbr_bags: nbr_bags},
+      dataType: 'json',
+      success:function(data){
+        if (data.logout) {
+          alert(data.logout);
+          window.location="../deconnexion.php";
+        }else{
+          // $('#marchandiseDossier').html(data.marchandiseDossier);
+          // $('#modal_edit_marchandise_dossier').modal('show');
+        }
+      },
+      complete: function () {
+          $('#spinner-div').hide();//Request is complete so hide spinner
+      }
+    });
+
+  }
+
+  function maj_march_dos_qte(id_march_dos, qte){
+
+    $.ajax({
+      type: 'post',
+      url: 'ajax.php',
+      data: {operation: 'maj_march_dos_qte', id_march_dos: id_march_dos, qte: qte},
+      dataType: 'json',
+      success:function(data){
+        if (data.logout) {
+          alert(data.logout);
+          window.location="../deconnexion.php";
+        }else{
+          // $('#marchandiseDossier').html(data.marchandiseDossier);
+          // $('#modal_edit_marchandise_dossier').modal('show');
+        }
+      },
+      complete: function () {
+          $('#spinner-div').hide();//Request is complete so hide spinner
+      }
+    });
+
+  }
+
+  function maj_march_dos_poids(id_march_dos, poids){
+
+    $.ajax({
+      type: 'post',
+      url: 'ajax.php',
+      data: {operation: 'maj_march_dos_poids', id_march_dos: id_march_dos, poids: poids},
+      dataType: 'json',
+      success:function(data){
+        if (data.logout) {
+          alert(data.logout);
+          window.location="../deconnexion.php";
+        }else{
+          // $('#marchandiseDossier').html(data.marchandiseDossier);
+          // $('#modal_edit_marchandise_dossier').modal('show');
+        }
+      },
+      complete: function () {
+          $('#spinner-div').hide();//Request is complete so hide spinner
+      }
+    });
+
+  }
+
+  function maj_march_dos_fob(id_march_dos, fob){
+
+    $.ajax({
+      type: 'post',
+      url: 'ajax.php',
+      data: {operation: 'maj_march_dos_fob', id_march_dos: id_march_dos, fob: fob},
+      dataType: 'json',
+      success:function(data){
+        if (data.logout) {
+          alert(data.logout);
+          window.location="../deconnexion.php";
+        }else{
+          // $('#marchandiseDossier').html(data.marchandiseDossier);
+          // $('#modal_edit_marchandise_dossier').modal('show');
+        }
+      },
+      complete: function () {
+          $('#spinner-div').hide();//Request is complete so hide spinner
+      }
+    });
+
+  }
+
+  function modal_edit_marchandise_dossier(id_march_dos, id_dos, ligne){
+
+    $.ajax({
+      type: 'post',
+      url: 'ajax.php',
+      data: {operation: 'modal_edit_marchandise_dossier', id_dos: id_dos, id_march_dos: id_march_dos, ligne: ligne},
+      dataType: 'json',
+      success:function(data){
+        if (data.logout) {
+          alert(data.logout);
+          window.location="../deconnexion.php";
+        }else{
+          $('#marchandiseDossier').html(data.marchandiseDossier);
+          // $('#modal_edit_marchandise_dossier').modal('show');
+        }
+      },
+      complete: function () {
+          $('#spinner-div').hide();//Request is complete so hide spinner
+      }
+    });
+
+  }
+
+  // function modal_edit_marchandise_dossier(id_march_dos, id_dos){
+
+  //   $.ajax({
+  //     type: 'post',
+  //     url: 'ajax.php',
+  //     data: {operation: 'modal_edit_marchandise_dossier', id_dos: id_dos, id_march_dos: id_march_dos},
+  //     dataType: 'json',
+  //     success:function(data){
+  //       if (data.logout) {
+  //         alert(data.logout);
+  //         window.location="../deconnexion.php";
+  //       }else{
+  //         $('#id_march_dos_edit').val(id_march_dos);
+  //         $('#id_dos_edit').val(id_dos);
+  //         $('#modal_edit_marchandise_dossier').modal('show');
+  //       }
+  //     },
+  //     complete: function () {
+  //         $('#spinner-div').hide();//Request is complete so hide spinner
+  //     }
+  //   });
+
+  // }
+
   function grouper_marchandise(id_dos){
 
     if(confirm('This operation is irreversible, do really you want to submit ?')) {
@@ -530,7 +896,7 @@ table.on('click', 'tbody tr', function () {
 
   function supprimerMarchandiseDossier(id_march_dos, id_dos){
 
-    if(confirm('Do really you want to submit ?')) {
+    if(confirm('Do really you want to delete this item ?')) {
 
       $.ajax({
         type: 'post',

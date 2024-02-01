@@ -2862,6 +2862,106 @@
 
   		echo json_encode($reponse);
 
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='modal_edit_marchandise_dossier'){
+
+  		$reponse['marchandiseDossier'] = $maClasse-> getMarchandiseDossierEdit($_POST['id_dos'], $_POST['ligne']);
+
+  		echo json_encode($reponse);
+
+	}//num_av
+	elseif(isset($_POST['operation']) && $_POST['operation']=='maj_march_dos_num_av'){
+
+  		$maClasse-> maj_march_dos_num_av($_POST['id_march_dos'], $_POST['num_av']);
+  		$response['message'] = 'Done !';
+
+  		echo json_encode($response);
+
+	}//ref_fact
+	elseif(isset($_POST['operation']) && $_POST['operation']=='maj_march_dos_ref_fact'){
+
+  		$maClasse-> maj_march_dos_ref_fact($_POST['id_march_dos'], $_POST['ref_fact']);
+  		$response['message'] = 'Done !';
+
+  		echo json_encode($response);
+
+	}//position_av
+	elseif(isset($_POST['operation']) && $_POST['operation']=='maj_march_dos_position_av'){
+
+  		$maClasse-> maj_march_dos_position_av($_POST['id_march_dos'], $_POST['position_av']);
+  		$response['message'] = 'Done !';
+
+  		echo json_encode($response);
+
+	}//origine
+	elseif(isset($_POST['operation']) && $_POST['operation']=='maj_march_dos_origine'){
+
+  		$maClasse-> maj_march_dos_origine($_POST['id_march_dos'], $_POST['origine']);
+  		$response['message'] = 'Done !';
+
+  		echo json_encode($response);
+
+	}//provenance
+	elseif(isset($_POST['operation']) && $_POST['operation']=='maj_march_dos_provenance'){
+
+  		$maClasse-> maj_march_dos_provenance($_POST['id_march_dos'], $_POST['provenance']);
+  		$response['message'] = 'Done !';
+
+  		echo json_encode($response);
+
+	}//code_add
+	elseif(isset($_POST['operation']) && $_POST['operation']=='maj_march_dos_code_add'){
+
+  		$maClasse-> maj_march_dos_code_add($_POST['id_march_dos'], $_POST['code_add']);
+  		$response['message'] = 'Done !';
+
+  		echo json_encode($response);
+
+	}//nbr_bags
+	elseif(isset($_POST['operation']) && $_POST['operation']=='maj_march_dos_nbr_bags'){
+
+  		$maClasse-> maj_march_dos_nbr_bags($_POST['id_march_dos'], $_POST['nbr_bags']);
+  		$response['message'] = 'Done !';
+
+  		echo json_encode($response);
+
+	}//qte
+	elseif(isset($_POST['operation']) && $_POST['operation']=='maj_march_dos_qte'){
+
+  		$maClasse-> maj_march_dos_qte($_POST['id_march_dos'], $_POST['qte']);
+  		$response['message'] = 'Done !';
+
+  		echo json_encode($response);
+
+	}//poids
+	elseif(isset($_POST['operation']) && $_POST['operation']=='maj_march_dos_poids'){
+
+  		$maClasse-> maj_march_dos_poids($_POST['id_march_dos'], $_POST['poids']);
+  		$response['message'] = 'Done !';
+
+  		echo json_encode($response);
+
+	}//fob
+	elseif(isset($_POST['operation']) && $_POST['operation']=='maj_march_dos_fob'){
+
+  		$maClasse-> maj_march_dos_fob($_POST['id_march_dos'], $_POST['fob']);
+  		$response['message'] = 'Done !';
+
+  		echo json_encode($response);
+
+	}//nom_march
+	elseif(isset($_POST['operation']) && $_POST['operation']=='maj_march_dos_nom_march'){
+
+  		$maClasse-> maj_march_dos_nom_march($_POST['id_march_dos'], $_POST['nom_march']);
+  		$response['message'] = 'Done !';
+
+  		echo json_encode($response);
+
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='reloadMarchandiseDossier'){ 
+
+		$response['marchandiseDossier'] = $maClasse-> getMarchandiseDossier($_POST['id_dos']);
+
+		echo json_encode($response);
+
 	}
 
 
