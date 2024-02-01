@@ -54,7 +54,7 @@
                     </button>
                     <div class="dropdown-menu" role="menu">
                       <a class="dropdown-item" href="#" onclick="window.open('generateurWorksheet.php?id_dos=<?php echo $_GET['id_dos'];?>&ref_dos=<?php echo $maClasse-> getDossier($_GET['id_dos'])['ref_dos'];?>&groupe=','Feuille de calcul <?php echo $maClasse-> getDossier($_GET['id_dos'])['ref_dos'];?>', 'width=1000,height=800');"><i class="fa fa-list"></i> Feuille Brute</a>
-                      <a class="dropdown-item" href="#" onclick="window.open('generateurWorksheet.php?id_dos=<?php echo $_GET['id_dos'];?>&ref_dos=<?php echo $maClasse-> getDossier($_GET['id_dos'])['ref_dos'];?>&groupe=tarifaire','Feuille de calcul <?php echo $maClasse-> getDossier($_GET['id_dos'])['ref_dos'];?>', 'width=1000,height=800');"><i class="fa fa-object-group"></i> Gouper Par Position Parifaire</a>
+                      <a class="dropdown-item" href="#" onclick="window.open('generateurWorksheet.php?id_dos=<?php echo $_GET['id_dos'];?>&ref_dos=<?php echo $maClasse-> getDossier($_GET['id_dos'])['ref_dos'];?>&groupe=tarifaire','Feuille de calcul <?php echo $maClasse-> getDossier($_GET['id_dos'])['ref_dos'];?>', 'width=1000,height=800');"><i class="fa fa-object-group"></i> Gouper Par Position Tarifaire</a>
                       <a class="dropdown-item" href="#" onclick="window.open('generateurWorksheet.php?id_dos=<?php echo $_GET['id_dos'];?>&ref_dos=<?php echo $maClasse-> getDossier($_GET['id_dos'])['ref_dos'];?>&groupe=code Additionnel','Feuille de calcul <?php echo $maClasse-> getDossier($_GET['id_dos'])['ref_dos'];?>', 'width=1000,height=800');"><i class="fa fa-object-group"></i> Gouper Par Code Additionnel</a>
                     </div>
                   </div>
