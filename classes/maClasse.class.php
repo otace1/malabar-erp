@@ -1888,6 +1888,31 @@
 			
 		}
 
+		public function updateNoteDebit($ref_note, $label_other_fee, $unite, $parametre, $base){
+			include('connexion.php');
+
+			$entree['label_other_fee'] = $label_other_fee;
+			$entree['ref_note'] = $ref_note;
+			$entree['unite'] = $unite;
+			$entree['parametre'] = $parametre;
+			$entree['base'] = $base;
+
+			// echo '<br><br>label_other_fee = '.$label_other_fee;
+			// echo '<br>ref_note = '.$ref_note;
+			// echo '<br>parametre = '.$parametre;
+			// echo '<br>unite = '.$unite;
+			// echo '<br>base = '.$base;
+			// echo '<br>------------------<br>';
+
+			$requete = $connexion-> prepare("UPDATE note_debit
+												SET label_other_fee = ?, unite = ?, parametre = ?, base = ?
+												WHERE ref_note = ?");
+			$requete-> execute(array($entree['label_other_fee'], $entree['unite'], 
+								$entree['parametre'], $entree['base'], $entree['ref_note']));
+
+			
+		}
+
 		public function creerDetailFactureDossier2($ref_fact, $id_dos, $id_deb, $montant, $tva, $usd='1', $detail=NULL, $unite=NULL, $pourcentage_qte, $montant_tva){
 			include('connexion.php');
 
@@ -5897,7 +5922,21 @@
 			include('connexion.php');
 			$entree['ref_note'] = $ref_note;
 
-			$requete = $connexion-> prepare("SELECT *, DATE_FORMAT(date_create, '%d-%b-%y') AS date_note
+			$requete = $connexion-> prepare("SELECT *, DATE_FORMAT(date_create, '%d-%b-%y') AS date_note,
+													IF(label_other_fee IS NOT NULL,
+														IF(parametre='qte',
+															unite*base,
+															base*(unite/100)
+														),
+														NULL
+													) AS other_fee,
+													IF(label_other_fee IS NOT NULL,
+														IF(parametre='qte',
+															unite,
+															CONCAT(unite, '%')
+														),
+														NULL
+													) AS label_unite
 												FROM note_debit
 												WHERE ref_note = ?");
 			$requete-> execute(array($entree['ref_note']));
@@ -10009,6 +10048,7 @@
 															CONCAT(' / ',dos.trailer_2),
 															'')
 														)) AS truck,
+													dos.container AS container,
 													-- UPPER(CONCAT(
 													-- 	IF(dos.horse IS NOT NULL,
 													-- 		dos.horse,
@@ -10037,6 +10077,7 @@
 						<tr>
 							<td style="text-align: left; border-left: 1px solid black; border-right: 0.5px solid black; font-size: 6px;" colspan="2" width="50%">'.$compteur.') '
 								.$reponse['ref_dos'].'<br>&nbsp;&nbsp;&nbsp;Truck Ref.: <b>'.$reponse['truck'].'</b><br>&nbsp;&nbsp;&nbsp;Manifest Ref.: <b>'.$reponse['road_manif'].
+							'</b><br>&nbsp;&nbsp;&nbsp;Container: <b>'.$reponse['container'].
 							'</b></td>
 							<td style="text-align: center; border-right: 0.5px solid black; font-size: 6.5px;" width="10%">1</td>
 							<td style="text-align: center; border-right: 0.5px solid black; font-size: 6.5px;" width="15%">'
@@ -10052,6 +10093,27 @@
 					';
 
 			}$requete-> closeCursor();
+
+			if(!empty($this-> getNote($entree['ref_note'])['label_other_fee'])){
+				$montant_ht += $this-> getNote($entree['ref_note'])['other_fee'];
+				$montant_ttc += $this-> getNote($entree['ref_note'])['other_fee'];
+				$tbl .= '
+						<tr>
+							<td style="text-align: left; border-left: 1px solid black; border-right: 0.5px solid black; font-size: 6px;" colspan="2" width="50%">'.$this-> getNote($entree['ref_note'])['label_other_fee'].'</td>
+							<td style="text-align: center; border-right: 0.5px solid black; font-size: 6.5px;" width="10%">'.$this-> getNote($entree['ref_note'])['label_unite'].'</td>
+							<td style="text-align: center; border-right: 0.5px solid black; font-size: 6.5px;" width="15%">'
+								.number_format($this-> getNote($entree['ref_note'])['base'], 2, ',', '.').
+							'&nbsp;&nbsp;</td>
+							<td style="text-align: center; border-right: 0.5px solid black; font-size: 6.5px;" width="10%">'
+								.number_format(0, 2, ',', '.').
+							'&nbsp;&nbsp;</td>
+							<td style="text-align: right; border-right: 1px solid black; font-size: 6.5px;" width="15%">'
+								.number_format($this-> getNote($entree['ref_note'])['other_fee'], 2, ',', '.').
+							'&nbsp;&nbsp;</td>
+						</tr>
+					';
+			}
+
 			$tbl .='
 					<tr>
 						<td style="text-align: left; border-left: 1px solid black; border-right: 0.5px solid black; border-bottom: 0.5px solid black; font-size: 8px;" width="50%"></td>
@@ -12284,10 +12346,50 @@
 
 			}$requete-> closeCursor();
 
+			$tableau .= '<tr>
+							<td colspan="5"></td>
+						</tr>
+						<tr>
+							<td colspan="2">Other Fee</td>
+							<td>
+								<select name="label_other_fee" id="label_other_fee" onchange="getOtherFee(this.value, parametre.value, unite.value, base.value)">
+									<option></option>
+									'.$this-> selectionnerOtherFeeNoteDebit().'
+								</select>
+							</td>
+							<td style="text-align: center;">
+								<input type="number" style="width: 5em;" step="0.01" placeholder="Unite" name="unite" id="unite" onblur="getOtherFee(label_other_fee.value, parametre.value, this.value, base.value)">
+								<select name="parametre" id="parametre" onchange="getOtherFee(label_other_fee.value, this.value, unite.value, base.value)">
+									<option></option>
+									<option value="qte">Qte</option>
+									<option value="pourc">%</option>
+								</select>
+							</td>
+							<td style="text-align: center;">
+								<input type="number" style="width: 8em;" step="0.01" placeholder="Base" name="base" id="base" onblur="getOtherFee(label_other_fee.value, parametre.value, unite.value, this.value)">
+							</td>
+							<td style="text-align: center;">
+								<span id="other_fee" class="text-sm bg bg-primary"></span>
+							</td>
+						</tr>';
 			$tableau .='<input type="hidden" name="nbre" value="'.$compteur.'">';
 
 			return $tableau;
 
+		}
+
+		public function selectionnerOtherFeeNoteDebit(){
+			include('connexion.php');
+			// $entree['id_role'] = $id_role;
+			$select = '';
+			$requete = $connexion-> query("SELECT *
+											FROM other_fee");
+			// $requete-> execute(array($entree['id_role']));
+
+			while($reponse = $requete-> fetch()){
+				$select .= '<option value="'.$reponse['nom_of'].'">'.$reponse['nom_of'].'</option>';
+			}$requete-> closeCursor();
+			return $select;
 		}
 
 		public function afficherDossierNewNoteDebitOther($id_cli, $id_mod_lic, $id_dep){
@@ -12579,6 +12681,39 @@
     						</tr>';
 			}$requete-> closeCursor();
 
+			$tableau .= '<tr>
+							<td colspan="5"></td>
+						</tr>
+						<tr>
+							<td colspan="2">Other Fee</td>
+							<td>Unite</td>
+							<td>Parametre</td>
+							<td>Base</td>
+						</tr>
+						<tr>
+							<td colspan="2">
+								<select name="label_other_fee" id="label_other_fee" onchange="getOtherFee(this.value, parametre.value, unite.value, base.value);updateNoteDebit(this.value, parametre.value, unite.value, base.value);">
+									<option value="'.$this-> getNote($entree['ref_note'])['label_other_fee'].'">'.$this-> getNote($entree['ref_note'])['label_other_fee'].'</option>
+									'.$this-> selectionnerOtherFeeNoteDebit().'
+								</select>
+							</td>
+							<td style="text-align: center;">
+								<input type="number" style="width: 5em;" step="0.01" placeholder="Unite" name="unite" id="unite" onblur="getOtherFee(label_other_fee.value, parametre.value, this.value, base.value);updateNoteDebit(label_other_fee.value, parametre.value, this.value, base.value);" value="'.$this-> getNote($entree['ref_note'])['unite'].'">
+							</td>
+							<td style="text-align: center;">
+								<select name="parametre" id="parametre" onchange="getOtherFee(label_other_fee.value, this.value, unite.value, base.value);updateNoteDebit(label_other_fee.value, this.value, unite.value, base.value);">
+									<option value="'.$this-> getNote($entree['ref_note'])['parametre'].'">'.$this-> getNote($entree['ref_note'])['parametre'].'</option>
+									<option value="qte">Qte</option>
+									<option value="pourc">%</option>
+								</select>
+							</td>
+							<td style="text-align: center;">
+								<input type="number" style="width: 8em;" step="0.01" placeholder="Base" name="base" id="base" onblur="getOtherFee(label_other_fee.value, parametre.value, unite.value, this.value);updateNoteDebit(label_other_fee.value, parametre.value, unite.value, this.value);" value="'.$this-> getNote($entree['ref_note'])['base'].'">
+							</td>
+							<td style="text-align: center;">
+								<span id="other_fee" class="text-sm bg bg-primary"></span>
+							</td>
+						</tr>';
 
 			return $tableau;
 
@@ -42281,7 +42416,17 @@
 			$requete = $connexion-> prepare("SELECT 
 												det.ref_note AS ref_note,
 												cl.nom_cli AS nom_cli,
-												SUM(det.montant) AS montant,
+												(
+													SUM(det.montant)
+													+
+													IF(label_other_fee IS NOT NULL,
+														IF(parametre='qte',
+															unite*base,
+															base*(unite/100)
+														),
+														0
+													)
+												) AS montant,
 												DATE(note_debit.date_create) AS date_create,
 												util.nom_util AS nom_util,
 												dep.nom_dep AS nom_dep
@@ -53112,10 +53257,20 @@
 									                <button class=\"btn btn-xs bg-danger square-btn-adjust\" onclick=\"supprimerFacture(\'',note.ref_note,'\');\" title=\"Delete\">
 									                    <i class=\"fas fa-times\"></i> 
 									                </button>') AS action,
-													SUM(IF(det.tva='1',
-														det.montant*1.16,
-														det.montant
-													)) AS montant_ttc
+													(
+														SUM(IF(det.tva='1',
+															det.montant*1.16,
+															det.montant
+														))
+														+
+														IF(label_other_fee IS NOT NULL,
+															IF(parametre='qte',
+																unite*base,
+																base*(unite/100)
+															),
+															0
+														)
+													) AS montant_ttc
  												FROM note_debit note, modele_note_debit mnd, affectation_modele_note_debit_client aff, depense dep, depense_dossier depdos, detail_note_debit det
 												WHERE note.id_mod_lic = ?
 													AND note.id_cli = ?
@@ -53138,10 +53293,20 @@
 									                <button class=\"btn btn-xs bg-warning square-btn-adjust\" onclick=\"modal_edit_note_debit(\'',note.ref_note,'\');\" title=\"Edit\">
 									                    <i class=\"fas fa-edit\"></i> 
 									                </button>') AS action,
-													SUM(IF(det.tva='1',
-														det.montant*1.16,
-														det.montant
-													)) AS montant_ttc
+													(
+														SUM(IF(det.tva='1',
+															det.montant*1.16,
+															det.montant
+														))
+														+
+														IF(label_other_fee IS NOT NULL,
+															IF(parametre='qte',
+																unite*base,
+																base*(unite/100)
+															),
+															0
+														)
+													) AS montant_ttc
  												FROM note_debit note, modele_note_debit mnd, affectation_modele_note_debit_client aff, depense dep, depense_dossier depdos, detail_note_debit det
 												WHERE note.id_mod_lic = ?
 													AND note.id_cli = ?
