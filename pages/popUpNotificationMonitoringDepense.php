@@ -50,7 +50,7 @@
               <div class="card-header">
                 <h5><i class="fa fa-folder-open nav-icon"></i> 
                   <?php 
-                    echo $maClasse-> getDepense($_GET['id_dep'])['nom_dep'].'Reporting - Debit Notes Summary ';
+                    echo $maClasse-> getDepense($_GET['id_dep'])['nom_dep'].' Reporting - Debit Notes Summary ';
                   ?>
                 </h5>
 

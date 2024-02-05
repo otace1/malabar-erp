@@ -2490,6 +2490,12 @@
 			
 		}
 
+		if (!empty($_POST['label_other_fee']) && !empty($_POST['unite']) && !empty($_POST['parametre']) && !empty($_POST['base'])) {
+			
+			$maClasse-> updateNoteDebit($_POST['ref_note'], $_POST['label_other_fee'], $_POST['unite'], $_POST['parametre'], $_POST['base']);
+
+		}
+
   		$response = array('message' => 'Invoice Created');
 
   		echo json_encode($response);
@@ -2959,6 +2965,18 @@
 	}elseif(isset($_POST['operation']) && $_POST['operation']=='reloadMarchandiseDossier'){ 
 
 		$response['marchandiseDossier'] = $maClasse-> getMarchandiseDossier($_POST['id_dos']);
+
+		echo json_encode($response);
+
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='updateNoteDebit'){ 
+
+		if (!empty($_POST['label_other_fee']) && !empty($_POST['unite']) && !empty($_POST['parametre']) && !empty($_POST['base'])) {
+			
+			$maClasse-> updateNoteDebit($_POST['ref_note'], $_POST['label_other_fee'], $_POST['unite'], $_POST['parametre'], $_POST['base']);
+
+		}
+
+		$response['message'] = 'Done!';
 
 		echo json_encode($response);
 

@@ -51,7 +51,7 @@
           <input type="hidden" name="operation" value="creer_note_debit">
           <input type="hidden" name="id_model_nd" value="1">
         <div class="row">
-          <div class="col-12">
+          <div class="col-4">
             <div class="card">   
               <!-- /.card-header -->
               <div class="card-body">
@@ -60,51 +60,26 @@
                 ?>
                 <input type="hidden" name="id_cli" value="<?php echo $_GET['id_cli'];?>">
                 <input type="hidden" name="id_mod_lic" value="<?php echo $_GET['id_mod_lic'];?>">
-                <div class="row">
-                  <div class="col-md-3">
-                  
-                      <div class="form-group">
-                        <label for="inputEmail3" class="col-form-label">Invoice Ref.: </label>
-                        <input class="form-control form-control-sm bg bg-dark" type="text" name="ref_note" id="ref_note" value="<?php echo $maClasse-> buildRefFactureGlobale($_GET['id_cli']);?>" required>
-                      </div>
-
-                  </div>
-
-                  <div class="col-md-3">
-                  
-                      <div class="form-group">
-                        <label for="inputEmail3" class="col-form-label">Information: </label>
-                        <input class="form-control form-control-sm bg bg-dark" type="text" name="libelle" id="libelle" value="" required>
-                      </div>
-
-                  </div>
-
-                  <div class="col-md-3">
-                  
-                      <div class="form-group">
-                        <label for="inputEmail3" class="col-form-label">PO Ref.: </label>
-                        <span id="selectPONewNoteDebitKamoa"></span>
-                      </div>
-
-                  </div>
-
-                  <div class="col-md-3">
-                  
-                      <div class="form-group">
-                        <label for="inputEmail3" class="col-form-label">Client: </label>
-                        <input class="form-control form-control-sm bg bg-dark" disabled value="<?php echo $maClasse-> getClient($_GET['id_cli'])['nom_cli'];?>" required>
-                      </div>
-
-                  </div>
-
+                
+                <div class="form-group">
+                  <label for="inputEmail3" class="col-form-label">Invoice Ref.: </label>
+                  <input class="form-control form-control-sm bg bg-dark" type="text" name="ref_note" id="ref_note" value="<?php echo $maClasse-> buildRefFactureGlobale($_GET['id_cli']);?>" required>
                 </div>
-
+                <div class="form-group">
+                  <label for="inputEmail3" class="col-form-label">PO Ref.: </label>
+                  <span id="selectPONewNoteDebitKamoa"></span>
+                </div>
+                <div class="form-group">
+                  <label for="inputEmail3" class="col-form-label">Information: </label>
+                  <textarea class="form-control form-control-sm bg bg-dark" type="text" name="libelle" id="libelle" required></textarea>
+                </div>
+                <div class="form-group">
+                  <label for="inputEmail3" class="col-form-label">Client: </label>
+                  <input class="form-control form-control-sm bg bg-dark" disabled value="<?php echo $maClasse-> getClient($_GET['id_cli'])['nom_cli'];?>" required>
+                </div>
               </div>
-              <!-- /.card-body -->
             </div>
-            <!-- /.card -->
           </div>
-
           <div class="col-8">
             <div class="card">   
               <!-- /.card-header -->
@@ -184,6 +159,38 @@
 
 
 <script type="text/javascript">
+
+function getOtherFee(label_other_fee, parametre, unite, base){
+
+  if ($('#label_other_fee').val()!='' && $('#parametre').val()!='' &&  $('#base').val()!=''  &&  $('#unite').val()!='' ) {
+
+    if (parseFloat($('#unite').val()) > 0 ) {
+      unite = parseFloat($('#unite').val());
+    }else{
+      unite=0;
+    }
+
+    if (parseFloat($('#base').val()) > 0 ) {
+      base = parseFloat($('#base').val());
+    }else{
+      base=0;
+    }
+    
+    if(parametre=='qte'){
+
+      other_fee = unite*base;
+
+    }else if(parametre=='pourc'){
+
+      other_fee = base*(unite/100);
+
+    }
+
+    $('#other_fee').html(new Intl.NumberFormat('en-DE').format(other_fee));
+
+  }
+
+}
 
 $(document).ready(function(){
   selectPONewNoteDebitKamoa();

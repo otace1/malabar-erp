@@ -230,7 +230,7 @@
 </div>
 
 <div class="modal fade" id="modal_edit_note_debit">
-  <div class="modal-dialog modal-md">
+  <div class="modal-dialog modal-lg">
     <!-- <form id="edit_note_debit_form" method="POST" action="" data-parsley-validate enctype="multipart/form-data"> -->
       <input type="hidden" name="operation" id="operation" value="edit_note_debit">
     <div class="modal-content">
@@ -283,7 +283,97 @@
 </div>
 
 <script type="text/javascript">
+
+  function updateNoteDebit(label_other_fee, parametre, unite, base){
+    if ($('#label_other_fee').val()!='' && $('#parametre').val()!='' &&  $('#base').val()!=''  &&  $('#unite').val()!='' ) {
+      $.ajax({
+        type: 'post',
+        url: 'ajax.php',
+        data: {ref_note: $('#ref_note_edit').val(), label_other_fee: label_other_fee, unite: $('#unite').val(), parametre: parametre, base: $('#base').val(), operation: "updateNoteDebit"},
+        dataType: 'json',
+        success:function(data){
+          if (data.logout) {
+            alert(data.logout);
+            window.location="../deconnexion.php";
+          }else{
+            $('#detail_debit_note').html(data.detail_debit_note);
+            $('#debit_note_validated').DataTable().ajax.reload();
+            $('#debit_note_pending_validation').DataTable().ajax.reload();
+          }
+        }
+      });
+    }
+  }
   
+  function calculOtherFee(){
+
+    if ($('#label_other_fee').val()!='' && $('#parametre').val()!='' &&  $('#base').val()!=''  &&  $('#unite').val()!='' ) {
+      var label_other_fee = $('#label_other_fee').val();
+      var parametre = $('#parametre').val();
+
+      var other_fee = 0;
+
+      if (parseFloat($('#unite').val()) > 0 ) {
+        unite = parseFloat($('#unite').val());
+      }else{
+        unite=0;
+      }
+
+      if (parseFloat($('#base').val()) > 0 ) {
+        base = parseFloat($('#base').val());
+      }else{
+        base=0;
+      }
+      
+      if($('#parametre').val()=='qte'){
+
+        other_fee = unite*base;
+
+      }else if($('#parametre').val()=='pourc'){
+
+        other_fee = base*(unite/100);
+
+      }
+
+      console.log(other_fee);
+      $('#other_fee').html(new Intl.NumberFormat('en-DE').format(other_fee));
+
+    }
+
+  }
+
+  function getOtherFee(label_other_fee, parametre, unite, base){
+
+    if ($('#label_other_fee').val()!='' && $('#parametre').val()!='' &&  $('#base').val()!=''  &&  $('#unite').val()!='' ) {
+
+      if (parseFloat($('#unite').val()) > 0 ) {
+        unite = parseFloat($('#unite').val());
+      }else{
+        unite=0;
+      }
+
+      if (parseFloat($('#base').val()) > 0 ) {
+        base = parseFloat($('#base').val());
+      }else{
+        base=0;
+      }
+      
+      if(parametre=='qte'){
+
+        other_fee = unite*base;
+
+      }else if(parametre=='pourc'){
+
+        other_fee = base*(unite/100);
+
+      }
+
+      $('#other_fee').html(new Intl.NumberFormat('en-DE').format(other_fee));
+
+    }
+
+  }
+
   function edit_detail_depense(ref_note, id_dep_dos, montant){
     // if(confirm('Do really you want to remove this data ?')) {
       $.ajax({
@@ -340,6 +430,7 @@
         }else{
           $('#ref_note_edit').val(ref_note);
           $('#detail_debit_note').html(data.detail_debit_note);
+          calculOtherFee();
           $('#modal_edit_note_debit').modal('show');
         }
       },
