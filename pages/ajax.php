@@ -633,7 +633,7 @@
 		if (isset($_POST['fin'])&&($_POST['fin']!='')) {
 			$fin = $_POST['fin'];
 		}
-		echo json_encode($maClasse-> getListeFactures($_POST['statut'], $id_mod_lic, $id_util, $debut, $fin));
+		echo json_encode($maClasse-> getListeFactures($_POST['statut'], $id_mod_lic, $id_util, $debut, $fin, $_POST['id_cli']));
 		
 	}elseif(isset($_POST['operation']) && $_POST['operation']=='rapportOperations'){ // On Recupere les data pour rapport Operations
 		$response['nbre_dossier_encours'] = $maClasse-> getNbreDossier('Dossiers En Cours');
@@ -1189,12 +1189,12 @@
 
   		$reponse['afficherMonitoringFacturation'] = $maClasse-> afficherMonitoringFacturation($_POST['id_mod_lic'], $_POST['debut'], $_POST['fin']);
 
-		$reponse['nbre_facture'] = $maClasse-> getNbreFacture($_POST['id_mod_lic'], NULL, $_POST['debut'], $_POST['fin']);
-		$reponse['nbre_dossier_facture'] = $maClasse-> getNbreDossierFacture($_POST['id_mod_lic'], NULL, $_POST['debut'], $_POST['fin']);
-		$reponse['btn_info_factures'] = '<span onclick="window.open(\'popUpDashboardFacturation.php?statut=Factures&amp;id_mod_lic='.$_POST['id_mod_lic'].'&amp;debut='.$_POST['debut'].'&amp;fin='.$_POST['fin'].'\',\'pop1\',\'width=950,height=700\');">
+		$reponse['nbre_facture'] = $maClasse-> getNbreFacture($_POST['id_mod_lic'], NULL, $_POST['debut'], $_POST['fin'], $_POST['id_cli']);
+		$reponse['nbre_dossier_facture'] = $maClasse-> getNbreDossierFacture($_POST['id_mod_lic'], NULL, $_POST['debut'], $_POST['fin'], $_POST['id_cli']);
+		$reponse['btn_info_factures'] = '<span onclick="window.open(\'popUpDashboardFacturation.php?statut=Factures&amp;id_mod_lic='.$_POST['id_mod_lic'].'&amp;debut='.$_POST['debut'].'&amp;fin='.$_POST['fin'].'&amp;id_cli='.$_POST['id_cli'].'\',\'pop1\',\'width=950,height=700\');">
                 Details <i class="fas fa-arrow-circle-right"></i>
               </span>';
-		$reponse['btn_info_dossiers_factures'] = '<span onclick="window.open(\'popUpDashboardFacturation.php?statut=Dossiers Facturés&amp;id_mod_lic='.$_POST['id_mod_lic'].'&amp;debut='.$_POST['debut'].'&amp;fin='.$_POST['fin'].'\',\'pop1\',\'width=1200,height=700\');">
+		$reponse['btn_info_dossiers_factures'] = '<span onclick="window.open(\'popUpDashboardFacturation.php?statut=Dossiers Facturés&amp;id_mod_lic='.$_POST['id_mod_lic'].'&amp;debut='.$_POST['debut'].'&amp;fin='.$_POST['fin'].'&amp;id_cli='.$_POST['id_cli'].'\',\'pop1\',\'width=1200,height=700\');">
                 Details <i class="fas fa-arrow-circle-right"></i>
               </span>';
 
@@ -2127,7 +2127,7 @@
 		if ($_POST['id_mod_lic']==1) {
 
 			if ($_POST['id_mod_trans'] == '1') {
-				$maxPoids = 'max=40';
+				$maxPoids = 'max=45';
 			}else{
 				$maxPoids = 'max=50';
 			}
@@ -2980,6 +2980,17 @@
 
 		echo json_encode($response);
 
+	}else if(isset($_POST['operation']) && $_POST['operation']=='afficherMonitoringFile'){
+
+  		$reponse['nbre_awaiting_elq'] = $maClasse-> nbre_awaiting_elq($_POST['id_mod_lic'], $_POST['id_cli']);
+  		$reponse['nbre_awaiting_invoice'] = $maClasse-> nbre_awaiting_invoice($_POST['id_mod_lic'], $_POST['id_cli']);
+  		$reponse['nbre_invoiced'] = $maClasse-> nbre_invoiced($_POST['id_mod_lic'], $_POST['id_cli']);
+  		$reponse['nbre_disabled'] = $maClasse-> nbre_disabled($_POST['id_mod_lic'], $_POST['id_cli']);
+
+  		echo json_encode($reponse);
+
+	}else if ($_POST['operation']=="statutDossier2") {
+		echo json_encode($maClasse-> afficherStatutDossierFactureAjax2($_POST['statut'], $_POST['id_mod_lic'], $_POST['id_cli']));
 	}
 
 

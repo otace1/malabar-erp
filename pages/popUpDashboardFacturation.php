@@ -271,6 +271,7 @@
           "data": {
               "id_cli": "",
               "statut": "<?php echo $_GET['statut'];?>",
+              "id_cli": "<?php echo $_GET['id_cli'];?>",
               "id_mod_lic": "<?php echo $id_mod_lic;?>",
               "id_util": "<?php echo $id_util;?>",
               "debut": "<?php echo $debut;?>",
