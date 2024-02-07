@@ -3587,6 +3587,266 @@
 
 		}
 
+		public function afficherStatutDossierFactureAjax2($statut, $id_mod_lic, $id_cli){
+			include("connexion.php");
+			// $entree['id_cli'] = $id_cli;
+			$entree['id_mod_lic'] = $id_mod_lic;
+			//$entree['type_fact'] = $type_fact;
+			$compteur=0;
+
+			$bg = "";
+			$badge = '';
+			$btn = '';
+			$etat ='';
+
+			$debut = $compteur;
+			$rows = array();
+
+			$sql = '';
+
+			if ($statut=='Disabled') {
+
+				if (isset($id_cli) && ($id_cli!='')) {
+					$sqlClient = ' AND dossier.id_cli = "'.$id_cli.'"';
+				}else{
+					$sqlClient = '';
+				}
+
+				$sql = "SELECT 1 AS compteur,
+							IF(facture_dossier.note_debit='0', facture_dossier.ref_fact, NULL) AS ref_fact,
+							IF(marchandise.nom_march IS NOT NULL,
+								marchandise.nom_march,
+								dossier.commodity
+							) AS commodity,
+							dossier.num_lic AS num_lic,
+							DATE_FORMAT(facture_dossier.date_fact, '%d/%m/%Y') AS date_fact,
+							IF(dossier.id_mod_lic='2',
+								dossier.ref_fact,
+								dossier.num_lot
+								)
+							 AS ref_fact_dos,
+							dossier.ref_decl AS ref_decl,
+							DATE_FORMAT(dossier.date_decl, '%d/%m/%Y') AS date_decl,
+							dossier.ref_liq AS ref_liq,
+							DATE_FORMAT(dossier.date_liq, '%d/%m/%Y') AS date_liq,
+							dossier.ref_quit AS ref_quit,
+							DATE_FORMAT(dossier.date_quit, '%d/%m/%Y') AS date_quit,
+							IF(dossier.not_fact='1',
+								'<span class=\'badge badge-danger font-weight-bold\'>Disabled</span>',
+									IF(facture_dossier.ref_fact IS NOT NULL AND facture_dossier.note_debit='0',
+										'<span class=\'badge badge-success font-weight-bold\'>Invoiced</span>',
+										IF(dossier.ref_decl IS NULL OR dossier.date_decl IS NULL OR dossier.ref_liq IS NULL OR dossier.date_liq IS NULL OR dossier.ref_quit IS NULL OR dossier.date_quit IS NULL,
+											'<span class=\'badge badge-warning font-weight-bold\'>Missing E, L or Q</span>',
+											'<span class=\'badge badge-warning font-weight-bold\'>Waiting to be invoiced</span>'
+										)
+
+									)
+								)
+							AS statut
+						FROM dossier
+							LEFT JOIN detail_facture_dossier
+								ON detail_facture_dossier.id_dos = dossier.id_dos
+							LEFT JOIN facture_dossier
+								ON facture_dossier.ref_fact = detail_facture_dossier.ref_fact 
+							LEFT JOIN marchandise
+								ON marchandise.id_march = dossier.id_march
+						WHERE dossier.id_mod_lic = ?
+							AND dossier.ref_dos NOT LIKE 'EXPDEC%'
+							AND dossier.ref_dos NOT LIKE '21EXP%'
+							AND dossier.ref_dos NOT LIKE '21DEC%'
+							AND dossier.not_fact = '1'
+							AND dossier.id_cli <> 1
+							$sqlClient
+						GROUP BY dossier.id_dos
+						ORDER BY dossier.id_dos ASC";
+
+			}else if ($statut=='Invoiced') {
+
+				if (isset($id_cli) && ($id_cli!='')) {
+					$sqlClient = ' AND dossier.id_cli = "'.$id_cli.'"';
+				}else{
+					$sqlClient = '';
+				}
+
+				$sql = "SELECT 1 AS compteur,
+							CONCAT(dossier.ref_dos,' <button class=\'btn btn-warning btn-xs\' onclick=\'modal_edit_statut_dossier_facturation(',dossier.id_dos,')\'><i class=\'fa fa-edit\'></i></button>') AS ref_dos,
+							IF(facture_dossier.note_debit='0', facture_dossier.ref_fact, NULL) AS ref_fact,
+							IF(marchandise.nom_march IS NOT NULL,
+								marchandise.nom_march,
+								dossier.commodity
+							) AS commodity,
+							dossier.num_lic AS num_lic,
+							DATE_FORMAT(facture_dossier.date_fact, '%d/%m/%Y') AS date_fact,
+							IF(dossier.id_mod_lic='2',
+								dossier.ref_fact,
+								dossier.num_lot
+								)
+							 AS ref_fact_dos,
+							dossier.ref_decl AS ref_decl,
+							DATE_FORMAT(dossier.date_decl, '%d/%m/%Y') AS date_decl,
+							dossier.ref_liq AS ref_liq,
+							DATE_FORMAT(dossier.date_liq, '%d/%m/%Y') AS date_liq,
+							dossier.ref_quit AS ref_quit,
+							DATE_FORMAT(dossier.date_quit, '%d/%m/%Y') AS date_quit,
+							IF(dossier.not_fact='1',
+								'<span class=\'badge badge-danger font-weight-bold\'>Disabled</span>',
+									IF(facture_dossier.ref_fact IS NOT NULL AND facture_dossier.note_debit='0',
+										'<span class=\'badge badge-success font-weight-bold\'>Invoiced</span>',
+										IF(dossier.ref_decl IS NULL OR dossier.date_decl IS NULL OR dossier.ref_liq IS NULL OR dossier.date_liq IS NULL OR dossier.ref_quit IS NULL OR dossier.date_quit IS NULL,
+											'<span class=\'badge badge-warning font-weight-bold\'>Missing E, L or Q</span>',
+											'<span class=\'badge badge-warning font-weight-bold\'>Waiting to be invoiced</span>'
+										)
+
+									)
+								)
+							AS statut
+						FROM dossier, detail_facture_dossier, facture_dossier, marchandise
+						WHERE dossier.id_mod_lic = ?
+							AND dossier.ref_dos NOT LIKE 'EXPDEC%'
+							AND dossier.ref_dos NOT LIKE '21EXP%'
+							AND dossier.ref_dos NOT LIKE '21DEC%'
+							$sqlClient
+							AND facture_dossier.note_debit='0'
+							AND detail_facture_dossier.id_dos = dossier.id_dos
+							AND facture_dossier.ref_fact = detail_facture_dossier.ref_fact 
+							AND marchandise.id_march = dossier.id_march
+							AND dossier.id_cli <> 1
+						GROUP BY dossier.id_dos
+						ORDER BY dossier.id_dos ASC";
+			}else if ($statut=='Missing E, L or Q') {
+
+				if (isset($id_cli) && ($id_cli!='')) {
+					$sqlClient = ' AND dossier.id_cli = "'.$id_cli.'"';
+				}else{
+					$sqlClient = '';
+				}
+
+				$sql = "SELECT 1 AS compteur,
+							CONCAT(dossier.ref_dos,' <button class=\'btn btn-warning btn-xs\' onclick=\'modal_edit_statut_dossier_facturation(',dossier.id_dos,')\'><i class=\'fa fa-edit\'></i></button>') AS ref_dos,
+							IF(dossier.not_fact='1',
+								'<span class=\'badge badge-danger font-weight-bold\'>Disabled</span>',
+									IF(facture_dossier.ref_fact IS NOT NULL AND facture_dossier.note_debit='0',
+										'<span class=\'badge badge-success font-weight-bold\'>Invoiced</span>',
+										IF(dossier.ref_decl IS NULL OR dossier.date_decl IS NULL OR dossier.ref_liq IS NULL OR dossier.date_liq IS NULL OR dossier.ref_quit IS NULL OR dossier.date_quit IS NULL,
+											'<span class=\'badge badge-warning font-weight-bold\'>Missing E, L or Q</span>',
+											'<span class=\'badge badge-warning font-weight-bold\'>Waiting to be invoiced</span>'
+										)
+
+									)
+								)
+							AS statut,
+							IF(facture_dossier.note_debit='0', facture_dossier.ref_fact, NULL) AS ref_fact,
+							IF(marchandise.nom_march IS NOT NULL,
+								marchandise.nom_march,
+								dossier.commodity
+							) AS commodity,
+							dossier.num_lic AS num_lic,
+							DATE_FORMAT(facture_dossier.date_fact, '%d/%m/%Y') AS date_fact,
+							IF(dossier.id_mod_lic='2',
+								dossier.ref_fact,
+								dossier.num_lot
+								)
+							 AS ref_fact_dos,
+							dossier.ref_decl AS ref_decl,
+							DATE_FORMAT(dossier.date_decl, '%d/%m/%Y') AS date_decl,
+							dossier.ref_liq AS ref_liq,
+							DATE_FORMAT(dossier.date_liq, '%d/%m/%Y') AS date_liq,
+							dossier.ref_quit AS ref_quit,
+							DATE_FORMAT(dossier.date_quit, '%d/%m/%Y') AS date_quit
+						FROM dossier
+							LEFT JOIN detail_facture_dossier
+								ON detail_facture_dossier.id_dos = dossier.id_dos
+							LEFT JOIN facture_dossier
+								ON facture_dossier.ref_fact = detail_facture_dossier.ref_fact 
+							LEFT JOIN marchandise
+								ON marchandise.id_march = dossier.id_march
+						WHERE dossier.id_mod_lic = ?
+							AND (dossier.ref_decl IS NULL 
+									OR dossier.date_decl IS NULL 
+									OR dossier.ref_liq IS NULL 
+									OR dossier.date_liq IS NULL 
+									OR dossier.ref_quit IS NULL 
+									OR dossier.date_quit IS NULL
+								) 
+							$sqlClient
+							AND dossier.not_fact='0'
+							AND dossier.ref_dos NOT LIKE 'EXPDEC%'
+							AND dossier.ref_dos NOT LIKE '21EXP%'
+							AND dossier.ref_dos NOT LIKE '21DEC%'
+							AND dossier.id_dos NOT IN (
+								SELECT DISTINCT(det.id_dos) 
+									FROM facture_dossier fd, detail_facture_dossier det
+									WHERE fd.ref_fact = det.ref_fact
+										AND fd.note_debit = '0'
+							)
+							AND dossier.id_cli <> 1
+						GROUP BY dossier.id_dos
+						ORDER BY dossier.id_dos ASC";
+			}else if ($statut=='Waiting to be invoiced') {
+
+				if (isset($id_cli) && ($id_cli!='')) {
+					$sqlClient = ' AND dossier.id_cli = "'.$id_cli.'"';
+				}else{
+					$sqlClient = '';
+				}
+
+				$sql = "SELECT 1 AS compteur,
+							CONCAT(dossier.ref_dos,' <button class=\'btn btn-warning btn-xs\' onclick=\'modal_edit_statut_dossier_facturation(',dossier.id_dos,')\'><i class=\'fa fa-edit\'></i></button>') AS ref_dos,
+							NULL AS ref_fact,
+							IF(marchandise.nom_march IS NOT NULL,
+								marchandise.nom_march,
+								dossier.commodity
+							) AS commodity,
+							dossier.num_lic AS num_lic,
+							NULL AS date_fact,
+							IF(dossier.id_mod_lic='2',
+								dossier.ref_fact,
+								dossier.num_lot
+								)
+							 AS ref_fact_dos,
+							dossier.ref_decl AS ref_decl,
+							DATE_FORMAT(dossier.date_decl, '%d/%m/%Y') AS date_decl,
+							dossier.ref_liq AS ref_liq,
+							DATE_FORMAT(dossier.date_liq, '%d/%m/%Y') AS date_liq,
+							dossier.ref_quit AS ref_quit,
+							DATE_FORMAT(dossier.date_quit, '%d/%m/%Y') AS date_quit,
+							'<span class=\'badge badge-info font-weight-bold\'>Waiting to be invoiced</span>' AS statut
+						FROM dossier, marchandise
+						WHERE dossier.id_mod_lic = ?
+							AND dossier.date_decl IS NOT NULL
+							AND dossier.ref_decl IS NOT NULL
+							AND dossier.date_liq IS NOT NULL
+							AND dossier.ref_liq IS NOT NULL
+							AND dossier.date_quit IS NOT NULL
+							AND dossier.ref_quit IS NOT NULL
+							$sqlClient
+							AND dossier.id_cli <> 1
+							AND dossier.not_fact = '0'
+							AND dossier.id_dos NOT IN (
+								SELECT DISTINCT(dos.id_dos) 
+									FROM facture_dossier fd, detail_facture_dossier det, dossier dos
+									WHERE fd.ref_fact = det.ref_fact
+										AND fd.note_debit = '0'
+										AND det.id_dos = dos.id_dos
+							)
+						GROUP BY dossier.id_dos
+						ORDER BY dossier.id_dos ASC";
+			}
+
+			$requete = $connexion-> prepare($sql);
+			$requete-> execute(array($entree['id_mod_lic']));
+			while ($reponse = $requete-> fetch()) {
+				$compteur++;
+
+				$reponse['compteur'] = $compteur;
+				$rows[] = $reponse;
+
+			}$requete-> closeCursor();
+
+			return $rows;
+
+		}
+
 		public function afficherAllCompteAjax(){
 			include("connexion.php");
 
@@ -19502,6 +19762,225 @@
 			}$requete-> closeCursor();
 
 			return $tbl;
+
+		}
+
+		public function afficherMonitoringFile($id_mod_lic){
+			include("connexion.php");
+
+			$compteur=0;
+			$entree['id_mod_lic'] = $id_mod_lic;
+
+			$tbl = "";
+
+			$requete = $connexion-> prepare("SELECT COUNT(dos.id_dos) AS nbre_awaiting_elq
+											FROM dossier dos
+											WHERE dos.id_mod_lic = ?
+												AND (dos.ref_decl IS NULL 
+														OR dos.date_decl IS NULL 
+														OR dos.ref_liq IS NULL 
+														OR dos.date_liq IS NULL 
+														OR dos.ref_quit IS NULL 
+														OR dos.date_quit
+													) 
+												AND dos.not_fact='0'
+												AND dos.id_dos NOT IN (
+													SELECT DISTINCT(dos.id_dos) 
+														FROM facture_dossier fd, detail_facture_dossier det, dossier dos
+														WHERE fd.ref_fact = det.ref_fact
+															AND fd.note_debit = '0'
+															AND det.id_dos = dos.id_dos
+												)");
+			$requete-> execute(array($entree['id_mod_lic']));
+			$reponse = $requete-> fetch();
+
+			// $requete = $connexion-> prepare("SELECT COUNT(dos.id_dos) AS nbre_awaiting_invoice
+			// 									FROM dossier dos
+			// 									WHERE dos.id_mod_lic = ?
+			// 										AND dos.date_decl IS NOT NULL
+			// 										AND dos.ref_decl IS NOT NULL
+			// 										AND dos.date_liq IS NOT NULL
+			// 										AND dos.ref_liq IS NOT NULL
+			// 										AND dos.date_quit IS NOT NULL
+			// 										AND dos.ref_quit IS NOT NULL
+			// 										AND dos.id_dos NOT IN (
+			// 											SELECT DISTINCT(dos.id_dos) 
+			// 												FROM facture_dossier fd, detail_facture_dossier det, dossier dos
+			// 												WHERE fd.ref_fact = det.ref_fact
+			// 													AND fd.note_debit = '0'
+			// 													AND det.id_dos = dos.id_dos
+			// 										)");
+			// $requete-> execute(array($entree['id_mod_lic']));
+			// $reponse['nbre_awaiting_invoice'] = $requete-> fetch();
+
+			// $requete = $connexion-> prepare("SELECT COUNT(DISTINCT(dos.id_dos)) AS nbre_invoiced
+			// 									FROM dossier dos, detail_facture_dossier det, facture_dossier fd
+			// 									WHERE dos.id_mod_lic = ?
+			// 										AND dos.id_dos = det.id_dos
+			// 										AND det.ref_fact = fd.ref_fact
+			// 										AND fd.note_debit = '0'");
+			// $requete-> execute(array($entree['id_mod_lic']));
+			// $reponse['nbre_invoiced'] = $requete-> fetch();
+
+			// $requete = $connexion-> prepare("SELECT COUNT(dos.id_dos) AS nbre_disabled
+			// 									FROM dossier dos
+			// 									WHERE dos.id_mod_lic = ?
+			// 										AND dos.ref_decl IS  NOT NULL 
+			// 										AND dos.date_decl IS  NOT NULL 
+			// 										AND dos.ref_liq IS  NOT NULL 
+			// 										AND dos.date_liq IS  NOT NULL 
+			// 										AND dos.ref_quit IS  NOT NULL 
+			// 										AND dos.date_quit IS NOT NULL
+			// 										AND dos.not_fact = '1'");
+			// $requete-> execute(array($entree['id_mod_lic']));
+			// $reponse['nbre_disabled'] = $requete-> fetch();
+
+			return $reponse['nbre_awaiting_invoice'];
+
+		}
+
+		public function nbre_awaiting_elq($id_mod_lic, $id_cli){
+			include("connexion.php");
+
+			$compteur=0;
+			$entree['id_mod_lic'] = $id_mod_lic;
+
+			if (isset($id_cli) && ($id_cli!='')) {
+				$sqlClient = ' AND dos.id_cli = "'.$id_cli.'"';
+			}else{
+				$sqlClient = '';
+			}
+
+			$tbl = "";
+
+			$requete = $connexion-> prepare("SELECT COUNT(dos.id_dos) AS nbre_awaiting_elq
+											FROM dossier dos
+											WHERE dos.id_mod_lic = ?
+												AND (dos.ref_decl IS NULL 
+														OR dos.date_decl IS NULL 
+														OR dos.ref_liq IS NULL 
+														OR dos.date_liq IS NULL 
+														OR dos.ref_quit IS NULL 
+														OR dos.date_quit IS NULL
+													) 
+												AND dos.not_fact='0'
+												AND dos.ref_dos NOT LIKE 'EXPDEC%'
+												AND dos.ref_dos NOT LIKE '21EXP%'
+												AND dos.ref_dos NOT LIKE '21DEC%'
+												$sqlClient
+												AND dos.id_cli <> 1
+												AND dos.id_dos NOT IN (
+													SELECT DISTINCT(det.id_dos) 
+														FROM facture_dossier fd, detail_facture_dossier det
+														WHERE fd.ref_fact = det.ref_fact
+															AND fd.note_debit = '0'
+												)");
+			$requete-> execute(array($entree['id_mod_lic']));
+			$reponse = $requete-> fetch();
+
+			return $reponse['nbre_awaiting_elq'];
+
+		}
+
+		public function nbre_awaiting_invoice($id_mod_lic, $id_cli){
+			include("connexion.php");
+
+			$compteur=0;
+			$entree['id_mod_lic'] = $id_mod_lic;
+
+			if (isset($id_cli) && ($id_cli!='')) {
+				$sqlClient = ' AND dos.id_cli = "'.$id_cli.'"';
+			}else{
+				$sqlClient = '';
+			}
+
+			$tbl = "";
+
+			$requete = $connexion-> prepare("SELECT COUNT(dos.id_dos) AS nbre_awaiting_invoice
+												FROM dossier dos
+												WHERE dos.id_mod_lic = ?
+													AND dos.date_decl IS NOT NULL
+													AND dos.ref_decl IS NOT NULL
+													AND dos.date_liq IS NOT NULL
+													AND dos.ref_liq IS NOT NULL
+													AND dos.date_quit IS NOT NULL
+													AND dos.ref_quit IS NOT NULL
+													AND dos.id_cli <> 1
+													AND dos.not_fact = '0'
+													AND dos.id_dos NOT IN (
+														SELECT DISTINCT(dos.id_dos) 
+															FROM facture_dossier fd, detail_facture_dossier det, dossier dos
+															WHERE fd.ref_fact = det.ref_fact
+																AND fd.note_debit = '0'
+																AND det.id_dos = dos.id_dos
+													)
+													$sqlClient");
+			$requete-> execute(array($entree['id_mod_lic']));
+			$reponse = $requete-> fetch();
+
+			return $reponse['nbre_awaiting_invoice'];
+
+		}
+
+		public function nbre_invoiced($id_mod_lic, $id_cli){
+			include("connexion.php");
+
+			$compteur=0;
+			$entree['id_mod_lic'] = $id_mod_lic;
+
+			if (isset($id_cli) && ($id_cli!='')) {
+				$sqlClient = ' AND dos.id_cli = "'.$id_cli.'"';
+			}else{
+				$sqlClient = '';
+			}
+
+			$tbl = "";
+
+			$requete = $connexion-> prepare("SELECT COUNT(DISTINCT(dos.id_dos)) AS nbre_invoiced
+												FROM dossier dos, detail_facture_dossier det, facture_dossier fd
+												WHERE dos.id_mod_lic = ?
+													AND dos.id_dos = det.id_dos
+													$sqlClient
+													AND dos.id_cli <> 1
+													AND det.ref_fact = fd.ref_fact
+													AND fd.note_debit = '0'");
+			$requete-> execute(array($entree['id_mod_lic']));
+			$reponse = $requete-> fetch();
+
+			return $reponse['nbre_invoiced'];
+
+		}
+
+		public function nbre_disabled($id_mod_lic, $id_cli){
+			include("connexion.php");
+
+			$compteur=0;
+			$entree['id_mod_lic'] = $id_mod_lic;
+
+			if (isset($id_cli) && ($id_cli!='')) {
+				$sqlClient = ' AND dos.id_cli = "'.$id_cli.'"';
+			}else{
+				$sqlClient = '';
+			}
+
+			$tbl = "";
+
+			$requete = $connexion-> prepare("SELECT COUNT(dos.id_dos) AS nbre_disabled
+												FROM dossier dos
+												WHERE dos.id_mod_lic = ?
+													AND dos.ref_decl IS  NOT NULL 
+													AND dos.date_decl IS  NOT NULL 
+													AND dos.ref_liq IS  NOT NULL 
+													AND dos.date_liq IS  NOT NULL 
+													AND dos.ref_quit IS  NOT NULL 
+													AND dos.date_quit IS NOT NULL
+													$sqlClient
+													AND dos.id_cli <> 1
+													AND dos.not_fact = '1'");
+			$requete-> execute(array($entree['id_mod_lic']));
+			$reponse = $requete-> fetch();
+
+			return $reponse['nbre_disabled'];
 
 		}
 
@@ -41467,7 +41946,7 @@
 			return $compteur;
 		}
 
-		public function getNbreFacture($id_mod_lic=NULL, $id_util=NULL, $debut=NULL, $fin=NULL){
+		public function getNbreFacture($id_mod_lic=NULL, $id_util=NULL, $debut=NULL, $fin=NULL, $id_cli=NULL){
 			include('connexion.php');
 			// $entree['id_mod_lic'] = $id_mod_lic;
 
@@ -41640,14 +42119,9 @@
 			
 		}
 
-		public function getListeFactures($statut, $id_mod_lic, $id_util=NULL, $debut=NULL, $fin=NULL){
+		public function getListeFactures($statut, $id_mod_lic, $id_util=NULL, $debut=NULL, $fin=NULL, $id_cli=NULL){
 			include('connexion.php');
 			// $entree['id_mod_lic'] = $id_mod_lic;
-
-			$sqlClient = "";
-			if (isset($id_cli) && ($id_cli != '')) {
-				$sqlClient = ' AND dos.id_cli = "'.$id_cli.'" ';
-			}
 
 			$compteur = 0;
 
@@ -41656,6 +42130,11 @@
 				$sqlTransit = "";
 				if (isset($id_mod_lic) && ($id_mod_lic != '')) {
 					$sqlTransit = ' AND fd.id_mod_lic = "'.$id_mod_lic.'" ';
+				}
+
+				$sqlClient = "";
+				if (isset($id_cli) && ($id_cli != '')) {
+					$sqlClient = ' AND fd.id_cli = "'.$id_cli.'" ';
 				}
 
 				$sqlUtilisateur = "";
@@ -41862,7 +42341,7 @@
 													$sqlUtilisateur
 													$sqlTime
 												GROUP BY fd.ref_fact
-												ORDER BY fd.date_fact DESC");
+												ORDER BY fd.date_fact ASC");
 				// $requete-> execute(array($entree['id_mod_lic']));
 				while($reponse = $requete-> fetch()){
 					$compteur++;
@@ -41884,6 +42363,11 @@
 				$sqlTransit = "";
 				if (isset($id_mod_lic) && ($id_mod_lic != '')) {
 					$sqlTransit = ' AND dos.id_mod_lic = "'.$id_mod_lic.'" ';
+				}
+
+				$sqlClient = "";
+				if (isset($id_cli) && ($id_cli != '')) {
+					$sqlClient = ' AND dos.id_cli = "'.$id_cli.'" ';
 				}
 
 				$sqlUtilisateur = "";
@@ -42094,7 +42578,7 @@
 													$sqlUtilisateur
 													$sqlTime
 												GROUP BY dos.id_dos
-												ORDER BY dos.id_dos DESC");
+												ORDER BY dos.id_dos ASC");
 				// $requete-> execute(array($entree['id_mod_lic']));
 				while($reponse = $requete-> fetch()){
 					$compteur++;
@@ -42171,6 +42655,11 @@
 					$sqlTransit = ' AND dos.id_mod_lic = "'.$id_mod_lic.'" ';
 				}
 
+				$sqlClient = "";
+				if (isset($id_cli) && ($id_cli != '')) {
+					$sqlClient = ' AND dos.id_cli = "'.$id_cli.'" ';
+				}
+
 				$requete = $connexion-> query("SELECT dos.ref_dos AS ref_dos,
 													cl.nom_cli AS nom_cli, 
 													dos.id_dos AS id_dos,
@@ -42218,6 +42707,7 @@
 																AND det.id_dos = dos.id_dos
 													)
 													$sqlTransit
+													$sqlClient
 												ORDER BY dos.id_dos
 											");
 				// $requete-> execute(array($entree['id_mod_lic']));
@@ -43293,7 +43783,7 @@
 			}
 		}
 
-		public function getNbreDossierFacture($id_mod_lic=NULL, $id_util=NULL, $debut=NULL, $fin=NULL){
+		public function getNbreDossierFacture($id_mod_lic=NULL, $id_util=NULL, $debut=NULL, $fin=NULL, $id_cli=NULL){
 			include('connexion.php');
 			// $entree['id_mod_lic'] = $id_mod_lic;
 
