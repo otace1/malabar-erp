@@ -704,6 +704,8 @@ for ($i=1; $i <= 15 ; $i++) {
   }
 
 ?>
+
+                      <input type="hidden" id="annee">
   <!-- /.navbar -->
 
   <!-- Main Sidebar Container -->
@@ -737,7 +739,7 @@ for ($i=1; $i <= 15 ; $i++) {
 
                               if ( isset($_POST['ref_dos_'.$i]) && ($_POST['ref_dos_'.$i]!='') && isset($_POST['num_lic_'.$i]) && ($_POST['num_lic_'.$i]!='') && isset($_POST['poids_'.$i]) && ($_POST['poids_'.$i] != '') ) {
 
-                                $maClasse-> creerDossierIBAcid($_POST['ref_dos_'.$i], $_GET['id_cli'], 
+                                $maClasse-> creerDossierIBAcid($_POST['ref_dos_'.$i], $_POST['mca_b_ref_'.$i], $_GET['id_cli'], 
                                                         $_POST['ref_fact_'.$i], $_POST['t1_'.$i], 
                                                         $_POST['poids_'.$i], $_POST['num_lic_'.$i], 
                                                         $_GET['id_mod_trac'], $_GET['id_march'], 
@@ -753,7 +755,8 @@ for ($i=1; $i <= 15 ; $i++) {
 
                           }else{
 
-                            $maClasse-> creerDossierIB($_POST['ref_dos'], $_GET['id_cli'], $_POST['ref_fact'], 
+                            $maClasse-> creerDossierIB($_POST['ref_dos'], 
+                                                      $_POST['mca_b_ref'], $_GET['id_cli'], $_POST['ref_fact'], 
                                                       $_POST['fob'],$_POST['fret'], $_POST['assurance'], 
                                                       $_POST['autre_frais'], $_POST['num_lic'], $_GET['id_mod_trac'], 
                                                       $_GET['id_march'], $_GET['id_mod_trans'],
@@ -1614,7 +1617,7 @@ if( isset($_GET['id_mod_trac']) && ($_GET['id_mod_trac']=='2' && $_GET['id_cli']
 
                       <div class="col-md-3">
                         <label for="x_card_code" class="control-label mb-1">MCA FILE NUMBER</label>
-                        <input type="text" name="ref_dos" value="<?php echo $maClasse-> getMcaFile($_GET['id_cli'], $_GET['id_mod_trans']);?>" class="form-control form-control-sm cc-exp" required>
+                        <input type="text" name="ref_dos" id="ref_dos_a" onblur="function_mca_b_ref_a()" value="<?php echo $maClasse-> getMcaFile($_GET['id_cli'], $_GET['id_mod_trans']);?>" class="form-control form-control-sm cc-exp" required>
                       </div>
                 
                       <div class="col-md-3">
@@ -1637,6 +1640,7 @@ if( isset($_GET['id_mod_trac']) && ($_GET['id_mod_trac']=='2' && $_GET['id_cli']
                           ?>
                       <!-- <script type="text/javascript" src="../classes/script.js"></script> -->
                       <script type="text/javascript">
+
                         function getBalanceLicence(val){
                           $.ajax({
                             type: "POST",
@@ -1952,6 +1956,11 @@ if( isset($_GET['id_mod_trac']) && ($_GET['id_mod_trac']=='2' && $_GET['id_cli']
                         </select>
                       </div>
 
+                      <div class="col-md-3">
+                        <label for="x_card_code" class="control-label mb-1">Tally Ref.</label>
+                        <input type="text" id="mca_b_ref_a" name="mca_b_ref" class="form-control form-control-sm cc-exp" required>
+                      </div>
+
                     </div>
                   </div>
                   <!-- /.tab-pane -->
@@ -1982,7 +1991,45 @@ if( isset($_GET['id_mod_trac']) && ($_GET['id_mod_trac']=='2' && $_GET['id_cli']
   </div>
   <!-- /.modal-dialog -->
 </div>
+<script type="text/javascript">
+  
+  $(document).ready(function(){
+    function_mca_b_ref_a();
+  });
 
+  function function_mca_b_ref_a() {
+    var code='';
+    var today   = new Date();
+    var annee = today.getYear();
+    $('#annee').val(annee);
+    
+    // const xmas = new Date("1995-12-25");
+    // const year = xmas.getYear(); // returns 95
+
+    if (<?php echo $_GET['id_mod_trac'];?>=='2') {// Import
+
+      if (<?php echo $_GET['id_mod_trans'];?>=='1') {
+
+        code = 'IMP-RR-'+$('#ref_dos_a').val().substr(0, 3)+$('#annee').val().substr(1)+'-'+$('#ref_dos_a').val().substr(9);
+
+      }else if (<?php echo $_GET['id_mod_trans'];?>=='3') {
+
+        code = 'IMP-AW-'+$('#ref_dos_a').val().substr(0, 3)+$('#annee').val().substr(1)+'-'+$('#ref_dos_a').val().substr(9);
+
+      }else{
+
+        code = 'IMP-W-'+$('#ref_dos_a').val().substr(0, 3)+$('#annee').val().substr(1)+'-'+$('#ref_dos_a').val().substr(9);
+
+      }
+
+    }
+
+    console.log(code);
+    $('#mca_b_ref_a').val(code);
+    // console.log($('#ref_dos_a').val());
+  }
+
+</script>
 <?php
 }else if(isset($_GET['id_mod_trac']) && $_GET['id_mod_trac']=='1' && ($_GET['id_march'] == '18' || $_GET['id_march'] == '21' || $_GET['id_march'] == '22') && $_GET['id_cli']!='869'){
 
@@ -2425,6 +2472,7 @@ if (($maClasse-> verifierRegimeSuspensionSansDateExtreme($_GET['id_cli'], $_GET[
 ?>
 
 <script type="text/javascript">
+
   function check_camion(horse, trailer_1, trailer_2, road_manif){
 
     if ($('#horse').val()===null && $('#horse').val()==='' ) {}else{

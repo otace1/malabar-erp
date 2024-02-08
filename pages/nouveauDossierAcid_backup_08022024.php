@@ -71,7 +71,6 @@ if($_GET['id_cli'] == 869 && $_GET['id_mod_trac'] == 2){
                       <th class="col_6" style="">
                         MCA File REF
                       </th>
-                      <th style="">Tally Ref.</th>
                       <th style="">Licence Number</th>
                       <th style="">T1 Ref.</th>
                       <th style="">Weight</th>
@@ -112,70 +111,6 @@ if($_GET['id_cli'] == 869 && $_GET['id_mod_trac'] == 2){
 
 <script language="javascript">
   
-  function function_mca_b_ref_b(i, code_march) {
-    var code='';
-    var today = new Date();
-    var annee = today.getYear();
-    $('#annee').val(annee);
-    
-    // const xmas = new Date("1995-12-25");
-    // const year = xmas.getYear(); // returns 95
-
-    if (<?php echo $_GET['id_mod_trac'];?>=='2') {// Import
-
-      if (<?php echo $_GET['id_mod_trans'];?>=='1') {
-
-        code = 'IMP-RR-'+$('#ref_dos_b_'+i).val().substr(0, 3)+'-'+code_march+$('#annee').val().substr(1)+'-'+$('#ref_dos_b_'+i).val().substr(10);
-
-      }else if (<?php echo $_GET['id_mod_trans'];?>=='3') {
-
-        code = 'IMP-AW-'+$('#ref_dos_b_'+i).val().substr(0, 3)+'-'+code_march+$('#annee').val().substr(1)+'-'+$('#ref_dos_b_'+i).val().substr(10);
-
-      }else{
-
-        code = 'IMP-W-'+$('#ref_dos_b_'+i).val().substr(0, 3)+'-'+code_march+$('#annee').val().substr(1)+'-'+$('#ref_dos_b_'+i).val().substr(10);
-
-      }
-
-    }
-
-    console.log(code);
-    $('#mca_b_ref_b_'+i).val(code);
-    // console.log($('#ref_dos_b').val());
-  }
-
-  // function function_mca_b_ref_b() {
-  //   var code='';
-  //   var today   = new Date();
-  //   var annee = today.getYear();
-  //   $('#annee').val(annee);
-    
-  //   // const xmas = new Date("1995-12-25");
-  //   // const year = xmas.getYear(); // returns 95
-
-  //   if (<?php echo $_GET['id_mod_trac'];?>=='2') {// Import
-
-  //     if (<?php echo $_GET['id_mod_trans'];?>=='1') {
-
-  //       code = 'IMP-RR-'+$('#ref_dos_b').val().substr(0, 3)+$('#annee').val().substr(1)+'-'+$('#ref_dos_b').val().substr(9);
-
-  //     }else if (<?php echo $_GET['id_mod_trans'];?>=='3') {
-
-  //       code = 'IMP-AW-'+$('#ref_dos_b').val().substr(0, 3)+$('#annee').val().substr(1)+'-'+$('#ref_dos_b').val().substr(9);
-
-  //     }else{
-
-  //       code = 'IMP-W-'+$('#ref_dos_b').val().substr(0, 3)+$('#annee').val().substr(1)+'-'+$('#ref_dos_b').val().substr(9);
-
-  //     }
-
-  //   }
-
-  //   console.log(code);
-  //   $('#mca_b_ref_b').val(code);
-  //   // console.log($('#ref_dos_b').val());
-  // }
-
   function modal_nouveauDossierLicence() {
     $('#modal_nouveauDossierLicence').modal('show');
     $('#nouveauDossierLicence').DataTable().ajax.reload();
@@ -195,9 +130,6 @@ if($_GET['id_cli'] == 869 && $_GET['id_mod_trac'] == 2){
           window.location="../deconnexion.php";
         }else{
           $('#tableau_creation_dossiers_lot').html(data.tableau_creation_dossiers_lot);
-          for (var i = 1; i <= 10; i++) {
-            function_mca_b_ref_b(i, '<?php echo $maClasse-> getElementMarchandise($_GET['id_march'])['code'];?>');
-          }
         }
       },
       complete: function () {

@@ -135,6 +135,7 @@
                       ?>
                       <th style="">#</th>
                       <th style="">Notre Nº Ref #</th>
+                      <th style="">Tally Ref #</th>
                       <th>Client</th>
                       <th>Poids</th>
                       <th>Scelle Electr.</th>
@@ -167,6 +168,7 @@
                       ?>
                       <th style="">#</th>
                       <th style="">MCA File Ref.</th>
+                      <th style="">Tally Ref.</th>
                       <th style="">Support Documents</th>
                       <th style="">Lot Num. / Inv.No.</th>
                       <th style="">PO.No.</th>
@@ -247,7 +249,7 @@
             'pageLength', 'colvis'
         ],
         fixedColumns: {
-          left: 2
+          left: 3
         },
         paging: false,
         scrollCollapse: true,
@@ -353,6 +355,7 @@
         "columns":[
           {"data":"compteur"},
           {"data":"ref_dos"},
+          {"data":"mca_b_ref"},
           {"data":"nom_cli"},
           {"data":"poids",
             render: DataTable.render.number( null, null, 2, null ),
@@ -608,6 +611,7 @@
         "columns":[
           {"data":"compteur"},
           {"data":"ref_dos"},
+          {"data":"mca_b_ref"},
           {"data":"support_doc"},
           {"data":"po_ref"},
           {"data":"num_lot"},

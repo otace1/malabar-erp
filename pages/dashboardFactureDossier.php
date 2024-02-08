@@ -133,7 +133,7 @@
               <div class="icon">
                 <i class="fas fa-bell"></i>
               </div>
-              <a href="#" class="small-box-footer" onclick="window.open('popUpDashboardFacturation.php?statut=Dossiers Non Facturés&amp;id_mod_lic=<?php echo $_GET['id_mod_lic_fact'];?>','pop1','width=1200,height=700');">
+              <a href="#" class="small-box-footer" onclick="window.open('popUpDashboardFacturation.php?statut=Dossiers Non Facturés&amp;id_mod_lic=<?php echo $_GET['id_mod_lic_fact'];?>&amp;id_cli='+id_cli.value,'pop1','width=1200,height=700');">
                 Details <i class="fas fa-arrow-circle-right"></i>
               </a>
             </div>
@@ -593,6 +593,7 @@ if(isset($_GET['id_mod_lic_fact']) && isset($_GET['id_mod_lic_fact'])){
           $('#label_monitoring').html('Report between '+debut+' and '+fin);
           $('#nbre_facture').html(data.nbre_facture);
           $('#nbre_dossier_facture').html(data.nbre_dossier_facture);
+          $('#nbre_dossier_non_facture').html(data.nbre_dossier_non_facture);
           $('#btn_info_factures').html(data.btn_info_factures);
           $('#btn_info_dossiers_factures').html(data.btn_info_dossiers_factures);
           $('#afficherMonitoringFacturation').html(data.afficherMonitoringFacturation);

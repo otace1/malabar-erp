@@ -31,6 +31,7 @@
                     <tr>
                       <th style="">#</th>
                       <th style="">File Ref.</th>
+                      <th style="">Tally Ref.</th>
                       <th style="">Status</th>
                       <th style="">Invoice Ref.</th>
                       <th style="">Invoice Date</th>
@@ -256,6 +257,7 @@
     "columns":[
       {"data":"compteur"},
       {"data":"ref_dos"},
+      {"data":"mca_b_ref"},
       {"data":"statut"},
       {"data":"ref_fact"},
       {"data":"date_fact"},

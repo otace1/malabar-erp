@@ -103,11 +103,12 @@
               </div>    
               <!-- /.card-header -->
               <div class="card-body table-responsive p-0">
-                <table id="file_data" cellspacing="0" width="100%" class="table text-center hover display compact table-bordered table-striped table-dark table-sm text-nowrap">
+                <table id="file_data" cellspacing="0" width="100%" class="table text-center display compact table-bordered table-striped table-dark table-sm text-nowrap">
                   <thead>
                     <tr>
                       <th style="">#</th>
                       <th style="">File Ref.</th>
+                      <th style="">Tally Ref.</th>
                       <th style="">Status</th>
                       <th style="">Invoice Ref.</th>
                       <th style="">Invoice Date</th>
@@ -332,6 +333,7 @@
     "columns":[
       {"data":"compteur"},
       {"data":"ref_dos"},
+      {"data":"mca_b_ref"},
       {"data":"statut"},
       {"data":"ref_fact"},
       {"data":"date_fact"},

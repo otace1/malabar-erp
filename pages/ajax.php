@@ -1191,6 +1191,7 @@
 
 		$reponse['nbre_facture'] = $maClasse-> getNbreFacture($_POST['id_mod_lic'], NULL, $_POST['debut'], $_POST['fin'], $_POST['id_cli']);
 		$reponse['nbre_dossier_facture'] = $maClasse-> getNbreDossierFacture($_POST['id_mod_lic'], NULL, $_POST['debut'], $_POST['fin'], $_POST['id_cli']);
+		$response['nbre_dossier_non_facture'] = $maClasse-> getNbreDossierNonFacture($_POST['id_mod_lic'], $_POST['id_cli']);
 		$reponse['btn_info_factures'] = '<span onclick="window.open(\'popUpDashboardFacturation.php?statut=Factures&amp;id_mod_lic='.$_POST['id_mod_lic'].'&amp;debut='.$_POST['debut'].'&amp;fin='.$_POST['fin'].'&amp;id_cli='.$_POST['id_cli'].'\',\'pop1\',\'width=950,height=700\');">
                 Details <i class="fas fa-arrow-circle-right"></i>
               </span>';
@@ -2136,7 +2137,7 @@
 			
 				$response['tableau_creation_dossiers_lot'] .= '<tr>
 											<td class="col_1">'.$i.'</td>
-											<td class="col_6"><input type="text" name="ref_dos_'.$i.'" id="ref_dos_'.$i.'" value="'.$ref_dos.'"></td>
+											<td class="col_6"><input type="text" name="ref_dos_'.$i.'" id="ref_dos_b_'.$i.'"  value="'.$ref_dos.'"></td>
 											<td><input type="text" name="num_lic_'.$i.'" id="num_lic_'.$i.'" value="'.$_POST['num_lic'].'"></td>
 				<td style="border: 0.5px solid black;">
 					<input type="date" style="width: 10em;" class="form-control cc-exp form-control-sm" name="load_date_'.$i.'">
@@ -2206,7 +2207,8 @@
 			
 				$response['tableau_creation_dossiers_lot'] .= '<tr>
 											<td class="col_1">'.$i.'</td>
-											<td class="col_6"><input type="text" name="ref_dos_'.$i.'" id="ref_dos_'.$i.'" value="'.$ref_dos.'"></td>
+											<td class="col_6"><input type="text" name="ref_dos_'.$i.'" id="ref_dos_b_'.$i.'" value="'.$ref_dos.'"></td>
+											<td><input type="text" name="mca_b_ref_'.$i.'" id="mca_b_ref_b_'.$i.'"></td>
 											<td><input type="text" name="num_lic_'.$i.'" id="num_lic_'.$i.'" value="'.$_POST['num_lic'].'"></td>
 											<td><input type="text" name="t1_'.$i.'" id="t1_'.$i.'"></td>
 											<td><input type="number" step="0.001" name="poids_'.$i.'" id="poids_'.$i.'"></td>
