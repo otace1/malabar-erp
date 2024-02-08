@@ -2187,7 +2187,7 @@
 
 		}
 		
-		public function creerDossierIB($ref_dos, $id_cli, $ref_fact, $fob, 
+		public function creerDossierIB($ref_dos, $mca_b_ref, $id_cli, $ref_fact, $fob, 
 										$fret, $assurance, $autre_frais, $num_lic, 
 										$id_mod_lic, $id_march, $id_mod_trans,
 										$ref_av, $cod, $id_util, $road_manif, $date_preal, 
@@ -2319,6 +2319,8 @@
 
 				$id_dos = $this-> getDossierRefDos($ref_dos)['id_dos'];
 
+				$this-> MAJ_mca_b_ref($id_dos, $mca_b_ref);
+
 			    for ($i=1; $i <= $_POST['nbre_document']; $i++) { 
 			      
 			      if(isset($_FILES['fichier_'.$i]['name']) && $_FILES['fichier_'.$i]['name'] != ''){
@@ -2362,7 +2364,7 @@
 		}
 		//FIN Methodes permettant d'archiver
 
-		public function creerDossierIBAcid($ref_dos, $id_cli, $ref_fact, $t1, $poids, 
+		public function creerDossierIBAcid($ref_dos, $mca_b_ref, $id_cli, $ref_fact, $t1, $poids, 
 											$num_lic, $id_mod_lic, $id_march, $id_mod_trans, 
 											$id_util, $horse, $trailer_1, $trailer_2, $klsa_arriv, 
 											$crossing_date, $wiski_arriv, $wiski_dep, $ref_crf, 
@@ -2380,7 +2382,7 @@
 			echo '<br> wiski_dep = '.$wiski_dep;*/
 			//echo '<br> id_mod_lic = '.$id_mod_lic;
 
-			$entree['ref_dos'] = $ref_dos; $entree['id_cli'] = $id_cli; $entree['ref_fact'] = $ref_fact; 
+			$entree['ref_dos'] = $ref_dos; $entree['mca_b_ref'] = $mca_b_ref; $entree['id_cli'] = $id_cli; $entree['ref_fact'] = $ref_fact; 
 			$entree['t1'] = $t1; $entree['poids'] = $poids; $entree['num_lic'] = $num_lic; 
 			$entree['id_mod_lic'] = $id_mod_lic; $entree['id_march'] = $id_march; $entree['id_mod_trans'] = $id_mod_trans; 
 			$entree['id_util'] = $id_util; $entree['horse'] = $horse; $entree['trailer_1'] = $trailer_1; 
@@ -2412,13 +2414,13 @@
 				$entree['date_crf'] = NULL;
 			}
 
-			$requete = $connexion-> prepare('INSERT INTO dossier(ref_dos, id_cli, ref_fact, t1, poids, 
+			$requete = $connexion-> prepare('INSERT INTO dossier(ref_dos, mca_b_ref, id_cli, ref_fact, t1, poids, 
 														num_lic, id_mod_lic, id_march, id_mod_trans, 
 														id_util, horse, trailer_1, trailer_2, klsa_arriv, 
 														crossing_date, wiski_arriv, wiski_dep, ref_crf, date_crf, fob)
 												VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 
-														?, ?, ?, ?, ?, ?, ?, ?)');
-			$requete-> execute(array($entree['ref_dos'], $entree['id_cli'], $entree['ref_fact'], 
+														?, ?, ?, ?, ?, ?, ?, ?, ?)');
+			$requete-> execute(array($entree['ref_dos'], $entree['mca_b_ref'], $entree['id_cli'], $entree['ref_fact'], 
 									$entree['t1'], $entree['poids'], $entree['num_lic'], 
 									$entree['id_mod_lic'], $entree['id_march'], $entree['id_mod_trans'], 
 									$entree['id_util'], $entree['horse'], $entree['trailer_1'], 
@@ -3529,6 +3531,7 @@
 			$rows = array();
 
 			$requete = $connexion-> prepare("SELECT 1 AS compteur,
+													dossier.mca_b_ref AS mca_b_ref,
 													CONCAT(dossier.ref_dos,' <button class=\'btn btn-warning btn-xs\' onclick=\'modal_edit_statut_dossier_facturation(',dossier.id_dos,')\'><i class=\'fa fa-edit\'></i></button>') AS ref_dos,
 													IF(dossier.not_fact='1',
 														'<span class=\'badge badge-danger font-weight-bold\'>Disabled</span>',
@@ -3613,6 +3616,7 @@
 				}
 
 				$sql = "SELECT 1 AS compteur,
+							dossier.ref_dos AS ref_dos,
 							IF(facture_dossier.note_debit='0', facture_dossier.ref_fact, NULL) AS ref_fact,
 							IF(marchandise.nom_march IS NOT NULL,
 								marchandise.nom_march,
@@ -3642,7 +3646,8 @@
 
 									)
 								)
-							AS statut
+							AS statut,
+							dossier.mca_b_ref AS mca_b_ref
 						FROM dossier
 							LEFT JOIN detail_facture_dossier
 								ON detail_facture_dossier.id_dos = dossier.id_dos
@@ -3699,7 +3704,8 @@
 
 									)
 								)
-							AS statut
+							AS statut,
+							dossier.mca_b_ref AS mca_b_ref
 						FROM dossier, detail_facture_dossier, facture_dossier, marchandise
 						WHERE dossier.id_mod_lic = ?
 							AND dossier.ref_dos NOT LIKE 'EXPDEC%'
@@ -3752,7 +3758,8 @@
 							dossier.ref_liq AS ref_liq,
 							DATE_FORMAT(dossier.date_liq, '%d/%m/%Y') AS date_liq,
 							dossier.ref_quit AS ref_quit,
-							DATE_FORMAT(dossier.date_quit, '%d/%m/%Y') AS date_quit
+							DATE_FORMAT(dossier.date_quit, '%d/%m/%Y') AS date_quit,
+							dossier.mca_b_ref AS mca_b_ref
 						FROM dossier
 							LEFT JOIN detail_facture_dossier
 								ON detail_facture_dossier.id_dos = dossier.id_dos
@@ -3810,7 +3817,8 @@
 							DATE_FORMAT(dossier.date_liq, '%d/%m/%Y') AS date_liq,
 							dossier.ref_quit AS ref_quit,
 							DATE_FORMAT(dossier.date_quit, '%d/%m/%Y') AS date_quit,
-							'<span class=\'badge badge-info font-weight-bold\'>Waiting to be invoiced</span>' AS statut
+							'<span class=\'badge badge-info font-weight-bold\'>Waiting to be invoiced</span>' AS statut,
+							dossier.mca_b_ref AS mca_b_ref
 						FROM dossier, marchandise
 						WHERE dossier.id_mod_lic = ?
 							AND dossier.date_decl IS NOT NULL
@@ -42124,6 +42132,7 @@
 			// $entree['id_mod_lic'] = $id_mod_lic;
 
 			$compteur = 0;
+			$rows = array();
 
 			if($statut=='Factures'){
 
@@ -42380,6 +42389,7 @@
 					$sqlTime = ' AND DATE(fd.date_fact) BETWEEN "'.$debut.'" AND "'.$fin.'"';
 				}
 				$requete = $connexion-> query("SELECT dos.ref_dos AS ref_dos, 
+													dos.mca_b_ref AS mca_b_ref,
 													fd.ref_fact AS ref_fact, 
 													dos.po_ref AS po_ref,
 													dos.roe_decl AS roe_decl,
@@ -42662,6 +42672,7 @@
 
 				$requete = $connexion-> query("SELECT dos.ref_dos AS ref_dos,
 													cl.nom_cli AS nom_cli, 
+													dos.mca_b_ref AS mca_b_ref,
 													dos.id_dos AS id_dos,
 													dos.po_ref AS po_ref,
 													dos.horse AS horse,
@@ -43860,7 +43871,7 @@
 			return $reponse['nbre'];
 		}
 
-		public function getNbreDossierNonFacture($id_mod_lic){
+		public function getNbreDossierNonFacture($id_mod_lic, $id_cli=null){
 			include('connexion.php');
 			// $entree['id_mod_lic'] = $id_mod_lic;
 
