@@ -33051,9 +33051,9 @@
 			}else if ($id_mod_lic == '2' && $id_cli == '857') {
 				$sqlOrder = ' ORDER BY d.id_dos DESC';
 			}
-			// else if ($id_mod_lic == '2' && $id_cli == '850') {
-			// 	$sqlOrder = ' ORDER BY d.ref_dos DESC';
-			// }
+			else if ($id_mod_lic == '2' && $id_cli == '850') {
+				$sqlOrder = ' ORDER BY d.id_dos DESC';
+			}
 
 			if (isset($cleared) && ($cleared != '')) {
 				$sqlCleared = ' AND d.cleared = "'.$cleared.'"';
