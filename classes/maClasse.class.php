@@ -15610,13 +15610,16 @@
 													UPPER(CONCAT(
 														IF(dos.horse IS NOT NULL,
 															dos.horse,
-															NULL),
+															''),
 														IF(dos.trailer_1 IS NOT NULL,
 															CONCAT('/',dos.trailer_1),
-															NULL),
-														IF(dos.trailer_1 IS NOT NULL,
+															''),
+														IF(dos.trailer_2 IS NOT NULL,
 															CONCAT('/',dos.trailer_2),
-															NULL)
+															''),
+														IF(dos.container IS NOT NULL,
+															CONCAT('/',dos.container),
+															'')
 														)) AS truck,
 													fd.num_cmpt AS num_cmpt,
 													DATE_FORMAT(dos.date_decl, '%d/%m/%Y') AS date_decl,
