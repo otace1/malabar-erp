@@ -148,6 +148,27 @@
 
 
     }
+    
+    function modal_client_rapport_invoice(id_mod_lic){
+
+      $.ajax({
+        type: "POST",
+        url: "ajax.php",
+        data: {id_mod_lic: id_mod_lic, operation: 'modal_client_rapport_invoice'},
+        dataType:"json",
+        success:function(data){
+          if (data.logout) {
+            alert(data.logout);
+            window.location="../deconnexion.php";
+          }else{
+            $('#tableau_client_rapport_invoice').html(data.tableau_client_rapport_invoice);
+            $('#modal_client_rapport_invoice').modal("show");
+          }
+        }
+      });
+
+
+    }
 
     function deroulerMenuLicence(id_mod_lic){
 

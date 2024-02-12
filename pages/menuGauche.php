@@ -30,7 +30,72 @@
           <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
           <?php
-            if($_SESSION['id_role'] == '1' || $_SESSION['id_role'] == '2'){
+            if(!empty($maClasse-> getAffectationUtilisateurModule($_SESSION['id_util'], 14))){
+          ?>
+           <li class="nav-item has-treeview">
+              <a href="#" class="nav-link" class="nav-link">
+                <img src="../images/rapport-dactivite (1).png" width="25px">
+                <p>
+                  <?php
+                    if ($maClasse-> getUtilisateur($_SESSION['id_util'])['langue']=='ENG') {
+                      echo 'Invoicing Report';
+                    }else if ($maClasse-> getUtilisateur($_SESSION['id_util'])['langue']=='FR') {
+                      echo 'Rapport Facturation';
+                    }
+                  ?>
+                  <i class="right fas fa-angle-left"></i>
+                </p>
+              </a>
+              <ul class="nav nav-treeview">
+                <li class="nav-item">
+                  <a href="#" class="nav-link" onclick="modal_client_rapport_invoice(2);">
+                    &nbsp;&nbsp;&nbsp;<i class="fa fa-arrow-down nav-icon"></i> 
+                    <p>
+                    <?php
+                      if ($maClasse-> getUtilisateur($_SESSION['id_util'])['langue']=='ENG') {
+                        echo 'Import';
+                      }else if ($maClasse-> getUtilisateur($_SESSION['id_util'])['langue']=='FR') {
+                        echo 'Import';
+                      }
+                    ?>
+                    </p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="#" class="nav-link" onclick="modal_client_rapport_invoice(1);">
+                    &nbsp;&nbsp;&nbsp;<i class="fa fa-arrow-up nav-icon"></i>
+                    <p>
+                    <?php
+                      if ($maClasse-> getUtilisateur($_SESSION['id_util'])['langue']=='ENG') {
+                        echo 'Export';
+                      }else if ($maClasse-> getUtilisateur($_SESSION['id_util'])['langue']=='FR') {
+                        echo 'Export';
+                      }
+                    ?>
+                    </p>
+                  </a>
+                </li>
+                <!-- <li class="nav-item">
+                  <a href="balanceSheet.php" class="nav-link">
+                    &nbsp;&nbsp;&nbsp;<i class="fa fa-folder-open nav-icon"></i>
+                    <p>
+                    <?php
+                      if ($maClasse-> getUtilisateur($_SESSION['id_util'])['langue']=='ENG') {
+                        echo 'Balance Sheet';
+                      }else if ($maClasse-> getUtilisateur($_SESSION['id_util'])['langue']=='FR') {
+                        echo 'Balance de Comptes';
+                      }
+                    ?>
+                    </p>
+                  </a>
+                </li> -->
+              </ul>
+          </li>
+            <hr>
+            <?php
+            }
+
+            /*if($_SESSION['id_role'] == '1' || $_SESSION['id_role'] == '2'){
           ?>
           <li class="nav-item"  style="">
             <a href="#" class="nav-link active bg bg-danger" style=" font-weight: bold;">
@@ -76,7 +141,7 @@
 
             <hr>
             <?php
-            }
+            }*/
 
             if(!empty($maClasse-> getAffectationUtilisateurModule($_SESSION['id_util'], 11))){
           ?>

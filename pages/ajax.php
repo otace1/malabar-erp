@@ -3007,6 +3007,16 @@
 
   		echo json_encode($reponse);
 
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='modal_client_rapport_invoice'){ 
+
+		$response['tableau_client_rapport_invoice'] = $maClasse-> tableau_client_rapport_invoice($_POST['id_mod_lic']);
+
+		echo json_encode($response);
+
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='invoice_report'){ // On Recupere les factures CDN
+
+		echo json_encode($maClasse-> invoice_report($_POST['id_cli'], $_POST['id_mod_lic']));
+
 	}
 
 
