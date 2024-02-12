@@ -5704,11 +5704,16 @@
     		 return $tableau;
 		}
 
-		public function tableau_client_rapport_invoice($id_mod_lic){
+		public function search_client_worksheet($id_mod_lic, $mot_cle){
 			include('connexion.php');
 			// $entree['id_cli'] = $id_cli;
 			$entree['id_mod_lic'] = $id_mod_lic;
 			$compteur = 0;
+			$sqlMotCle = '';
+
+			if (isset($mot_cle) && ($mot_cle!='')) {
+				$sqlMotCle = ' AND cl.nom_cli LIKE "%'.$mot_cle.'%"';
+			}
 
 			$tableau = '';
 
@@ -5718,6 +5723,65 @@
 												FROM client cl, affectation_client_modele_licence aff
 												WHERE cl.id_cli = aff.id_cli
 													AND aff.id_mod_lic = ?
+													$sqlMotCle
+													ORDER BY cl.code_cli");
+    		$requete-> execute(array($entree['id_mod_lic']));
+    		while ($reponse = $requete-> fetch()) {
+    			$compteur++;
+    			// $tableau .= '
+    			// 			<tr>
+    			// 				<td>'.$compteur.'</td>
+    			// 				<td>'.$reponse['code_cli'].'</td>
+    			// 				<td>'.$reponse['nom_cli'].'</td>
+    			// 				<td class="text-center text-light">
+    			// 					<button class="btn btn-xs btn-warning" onclick="window.location.replace(\'file_pending_worksheet.php?id_mod_lic='.$id_mod_lic.'&id_cli='.$reponse['id_cli'].'\');">
+    			// 						<i class="fa fa-exclamation"></i> Files Pending ('.$this-> dossier_awaiting_worksheet_client($id_mod_lic, $reponse['id_cli']).')
+    			// 					</button> | 
+    			// 					<button class="btn btn-xs bg-info" onclick="window.location.replace(\'list_worksheet.php?id_mod_lic='.$id_mod_lic.'&id_cli='.$reponse['id_cli'].'\');"><i class="fa fa-list"></i> Worsheet list</button>
+    			// 				</td>
+    			// 			</tr>
+    			// ';
+    			$tableau .= '
+    						<tr onMouseOver="this.style.cursor=\'pointer\'" onclick="window.location.replace(\'list_worksheet.php?id_mod_lic='.$id_mod_lic.'&id_cli='.$reponse['id_cli'].'\');">
+    							<td>'.$compteur.'</td>
+    							<td>'.$reponse['code_cli'].'</td>
+    							<td>'.$reponse['nom_cli'].'</td>
+    							<td>'.$this-> dossier_awaiting_worksheet_client($id_mod_lic, $reponse['id_cli']).'</td>
+    						</tr>
+    			';
+    			// $tableau .= '
+    			// 			<tr onMouseOver="this.style.cursor=\'pointer\'" onclick="window.location.replace(\'worksheet.php?id_mod_lic='.$id_mod_lic.'&id_cli='.$reponse['id_cli'].'\');">
+    			// 				<td>'.$compteur.'</td>
+    			// 				<td>'.$reponse['code_cli'].'</td>
+    			// 				<td>'.$reponse['nom_cli'].'</td>
+    			// 				<td>'.$this-> dossier_awaiting_worksheet_client($id_mod_lic, $reponse['id_cli']).'</td>
+    			// 			</tr>
+    			// ';
+    		 }$requete-> closeCursor();
+
+    		 return $tableau;
+		}
+
+		public function tableau_client_rapport_invoice($id_mod_lic, $mot_cle=NULL){
+			include('connexion.php');
+			// $entree['id_cli'] = $id_cli;
+			$entree['id_mod_lic'] = $id_mod_lic;
+			$compteur = 0;
+
+			$tableau = '';
+			$sqlMotCle = '';
+
+			if (isset($mot_cle) && ($mot_cle!='')) {
+				$sqlMotCle = ' AND cl.nom_cli LIKE "%'.$mot_cle.'%"';
+			}
+
+			$requete = $connexion-> prepare("SELECT cl.nom_cli AS nom_cli,
+													cl.code_cli AS code_cli,
+													cl.id_cli AS id_cli
+												FROM client cl, affectation_client_modele_licence aff
+												WHERE cl.id_cli = aff.id_cli
+													AND aff.id_mod_lic = ?
+													$sqlMotCle
 													ORDER BY cl.code_cli");
     		$requete-> execute(array($entree['id_mod_lic']));
     		while ($reponse = $requete-> fetch()) {
@@ -5727,7 +5791,6 @@
     							<td>'.$compteur.'</td>
     							<td>'.$reponse['code_cli'].'</td>
     							<td>'.$reponse['nom_cli'].'</td>
-    							<td>'.$this-> dossier_awaiting_worksheet_client($id_mod_lic, $reponse['id_cli']).'</td>
     						</tr>
     			';
     		 }$requete-> closeCursor();
@@ -13300,6 +13363,7 @@
 												AND fd.id_mod_fact = mf.id_mod_fact
 												AND fd.validation = '1'
 												AND fd.id_cli = ?
+												AND YEAR(fd.date_fact) = '2023'
 											ORDER BY fd.date_fact ASC");
 			
 			$requete-> execute(array($entree['id_mod_lic'], $entree['id_cli']));
