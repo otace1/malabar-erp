@@ -105,6 +105,14 @@
 
       </div>
 
+      <div class="col-md-2">
+          <div class="form-group">
+            <label for="inputEmail3" class="col-form-label">Invoice Template:</label>
+            <span id="template_invoice"></span>
+          </div>
+
+      </div>
+
       <div class="col-md-12"></div>
       
       <div class="col-md-5">
@@ -342,6 +350,32 @@
 
 <script type="text/javascript">
 
+  function getDeboursPourFactureClientModeleLicenceAjaxChange(id_cli, id_mod_lic, id_march, id_mod_trans, id_dos){
+    $('#spinner-div').show();
+    $.ajax({
+      type: "POST",
+      url: "ajax.php",
+      data: { id_cli: id_cli, id_mod_lic: id_mod_lic, id_march:id_march, id_mod_trans:id_mod_trans, id_dos:id_dos, ref_fact:'<?php echo $_GET['ref_fact'];?>', operation: 'getDeboursPourFactureClientModeleLicenceAjaxChangeEdit'},
+      dataType:"json",
+      success:function(data){
+        if (data.logout) {
+          alert(data.logout);
+          window.location="../deconnexion.php";
+        }else{
+          // alert('Hello');
+          
+          $('#debours').html(data.debours);
+          // $('#template_invoice').html(data.template_invoice);
+          // calculTresco();
+        }
+      },
+      complete: function () {
+          $('#spinner-div').hide();//Request is complete so hide spinner
+      }
+    });
+
+  }
+
   function getDeboursFacture(){
     $('#spinner-div').show();
     $.ajax({
@@ -546,6 +580,8 @@
           calculCIF();
           //Items ------------
           $('#debours').html(data.debours);
+          $('#template_invoice').html(data.template_invoice);
+          $('#id_march_template').val(<?php echo $maClasse-> getDataFactureGlobale($_GET['ref_fact'])['id_march'];?>);
         }
       },
       complete: function () {

@@ -38,6 +38,7 @@
   		// $reponse['mon_assurance'] = $maClasse-> selectionnerMonnaie3('id_mon_assurance');
   		// $reponse['mon_autre_frais'] = $maClasse-> selectionnerMonnaie3('id_mon_autre_frais');
   		$reponse['debours'] = $maClasse-> getDeboursPourFactureClientModeleLicenceAjax($reponse['id_cli'], $reponse['id_mod_lic'], $reponse['id_march'], $reponse['id_mod_trans'], $_POST['id_dos'], $_POST['consommable']);
+  		$reponse['template_invoice'] = $maClasse-> selectionnerMarchandiseTemplateFacture($reponse['id_cli'], $reponse['id_mod_trans'], $reponse['id_mod_lic']);
 
   		echo json_encode($reponse);
 
@@ -49,6 +50,7 @@
   		$reponse['debours'] = $maClasse-> getDeboursPourFactureClientModeleLicenceAjaxEdit($reponse['id_cli'], $reponse['id_mod_lic'], $reponse['id_march'], $reponse['id_mod_trans'], $_POST['id_dos'], $_POST['ref_fact']);
 
   		$reponse['label_mon_fob'] = $maClasse-> getMonnaie($maClasse-> getDataDossier($_POST['id_dos'])['id_mon_fob'])['sig_mon'];
+  		$reponse['template_invoice'] = $maClasse-> selectionnerMarchandiseTemplateFacture($reponse['id_cli'], $reponse['id_mod_trans'], $reponse['id_mod_lic']);
   		echo json_encode($reponse);
 
 	}elseif(isset($_POST['operation']) && $_POST['operation']=='maj_roe_decl'){// MAJ Roe decl
@@ -2993,6 +2995,18 @@
 
 	}else if ($_POST['operation']=="statutDossier2") {
 		echo json_encode($maClasse-> afficherStatutDossierFactureAjax2($_POST['statut'], $_POST['id_mod_lic'], $_POST['id_cli']));
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='getDeboursPourFactureClientModeleLicenceAjaxChange'){// On recupere le modele a facturer
+  		$reponse['debours'] = $maClasse-> getDeboursPourFactureClientModeleLicenceAjaxChange($_POST['id_cli'], $_POST['id_mod_lic'], $_POST['id_march'], $_POST['id_mod_trans'], $_POST['id_dos']);
+  		// $reponse['template_invoice'] = $maClasse-> selectionnerMarchandiseTemplateFacture($reponse['id_cli'], $reponse['id_mod_trans'], $reponse['id_mod_lic']);
+
+  		echo json_encode($reponse);
+
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='getDeboursPourFactureClientModeleLicenceAjaxChangeEdit'){// On recupere le modele a facturer
+  		$reponse['debours'] = $maClasse-> getDeboursPourFactureClientModeleLicenceAjaxChangeEdit($_POST['id_cli'], $_POST['id_mod_lic'], $_POST['id_march'], $_POST['id_mod_trans'], $_POST['id_dos'], $_POST['ref_fact']);
+  		// $reponse['template_invoice'] = $maClasse-> selectionnerMarchandiseTemplateFacture($reponse['id_cli'], $reponse['id_mod_trans'], $reponse['id_mod_lic']);
+
+  		echo json_encode($reponse);
+
 	}
 
 
