@@ -5704,6 +5704,37 @@
     		 return $tableau;
 		}
 
+		public function tableau_client_rapport_invoice($id_mod_lic){
+			include('connexion.php');
+			// $entree['id_cli'] = $id_cli;
+			$entree['id_mod_lic'] = $id_mod_lic;
+			$compteur = 0;
+
+			$tableau = '';
+
+			$requete = $connexion-> prepare("SELECT cl.nom_cli AS nom_cli,
+													cl.code_cli AS code_cli,
+													cl.id_cli AS id_cli
+												FROM client cl, affectation_client_modele_licence aff
+												WHERE cl.id_cli = aff.id_cli
+													AND aff.id_mod_lic = ?
+													ORDER BY cl.code_cli");
+    		$requete-> execute(array($entree['id_mod_lic']));
+    		while ($reponse = $requete-> fetch()) {
+    			$compteur++;
+    			$tableau .= '
+    						<tr onMouseOver="this.style.cursor=\'pointer\'" onclick="window.location.replace(\'rapport_invoice.php?id_mod_lic='.$id_mod_lic.'&id_cli='.$reponse['id_cli'].'\');">
+    							<td>'.$compteur.'</td>
+    							<td>'.$reponse['code_cli'].'</td>
+    							<td>'.$reponse['nom_cli'].'</td>
+    							<td>'.$this-> dossier_awaiting_worksheet_client($id_mod_lic, $reponse['id_cli']).'</td>
+    						</tr>
+    			';
+    		 }$requete-> closeCursor();
+
+    		 return $tableau;
+		}
+
 		public function dossier_awaiting_worksheet_client($id_mod_lic, $id_cli){
 			include('connexion.php');
 			// $entree['id_cli'] = $id_cli;
@@ -13208,6 +13239,69 @@
 													AND fd.id_cli = ?
 												ORDER BY fd.date_fact ASC");
 			}
+			$requete-> execute(array($entree['id_mod_lic'], $entree['id_cli']));
+			while ($reponse = $requete-> fetch()) {
+				$compteur++;
+				$reponse['compteur'] = $compteur;
+				$reponse['montant'] = $this-> getMontantFactureGlobale($reponse['ref_fact'])+(( ($this-> getMontantFactureDebours($reponse['ref_fact'], 27)*$this-> getFactureGlobale($reponse['ref_fact'])['taux_commission']) - $this-> getMontantFactureDebours($reponse['ref_fact'], 27)));
+				$reponse['commodity'] = $this-> getMarchandiseFacture($reponse['ref_fact'])['nom_march'];
+
+				$rows[] = $reponse;
+			}$requete-> closeCursor();
+			return $rows;
+
+		}
+
+		public function invoice_report($id_cli, $id_mod_lic){
+			include("connexion.php");
+			$entree['id_cli'] = $id_cli;
+			$entree['id_mod_lic'] = $id_mod_lic;
+			//$entree['type_fact'] = $type_fact;
+			$compteur=0;
+
+			$bg = "";
+			$badge = '';
+			$btn = '';
+			$etat ='';
+			$tableau = '';
+
+			$debut = $compteur;
+
+			$rows = array();
+
+			$requete = $connexion-> prepare("SELECT fd.ref_fact AS ref_fact,
+												DATE_FORMAT(fd.date_fact, '%d/%m/%Y') AS date_fact,
+												fd.validation AS validation,
+												fd.id_march AS id_march,
+												fd.type_fact AS type_fact,
+												cl.nom_cli AS nom_cli,
+												cl.id_cli AS id_cli,
+												u.nom_util AS nom_util,
+												u.validation_facture AS validation_facture,
+												fd.transmission AS transmission,
+												fd.type_fact AS type_fact,
+												fd.id_mod_lic AS id_mod_lic,
+												mf.edit_page AS edit_page,
+												mf.view_page AS view_page,
+												mf.excel AS excel,
+												CONCAT(CONCAT('<button class=\"btn btn-xs bg-info square-btn-adjust\" onclick=\"window.open(\'',mf.view_page,'?ref_fact=',fd.ref_fact,'\',\'pop3\',\'width=1000,height=800\');\" title=\"View invoice\">
+								                    <i class=\"fas fa-eye\"></i> 
+								                </button>'),' ',
+								                IF(mf.excel IS NOT NULL, CONCAT('<button class=\"btn btn-xs bg-success square-btn-adjust\" onclick=\"window.location.replace(\'',mf.excel,'?ref_fact=',fd.ref_fact,'\',\'pop4\',\'width=1000,height=800\');\" title=\"Export Annex\">
+								                    <i class=\"fas fa-file-excel\"></i> 
+								                </button>'), '')) AS action_2,
+												CONCAT(CONCAT('<button class=\"btn btn-xs bg-info square-btn-adjust\" onclick=\"window.open(\'',mf.view_page,'?ref_fact=',fd.ref_fact,'\',\'pop3\',\'width=1000,height=800\');\" title=\"View invoice\">
+								                    <i class=\"fas fa-eye\"></i> 
+								                </button>')) AS action
+												FROM facture_dossier fd, client cl, utilisateur u, modele_facture mf
+											WHERE fd.id_mod_lic = ?
+												AND fd.id_util = u.id_util
+												AND fd.id_cli = cl.id_cli
+												AND fd.id_mod_fact = mf.id_mod_fact
+												AND fd.validation = '1'
+												AND fd.id_cli = ?
+											ORDER BY fd.date_fact ASC");
+			
 			$requete-> execute(array($entree['id_mod_lic'], $entree['id_cli']));
 			while ($reponse = $requete-> fetch()) {
 				$compteur++;
