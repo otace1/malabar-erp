@@ -51484,6 +51484,85 @@
 			$requete-> execute(array($entree['roe_feuil_calc'], $entree['id_dos']));
 
 		} 
+		//note_feuille
+		public function maj_note_feuille($id_dos, $note_feuille){
+
+			//Log
+			if ($this-> getDossier($id_dos)['note_feuille'] != $note_feuille) {
+				
+				// $colonne = $this-> getNomColonneClient('note_feuille', $_GET['id_cli'], $_GET['id_mod_trans'], $_GET['id_mod_trac']);
+				$this-> creerLogDossier('note_feuille', $note_feuille, $id_dos, $_SESSION['id_util']);
+
+			}
+
+			include('connexion.php');
+			$entree['id_dos'] = $id_dos;
+			$entree['note_feuille'] = $note_feuille;
+			$requete = $connexion-> prepare("UPDATE dossier SET note_feuille = ?
+												WHERE id_dos = ?");
+			$requete-> execute(array($entree['note_feuille'], $entree['id_dos']));
+
+		} 
+
+		//note_fret
+		public function maj_note_fret($id_dos, $note_fret){
+
+			//Log
+			if ($this-> getDossier($id_dos)['note_fret'] != $note_fret) {
+				
+				// $colonne = $this-> getNomColonneClient('note_fret', $_GET['id_cli'], $_GET['id_mod_trans'], $_GET['id_mod_trac']);
+				$this-> creerLogDossier('note_fret', $note_fret, $id_dos, $_SESSION['id_util']);
+
+			}
+
+			include('connexion.php');
+			$entree['id_dos'] = $id_dos;
+			$entree['note_fret'] = $note_fret;
+			$requete = $connexion-> prepare("UPDATE dossier SET note_fret = ?
+												WHERE id_dos = ?");
+			$requete-> execute(array($entree['note_fret'], $entree['id_dos']));
+
+		} 
+
+		//note_assurance
+		public function maj_note_assurance($id_dos, $note_assurance){
+
+			//Log
+			if ($this-> getDossier($id_dos)['note_assurance'] != $note_assurance) {
+				
+				// $colonne = $this-> getNomColonneClient('note_assurance', $_GET['id_cli'], $_GET['id_mod_trans'], $_GET['id_mod_trac']);
+				$this-> creerLogDossier('note_assurance', $note_assurance, $id_dos, $_SESSION['id_util']);
+
+			}
+
+			include('connexion.php');
+			$entree['id_dos'] = $id_dos;
+			$entree['note_assurance'] = $note_assurance;
+			$requete = $connexion-> prepare("UPDATE dossier SET note_assurance = ?
+												WHERE id_dos = ?");
+			$requete-> execute(array($entree['note_assurance'], $entree['id_dos']));
+
+		} 
+
+		//note_autre_frais
+		public function maj_note_autre_frais($id_dos, $note_autre_frais){
+
+			//Log
+			if ($this-> getDossier($id_dos)['note_autre_frais'] != $note_autre_frais) {
+				
+				// $colonne = $this-> getNomColonneClient('note_autre_frais', $_GET['id_cli'], $_GET['id_mod_trans'], $_GET['id_mod_trac']);
+				$this-> creerLogDossier('note_autre_frais', $note_autre_frais, $id_dos, $_SESSION['id_util']);
+
+			}
+
+			include('connexion.php');
+			$entree['id_dos'] = $id_dos;
+			$entree['note_autre_frais'] = $note_autre_frais;
+			$requete = $connexion-> prepare("UPDATE dossier SET note_autre_frais = ?
+												WHERE id_dos = ?");
+			$requete-> execute(array($entree['note_autre_frais'], $entree['id_dos']));
+
+		} 
 
 		public function MAJ_id_front($id_dos, $id_front){
 
