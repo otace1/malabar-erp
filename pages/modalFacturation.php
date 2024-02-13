@@ -57,6 +57,8 @@
       </div>
       <div class="modal-body">
         <div class="row">
+          <input type="text" id="search_client_worksheet" class="form-control form-control-sm" placeholder="e.g.: KAMOA" onkeyup="search_client_worksheet(this.value);">
+          <hr>
 
           <div class="col-md-12 table-responsive p-0 " style="height: 500px;">
             <table class="table table-bordered table-striped text-nowrap table-hover table-sm small text-nowrap table-head-fixed table-dark">
@@ -138,10 +140,14 @@
       </div>
       <div class="modal-body">
         <div class="row">
+          <input type="hidden" id="id_mod_lic_search">
 
+          <input type="text" id="search_client_rapport_invoice" class="form-control form-control-sm" placeholder="e.g.: KAMOA" onkeyup="search_client_rapport_invoice(this.value);">
+          <hr>
           <div class="col-md-12 table-responsive p-0 " style="height: 500px;">
             <table class="table table-bordered table-striped text-nowrap table-hover table-sm small text-nowrap table-head-fixed table-dark">
               <thead>
+                  <tr>
                   <tr>
                       <th>#</th>
                       <th>Code</th>

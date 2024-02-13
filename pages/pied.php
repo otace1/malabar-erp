@@ -142,13 +142,35 @@
           }else{
             $('#tableau_client_worksheet').html(data.tableau_client_worksheet);
             $('#modal_client_worksheet').modal("show");
+            $('#id_mod_lic_search').val(id_mod_lic);
+            document.getElementById("search_client_worksheet").focus();
           }
         }
       });
 
 
     }
-    
+
+    function search_client_worksheet(mot_cle){
+
+      $.ajax({
+        type: "POST",
+        url: "ajax.php",
+        data: {id_mod_lic: $('#id_mod_lic_search').val(), mot_cle: mot_cle, operation: 'search_client_worksheet'},
+        dataType:"json",
+        success:function(data){
+          if (data.logout) {
+            alert(data.logout);
+            window.location="../deconnexion.php";
+          }else{
+            $('#tableau_client_worksheet').html(data.tableau_client_worksheet);
+          }
+        }
+      });
+
+
+    }
+
     function modal_client_rapport_invoice(id_mod_lic){
 
       $.ajax({
@@ -163,6 +185,30 @@
           }else{
             $('#tableau_client_rapport_invoice').html(data.tableau_client_rapport_invoice);
             $('#modal_client_rapport_invoice').modal("show");
+            $('#id_mod_lic_search').val(id_mod_lic);
+            document.getElementById("search_client_rapport_invoice").focus();
+          }
+        }
+      });
+
+
+    }
+
+    function search_client_rapport_invoice(mot_cle){
+
+      $.ajax({
+        type: "POST",
+        url: "ajax.php",
+        data: {id_mod_lic: $('#id_mod_lic_search').val(), mot_cle: mot_cle, operation: 'search_client_rapport_invoice'},
+        dataType:"json",
+        success:function(data){
+          if (data.logout) {
+            alert(data.logout);
+            window.location="../deconnexion.php";
+          }else{
+            $('#tableau_client_rapport_invoice').html(data.tableau_client_rapport_invoice);
+            // $('#modal_client_rapport_invoice').modal("show");
+            // document.getElementById("search_client_rapport_invoice").focus();
           }
         }
       });

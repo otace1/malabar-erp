@@ -70,6 +70,10 @@ $fob = number_format($maClasse-> getFOBMarchandiseDossier($_GET['id_dos']), 2, '
 $fret = number_format($maClasse-> getDossier($_GET['id_dos'])['fret'], 2, '.', ',');
 $assurance = number_format($maClasse-> getDossier($_GET['id_dos'])['assurance'], 2, '.', ',');
 $autre_frais = number_format($maClasse-> getDossier($_GET['id_dos'])['autre_frais'], 2, '.', ',');
+$note_feuille = $maClasse-> getDossier($_GET['id_dos'])['note_feuille'];
+$note_fret = $maClasse-> getDossier($_GET['id_dos'])['note_fret'];
+$note_assurance = $maClasse-> getDossier($_GET['id_dos'])['note_assurance'];
+$note_autre_frais = $maClasse-> getDossier($_GET['id_dos'])['note_autre_frais'];
 $incoterm = $maClasse-> getDossier($_GET['id_dos'])['incoterm'];
 $regime = $maClasse-> getDossier($_GET['id_dos'])['regime'];
 $num_lic = $maClasse-> getDossier($_GET['id_dos'])['num_lic'];
@@ -97,7 +101,7 @@ $tbl = <<<EOD
         <meta http-equiv = " content-type " content = " text/html; charset=utf-8" />
     </head>
     <body style="font-weight: bold;" style="">
-	<table>
+	<table  cellpadding="1">
 		<tr>
 			<td width="45%" style="text-align: center;"></td>
 			<td width="55%" style="text-align: right; font-size: 5px;">
@@ -126,12 +130,14 @@ $tbl = <<<EOD
 			<td width="10%" style="text-align: center; border-left: 0.3px solid black; font-weight: bold;">$ref_dos</td>
 			<td width="10%" style="text-align: center; border: 0.3px solid black; ">Fret</td>
 			<td width="10%" style="text-align: center; border: 0.3px solid black; font-weight: bold;">$fret</td>
+			<td width="20%" style="">$note_fret</td>
 		</tr>
 		<tr>
 			<td width="10%" style="text-align: center; border-left: 0.3px solid black;  border-bottom: 0.3px solid black; "></td>
 			<td width="10%" style="text-align: center; border-bottom: 0.3px solid black; border-left: 0.3px solid black; font-weight: bold;"></td>
 			<td width="10%" style="text-align: center; border: 0.3px solid black; ">Autres Charges</td>
 			<td width="10%" style="text-align: center; border: 0.3px solid black; font-weight: bold;">$autre_frais</td>
+			<td width="20%" style="">$note_autre_frais</td>
 		</tr>
 
 		<tr>
@@ -139,6 +145,7 @@ $tbl = <<<EOD
 			<td width="10%" style="text-align: center; border-left: 0.3px solid black; border-top: 0.3px solid black; border-right: 0.3px solid black;  font-weight: bold;"></td>
 			<td width="10%" style="text-align: center; border: 0.3px solid black; ">Assurance</td>
 			<td width="10%" style="text-align: center; border: 0.3px solid black; font-weight: bold;">$assurance</td>
+			<td width="20%" style="">$note_assurance</td>
 		</tr>
 		<tr>
 			<td width="10%" style="text-align: center; border-left: 0.3px solid black; ">INCOTERM</td>
@@ -194,6 +201,13 @@ $tbl = <<<EOD
 			<td width="8%" style="text-align: center; border: 0.3px solid black; font-weight: bold;">DDI en CDF</td>
 		</tr>
 		$marchandise_dossier
+		<br>
+		<tr>
+			<td width="34%" style="text-align: left; border: solid 1px black;">
+			<b>Note:</b><br>
+			$note_feuille
+			</td>
+		</tr>
 		<br>
 		<tr>
 			<td width="33%" style="text-align: center;">

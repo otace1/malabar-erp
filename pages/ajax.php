@@ -3013,9 +3013,59 @@
 
 		echo json_encode($response);
 
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='search_client_rapport_invoice'){ 
+
+		$response['tableau_client_rapport_invoice'] = $maClasse-> tableau_client_rapport_invoice($_POST['id_mod_lic'], $_POST['mot_cle']);
+
+		echo json_encode($response);
+
 	}elseif(isset($_POST['operation']) && $_POST['operation']=='invoice_report'){ // On Recupere les factures CDN
 
 		echo json_encode($maClasse-> invoice_report($_POST['id_cli'], $_POST['id_mod_lic']));
+
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='search_client_worksheet'){ 
+
+		$response['tableau_client_worksheet'] = $maClasse-> search_client_worksheet($_POST['id_mod_lic'], $_POST['mot_cle']);
+
+		echo json_encode($response);
+
+	}//note_feuille
+	elseif(isset($_POST['operation']) && $_POST['operation']=='MAJ_note_feuille'){
+
+  		$reponse['message'] = 'Done!';
+  		$maClasse-> MAJ_note_feuille($_POST['id_dos'], $_POST['note_feuille']);
+
+  		echo json_encode($reponse);
+
+	}//note_fret
+	elseif(isset($_POST['operation']) && $_POST['operation']=='MAJ_note_fret'){
+
+  		$reponse['message'] = 'Done!';
+  		$maClasse-> MAJ_note_fret($_POST['id_dos'], $_POST['note_fret']);
+
+  		echo json_encode($reponse);
+
+	}//note_assurance
+	elseif(isset($_POST['operation']) && $_POST['operation']=='MAJ_note_assurance'){
+
+  		$reponse['message'] = 'Done!';
+  		$maClasse-> MAJ_note_assurance($_POST['id_dos'], $_POST['note_assurance']);
+
+  		echo json_encode($reponse);
+
+	}//note_autre_frais
+	elseif(isset($_POST['operation']) && $_POST['operation']=='MAJ_note_autre_frais'){
+
+  		$reponse['message'] = 'Done!';
+  		$maClasse-> MAJ_note_autre_frais($_POST['id_dos'], $_POST['note_autre_frais']);
+
+  		echo json_encode($reponse);
+
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='calculFOBWorksheet'){
+
+  		$reponse['fob'] = $maClasse-> getDataDossier($_POST['id_dos'])['fob'];
+
+  		echo json_encode($reponse);
 
 	}
 

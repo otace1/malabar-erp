@@ -93,7 +93,7 @@
                     <tr>
                       <td>Duree Loyer</td>
                       <td>
-                        <select id="duree_loyer" name="duree_loyer" onchange="MAJ_duree_loyer(id_dos_worsheet.value, this.value)">
+                        <select id="duree_loyer" name="duree_loyer" onchange="MAJ_duree_loyer(id_dos_worsheet.value, this.value);">
                           <option value="0">0</option>
                           <option value="6">6</option>
                           <option value="12">12</option>
@@ -103,6 +103,11 @@
                       <?php
                         }
                       ?>
+                      <tr>
+                        <td colspan="2">
+                          <textarea class="form-control form-control-sm" placeholder="Note" id="note_feuille" onblur="MAJ_note_feuille(id_dos_worsheet.value, this.value);" ></textarea>
+                        </td>
+                      </tr>
                   </tbody>
                 </table>
               </div>
@@ -121,6 +126,9 @@
                      <td>
                        <input type="number" step="0.01" name="fret" id="fret" onblur="MAJ_fret(id_dos_worsheet.value, this.value);">
                      </td>
+                     <td>
+                       <textarea class="form-control form-control-sm" id="note_fret" onblur="MAJ_note_fret(id_dos_worsheet.value, this.value);"  placeholder="Note Fret"></textarea>
+                     </td>
                    </tr>
                    <tr>
                      <td>Autres Charges</td>
@@ -129,6 +137,9 @@
                      <td>
                        <input type="number" step="0.01" name="autre_frais" id="autre_frais" onblur="MAJ_autre_frais(id_dos_worsheet.value, this.value);">
                      </td>
+                     <td>
+                       <textarea class="form-control form-control-sm" id="note_autre_frais" onblur="MAJ_note_autre_frais(id_dos_worsheet.value, this.value);"  placeholder="Note Autres Frais"></textarea>
+                     </td>
                    </tr>
                    <tr>
                      <td>Assurance</td>
@@ -136,6 +147,9 @@
                      <input type="hidden" id="assurance"> -->
                      <td>
                        <input type="number" step="0.01" name="assurance" id="assurance" onblur="MAJ_assurance(id_dos_worsheet.value, this.value);">
+                     </td>
+                     <td>
+                       <textarea class="form-control form-control-sm" id="note_assurance" onblur="MAJ_note_assurance(id_dos_worsheet.value, this.value);"  placeholder="Note Assurance"></textarea>
                      </td>
                    </tr>
                    <tr>
@@ -170,7 +184,7 @@
             <hr>
           </div>
  -->
-          <div class="col-md-12 table-responsive p-0">
+          <div class="col-md-12 table-responsive p-0" style="height: 500px;">
             <table class="table table-bordered table-striped text-nowrap table-hover table-sm text-nowrap table-head-fixed ">
               <thead>
                   <tr>
@@ -229,7 +243,7 @@
                         <td><input type="number" placeholder="Colis" style="width: 5em;" name="nbr_bags" step="0.01" required></td>
                         <td><input type="number" placeholder="Qte" style="width: 5em;" name="qte" step="0.01" required></td>
                         <td><input type="number" placeholder="Poids" style="width: 8em;" name="poids" step="0.01" required></td>
-                        <td><input type="number" placeholder="FOB" style="width: 8em;" name="fob" step="0.01" required></td>
+                        <td><input type="number" placeholder="FOB" style="width: 8em;" name="fob" id="fob_input" onkeyup="calculFOBWorksheet();" step="0.01" required></td>
                         <td><button class="btn btn-xs btn-primary" type="submit"><i class="fa fa-check"></i></button></td>
                     </tr>
                   </form>
@@ -336,6 +350,154 @@
 </div>
 
 <script type="text/javascript">
+  
+  function calculFOBWorksheet(){
+
+    $.ajax({
+      type: 'post',
+      url: 'ajax.php',
+      data: {operation: 'calculFOBWorksheet', id_dos: <?php echo $_GET['id_dos'];?>},
+      dataType: 'json',
+      success:function(data){
+        if (data.logout) {
+          alert(data.logout);
+          window.location="../deconnexion.php";
+        }else{
+          if (parseFloat($('#fob_input').val()) > 0 ) {
+            fob_input = parseFloat($('#fob_input').val());
+          }else{
+            fob_input=0;
+          }
+          fob = parseFloat(data.fob)+fob_input;
+
+          $('#fob_worksheet').html(new Intl.NumberFormat('en-US').format(Math.round(fob*1000)/1000));
+          console.log(fob);
+        }
+      },
+      complete: function () {
+          $('#spinner-div').hide();//Request is complete so hide spinner
+      }
+    });
+
+  }
+
+  function MAJ_not_feuille(id_dos, not_feuille){
+
+    $.ajax({
+      type: 'post',
+      url: 'ajax.php',
+      data: {operation: 'MAJ_not_feuille', id_dos: id_dos, not_feuille: not_feuille},
+      dataType: 'json',
+      success:function(data){
+        if (data.logout) {
+          alert(data.logout);
+          window.location="../deconnexion.php";
+        }else{
+
+        }
+      },
+      complete: function () {
+          $('#spinner-div').hide();//Request is complete so hide spinner
+      }
+    });
+
+  }
+
+  //note_assurance
+  function MAJ_note_assurance(id_dos, note_assurance){
+
+    $.ajax({
+      type: 'post',
+      url: 'ajax.php',
+      data: {operation: 'MAJ_note_assurance', id_dos: id_dos, note_assurance: note_assurance},
+      dataType: 'json',
+      success:function(data){
+        if (data.logout) {
+          alert(data.logout);
+          window.location="../deconnexion.php";
+        }else{
+          // $('#marchandiseDossier').html(data.marchandiseDossier);
+          // getSommeMarchandiseDossier(id_dos);
+        }
+      },
+      complete: function () {
+          $('#spinner-div').hide();//Request is complete so hide spinner
+      }
+    });
+
+  }
+
+  //note_fret
+  function MAJ_note_fret(id_dos, note_fret){
+
+    $.ajax({
+      type: 'post',
+      url: 'ajax.php',
+      data: {operation: 'MAJ_note_fret', id_dos: id_dos, note_fret: note_fret},
+      dataType: 'json',
+      success:function(data){
+        if (data.logout) {
+          alert(data.logout);
+          window.location="../deconnexion.php";
+        }else{
+          // $('#marchandiseDossier').html(data.marchandiseDossier);
+          // getSommeMarchandiseDossier(id_dos);
+        }
+      },
+      complete: function () {
+          $('#spinner-div').hide();//Request is complete so hide spinner
+      }
+    });
+
+  }
+
+  //note_autre_frais
+  function MAJ_note_autre_frais(id_dos, note_autre_frais){
+
+    $.ajax({
+      type: 'post',
+      url: 'ajax.php',
+      data: {operation: 'MAJ_note_autre_frais', id_dos: id_dos, note_autre_frais: note_autre_frais},
+      dataType: 'json',
+      success:function(data){
+        if (data.logout) {
+          alert(data.logout);
+          window.location="../deconnexion.php";
+        }else{
+          // $('#marchandiseDossier').html(data.marchandiseDossier);
+          // getSommeMarchandiseDossier(id_dos);
+        }
+      },
+      complete: function () {
+          $('#spinner-div').hide();//Request is complete so hide spinner
+      }
+    });
+
+  }
+
+  //note_feuille
+  function MAJ_note_feuille(id_dos, note_feuille){
+
+    $.ajax({
+      type: 'post',
+      url: 'ajax.php',
+      data: {operation: 'MAJ_note_feuille', id_dos: id_dos, note_feuille: note_feuille},
+      dataType: 'json',
+      success:function(data){
+        if (data.logout) {
+          alert(data.logout);
+          window.location="../deconnexion.php";
+        }else{
+          // $('#marchandiseDossier').html(data.marchandiseDossier);
+          // getSommeMarchandiseDossier(id_dos);
+        }
+      },
+      complete: function () {
+          $('#spinner-div').hide();//Request is complete so hide spinner
+      }
+    });
+
+  }
 
   function reloadMarchandiseDossier(id_dos){
     $('#spinner-div').show();
@@ -1056,6 +1218,10 @@ table.on('click', 'tbody tr', function () {
           $('#ref_fact').val(data.ref_fact);
           $('#incoterm').val(data.incoterm);
           $('#roe_feuil_calc').val(data.roe_feuil_calc);
+          $('#note_feuille').val(data.note_feuille);
+          $('#note_fret').val(data.note_fret);
+          $('#note_assurance').val(data.note_assurance);
+          $('#note_autre_frais').val(data.note_autre_frais);
           $('#regime').html(data.regime);
           $('#num_lic').html(data.num_lic);
           $('#fret_worsheet').html(new Intl.NumberFormat('en-US').format(Math.round(data.fret*1000)/1000));
