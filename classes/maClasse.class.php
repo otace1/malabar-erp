@@ -15805,6 +15805,7 @@
 													MAX(dos.ref_dos) AS ref_dos_max,
 													COUNT(DISTINCT(dos.id_dos)) AS nbre_dos,
 													dos.*,
+													((dos.fob_usd*dos.roe_inv)/dos.roe_decl) AS fob_en_usd,
 													UPPER(CONCAT(
 														IF(dos.horse IS NOT NULL,
 															dos.horse,
@@ -18398,7 +18399,8 @@
 					$compteur++;
 					$montant_tva_input = '';
 
-					if ($this-> getDossier($id_dos)['num_lic'] == 'UNDER VALUE' && !empty($this-> getMontantDeboursUnderValue($this-> getDossier($id_dos)['id_cli'], $reponseDebours['id_deb'], $this-> getDossier($id_dos)['id_mod_lic'], $this-> getDossier($id_dos)['id_mod_trans'], $this-> getDossier($id_dos)['id_march']))) {
+					// if ($this-> getDossier($id_dos)['num_lic'] == 'UNDER VALUE' && !empty( $this-> getMontantDeboursUnderValue($this-> getDossier($id_dos)['id_cli'], $reponseDebours['id_deb'], $this-> getDossier($id_dos)['id_mod_lic'], $this-> getDossier($id_dos)['id_mod_trans'], $this-> getDossier($id_dos)['id_march']))) {
+					if ($this-> getDossier($id_dos)['fob_en_usd'] < 2500 && !empty( $this-> getMontantDeboursUnderValue($this-> getDossier($id_dos)['id_cli'], $reponseDebours['id_deb'], $this-> getDossier($id_dos)['id_mod_lic'], $this-> getDossier($id_dos)['id_mod_trans'], $this-> getDossier($id_dos)['id_march']))) {
 
 						$reponseDebours['montant'] = $this-> getMontantDeboursUnderValue($this-> getDossier($id_dos)['id_cli'], $reponseDebours['id_deb'], $this-> getDossier($id_dos)['id_mod_lic'], $this-> getDossier($id_dos)['id_mod_trans'], $this-> getDossier($id_dos)['id_march']);
 
@@ -39544,7 +39546,8 @@
 															autre_frais, 0)
 													) AS cif_2,
 													DATE_FORMAT(date_feuil_calc, '%Y-%m-%d %H:%i:%s') AS date_feuil_calc_1,
-													DATE_FORMAT(date_verif_feuil_calc, '%Y-%m-%d %H:%i:%s') AS date_verif_feuil_calc_1
+													DATE_FORMAT(date_verif_feuil_calc, '%Y-%m-%d %H:%i:%s') AS date_verif_feuil_calc_1,
+													((fob_usd*roe_inv)/roe_decl) AS fob_en_usd
 												FROM dossier
 												WHERE id_dos = ?");
 			$requete-> execute(array($entree['id_dos']));
