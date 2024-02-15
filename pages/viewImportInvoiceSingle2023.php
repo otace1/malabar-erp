@@ -171,6 +171,7 @@ $po_ref = $maClasse-> getDataDossiersMultipleInvoice($_GET['ref_fact'])['po_ref'
 $num_exo = $maClasse-> getDataDossiersMultipleInvoice($_GET['ref_fact'])['num_exo'];
 $poids = number_format($maClasse-> getDataDossiersMultipleInvoice($_GET['ref_fact'])['poids'], 2, ',', '.');
 $fob_usd = number_format($maClasse-> getDataDossiersMultipleInvoice($_GET['ref_fact'])['fob_usd'], 2, ',', '.');
+$fob_en_usd = number_format($maClasse-> getDataDossiersMultipleInvoice($_GET['ref_fact'])['fob_en_usd'], 2, ',', '.');
 $fret_usd = number_format($maClasse-> getDataDossiersMultipleInvoice($_GET['ref_fact'])['fret_usd'], 2, ',', '.');
 $autre_frais_usd = number_format($maClasse-> getDataDossiersMultipleInvoice($_GET['ref_fact'])['autre_frais_usd'], 2, ',', '.');
 $assurance_usd = number_format($maClasse-> getDataDossiersMultipleInvoice($_GET['ref_fact'])['assurance_usd'], 2, ',', '.');
@@ -370,7 +371,7 @@ $tbl = <<<EOD
 
 		<tr>
 			<td width="15%" style="text-align: center;"></td>
-			<td width="15%" style="text-align: left; border: 0.3px solid black; font-size: 7px;">&nbsp;Truck/Trailer No.</td>
+			<td width="15%" style="text-align: left; border: 0.3px solid black; font-size: 7px;">&nbsp;Truck/Trailer/Container</td>
 			<td width="25%" style="text-align: center; border: 0.3px solid black; font-size: 7px;">$truck</td>
 		</tr>
 
@@ -432,6 +433,8 @@ $tbl = <<<EOD
 			<td width="23%" style="text-align: left; border: 0.3px solid black; font-size: 7px;">&nbsp;Autres Charges/$id_mon_autre_frais: </td>
 			<td width="22%" style="text-align: center; border: 0.3px solid black; font-size: 7px;">$autre_frais_usd</td>
 			<td width="15%" style="text-align: left; "></td>
+			<td width="15%" style="text-align: left; border: 0.3px solid black; font-size: 7px;">&nbsp;FOB (USD): </td>
+			<td width="25%" style="text-align: center; border: 0.3px solid black; font-size: 7px;">$fob_en_usd</td>
 		</tr>
 		<tr>
 			<td width="23%" style="text-align: left; border: 0.3px solid black; font-size: 7px;">&nbsp;Assurance/$id_mon_assurance: </td>

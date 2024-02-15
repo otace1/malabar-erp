@@ -141,6 +141,7 @@
 
       <div class="col-md-5">
         <label for="x_card_code" class="control-label mb-1"><u>File Data</u></label>
+        <span id="fob_en_usd_label"></span>
         <table class="table table-bordered table-responsive table-striped text-nowrap table-hover table-sm small table-head-fixed table-dark">
           <tbody>
             <tr>
@@ -545,6 +546,9 @@
           $('#autre_frais_usd').val(Math.round((data.autre_frais_usd*1000))/1000);
           $('#cif_usd').val(Math.round((data.cif_usd*1000))/1000);
           $('#montant_liq').val(Math.round((data.montant_liq*1000))/1000);
+          fob_en_usd = Math.round((data.fob_en_usd*1000))/1000;
+          $('#fob_en_usd_label').html('FOB (USD): '+fob_en_usd);
+          // console.log(data.fob_en_usd);
           calculCIF();
 
           $('#klsa_arriv').html(data.klsa_arriv);
@@ -716,6 +720,12 @@
       $('#cif_cdf').removeClass("badge badge-danger");
 
     }
+
+    fob_en_usd_label = (fob_usd*roe_inv)/roe_decl;
+
+    $('#fob_en_usd_label').html('FOB (USD): '+new Intl.NumberFormat('en-DE').format(Math.round(fob_en_usd_label*1000)/1000));
+    $('#fob_en_usd_label').addClass('text-sm font-weight-bold float-right badge badge-dark');
+    getTableauImportInvoiceSingle($('#id_mod_fact').val(), $('#id_dos').val(), $('#id_mod_lic').val(), $('#id_march').val(), $('#id_mod_trans').val(), $('#consommable').val())
 
   }
 
