@@ -46560,7 +46560,7 @@
 			$entree['id_mod_lic'] = $id_mod_lic;
 			// $entree['id_march'] = $id_march;
 
-			$select = '<select class="form-control form-control-sm" id="id_march_template" onchange="getDeboursPourFactureClientModeleLicenceAjaxChange('.$id_cli.', '.$id_mod_lic.', this.value, '.$id_mod_trans.', id_dos.value)" required>';
+			$select = '<select class="form-control form-control-sm" id="id_march_template" onchange="getDeboursPourFactureClientModeleLicenceAjaxChange('.$id_cli.', '.$id_mod_lic.', this.value, '.$id_mod_trans.', id_dos.value)" required><option></option>';
 
 			$requete = $connexion-> prepare("SELECT march.id_march AS id_march,
 													march.nom_march AS nom_march
