@@ -51,12 +51,12 @@
 
     <div class="row">
       
-      <input type="hidden" name="id_cli" value="<?php echo $_GET['id_cli'];?>">
-      <input type="hidden" name="id_mod_lic" value="<?php echo $_GET['id_mod_lic_fact'];?>">
-      <input type="hidden" name="id_march" value="<?php echo $_GET['id_march'];?>">
-      <input type="hidden" name="id_mod_fact" value="<?php echo $_GET['id_mod_fact'];?>">
-      <input type="hidden" name="id_mod_trans" value="<?php echo $_GET['id_mod_trans'];?>">
-      <input type="hidden" name="consommable" value="<?php echo $_GET['consommable'];?>">
+      <input type="hidden" name="id_cli" id="id_cli" value="<?php echo $_GET['id_cli'];?>">
+      <input type="hidden" name="id_mod_lic" id="id_mod_lic" value="<?php echo $_GET['id_mod_lic_fact'];?>">
+      <input type="hidden" name="id_march" id="id_march" value="<?php echo $_GET['id_march'];?>">
+      <input type="hidden" name="id_mod_fact" id="id_mod_fact" value="<?php echo $_GET['id_mod_fact'];?>">
+      <input type="hidden" name="id_mod_trans" id="id_mod_trans" value="<?php echo $_GET['id_mod_trans'];?>">
+      <input type="hidden" name="consommable" id="consommable" value="<?php echo $_GET['consommable'];?>">
       <div class="col-md-3">
         
           <div class="form-group">
@@ -568,6 +568,31 @@
 
   }
 
+  function getTableauImportInvoiceSingle2(id_mod_fact, id_dos, id_mod_lic, id_march, id_mod_trans, consommable){
+    $('#spinner-div').show();
+    $.ajax({
+      type: "POST",
+      url: "ajax.php",
+      data: { id_mod_fact: id_mod_fact, id_dos: id_dos, id_mod_lic: id_mod_lic, id_march:id_march, id_mod_trans:id_mod_trans, consommable:consommable, operation: 'getTableauImportInvoiceSingle'},
+      dataType:"json",
+      success:function(data){
+        if (data.logout) {
+          alert(data.logout);
+          window.location="../deconnexion.php";
+        }else{
+          // alert('Hello');
+          
+          //Items ------------
+          $('#debours').html(data.debours);
+        }
+      },
+      complete: function () {
+          $('#spinner-div').hide();//Request is complete so hide spinner
+      }
+    });
+
+  }
+
   function getDeboursPourFactureClientModeleLicenceAjaxChange(id_cli, id_mod_lic, id_march, id_mod_trans, id_dos){
     $('#spinner-div').show();
     $.ajax({
@@ -725,7 +750,8 @@
 
     $('#fob_en_usd_label').html('FOB (USD): '+new Intl.NumberFormat('en-DE').format(Math.round(fob_en_usd_label*1000)/1000));
     $('#fob_en_usd_label').addClass('text-sm font-weight-bold float-right badge badge-dark');
-    getTableauImportInvoiceSingle($('#id_mod_fact').val(), $('#id_dos').val(), $('#id_mod_lic').val(), $('#id_march').val(), $('#id_mod_trans').val(), $('#consommable').val())
+    // $('#debours').html('');
+    getTableauImportInvoiceSingle2($('#id_mod_fact').val(), $('#id_dos').val(), $('#id_mod_lic').val(), $('#id_march').val(), $('#id_mod_trans').val(), '1');
 
   }
 
