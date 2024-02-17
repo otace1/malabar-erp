@@ -10002,7 +10002,11 @@
 					$cost_2 = '1';
 					$unite_2 = $reponse['nbre_dos'];
 
-					if($reponse['id_deb']=='206' || $reponse['id_deb']=='204' || $reponse['id_deb']=='205'){
+					if($reponse['id_deb']=='206'){
+
+						$unite = 'Per Truck/Trailer';
+
+					}else if($reponse['id_deb']=='206' || $reponse['id_deb']=='204' || $reponse['id_deb']=='205'){
 
 						$unite = 'Per Truck';
 
