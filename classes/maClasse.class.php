@@ -9961,7 +9961,7 @@
 				}else if ($reponse['id_deb']=='29') {
 					$data_dossier = $this-> getDossier($reponse['id_dos']);
 					
-					$unite = 'par declaration';
+					$unite = 'Per Declaration';
 					// $cost_2 = $this-> getMontantTotalTypeDeboursFacture($ref_fact, 1)['montant_usd'];
 					if ($data_dossier['id_cli']=='938'||$data_dossier['id_cli']=='945') {
 						$cost_2 = number_format(($this-> getDataAffectationDeboursClientModeleLicence($reponse['id_deb'], $data_dossier['id_cli'], $data_dossier['id_mod_lic'], $data_dossier['id_march'], $data_dossier['id_mod_trans'])['montant']), 2, ',', '.').'%';
@@ -9982,7 +9982,7 @@
 				}else if ($reponse['id_deb']=='45') {
 					$rate = 0;
 					
-					$unite = 'Par declaration';
+					$unite = 'Per Declaration';
 					$data_dossier = $this-> getDossier($reponse['id_dos']);
 
 					if (($this-> getDataAffectationDeboursClientModeleLicence($reponse['id_deb'], $data_dossier['id_cli'], $data_dossier['id_mod_lic'], $data_dossier['id_march'], $data_dossier['id_mod_trans'])['montant'])>1) {
@@ -10002,26 +10002,26 @@
 					$cost_2 = '1';
 					$unite_2 = $reponse['nbre_dos'];
 
-					if($reponse['id_deb']=='202' || $reponse['id_deb']=='204' || $reponse['id_deb']=='205'){
+					if($reponse['id_deb']=='206' || $reponse['id_deb']=='204' || $reponse['id_deb']=='205'){
 
-						$unite = 'per truck';
+						$unite = 'Per Truck';
 
 					}else if($reponse['id_deb']=='107'){
 
-						$unite = 'per AWB';
+						$unite = 'Per AWB';
 
 					}else if($reponse['id_deb']=='102'){
 
-						$unite = 'per license';
+						$unite = 'Per License';
 
 					}else{
 
-						$unite = 'par declaration';
+						$unite = 'Per Declaration';
 
 					}
 
 				}else{
-					$unite = 'par declaration';
+					$unite = 'Per Declaration';
 					$cost_2 = '1';
 					$unite_2 = $reponse['nbre_dos'];
 				}
