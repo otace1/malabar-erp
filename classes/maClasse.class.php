@@ -10100,7 +10100,7 @@
 							<td style="text-align: left; border-left: 1px solid black; border-right: 0.5px solid black; font-size: '.$reponse['font_size'].'px;" colspan="2" width="49%">&nbsp;&nbsp;'
 								.$reponse['nom_deb'].
 							'</td>
-							<td style="text-align: center; border-right: 0.5px solid black; font-size: '.$reponse['font_size'].'px;" width="9%">'
+							<td style="text-align: center; border-right: 0.5px solid black; font-size: 6px;" width="9%">'
 								.$unite.
 							'
 							</td>
