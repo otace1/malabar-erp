@@ -9887,7 +9887,8 @@
 														) AS rls,
 													dos.id_dos AS id_dos,
 													det.pourcentage_qte AS pourcentage_qte,
-													fact.font_size AS font_size
+													fact.font_size AS font_size, 
+													dos.id_cli AS id_cli
 												FROM debours d, detail_facture_dossier det, dossier dos, facture_dossier fact
 												WHERE det.ref_fact = ?
 													AND det.id_deb = d.id_deb
@@ -9995,6 +9996,29 @@
 					}
 					
 					$unite_2 = $reponse['nbre_poids'];
+
+				}else if($reponse['id_cli']==857){
+					
+					$cost_2 = '1';
+					$unite_2 = $reponse['nbre_dos'];
+
+					if($reponse['id_deb']=='202' || $reponse['id_deb']=='204' || $reponse['id_deb']=='205'){
+
+						$unite = 'per truck';
+
+					}else if($reponse['id_deb']=='107'){
+
+						$unite = 'per AWB';
+
+					}else if($reponse['id_deb']=='102'){
+
+						$unite = 'per license';
+
+					}else{
+
+						$unite = 'par declaration';
+
+					}
 
 				}else{
 					$unite = 'par declaration';
@@ -46560,7 +46584,7 @@
 			$entree['id_mod_lic'] = $id_mod_lic;
 			// $entree['id_march'] = $id_march;
 
-			$select = '<select class="form-control form-control-sm" id="id_march_template" onchange="getDeboursPourFactureClientModeleLicenceAjaxChange('.$id_cli.', '.$id_mod_lic.', this.value, '.$id_mod_trans.', id_dos.value)" required><option></option>';
+			$select = '<select class="form-control form-control-sm" id="id_march_template" onchange="getDeboursPourFactureClientModeleLicenceAjaxChange('.$id_cli.', '.$id_mod_lic.', this.value, '.$id_mod_trans.', id_dos.value)"><option></option>';
 
 			$requete = $connexion-> prepare("SELECT march.id_march AS id_march,
 													march.nom_march AS nom_march
