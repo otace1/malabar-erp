@@ -434,7 +434,7 @@ $tbl = <<<EOD
 			<td width="22%" style="text-align: center; border: 0.3px solid black; font-size: 7px;">$autre_frais_usd</td>
 			<td width="15%" style="text-align: left; "></td>
 			<td width="15%" style="text-align: left; border: 0.3px solid black; font-size: 7px;">&nbsp;FOB (USD): </td>
-			<td width="25%" style="text-align: center; border: 0.3px solid black; font-size: 7px;">$fob_en_usd</td>
+			<td width="25%" style="text-align: center; border: 0.3px solid black; font-size: 7px; font-weight: bold;">$fob_en_usd</td>
 		</tr>
 		<tr>
 			<td width="23%" style="text-align: left; border: 0.3px solid black; font-size: 7px;">&nbsp;Assurance/$id_mon_assurance: </td>
