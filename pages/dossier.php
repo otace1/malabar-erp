@@ -773,7 +773,7 @@ for ($i=1; $i <= 15 ; $i++) {
 
                         }
                         else if($_GET['id_mod_trac'] == '1' && ($_GET['id_march'] == '18' || $_GET['id_march'] == '21' || $_GET['id_march'] == '22')){
-                          $maClasse-> creerDossierIB($_POST['ref_dos'], $_GET['id_cli'], $_POST['ref_fact'], 
+                          $maClasse-> creerDossierIB($_POST['ref_dos'], $_POST['mca_b_ref'], $_GET['id_cli'], $_POST['ref_fact'], 
                                                       $_POST['fob'],$_POST['fret'], $_POST['assurance'], 
                                                       $_POST['autre_frais'], $_POST['num_lic'], $_GET['id_mod_trac'], 
                                                       $_GET['id_march'], $_GET['id_mod_trans'],
@@ -2078,7 +2078,7 @@ if( isset($_GET['id_mod_trac']) && ($_GET['id_mod_trac']=='2' && $_GET['id_cli']
 
                       <div class="col-md-3">
                         <label for="x_card_code" class="control-label mb-1">MCA FILE NUMBER</label>
-                        <input type="text" name="ref_dos" value="<?php echo $maClasse-> getMcaFileExport($_GET['id_cli'], $_GET['id_mod_trans'], $_GET['id_march'], $_GET['id_mod_trac'], 1);?>" class="form-control cc-exp" required>
+                        <input type="text" name="ref_dos" id="ref_dos_c" onblur="function_mca_b_ref_c()" value="<?php echo $maClasse-> getMcaFileExport($_GET['id_cli'], $_GET['id_mod_trans'], $_GET['id_march'], $_GET['id_mod_trac'], 1);?>" class="form-control cc-exp" required>
                       </div>
                 
                       <div class="col-md-3">
@@ -2317,6 +2317,11 @@ if( isset($_GET['id_mod_trac']) && ($_GET['id_mod_trac']=='2' && $_GET['id_cli']
                         </select>
                       </div>
 
+                      <div class="col-md-3">
+                        <label for="x_card_code" class="control-label mb-1">Tally Ref.</label>
+                        <input type="text" id="mca_b_ref_c" name="mca_b_ref" class="form-control form-control-sm cc-exp" required>
+                      </div>
+
                     </div>
                   </div>
                   <!-- /.tab-pane -->
@@ -2348,6 +2353,45 @@ if( isset($_GET['id_mod_trac']) && ($_GET['id_mod_trac']=='2' && $_GET['id_cli']
   <!-- /.modal-dialog -->
 </div>
 
+<script type="text/javascript">
+  
+  $(document).ready(function(){
+    function_mca_b_ref_c();
+  });
+
+  function function_mca_b_ref_c() {
+    var code='';
+    var today   = new Date();
+    var annee = today.getYear();
+    $('#annee').val(annee);
+    
+    // const xmas = new Date("1995-12-25");
+    // const year = xmas.getYear(); // returns 95
+
+    if (<?php echo $_GET['id_mod_trac'];?>=='2' || (<?php echo $_GET['id_mod_trac'];?>=='1' && <?php echo $_GET['id_march'];?>=='21')) {// Import
+
+      if (<?php echo $_GET['id_mod_trans'];?>=='1') {
+
+        code = 'IMP-RR-'+$('#ref_dos_c').val().substr(0, 3)+$('#annee').val().substr(1)+$('#ref_dos_c').val().substr(9);
+
+      }else if (<?php echo $_GET['id_mod_trans'];?>=='3') {
+
+        code = 'IMP-AW-'+$('#ref_dos_c').val().substr(0, 3)+$('#annee').val().substr(1)+$('#ref_dos_c').val().substr(9);
+
+      }else{
+
+        code = 'IMP-W-'+$('#ref_dos_c').val().substr(0, 3)+$('#annee').val().substr(1)+$('#ref_dos_c').val().substr(9);
+
+      }
+
+    }
+
+    console.log(code);
+    $('#mca_b_ref_c').val(code);
+    // console.log($('#ref_dos_a').val());
+  }
+
+</script>
 <?php
 }else if($_GET['id_mod_trac']=='2' && $_GET['id_cli']=='869' && $_GET['id_march']!='11'){
   include('nouveauDossierAcid.php');
