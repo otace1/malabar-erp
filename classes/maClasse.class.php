@@ -18515,9 +18515,9 @@
 					}else if ($reponseDebours['id_deb']=='94') {
 
 						$unite_input = '';
-						$montant_input = '<input type="number" step="0.001" style="text-align: center;" name="montant_'.$compteur.'" id="tresco" value="'.$reponseDebours['montant'].'" onblur="calculDroit();">';
+						$montant_input = '<input type="number" step="0.001" style="text-align: center;" name="montant_'.$compteur.'" id="tresco" onblur="calculDroit();">';
 						
-					}else if ($reponseDebours['id_deb']=='45') {
+					}else if ($reponseDebours['id_deb']=='45' || $reponseDebours['id_deb']=='206') {
 
 						$trailer_1 = $this-> getDossier($id_dos)['trailer_1'];
 						$trailer_2 = $this-> getDossier($id_dos)['trailer_2'];
@@ -18756,7 +18756,7 @@
 					}else if ($reponseDebours['id_deb']=='94') {
 
 						$unite_input = '';
-						$montant_input = '<input type="number" step="0.001" style="text-align: center;" name="montant_'.$compteur.'" id="tresco" value="'.$reponseDebours['montant'].'" onblur="calculDroit();">';
+						$montant_input = '<input type="number" step="0.001" style="text-align: center;" name="montant_'.$compteur.'" id="tresco"  onblur="calculDroit();">';
 						
 					}else if ($reponseDebours['id_deb']=='45') {
 
