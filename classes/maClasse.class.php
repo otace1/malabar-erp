@@ -9522,7 +9522,7 @@
 				}else if($id_t_deb=='1'){
 					$unite = 'CIF';
 					$unite_2 = $reponse['nbre_dos'];
-				}else if ($reponse['id_deb']=='45') {
+				}else if ($reponse['id_deb']=='45' || $reponse['id_deb']=='206') {
 					
 					$unite = 'Par declaration';
 					$data_dossier = $this-> getDossier($reponse['id_dos']);
