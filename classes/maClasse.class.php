@@ -51790,6 +51790,7 @@
 			$entree['id_dos'] = $id_dos;
 			$entree['fob_usd'] = $fob_usd;
 
+			$this-> creerLogDossier('FOB USD', $fob_usd, $id_dos, $_SESSION['id_util']);
 			$requete = $connexion-> prepare("UPDATE dossier SET fob_usd = ?
 												WHERE id_dos = ?");
 			$requete-> execute(array($entree['fob_usd'], $entree['id_dos']));
@@ -51802,6 +51803,7 @@
 			$entree['id_dos'] = $id_dos;
 			$entree['fret_usd'] = $fret_usd;
 
+			$this-> creerLogDossier('Fret USD', $fret_usd, $id_dos, $_SESSION['id_util']);
 			$requete = $connexion-> prepare("UPDATE dossier SET fret_usd = ?
 												WHERE id_dos = ?");
 			$requete-> execute(array($entree['fret_usd'], $entree['id_dos']));
@@ -51814,6 +51816,7 @@
 			$entree['id_dos'] = $id_dos;
 			$entree['autre_frais_usd'] = $autre_frais_usd;
 
+			$this-> creerLogDossier('Autre Frais USD', $fob_usd, $id_dos, $_SESSION['id_util']);
 			$requete = $connexion-> prepare("UPDATE dossier SET autre_frais_usd = ?
 												WHERE id_dos = ?");
 			$requete-> execute(array($entree['autre_frais_usd'], $entree['id_dos']));
