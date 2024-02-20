@@ -10003,6 +10003,8 @@
 					$unite_2 = $reponse['nbre_dos'];
 
 					if($reponse['id_deb']=='206'){
+						$cost_2 = $reponse['ht_usd']/$this-> getDataAffectationDeboursClientModeleLicence($reponse['id_deb'], $data_dossier['id_cli'], $data_dossier['id_mod_lic'], $data_dossier['id_march'], $data_dossier['id_mod_trans'])['montant'];
+						$rate = $this-> getDataAffectationDeboursClientModeleLicence($reponse['id_deb'], $data_dossier['id_cli'], $data_dossier['id_mod_lic'], $data_dossier['id_march'], $data_dossier['id_mod_trans'])['montant'];
 
 						$unite = 'Per Truck/Trailer';
 
@@ -10068,14 +10070,14 @@
 							'&nbsp;&nbsp;</td>
 						</tr>
 					';
-				}else if($reponse['id_deb']==45){//Scelle Electronique
+				}else if($reponse['id_deb']==45 || $reponse['id_deb']=='206'){//Scelle Electronique
 					$sub_total += $this-> getDataAffectationDeboursClientModeleLicence($reponse['id_deb'], $data_dossier['id_cli'], $data_dossier['id_mod_lic'], $data_dossier['id_march'], $data_dossier['id_mod_trans'])['montant'];
 					$tbl .= '
 						<tr>
 							<td style="text-align: left; border-left: 1px solid black; border-right: 0.5px solid black; font-size: '.$reponse['font_size'].'px;" colspan="2" width="49%">&nbsp;&nbsp;'
 								.$reponse['nom_deb'].
 							'</td>
-							<td style="text-align: center; border-right: 0.5px solid black; font-size: '.$reponse['font_size'].'px;" width="9%">'
+							<td style="text-align: center; border-right: 0.5px solid black; font-size: 6px;" width="9%">'
 								.$unite.
 							'
 							</td>
