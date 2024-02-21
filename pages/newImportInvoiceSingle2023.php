@@ -164,7 +164,7 @@
             </tr>
             <tr>
               <th>FOB <span id="mon_fob"></span></th>
-              <th><input style="text-align: center; width: 9em;" id="fob_usd" name="fob_usd" onblur="maj_fob_usd(id_dos.value, this.value);calculCIF();calculCIF();" type="number" step="0.000001" min="0" class="" required></th>
+              <th><input style="text-align: center; width: 9em;" id="fob_usd" name="fob_usd" onblur="maj_fob_usd(id_dos.value, this.value);" type="number" step="0.000001" min="0" class="" required></th>
               <th>Fret <span id="mon_fret"></span></th>
               <th><input style="text-align: center; width: 9em;" id="fret_usd" name="fret_usd" onblur="maj_fret_usd(id_dos.value, this.value);calculCIF();" class="" type="number" step="0.000001" min="0" required></th>
             </tr>
@@ -176,9 +176,9 @@
             </tr>
             <tr>
               <th>Rate (CDF/<span id="label_mon_fob"></span>) INV.</th>
-              <th><input style="text-align: center; width: 9em;" id="roe_inv" name="roe_inv" onblur="maj_roe_inv(id_dos.value, this.value);calculCIF();" type="number" step="0.000001" min="1" required></th>
+              <th><input style="text-align: center; width: 9em;" id="roe_inv" name="roe_inv" onblur="maj_roe_inv(id_dos.value, this.value);" type="number" step="0.000001" min="1" required></th>
               <th>Rate(CDF/USD) BCC</th>
-              <th><input style="text-align: center; width: 9em;" id="roe_decl" name="roe_decl" onblur="maj_roe_decl(id_dos.value, this.value);calculCIF();" type="number" step="0.000001" min="1" required></th>
+              <th><input style="text-align: center; width: 9em;" id="roe_decl" name="roe_decl" onblur="maj_roe_decl(id_dos.value, this.value);" type="number" step="0.000001" min="1" required></th>
             </tr>
             <tr>
               <th>CIF (<span id="label_mon_cif"></span>)</th>
@@ -769,6 +769,7 @@
         }
       },
       complete: function () {
+          calculCIF();
           $('#spinner-div').hide();//Request is complete so hide spinner
       }
     });
@@ -831,6 +832,7 @@
         }
       },
       complete: function () {
+          calculCIF();
           $('#spinner-div').hide();//Request is complete so hide spinner
       }
     });
@@ -871,6 +873,7 @@
         }
       },
       complete: function () {
+          calculCIF();
           $('#spinner-div').hide();//Request is complete so hide spinner
       }
     });
@@ -1643,6 +1646,9 @@
     }else{
       $('#tresco').val('');
     }
+
+    // $('#tresco').val(tresco);
+    console.log($('#tresco').val());
 
   }
 
