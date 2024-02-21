@@ -157,9 +157,14 @@
       <div class="modal-body">
         <div class="row">
 
-          <div class="col-md-6">
+          <div class="col-md-12">
             <label for="x_card_code" class="control-label mb-1">File Ref.</label>
             <input name="ref_dos" id="ref_dos" class="form-control form-control-sm cc-exp" disabled>
+          </div>
+
+          <div class="col-md-6">
+            <label for="x_card_code" class="control-label mb-1">Tally Ref.</label>
+            <input name="mca_b_ref" id="mca_b_ref" class="form-control form-control-sm cc-exp">
           </div>
 
           <div class="col-md-6">
@@ -238,6 +243,7 @@
         }else{
           $('#id_dos').val(data.id_dos);
           $('#ref_dos').val(data.ref_dos);
+          $('#mca_b_ref').val(data.mca_b_ref);
           $('#not_fact').val(data.not_fact);
           $('#ref_decl').val(data.ref_decl);
           $('#date_decl').val(data.date_decl);

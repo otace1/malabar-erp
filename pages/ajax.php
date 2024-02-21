@@ -1540,6 +1540,7 @@
 
 	}else if ($_POST['operation']=='edit_statut_dossier_facturation') {
 	  
+		$maClasse-> MAJ_mca_b_ref($_POST['id_dos'], $_POST['mca_b_ref']);
 		$maClasse-> MAJ_not_fact($_POST['id_dos'], $_POST['not_fact']);
 		$maClasse-> MAJ_ref_decl($_POST['id_dos'], $_POST['ref_decl']);
 		$maClasse-> MAJ_date_decl($_POST['id_dos'], $_POST['date_decl']);
