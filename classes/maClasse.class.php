@@ -9522,7 +9522,7 @@
 				}else if($id_t_deb=='1'){
 					$unite = 'CIF';
 					$unite_2 = $reponse['nbre_dos'];
-				}else if ($reponse['id_deb']=='45' || $reponse['id_deb']=='206' || $reponse['id_deb']=='202') {
+				}else if ($reponse['id_deb']=='45' || $reponse['id_deb']=='206') {
 					
 					$unite = 'Par declaration';
 					$data_dossier = $this-> getDossier($reponse['id_dos']);
@@ -15680,7 +15680,7 @@
 														FROM debours deb, detail_facture_dossier det, dossier dos
 														WHERE deb.id_deb = det.id_deb
 															AND det.ref_fact = ?
-															AND (det.id_deb = 45 OR det.id_deb = 206)
+															AND (det.id_deb = 45 OR det.id_deb = 206 OR det.id_deb = 202)
 															AND det.id_dos = ?
 															AND dos.id_dos = det.id_dos");
 				$requete-> execute(array($entree['ref_fact'], $entree['id_dos']));
