@@ -9998,6 +9998,7 @@
 					$unite_2 = $reponse['nbre_poids'];
 
 				}else if($reponse['id_cli']==857){
+					$data_dossier = $this-> getDossier($reponse['id_dos']);
 					
 					$cost_2 = '1';
 					$unite_2 = $reponse['nbre_dos'];
@@ -15674,14 +15675,26 @@
 			$entree['ref_fact'] = $ref_fact;
 			$entree['id_dos'] = $id_dos;
 
-			$requete = $connexion-> prepare("SELECT ROUND(det.montant, 3) AS montant
-													FROM debours deb, detail_facture_dossier det, dossier dos
-													WHERE deb.id_deb = det.id_deb
-														AND det.ref_fact = ?
-														AND det.id_deb = ?
-														AND det.id_dos = ?
-														AND dos.id_dos = det.id_dos");
-			$requete-> execute(array($entree['ref_fact'], $entree['id_deb'], $entree['id_dos']));
+			if ($id_deb==45) {
+				$requete = $connexion-> prepare("SELECT ROUND(det.montant, 3) AS montant
+														FROM debours deb, detail_facture_dossier det, dossier dos
+														WHERE deb.id_deb = det.id_deb
+															AND det.ref_fact = ?
+															AND (det.id_deb = 45 OR det.id_deb = 206)
+															AND det.id_dos = ?
+															AND dos.id_dos = det.id_dos");
+				$requete-> execute(array($entree['ref_fact'], $entree['id_dos']));
+			}else{
+				$requete = $connexion-> prepare("SELECT ROUND(det.montant, 3) AS montant
+														FROM debours deb, detail_facture_dossier det, dossier dos
+														WHERE deb.id_deb = det.id_deb
+															AND det.ref_fact = ?
+															AND det.id_deb = ?
+															AND det.id_dos = ?
+															AND dos.id_dos = det.id_dos");
+				$requete-> execute(array($entree['ref_fact'], $entree['id_deb'], $entree['id_dos']));
+			}
+
 			$reponse = $requete-> fetch();
 			if ($reponse) {
 				return $reponse['montant'];
