@@ -42951,29 +42951,45 @@
 													SUM(
 														IF(debours.id_t_deb='1' AND det.usd='0',
 															det.montant,
-															0)
-														) AS duty_vat_excl_cdf,
+															IF(debours.id_t_deb='1',
+																det.montant*dos.roe_decl,
+																0
+															)
+														)
+													) AS duty_vat_excl_cdf,
 													SUM(
 														IF(debours.id_t_deb='1' AND det.usd='0',
 															det.montant/dos.roe_decl,
-															0)
-														) AS duty_vat_excl_usd,
+															IF(debours.id_t_deb='1',
+																det.montant,
+																0
+															)
+														)
+													) AS duty_vat_excl_usd,
 													SUM(
 														IF(debours.id_t_deb='1' AND det.usd='0' AND det.tva='1',
 															IF(det.montant_tva>0,
 																det.montant_tva,
 																det.montant*0.16
-																),
-															0)
-														) AS duty_vat_cdf,
+															),
+															IF(debours.id_t_deb='1' AND det.tva='1',
+																det.montant*dos.roe_decl*0.16,
+																0
+															)
+														)
+													) AS duty_vat_cdf,
 													SUM(
 														IF(debours.id_t_deb='1' AND det.usd='0' AND det.tva='1',
 															IF(det.montant_tva>0,
 																det.montant_tva/dos.roe_decl,
 																(det.montant*0.16)/dos.roe_decl
-																),
-															0)
-														) AS duty_vat_usd,
+															),
+															IF(debours.id_t_deb='1' AND det.tva='1',
+																det.montant*0.16,
+																0
+															)
+														)
+													) AS duty_vat_usd,
 													SUM(
 														IF(debours.id_t_deb='1' AND det.usd='0',
 															IF(det.tva='1',
@@ -42983,7 +42999,13 @@
 																),
 																det.montant
 															),
-															0
+															IF(debours.id_t_deb='1',
+																IF(det.tva = '1',
+																	det.montant*dos.roe_decl*1.16,
+																	det.montant*dos.roe_decl
+																),
+																0
+															)
 														)
 													) AS total_duty_cdf,
 													SUM(
@@ -42995,7 +43017,13 @@
 																),
 																det.montant/dos.roe_decl
 															),
-															0
+															IF(debours.id_t_deb='1',
+																IF(det.tva = '1',
+																	det.montant*1.16,
+																	det.montant
+																),
+																0
+															)
 														)
 													) AS total_duty_usd,
 													SUM(
