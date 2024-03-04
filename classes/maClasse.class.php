@@ -9997,7 +9997,7 @@
 					
 					$unite_2 = $reponse['nbre_poids'];
 
-				}else if($reponse['id_cli']==857){
+				}else if($reponse['id_cli']==857||$reponse['id_cli']==952){
 					$data_dossier = $this-> getDossier($reponse['id_dos']);
 					
 					$cost_2 = '1';
