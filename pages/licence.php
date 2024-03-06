@@ -398,6 +398,18 @@
                         <a class="dropdown-item"onclick="window.location.replace('exportSyntheseLicenceClient.php?id_cli=<?php echo $_GET['id_cli']; ?>&id_mod_lic=<?php echo $_GET['id_mod_lic']; ?>','pop1','width=80,height=80');">
                           Export Syntheses/CLient
                         </a>
+                        <a class="dropdown-item"onclick="window.location.replace('exportLicence2.php?id_cli=<?php echo $_GET['id_cli']; ?>&id_mod_lic=<?php echo $_GET['id_mod_lic']; ?>&id_type_lic=<?php echo $_GET['id_type_lic']; ?>&annee=2024','pop1','width=80,height=80');">
+                          Export 2024 Licenses
+                        </a>
+                        <a class="dropdown-item"onclick="window.location.replace('exportSyntheseLicence.php?id_cli=<?php echo $_GET['id_cli']; ?>&id_mod_lic=<?php echo $_GET['id_mod_lic']; ?>&id_type_lic=<?php echo $_GET['id_type_lic']; ?>&annee=2024','pop1','width=80,height=80');">
+                          Export 2024 Synthese
+                        </a>
+                        <a class="dropdown-item"onclick="window.location.replace('exportLicence2.php?id_cli=<?php echo $_GET['id_cli']; ?>&id_mod_lic=<?php echo $_GET['id_mod_lic']; ?>&id_type_lic=<?php echo $_GET['id_type_lic']; ?>&annee=2023','pop1','width=80,height=80');">
+                          Export 2023 Licenses
+                        </a>
+                        <a class="dropdown-item"onclick="window.location.replace('exportSyntheseLicence.php?id_cli=<?php echo $_GET['id_cli']; ?>&id_mod_lic=<?php echo $_GET['id_mod_lic']; ?>&id_type_lic=<?php echo $_GET['id_type_lic']; ?>&annee=2023','pop1','width=80,height=80');">
+                          Export 2023 Synthese
+                        </a>
                         <a class="dropdown-item"onclick="window.location.replace('exportLicence2.php?id_cli=<?php echo $_GET['id_cli']; ?>&id_mod_lic=<?php echo $_GET['id_mod_lic']; ?>&id_type_lic=<?php echo $_GET['id_type_lic']; ?>&annee=2022','pop1','width=80,height=80');">
                           Export 2022 Licenses
                         </a>
