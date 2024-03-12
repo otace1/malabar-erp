@@ -3193,6 +3193,17 @@
 				<?php
 			}$requete-> closeCursor();
 			}
+			if ($this-> getUtilisateur($_SESSION['id_util'])['config_invoice']=='1') {
+        	?>
+		<li class="nav-item">
+            <a href="config_invoice.php" class="nav-link">
+              <i class="fa fa-cogs nav-icon"></i>
+              <p>Settings
+              </p>
+            </a>
+        </li>
+        	<?php
+        	}
 		}
 
 		public function afficherMenuFacturationDebitNote(){
@@ -44308,7 +44319,10 @@
 			$requete = $connexion-> query("SELECT *,
 												CONCAT('<button class=\"btn btn-xs bg-primary square-btn-adjust\" onclick=\"window.location.replace(\'detail_client.php?id_cli=',id_cli,'\');\">
 									                    <i class=\"fas fa-eye\"></i> 
-									                </button>') AS btn_action 
+									                </button>') AS btn_action ,
+												CONCAT('<button class=\"btn btn-xs bg-info square-btn-adjust\" onclick=\"window.location.replace(\'detail_client_2.php?id_cli=',id_cli,'\');\">
+									                    <i class=\"fas fa-arrow-circle-right\"></i> 
+									                </button>') AS btn_action_2 
 											FROM client 
 											ORDER BY nom_cli
 										");
@@ -44322,6 +44336,223 @@
 			
 			return $rows;
 			
+
+		}
+
+		public function resume_facture_client($id_cli){
+			include('connexion.php');
+			$entree['id_cli'] = $id_cli;
+
+			$compteur = 0;
+			$rows = array();
+
+			$requete = $connexion-> prepare("SELECT ml.nom_mod_lic AS nom_mod_lic,
+												march.nom_march AS nom_march,
+												mt.nom_mod_trans AS nom_mod_trans,
+												SUM(IF(aff.montant IS NOT NULL AND aff.usd='1' AND aff.montant>2 AND deb.id_t_deb>1, aff.montant, 0)) AS montant,
+												aff.id_cli AS id_cli,
+												aff.id_mod_lic AS id_mod_lic,
+												aff.id_march AS id_march,
+												aff.id_mod_trans AS id_mod_trans
+											FROM modele_licence ml, marchandise march, affectation_debours_client_modele_licence aff, mode_transport mt, debours deb
+											WHERE ml.id_mod_lic = aff.id_mod_lic
+												AND march.id_march = aff.id_march
+												AND mt.id_mod_trans = aff.id_mod_trans
+												AND aff.id_deb = deb.id_deb
+												AND aff.id_cli = ?
+											GROUP BY aff.id_mod_lic, march.nom_march, aff.id_mod_trans
+											ORDER BY aff.id_mod_lic, march.nom_march, aff.id_mod_trans
+										");
+			$requete-> execute(array($entree['id_cli']));
+			while($reponse = $requete-> fetch()){
+				$compteur++;
+
+				$reponse['compteur'] = $compteur;
+				$rows[] = $reponse;
+			}$requete-> closeCursor();
+			
+			return $rows;
+			
+
+		}
+
+		public function modele_facture_client($id_cli){
+			include('connexion.php');
+			$entree['id_cli'] = $id_cli;
+
+			$compteur = 0;
+			$rows = array();
+
+			$requete = $connexion-> prepare("SELECT ml.nom_mod_lic AS nom_mod_lic,
+												march.nom_march AS nom_march,
+												mt.nom_mod_trans AS nom_mod_trans,
+												aff.id_cli AS id_cli,
+												aff.id_march AS id_march,
+												aff.id_mod_trans AS id_mod_trans,
+												mf.nom_mod_fact AS nom_mod_fact,
+												'' AS btn_action
+											FROM modele_licence ml, marchandise march, affectation_modele_facture_client_marchandise aff, mode_transport mt, modele_facture mf
+											WHERE march.id_march = aff.id_march
+												AND mt.id_mod_trans = aff.id_mod_trans
+												AND aff.id_mod_fact = mf.id_mod_fact
+												AND ml.id_mod_lic = mf.id_mod_lic
+												AND aff.id_cli = ?
+											-- GROUP BY aff.id_mod_lic, march.nom_march, aff.id_mod_trans
+											ORDER BY ml.id_mod_lic, march.nom_march, aff.id_mod_trans
+										");
+			$requete-> execute(array($entree['id_cli']));
+			while($reponse = $requete-> fetch()){
+				$compteur++;
+
+				$reponse['compteur'] = $compteur;
+				$rows[] = $reponse;
+			}$requete-> closeCursor();
+			
+			return $rows;
+			
+
+		}
+
+		public function detail_cotation($id_cli, $id_mod_lic, $id_march, $id_mod_trans){
+			include('connexion.php');
+			$entree['id_cli'] = $id_cli;
+			$entree['id_mod_lic'] = $id_mod_lic;
+			$entree['id_march'] = $id_march;
+			$entree['id_mod_trans'] = $id_mod_trans;
+
+			$compteur = 0;
+			$tab = '';
+
+			$requete = $connexion-> query("SELECT *
+												FROM type_debours");
+			// $requete-> execute(array($entree['id_cli']));
+			while($reponse = $requete-> fetch()){
+				$compteur++;
+				$tab .= '<table class=" table table-bordered table-hover text-nowrap small">
+							<thead>
+							<tr>
+								<th colspan="5" class="bg bg-dark">'.$reponse['nom_t_deb'].'</th>
+							</tr>
+							<tr>
+								<th width="55%">Items</th>
+								<th width="20%">Amount</th>
+								<th width="10%">Currency</th>
+								<th width="10%">TVA</th>
+								<th width="5%"></th>
+							</tr>
+							</thead>
+							<tbody>';
+
+				$requete2 = $connexion-> prepare("SELECT deb.id_deb AS id_deb,
+														deb.nom_deb AS nom_deb,
+														aff.montant AS montant,
+														IF(aff.usd='1', 'USD', 'CDF') AS usd,
+														IF(aff.tva='1', 'YES', 'NO') AS tva
+													FROM affectation_debours_client_modele_licence aff, debours deb
+													WHERE deb.id_t_deb = ?
+														AND deb.id_deb = aff.id_deb
+														AND aff.id_cli = ?
+														AND aff.id_mod_lic = ?
+														AND aff.id_march = ?
+														AND aff.id_mod_trans = ?
+													ORDER BY deb.nom_deb");
+				$requete2-> execute(array($reponse['id_t_deb'], $entree['id_cli'], $entree['id_mod_lic'], $entree['id_march'], $entree['id_mod_trans']));
+
+				while($reponse2 = $requete2-> fetch()){
+
+					$tab .='<tr>
+								<td>'.$reponse2['nom_deb'].'</td>
+								<td style="text-align: center;">'.$reponse2['montant'].'</td>
+								<td style="text-align: center;">'.$reponse2['usd'].'</td>
+								<td style="text-align: center;">'.$reponse2['tva'].'</td>
+								<td style="text-align: center;"><span class="btn btn-xs btn-danger" onclick="supprimer_aff_debours('.$reponse2['id_deb'].', '.$id_cli.', '.$id_mod_lic.', '.$id_march.', '.$id_mod_trans.');"><i class="fa fa-times"></i></span></td>
+							</tr>';
+
+				}$requete2-> closeCursor();
+
+				$tab.='		<tr>
+								<td><select id="id_deb_'.$reponse['id_t_deb'].'"><option></option>'.$this-> selectDeboursNonAffectes($reponse['id_t_deb'], $id_cli, $id_mod_lic, $id_march, $id_mod_trans).'</select></td>
+								<td style="text-align: center;"><input id="montant_'.$reponse['id_t_deb'].'" type="number" step="0.01" min="0"></td>
+								<td style="text-align: center;"><select id="usd_'.$reponse['id_t_deb'].'"><option></option><option value="1">USD</option><option value="0">CDF</option></select></td>
+								<td style="text-align: center;"><select id="tva_'.$reponse['id_t_deb'].'"><option></option><option value="1">YES</option><option value="0">NO</option></select></td>
+								<td style="text-align: center;"><span class="btn btn-xs btn-info" onclick="inserer_aff_debours(id_deb_'.$reponse['id_t_deb'].'.value, '.$id_cli.', '.$id_mod_lic.', '.$id_march.', '.$id_mod_trans.', montant_'.$reponse['id_t_deb'].'.value, usd_'.$reponse['id_t_deb'].'.value, tva_'.$reponse['id_t_deb'].'.value);"><i class="fa fa-check"></i></span></td>
+							</tr>
+							</tbody>
+						</table>';
+			}$requete-> closeCursor();
+			
+			return $tab;
+			
+
+		}
+
+		public function selectDeboursNonAffectes($id_t_deb, $id_cli, $id_mod_lic, $id_march, $id_mod_trans){
+			include('connexion.php');
+			$entree['id_t_deb'] = $id_t_deb;
+			$entree['id_cli'] = $id_cli;
+			$entree['id_mod_lic'] = $id_mod_lic;
+			$entree['id_march'] = $id_march;
+			$entree['id_mod_trans'] = $id_mod_trans;
+
+			$select = '';
+			$requete = $connexion-> prepare("SELECT *
+												FROM debours
+												WHERE id_t_deb = ?
+													AND id_deb NOT IN (
+														SELECT aff.id_deb
+															FROM affectation_debours_client_modele_licence aff
+															WHERE aff.id_cli = ?
+																AND aff.id_mod_lic = ?
+																AND aff.id_march = ?
+																AND aff.id_mod_trans = ?
+													)
+												ORDER BY nom_deb");
+			$requete-> execute(array($entree['id_t_deb'], $entree['id_cli'], $entree['id_mod_lic'], $entree['id_march'], $entree['id_mod_trans']));
+			while($reponse = $requete-> fetch()){
+				$select.='<option value="'.$reponse['id_deb'].'">'.$reponse['nom_deb'].'</option>';
+			}$requete-> closeCursor();
+			
+			return $select;
+			
+
+		}
+
+		public function inserer_aff_debours($id_deb, $id_cli, $id_mod_lic, $id_march, $id_mod_trans, $montant, $usd, $tva){
+			include('connexion.php');
+			$entree['id_deb'] = $id_deb;
+			$entree['id_cli'] = $id_cli;
+			$entree['id_mod_lic'] = $id_mod_lic;
+			$entree['id_march'] = $id_march;
+			$entree['id_mod_trans'] = $id_mod_trans;
+			$entree['montant'] = $montant;
+
+			if ($entree['montant'] == '') {
+				$entree['montant'] = NULL;
+			}
+
+			$entree['usd'] = $usd;
+			$entree['tva'] = $tva;
+
+			$requete = $connexion-> prepare("INSERT INTO affectation_debours_client_modele_licence(id_deb, id_cli, id_mod_lic, id_march, id_mod_trans, montant, usd, tva) VALUES(?, ?, ?, ?, ?, ?, ?, ?)");
+			$requete-> execute(array($entree['id_deb'], $entree['id_cli'], $entree['id_mod_lic'], $entree['id_march'], $entree['id_mod_trans'], $entree['montant'], $entree['usd'], $entree['tva']));
+
+		}
+
+		public function supprimer_aff_debours($id_deb, $id_cli, $id_mod_lic, $id_march, $id_mod_trans){
+			include('connexion.php');
+			$entree['id_deb'] = $id_deb;
+			$entree['id_cli'] = $id_cli;
+			$entree['id_mod_lic'] = $id_mod_lic;
+			$entree['id_march'] = $id_march;
+			$entree['id_mod_trans'] = $id_mod_trans;
+
+			$requete = $connexion-> prepare("DELETE FROM affectation_debours_client_modele_licence
+												WHERE id_deb = ?
+													AND id_cli = ?
+													AND id_mod_lic = ?
+													AND id_march = ?
+													AND id_mod_trans = ?");
+			$requete-> execute(array($entree['id_deb'], $entree['id_cli'], $entree['id_mod_lic'], $entree['id_march'], $entree['id_mod_trans']));
 
 		}
 
@@ -47184,7 +47415,7 @@
 
 		}
 
-		public function editerDossierRisque($id, $ref_doc, $date_doc, $date_recept, $id_bur_douane, $id_etap, $id_sen, $date_proch_pres, $id_reg, $date_pres, $remarque){
+		public function editerDossierRisque($id, $ref_doc, $date_doc, $date_recept, $id_bur_douane, $id_etap, $id_sen, $date_proch_pres, $id_reg, $date_pres, $remarque, $id_cli){
 			include('connexion.php');
 			$entree['id']=$id;
 			$entree['ref_doc']=$ref_doc;
@@ -47197,6 +47428,7 @@
 			$entree['id_reg']=$id_reg;
 			$entree['date_pres']=$date_pres;
 			$entree['remarque']=$remarque;
+			$entree['id_cli']=$id_cli;
 
 			if ($entree['date_pres'] == '') {
 				$entree['date_pres'] = NULL;
@@ -47205,9 +47437,9 @@
 			$requete = $connexion-> prepare('UPDATE dossier_risque_douane
 												SET ref_doc = ?, date_doc = ?, date_recept = ?, 
 																id_bur_douane = ?, id_etap = ?, id_sen = ?, date_proch_pres = ?, 
-																id_reg = ?, date_pres = ?, remarque = ?
+																id_reg = ?, date_pres = ?, remarque = ?, id_cli = ?
 												WHERE id = ?');
-			$requete-> execute(array($entree['ref_doc'], $entree['date_doc'], $entree['date_recept'], $entree['id_bur_douane'], $entree['id_etap'], $entree['id_sen'], $entree['date_proch_pres'], $entree['id_reg'], $entree['date_pres'], $entree['remarque'], $entree['id']));
+			$requete-> execute(array($entree['ref_doc'], $entree['date_doc'], $entree['date_recept'], $entree['id_bur_douane'], $entree['id_etap'], $entree['id_sen'], $entree['date_proch_pres'], $entree['id_reg'], $entree['date_pres'], $entree['remarque'], $entree['id_cli'], $entree['id']));
 
 		}
 
