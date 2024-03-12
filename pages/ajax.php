@@ -1685,7 +1685,7 @@
 
 	}else if($_POST['operation']=='editDossierRisque'){//Creation PV Contentieux
 
-        $maClasse-> editerDossierRisque($_POST['id'], $_POST['ref_doc'], $_POST['date_doc'], $_POST['date_recept'], $_POST['id_bur_douane'], $_POST['id_etap'], $_POST['id_sen'], $_POST['date_proch_pres'], $_POST['id_reg'], $_POST['date_pres'], $_POST['remarque']);
+        $maClasse-> editerDossierRisque($_POST['id'], $_POST['ref_doc'], $_POST['date_doc'], $_POST['date_recept'], $_POST['id_bur_douane'], $_POST['id_etap'], $_POST['id_sen'], $_POST['date_proch_pres'], $_POST['id_reg'], $_POST['date_pres'], $_POST['remarque'], $_POST['id_cli']);
 
         $response = array('message' => 'Notification modifiée avec succès!');
         echo json_encode($response);exit;
@@ -2686,6 +2686,14 @@
 
 		echo json_encode($response);
 
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='maj_regime'){// MAJ Montant Decl
+
+  		// $reponse = $maClasse-> getDataDossier($_POST['id_dos']);
+  		$maClasse-> MAJ_regime($_POST['id_dos'], $_POST['regime']);
+  		$response['message'] = 'Done !';
+
+  		echo json_encode($response);
+
 	}elseif(isset($_POST['operation']) && $_POST['operation']=='maj_incoterm'){// MAJ Montant Decl
 
   		// $reponse = $maClasse-> getDataDossier($_POST['id_dos']);
@@ -3067,6 +3075,30 @@
   		$reponse['fob'] = $maClasse-> getDataDossier($_POST['id_dos'])['fob'];
 
   		echo json_encode($reponse);
+
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='resume_facture_client'){
+		echo json_encode($maClasse-> resume_facture_client($_POST['id_cli']));
+
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='detail_cotation'){
+
+		$response['detail_cotation'] = $maClasse-> detail_cotation($_POST['id_cli'], $_POST['id_mod_lic'], $_POST['id_march'], $_POST['id_mod_trans']);
+		$response['label_cotation'] = '<span class="badge badge-dark text-md">'.$maClasse-> getClient($_POST['id_cli'])['nom_cli'].' | '.$maClasse-> getMarchandise($_POST['id_march']).' | '.$maClasse-> getNomModeTransport($_POST['id_mod_trans']).'</span>';
+		echo json_encode($response);
+
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='inserer_aff_debours'){
+
+		$maClasse-> inserer_aff_debours($_POST['id_deb'], $_POST['id_cli'], $_POST['id_mod_lic'], $_POST['id_march'], $_POST['id_mod_trans'], $_POST['montant'], $_POST['usd'], $_POST['tva']);
+		$response['message'] = 'Done!';
+		echo json_encode($response);
+
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='supprimer_aff_debours'){
+
+		$maClasse-> supprimer_aff_debours($_POST['id_deb'], $_POST['id_cli'], $_POST['id_mod_lic'], $_POST['id_march'], $_POST['id_mod_trans']);
+		$response['message'] = 'Done!';
+		echo json_encode($response);
+
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='modele_facture_client'){
+		echo json_encode($maClasse-> modele_facture_client($_POST['id_cli']));
 
 	}
 

@@ -208,9 +208,18 @@
         <div class="card card-primary card-outline card-outline-tabs">
           <div class="card-body">
             <div class="row">
-              <div class="col-md-12">
+              <div class="col-md-6">
                 <label for="x_card_code" class="control-label mb-1">Ref. Document</label>
                 <input class="form-control cc-exp form-control-sm" type="text" id="ref_doc_edit" name="ref_doc" required>
+              </div>
+
+              <div class="col-md-6">
+                <label for="x_card_code" class="control-label mb-1">Client</label>
+                <select name="id_cli" id="id_cli_edit" class="form-control cc-exp form-control-sm" required>
+                    <?php
+                      $maClasse->selectionnerClient();
+                    ?>
+                </select>
               </div>
 
               <div class="col-md-6">
@@ -793,6 +802,7 @@
           window.location="../deconnexion.php";
         }else{
           $('#id_edit').val(id);
+          $('#id_cli_edit').val(data.id_cli);
           //ref_doc
           $('#ref_doc_edit').val(data.ref_doc);
           //date_doc
@@ -1110,7 +1120,7 @@
                 });
 
                 $('#file_data_dossier_risque_douane').DataTable().ajax.reload();
-                getNombreDossierRisqueDouane();
+                // getNombreDossierRisqueDouane();
                 alert(data.message);
               }
             },

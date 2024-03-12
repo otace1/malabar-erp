@@ -85,7 +85,7 @@
                     </tr>
                     <tr>
                       <td>Regime</td>
-                      <td><span id="regime"></span></td>
+                      <td><input type="text" id="regime" onblur="maj_regime(id_dos_worsheet.value, this.value);"></td>
                     </tr>
                     <?php
                         if (!empty($maClasse-> checkRegimeSuspens($_GET['id_dos']))) {
@@ -1131,6 +1131,28 @@ table.on('click', 'tbody tr', function () {
 
   }
   
+  function maj_regime(id_dos, regime){
+
+    $.ajax({
+      type: 'post',
+      url: 'ajax.php',
+      data: {operation: 'maj_regime', id_dos: id_dos, regime: regime},
+      dataType: 'json',
+      success:function(data){
+        if (data.logout) {
+          alert(data.logout);
+          window.location="../deconnexion.php";
+        }else{
+          
+        }
+      },
+      complete: function () {
+          $('#spinner-div').hide();//Request is complete so hide spinner
+      }
+    });
+
+  }
+  
   function round(num, decimalPlaces = 0) {
     return new Decimal(num).toDecimalPlaces(decimalPlaces).toNumber();
   }
@@ -1222,7 +1244,7 @@ table.on('click', 'tbody tr', function () {
           $('#note_fret').val(data.note_fret);
           $('#note_assurance').val(data.note_assurance);
           $('#note_autre_frais').val(data.note_autre_frais);
-          $('#regime').html(data.regime);
+          $('#regime').val(data.regime);
           $('#num_lic').html(data.num_lic);
           $('#fret_worsheet').html(new Intl.NumberFormat('en-US').format(Math.round(data.fret*1000)/1000));
           $('#assurance_worksheet').html(new Intl.NumberFormat('en-US').format(Math.round(data.assurance*1000)/1000));
