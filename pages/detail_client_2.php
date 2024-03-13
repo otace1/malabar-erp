@@ -621,13 +621,13 @@ function modal_edit_detail_client(id_cli){
     // $('#modal_detail_cotation').modal('show');
   }
 
-  function inserer_aff_debours(id_deb, id_cli, id_mod_lic, id_march, id_mod_trans, montant, usd, tva){
+  function inserer_aff_debours(id_deb, id_cli, id_mod_lic, id_march, id_mod_trans, montant, montant_under_value, usd, tva){
     
     // $('#spinner-div').show();
     $.ajax({
       type: "POST",
       url: "ajax.php",
-      data: {id_deb: id_deb, id_cli: id_cli, id_mod_lic: id_mod_lic, id_march: id_march, id_mod_trans: id_mod_trans, montant: montant, usd: usd, tva: tva, operation: 'inserer_aff_debours'},
+      data: {id_deb: id_deb, id_cli: id_cli, id_mod_lic: id_mod_lic, id_march: id_march, id_mod_trans: id_mod_trans, montant: montant, montant_under_value: montant_under_value, usd: usd, tva: tva, operation: 'inserer_aff_debours'},
       dataType:"json",
       success:function(data){
         if (data.logout) {
