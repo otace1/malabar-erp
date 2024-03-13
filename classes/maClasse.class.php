@@ -20452,7 +20452,7 @@
 			$requete-> execute(array($entree['id_cli_old'], $entree['id_mod_lic'], $entree['id_march'], $entree['id_mod_trans']));
 			while($reponse = $requete-> fetch()){
 
-				$this-> inserer_aff_debours($reponse['id_deb'], $entree['id_cli'], $reponse['id_mod_lic'], $reponse['id_march'], $reponse['id_mod_trans'], $reponse['montant'], $reponse['usd'], $reponse['tva']);
+				$this-> inserer_aff_debours($reponse['id_deb'], $entree['id_cli'], $reponse['id_mod_lic'], $reponse['id_march'], $reponse['id_mod_trans'], $reponse['montant'], NULL, $reponse['usd'], $reponse['tva']);
 
 				// $requete2 = $connexion-> prepare("INSERT INTO affectation_debours_client_modele_licence(id_deb, 
 				// 										id_cli, id_mod_lic, id_march, id_mod_trans, 
@@ -44521,11 +44521,12 @@
 				$tab .= '<table class=" table table-bordered table-hover text-nowrap small">
 							<thead>
 							<tr>
-								<th colspan="5" class="bg bg-dark">'.$reponse['nom_t_deb'].'</th>
+								<th colspan="6" class="bg bg-dark">'.$reponse['nom_t_deb'].'</th>
 							</tr>
 							<tr>
-								<th width="55%">Items</th>
-								<th width="20%">Amount</th>
+								<th width="45%">Items</th>
+								<th width="15%">Default Amount</th>
+								<th width="15%">Under value Amount</th>
 								<th width="10%">Currency</th>
 								<th width="10%">TVA</th>
 								<th width="5%"></th>
@@ -44553,6 +44554,7 @@
 					$tab .='<tr>
 								<td>'.$reponse2['nom_deb'].'</td>
 								<td style="text-align: center;">'.$reponse2['montant'].'</td>
+								<td style="text-align: center;">'.$this-> getMontantDeboursUnderValue($id_cli, $reponse2['id_deb'], $id_mod_lic, $id_mod_trans, $id_march).'</td>
 								<td style="text-align: center;">'.$reponse2['usd'].'</td>
 								<td style="text-align: center;">'.$reponse2['tva'].'</td>
 								<td style="text-align: center;"><span class="btn btn-xs btn-danger" onclick="supprimer_aff_debours('.$reponse2['id_deb'].', '.$id_cli.', '.$id_mod_lic.', '.$id_march.', '.$id_mod_trans.');"><i class="fa fa-times"></i></span></td>
@@ -44563,9 +44565,10 @@
 				$tab.='		<tr>
 								<td><select id="id_deb_'.$reponse['id_t_deb'].'"><option></option>'.$this-> selectDeboursNonAffectes($reponse['id_t_deb'], $id_cli, $id_mod_lic, $id_march, $id_mod_trans).'</select></td>
 								<td style="text-align: center;"><input id="montant_'.$reponse['id_t_deb'].'" type="number" step="0.01" min="0"></td>
+								<td style="text-align: center;"><input id="montant_under_value_'.$reponse['id_t_deb'].'" type="number" step="0.01" min="0"></td>
 								<td style="text-align: center;"><select id="usd_'.$reponse['id_t_deb'].'"><option></option><option value="1">USD</option><option value="0">CDF</option></select></td>
 								<td style="text-align: center;"><select id="tva_'.$reponse['id_t_deb'].'"><option></option><option value="1">YES</option><option value="0">NO</option></select></td>
-								<td style="text-align: center;"><span class="btn btn-xs btn-info" onclick="inserer_aff_debours(id_deb_'.$reponse['id_t_deb'].'.value, '.$id_cli.', '.$id_mod_lic.', '.$id_march.', '.$id_mod_trans.', montant_'.$reponse['id_t_deb'].'.value, usd_'.$reponse['id_t_deb'].'.value, tva_'.$reponse['id_t_deb'].'.value);"><i class="fa fa-check"></i></span></td>
+								<td style="text-align: center;"><span class="btn btn-xs btn-info" onclick="inserer_aff_debours(id_deb_'.$reponse['id_t_deb'].'.value, '.$id_cli.', '.$id_mod_lic.', '.$id_march.', '.$id_mod_trans.', montant_'.$reponse['id_t_deb'].'.value, montant_under_value_'.$reponse['id_t_deb'].'.value, usd_'.$reponse['id_t_deb'].'.value, tva_'.$reponse['id_t_deb'].'.value);"><i class="fa fa-check"></i></span></td>
 							</tr>
 							</tbody>
 						</table>';
@@ -44607,7 +44610,7 @@
 
 		}
 
-		public function inserer_aff_debours($id_deb, $id_cli, $id_mod_lic, $id_march, $id_mod_trans, $montant, $usd, $tva){
+		public function inserer_aff_debours($id_deb, $id_cli, $id_mod_lic, $id_march, $id_mod_trans, $montant, $montant_under_value, $usd, $tva){
 			include('connexion.php');
 			$entree['id_deb'] = $id_deb;
 			$entree['id_cli'] = $id_cli;
@@ -44615,6 +44618,7 @@
 			$entree['id_march'] = $id_march;
 			$entree['id_mod_trans'] = $id_mod_trans;
 			$entree['montant'] = $montant;
+			$entree['montant_under_value'] = $montant_under_value;
 
 			if ($entree['montant'] == '') {
 				$entree['montant'] = NULL;
@@ -44625,6 +44629,14 @@
 
 			$requete = $connexion-> prepare("INSERT INTO affectation_debours_client_modele_licence(id_deb, id_cli, id_mod_lic, id_march, id_mod_trans, montant, usd, tva) VALUES(?, ?, ?, ?, ?, ?, ?, ?)");
 			$requete-> execute(array($entree['id_deb'], $entree['id_cli'], $entree['id_mod_lic'], $entree['id_march'], $entree['id_mod_trans'], $entree['montant'], $entree['usd'], $entree['tva']));
+
+			if ($entree['montant_under_value']>0) {// Under value
+
+				$requete = $connexion-> prepare("INSERT INTO debours_under_value(id_deb, id_cli, id_mod_lic, id_march, id_mod_trans, montant, usd, tva) VALUES(?, ?, ?, ?, ?, ?, ?, ?)");
+				$requete-> execute(array($entree['id_deb'], $entree['id_cli'], $entree['id_mod_lic'], $entree['id_march'], $entree['id_mod_trans'], $entree['montant_under_value'], $entree['usd'], $entree['tva']));
+
+			}
+
 
 		}
 
