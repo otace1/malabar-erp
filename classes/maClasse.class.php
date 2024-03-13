@@ -17935,6 +17935,45 @@
 
 		}
 
+		public function template_invoice_excl_client($id_cli){
+			include('connexion.php');
+			
+			$compteur = 0;
+			$rows = array();
+			$entree['id_cli'] = $id_cli;
+
+			$requete = $connexion-> prepare("SELECT cl.nom_cli AS nom_cli,
+													march.id_march AS id_march,
+													march.nom_march AS nom_march,
+													mt.id_mod_trans AS id_mod_trans,
+													mt.nom_mod_trans AS nom_mod_trans,
+													mf.id_mod_fact AS id_mod_fact,
+													mf.nom_mod_fact AS nom_mod_fact,
+													ml.nom_mod_lic AS nom_mod_lic,
+													ml.id_mod_lic AS id_mod_lic,
+													cl.id_cli AS id_cli
+												FROM client cl, marchandise march, mode_transport mt, modele_facture mf, affectation_modele_facture_client_marchandise aff, modele_licence ml
+												WHERE aff.id_cli = cl.id_cli
+													AND aff.id_march = march.id_march
+													AND aff.id_mod_trans = mt.id_mod_trans
+													AND aff.id_mod_fact = mf.id_mod_fact
+													AND mf.id_mod_lic = ml.id_mod_lic
+													AND aff.id_cli NOT IN (SELECT id_cli FROM affectation_modele_facture_client_marchandise WHERE id_cli = ?)
+												ORDER BY cl.nom_cli, ml.nom_mod_lic, march.nom_march, mt.nom_mod_trans");
+			$requete-> execute(array($entree['id_cli']));
+			while ($reponse = $requete-> fetch()) {
+				$compteur++;
+
+				$reponse['compteur'] = $compteur;
+
+				$rows[] = $reponse;
+			}$requete-> closeCursor();
+
+
+			return $rows;
+
+		}
+
 		public function dossier_worsheet_waiting_validation($id_cli, $id_mod_lic){
 			include('connexion.php');
 			$entree['id_mod_lic'] = $id_mod_lic;
@@ -20386,6 +20425,57 @@
 											VALUES(?, ?, ?, ?, ?)");
 			$requete-> execute(array($entree['id_taux_bcc'], $entree['id_banq'], $entree['date_taux'], $entree['montant'], $_SESSION['id_util']));
 			
+		}
+
+		public function insert_modele_facture($id_mod_fact, $id_cli, $id_march, $id_mod_trans, $id_cli_old, $id_mod_lic){
+			include('connexion.php');
+			$entree['id_mod_fact'] = $id_mod_fact;
+			$entree['id_cli'] = $id_cli;
+			$entree['id_march'] = $id_march;
+			$entree['id_mod_trans'] = $id_mod_trans;
+			$entree['id_cli_old'] = $id_cli_old;
+			$entree['id_mod_lic'] = $id_mod_lic;
+
+			$compteur = 0;
+
+			$requete = $connexion-> prepare("INSERT INTO affectation_modele_facture_client_marchandise(id_mod_fact, id_cli, id_march, id_mod_trans, id_util)
+											VALUES(?, ?, ?, ?, ?)");
+			$requete-> execute(array($entree['id_mod_fact'], $entree['id_cli'], $entree['id_march'], $entree['id_mod_trans'], $_SESSION['id_util']));
+			
+			$requete = $connexion-> prepare("SELECT id_deb, id_cli, id_mod_lic, id_march, id_mod_trans, 
+													code_serv, montant, montant_min, usd, tva, detail, unite
+												FROM affectation_debours_client_modele_licence
+												WHERE id_cli = ? 
+													AND id_mod_lic = ? 
+													AND id_march = ? 
+													AND id_mod_trans = ?");
+			$requete-> execute(array($entree['id_cli_old'], $entree['id_mod_lic'], $entree['id_march'], $entree['id_mod_trans']));
+			while($reponse = $requete-> fetch()){
+
+				$this-> inserer_aff_debours($reponse['id_deb'], $entree['id_cli'], $reponse['id_mod_lic'], $reponse['id_march'], $reponse['id_mod_trans'], $reponse['montant'], $reponse['usd'], $reponse['tva']);
+
+				// $requete2 = $connexion-> prepare("INSERT INTO affectation_debours_client_modele_licence(id_deb, 
+				// 										id_cli, id_mod_lic, id_march, id_mod_trans, 
+				// 										code_serv, montant, montant_min, usd, tva, detail, unite)
+				// 									VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+				// $requete2-> execute(array($entree['id_cli'], $reponse['id_mod_lic'], $reponse['id_march'], $reponse['id_mod_trans'], $reponse['code_serv'], $reponse['montant'], $reponse['montant_min'], $reponse['usd'], $reponse['tva'], $reponse['detail'], $reponse['unite'], $reponse['id_mod_trans']));
+
+				// echo '<br>----<br>';
+				// echo '<br>id_cli = '.$entree['id_cli'];
+				// echo '<br>id_mod_lic = '.$reponse['id_mod_lic'];
+				// echo '<br>id_march = '.$reponse['id_march'];
+				// echo '<br>id_mod_trans = '.$reponse['id_mod_trans'];
+				// echo '<br>code_serv = '.$reponse['code_serv'];
+				// echo '<br>montant = '.$reponse['montant'];
+				// echo '<br>montant_min = '.$reponse['montant_min'];
+				// echo '<br>usd = '.$reponse['usd'];
+				// echo '<br>tva = '.$reponse['tva'];
+				// echo '<br>detail = '.$reponse['detail'];
+				// echo '<br>unite = '.$reponse['unite'];
+				// echo '<br>id_mod_trans = '.$reponse['id_mod_trans'];
+
+			}$requete-> closeCursor();
+
 		}
 
 		public function afficherMonitoringTaux(){
