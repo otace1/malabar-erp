@@ -414,6 +414,11 @@ $indiceSheet = 0;
 		if (isset($_GET['id_type_lic']) && ($_GET['id_type_lic'] != '')) {
 			$sqlTypeLicence = ' AND l.id_type_lic = "'.$_GET['id_type_lic'].'"';
 		}
+		
+		$sqlClient = '';
+		if (isset($_GET['id_cli']) && ($_GET['id_cli'] != '')) {
+			$sqlClient = ' AND l.id_cli = "'.$_GET['id_cli'].'"';
+		}
 
 		$tmp_lic='';
 		$tmp_fob_lic = '';
@@ -461,12 +466,12 @@ $indiceSheet = 0;
 											LEFT JOIN dossier d ON l.num_lic = d.num_lic
 											LEFT JOIN monnaie mon ON l.id_mon = mon.id_mon
 											LEFT JOIN banque b ON l.id_banq = b.id_banq
-											WHERE l.id_cli = ?
-												AND l.id_mod_lic = ?
+											WHERE l.id_mod_lic = ?
 												AND YEAR(l.date_val) = ?
 												$sqlTypeLicence
+												$sqlClient
 												ORDER BY l.date_val ASC");
-		$requete-> execute(array($entree['id_cli'], $entree['id_mod_lic'], $entree['annee']));
+		$requete-> execute(array($entree['id_mod_lic'], $entree['annee']));
 		while ($reponse = $requete-> fetch()) {
 			$bg = "";
 			$styleHeader = '';
