@@ -3100,6 +3100,17 @@
 	}elseif(isset($_POST['operation']) && $_POST['operation']=='modele_facture_client'){
 		echo json_encode($maClasse-> modele_facture_client($_POST['id_cli']));
 
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='template_invoice_excl_client'){ 
+
+		echo json_encode($maClasse-> template_invoice_excl_client($_POST['id_cli']));
+
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='insert_modele_facture'){ 
+		$response['message'] = 'Done!';
+
+		$maClasse-> insert_modele_facture($_POST['id_mod_fact'], $_POST['id_cli'], $_POST['id_march'], $_POST['id_mod_trans'], $_POST['id_cli_old'], $_POST['id_mod_lic']);
+
+		echo json_encode($response);
+
 	}
 
 
