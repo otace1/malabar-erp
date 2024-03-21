@@ -39689,6 +39689,29 @@
 														IF(autre_frais IS NOT NULL,
 															autre_frais, 0)
 													) AS cif_2,
+													(
+														IF(fret IS NULL,
+															0,
+															IF(id_mon_fret = id_mon_fob,
+																fret,
+																fret*roe_fret
+															)
+														)+
+														IF(assurance IS NULL,
+															0,
+															IF(id_mon_assurance = id_mon_fob,
+																assurance,
+																assurance*roe_assurance
+															)
+														)+
+														IF(autre_frais IS NULL,
+															0,
+															IF(id_mon_autre_frais = id_mon_fob,
+																autre_frais,
+																autre_frais*roe_autre_frais
+															)
+														)
+													) AS cif_multiple_monnaie,
 													DATE_FORMAT(date_feuil_calc, '%Y-%m-%d %H:%i:%s') AS date_feuil_calc_1,
 													DATE_FORMAT(date_verif_feuil_calc, '%Y-%m-%d %H:%i:%s') AS date_verif_feuil_calc_1,
 													((fob_usd*roe_inv)/roe_decl) AS fob_en_usd
@@ -39724,13 +39747,14 @@
 			$loyer = 0;
 			$duree_loyer = $this-> getDossier($id_dos)['duree_loyer'];
 			$compteur=0;
+			$sig_mon = $this-> getMonnaie($this-> getDataDossier($id_dos)['id_mon_fob'])['sig_mon'];
 			if ($this-> getFOBMarchandiseDossier($id_dos)>0) {
 				$fob_marchandise = $this-> getFOBMarchandiseDossier($id_dos);
 			}else{
 				$fob_marchandise = 1;
 			}
 			// $coef = round(($this-> getFOBMarchandiseDossier($id_dos)+$this-> getDossier($id_dos)['cif_2'])/$fob_marchandise, 1);
-			$coef = ($this-> getFOBMarchandiseDossier($id_dos)+$this-> getDossier($id_dos)['cif_2'])/$fob_marchandise;
+			$coef = ($this-> getFOBMarchandiseDossier($id_dos)+$this-> getDossier($id_dos)['cif_multiple_monnaie'])/$fob_marchandise;
 			$roe_feuil_calc = $this-> getDossier($id_dos)['roe_feuil_calc'];
 
 			$requete = $connexion-> prepare("SELECT *
@@ -39762,7 +39786,7 @@
 									<td style="text-align: right;">'.number_format($reponse['nbr_bags'], 2, '.', ',').'</td>
 									<td style="text-align: right;">'.number_format($reponse['qte'], 2, '.', ',').'</td>
 									<td style="text-align: right;">'.number_format($reponse['poids'], 2, '.', ',').'</td>
-									<td style="text-align: right;">'.number_format($reponse['fob'], 2, '.', ',').'</td>
+									<td style="text-align: right;">'.number_format($reponse['fob'], 2, '.', ',').' '.$sig_mon.'</td>
 									<td style="text-align: right;">'.number_format($coef, 1, '.', ',').'</td>
 									<td style="text-align: right;">'.number_format($reponse['fob']*$coef, 2, '.', ',').'</td>
 									<td style="text-align: right;">'.number_format($this-> getCode_tarif($reponse['code_tarif_march'])['DDI'], 2, '.', ',').'</td>
@@ -39802,7 +39826,7 @@
 									<td style="text-align: right;">'.number_format($reponse['nbr_bags'], 2, '.', ',').'</td>
 									<td style="text-align: right;">'.number_format($reponse['qte'], 2, '.', ',').'</td>
 									<td style="text-align: right;">'.number_format($reponse['poids'], 2, '.', ',').'</td>
-									<td style="text-align: right;">'.number_format($reponse['fob'], 2, '.', ',').'</td>
+									<td style="text-align: right;">'.number_format($reponse['fob'], 2, '.', ',').' '.$sig_mon.'</td>
 									<td style="text-align: right;">'.number_format($coef, 1, '.', ',').'</td>
 									<td style="text-align: right;">'.number_format($reponse['fob']*$coef, 2, '.', ',').'</td>
 									<td style="text-align: right;">'.number_format($this-> getCode_tarif($reponse['code_tarif_march'])['DDI'], 2, '.', ',').'</td>
@@ -40005,13 +40029,13 @@
 			}else if ($groupe=='code Additionnel') {
 				$sqlGroupe = ' GROUP BY code_add ';
 			}
-
+			$sig_mon_fob = $this-> getMonnaie($this-> getDataDossier($id_dos)['id_mon_fob'])['sig_mon'];
 			if ($this-> getFOBMarchandiseDossier($id_dos)>0) {
 				$fob_marchandise = $this-> getFOBMarchandiseDossier($id_dos);
 			}else{
 				$fob_marchandise = 1;
 			}
-			$coef = ($this-> getFOBMarchandiseDossier($id_dos)+$this-> getDossier($id_dos)['cif_2'])/$fob_marchandise;
+			$coef = ($this-> getFOBMarchandiseDossier($id_dos)+$this-> getDossier($id_dos)['cif_multiple_monnaie'])/$fob_marchandise;
 			$roe_feuil_calc = $this-> getDossier($id_dos)['roe_feuil_calc'];
 
 			$requete = $connexion-> prepare("SELECT *,
@@ -40046,8 +40070,8 @@
 							<td width="3%" style="text-align: center; border: 0.3px solid black; ">'.number_format($reponse['nbr_bags'], 0, '.', ',').'</td>
 							<td width="3%" style="text-align: center; border: 0.3px solid black; ">'.number_format($reponse['qte'], 0, '.', ',').'</td>
 							<td width="6%" style="text-align: right; border: 0.3px solid black; ">'.number_format($reponse['poids'], 2, '.', ',').'</td>
-							<td width="8%" style="text-align: right; border: 0.3px solid black; ">'.number_format($reponse['fob'], 2, '.', ',').'</td>
-							<td width="8%" style="text-align: right; border: 0.3px solid black; ">'.number_format($reponse['fob']*$coef, 2, '.', ',').'</td>
+							<td width="8%" style="text-align: right; border: 0.3px solid black; ">'.number_format($reponse['fob'], 2, '.', ',').' '.$sig_mon.'</td>
+							<td width="8%" style="text-align: right; border: 0.3px solid black; ">'.number_format($reponse['fob']*$coef, 2, '.', ',').' '.$sig_mon.'</td>
 							<td width="3%" style="text-align: right; border: 0.3px solid black; ">'.number_format($this-> getCode_tarif($reponse['code_tarif_march'])['DDI'], 2, '.', ',').'</td>
 							<td width="8%" style="text-align: right; border: 0.3px solid black; ">'.number_format($reponse['fob']*$coef*($this-> getCode_tarif($reponse['code_tarif_march'])['DDI']/100)*$roe_feuil_calc, 0, '.', ',').'</td>
 						</tr>';
@@ -40066,8 +40090,8 @@
 							<td width="3%" style="text-align: center; border: 0.3px solid black; font-weight: bold;">'.number_format($nbr_bags, 0, '.', ',').'</td>
 							<td width="3%" style="text-align: center; border: 0.3px solid black; font-weight: bold;">'.number_format($qte, 0, '.', ',').'</td>
 							<td width="6%" style="text-align: right; border: 0.3px solid black; font-weight: bold;">'.number_format($poids, 2, '.', ',').'</td>
-							<td width="8%" style="text-align: right; border: 0.3px solid black; font-weight: bold;">'.number_format($fob, 2, '.', ',').'</td>
-							<td width="8%" style="text-align: right; border: 0.3px solid black; font-weight: bold;">'.number_format($cif_1, 2, '.', ',').'</td>
+							<td width="8%" style="text-align: right; border: 0.3px solid black; font-weight: bold;">'.number_format($fob, 2, '.', ',').' '.$sig_mon.'</td>
+							<td width="8%" style="text-align: right; border: 0.3px solid black; font-weight: bold;">'.number_format($cif_1, 2, '.', ',').' '.$sig_mon.'</td>
 							<td width="3%" style="text-align: center; border: 0.3px solid black; "></td>
 							<td width="8%" style="text-align: right; border: 0.3px solid black; font-weight: bold;">'.number_format($ddi, 0, '.', ',').'</td>
 						</tr>';
@@ -44637,6 +44661,55 @@
 
 			}
 
+
+		}
+
+		public function table_menuLicence($id_mod_lic, $mot_cle=null){
+			include('connexion.php');
+
+			$compteur=0;
+			$entree['id_mod_lic'] = $id_mod_lic;
+
+			$sqlMotCle = '';
+
+			if (!empty($mot_cle) && ($mot_cle!='')) {
+				$sqlMotCle = 'AND (cl.code_cli LIKE "%'.$mot_cle.'%" OR cl.nom_cli LIKE "%'.$mot_cle.'%")';
+			}
+			// echo $mot_cle;
+			$table = '';
+			
+			$requete = $connexion-> prepare("SELECT cl.id_cli AS id_cli,
+															cl.nom_cli AS nom_cli,
+															cl.code_cli AS code_cli
+														FROM affectation_client_modele_licence aff, client cl
+														WHERE aff.id_mod_lic = ?
+															AND aff.id_cli = cl.id_cli
+														$sqlMotCle
+														ORDER BY cl.code_cli");
+			$requete-> execute(array($entree['id_mod_lic']));
+			while($reponse = $requete-> fetch()){
+				$compteur++;
+				$table .='
+    					<tr>
+							<td>'.$compteur.'</td>
+							<td>'.$reponse['code_cli'].'</td>
+							<td>'.$reponse['nom_cli'].'</td>
+							<td>
+								<div class="btn-group">
+				                    <button type="button" class="btn btn-xs btn-info dropdown-toggle" data-toggle="dropdown">
+				                      Sous-menu
+				                    </button>
+				                    <div class="dropdown-menu sm">
+				                    	<a class="dropdown-item" href="#"><b>'.$reponse['nom_cli'].'</b></a>
+				                    	<a class="dropdown-item" href="licence.php?id_mod_lic='.$id_mod_lic.'&id_cli='.$reponse['id_cli'].'&id_type_lic=&id_march=&id_banq="><i class="fa fa-list"></i> Repertoire Licence</a>
+				                    	<a class="dropdown-item" href="apurementLicence.php?id_mod_lic='.$id_mod_lic.'&id_cli='.$reponse['id_cli'].'"><i class="fa fa-check"></i> Transmit Apurement</a>
+				                    </div>
+				                </div>
+							</td>
+						</tr>';
+			}$requete-> closeCursor();
+			
+			return $table;
 
 		}
 
@@ -52231,6 +52304,57 @@
 			$requete = $connexion-> prepare("UPDATE dossier SET id_mon_fob = ?
 												WHERE id_dos = ?");
 			$requete-> execute(array($entree['id_mon_fob'], $entree['id_dos']));
+
+		}
+		//roe_fob
+		public function MAJ_roe_fob($id_dos, $roe_fob){
+
+			include('connexion.php');
+			$entree['id_dos'] = $id_dos;
+			$entree['roe_fob'] = $roe_fob;
+
+			$requete = $connexion-> prepare("UPDATE dossier SET roe_fob = ?
+												WHERE id_dos = ?");
+			$requete-> execute(array($entree['roe_fob'], $entree['id_dos']));
+
+		}
+
+		//roe_fret
+		public function MAJ_roe_fret($id_dos, $roe_fret){
+
+			include('connexion.php');
+			$entree['id_dos'] = $id_dos;
+			$entree['roe_fret'] = $roe_fret;
+
+			$requete = $connexion-> prepare("UPDATE dossier SET roe_fret = ?
+												WHERE id_dos = ?");
+			$requete-> execute(array($entree['roe_fret'], $entree['id_dos']));
+
+		}
+
+		//roe_assurance
+		public function MAJ_roe_assurance($id_dos, $roe_assurance){
+
+			include('connexion.php');
+			$entree['id_dos'] = $id_dos;
+			$entree['roe_assurance'] = $roe_assurance;
+
+			$requete = $connexion-> prepare("UPDATE dossier SET roe_assurance = ?
+												WHERE id_dos = ?");
+			$requete-> execute(array($entree['roe_assurance'], $entree['id_dos']));
+
+		}
+
+		//roe_autre_frais
+		public function MAJ_roe_autre_frais($id_dos, $roe_autre_frais){
+
+			include('connexion.php');
+			$entree['id_dos'] = $id_dos;
+			$entree['roe_autre_frais'] = $roe_autre_frais;
+
+			$requete = $connexion-> prepare("UPDATE dossier SET roe_autre_frais = ?
+												WHERE id_dos = ?");
+			$requete-> execute(array($entree['roe_autre_frais'], $entree['id_dos']));
 
 		}
 
