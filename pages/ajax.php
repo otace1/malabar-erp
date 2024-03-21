@@ -2667,6 +2667,19 @@
 	}elseif(isset($_POST['operation']) && $_POST['operation']=='modal_worksheet'){ 
 
 		$response = $maClasse-> getDossier($_POST['id_dos']);
+		$response['label_mon_fob'] = $maClasse-> getMonnaie($maClasse-> getDataDossier($_POST['id_dos'])['id_mon_fob'])['sig_mon'];
+  		$response['mon_fob'] = '<select class="" name="mon_fob" id="mon_fob" onchange="maj_id_mon_fob(id_dos_worsheet.value, this.value);" required><option value="'.$response['id_mon_fob'].'">'.$maClasse-> getMonnaie($response['id_mon_fob'])['sig_mon'].'</option>
+  								'.$maClasse-> selectionnerMonnaie2().'
+  							</select>';
+  		$response['mon_fret'] = '<select class="" name="mon_fret" id="mon_fret" onchange="maj_id_mon_fret(id_dos_worsheet.value, this.value);" required><option value="'.$response['id_mon_fret'].'">'.$maClasse-> getMonnaie($response['id_mon_fret'])['sig_mon'].'</option>
+  								'.$maClasse-> selectionnerMonnaie2().'
+  							</select>';
+  		$response['mon_autre_frais'] = '<select class="" name="mon_autre_frais" id="mon_autre_frais" onchange="maj_id_mon_autre_frais(id_dos_worsheet.value, this.value);" required><option value="'.$response['id_mon_autre_frais'].'">'.$maClasse-> getMonnaie($response['id_mon_autre_frais'])['sig_mon'].'</option>
+  								'.$maClasse-> selectionnerMonnaie2().'
+  							</select>';
+  		$response['mon_assurance'] = '<select class="" name="mon_assurance" id="mon_assurance" onchange="maj_id_mon_assurance(id_dos_worsheet.value, this.value);" required><option value="'.$response['id_mon_assurance'].'">'.$maClasse-> getMonnaie($response['id_mon_assurance'])['sig_mon'].'</option>
+  								'.$maClasse-> selectionnerMonnaie2().'
+  							</select>';
 		$response['marchandiseDossier'] = $maClasse-> getMarchandiseDossier($_POST['id_dos']);
 
 		echo json_encode($response);
@@ -3110,6 +3123,47 @@
 		$maClasse-> insert_modele_facture($_POST['id_mod_fact'], $_POST['id_cli'], $_POST['id_march'], $_POST['id_mod_trans'], $_POST['id_cli_old'], $_POST['id_mod_lic']);
 
 		echo json_encode($response);
+
+	}else if ($_POST['operation']=="menuLicence") {
+
+		$response['table_menuLicence'] = $maClasse-> table_menuLicence($_POST['id_mod_lic'], $_POST['mot_cle']);
+
+		echo json_encode($response);
+
+	}//roe_fob
+	elseif(isset($_POST['operation']) && $_POST['operation']=='MAJ_roe_fob'){
+
+  		$reponse = $maClasse-> getDataDossier($_POST['id_dos']);
+  		$maClasse-> MAJ_roe_fob($_POST['id_dos'], $_POST['roe_fob']);
+
+  		echo json_encode($reponse);
+
+	}
+//roe_fret
+	elseif(isset($_POST['operation']) && $_POST['operation']=='MAJ_roe_fret'){
+
+  		$reponse = $maClasse-> getDataDossier($_POST['id_dos']);
+  		$maClasse-> MAJ_roe_fret($_POST['id_dos'], $_POST['roe_fret']);
+
+  		echo json_encode($reponse);
+
+	}
+//roe_assurance
+	elseif(isset($_POST['operation']) && $_POST['operation']=='MAJ_roe_assurance'){
+
+  		$reponse = $maClasse-> getDataDossier($_POST['id_dos']);
+  		$maClasse-> MAJ_roe_assurance($_POST['id_dos'], $_POST['roe_assurance']);
+
+  		echo json_encode($reponse);
+
+	}
+//roe_autre_frais
+	elseif(isset($_POST['operation']) && $_POST['operation']=='MAJ_roe_autre_frais'){
+
+  		$reponse = $maClasse-> getDataDossier($_POST['id_dos']);
+  		$maClasse-> MAJ_roe_autre_frais($_POST['id_dos'], $_POST['roe_autre_frais']);
+
+  		echo json_encode($reponse);
 
 	}
 

@@ -72,7 +72,7 @@
           <div class="col-md-12">
 
             <div class="row">
-              <div class="col-md-4">
+              <div class="col-md-3">
                 <table class=" table  table-bordered table-hover text-nowrap table-head-fixed table-sm">
                   <tbody>
                     <tr>
@@ -111,63 +111,93 @@
                   </tbody>
                 </table>
               </div>
-              <div class="col-md-8">
+              <div class="col-md-9">
                 <table class=" table  table-bordered table-hover text-nowrap table-head-fixed table-sm">
+                  <thead>
+                   <tr>
+                     <th>Item</th>
+                     <th>Monnaie</th>
+                     <th>Montant</th>
+                     <th>Taux</th>
+                     <th>Montant / <span id="label_mon_fob"></span></th>
+                     <th>Commentaire</th>
+                   </tr>
+                  </thead>
                   <tbody>
                    <tr>
                      <td>Fob Général</td>
-                     <td><span id="fob_worksheet"></span></td>
+                     <td><span id="mon_fob"></span></td>
+                     <td style="text-align: center;"><span id="fob_worksheet"></span></td>
+                     <td>
+                       <input type="number" step="0.01" name="roe_fob" style="width: 8em; text-align: center;" id="roe_fob" onblur="MAJ_roe_fob(id_dos_worsheet.value, this.value);">
+                     </td>
+                     <td style="text-align: center;"><span id="montant_fob"></span></td>
                      <input type="hidden" id="fob">
                    </tr>
                    <tr>
                      <td>Fret</td>
-                     <!-- <td><span id="fret_worsheet"></span></td>
-                     <input type="hidden" id="fret"> -->
-                     <td>
-                       <input type="number" step="0.01" name="fret" id="fret" onblur="MAJ_fret(id_dos_worsheet.value, this.value);">
+                     <td><span id="mon_fret"></span></td>
+                     <td style="text-align: center;">
+                       <input type="number" step="0.01" name="fret" id="fret" style="width: 8em; text-align: center;" onblur="MAJ_fret(id_dos_worsheet.value, this.value);">
                      </td>
+                     <td>
+                       <input type="number" step="0.01" name="roe_fret" style="width: 8em; text-align: center;" id="roe_fret" onblur="MAJ_roe_fret(id_dos_worsheet.value, this.value);">
+                     </td>
+                     <td style="text-align: center;"><span id="montant_fret"></span></td>
                      <td>
                        <textarea class="form-control form-control-sm" id="note_fret" onblur="MAJ_note_fret(id_dos_worsheet.value, this.value);"  placeholder="Note Fret"></textarea>
                      </td>
                    </tr>
                    <tr>
-                     <td>Autres Charges</td>
-                     <!-- <td><span id="autre_frais_worsheet"></span></td>
-                     <input type="hidden" id="autre_frais"> -->
-                     <td>
-                       <input type="number" step="0.01" name="autre_frais" id="autre_frais" onblur="MAJ_autre_frais(id_dos_worsheet.value, this.value);">
-                     </td>
-                     <td>
-                       <textarea class="form-control form-control-sm" id="note_autre_frais" onblur="MAJ_note_autre_frais(id_dos_worsheet.value, this.value);"  placeholder="Note Autres Frais"></textarea>
-                     </td>
-                   </tr>
-                   <tr>
                      <td>Assurance</td>
+                     <td><span id="mon_assurance"></span></td>
                      <!-- <td><span id="assurance_worksheet"></span></td>
                      <input type="hidden" id="assurance"> -->
-                     <td>
-                       <input type="number" step="0.01" name="assurance" id="assurance" onblur="MAJ_assurance(id_dos_worsheet.value, this.value);">
+                     <td style="text-align: center;">
+                       <input type="number" step="0.01" style="width: 8em; text-align: center;" name="assurance" id="assurance" onblur="MAJ_assurance(id_dos_worsheet.value, this.value);">
                      </td>
+                     <td>
+                       <input type="number" step="0.01" name="roe_assurance" style="width: 8em; text-align: center;" id="roe_assurance" onblur="MAJ_roe_assurance(id_dos_worsheet.value, this.value);">
+                     </td>
+                     <td style="text-align: center;"><span id="montant_assurance"></span></td>
                      <td>
                        <textarea class="form-control form-control-sm" id="note_assurance" onblur="MAJ_note_assurance(id_dos_worsheet.value, this.value);"  placeholder="Note Assurance"></textarea>
                      </td>
                    </tr>
                    <tr>
+                     <td>Autres Charges</td>
+                     <td><span id="mon_autre_frais"></span></td>
+                     <td style="text-align: center;">
+                       <input type="number" step="0.01" style="width: 8em; text-align: center;" name="autre_frais" id="autre_frais" onblur="MAJ_autre_frais(id_dos_worsheet.value, this.value);">
+                     </td>
+                     <td style="text-align: center;">
+                       <input type="number" step="0.01" name="roe_autre_frais" style="width: 8em; text-align: center;" id="roe_autre_frais" onblur="MAJ_roe_autre_frais(id_dos_worsheet.value, this.value);">
+                     </td>
+                     <td style="text-align: center;"><span id="montant_autre_frais"></span></td>
+                     <td>
+                       <textarea class="form-control form-control-sm" id="note_autre_frais" onblur="MAJ_note_autre_frais(id_dos_worsheet.value, this.value);"  placeholder="Note Autres Frais"></textarea>
+                     </td>
+                   </tr>
+                   <tr>
                      <td>CIF</td>
-                     <td><span id="cif_worsheet"></span></td>
+                     <td></td>
+                     <td style="text-align: center;"><span id="cif_worsheet"></span></td>
                      <input type="hidden" id="cif">
                    </tr>
                    <tr>
                      <td>Coefficient</td>
-                     <td><span id="coef_worsheet"></span></td>
+                     <td style="text-align: center;"></td>
+                     <td style="text-align: center;"><span id="coef_worsheet"></span></td>
                      <input type="hidden" id="coef">
                    </tr>
                    <tr>
                      <td>Licence</td>
-                     <td><span id="num_lic"></span></td>
+                     <td style="text-align: center;"></td>
+                     <td style="text-align: center;"><span id="num_lic"></span></td>
                    </tr>
                    <tr>
                      <td>Taux de change</td>
+                     <td></td>
                      <td><input type="number" step="0.0001" id="roe_feuil_calc" onblur="maj_roe_feuil_calc(id_dos_worsheet.value, this.value);"></td>
                    </tr>
                   </tbody>
@@ -351,6 +381,192 @@
 
 <script type="text/javascript">
   
+  function MAJ_roe_fob(id_dos, roe_fob){
+    $('#spinner-div').show();
+    $.ajax({
+      type: 'post',
+      url: 'ajax.php',
+      data: {id_dos: id_dos, roe_fob: roe_fob, operation: 'MAJ_roe_fob'},
+      dataType: 'json',
+      success:function(data){
+        if (data.logout) {
+          alert(data.logout);
+          window.location="../deconnexion.php";
+        }else{
+          $('#label_mon_fob').html(data.label_mon_fob);
+          // $('#label_mon_cif').html(data.label_mon_fob);
+          getSommeMarchandiseDossier(id_dos);
+        }
+      },
+      complete: function () {
+          $('#spinner-div').hide();//Request is complete so hide spinner
+      }
+    });
+
+  }
+
+  function MAJ_roe_fret(id_dos, roe_fret){
+    $('#spinner-div').show();
+    $.ajax({
+      type: 'post',
+      url: 'ajax.php',
+      data: {id_dos: id_dos, roe_fret: roe_fret, operation: 'MAJ_roe_fret'},
+      dataType: 'json',
+      success:function(data){
+        if (data.logout) {
+          alert(data.logout);
+          window.location="../deconnexion.php";
+        }else{
+          // $('#label_mon_fob').html(data.label_mon_fob);
+          // $('#label_mon_cif').html(data.label_mon_fob);
+          getSommeMarchandiseDossier(id_dos);
+        }
+      },
+      complete: function () {
+          $('#spinner-div').hide();//Request is complete so hide spinner
+      }
+    });
+
+  }
+
+  function MAJ_roe_assurance(id_dos, roe_assurance){
+    $('#spinner-div').show();
+    $.ajax({
+      type: 'post',
+      url: 'ajax.php',
+      data: {id_dos: id_dos, roe_assurance: roe_assurance, operation: 'MAJ_roe_assurance'},
+      dataType: 'json',
+      success:function(data){
+        if (data.logout) {
+          alert(data.logout);
+          window.location="../deconnexion.php";
+        }else{
+          // $('#label_mon_fob').html(data.label_mon_fob);
+          // $('#label_mon_cif').html(data.label_mon_fob);
+          getSommeMarchandiseDossier(id_dos);
+        }
+      },
+      complete: function () {
+          $('#spinner-div').hide();//Request is complete so hide spinner
+      }
+    });
+
+  }
+
+  function MAJ_roe_autre_frais(id_dos, roe_autre_frais){
+    $('#spinner-div').show();
+    $.ajax({
+      type: 'post',
+      url: 'ajax.php',
+      data: {id_dos: id_dos, roe_autre_frais: roe_autre_frais, operation: 'MAJ_roe_autre_frais'},
+      dataType: 'json',
+      success:function(data){
+        if (data.logout) {
+          alert(data.logout);
+          window.location="../deconnexion.php";
+        }else{
+          // $('#label_mon_fob').html(data.label_mon_fob);
+          // $('#label_mon_cif').html(data.label_mon_fob);
+          getSommeMarchandiseDossier(id_dos);
+        }
+      },
+      complete: function () {
+          $('#spinner-div').hide();//Request is complete so hide spinner
+      }
+    });
+
+  }
+
+  function maj_id_mon_fob(id_dos, id_mon_fob){
+    $('#spinner-div').show();
+    $.ajax({
+      type: 'post',
+      url: 'ajax.php',
+      data: {id_dos: id_dos, id_mon_fob: id_mon_fob, operation: 'maj_id_mon_fob'},
+      dataType: 'json',
+      success:function(data){
+        if (data.logout) {
+          alert(data.logout);
+          window.location="../deconnexion.php";
+        }else{
+          $('#label_mon_fob').html(data.label_mon_fob);
+          // $('#label_mon_cif').html(data.label_mon_fob);
+          getSommeMarchandiseDossier(id_dos);
+        }
+      },
+      complete: function () {
+          $('#spinner-div').hide();//Request is complete so hide spinner
+      }
+    });
+
+  }
+
+  function maj_id_mon_fret(id_dos, id_mon_fret){
+    $('#spinner-div').show();
+    $.ajax({
+      type: 'post',
+      url: 'ajax.php',
+      data: {id_dos: id_dos, id_mon_fret: id_mon_fret, operation: 'maj_id_mon_fret'},
+      dataType: 'json',
+      success:function(data){
+        if (data.logout) {
+          alert(data.logout);
+          window.location="../deconnexion.php";
+        }else{
+          getSommeMarchandiseDossier(id_dos);
+        }
+      },
+      complete: function () {
+          $('#spinner-div').hide();//Request is complete so hide spinner
+      }
+    });
+
+  }
+
+  function maj_id_mon_assurance(id_dos, id_mon_assurance){
+    $('#spinner-div').show();
+    $.ajax({
+      type: 'post',
+      url: 'ajax.php',
+      data: {id_dos: id_dos, id_mon_assurance: id_mon_assurance, operation: 'maj_id_mon_assurance'},
+      dataType: 'json',
+      success:function(data){
+        if (data.logout) {
+          alert(data.logout);
+          window.location="../deconnexion.php";
+        }else{
+          getSommeMarchandiseDossier(id_dos);
+        }
+      },
+      complete: function () {
+          $('#spinner-div').hide();//Request is complete so hide spinner
+      }
+    });
+
+  }
+
+  function maj_id_mon_autre_frais(id_dos, id_mon_autre_frais){
+    $('#spinner-div').show();
+    $.ajax({
+      type: 'post',
+      url: 'ajax.php',
+      data: {id_dos: id_dos, id_mon_autre_frais: id_mon_autre_frais, operation: 'maj_id_mon_autre_frais'},
+      dataType: 'json',
+      success:function(data){
+        if (data.logout) {
+          alert(data.logout);
+          window.location="../deconnexion.php";
+        }else{
+          getSommeMarchandiseDossier(id_dos);
+        }
+      },
+      complete: function () {
+          $('#spinner-div').hide();//Request is complete so hide spinner
+      }
+    });
+
+  }
+
   function calculFOBWorksheet(){
 
     $.ajax({
@@ -512,6 +728,7 @@
           window.location="../deconnexion.php";
         }else{
           $('#marchandiseDossier').html(data.marchandiseDossier);
+          getSommeMarchandiseDossier(id_dos);
         }
       },
       complete: function () {
@@ -1180,20 +1397,55 @@ table.on('click', 'tbody tr', function () {
             fob=0;
           }
           if (parseFloat($('#fret').val()) > 0 ) {
-            fret = parseFloat($('#fret').val());
+
+            if (parseFloat($('#mon_fret').val()) == parseFloat($('#mon_fob').val())) {
+              fret = parseFloat($('#fret').val());
+            }else{
+              fret = parseFloat($('#fret').val())*parseFloat($('#roe_fret').val());
+            }
+
           }else{
             fret=0;
           }
+
           if (parseFloat($('#assurance').val()) > 0 ) {
-            assurance = parseFloat($('#assurance').val());
+
+            if (parseFloat($('#mon_assurance').val()) == parseFloat($('#mon_fob').val())) {
+              assurance = parseFloat($('#assurance').val());
+            }else{
+              assurance = parseFloat($('#assurance').val())*parseFloat($('#roe_assurance').val());
+            }
+
           }else{
             assurance=0;
           }
+
           if (parseFloat($('#autre_frais').val()) > 0 ) {
-            autre_frais = parseFloat($('#autre_frais').val());
+
+            if (parseFloat($('#mon_autre_frais').val()) == parseFloat($('#mon_fob').val())) {
+              autre_frais = parseFloat($('#autre_frais').val());
+            }else{
+              autre_frais = parseFloat($('#autre_frais').val())*parseFloat($('#roe_autre_frais').val());
+            }
+
           }else{
             autre_frais=0;
           }
+          // if (parseFloat($('#fret').val()) > 0 ) {
+          //   fret = parseFloat($('#fret').val());
+          // }else{
+          //   fret=0;
+          // }
+          // if (parseFloat($('#assurance').val()) > 0 ) {
+          //   assurance = parseFloat($('#assurance').val());
+          // }else{
+          //   assurance=0;
+          // }
+          // if (parseFloat($('#autre_frais').val()) > 0 ) {
+          //   autre_frais = parseFloat($('#autre_frais').val());
+          // }else{
+          //   autre_frais=0;
+          // }
 
           cif = parseFloat(fob) + parseFloat(fret) + parseFloat(assurance) + parseFloat(autre_frais);
           if (fob>0) {
@@ -1212,6 +1464,16 @@ table.on('click', 'tbody tr', function () {
 
           $('#coef_worsheet').html(new Intl.NumberFormat('en-US').format(Math.round(coef*10)/10));
           $('#coef_worsheet').addClass('text-red font-weight-bold');
+
+          $('#montant_fob').html(new Intl.NumberFormat('en-US').format(Math.round(fob*1000)/1000));
+          $('#montant_fret').html(new Intl.NumberFormat('en-US').format(Math.round(fret*1000)/1000));
+          // $('#montant_fret').addClass('text-red font-weight-bold');
+        
+          $('#montant_assurance').html(new Intl.NumberFormat('en-US').format(Math.round(assurance*1000)/1000));
+          // $('#montant_assurance').addClass('text-red font-weight-bold');
+        
+          $('#montant_autre_frais').html(new Intl.NumberFormat('en-US').format(Math.round(autre_frais*1000)/1000));
+          // $('#montant_autre_frais').addClass('text-red font-weight-bold');
         }
       },
       complete: function () {
@@ -1255,6 +1517,20 @@ table.on('click', 'tbody tr', function () {
           $('#marchandiseDossier').html(data.marchandiseDossier);
           $('#duree_loyer').val(data.duree_loyer);
           $('#label_duree_loyer').html(data.duree_loyer);
+          $('#mon_fob').html(data.mon_fob);
+          $('#label_mon_fob').html(data.label_mon_fob);
+          // console.log(data.label_mon_fob);
+          $('#mon_fret').html(data.mon_fret);
+          $('#mon_autre_frais').html(data.mon_autre_frais);
+          $('#mon_assurance').html(data.mon_assurance);
+          //roe_fob
+          $('#roe_fob').val(data.roe_fob);
+          //roe_fret
+          $('#roe_fret').val(data.roe_fret);
+          //roe_assurance
+          $('#roe_assurance').val(data.roe_assurance);
+          //roe_autre_frais
+          $('#roe_autre_frais').val(data.roe_autre_frais);
           getSommeMarchandiseDossier(<?php echo $_GET['id_dos'];?>);
         }
       },

@@ -66,10 +66,10 @@ if ( empty($maClasse-> getDossier($_GET['id_dos'])['id_verif_feuil_calc_ops']) )
 }
 
 $ref_dos = $_GET['ref_dos'];
-$fob = number_format($maClasse-> getFOBMarchandiseDossier($_GET['id_dos']), 2, '.', ',');
-$fret = number_format($maClasse-> getDossier($_GET['id_dos'])['fret'], 2, '.', ',');
-$assurance = number_format($maClasse-> getDossier($_GET['id_dos'])['assurance'], 2, '.', ',');
-$autre_frais = number_format($maClasse-> getDossier($_GET['id_dos'])['autre_frais'], 2, '.', ',');
+$fob = number_format($maClasse-> getFOBMarchandiseDossier($_GET['id_dos']), 2, ',', '.');
+$fret = number_format($maClasse-> getDossier($_GET['id_dos'])['fret'], 2, ',', '.');
+$assurance = number_format($maClasse-> getDossier($_GET['id_dos'])['assurance'], 2, ',', '.');
+$autre_frais = number_format($maClasse-> getDossier($_GET['id_dos'])['autre_frais'], 2, ',', '.');
 $note_feuille = $maClasse-> getDossier($_GET['id_dos'])['note_feuille'];
 $note_fret = $maClasse-> getDossier($_GET['id_dos'])['note_fret'];
 $note_assurance = $maClasse-> getDossier($_GET['id_dos'])['note_assurance'];
@@ -77,7 +77,7 @@ $note_autre_frais = $maClasse-> getDossier($_GET['id_dos'])['note_autre_frais'];
 $incoterm = $maClasse-> getDossier($_GET['id_dos'])['incoterm'];
 $regime = $maClasse-> getDossier($_GET['id_dos'])['regime'];
 $num_lic = $maClasse-> getDossier($_GET['id_dos'])['num_lic'];
-$roe_feuil_calc = number_format($maClasse-> getDossier($_GET['id_dos'])['roe_feuil_calc'], 2, '.', ',');
+$roe_feuil_calc = number_format($maClasse-> getDossier($_GET['id_dos'])['roe_feuil_calc'], 2, ',', '.');
 $date_feuil = date('Y-m-d H:i:s');
 $date_feuil_calc = $maClasse-> getDossier($_GET['id_dos'])['date_feuil_calc_1'];
 $util_feuil_calc = $maClasse-> getUtilisateur($maClasse-> getDossier($_GET['id_dos'])['id_feuil_calc'])['nom_util'];
@@ -86,10 +86,39 @@ $date_verif_feuil_calc = $maClasse-> getDossier($_GET['id_dos'])['date_verif_feu
 $util_verif_feuil_calc_ops = $maClasse-> getUtilisateur($maClasse-> getDossier($_GET['id_dos'])['id_verif_feuil_calc_ops'])['nom_util'];
 $date_verif_feuil_calc_ops = $maClasse-> getDossier($_GET['id_dos'])['date_verif_feuil_calc_ops'];
 $marchandise_dossier = $maClasse-> getMarchandiseDossier2($_GET['id_dos'], $_GET['groupe']);
+$sig_mon_fob = $maClasse-> getMonnaie($maClasse-> getDataDossier($_GET['id_dos'])['id_mon_fob'])['sig_mon'];
+$sig_mon_fret = $maClasse-> getMonnaie($maClasse-> getDataDossier($_GET['id_dos'])['id_mon_fret'])['sig_mon'];
+$sig_mon_assurance = $maClasse-> getMonnaie($maClasse-> getDataDossier($_GET['id_dos'])['id_mon_assurance'])['sig_mon'];
+$sig_mon_autre_frais = $maClasse-> getMonnaie($maClasse-> getDataDossier($_GET['id_dos'])['id_mon_autre_frais'])['sig_mon'];
+
+$roe_fob = number_format($maClasse-> getDossier($_GET['id_dos'])['roe_fob'], 4, ',', '.');
+$roe_fret = number_format($maClasse-> getDossier($_GET['id_dos'])['roe_fret'], 4, ',', '.');
+$roe_assurance = number_format($maClasse-> getDossier($_GET['id_dos'])['roe_assurance'], 4, ',', '.');
+$roe_autre_frais = number_format($maClasse-> getDossier($_GET['id_dos'])['roe_autre_frais'], 4, ',', '.');
+
+if ($maClasse-> getDossier($_GET['id_dos'])['id_mon_fret']==$maClasse-> getDossier($_GET['id_dos'])['id_mon_fob']) {
+	$montant_fret = number_format($maClasse-> getDossier($_GET['id_dos'])['fret'], 2, ',', '.');
+}else{
+	$montant_fret = number_format($maClasse-> getDossier($_GET['id_dos'])['fret']*$maClasse-> getDossier($_GET['id_dos'])['roe_fret'], 2, ',', '.');
+}
+
+if ($maClasse-> getDossier($_GET['id_dos'])['id_mon_assurance']==$maClasse-> getDossier($_GET['id_dos'])['id_mon_fob']) {
+	$montant_assurance = number_format($maClasse-> getDossier($_GET['id_dos'])['assurance'], 2, ',', '.');
+}else{
+	$montant_assurance = number_format($maClasse-> getDossier($_GET['id_dos'])['assurance']*$maClasse-> getDossier($_GET['id_dos'])['roe_assurance'], 2, ',', '.');
+}
+
+if ($maClasse-> getDossier($_GET['id_dos'])['id_mon_autre_frais']==$maClasse-> getDossier($_GET['id_dos'])['id_mon_fob']) {
+	$montant_autre_frais = number_format($maClasse-> getDossier($_GET['id_dos'])['autre_frais'], 2, ',', '.');
+}else{
+	$montant_autre_frais = number_format($maClasse-> getDossier($_GET['id_dos'])['autre_frais']*$maClasse-> getDossier($_GET['id_dos'])['roe_autre_frais'], 2, ',', '.');
+}
 
 
-$cif = number_format($maClasse-> getFOBMarchandiseDossier($_GET['id_dos'])+$maClasse-> getDossier($_GET['id_dos'])['fret']+$maClasse-> getDossier($_GET['id_dos'])['assurance']+$maClasse-> getDossier($_GET['id_dos'])['autre_frais'], 2, '.', ',');
-$coef = number_format(($maClasse-> getFOBMarchandiseDossier($_GET['id_dos'])+$maClasse-> getDossier($_GET['id_dos'])['fret']+$maClasse-> getDossier($_GET['id_dos'])['assurance']+$maClasse-> getDossier($_GET['id_dos'])['autre_frais'])/$maClasse-> getFOBMarchandiseDossier($_GET['id_dos']), 2, '.', ',');
+// $cif = number_format($maClasse-> getFOBMarchandiseDossier($_GET['id_dos'])+$maClasse-> getDossier($_GET['id_dos'])['fret']+$maClasse-> getDossier($_GET['id_dos'])['assurance']+$maClasse-> getDossier($_GET['id_dos'])['autre_frais'], 2, ',', '.');
+$cif = number_format($maClasse-> getFOBMarchandiseDossier($_GET['id_dos'])+$maClasse-> getDossier($_GET['id_dos'])['cif_multiple_monnaie'], 2, ',', '.');
+// $coef = number_format(($maClasse-> getFOBMarchandiseDossier($_GET['id_dos'])+$maClasse-> getDossier($_GET['id_dos'])['fret']+$maClasse-> getDossier($_GET['id_dos'])['assurance']+$maClasse-> getDossier($_GET['id_dos'])['autre_frais'])/$maClasse-> getFOBMarchandiseDossier($_GET['id_dos']), 2, ',', '.');
+$coef = number_format(($maClasse-> getFOBMarchandiseDossier($_GET['id_dos'])+$maClasse-> getDossier($_GET['id_dos'])['cif_multiple_monnaie'])/$maClasse-> getFOBMarchandiseDossier($_GET['id_dos']), 2, ',', '.');
 
 if(isset($_GET['id_dos'])){
 
@@ -120,44 +149,60 @@ $tbl = <<<EOD
 		</tr>
 		<br>
 		<tr>
+			<td width="10%" style="text-align: center; "></td>
+			<td width="10%" style="text-align: center;"></td>
+			<td width="10%" style="text-align: center;"></td>
+			<td width="10%" style="text-align: center; font-weight: bold;">SYDONIA</td>
+			<td width="5%" style="text-align: center; font-weight: bold;">Taux $sig_mon_fob</td>
+			<td width="10%" style="text-align: center; font-weight: bold;">Montant $sig_mon_fob</td>
+		</tr>
+		<tr>
 			<td width="10%" style="text-align: center; border-left: 0.3px solid black; border-top: 0.3px solid black; border-right: 0.3px solid black; "></td>
 			<td width="10%" style="text-align: center; border-left: 0.3px solid black; border-top: 0.3px solid black; border-right: 0.3px solid black;  font-weight: bold;"></td>
 			<td width="10%" style="text-align: center; border: 0.3px solid black; ">Fob General</td>
-			<td width="10%" style="text-align: center; border: 0.3px solid black; font-weight: bold;">$fob</td>
+			<td width="10%" style="text-align: right; border: 0.3px solid black; font-weight: bold;">$fob $sig_mon_fob</td>
+			<td width="5%" style="text-align: right; border: 0.3px solid black; font-weight: bold;">$roe_fob</td>
+			<td width="10%" style="text-align: right; border: 0.3px solid black; font-weight: bold;">$fob</td>
 		</tr>
 		<tr>
 			<td width="10%" style="text-align: center; border-left: 0.3px solid black; ">MCA FILE</td>
 			<td width="10%" style="text-align: center; border-left: 0.3px solid black; font-weight: bold;">$ref_dos</td>
 			<td width="10%" style="text-align: center; border: 0.3px solid black; ">Fret</td>
-			<td width="10%" style="text-align: center; border: 0.3px solid black; font-weight: bold;">$fret</td>
+			<td width="10%" style="text-align: right; border: 0.3px solid black; font-weight: bold;">$fret $sig_mon_fret</td>
+			<td width="5%" style="text-align: right; border: 0.3px solid black; font-weight: bold;">$roe_fret</td>
+			<td width="10%" style="text-align: right; border: 0.3px solid black; font-weight: bold;">$montant_fret</td>
 			<td width="20%" style="">$note_fret</td>
-		</tr>
-		<tr>
-			<td width="10%" style="text-align: center; border-left: 0.3px solid black;  border-bottom: 0.3px solid black; "></td>
-			<td width="10%" style="text-align: center; border-bottom: 0.3px solid black; border-left: 0.3px solid black; font-weight: bold;"></td>
-			<td width="10%" style="text-align: center; border: 0.3px solid black; ">Autres Charges</td>
-			<td width="10%" style="text-align: center; border: 0.3px solid black; font-weight: bold;">$autre_frais</td>
-			<td width="20%" style="">$note_autre_frais</td>
 		</tr>
 
 		<tr>
 			<td width="10%" style="text-align: center; border-left: 0.3px solid black; border-top: 0.3px solid black; border-right: 0.3px solid black; "></td>
 			<td width="10%" style="text-align: center; border-left: 0.3px solid black; border-top: 0.3px solid black; border-right: 0.3px solid black;  font-weight: bold;"></td>
 			<td width="10%" style="text-align: center; border: 0.3px solid black; ">Assurance</td>
-			<td width="10%" style="text-align: center; border: 0.3px solid black; font-weight: bold;">$assurance</td>
+			<td width="10%" style="text-align: right; border: 0.3px solid black; font-weight: bold;">$assurance $sig_mon_assurance</td>
+			<td width="5%" style="text-align: right; border: 0.3px solid black; font-weight: bold;">$roe_assurance</td>
+			<td width="10%" style="text-align: right; border: 0.3px solid black; font-weight: bold;">$montant_assurance</td>
 			<td width="20%" style="">$note_assurance</td>
+		</tr>
+		<tr>
+			<td width="10%" style="text-align: center; border-left: 0.3px solid black;  border-bottom: 0.3px solid black; "></td>
+			<td width="10%" style="text-align: center; border-bottom: 0.3px solid black; border-left: 0.3px solid black; font-weight: bold;"></td>
+			<td width="10%" style="text-align: center; border: 0.3px solid black; ">Autres Charges</td>
+			<td width="10%" style="text-align: right; border: 0.3px solid black; font-weight: bold;">$autre_frais $sig_mon_autre_frais</td>
+			<td width="5%" style="text-align: right; border: 0.3px solid black; font-weight: bold;">$roe_autre_frais</td>
+			<td width="10%" style="text-align: right; border: 0.3px solid black; font-weight: bold;">$montant_autre_frais</td>
+			<td width="20%" style="">$note_autre_frais</td>
 		</tr>
 		<tr>
 			<td width="10%" style="text-align: center; border-left: 0.3px solid black; ">INCOTERM</td>
 			<td width="10%" style="text-align: center; border-left: 0.3px solid black; font-weight: bold;">$incoterm</td>
 			<td width="10%" style="text-align: center; border: 0.3px solid black; ">CIF</td>
-			<td width="10%" style="text-align: center; border: 0.3px solid black; font-weight: bold;">$cif</td>
+			<td width="25%" style="text-align: right; border: 0.3px solid black; font-weight: bold; background-color: #404040; color: white;">$cif $sig_mon_fob</td>
 		</tr>
 		<tr>
 			<td width="10%" style="text-align: center; border-left: 0.3px solid black;  border-bottom: 0.3px solid black; "></td>
 			<td width="10%" style="text-align: center; border-bottom: 0.3px solid black; border-left: 0.3px solid black; font-weight: bold;"></td>
 			<td width="10%" style="text-align: center; border: 0.3px solid black; ">Coefficient</td>
-			<td width="10%" style="text-align: center; border: 0.3px solid black; font-weight: bold;">$coef</td>
+			<td width="10%" style="text-align: right; border: 0.3px solid black; font-weight: bold;">$coef</td>
 		</tr>
 
 		<tr>
@@ -170,7 +215,7 @@ $tbl = <<<EOD
 			<td width="10%" style="text-align: center; border-left: 0.3px solid black; ">REGIME</td>
 			<td width="10%" style="text-align: center; border-left: 0.3px solid black; font-weight: bold;">$regime</td>
 			<td width="10%" style="text-align: center; border: 0.3px solid black; ">Taux de change</td>
-			<td width="10%" style="text-align: center; border: 0.3px solid black; font-weight: bold;">$roe_feuil_calc</td>
+			<td width="10%" style="text-align: right; border: 0.3px solid black; font-weight: bold;">$roe_feuil_calc</td>
 		</tr>
 		<tr>
 			<td width="10%" style="text-align: center; border-left: 0.3px solid black;  border-bottom: 0.3px solid black; "></td>
