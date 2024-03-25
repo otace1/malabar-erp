@@ -10039,6 +10039,36 @@
 
 					}
 
+				}else if($reponse['id_deb']=='206'){
+					$data_dossier = $this-> getDossier($reponse['id_dos']);
+					
+					$cost_2 = '1';
+					$unite_2 = $reponse['nbre_dos'];
+
+					if($reponse['id_deb']=='206'){
+						$cost_2 = $reponse['ht_usd']/$this-> getDataAffectationDeboursClientModeleLicence($reponse['id_deb'], $data_dossier['id_cli'], $data_dossier['id_mod_lic'], $data_dossier['id_march'], $data_dossier['id_mod_trans'])['montant'];
+						$rate = $this-> getDataAffectationDeboursClientModeleLicence($reponse['id_deb'], $data_dossier['id_cli'], $data_dossier['id_mod_lic'], $data_dossier['id_march'], $data_dossier['id_mod_trans'])['montant'];
+
+						$unite = 'Per Truck/Trailer';
+
+					}else if($reponse['id_deb']=='206' || $reponse['id_deb']=='204' || $reponse['id_deb']=='205'){
+
+						$unite = 'Per Truck';
+
+					}else if($reponse['id_deb']=='107'){
+
+						$unite = 'Per AWB';
+
+					}else if($reponse['id_deb']=='102'){
+
+						$unite = 'Per License';
+
+					}else{
+
+						$unite = 'Per Declaration';
+
+					}
+
 				}else{
 					$unite = 'Per Declaration';
 					$cost_2 = '1';
