@@ -3100,7 +3100,7 @@
 
 	}elseif(isset($_POST['operation']) && $_POST['operation']=='inserer_aff_debours'){
 
-		$maClasse-> inserer_aff_debours($_POST['id_deb'], $_POST['id_cli'], $_POST['id_mod_lic'], $_POST['id_march'], $_POST['id_mod_trans'], $_POST['montant'], $_POST['montant_under_value'], $_POST['usd'], $_POST['tva']);
+		$maClasse-> inserer_aff_debours($_POST['id_deb'], $_POST['id_cli'], $_POST['id_mod_lic'], $_POST['id_march'], $_POST['id_mod_trans'], $_POST['montant'], $_POST['montant_under_value'], $_POST['usd'], $_POST['tva'], $_POST['unite']);
 		$response['message'] = 'Done!';
 		echo json_encode($response);
 
