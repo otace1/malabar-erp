@@ -380,7 +380,7 @@ while ($reponseModeTransport = $requeteModeTransport-> fetch()) {
 	
 }$requeteModeTransport-> closeCursor();
 
-include('excelDiluent.php');
+// include('excelDiluent.php');
 
 // $indiceSheet++;
 

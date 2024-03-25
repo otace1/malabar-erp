@@ -999,6 +999,12 @@ for ($i=1; $i <= 15 ; $i++) {
                       <i class="fas fa-file-excel"></i> Export
                     </button>
                         <?php
+                      }elseif ($_GET['id_cli'] == 869 && $_GET['id_mod_trac'] == 2) {
+                        ?>
+                    <button class="btn btn-xs btn-success square-btn-adjust" onclick="window.location.replace('exportExcelMMGImport2.php?id_cli=<?php echo $_GET['id_cli']; ?>&id_mod_trans=<?php echo $_GET['id_mod_trans']; ?>&id_mod_trac=<?php echo $_GET['id_mod_trac']; ?>&commodity=<?php echo $_GET['commodity']; ?>&statut=<?php echo $_GET['statut'];?>&id_march=<?php echo $_GET['id_march'];?>','pop1','width=80,height=80');">
+                      <i class="fas fa-file-excel"></i> Export
+                    </button>
+                        <?php
                       }else{
                         ?>
                     <!-- <button class="btn btn-success square-btn-adjust" onclick="window.location.replace('exportExcel2.php?id_cli=<?php echo $_GET['id_cli']; ?>&id_mod_trans=<?php echo $_GET['id_mod_trans']; ?>&id_mod_trac=<?php echo $_GET['id_mod_trac']; ?>&commodity=<?php echo $_GET['commodity']; ?>&statut=<?php echo $_GET['statut'];?>&id_march=<?php echo $_GET['id_march'];?>','pop1','width=80,height=80');">
