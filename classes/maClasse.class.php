@@ -21559,6 +21559,184 @@
 			return $rows;
 		}
 		
+		public function kpi_tracking_report($debut, $fin){
+			include('connexion.php');
+
+
+			$rows = array();
+			$compteur = 0;
+			$entree['debut'] = $debut;
+			$entree['fin'] = $fin;
+
+			$requete = $connexion-> prepare("SELECT cl.code_kpi_tracking AS code_kpi_tracking,
+													d.id_dos AS id_dos,
+													d.ref_dos AS ref_dos,
+													d.frontiere AS frontiere,
+													DATE_FORMAT(d.klsa_arriv, '%d/%m/%Y') AS klsa_arriv,
+													DATE_FORMAT(d.dispatch_klsa, '%d/%m/%Y') AS dispatch_klsa,
+													IF(d.klsa_arriv IS NULL,
+														0,
+														IF(d.dispatch_klsa IS NULL,
+															DATEDIFF(CURRENT_DATE(), d.klsa_arriv),
+															DATEDIFF(d.dispatch_klsa, d.klsa_arriv)
+														)
+													) AS delay_klsa,
+													CONCAT(
+														IF(d.horse IS NOT NULL AND REPLACE(d.horse, ' ', '') NOT LIKE '',
+															d.horse,
+															''),
+														IF(d.trailer_1 IS NOT NULL AND REPLACE(d.trailer_1, ' ', '') NOT LIKE '',
+															CONCAT(' / ', d.trailer_1),
+															''),
+														IF(d.trailer_2 IS NOT NULL AND REPLACE(d.trailer_2, ' ', '') NOT LIKE '',
+															CONCAT(' / ', d.trailer_2),
+															'')
+													) AS truck,
+													IF(d.klsa_arriv IS NULL,
+														'',
+														IF(d.dispatch_klsa IS NULL,
+															IF(DATEDIFF(CURRENT_DATE(), d.klsa_arriv)<3, 'On time', 'Delay'),
+															IF(DATEDIFF(d.dispatch_klsa, d.klsa_arriv)<3, 'On time', 'Delay')
+														)
+													) AS comment_delay_klsa,
+													DATE_FORMAT(d.wiski_arriv, '%d/%m/%Y') AS wiski_arriv,
+													IF(d.wiski_dep IS NULL AND d.dispatch_klsa IS NOT NULL, 
+														DATE_FORMAT(d.dispatch_klsa, '%d/%m/%Y'),
+														DATE_FORMAT(d.wiski_dep, '%d/%m/%Y')) AS wiski_dep,
+													IF(d.wiski_arriv IS NULL,
+														0,
+														IF(d.wiski_dep IS NULL AND d.dispatch_klsa IS NOT NULL,
+															DATEDIFF(d.dispatch_klsa, d.wiski_arriv),
+															IF(d.wiski_dep IS NULL,
+																DATEDIFF(CURRENT_DATE(), d.wiski_arriv),
+																DATEDIFF(d.wiski_dep, d.wiski_arriv)
+															)
+															
+														)
+													) AS delay_wiski
+												FROM dossier d, client cl
+												WHERE d.id_cli = cl.id_cli
+													AND (
+															(d.klsa_arriv BETWEEN ? AND ?)
+															OR (d.dispatch_klsa BETWEEN ? AND ?)
+														)
+												ORDER BY cl.code_kpi_tracking, d.id_dos");
+
+			$requete-> execute(array($entree['debut'], $entree['fin'], $entree['debut'], $entree['fin']));
+
+			while($reponse = $requete-> fetch()){
+				$compteur++;
+				$reponse['compteur'] = $compteur;
+				$rows[] = $reponse;
+
+			}$requete-> closeCursor();
+
+			return $rows;
+		}
+		
+		public function getDispatchFromBorderUtilisateur($id_util, $debut, $fin){
+			include('connexion.php');
+
+			$entree['id_util'] = $id_util;
+			$entree['debut'] = $debut;
+			$entree['fin'] = $fin;
+
+			$requete = $connexion-> prepare("SELECT COUNT(DISTINCT(id_dos)) AS nbre_dossier_dispatch_border
+												FROM log_dossier
+												WHERE id_util = ?
+													AND colonne IN ('Dispacth from K\'lsa', 'Dispacth from Border')
+													AND DATE(date_log) BETWEEN ? AND ?
+												-- GROUP BY id_dos
+											");
+			$requete-> execute(array($entree['id_util'], $entree['debut'], $entree['fin']));
+
+			$reponse = $requete-> fetch();
+
+			return $reponse['nbre_dossier_dispatch_border'];
+		}
+		
+		public function getBorderWHArrivalUtilisateur($id_util, $debut, $fin){
+			include('connexion.php');
+
+			$entree['id_util'] = $id_util;
+			$entree['debut'] = $debut;
+			$entree['fin'] = $fin;
+
+			$requete = $connexion-> prepare("SELECT COUNT(DISTINCT(id_dos)) AS nbre_dossier_border_wh_arriv
+												FROM log_dossier
+												WHERE id_util = ?
+													AND colonne IN ('Wiski arrival date', 'Truck enter W\'ky', 'Border warehouse arrival date')
+													AND DATE(date_log) BETWEEN ? AND ?
+												-- GROUP BY id_dos
+											");
+			$requete-> execute(array($entree['id_util'], $entree['debut'], $entree['fin']));
+
+			$reponse = $requete-> fetch();
+
+			return $reponse['nbre_dossier_border_wh_arriv'];
+		}
+	
+		public function getBorderWHDepUtilisateur($id_util, $debut, $fin){
+			include('connexion.php');
+
+			$entree['id_util'] = $id_util;
+			$entree['debut'] = $debut;
+			$entree['fin'] = $fin;
+
+			$requete = $connexion-> prepare("SELECT COUNT(DISTINCT(id_dos)) AS nbre_dossier_border_wh_dep
+												FROM log_dossier
+												WHERE id_util = ?
+													AND colonne IN ('Departure date Wiski', 'Dispacth from W\'ky to AMICONGO Date', 'Border warehouse departure date')
+													AND DATE(date_log) BETWEEN ? AND ?
+												-- GROUP BY id_dos
+											");
+			$requete-> execute(array($entree['id_util'], $entree['debut'], $entree['fin']));
+
+			$reponse = $requete-> fetch();
+
+			return $reponse['nbre_dossier_border_wh_dep'];
+		}
+	
+		public function getBorderArrivalUtilisateur($id_util, $debut, $fin){
+			include('connexion.php');
+
+			$entree['id_util'] = $id_util;
+			$entree['debut'] = $debut;
+			$entree['fin'] = $fin;
+
+			$requete = $connexion-> prepare("SELECT COUNT(DISTINCT(id_dos)) AS nbre_dossier_border_arriv
+												FROM log_dossier
+												WHERE id_util = ?
+													AND colonne IN ('Klesa arrival date', 'Document rec date (Kasum)', 'Border Arrival Date')
+													AND DATE(date_log) BETWEEN ? AND ?
+												-- GROUP BY id_dos
+											");
+			$requete-> execute(array($entree['id_util'], $entree['debut'], $entree['fin']));
+
+			$reponse = $requete-> fetch();
+
+			return $reponse['nbre_dossier_border_arriv'];
+		}
+	
+		public function getDossierCreesUtilisateur($id_util, $debut, $fin){
+			include('connexion.php');
+
+			$entree['id_util'] = $id_util;
+			$entree['debut'] = $debut;
+			$entree['fin'] = $fin;
+
+			$requete = $connexion-> prepare('SELECT COUNT(id_dos) AS nbre_dossier_crees
+												FROM dossier
+												WHERE id_util = ?
+													AND DATE(date_creat_dos) BETWEEN ? AND ?
+											');
+			$requete-> execute(array($entree['id_util'], $entree['debut'], $entree['fin']));
+
+			$reponse = $requete-> fetch();
+
+			return $reponse;
+		}
+
 		public function detail_invoice_pending_report($id_cli, $id_mod_lic){
 			include('connexion.php');
 
