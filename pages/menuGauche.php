@@ -427,6 +427,15 @@
               </p></span>
             </a>
           </li>
+          <li class="nav-item"  style="">
+            <a href="kpi_tracking.php?debut=<?php echo date('Y-m-d');?>&fin=<?php echo date('Y-m-d');?>" class="nav-link" style=" font-weight: bold;">
+              <img src="../images/kpi.png" width="23px">
+              <span class="">
+              <p style="">
+                &nbsp;&nbsp;&nbsp;&nbsp;KPI'S<br>
+              </p></span>
+            </a>
+          </li>
 
             <?php
               $maClasse-> afficherMenuTracking();

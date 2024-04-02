@@ -3165,6 +3165,10 @@
 
   		echo json_encode($reponse);
 
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='kpi_tracking_report'){ 
+
+		echo json_encode($maClasse-> kpi_tracking_report($_POST['debut'], $_POST['fin']));
+
 	}
 
 
