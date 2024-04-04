@@ -16853,8 +16853,7 @@
 			$requete-> execute(array($tab['date_mvt'], $tab['entree'], $tab['sortie'], $tab['libelle'], $tab['reference'], $tab['id_mvt']));
 
 		}
-
-		public function creerFactureDossier($ref_fact, $id_mod_fact, $id_cli, $id_util, $id_mod_lic, $type_fact, $information, $note_debit='0', $type_case=NULL, $taux=NULL){
+		public function creerFactureDossier($ref_fact, $id_mod_fact, $id_cli, $id_util, $id_mod_lic, $type_fact, $information, $note_debit='0', $type_case=NULL, $taux=NULL, $id_mod_trans=1){
 			include('connexion.php');
 
 			$entree['ref_fact'] = $ref_fact;
@@ -16867,6 +16866,7 @@
 			$entree['note_debit'] = $note_debit;
 			$entree['type_case'] = $type_case;
 			$entree['taux'] = $taux;
+			$entree['id_mod_trans'] = $id_mod_trans;
 
 			// echo "<br>ref_fact = $ref_fact";
 			// echo "<br>id_mod_fact = $id_mod_fact";
@@ -16876,14 +16876,17 @@
 			// echo "<br>type_fact = $type_fact";
 			// echo "<br>information = $information";
 			// echo "<br>note_debit = $note_debit";
+			// echo "<br>type_case = $type_case";
+			// echo "<br>taux = $taux";
+			// echo "<br>id_mod_trans = $id_mod_trans";
 
 			$requete = $connexion-> prepare('INSERT INTO facture_dossier(ref_fact, id_mod_fact, id_cli, id_util, 
 																			id_mod_lic, type_fact, information, 
-																			note_debit, type_case, taux)
-												VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
+																			note_debit, type_case, taux, id_mod_trans)
+												VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
 			$requete-> execute(array($entree['ref_fact'], $entree['id_mod_fact'], $entree['id_cli'], $entree['id_util'], 
 									$entree['id_mod_lic'], $entree['type_fact'], $entree['information'], 
-									$entree['note_debit'], $entree['type_case'], $entree['taux']));
+									$entree['note_debit'], $entree['type_case'], $entree['taux'], $entree['id_mod_trans']));
 
 		}
 		
