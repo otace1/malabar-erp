@@ -382,7 +382,7 @@
     $.ajax({
       type: "POST",
       url: "ajax.php",
-      data: { id_cli: id_cli, id_mod_lic: id_mod_lic, ref_fact:ref_fact, id_mod_fact:id_mod_fact, operation: 'creer_facture_en_cours'},
+      data: { id_cli: id_cli, id_mod_lic: id_mod_lic, ref_fact:ref_fact, id_mod_fact:id_mod_fact, id_mod_trans: <?php echo $_GET['id_mod_trans']; ?>, operation: 'creer_facture_en_cours'},
       dataType:"json",
       success:function(data){
         if (data.logout) {

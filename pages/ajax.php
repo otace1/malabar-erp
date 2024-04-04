@@ -1401,7 +1401,7 @@
 
 	}else if ($_POST['operation']=='creer_facture_en_cours') {
 	  
-		$maClasse-> creerFactureDossier($_POST['ref_fact'], $_POST['id_mod_fact'], $_POST['id_cli'], $_SESSION['id_util'], $_POST['id_mod_lic'], 'globale', NULL);
+		$maClasse-> creerFactureDossier($_POST['ref_fact'], $_POST['id_mod_fact'], $_POST['id_cli'], $_SESSION['id_util'], $_POST['id_mod_lic'], 'globale', NULL, '0', NULL, NULL, $_POST['id_mod_trans']);
 		$response['message'] = 'ok';
 		echo json_encode($response);
 
