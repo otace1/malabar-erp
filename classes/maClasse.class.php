@@ -21634,6 +21634,130 @@
 			return $rows;
 		}
 		
+		public function kpi_tracking_reportAll($debut, $fin, $id_cli=null, $id_mod_lic=null){
+			include('connexion.php');
+
+
+			$rows = array();
+			$compteur = 0;
+			$entree['debut'] = $debut;
+			$entree['fin'] = $fin;
+
+			if (isset($id_cli) && ($id_cli!='')) {
+				$sqlClient = ' AND cl.id_cli = "'.$id_cli.'"';
+			}else{
+				$sqlClient = '';
+			}
+
+			if (isset($id_mod_lic) && ($id_mod_lic!='')) {
+				$sqlModeLic = ' AND d.id_mod_lic = "'.$id_mod_lic.'"';
+			}else{
+				$sqlModeLic = '';
+			}
+
+
+			$requete = $connexion-> prepare("SELECT cl.code_kpi_tracking AS code_kpi_tracking,
+													d.id_dos AS id_dos,
+													d.ref_dos AS ref_dos,
+													d.ref_fact AS ref_fact,
+													d.commodity AS commodity,
+													d.supplier AS supplier,
+													d.poids AS poids,
+													d.fob AS fob,
+													d.road_manif AS road_manif,
+													d.horse AS horse,
+													d.trailer_1 AS trailer_1,
+													d.trailer_2 AS trailer_2,
+													d.container AS container,
+													d.regime AS regime,
+													d.frontiere AS frontiere,
+													d.entrepot_frontiere AS entrepot_frontiere,
+													d.po_ref AS po_ref,
+													d.t1 AS t1,
+													d.bond_warehouse AS bond_warehouse,
+													d.warehouse_arriv AS warehouse_arriv,
+													d.warehouse_dep AS warehouse_dep,
+													d.num_lic AS num_lic,
+													cl.nom_cli AS nom_cli,
+													d.frontiere AS frontiere,
+													d.ref_crf AS ref_crf,
+													DATE_FORMAT(d.date_crf, '%d/%m/%Y') AS date_crf,
+													d.ir_crf AS ir_crf,
+													DATE_FORMAT(d.date_decl, '%d/%m/%Y') AS date_decl,
+													d.ref_decl AS ref_decl,
+													DATE_FORMAT(d.date_liq, '%d/%m/%Y') AS date_liq,
+													d.ref_liq AS ref_liq,
+													DATE_FORMAT(d.date_quit, '%d/%m/%Y') AS date_quit,
+													d.ref_quit AS ref_quit,
+													d.remarque AS remarque,
+													DATE_FORMAT(d.date_preal, '%d/%m/%Y') AS date_preal,
+													DATE_FORMAT(d.klsa_arriv, '%d/%m/%Y') AS klsa_arriv,
+													DATE_FORMAT(d.dispatch_klsa, '%d/%m/%Y') AS dispatch_klsa,
+													DATE_FORMAT(d.date_ad, '%d/%m/%Y') AS date_ad,
+													DATE_FORMAT(d.date_assurance, '%d/%m/%Y') AS date_assurance,
+													DATE_FORMAT(d.dispatch_deliv, '%d/%m/%Y') AS dispatch_deliv,
+													DATE_FORMAT(d.dispatch_klsa, '%d/%m/%Y') AS dispatch_klsa,
+													IF(d.klsa_arriv IS NULL,
+														0,
+														IF(d.dispatch_klsa IS NULL,
+															DATEDIFF(CURRENT_DATE(), d.klsa_arriv),
+															DATEDIFF(d.dispatch_klsa, d.klsa_arriv)
+														)
+													) AS delay_klsa,
+													CONCAT(
+														IF(d.horse IS NOT NULL AND REPLACE(d.horse, ' ', '') NOT LIKE '',
+															d.horse,
+															''),
+														IF(d.trailer_1 IS NOT NULL AND REPLACE(d.trailer_1, ' ', '') NOT LIKE '',
+															CONCAT(' / ', d.trailer_1),
+															''),
+														IF(d.trailer_2 IS NOT NULL AND REPLACE(d.trailer_2, ' ', '') NOT LIKE '',
+															CONCAT(' / ', d.trailer_2),
+															'')
+													) AS truck,
+													IF(d.klsa_arriv IS NULL,
+														'',
+														IF(d.dispatch_klsa IS NULL,
+															IF(DATEDIFF(CURRENT_DATE(), d.klsa_arriv)<3, 'On time', 'Delay'),
+															IF(DATEDIFF(d.dispatch_klsa, d.klsa_arriv)<3, 'On time', 'Delay')
+														)
+													) AS comment_delay_klsa,
+													DATE_FORMAT(d.wiski_arriv, '%d/%m/%Y') AS wiski_arriv,
+													IF(d.wiski_dep IS NULL AND d.dispatch_klsa IS NOT NULL, 
+														DATE_FORMAT(d.dispatch_klsa, '%d/%m/%Y'),
+														DATE_FORMAT(d.wiski_dep, '%d/%m/%Y')) AS wiski_dep,
+													IF(d.wiski_arriv IS NULL,
+														0,
+														IF(d.wiski_dep IS NULL AND d.dispatch_klsa IS NOT NULL,
+															DATEDIFF(d.dispatch_klsa, d.wiski_arriv),
+															IF(d.wiski_dep IS NULL,
+																DATEDIFF(CURRENT_DATE(), d.wiski_arriv),
+																DATEDIFF(d.wiski_dep, d.wiski_arriv)
+															)
+															
+														)
+													) AS delay_wiski,
+													mt.nom_mod_trans AS nom_mod_trans
+												FROM dossier d, client cl, mode_transport mt
+												WHERE d.id_mod_trans = mt.id_mod_trans
+													AND d.id_cli = cl.id_cli
+													AND (DATE(d.date_creat_dos) BETWEEN ? AND ?)
+													$sqlClient
+													$sqlModeLic
+												ORDER BY d.id_dos");
+
+			$requete-> execute(array($entree['debut'], $entree['fin']));
+
+			while($reponse = $requete-> fetch()){
+				$compteur++;
+				$reponse['compteur'] = $compteur;
+				$rows[] = $reponse;
+
+			}$requete-> closeCursor();
+
+			return $rows;
+		}
+		
 		public function getDispatchFromBorderUtilisateur($id_util, $debut, $fin){
 			include('connexion.php');
 
