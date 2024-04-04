@@ -329,9 +329,9 @@ if(isset($_GET['id_mod_trac']) && isset($_GET['id_mod_trac'])){
 
           <?php
           if ($_GET['id_mod_trac'] == '1') {
-            echo 'EXPORT KIPs | Filter By Loading Date ';
+            echo 'EXPORT KIPs ';
           }else if ($_GET['id_mod_trac'] == '2') {
-            echo 'IMPORT KIPs | Filter By Wiski Arrival Date ';
+            echo 'IMPORT KIPs  ';
           }
           ?>
 

@@ -1,174 +1,5 @@
 <?php
-  include("tete.php");
-
-  if ($_GET['id_mod_lic'] == '1') {
-    $filtre = ' | <u> LOADING DATE BETWEEN <span class="bg bg-danger" style="padding-left: 5px; padding-right: 5px;">'.$_GET['debut'].' AND '.$_GET['fin'].'</span></u>';
-  }else if ($_GET['id_mod_lic'] == '2' && $_GET['id_mod_trans'] == '1') {
-    $filtre = ' | <u> WISKI ARRIVAL DATE BETWEEN <span class="bg bg-danger" style="padding-left: 5px; padding-right: 5px;">'.$_GET['debut'].' AND '.$_GET['fin'].'</span></u>';
-  }else if ($_GET['id_mod_lic'] == '2') {
-    $filtre = ' | <u> ARRIVAL DATE BETWEEN <span class="bg bg-danger" style="padding-left: 5px; padding-right: 5px;">'.$_GET['debut'].' AND '.$_GET['fin'].'</span></u>';
-  }
-  
-  $nombre_dossier = $maClasse-> nbreKpiFile($_GET['id_cli'], $_GET['id_mod_lic'], $_GET['id_mod_trans'], $_GET['debut'], $_GET['fin']);
-
-  $avg = ' | AVG TIME <span class="bg bg-primary" style="padding-left: 5px; padding-right: 5px;">'.round(($maClasse-> getAvgKpiFile($_GET['id_cli'], $_GET['id_mod_lic'], $_GET['id_mod_trans'], $_GET['debut'], $_GET['fin'])/$nombre_dossier), 2).' DAY(S)</span>';
-
-  if( isset($_GET['id_mod_trans']) && ($_GET['id_mod_trans'] != '')){
-    $mode_transport = ' | '.$maClasse-> getNomModeTransport($_GET['id_mod_trans']);
-  }else{
-    $mode_transport = '';
-  }
-
-  if( isset($_GET['id_mod_lic']) && ($_GET['id_mod_lic'] != '')){
-    $modele_licence = $maClasse-> getNomModeleLicence($_GET['id_mod_lic']);
-  }else{
-    $modele_licence = '';
-  }
-
-  if( isset($_GET['id_cli']) && ($_GET['id_cli'] != '')){
-    $client = ' | '.$maClasse-> getElementClient($_GET['id_cli'])['nom_cli'];
-  }else{
-    $client = '';
-  }
-
-if ($_GET['id_mod_lic']=='1' && ($_GET['id_mod_trans']=='3' || $_GET['id_mod_trans']=='4') ) {
-
-  $message = '<table class="table table-dark table-hover text-nowrap table-sm">
-                         <tr>
-                              <td style="border: 1px solid white;">N.</td>
-                              <td style="border: 1px solid white;">MCA REF. FILE</td>
-                              <td style="border: 1px solid white;">Client</td>
-                              <td style="border: 1px solid white;">Commodity</td>
-                              <td style="border: 1px solid white;">AWB Num.</td>
-                              <td style="border: 1px solid white;">Prealerte Date</td>
-                              <td style="border: 1px solid white;">Loading Arrival</td>
-                              <td style="border: 1px solid white;">Ref. Decl.</td>
-                              <td style="border: 1px solid white;">Date. Decl.</td>
-                              <td style="border: 1px solid white;">Ref. Liq.</td>
-                              <td style="border: 1px solid white;">Date. Liq.</td>
-                              <td style="border: 1px solid white;">Ref. Quit.</td>
-                              <td style="border: 1px solid white;">Date. Quit.</td>
-                              <td style="border: 1px solid white;">Exit Drc Date</td>
-                              <td style="border: 1px solid white;">Timing</td>
-                              <td style="border: 1px solid white;">Status</td>
-                              <td style="border: 1px solid white;">Comment</td>
-                         </tr>
-                         '.$maClasse-> afficherKpiFile($_GET['id_cli'], $_GET['id_mod_lic'], $_GET['id_mod_trans'], $_GET['debut'], $_GET['fin']).'
-                    </table>';
-
-}if ($_GET['id_mod_lic']=='1' && ($_GET['id_mod_trans']=='1' || $_GET['id_mod_trans']=='5') ) {
-
-  $message = '<table class="table table-dark table-hover text-nowrap table-sm">
-                         <tr>
-                              <td style="border: 1px solid white;">N.</td>
-                              <td style="border: 1px solid white;">MCA REF. FILE</td>
-                              <td style="border: 1px solid white;">Client</td>
-                              <td style="border: 1px solid white;">Commodity</td>
-                              <td style="border: 1px solid white;">Horse</td>
-                              <td style="border: 1px solid white;">Trailer 1</td>
-                              <td style="border: 1px solid white;">Trailer 2</td>
-                              <td style="border: 1px solid white;">Prealerte Date</td>
-                              <td style="border: 1px solid white;">Loading Arrival</td>
-                              <td style="border: 1px solid white;">Ref. Decl.</td>
-                              <td style="border: 1px solid white;">Date. Decl.</td>
-                              <td style="border: 1px solid white;">Ref. Liq.</td>
-                              <td style="border: 1px solid white;">Date. Liq.</td>
-                              <td style="border: 1px solid white;">Ref. Quit.</td>
-                              <td style="border: 1px solid white;">Date. Quit.</td>
-                              <td style="border: 1px solid white;">Exit Drc Date</td>
-                              <td style="border: 1px solid white;">Timing</td>
-                              <td style="border: 1px solid white;">Status</td>
-                              <td style="border: 1px solid white;">Comment</td>
-                         </tr>
-                         '.$maClasse-> afficherKpiFile($_GET['id_cli'], $_GET['id_mod_lic'], $_GET['id_mod_trans'], $_GET['debut'], $_GET['fin']).'
-                    </table>';
-
-}if ($_GET['id_mod_lic']=='1') {
-
-  $message = '<table class="table table-dark table-hover text-nowrap table-sm">
-                         <tr>
-                              <td style="border: 1px solid white;">N.</td>
-                              <td style="border: 1px solid white;">MCA REF. FILE</td>
-                              <td style="border: 1px solid white;">Client</td>
-                              <td style="border: 1px solid white;">Commodity</td>
-                              <td style="border: 1px solid white;">Horse</td>
-                              <td style="border: 1px solid white;">Trailer 1</td>
-                              <td style="border: 1px solid white;">Trailer 2</td>
-                              <td style="border: 1px solid white;">Prealerte Date</td>
-                              <td style="border: 1px solid white;">Loading Arrival</td>
-                              <td style="border: 1px solid white;">Ref. Decl.</td>
-                              <td style="border: 1px solid white;">Date. Decl.</td>
-                              <td style="border: 1px solid white;">Ref. Liq.</td>
-                              <td style="border: 1px solid white;">Date. Liq.</td>
-                              <td style="border: 1px solid white;">Ref. Quit.</td>
-                              <td style="border: 1px solid white;">Date. Quit.</td>
-                              <td style="border: 1px solid white;">Exit Drc Date</td>
-                              <td style="border: 1px solid white;">Timing</td>
-                              <td style="border: 1px solid white;">Status</td>
-                              <td style="border: 1px solid white;">Comment</td>
-                         </tr>
-                         '.$maClasse-> afficherKpiFile($_GET['id_cli'], $_GET['id_mod_lic'], $_GET['id_mod_trans'], $_GET['debut'], $_GET['fin']).'
-                    </table>';
-
-}else if ($_GET['id_mod_lic']=='2' && ($_GET['id_mod_trans']=='3' || $_GET['id_mod_trans']=='4') ) {
-
-  $message = '<table class="table table-dark table-hover text-nowrap table-sm">
-                         <tr>
-                              <td style="border: 1px solid white;">N.</td>
-                              <td style="border: 1px solid white;">MCA REF. FILE</td>
-                              <td style="border: 1px solid white;">Client</td>
-                              <td style="border: 1px solid white;">Commodity</td>
-                              <td style="border: 1px solid white;">AWB Num.</td>
-                              <td style="border: 1px solid white;">Prealerte Date</td>
-                              <td style="border: 1px solid white;">Arrival Date</td>
-                              <td style="border: 1px solid white;">Ref. Decl.</td>
-                              <td style="border: 1px solid white;">Date. Decl.</td>
-                              <td style="border: 1px solid white;">Ref. Liq.</td>
-                              <td style="border: 1px solid white;">Date. Liq.</td>
-                              <td style="border: 1px solid white;">Ref. Quit.</td>
-                              <td style="border: 1px solid white;">Date. Quit.</td>
-                              <td style="border: 1px solid white;">Dispatch/Deliver Date</td>
-                              <td style="border: 1px solid white;">Timing</td>
-                              <td style="border: 1px solid white;">Status</td>
-                              <td style="border: 1px solid white;">Comment</td>
-                         </tr>
-                         '.$maClasse-> afficherKpiFile($_GET['id_cli'], $_GET['id_mod_lic'], $_GET['id_mod_trans'], $_GET['debut'], $_GET['fin']).'
-                    </table>';
-
-}else if ($_GET['id_mod_lic']=='2') {
-
-  $message = '<table class="table table-dark table-hover text-nowrap table-sm">
-                         <tr>
-                              <td style="border: 1px solid white;">N.</td>
-                              <td style="border: 1px solid white;">MCA REF. FILE</td>
-                              <td style="border: 1px solid white;">Client</td>
-                              <td style="border: 1px solid white;">Commodity</td>
-                              <td style="border: 1px solid white;">Horse</td>
-                              <td style="border: 1px solid white;">Trailer 1</td>
-                              <td style="border: 1px solid white;">Trailer 2</td>
-                              <td style="border: 1px solid white;">Prealerte Date</td>
-                              <td style="border: 1px solid white;">Wiski Arrival</td>
-                              <td style="border: 1px solid white;">Ref. Decl.</td>
-                              <td style="border: 1px solid white;">Date. Decl.</td>
-                              <td style="border: 1px solid white;">Ref. Liq.</td>
-                              <td style="border: 1px solid white;">Date. Liq.</td>
-                              <td style="border: 1px solid white;">Ref. Quit.</td>
-                              <td style="border: 1px solid white;">Date. Quit.</td>
-                              <td style="border: 1px solid white;">Dispatch/Deliver Date</td>
-                              <td style="border: 1px solid white;">Timing</td>
-                              <td style="border: 1px solid white;">Status</td>
-                              <td style="border: 1px solid white;">Comment</td>
-                         </tr>
-                         '.$maClasse-> afficherKpiFile($_GET['id_cli'], $_GET['id_mod_lic'], $_GET['id_mod_trans'], $_GET['debut'], $_GET['fin']).'
-                    </table>';
-
-}
-//UPDATES
-  
-//FIN UPDATES
-
-  //include('excel/popUpDossier.php');
-
+  include("tetePopCDN.php");
  ?>
 
   <div class="wrapper">
@@ -183,32 +14,66 @@ if ($_GET['id_mod_lic']=='1' && ($_GET['id_mod_trans']=='3' || $_GET['id_mod_tra
                 </h3>
               </div>
               <!-- /.card-header -->
-                  <div class="card card-dark">
+                  <div class="card ">
                     <div class="card-header">
                       <h3 class="card-title">
-                        <i class="fa fa-folder-open nav-icon"></i>
-                          <?php echo  'KPIs <span class="bg bg-dark" style="padding-left: 5px; padding-right: 5px;">'.$modele_licence.$client.$mode_transport.$filtre.$avg.'</span> | TOTAL FILES <span class="bg bg-warning" style="padding-left: 5px; padding-right: 5px;">'.number_format($nombre_dossier, 0, ',', ' ').'</span>';?>
-                        
-                    <button class="btn btn-success square-btn-adjust" onclick="window.location.replace('exportExcelDashboardKpiPopUp.php?id_cli=<?php echo $_GET['id_cli'];?>&id_mod_lic=<?php echo $_GET['id_mod_lic'];?>&id_mod_trans=<?php echo $_GET['id_mod_trans'];?>&debut=<?php echo $_GET['debut'];?>&fin=<?php echo $_GET['fin'];?>','pop1','width=80,height=80');">
-                      <i class="fas fa-file-excel"></i> Export
-                    </button>
 
                       </h3>
-
-                  <!--<div class="card-tools">
-                    <button class="btn btn-info square-btn-adjust" data-toggle="modal" data-target=".update">
-                        <i class="fa fa-edit"></i> Update Multiple Files
-                    </button>
-                  </div>-->
                     </div>
                     <!-- /.card-header -->
                     <div class="card-body">
-                        <div class="row">
-                          <div class="col-sm-12">
-                            <?php
-                              echo $message;
-                            ?>  
-                        </div>
+                      <div class=" table-responsive p-0 small">
+                        <table id="kpi_tracking_reportAll" class=" table table-bordered table-hover text-nowrap table-head-fixed table-sm">
+                          <thead>
+                            <tr class="">
+                              <th style="text-align: center;">#</th>
+                              <th style="text-align: center;">MCA REF</th>
+                              <th style="text-align: center;">Client</th>
+                              <th style="text-align: center;">Transport Mode</th>
+                              <th style="text-align: center;">PRE-ALERTE DATE</th>
+                              <th style="text-align: center;">INVOICE</th>
+                              <th style="text-align: center;">COMMODITY</th>
+                              <th style="text-align: center;">SUPPLIER</th>
+                              <th style="text-align: center;">PO Ref</th>
+                              <th style="text-align: center;">WEIGHT</th>
+                              <th style="text-align: center;">FOB</th>
+                              <th style="text-align: center;">ROAD MANIF</th>
+                              <th style="text-align: center;">HORSE</th>
+                              <th style="text-align: center;">TRAILER 1</th>
+                              <th style="text-align: center;">TRAILER 2</th>
+                              <th style="text-align: center;">Container</th>
+                              <th style="text-align: center;">Regime</th>
+                              <th style="text-align: center;">Entry Point</th>
+                              <th style="text-align: center;">Border Arrival Date</th>
+                              <th style="text-align: center;">Border warehouse</th>
+                              <th style="text-align: center;">Border warehouse arrival date</th>
+                              <th style="text-align: center;">Dispacth from Border</th>
+                              <th style="text-align: center;">T1 Number</th>
+                              <th style="text-align: center;">Bonded Warehouse</th>
+                              <th style="text-align: center;">Warehouse Arrival Date</th>
+                              <th style="text-align: center;">Warehouse Departure Date</th>
+                              <th style="text-align: center;">LICENCE Num.</th>
+                              <th style="text-align: center;">CRF Reference</th>
+                              <th style="text-align: center;">CRF Received Date</th>
+                              <th style="text-align: center;">Clearing Based on IR/CRF/ARA</th>
+                              <th style="text-align: center;">AD Date</th>
+                              <th style="text-align: center;">INSURANCE Date</th>
+                              <th style="text-align: center;">Declaration Date</th>
+                              <th style="text-align: center;">Declaration Reference</th>
+                              <th style="text-align: center;">Liquidation Reference</th>
+                              <th style="text-align: center;">Date Liquidation</th>
+                              <th style="text-align: center;">Quittance Reference</th>
+                              <th style="text-align: center;">Date Quittance</th>
+                              <th style="text-align: center;">DISPACTH/DELIVER DATE</th>
+                              <th style="text-align: center;">REMARKS</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                           
+                          </tbody>
+                        </table>
+                      </div>
+                        
                     </div>
                         <!-- input states -->
                     <!-- /.card-body -->
@@ -232,7 +97,220 @@ if ($_GET['id_mod_lic']=='1' && ($_GET['id_mod_trans']=='3' || $_GET['id_mod_tra
 <?php
 include('pied.php');
 ?>
+<script type="text/javascript">
+  
+  $('#spinner-div').show();
+  $('#kpi_tracking_reportAll').DataTable({
+     lengthMenu: [
+        [25, 50, 100, 500, -1],
+        [25, 50, 100, 500, 'All'],
+    ],
+    dom: 'Bfrtip',
+  buttons: [
+      {
+        extend: 'excel',
+        text: '<i class="fa fa-file-excel"></i>',
+        title: 'Tracking KPI\'S',
+        className: 'btn btn-success'
+      },
+      {
+        extend: 'pageLength',
+        text: '<i class="fa fa-list"></i>',
+        className: 'btn btn-dark'
+      }
+  ],
+  "paging": true,
+  "lengthChange": true,
+  "searching": true,
+  "ordering": true,
+  "info": true,
+  "autoWidth": true,
+  // "responsive": true,
+    "ajax":{
+      "type": "GET",
+      "url":"ajax.php",
+      "method":"post",
+      "dataSrc":{
+          "id_cli": ""
+      },
+      "data": {
+          "operation": "kpi_tracking_reportAll",
+          "debut": "<?php echo $_GET['debut'];?>",
+          "fin": "<?php echo $_GET['fin'];?>",
+          "id_cli": "<?php echo $_GET['id_cli'];?>",
+          "id_mod_lic": "<?php echo $_GET['id_mod_lic'];?>"
+      }
+    },
+    // order: [[1, 'asc']],
+    // rowGroup: {
+    //     dataSrc: 0,
+    //     endRender: function (rows, group) {
+    //         var avg =
+    //             rows
+    //                 .data()
+    //                 .pluck(4)
+    //                 .reduce((a, b) => a + b.replace(/[^\d]/g, '') * 1, 0) / rows.count() * rows.count();
+ 
+    //         // Use the DataTables number formatter
+    //         // return (
+    //         //     'Total in group: ' +
+    //         //     DataTable.render.number(null, null, 0, null).display(avg)
+    //         // );
+    //     }
+    // },
 
-</body>
+    "columns":[
+      {"data":"compteur"},
+      {"data":"ref_dos",
+        className: 'dt-body-center'
+      },
+      {"data":"nom_cli",
+        className: 'dt-body-left'
+      },
+      {"data":"nom_mod_trans",
+        className: 'dt-body-left'
+      },
+      {"data":"date_preal",
+        className: 'dt-body-center'
+      },
+      {"data":"ref_fact",
+        className: 'dt-body-center'
+      },
+      {"data":"commodity",
+        className: 'dt-body-center'
+      },
+      {"data":"supplier",
+        className: 'dt-body-center'
+      },
+      {"data":"po_ref",
+        className: 'dt-body-center'
+      },
+      {"data":"poids",
+        className: 'dt-body-center',
+        render: DataTable.render.number( null, null, 2, null )
+      },
+      {"data":"fob",
+        className: 'dt-body-center',
+        render: DataTable.render.number( null, null, 2, null )
+      },
+      {"data":"road_manif",
+        className: 'dt-body-center'
+      },
+      {"data":"horse",
+        className: 'dt-body-center'
+      },
+      {"data":"trailer_1",
+        className: 'dt-body-center'
+      },
+      {"data":"trailer_2",
+        className: 'dt-body-center'
+      },
+      {"data":"container",
+        className: 'dt-body-center'
+      },
+      {"data":"regime",
+        className: 'dt-body-center'
+      },
+      {"data":"frontiere",
+        className: 'dt-body-center'
+      },
+      {"data":"klsa_arriv",
+        className: 'dt-body-center'
+      },
+      {"data":"entrepot_frontiere",
+        className: 'dt-body-center'
+      },
+      {"data":"wiski_arriv",
+        className: 'dt-body-center'
+      },
+      {"data":"wiski_dep",
+        className: 'dt-body-center'
+      },
+      {"data":"t1",
+        className: 'dt-body-center'
+      },
+      {"data":"bond_warehouse",
+        className: 'dt-body-center'
+      },
+      {"data":"warehouse_arriv",
+        className: 'dt-body-center'
+      },
+      {"data":"warehouse_dep",
+        className: 'dt-body-center'
+      },
+      {"data":"num_lic",
+        className: 'dt-body-center'
+      },
+      {"data":"ref_crf",
+        className: 'dt-body-center'
+      },
+      {"data":"date_crf",
+        className: 'dt-body-center'
+      },
+      {"data":"ir_crf",
+        className: 'dt-body-center'
+      },
+      {"data":"date_ad",
+        className: 'dt-body-center'
+      },
+      {"data":"date_assurance",
+        className: 'dt-body-center'
+      },
+      {"data":"date_decl",
+        className: 'dt-body-center'
+      },
+      {"data":"ref_decl",
+        className: 'dt-body-center'
+      },
+      {"data":"ref_liq",
+        className: 'dt-body-center'
+      },
+      {"data":"date_liq",
+        className: 'dt-body-center'
+      },
+      {"data":"ref_quit",
+        className: 'dt-body-center'
+      },
+      {"data":"date_quit",
+        className: 'dt-body-center'
+      },
+      {"data":"dispatch_deliv",
+        className: 'dt-body-center'
+      },
+      {"data":"remarque",
+        className: 'dt-body-left'
+      }
+    ]
+    // ,
+    // "createdRow": function( row, data, dataIndex ) {
+    //   if ( data.delay_klsa < 0) {
+    //     $('td:eq(10)', row).addClass("font-weight-bold bg-danger");
+    //   }else if ( data.delay_klsa < 2) {
+    //     $('td:eq(10)', row).addClass("font-weight-bold bg-success");
+    //   }else if ( data.delay_klsa < 3) {
+    //     $('td:eq(10)', row).addClass("font-weight-bold bg-info");
+    //   }else if ( data.delay_klsa < 4) {
+    //     $('td:eq(10)', row).addClass("font-weight-bold bg-warning");
+    //   }else {
+    //     $('td:eq(10)', row).addClass("font-weight-bold bg-danger");
+    //   }
+
+    //   if ( data.comment_delay_klsa == 'On time') {
+    //     $('td:eq(11)', row).addClass("font-weight-bold text-success");
+    //   }else{
+    //     $('td:eq(11)', row).addClass("font-weight-bold text-danger");
+    //   }
+
+    // } 
+  });
+  $('#spinner-div').hide();
+  // let table = new DataTable('#pending_report');
+  // table.on('click', 'tbody tr', function () {
+  //     let data = table.row(this).data();
+
+  //     modal_detail_invoice_pending_report(data.id_cli, data.id_mod_lic);
+      
+  //     // alert('You clicked on ' + data[0] + "'s row");
+  // });
+
 </script>
-</html>
