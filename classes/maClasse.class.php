@@ -43792,7 +43792,8 @@
 									                dos.id_mod_lic AS id_mod_lic,
 									                dos.id_cli AS id_cli,
 									                dos.id_mod_trans AS id_mod_trans,
-									                dos.id_march AS id_march
+									                dos.id_march AS id_march,
+													((dos.fob_usd*dos.roe_inv)/dos.roe_decl) AS fob_en_usd
 												FROM facture_dossier fd, modele_facture mf, client cl, dossier dos, detail_facture_dossier det, debours deb
 												WHERE fd.id_mod_fact = mf.id_mod_fact
 													AND fd.note_debit = '0'
