@@ -317,6 +317,17 @@ for ($i=1; $i <= 15 ; $i++) {
         $maClasse-> MAJ_fret($_POST['id_dos_'.$i], $_POST['fret_'.$i]);
       }
 
+      //ogefrem_ref_fact
+      if (isset($_POST['ogefrem_ref_fact_'.$i]) && ($_POST['ogefrem_ref_fact_'.$i] != '')) {
+        // echo '<script>alert("'.$_POST['ogefrem_ref_fact_'.$i].'")</script>';
+        $maClasse-> MAJ_ogefrem_ref_fact($_POST['id_dos_'.$i], $_POST['ogefrem_ref_fact_'.$i]);
+      }
+
+      //lmc_id
+      if (isset($_POST['lmc_id_'.$i]) && ($_POST['lmc_id_'.$i] != '')) {
+        $maClasse-> MAJ_lmc_id($_POST['id_dos_'.$i], $_POST['lmc_id_'.$i]);
+      }
+
       if (isset($_POST['assurance_'.$i]) && ($_POST['assurance_'.$i] != '')) {
         $maClasse-> MAJ_assurance($_POST['id_dos_'.$i], $_POST['assurance_'.$i]);
       }
