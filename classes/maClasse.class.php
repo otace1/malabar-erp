@@ -54803,16 +54803,45 @@
 
 		} 
 
-		/*public function MAJ_montant_av($id_dos, $montant_av){
+		// lmc_id
+		public function MAJ_lmc_id($id_dos, $lmc_id){
 			
+			//Log
+			if ($this-> getDossier($id_dos)['lmc_id'] != $lmc_id) {
+				
+				$colonne = $this-> getNomColonneClient('lmc_id', $_GET['id_cli'], $_GET['id_mod_trans'], $_GET['id_mod_trac']);
+				$this-> creerLogDossier($colonne, $lmc_id, $id_dos, $_SESSION['id_util']);
+
+			}
+
 			include('connexion.php');
 			$entree['id_dos'] = $id_dos;
-			$entree['montant_av'] = $montant_av;
-			$requete = $connexion-> prepare("UPDATE dossier SET montant_av = ?
+			$entree['lmc_id'] = $lmc_id;
+			$requete = $connexion-> prepare("UPDATE dossier SET lmc_id = ?
 												WHERE id_dos = ?");
-			$requete-> execute(array($entree['montant_av'], $entree['id_dos']));
+			$requete-> execute(array($entree['lmc_id'], $entree['id_dos']));
 
-		} */
+		} 
+
+		// ogefrem_ref_fact
+		public function MAJ_ogefrem_ref_fact($id_dos, $ogefrem_ref_fact){
+			
+			//Log
+			if ($this-> getDossier($id_dos)['ogefrem_ref_fact'] != $ogefrem_ref_fact) {
+				
+				$colonne = $this-> getNomColonneClient('ogefrem_ref_fact', $_GET['id_cli'], $_GET['id_mod_trans'], $_GET['id_mod_trac']);
+				$this-> creerLogDossier($colonne, $ogefrem_ref_fact, $id_dos, $_SESSION['id_util']);
+
+			}
+
+			include('connexion.php');
+			$entree['id_dos'] = $id_dos;
+			$entree['ogefrem_ref_fact'] = $ogefrem_ref_fact;
+			$requete = $connexion-> prepare("UPDATE dossier SET ogefrem_ref_fact = ?
+												WHERE id_dos = ?");
+			$requete-> execute(array($entree['ogefrem_ref_fact'], $entree['id_dos']));
+
+		} 
 
 		public function MAJ_apurement_lic($num_lic, $apurement){
 			
