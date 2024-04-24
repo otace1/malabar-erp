@@ -5773,6 +5773,72 @@
     		 return $tableau;
 		}
 
+		public function tableau_client_ogefrem(){
+			include('connexion.php');
+			// $entree['id_cli'] = $id_cli;
+			// $entree['id_mod_lic'] = $id_mod_lic;
+			$compteur = 0;
+
+			$tableau = '';
+
+			$requete = $connexion-> query("SELECT cl.nom_cli AS nom_cli,
+													cl.code_cli AS code_cli,
+													cl.id_cli AS id_cli
+												FROM client cl, affectation_client_modele_licence aff
+												WHERE cl.id_cli = aff.id_cli
+													AND aff.id_mod_lic = 1
+													ORDER BY cl.code_cli");
+    		// $requete-> execute(array($entree['id_mod_lic']));
+    		while ($reponse = $requete-> fetch()) {
+    			$compteur++;
+    			$tableau .= '
+    						<tr onMouseOver="this.style.cursor=\'pointer\'" onclick="window.location.replace(\'list_ogefrem.php?id_cli='.$reponse['id_cli'].'\');">
+    							<td>'.$compteur.'</td>
+    							<td>'.$reponse['code_cli'].'</td>
+    							<td>'.$reponse['nom_cli'].'</td>
+    						</tr>
+    			';
+    		 }$requete-> closeCursor();
+
+    		 return $tableau;
+		}
+
+		public function search_client_ogefrem($mot_cle){
+			include('connexion.php');
+			// $entree['id_cli'] = $id_cli;
+			// $entree['id_mod_lic'] = $id_mod_lic;
+			$compteur = 0;
+			$sqlMotCle = '';
+
+			if (isset($mot_cle) && ($mot_cle!='')) {
+				$sqlMotCle = ' AND cl.nom_cli LIKE "%'.$mot_cle.'%"';
+			}
+
+			$tableau = '';
+
+			$requete = $connexion-> query("SELECT cl.nom_cli AS nom_cli,
+													cl.code_cli AS code_cli,
+													cl.id_cli AS id_cli
+												FROM client cl, affectation_client_modele_licence aff
+												WHERE cl.id_cli = aff.id_cli
+													AND aff.id_mod_lic = 1
+													$sqlMotCle
+													ORDER BY cl.code_cli");
+    		// $requete-> execute(array($entree['id_mod_lic']));
+    		while ($reponse = $requete-> fetch()) {
+    			$compteur++;
+    			$tableau .= '
+    						<tr onMouseOver="this.style.cursor=\'pointer\'" onclick="window.location.replace(\'list_ogefrem.php?id_cli='.$reponse['id_cli'].'\');">
+    							<td>'.$compteur.'</td>
+    							<td>'.$reponse['code_cli'].'</td>
+    							<td>'.$reponse['nom_cli'].'</td>
+    						</tr>
+    			';
+    		 }$requete-> closeCursor();
+
+    		 return $tableau;
+		}
+
 		public function tableau_client_rapport_invoice($id_mod_lic, $mot_cle=NULL){
 			include('connexion.php');
 			// $entree['id_cli'] = $id_cli;
@@ -17967,6 +18033,57 @@
 													AND dos.date_feuil_calc IS NULL
 													$sqlClient");
 			$requete-> execute(array($entree['id_mod_lic']));
+			while ($reponse = $requete-> fetch()) {
+				$compteur++;
+
+				$reponse['compteur'] = $compteur;
+
+				$rows[] = $reponse;
+			}$requete-> closeCursor();
+
+
+			return $rows;
+
+		}
+
+		public function dossier_ogefrem($id_cli){
+			include('connexion.php');
+			// $entree['id_mod_lic'] = $id_mod_lic;
+
+			if (isset($id_cli) && ($id_cli != '')) {
+				$sqlClient = ' AND dos.id_cli = '.$id_cli;
+			}else{
+				$sqlClient = '';
+			}
+
+			$compteur = 0;
+			$rows = array();
+
+			$requete = $connexion-> query("SELECT dos.id_dos AS id_dos,
+													dos.ref_dos AS ref_dos,
+													cl.code_cli AS code_cli,
+													dos.ogefrem_ref_fact AS ogefrem_ref_fact,
+													dos.lmc_id AS lmc_id,
+													march.nom_march AS nom_march,
+													CONCAT(
+														IF(dos.horse IS NOT NULL AND REPLACE(dos.horse, ' ', '') NOT LIKE '',
+															dos.horse,
+															''),
+														IF(dos.trailer_1 IS NOT NULL AND REPLACE(dos.trailer_1, ' ', '') NOT LIKE '',
+															CONCAT(' / ', dos.trailer_1),
+															''),
+														IF(dos.trailer_2 IS NOT NULL AND REPLACE(dos.trailer_2, ' ', '') NOT LIKE '',
+															CONCAT(' / ', dos.trailer_2),
+															'')
+													) AS truck,
+													CONCAT('<button class=\"btn btn-xs btn-info\" title=\"Feuille de calcul\" onclick=\"modal_edit_ogefrem(\'',dos.id_dos,'\');\"><i class=\"fa fa-edit\"></i></button>') AS btn_action
+												FROM dossier dos, client cl, marchandise march
+												WHERE dos.id_cli = cl.id_cli
+													AND dos.id_mod_lic = 1
+													AND dos.id_march = march.id_march
+													$sqlClient
+												ORDER BY dos.id_dos DESC");
+			// $requete-> execute(array($entree['id_mod_lic']));
 			while ($reponse = $requete-> fetch()) {
 				$compteur++;
 
@@ -40081,6 +40198,17 @@
 															)
 														)
 													) AS cif_multiple_monnaie,
+													CONCAT(
+														IF(horse IS NOT NULL AND REPLACE(horse, ' ', '') NOT LIKE '',
+															horse,
+															''),
+														IF(trailer_1 IS NOT NULL AND REPLACE(trailer_1, ' ', '') NOT LIKE '',
+															CONCAT(' / ', trailer_1),
+															''),
+														IF(trailer_2 IS NOT NULL AND REPLACE(trailer_2, ' ', '') NOT LIKE '',
+															CONCAT(' / ', trailer_2),
+															'')
+													) AS truck,
 													DATE_FORMAT(date_feuil_calc, '%Y-%m-%d %H:%i:%s') AS date_feuil_calc_1,
 													DATE_FORMAT(date_verif_feuil_calc, '%Y-%m-%d %H:%i:%s') AS date_verif_feuil_calc_1,
 													((fob_usd*roe_inv)/roe_decl) AS fob_en_usd
@@ -54810,8 +54938,7 @@
 			//Log
 			if ($this-> getDossier($id_dos)['lmc_id'] != $lmc_id) {
 				
-				$colonne = $this-> getNomColonneClient('lmc_id', $_GET['id_cli'], $_GET['id_mod_trans'], $_GET['id_mod_trac']);
-				$this-> creerLogDossier($colonne, $lmc_id, $id_dos, $_SESSION['id_util']);
+				$this-> creerLogDossier('lmc_id', $lmc_id, $id_dos, $_SESSION['id_util']);
 
 			}
 
@@ -54830,8 +54957,7 @@
 			//Log
 			if ($this-> getDossier($id_dos)['ogefrem_ref_fact'] != $ogefrem_ref_fact) {
 				
-				$colonne = $this-> getNomColonneClient('ogefrem_ref_fact', $_GET['id_cli'], $_GET['id_mod_trans'], $_GET['id_mod_trac']);
-				$this-> creerLogDossier($colonne, $ogefrem_ref_fact, $id_dos, $_SESSION['id_util']);
+				$this-> creerLogDossier('ogefrem_ref_fact', $ogefrem_ref_fact, $id_dos, $_SESSION['id_util']);
 
 			}
 
