@@ -440,7 +440,30 @@
             <?php
               $maClasse-> afficherMenuTracking();
             }
-        
+
+        if(!empty($maClasse-> getAffectationUtilisateurModule($_SESSION['id_util'], 15))){
+          ?>
+          <a href="#" class="nav-link active bg-danger">
+              <!-- <img src="../images/gestion-des-risques.png" width="25px"> -->
+              <span class="">
+              <p>
+                LMC & OGEFREM<br>
+              </p></span>
+            </a>
+          </li>
+            <li class="nav-item">
+                <!-- <a href="pv_contentieux.php" class="nav-link"> -->
+                <a href="#" class="nav-link" onclick="modal_client_ogefrem()">
+                  <i class="fa fa-list"></i>
+                  <p>Directory</p>
+                </a>
+            </li>
+
+            <?php
+              // $maClasse-> afficherMenuFinanceOPS();
+              echo '<hr>';
+            }
+
         if(!empty($maClasse-> getAffectationUtilisateurModule($_SESSION['id_util'], 13))){
           ?>
             <hr>

@@ -2660,9 +2660,19 @@
 
 		echo json_encode($response);
 
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='modal_client_ogefrem'){ 
+
+		$response['tableau_client_ogefrem'] = $maClasse-> tableau_client_ogefrem();
+
+		echo json_encode($response);
+
 	}elseif(isset($_POST['operation']) && $_POST['operation']=='dossier_pending_worsheet'){ 
 
 		echo json_encode($maClasse-> dossier_pending_worsheet($_POST['id_cli'], $_POST['id_mod_lic']));
+
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='dossier_ogefrem'){ 
+
+		echo json_encode($maClasse-> dossier_ogefrem($_POST['id_cli']));
 
 	}elseif(isset($_POST['operation']) && $_POST['operation']=='modal_worksheet'){ 
 
@@ -3051,6 +3061,12 @@
 
 		echo json_encode($response);
 
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='search_client_ogefrem'){ 
+
+		$response['tableau_client_ogefrem'] = $maClasse-> search_client_ogefrem($_POST['mot_cle']);
+
+		echo json_encode($response);
+
 	}//note_feuille
 	elseif(isset($_POST['operation']) && $_POST['operation']=='MAJ_note_feuille'){
 
@@ -3173,6 +3189,13 @@
 
 		echo json_encode($maClasse-> kpi_tracking_reportAll($_POST['debut'], $_POST['fin'], $_POST['id_cli'], $_POST['id_mod_lic']));
 
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='update_OGEFREM'){ 
+
+		$maClasse-> MAJ_ogefrem_ref_fact($_POST['id_dos'], $_POST['ogefrem_ref_fact']);
+		$maClasse-> MAJ_lmc_id($_POST['id_dos'], $_POST['lmc_id']);
+
+		$response['message'] = 'Done!';
+		echo json_encode($response);
 	}
 
 
