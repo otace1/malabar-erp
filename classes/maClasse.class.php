@@ -3544,17 +3544,20 @@
 			$requete = $connexion-> prepare("SELECT 1 AS compteur,
 													dossier.mca_b_ref AS mca_b_ref,
 													CONCAT(dossier.ref_dos,' <button class=\'btn btn-warning btn-xs\' onclick=\'modal_edit_statut_dossier_facturation(',dossier.id_dos,')\'><i class=\'fa fa-edit\'></i></button>') AS ref_dos,
-													IF(dossier.not_fact='1',
-														'<span class=\'badge badge-danger font-weight-bold\'>Disabled</span>',
-															IF(facture_dossier.ref_fact IS NOT NULL AND facture_dossier.note_debit='0',
-																'<span class=\'badge badge-success font-weight-bold\'>Invoiced</span>',
-																IF(dossier.ref_decl IS NULL OR dossier.date_decl IS NULL OR dossier.ref_liq IS NULL OR dossier.date_liq IS NULL OR dossier.ref_quit IS NULL OR dossier.date_quit IS NULL,
-																	'<span class=\'badge badge-warning font-weight-bold\'>Missing E, L or Q</span>',
-																	'<span class=\'badge badge-warning font-weight-bold\'>Waiting to be invoiced</span>'
-																)
+													IF(dossier.cleared='2',
+														'<span class=\'badge badge-danger font-weight-bold\'>Cancelled</span>',
+														IF(dossier.not_fact='1',
+															'<span class=\'badge badge-danger font-weight-bold\'>Disabled</span>',
+																IF(facture_dossier.ref_fact IS NOT NULL AND facture_dossier.note_debit='0',
+																	'<span class=\'badge badge-success font-weight-bold\'>Invoiced</span>',
+																	IF(dossier.ref_decl IS NULL OR dossier.date_decl IS NULL OR dossier.ref_liq IS NULL OR dossier.date_liq IS NULL OR dossier.ref_quit IS NULL OR dossier.date_quit IS NULL,
+																		'<span class=\'badge badge-warning font-weight-bold\'>Missing E, L or Q</span>',
+																		'<span class=\'badge badge-warning font-weight-bold\'>Waiting to be invoiced</span>'
+																	)
 
+																)
 															)
-														)
+													)
 													AS statut,
 													IF(facture_dossier.note_debit='0', facture_dossier.ref_fact, NULL) AS ref_fact,
 													IF(marchandise.nom_march IS NOT NULL,
@@ -3798,6 +3801,7 @@
 										AND fd.note_debit = '0'
 							)
 							AND dossier.id_cli <> 1
+							AND dossier.cleared <> '2'
 						GROUP BY dossier.id_dos
 						ORDER BY dossier.id_dos ASC";
 			}else if ($statut=='Waiting to be invoiced') {
@@ -20853,6 +20857,7 @@
 												AND dos.ref_dos NOT LIKE 'EXPDEC%'
 												AND dos.ref_dos NOT LIKE '21EXP%'
 												AND dos.ref_dos NOT LIKE '21DEC%'
+												AND dos.cleared <> '2'
 												$sqlClient
 												AND dos.id_cli <> 1
 												AND dos.id_dos NOT IN (
