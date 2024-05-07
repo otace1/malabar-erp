@@ -223,7 +223,7 @@
       </div>
       <div class="modal-footer justify-content-between">
         <span type="button" class="btn btn-xs btn-danger" data-dismiss="modal">Cancel</span>
-        <span type="button" name="rechercheClient1" class="btn btn-xs btn-primary" onclick="creer_facture_en_cours(ref_fact_new.value, id_mod_fact.value, id_cli.value, id_mod_lic.value);">Create</span>
+        <span type="button" name="rechercheClient1" class="btn btn-xs btn-primary" onclick="creer_facture_en_cours(ref_fact_new.value, id_mod_fact.value, id_cli.value, id_mod_lic.value, '<?php echo $_GET['id_mod_trans'];?>');">Create</span>
       </div>
     </div>
     </form>
@@ -377,12 +377,12 @@
     
   }
 
-  function creer_facture_en_cours(ref_fact, id_mod_fact, id_cli, id_mod_lic) {
+  function creer_facture_en_cours(ref_fact, id_mod_fact, id_cli, id_mod_lic, id_mod_trans) {
     $('#spinner-div').show();
     $.ajax({
       type: "POST",
       url: "ajax.php",
-      data: { id_cli: id_cli, id_mod_lic: id_mod_lic, ref_fact:ref_fact, id_mod_fact:id_mod_fact, operation: 'creer_facture_en_cours'},
+      data: { id_cli: id_cli, id_mod_lic: id_mod_lic, ref_fact:ref_fact, id_mod_fact:id_mod_fact, id_mod_trans:id_mod_trans, operation: 'creer_facture_en_cours'},
       dataType:"json",
       success:function(data){
         if (data.logout) {
