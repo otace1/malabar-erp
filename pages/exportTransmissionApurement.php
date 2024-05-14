@@ -124,13 +124,13 @@ $indiceSheet = 0;
 			-> setCellValue('L1', 'Lubumbashi, le '.$maClasse-> getTransmissionApurement($_GET['id_trans_ap'])['date_trans_ap']);
 
 		$excel-> getActiveSheet()
-			-> setCellValue('L3', 'cina@malabar-group.com');
+			-> setCellValue('L3', 'Mme Cina / cina@malabar-group.com');
 
 		$excel-> getActiveSheet()
-			-> setCellValue('L4', 'Tél.: +243 81 403 0796');
+			-> setCellValue('L4', 'Tél.: +243 81 706 6097');
 
 		$excel-> getActiveSheet()
-			-> setCellValue('L5', 'Licence.depart2@malabar-group.com');
+			-> setCellValue('L5', 'M. Pierre / licence.apurement@malabar-group.com');
 
 		$excel-> getActiveSheet()
 			-> setCellValue('L6', 'Tel.: +243 81 465 8850');
