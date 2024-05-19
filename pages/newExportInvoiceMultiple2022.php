@@ -119,6 +119,7 @@
                   <th>RLS(CDF)</th>
                   <th>CSO(CDF)</th>
                   <th>FSR(CDF)</th>
+                  <th>LSE(CDF)</th>
                   <th>Total Duty(CDF)</th>
                   <th>GOVERNORS TAX($)</th>
                   <th>CONCENTRATE TAX($)</th>
@@ -234,7 +235,13 @@
       fsr=0;
     }
 
-    total_duty = dde + rie + rls + cso + fsr;
+    if (parseFloat($('#lse_'+compteur).val()) > 0 ) {
+      lse = parseFloat($('#lse_'+compteur).val());
+    }else{
+      lse=0;
+    }
+
+    total_duty = dde + rie + rls + cso + fsr + lse;
 
 
     if (Math.round(total_duty*1000)/1000 > 0) {
