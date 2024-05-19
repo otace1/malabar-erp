@@ -5559,7 +5559,73 @@
     							<td>'.$reponseMarchandise['num_lic'].'</td>
     							<td>'.$reponseMarchandise['nbre'].'</td>
     							<td style="text-align: center;">
-    								<a class="btn btn-xs btn-primary" href="'.$reponseMarchandise['create_page'].'?id_mod_lic_fact='.$id_mod_lic.'&id_cli='.$id_cli.'&amp;id_mod_lic_fact='.$id_mod_lic.'&amp;id_mod_fact='.$reponseMarchandise['id_mod_fact'].'&amp;id_march='.$reponseMarchandise['id_march'].'&amp;id_mod_trans='.$reponseMarchandise['id_mod_trans'].'&amp;num_lic='.$reponseMarchandise['num_lic'].'">
+    								<a class="btn btn-xs btn-primary" href="'.$reponseMarchandise['create_page'].'?id_mod_lic_fact='.$id_mod_lic.'&id_cli='.$id_cli.'&amp;id_mod_lic_fact='.$id_mod_lic.'&amp;id_mod_fact='.$reponseMarchandise['id_mod_fact'].'&amp;id_march='.$reponseMarchandise['id_march'].'&amp;id_mod_trans='.$reponseMarchandise['id_mod_trans'].'&amp;num_lic='.$reponseMarchandise['num_lic'].'&amp;date_decl=">
+    									<i class="fa fa-calculator"></i>
+    								</a>
+    							</td>
+    						</tr>
+    			';
+    		 }$requeteMarchandise-> closeCursor();
+
+    		 return $tableau;
+		}
+
+		public function getModeleFacturation_2($id_cli, $id_mod_lic){
+			include('connexion.php');
+			$entree['id_cli'] = $id_cli;
+			$entree['id_mod_lic'] = $id_mod_lic;
+			$compteur = 0;
+
+			$tableau = '';
+
+			$requeteMarchandise = $connexion-> prepare("SELECT COUNT(dossier.id_dos) AS nbre, 
+																dossier.num_lic aS num_lic, 
+																DATE_FORMAT(dossier.date_decl, '%d/%m/%Y') aS date_decl, 
+																marchandise.id_march AS id_march,
+    															marchandise.nom_march AS nom_march,
+    															modele_facture.id_mod_fact AS id_mod_fact,
+    															modele_facture.create_page AS create_page,
+    															mode_transport.id_mod_trans AS id_mod_trans,
+    															mode_transport.nom_mod_trans AS nom_mod_trans
+    														FROM affectation_modele_facture_client_marchandise aff, 
+    															marchandise, modele_facture, mode_transport, dossier
+    														WHERE aff.id_cli = ?
+    															AND aff.id_march = marchandise.id_march
+    															AND aff.id_mod_trans = mode_transport.id_mod_trans
+    															AND aff.id_mod_fact = modele_facture.id_mod_fact
+    															AND modele_facture.id_mod_lic = ?
+                                                                AND dossier.id_cli = aff.id_cli
+    															AND dossier.id_march = marchandise.id_march
+    															AND dossier.id_mod_lic = modele_facture.id_mod_lic
+    															AND dossier.id_mod_trans = mode_transport.id_mod_trans
+																AND dossier.ref_quit IS NOT NULL
+																AND dossier.ref_quit <> ''
+																AND dossier.ref_decl IS NOT NULL
+																AND dossier.ref_decl <> ''
+																AND dossier.ref_liq IS NOT NULL
+																AND dossier.ref_liq <> ''
+																AND dossier.not_fact = '0'
+																AND dossier.id_dos NOT IN (
+																	SELECT det.id_dos 
+																		FROM detail_facture_dossier det, facture_dossier fact
+																		WHERE det.ref_fact = fact.ref_fact
+																			AND fact.note_debit = '0'
+																			GROUP BY det.id_dos
+																	)
+														GROUP BY dossier.date_decl, dossier.id_mod_trans
+														ORDER BY dossier.num_lic");
+    		$requeteMarchandise-> execute(array($entree['id_cli'], $entree['id_mod_lic']));
+    		while ($reponseMarchandise = $requeteMarchandise-> fetch()) {
+    			$compteur++;
+    			$tableau .= '
+    						<tr>
+    							<td>'.$compteur.'</td>
+    							<td>'.$reponseMarchandise['nom_march'].'</td>
+    							<td>'.$reponseMarchandise['nom_mod_trans'].'</td>
+    							<td>'.$reponseMarchandise['date_decl'].'</td>
+    							<td>'.$reponseMarchandise['nbre'].'</td>
+    							<td style="text-align: center;">
+    								<a class="btn btn-xs btn-primary" href="'.$reponseMarchandise['create_page'].'?id_mod_lic_fact='.$id_mod_lic.'&id_cli='.$id_cli.'&amp;id_mod_lic_fact='.$id_mod_lic.'&amp;id_mod_fact='.$reponseMarchandise['id_mod_fact'].'&amp;id_march='.$reponseMarchandise['id_march'].'&amp;id_mod_trans='.$reponseMarchandise['id_mod_trans'].'&amp;date_decl='.$reponseMarchandise['date_decl'].'&amp;num_lic=">
     									<i class="fa fa-calculator"></i>
     								</a>
     							</td>
@@ -21171,6 +21237,10 @@
 					<input type="number" step="0.001" min="0" style="text-align: center; width: 8em;" onblur="calculDDE(<?php echo $compteur;?>);" id="fsr_<?php echo $compteur;?>" name="fsr_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport(4, $id_mod_lic, $id_cli, $id_march, $id_mod_trans)['montant'];?>" class="bg bg-dark">
 					<input type="hidden" style="text-align: center; width: 8em;" name="fsr_tva_<?php echo $compteur;?>" id="tva_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport(4, $id_mod_lic, $id_cli, $id_march, $id_mod_trans)['tva'];?>" class="bg bg-dark">
 				</td>
+				<td style="text-align: center;">
+					<input type="number" step="0.001" min="0" style="text-align: center; width: 8em;" onblur="calculDDE(<?php echo $compteur;?>);" id="lse_<?php echo $compteur;?>" name="lse_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport(212, $id_mod_lic, $id_cli, $id_march, $id_mod_trans)['montant'];?>" class="bg bg-dark">
+					<input type="hidden" style="text-align: center; width: 8em;" name="lse_tva_<?php echo $compteur;?>" id="tva_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport(212, $id_mod_lic, $id_cli, $id_march, $id_mod_trans)['tva'];?>" class="bg bg-dark">
+				</td>
 				<td style="text-align: center; font-weight: bold; font-size: 20px;">
 					<span id="total_duty_<?php echo $compteur;?>"></span>
 				</td>
@@ -21806,6 +21876,16 @@
 													cl.nom_cli AS nom_cli,
 													d.frontiere AS frontiere,
 													d.ref_crf AS ref_crf,
+													d.num_lic AS num_lic,
+													d.horse AS horse,
+													d.trailer_1 AS trailer_1,
+													d.trailer_2 AS trailer_2,
+													d.container AS container,
+													d.pied_container AS pied_container,
+													d.site_load AS site_load,
+													d.destination AS destination,
+													d.transporter AS transporter,
+													d.num_lot AS num_lot,
 													DATE_FORMAT(d.date_crf, '%d/%m/%Y') AS date_crf,
 													d.ir_crf AS ir_crf,
 													DATE_FORMAT(d.date_decl, '%d/%m/%Y') AS date_decl,
@@ -22343,6 +22423,7 @@
 				$total_duty += $this-> getMontantDataDetailFacture($ref_fact, $reponse['id_dos'], 3)['montant'];
 				$total_duty += $this-> getMontantDataDetailFacture($ref_fact, $reponse['id_dos'], 37)['montant'];
 				$total_duty += $this-> getMontantDataDetailFacture($ref_fact, $reponse['id_dos'], 4)['montant'];
+				$total_duty += $this-> getMontantDataDetailFacture($ref_fact, $reponse['id_dos'], 212)['montant'];
 			?>
 			<tr>
 				<input type="hidden" name="id_dos_<?php echo $compteur;?>" value="<?php echo $reponse['id_dos'];?>">
@@ -22392,6 +22473,10 @@
 				<td style="text-align: center;">
 					<input type="number" step="0.001" min="0" style="text-align: center; width: 8em;" onblur="calculDDE(<?php echo $compteur;?>);" id="fsr_<?php echo $compteur;?>" name="fsr_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDataDetailFacture($ref_fact, $reponse['id_dos'], 4)['montant'];?>" class="bg bg-dark">
 					<input type="hidden" style="text-align: center; width: 8em;" name="fsr_tva_<?php echo $compteur;?>" id="tva_<?php echo $compteur;?>" value="0" class="bg bg-dark">
+				</td>
+				<td style="text-align: center;">
+					<input type="number" step="0.001" min="0" style="text-align: center; width: 8em;" onblur="calculDDE(<?php echo $compteur;?>);" id="lse_<?php echo $compteur;?>" name="lse_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDataDetailFacture($ref_fact, $reponse['id_dos'], 212)['montant'];?>" class="bg bg-dark">
+					<input type="hidden" style="text-align: center; width: 8em;" name="lse_tva_<?php echo $compteur;?>" id="tva_<?php echo $compteur;?>" value="0" class="bg bg-dark">
 				</td>
 				<td style="text-align: center; font-weight: bold; font-size: 20px;">
 					<span id="total_duty_<?php echo $compteur;?>"><span class="badge badge-danger"><?php echo number_format($total_duty, 0, ',', '.');?></span></span>
