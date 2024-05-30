@@ -43566,6 +43566,7 @@
 				$requete = $connexion-> query("SELECT fd.ref_fact AS ref_fact, 
 													DATE_FORMAT(fd.date_fact, '%d/%m/%Y') AS date_fact,
 													cl.nom_cli AS nom_cli,
+													util.nom_util AS nom_util,
 													IF(fd.validation='0',
 														'Pending Validation',
 														IF(fd.date_mail IS NULL,
@@ -43774,9 +43775,10 @@
 															0
 															)
 														) AS service_vat
-												FROM facture_dossier fd, modele_facture mf, client cl, detail_facture_dossier det, dossier dos, debours
+												FROM facture_dossier fd, utilisateur util, modele_facture mf, client cl, detail_facture_dossier det, dossier dos, debours
 												WHERE fd.id_mod_fact = mf.id_mod_fact
 													AND fd.id_cli = cl.id_cli
+													AND fd.id_util = util.id_util
 													AND fd.ref_fact = det.ref_fact
 													AND debours.id_deb = det.id_deb
 													AND det.id_dos = dos.id_dos
