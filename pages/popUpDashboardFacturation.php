@@ -55,6 +55,7 @@
                       <th style="">Inv.Ref.</th>
                       <th style="">Date</th>
                       <th style="">Client</th>
+                      <th style="">Encoded By</th>
                       <th style="">Rate(CDF/USD)</th>
                       <th style="">Duty VAT Excl(CDF)</th>
                       <th style="">Duty VAT Excl(USD)</th>
@@ -138,6 +139,7 @@
                       <th style="">Tally Ref #</th>
                       <th>Client</th>
                       <th>Poids</th>
+                      <th>FOB (USD)</th>
                       <th>Scelle Electr.</th>
                       <th>Scelle Electr. Amount</th>
                       <th>Frais Tresco</th>
@@ -289,6 +291,7 @@
           {"data":"ref_fact"},
           {"data":"date_fact"},
           {"data":"nom_cli"},
+          {"data":"nom_util"},
           {"data":"roe_decl",
             render: DataTable.render.number( null, null, 4, null ),
             className: 'dt-body-right'},
@@ -358,6 +361,10 @@
           {"data":"mca_b_ref"},
           {"data":"nom_cli"},
           {"data":"poids",
+            render: DataTable.render.number( null, null, 2, null ),
+            className: 'dt-body-right'
+          },
+          {"data":"fob_en_usd",
             render: DataTable.render.number( null, null, 2, null ),
             className: 'dt-body-right'
           },
