@@ -3704,13 +3704,16 @@
 														'<span class=\'badge badge-danger font-weight-bold\'>Cancelled</span>',
 														IF(dossier.not_fact='1',
 															'<span class=\'badge badge-danger font-weight-bold\'>Disabled</span>',
-																IF(facture_dossier.ref_fact IS NOT NULL AND facture_dossier.note_debit='0',
-																	'<span class=\'badge badge-success font-weight-bold\'>Invoiced</span>',
-																	IF(dossier.ref_decl IS NULL OR dossier.date_decl IS NULL OR dossier.ref_liq IS NULL OR dossier.date_liq IS NULL OR dossier.ref_quit IS NULL OR dossier.date_quit IS NULL,
-																		'<span class=\'badge badge-warning font-weight-bold\'>Missing E, L or Q</span>',
-																		'<span class=\'badge badge-warning font-weight-bold\'>Waiting to be invoiced</span>'
-																	)
+																IF(dossier.not_fact='2',
+																	CONCAT('<span class=\'badge badge-teal font-weight-bold\'>Invoiced in Excel Ref. ',IF(dossier.ref_fact_excel IS NOT NULL, dossier.ref_fact_excel, ''),'</span>'),
+																	IF(facture_dossier.ref_fact IS NOT NULL AND facture_dossier.note_debit='0',
+																		'<span class=\'badge badge-success font-weight-bold\'>Invoiced</span>',
+																		IF(dossier.ref_decl IS NULL OR dossier.date_decl IS NULL OR dossier.ref_liq IS NULL OR dossier.date_liq IS NULL OR dossier.ref_quit IS NULL OR dossier.date_quit IS NULL,
+																			'<span class=\'badge badge-warning font-weight-bold\'>Missing E, L or Q</span>',
+																			'<span class=\'badge badge-warning font-weight-bold\'>Waiting to be invoiced</span>'
+																		)
 
+																	)
 																)
 															)
 													)
@@ -44714,6 +44717,75 @@
 				
 				return $rows;
 				
+			}else if($statut=='Excel Invoice'){
+
+				$sqlTransit = "";
+				if (isset($id_mod_lic) && ($id_mod_lic != '')) {
+					$sqlTransit = ' AND dos.id_mod_lic = "'.$id_mod_lic.'" ';
+				}
+
+				$sqlClient = "";
+				if (isset($id_cli) && ($id_cli != '')) {
+					$sqlClient = ' AND dos.id_cli = "'.$id_cli.'" ';
+				}
+
+				$requete = $connexion-> query("SELECT dos.ref_dos AS ref_dos,
+													cl.nom_cli AS nom_cli, 
+													dos.mca_b_ref AS mca_b_ref,
+													dos.ref_fact_excel AS ref_fact_excel,
+													dos.id_dos AS id_dos,
+													dos.po_ref AS po_ref,
+													dos.horse AS horse,
+													dos.trailer_1 AS trailer_1,
+													dos.trailer_2 AS trailer_2,
+													IF(dos.num_lot IS NOT NULL,
+														dos.num_lot,
+														dos.ref_fact
+													) AS num_lot,
+													IF(march.nom_march IS NOT NULL,
+														march.nom_march,
+														dos.commodity
+													) AS commodity,
+													dos.ref_decl AS ref_decl,
+													IF(dos.support_doc='1',
+														'Available',
+														'Unavailable'
+													) AS support_doc,
+													DATE_FORMAT(dos.date_decl, '%d/%m/%Y') AS date_decl,
+													dos.ref_liq AS ref_liq,
+													dos.montant_liq AS montant_liq,
+													DATE_FORMAT(dos.date_liq, '%d/%m/%Y') AS date_liq,
+													dos.ref_quit AS ref_quit,
+													DATE_FORMAT(dos.date_quit, '%d/%m/%Y') AS date_quit,
+													DATEDIFF(CURRENT_DATE(), dos.date_quit) AS delay
+												FROM dossier dos
+												LEFT JOIN marchandise march
+													ON dos.id_march = march.id_march
+												LEFT JOIN client cl
+													ON dos.id_cli = cl.id_cli
+												WHERE dos.not_fact = '2'
+													AND dos.date_decl IS NOT NULL
+													AND dos.ref_decl IS NOT NULL
+													AND dos.date_liq IS NOT NULL
+													AND dos.ref_liq IS NOT NULL
+													AND dos.date_quit IS NOT NULL
+													AND dos.ref_quit IS NOT NULL
+													$sqlTransit
+													$sqlClient
+												ORDER BY dos.id_dos
+											");
+				// $requete-> execute(array($entree['id_mod_lic']));
+				while($reponse = $requete-> fetch()){
+					$compteur++;
+
+					$reponse['compteur'] = $compteur;
+					$reponse['date_log'] = $this-> getLastEncodingDateDataInLog($reponse['id_dos'], 'Quit')['date_log'];
+					$reponse['truck'] = $reponse['horse'].' / '.$reponse['trailer_1'].' / '.$reponse['trailer_2'];
+					$rows[] = $reponse;
+				}$requete-> closeCursor();
+				
+				return $rows;
+				
 			}
 
 		}
@@ -46211,6 +46283,40 @@
 															AND fd.note_debit = '0'
 															AND det.id_dos = dos.id_dos
 												)
+												$sqlTransit
+												$sqlClient
+										");
+			// $requete-> execute(array($entree['id_mod_lic']));
+			$reponse = $requete-> fetch();
+			
+			return $reponse['nbre'];
+		}
+
+		public function getNbreDossierFactureExcel($id_mod_lic, $id_cli=null){
+			include('connexion.php');
+			// $entree['id_mod_lic'] = $id_mod_lic;
+
+			$sqlTransit = "";
+			if (isset($id_mod_lic) && ($id_mod_lic != '')) {
+				$sqlTransit = ' AND id_mod_lic = "'.$id_mod_lic.'" ';
+			}
+
+			$sqlClient = "";
+			if (isset($id_cli) && ($id_cli != '')) {
+				$sqlClient = ' AND id_cli = "'.$id_cli.'" ';
+			}
+
+			$compteur = 0;
+
+			$requete = $connexion-> query("SELECT COUNT(id_dos) AS nbre
+											FROM dossier
+											WHERE not_fact = '2'
+												AND date_decl IS NOT NULL
+												AND ref_decl IS NOT NULL
+												AND date_liq IS NOT NULL
+												AND ref_liq IS NOT NULL
+												AND date_quit IS NOT NULL
+												AND ref_quit IS NOT NULL
 												$sqlTransit
 												$sqlClient
 										");
@@ -53537,6 +53643,29 @@
 			$requete = $connexion-> prepare("UPDATE dossier SET not_fact = ?
 												WHERE id_dos = ?");
 			$requete-> execute(array($entree['not_fact'], $entree['id_dos']));
+
+		} 
+
+		public function MAJ_ref_fact_excel($id_dos, $ref_fact_excel){
+			
+			if ($ref_fact_excel == '') {
+				$ref_fact_excel = NULL;
+			}
+
+			//Log
+			if ($this-> getDossier($id_dos)['ref_fact_excel'] != $ref_fact_excel) {
+				
+				// $colonne = $this-> getNomColonneClient('ref_fact_excel', $_GET['id_cli'], $_GET['id_mod_trans'], $_GET['id_mod_trac']);
+				$this-> creerLogDossier('Excel Invoice', $ref_fact_excel, $id_dos, $_SESSION['id_util']);
+
+			}
+
+			include('connexion.php');
+			$entree['id_dos'] = $id_dos;
+			$entree['ref_fact_excel'] = $ref_fact_excel;
+			$requete = $connexion-> prepare("UPDATE dossier SET ref_fact_excel = ?
+												WHERE id_dos = ?");
+			$requete-> execute(array($entree['ref_fact_excel'], $entree['id_dos']));
 
 		} 
 
