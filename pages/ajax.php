@@ -2574,7 +2574,7 @@
 
 	}elseif(isset($_POST['operation']) && $_POST['operation']=='afficherDossiersPretAEtreApuresAjax'){ 
 
-		echo json_encode($maClasse-> afficherDossiersPretAEtreApuresAjax($_POST['id_mod_lic'], $_POST['id_cli']));
+		echo json_encode($maClasse-> afficherDossiersPretAEtreApuresAjax($_POST['id_mod_lic'], $_POST['id_cli'], $_POST['type_trans_ap']));
 
 	}elseif(isset($_POST['operation']) && $_POST['operation']=='getDossier'){ 
 
@@ -2597,6 +2597,19 @@
         	$maClasse-> MAJ_remarque_apurement($_POST['id_dos'], $_POST['remarque_apurement']);
       	}
 
+      	//ref_cvee
+      	if (isset($_POST['ref_cvee']) && ($_POST['ref_cvee'] != '')) {
+        	$maClasse-> MAJ_ref_cvee($_POST['id_dos'], $_POST['ref_cvee']);
+      	}
+      	//fob_cvee
+      	if (isset($_POST['fob_cvee']) && ($_POST['fob_cvee'] != '')) {
+        	$maClasse-> MAJ_fob_cvee($_POST['id_dos'], $_POST['fob_cvee']);
+      	}
+      	//fob
+      	if (isset($_POST['fob']) && ($_POST['fob'] != '')) {
+        	$maClasse-> MAJ_fob($_POST['id_dos'], $_POST['fob']);
+      	}
+
 
 		$response['message'] = 'Done!';
 
@@ -2608,9 +2621,25 @@
 
 		echo json_encode($response);
 
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='getDossierEnAttenteApurementLicenceAjaxDGDA'){ 
+
+		$response['tableau_dossier'] = $maClasse-> getDossierEnAttenteApurementLicenceAjaxDGDA($_POST['num_lic']);
+
+		echo json_encode($response);
+
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='getDossierEnAttenteApurementLicenceAjaxOCC'){ 
+
+		$response['tableau_dossier'] = $maClasse-> getDossierEnAttenteApurementLicenceAjaxOCC($_POST['num_lic']);
+
+		echo json_encode($response);
+
 	}elseif(isset($_POST['operation']) && $_POST['operation']=='afficherApurementAjax'){ 
 
 		echo json_encode($maClasse-> afficherApurementAjax($_POST['id_cli'], $_POST['id_mod_lic']));
+
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='afficherApurementAjaxDGDA'){ 
+
+		echo json_encode($maClasse-> afficherApurementAjax($_POST['id_cli'], $_POST['id_mod_lic'], $_POST['type_trans_ap']));
 
 	}elseif(isset($_POST['operation']) && $_POST['operation']=='getTransmissionApurement'){ 
 
@@ -3149,6 +3178,12 @@
 
 		echo json_encode($response);
 
+	}else if ($_POST['operation']=="table_menuLicence_synthese") {
+
+		$response['table_menuLicence'] = $maClasse-> table_menuLicence_synthese($_POST['id_mod_lic'], $_POST['id_type_lic'], $_POST['page'], $_POST['mot_cle']);
+
+		echo json_encode($response);
+
 	}//roe_fob
 	elseif(isset($_POST['operation']) && $_POST['operation']=='MAJ_roe_fob'){
 
@@ -3199,6 +3234,125 @@
 
 		$response['message'] = 'Done!';
 		echo json_encode($response);
+
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='synthese_licence'){ 
+
+		echo json_encode($maClasse-> synthese_licence($_POST['id_cli'], $_POST['id_mod_lic'], $_POST['id_type_lic']));
+
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='new_synthese_licence'){ 
+
+		$maClasse-> new_synthese_licence_EB($_POST['num_lic'], $_POST['date_val'], $_POST['poids'], 
+                                $_POST['unit_mes'], $_POST['id_cli'], $_POST['id_march'], 
+                                $_POST['date_exp'], $_SESSION['id_util'], $_POST['destination'], 
+                                $_POST['acheteur'], $_POST['id_mod_trans'], $_POST['id_banq'],
+                                 $_POST['fob'], $_POST['lot_pret'], $_FILES['fichier_lic']['name'], 
+                                 $_FILES['fichier_lic']['tmp_name'], $_POST['id_type_lic']);
+
+		$response['message'] = 'Done!';
+
+		echo json_encode($response);
+
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='modal_edit_synthese_licence'){ 
+
+		$response = $maClasse-> getLicence($_POST['num_lic']);
+		$response['date_exp'] = $maClasse-> getDateExpirationLicence2($_POST['num_lic']);
+
+		echo json_encode($response);
+
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='edit_synthese_licence'){ 
+
+		$maClasse-> edit_synthese_licence_EB($_POST['num_lic'], $_POST['date_val'], $_POST['poids'], 
+                                $_POST['unit_mes'], $_POST['id_cli'], $_POST['id_march'], 
+                                $_POST['date_exp'], $_SESSION['id_util'], $_POST['destination'], 
+                                $_POST['acheteur'], $_POST['id_mod_trans'], $_POST['id_banq'],
+                                 $_POST['fob'], $_POST['lot_pret'], $_POST['num_lic_old']);
+
+		$response['message'] = 'Done!';
+
+		echo json_encode($response);
+
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='getNombreNotificationApurement'){ 
+
+		//dgda
+		$response['nbre_dossier_no_apurement_dgda'] = $maClasse-> nbre_dossier_no_apurement_dgda($_POST['id_cli'], $_POST['id_mod_lic']);
+		$response['nbre_transmis_no_ar_dgda'] = $maClasse-> nbre_transmis_no_ar_dgda($_POST['id_cli'], $_POST['id_mod_lic']);
+		//occ
+		$response['nbre_dossier_no_apurement_occ'] = $maClasse-> nbre_dossier_no_apurement_occ($_POST['id_cli'], $_POST['id_mod_lic']);
+		$response['nbre_transmis_no_ar_occ'] = $maClasse-> nbre_transmis_no_ar_occ($_POST['id_cli'], $_POST['id_mod_lic']);
+
+		$response['nbre_dossier_sans_fob_apurement'] = $maClasse-> nbre_dossier_sans_fob_apurement($_POST['id_cli'], $_POST['id_mod_lic']);
+		
+		$response['nbre_dossier_sans_manifeste_apurement'] = $maClasse-> nbre_dossier_sans_manifeste_apurement($_POST['id_cli'], $_POST['id_mod_lic']);
+
+		echo json_encode($response);
+
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='new_transmit_ap_dgda'){ 
+		
+		$maClasse-> creerTransmissionApurement(NULL, $_POST['ref_trans_ap'], 
+                                  $_SESSION['id_util'], NULL, $_POST['banque'], $_POST['date_trans_ap']);
+
+	    $id_trans_ap = $maClasse-> verifierTransmissionApurement($_POST['ref_trans_ap'], $_POST['date_trans_ap'], $_POST['banque'], $_POST['type_trans_ap']);
+
+	    for ($i=1; $i <= $_POST['nbre'] ; $i++) { 
+	      
+	      if (isset($_POST['id_dos_'.$i]) && ($_POST['id_dos_'.$i]!='')) {
+	        
+	        $maClasse-> creerDetailApurement($id_trans_ap, $_POST['id_dos_'.$i]);
+	        // echo $id_trans_ap.' '.$_POST['id_dos_'.$i].'<br>';
+
+	      }
+
+	    }
+
+	    $response['message'] = 'Done!';
+
+		echo json_encode($response);
+
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='upload_ar_transmit'){ 
+		
+		if (isset($_FILES['fichier_trans_ap']['name'])) {
+
+	      $fichier_trans_ap = $_FILES['fichier_trans_ap']['name'];
+	      $tmp = $_FILES['fichier_trans_ap']['tmp_name'];
+
+	      $maClasse-> uploadAccuseeRecpetionTransmissionApurement($_POST['id_trans_ap'], $fichier_trans_ap, $tmp);
+
+	    }else{
+	      $fichier_trans_ap = NULL;
+	      $tmp = NULL;
+	    }
+
+	    $response['message'] = 'Done!';
+
+		echo json_encode($response);
+
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='buildReferenceTransmissionApurementModeleLicence'){ 
+		
+		$code = '';
+
+		$i = 1;
+
+		$a = $maClasse-> getTailleCompteur2($i);
+
+		$code = $a.'-'.$maClasse-> getElementModeleLicence($_POST['id_mod_lic'])['sigle_mod_lic'].'-'.date('y');
+
+		while($maClasse-> verifierReferenceTransmissionApurement($code) == true){
+			$i++;
+
+			$a = $maClasse-> getTailleCompteur2($i);
+
+			$code = $a.'-'.$maClasse-> getElementModeleLicence($_POST['id_mod_lic'])['sigle_mod_lic'].'-'.date('y');
+		}
+
+
+	    $response['ref_trans_ap'] = $code;
+
+		echo json_encode($response);
+
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='afficherDossiersSansFOBApuresAjax'){ 
+
+		echo json_encode($maClasse-> afficherDossiersSansFOBApuresAjax($_POST['id_mod_lic'], $_POST['id_cli']));
+
 	}
 
 

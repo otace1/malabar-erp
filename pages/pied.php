@@ -2,6 +2,7 @@
 
 <?php
   include('modalFacturation.php');
+  include('modalMenu.php');
 ?>
 
   <footer class="main-footer text-xs">
@@ -49,127 +50,6 @@
   </script>
 
 <script>
-
-  function modal_depense_modele_licence(id_mod_lic){
-    $.ajax({
-      type: "POST",
-      url: "ajax.php",
-      data: {id_mod_lic: id_mod_lic, operation: 'modal_depense_modele_licence'},
-      dataType:"json",
-      success:function(data){
-        if (data.logout) {
-          alert(data.logout);
-          window.location="../deconnexion.php";
-        }else{
-          $('#tableau_client_depense_modele_licence').html(data.tableau_client_depense_modele_licence);
-          $('#modal_depense_modele_licence').modal("show");
-        }
-      }
-    });
-  }
-
-    $(document).ready(function () {
-        $('#txtCountry').typeahead({
-            source: function (query, result) {
-                $.ajax({
-                    url: "server.php",
-          data: 'query=' + query,            
-                    dataType: "json",
-                    type: "POST",
-                    success: function (data) {
-            result($.map(data, function (item) {
-              return item;
-                        }));
-                    }
-                });
-            }
-        });
-    });
-
-    function modal_facture(id_cli, id_mod_lic){
-
-      $.ajax({
-        type: "POST",
-        url: "ajax.php",
-        data: { id_cli: id_cli, id_mod_lic: id_mod_lic, operation: 'modal_facture'},
-        dataType:"json",
-        success:function(data){
-          if (data.logout) {
-            alert(data.logout);
-            window.location="../deconnexion.php";
-          }else{
-            $('#tableau_modele_facture').html(data.tableau_modele_facture);
-            $('#modal_facture').modal("show");
-          }
-        }
-      });
-
-
-    }
-
-    function modal_dossier_pending_worksheet(id_mod_lic){
-
-      $.ajax({
-        type: "POST",
-        url: "ajax.php",
-        data: {id_mod_lic: id_mod_lic, operation: 'modal_dossier_pending_worksheet'},
-        dataType:"json",
-        success:function(data){
-          if (data.logout) {
-            alert(data.logout);
-            window.location="../deconnexion.php";
-          }else{
-            $('#tableau_dossier_pending_worksheet').html(data.tableau_dossier_pending_worksheet);
-            $('#modal_dossier_pending_worksheet').modal("show");
-          }
-        }
-      });
-
-
-    }
-
-    function modal_client_worksheet(id_mod_lic){
-
-      $.ajax({
-        type: "POST",
-        url: "ajax.php",
-        data: {id_mod_lic: id_mod_lic, operation: 'modal_client_worksheet'},
-        dataType:"json",
-        success:function(data){
-          if (data.logout) {
-            alert(data.logout);
-            window.location="../deconnexion.php";
-          }else{
-            $('#tableau_client_worksheet').html(data.tableau_client_worksheet);
-            $('#modal_client_worksheet').modal("show");
-            $('#id_mod_lic_search').val(id_mod_lic);
-            document.getElementById("search_client_worksheet").focus();
-          }
-        }
-      });
-
-
-    }
-
-    function search_client_worksheet(mot_cle){
-
-      $.ajax({
-        type: "POST",
-        url: "ajax.php",
-        data: {id_mod_lic: $('#id_mod_lic_search').val(), mot_cle: mot_cle, operation: 'search_client_worksheet'},
-        dataType:"json",
-        success:function(data){
-          if (data.logout) {
-            alert(data.logout);
-            window.location="../deconnexion.php";
-          }else{
-            $('#tableau_client_worksheet').html(data.tableau_client_worksheet);
-          }
-        }
-      });
-
-
-    }
 
     function modal_client_rapport_invoice(id_mod_lic){
 
@@ -244,6 +124,24 @@
       // toastr.success('Lorem ipsum dolor sit amet, consetetur sadipscing elitr.');
       toastr.success(message);
     }
+
+    $(document).ready(function () {
+        $('#txtCountry').typeahead({
+            source: function (query, result) {
+                $.ajax({
+                    url: "server.php",
+          data: 'query=' + query,            
+                    dataType: "json",
+                    type: "POST",
+                    success: function (data) {
+            result($.map(data, function (item) {
+              return item;
+                        }));
+                    }
+                });
+            }
+        });
+    });
 
 </script>
 <script>

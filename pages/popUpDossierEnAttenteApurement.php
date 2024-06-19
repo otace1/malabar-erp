@@ -1,6 +1,9 @@
 <?php
   include("tetePopCDN.php");
   //include("popUpDashboardLicenceExcel.php");
+  if (!isset($_GET['type_trans_ap'])) {
+    $_GET['type_trans_ap'] = 'dgda';
+  }
   $client = ' | <span class="bg bg-dark" style="padding-left: 5px; padding-right: 5px;">'.$maClasse-> getClient($_GET['id_cli'])['nom_cli'].'</span>';
   $modeleLicence = ' | <span class="bg bg-dark" style="padding-left: 5px; padding-right: 5px;">'.$maClasse-> getNomModeleLicence($_GET['id_mod_lic']).'</span>';
  ?>
@@ -249,6 +252,7 @@
       "data": {
           "id_cli": "<?php echo $_GET['id_cli'];?>",
           "id_mod_lic": "<?php echo $_GET['id_mod_lic'];?>",
+          "type_trans_ap": "<?php echo $_GET['type_trans_ap'];?>",
           "operation": "afficherDossiersPretAEtreApuresAjax"
       }
     },

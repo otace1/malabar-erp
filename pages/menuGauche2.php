@@ -95,54 +95,6 @@
             <?php
             }
 
-            /*if($_SESSION['id_role'] == '1' || $_SESSION['id_role'] == '2'){
-          ?>
-          <li class="nav-item"  style="">
-            <a href="#" class="nav-link active bg bg-danger" style=" font-weight: bold;">
-              <!--<i class="nav-icon fas fa-tachometer-alt"></i>-->
-              <span class="">
-              <p style="">
-                <img src="../images/business-report.png" width="30px" /> 
-                <?php
-                  if ($maClasse-> getUtilisateur($_SESSION['id_util'])['langue']=='ENG') {
-                    echo 'REPORTING & KPI\'s';
-                  }else if ($maClasse-> getUtilisateur($_SESSION['id_util'])['langue']=='FR') {
-                    echo 'RAPPORTS & KPI\'s';
-                  }
-                ?>
-                <br>
-              </p></span>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a href="dashboardFacturation.php" class="nav-link">
-              &nbsp;<img src="../images/calculator.png" width="25px" /> 
-              <p><?php
-                  if ($maClasse-> getUtilisateur($_SESSION['id_util'])['langue']=='ENG') {
-                    echo 'Invoicing';
-                  }else if ($maClasse-> getUtilisateur($_SESSION['id_util'])['langue']=='FR') {
-                    echo 'Facturation';
-                  }
-                ?></p>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a href="dashboardOPS.php" class="nav-link">
-              &nbsp;<img src="../images/dossier.png" width="25px" /> 
-              <p><?php
-                  if ($maClasse-> getUtilisateur($_SESSION['id_util'])['langue']=='ENG') {
-                    echo 'Operations';
-                  }else if ($maClasse-> getUtilisateur($_SESSION['id_util'])['langue']=='FR') {
-                    echo 'Operations';
-                  }
-                ?></p>
-            </a>
-          </li>
-
-            <hr>
-            <?php
-            }*/
-
             if(!empty($maClasse-> getAffectationUtilisateurModule($_SESSION['id_util'], 11))){
           ?>
           <a href="#" class="nav-link active bg-danger">
@@ -377,6 +329,7 @@
           ?>
           <li class="nav-item"  style="">
             <a href="#" class="nav-link active bg bg-danger" style=" font-weight: bold;">
+              <!--<i class="nav-icon fas fa-tachometer-alt"></i>-->
               <span class="">
               <p style="">
                 LICENSES<br>
@@ -498,7 +451,7 @@
             <hr>
             <?php
             }
-
+            /*
             if($_SESSION['id_role'] == '1' || $_SESSION['id_role'] == '6' || $_SESSION['id_role'] == '7' || $_SESSION['id_role'] == '8' || $_SESSION['id_role'] == '9' || $_SESSION['id_role'] == '10' || $_SESSION['id_role'] == '11'){
           ?>
           <li class="nav-item"  style="">
@@ -514,7 +467,7 @@
             <?php
               $maClasse-> afficherMenuTrackingLogistique();
             }
-            
+            */
             if($_SESSION['id_role'] == '1' || $_SESSION['id_role'] == '12' || $_SESSION['id_role'] == '2'){
           ?>
           <hr>

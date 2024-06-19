@@ -321,8 +321,8 @@ if(isset($_GET['id_mod_trac']) && isset($_GET['id_mod_trac'])){
 
 
 <div class="modal fade kpi" id="modal-default">
-  <div class="modal-dialog modal-lg">
-    <form id="demo-form2" method="POST" action="" data-parsley-validate enctype="multipart/form-data">
+  <div class="modal-dialog modal-md">
+    <!-- <form id="demo-form2" method="POST" action="" data-parsley-validate enctype="multipart/form-data"> -->
     <div class="modal-content">
       <div class="modal-header ">
         <h4 class="modal-title"><i class="fa fa-tachometer-alt"></i> 
@@ -343,9 +343,9 @@ if(isset($_GET['id_mod_trac']) && isset($_GET['id_mod_trac'])){
       <div class="modal-body">
         <div class="row">
 
-          <div class="col-md-6">
+          <div class="col-md-4">
             <label for="x_card_code" class="control-label mb-1">CLIENT</label>
-            <select name="id_cli" onchange="" class="form-control cc-exp">
+            <select name="id_cli" id="id_cli" onchange="" class="form-control cc-exp form-control-sm">
               <option value=''>ALL</option>
                 <?php
                   $maClasse->selectionnerClientModeleLicence($_GET['id_mod_trac']);
@@ -353,24 +353,24 @@ if(isset($_GET['id_mod_trac']) && isset($_GET['id_mod_trac'])){
             </select>
           </div>
 
-          <div class="col-md-3">
+          <div class="col-md-4">
             <label for="x_card_code" class="control-label mb-1">BEGIN</label>
-            <input name="debut" type="date" class="form-control cc-exp" required>
+            <input id="debut" name="debut" type="date" class="form-control cc-exp form-control-sm" required>
           </div>
 
-          <div class="col-md-3">
+          <div class="col-md-4">
             <label for="x_card_code" class="control-label mb-1">END</label>
-            <input name="fin" type="date" class="form-control cc-exp" required>
+            <input name="fin" id="fin" type="date" class="form-control cc-exp form-control-sm" required>
           </div>
 
         </div>
       </div>
       <div class="modal-footer justify-content-between">
-        <button type="button" class="btn btn-danger" data-dismiss="modal">Annuler</button>
-        <button type="submit" name="kpi" class="btn btn-primary">Valider</button>
+        <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal">Cancel</button>
+        <button type="submit" onclick="window.open('popUpKPIDossier.php?id_cli='+id_cli.value+'&id_mod_lic=<?php echo $_GET['id_mod_trac']?>&id_mod_trans=<?php echo $_GET['id_mod_trans']?>&debut='+debut.value+'&fin='+fin.value+'','pop1','width=1500,height=900');" class="btn btn-primary btn-sm">Submit</button>
       </div>
     </div>
-    </form>
+    <!-- </form> -->
     <!-- /.modal-content -->
   </div>
   <!-- /.modal-dialog -->
