@@ -187,6 +187,28 @@
                       <th style="">Delay</th>
                       <th style="">Q.Encoding Date</th>
                       <?php
+                      }else if ($_GET['statut']=='Excel Invoice') {
+                      ?>
+                      <th style="">#</th>
+                      <th style="">MCA File Ref.</th>
+                      <th style="">Tally Ref.</th>
+                      <th style="">Excel Inv. Ref.</th>
+                      <th style="">Support Documents</th>
+                      <th style="">Lot Num. / Inv.No.</th>
+                      <th style="">PO.No.</th>
+                      <th style="">Client</th>
+                      <th style="">Commodity</th>
+                      <th style="">Truck / Wagon / AWB</th>
+                      <th style="">E.Ref.</th>
+                      <th style="">E.Date</th>
+                      <th style="">L.Ref.</th>
+                      <th style="">L.Date</th>
+                      <th style="">L.Amount</th>
+                      <th style="">Q.Ref.</th>
+                      <th style="">Q.Date</th>
+                      <th style="">Delay</th>
+                      <th style="">Q.Encoding Date</th>
+                      <?php
                       }
                       ?>
                     </tr>
@@ -619,6 +641,33 @@
           {"data":"compteur"},
           {"data":"ref_dos"},
           {"data":"mca_b_ref"},
+          {"data":"support_doc"},
+          {"data":"po_ref"},
+          {"data":"num_lot"},
+          {"data":"nom_cli"},
+          {"data":"commodity"},
+          {"data":"truck"},
+          {"data":"ref_decl"},
+          {"data":"date_decl"},
+          {"data":"ref_liq"},
+          {"data":"date_liq"},
+          {"data":"montant_liq",
+            render: DataTable.render.number( null, null, 2, null ),
+            className: 'dt-body-right'
+          },
+          {"data":"ref_quit"},
+          {"data":"date_quit"},
+          {"data":"delay"},
+          {"data":"date_log"}
+        ] 
+            <?php
+          }else if ($_GET['statut']=='Excel Invoice'){
+            ?>
+        "columns":[
+          {"data":"compteur"},
+          {"data":"ref_dos"},
+          {"data":"mca_b_ref"},
+          {"data":"ref_fact_excel"},
           {"data":"support_doc"},
           {"data":"po_ref"},
           {"data":"num_lot"},

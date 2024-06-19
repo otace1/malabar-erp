@@ -146,15 +146,15 @@
             <div class="small-box bg-warning">
               <div class="inner">
                 <h5>
-                  <span id="nbre_facture_sans_taux"></span>
+                  <span id="nbre_dossier_facture_excel"></span>
                 </h5>
 
                 <p> 
                   <?php
                   if ($maClasse-> getUtilisateur($_SESSION['id_util'])['langue']=='ENG') {
-                    echo 'Files invoiced awaiting banks rates';
+                    echo 'Files invoiced In Excel';
                   }else if ($maClasse-> getUtilisateur($_SESSION['id_util'])['langue']=='FR') {
-                    echo 'Dossiers Factures en attente des taux bancaires';
+                    echo 'Dossiers Factures en Excel';
                   }
                   ?> 
                 </p>
@@ -162,7 +162,7 @@
               <div class="icon">
                 <i class="fas fa-exclamation"></i>
               </div>
-              <a href="#" class="small-box-footer" onclick="modal_awaiting_rate(<?php echo $_GET['id_mod_lic_fact'];?>);">
+              <a href="#" class="small-box-footer" onclick="window.open('popUpDashboardFacturation.php?statut=Excel Invoice&amp;id_mod_lic=<?php echo $_GET['id_mod_lic_fact'];?>&amp;id_cli='+id_cli.value,'pop1','width=1200,height=700');">
                 Details <i class="fas fa-arrow-circle-right"></i>
               </a>
             </div>
@@ -397,6 +397,7 @@ if(isset($_GET['id_mod_lic_fact']) && isset($_GET['id_mod_lic_fact'])){
         }else{
           $('#nbre_awaiting_elq').html(new Intl.NumberFormat('en-US').format(data.nbre_awaiting_elq));
           $('#nbre_awaiting_invoice').html(new Intl.NumberFormat('en-US').format(data.nbre_awaiting_invoice));
+          $('#nbre_dossier_facture_excel').html(new Intl.NumberFormat('en-US').format(data.nbre_dossier_facture_excel));
           $('#nbre_invoiced').html(new Intl.NumberFormat('en-US').format(data.nbre_invoiced));
           $('#nbre_disabled').html(new Intl.NumberFormat('en-US').format(data.nbre_disabled));
         }
@@ -445,7 +446,6 @@ if(isset($_GET['id_mod_lic_fact']) && isset($_GET['id_mod_lic_fact'])){
             window.location="../deconnexion.php";
           }else{
             $('#files_awaiting_rate').html(data.files_awaiting_rate);
-            $('#nbre_facture_sans_taux').html(data.nbre_facture_sans_taux);
           }
         },
         complete: function () {
@@ -564,7 +564,7 @@ if(isset($_GET['id_mod_lic_fact']) && isset($_GET['id_mod_lic_fact'])){
           $('#nbre_facture').html(data.nbre_facture);
           $('#nbre_dossier_facture').html(data.nbre_dossier_facture);
           $('#nbre_dossier_non_facture').html(data.nbre_dossier_non_facture);
-          $('#nbre_facture_sans_taux').html(data.nbre_facture_sans_taux);
+          $('#nbre_dossier_facture_excel').html(data.nbre_dossier_facture_excel);
           $('#btn_info_factures').html(data.btn_info_factures);
           $('#btn_info_dossiers_factures').html(data.btn_info_dossiers_factures);
           afficherMonitoringFacturation(<?php echo $_GET['id_mod_lic_fact'];?>);
@@ -594,6 +594,7 @@ if(isset($_GET['id_mod_lic_fact']) && isset($_GET['id_mod_lic_fact'])){
           $('#nbre_facture').html(data.nbre_facture);
           $('#nbre_dossier_facture').html(data.nbre_dossier_facture);
           $('#nbre_dossier_non_facture').html(data.nbre_dossier_non_facture);
+          $('#nbre_dossier_facture_excel').html(data.nbre_dossier_facture_excel);
           $('#btn_info_factures').html(data.btn_info_factures);
           $('#btn_info_dossiers_factures').html(data.btn_info_dossiers_factures);
           $('#afficherMonitoringFacturation').html(data.afficherMonitoringFacturation);

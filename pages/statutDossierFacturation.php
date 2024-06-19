@@ -112,6 +112,7 @@
                       <th style="">Status</th>
                       <th style="">Invoice Ref.</th>
                       <th style="">Invoice Date</th>
+                      <th style="">Commodity</th>
                       <th style="">License</th>
                       <th style="">Comm. Inv. / Lot Num.</th>
                       <th style="">Commodity</th>
@@ -157,9 +158,9 @@
       <div class="modal-body">
         <div class="row">
 
-          <div class="col-md-12">
+          <div class="col-md-6">
             <label for="x_card_code" class="control-label mb-1">File Ref.</label>
-            <input name="ref_dos" id="ref_dos" class="form-control form-control-sm cc-exp" disabled>
+            <input name="ref_dos" id="ref_dos" class="form-control form-control-sm cc-exp bg bg-dark" disabled>
           </div>
 
           <div class="col-md-6">
@@ -171,9 +172,15 @@
             <label for="x_card_code" class="control-label mb-1">Invoicing</label>
             <select name="not_fact" id="not_fact" class="form-control form-control-sm cc-exp" required>
               <option></option>
-              <option value="0">YES</option>
-              <option value="1">NO</option>
+              <option value="0">Activated</option>
+              <option value="1">Disactivated</option>
+              <option value="2">Excel Invoice</option>
             </select>
+          </div>
+
+          <div class="col-md-6">
+            <label for="x_card_code" class="control-label mb-1">Excel Inv. Ref.</label>
+            <input type="text" name="ref_fact_excel" id="ref_fact_excel" class="form-control form-control-sm cc-exp bg bg-warning">
           </div>
 
           <div class="col-md-6">
@@ -245,6 +252,7 @@
           $('#ref_dos').val(data.ref_dos);
           $('#mca_b_ref').val(data.mca_b_ref);
           $('#not_fact').val(data.not_fact);
+          $('#ref_fact_excel').val(data.ref_fact_excel);
           $('#ref_decl').val(data.ref_decl);
           $('#date_decl').val(data.date_decl);
           $('#ref_liq').val(data.ref_liq);
@@ -343,6 +351,7 @@
       {"data":"statut"},
       {"data":"ref_fact"},
       {"data":"date_fact"},
+      {"data":"commodity"},
       {"data":"num_lic"},
       {"data":"ref_fact_dos"},
       {"data":"commodity"},

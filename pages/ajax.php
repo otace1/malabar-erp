@@ -612,6 +612,7 @@
 		$response['nbre_facture'] = $maClasse-> getNbreFacture($id_mod_lic);
 		$response['nbre_dossier_facture'] = $maClasse-> getNbreDossierFacture($id_mod_lic);
 		$response['nbre_dossier_non_facture'] = $maClasse-> getNbreDossierNonFacture($id_mod_lic);
+		$response['nbre_dossier_facture_excel'] = $maClasse-> getNbreDossierFactureExcel($id_mod_lic);
 		$response['nbre_facture_sans_taux'] = $maClasse-> nbre_facture_sans_taux($id_mod_lic);
 		$response['btn_info_factures'] = '<span onclick="window.open(\'popUpDashboardFacturation.php?statut=Factures&amp;id_mod_lic='.$id_mod_lic.'\',\'pop1\',\'width=1200,height=700\');">
                 Details <i class="fas fa-arrow-circle-right"></i>
@@ -1197,6 +1198,7 @@
 		$reponse['nbre_facture'] = $maClasse-> getNbreFacture($_POST['id_mod_lic'], NULL, $_POST['debut'], $_POST['fin'], $_POST['id_cli']);
 		$reponse['nbre_dossier_facture'] = $maClasse-> getNbreDossierFacture($_POST['id_mod_lic'], NULL, $_POST['debut'], $_POST['fin'], $_POST['id_cli']);
 		$response['nbre_dossier_non_facture'] = $maClasse-> getNbreDossierNonFacture($_POST['id_mod_lic'], $_POST['id_cli']);
+		$response['nbre_dossier_facture_excel'] = $maClasse-> getNbreDossierFactureExcel($_POST['id_mod_lic'], $_POST['id_cli']);
 		$reponse['btn_info_factures'] = '<span onclick="window.open(\'popUpDashboardFacturation.php?statut=Factures&amp;id_mod_lic='.$_POST['id_mod_lic'].'&amp;debut='.$_POST['debut'].'&amp;fin='.$_POST['fin'].'&amp;id_cli='.$_POST['id_cli'].'\',\'pop1\',\'width=950,height=700\');">
                 Details <i class="fas fa-arrow-circle-right"></i>
               </span>';
@@ -1551,6 +1553,7 @@
 		$maClasse-> MAJ_date_liq($_POST['id_dos'], $_POST['date_liq']);
 		$maClasse-> MAJ_ref_quit($_POST['id_dos'], $_POST['ref_quit']);
 		$maClasse-> MAJ_date_quit($_POST['id_dos'], $_POST['date_quit']);
+		$maClasse-> MAJ_ref_fact_excel($_POST['id_dos'], $_POST['ref_fact_excel']);
 		$response['message'] = 'File Updated!';
 		echo json_encode($response);
 
@@ -2112,6 +2115,7 @@
   		$reponse['files_awaiting_rate'] = $maClasse-> files_awaiting_rate($_POST['id_mod_lic']);
 
 		$reponse['nbre_facture_sans_taux'] = $maClasse-> nbre_facture_sans_taux($_POST['id_mod_lic']);
+		$reponse['nbre_facture_excel'] = $maClasse-> nbre_facture_excel($_POST['id_mod_lic']);
 
   		echo json_encode($reponse);
 
@@ -3054,6 +3058,7 @@
   		$reponse['nbre_awaiting_invoice'] = $maClasse-> nbre_awaiting_invoice($_POST['id_mod_lic'], $_POST['id_cli']);
   		$reponse['nbre_invoiced'] = $maClasse-> nbre_invoiced($_POST['id_mod_lic'], $_POST['id_cli']);
   		$reponse['nbre_disabled'] = $maClasse-> nbre_disabled($_POST['id_mod_lic'], $_POST['id_cli']);
+  		$reponse['nbre_dossier_facture_excel'] = $maClasse-> getNbreDossierFactureExcel($_POST['id_mod_lic'], $_POST['id_cli']);
 
   		echo json_encode($reponse);
 
