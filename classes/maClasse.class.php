@@ -8487,6 +8487,10 @@
 					$unite = number_format($this-> getMontantFactureTypeDeboursSansFinancialCost($ref_fact, '1'), 2, ',', '.');
 					$cost = '1%';
 					$cost_2 = $cost;
+				}elseif($reponse['id_deb']=='13'){ // DGDA Seal 3x
+					$unite = 3;
+					$cost = $reponse['ht_usd']/3;
+					$cost_2 = $cost;
 				}
 
 				$total_cost += $cost;
@@ -19316,6 +19320,154 @@
 										'.$montant_tva_input.'
 
 									</td>
+								</tr>';
+
+					?>
+					
+					<?php
+				}$requeteDebours-> closeCursor();
+				$debours .= '</div>';
+
+			}$requeteTypeDebours-> closeCursor();
+			$debours .= '<input type="hidden" name="compteur" value="'.$compteur.'">';
+
+			return $debours;
+		}
+
+		public function getDeboursPourFactureClientExport($id_cli, $id_mod_lic, $id_march, $id_mod_trans, $id_dos=NULL){
+			include('connexion.php');
+			$entree['id_cli'] = $id_cli;
+			$entree['id_mod_lic'] = $id_mod_lic;
+			$entree['id_march'] = $id_march;
+			$entree['id_mod_trans'] = $id_mod_trans;
+			$compteur = 0;
+			$active = '';
+			$sqlTypeDebours = '';
+			$detail_input = '';
+			$usd_input = '';
+			$tva_input = '';
+			$montant_input = '';
+			$montant_tva_input = '';
+			$unite_input = '';
+
+			$debours = '';
+			$poids = $this-> getDossier($id_dos)['poids'];
+
+			$requeteTypeDebours = $connexion-> query("SELECT UPPER(nom_t_deb) AS nom_t_deb, id_t_deb
+														FROM type_debours
+														$sqlTypeDebours");
+			while($reponseTypeDebours = $requeteTypeDebours-> fetch()){
+				$debours .= '
+							<tr id="">
+								<th colspan="7" class="bg bg-secondary">
+									<u>'.$reponseTypeDebours['nom_t_deb'].'</u>
+								</th>
+							</tr>
+							<div>';
+				?>
+				<?php 
+				$requeteDebours = $connexion-> prepare("SELECT deb.abr_deb AS abr_deb, 
+														-- UPPER(REPLACE(deb.nom_deb, '\'', '')) AS nom_deb, 
+														IF(af.montant_min > 0,
+															CONCAT(UPPER(REPLACE(deb.nom_deb, '\'', '')), ' (',af.montant_min,'$ min)'),
+															UPPER(REPLACE(deb.nom_deb, '\'', ''))
+														) AS nom_deb, 
+														deb.id_deb AS id_deb,
+														af.tva AS tva, af.usd AS usd, af.montant AS montant,
+														af.detail AS detail,
+														af.unite AS unite,
+														af.montant_min AS montant_min
+													FROM debours deb, affectation_debours_client_modele_licence af
+													WHERE deb.id_t_deb = ?
+														AND deb.id_deb = af.id_deb
+														AND af.id_mod_lic = ?
+														AND af.id_cli = ?
+														AND af.id_march = ?
+														AND af.id_mod_trans = ?
+													ORDER BY deb.id_deb ASC");
+				$requeteDebours-> execute(array($reponseTypeDebours['id_t_deb'], $entree['id_mod_lic'], $entree['id_cli'], $entree['id_march'], $entree['id_mod_trans']));
+				while($reponseDebours = $requeteDebours-> fetch()){
+					$compteur++;
+					$unite = '1';
+					$montant = $reponseDebours['montant'];
+					$select_monnaie = '';
+					$select_tva = '';
+
+					//Unite
+					if (empty($reponseDebours['unite']) || $reponseDebours['unite']=='') {
+						$unite = $poids;
+					}else {
+						$unite = 1;
+					}
+
+					//Monnaie
+					if ($reponseDebours['usd']=='1') {
+						$select_monnaie = '<option value="1">USD</option><option value="0">CDF</option>';
+					}else{
+						$select_monnaie = '<option value="0">CDF</option><option value="1">USD</option>';
+					}
+
+					//TVA
+					if ($reponseDebours['tva']=='1') {
+						$select_tva = '<option value="1">YES</option><option value="0">NO</option>';
+					}else{
+						$select_tva = '<option value="0">NO</option><option value="1">YES</option>';
+					}
+
+					//RLS 140$ par Escieu
+					if ($reponseDebours['id_deb']==3) {
+						
+						if (strlen(trim($this-> getDossier($id_dos)['horse']))>=5) {
+							$montant += 140;
+						}
+						if (strlen(trim($this-> getDossier($id_dos)['trailer_1']))>=5) {
+							$montant += 140;
+						}
+						if (strlen(trim($this-> getDossier($id_dos)['trailer_2']))>=5) {
+							$montant += 140;
+						}
+
+						$unite = $montant/140;
+
+					}
+					else if ($reponseDebours['id_deb'] == 7) { //GOV Tax 50$/T
+						
+						$montant = $this-> getDossier($id_dos)['poids']*50;
+
+					}
+					else if ($reponseDebours['id_deb'] == 5) { //FERE 3$/T
+						
+						$montant = $this-> getDossier($id_dos)['poids']*3;
+
+					}
+					else if ($reponseDebours['id_deb'] == 6) { //LMC 5$/T
+						
+						$montant = $this-> getDossier($id_dos)['poids']*5;
+
+					}
+					else if ($reponseDebours['id_deb'] == 11 && $this-> getDossier($id_dos)['poids']<=30) { //CEEC 300
+						
+						$montant = 300;
+
+					}
+					else if ($reponseDebours['id_deb'] == 12 && $this-> getDossier($id_dos)['poids']>30) { //CEEC 450
+						
+						$montant = 450;
+
+					}
+
+					$debours .= '<tr>
+									<td width="10%">
+										<input type="hidden" id="id_deb_'.$compteur.'" name="id_deb_'.$compteur.'" value="'.$reponseDebours['id_deb'].'">
+										'.$reponseDebours['abr_deb'].'
+									</td>
+									<td width="50%">
+										'.$reponseDebours['nom_deb'].'
+									</td>
+									<td><input type="number" step="0.001" value="'.$unite.'" name="unite_'.$compteur.'" id="unite_'.$compteur.'" class="text-center"></td>
+									<td><input type="number" step="0.001" value="'.$montant.'" name="montant_'.$compteur.'" id="montant_'.$compteur.'" class="text-center"></td>
+									<td><select name="usd_'.$compteur.'" id="usd_'.$compteur.'" class="text-center">'.$select_monnaie.'</select></td>
+									<td><select name="tva_'.$compteur.'" id="tva_'.$compteur.'" class="text-center">'.$select_tva.'</select></td>
 								</tr>';
 
 					?>
