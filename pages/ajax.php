@@ -11,6 +11,7 @@
   	}elseif(isset($_POST['operation']) && $_POST['operation']=='getTableauExportInvoiceSingle'){// On recupere les donnees du dossier a facturer 
 
   		$reponse = $maClasse-> getDataDossier($_POST['id_dos']);
+  		$reponse['debours'] = $maClasse-> getDeboursPourFactureClientExport($reponse['id_cli'], $reponse['id_mod_lic'], $reponse['id_march'], $reponse['id_mod_trans'], $_POST['id_dos']);
 
   		echo json_encode($reponse);
 
@@ -211,8 +212,8 @@
   			}
 
   			$response = array('message' => 'Invoice Created');
-  			$response['ref_fact'] = $maClasse-> buildRefFactureGlobale($_POST['id_cli']);
-  			$response['ref_dos'] =$maClasse-> selectionnerDossierClientModeleLicenceMarchandise2($_POST['id_cli'], $_POST['id_mod_lic'], $_POST['id_march']);
+  			// $response['ref_fact'] = $maClasse-> buildRefFactureGlobale($_POST['id_cli']);
+  			// $response['ref_dos'] =$maClasse-> selectionnerDossierClientModeleLicenceMarchandise2($_POST['id_cli'], $_POST['id_mod_lic'], $_POST['id_march']);
 
   			} catch (Exception $e) {
 
@@ -221,7 +222,7 @@
 	        }
 
   		}
-	    echo json_encode($response);exit;
+	    echo json_encode($response);
 	}elseif(isset($_POST['operation']) && $_POST['operation']=='enregistrerFactureExportMultiple'){// On enregistre la facture Export Multiple
 
 		if (isset($_POST['nbre'])) {
