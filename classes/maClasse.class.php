@@ -16459,6 +16459,41 @@
 			
 		}
 
+		public function getMontantDeboursFactureDossier2USD($ref_fact, $id_deb, $id_dos){
+			include('connexion.php');
+			$entree['id_deb'] = $id_deb;
+			$entree['ref_fact'] = $ref_fact;
+			$entree['id_dos'] = $id_dos;
+
+			if ($id_deb==45) {
+				$requete = $connexion-> prepare("SELECT ROUND(IF(det.usd='1', det.montant, det.montant/dos.roe_decl) 3) AS montant
+														FROM debours deb, detail_facture_dossier det, dossier dos
+														WHERE deb.id_deb = det.id_deb
+															AND det.ref_fact = ?
+															AND (det.id_deb = 45 OR det.id_deb = 206 OR det.id_deb = 202)
+															AND det.id_dos = ?
+															AND dos.id_dos = det.id_dos");
+				$requete-> execute(array($entree['ref_fact'], $entree['id_dos']));
+			}else{
+				$requete = $connexion-> prepare("SELECT ROUND(IF(det.usd='1', det.montant, det.montant/dos.roe_decl), 3) AS montant
+														FROM debours deb, detail_facture_dossier det, dossier dos
+														WHERE deb.id_deb = det.id_deb
+															AND det.ref_fact = ?
+															AND det.id_deb = ?
+															AND det.id_dos = ?
+															AND dos.id_dos = det.id_dos");
+				$requete-> execute(array($entree['ref_fact'], $entree['id_deb'], $entree['id_dos']));
+			}
+
+			$reponse = $requete-> fetch();
+			if ($reponse) {
+				return $reponse['montant'];
+			}else{
+				return NULL;
+			}
+			
+		}
+
 		public function getMontantTVADeboursFactureDossier($ref_fact, $id_deb, $id_dos){
 			include('connexion.php');
 			$entree['id_deb'] = $id_deb;
@@ -35364,7 +35399,7 @@
 													d.arrival_date AS arrival_date_1,
 
 
-													IF(d.id_mod_lic='2' AND d.id_mod_trans='1',
+													IF(d.id_mod_lic='2' AND d.id_mod_trans='1' AND d.cleared<>'2',
 														IF(d.date_crf IS NULL AND d.date_ad IS NULL AND d.date_assurance IS NULL,
 													      'AWAITING CRF/AD/INSURANCE',
 													      IF(d.date_crf IS NULL AND d.date_ad IS NULL AND d.date_assurance IS NOT NULL,
@@ -35398,7 +35433,7 @@
 													          )
 													      )
 														,
-														IF(d.id_mod_lic='1', 
+														IF(d.id_mod_lic='1' AND d.cleared<>'2', 
 															IF(d.load_date IS NOT NULL AND d.ceec_in IS NULL,
 																'LOADED',
 																IF(d.ceec_in IS NOT NULL AND d.ceec_out IS NULL, 'AT CEEC',
@@ -35431,21 +35466,21 @@
 															, d.statut )
 													) AS statut,
 
-													IF(d.id_mod_trans='1' AND d.id_mod_lic='2', 
+													IF(d.id_mod_trans='1' AND d.id_mod_lic='2' AND d.cleared<>2, 
 														IF(d.klsa_arriv IS NOT NULL AND d.wiski_arriv IS NULL,'ARRIVED AT K\'LSA', 
 															IF(d.wiski_arriv IS NOT NULL AND d.dispatch_klsa IS NULL, 'AT WISKI',
 																IF(d.dispatch_klsa IS NOT NULL, 'DISPATCHED FROM K\'LSA', 'EXCEPTED TO ARRIVE')
 																)
 															)
 														, '') AS klsa_status,
-													IF(d.id_mod_trans='1' AND d.id_mod_lic='2', 
+													IF(d.id_mod_trans='1' AND d.id_mod_lic='2' AND d.cleared<>2, 
 														IF(d.bond_warehouse='LUBUMBASHI',
 															IF(d.warehouse_arriv IS NOT NULL AND d.warehouse_dep IS NOT NULL, 'DISPATCHED FROM AMICONGO', 
 																IF(d.warehouse_arriv IS NOT NULL, 'ARRIVED AT AMICONGO', '')
 																)
 															,'')
 														,'') AS amicongo_status,
-													IF(d.id_mod_trans='1' AND d.id_mod_lic='2', 
+													IF(d.id_mod_trans='1' AND d.id_mod_lic='2' AND d.cleared<>2, 
 														IF(d.bond_warehouse='KOLWEZI',
 															IF(d.warehouse_arriv IS NOT NULL AND d.warehouse_dep IS NOT NULL, 'DISPATCHED FROM WAREHOUSE', 
 																IF(d.warehouse_arriv IS NOT NULL, 'ARRIVED AT WAREHOUSE', '')
@@ -36162,7 +36197,7 @@
 													d.arrival_date AS arrival_date_1,
 
 													
-													IF(d.id_mod_lic='2' AND d.id_mod_trans='1',
+													IF(d.id_mod_lic='2' AND d.id_mod_trans='1' AND d.cleared<>'2',
 														IF(d.date_crf IS NULL AND d.date_ad IS NULL AND d.date_assurance IS NULL,
 													      'AWAITING CRF/AD/INSURANCE',
 													      IF(d.date_crf IS NULL AND d.date_ad IS NULL AND d.date_assurance IS NOT NULL,
@@ -36196,7 +36231,7 @@
 													          )
 													      )
 														,
-														IF(d.id_mod_lic='1', 
+														IF(d.id_mod_lic='1' AND d.cleared<>'2', 
 															IF(d.load_date IS NOT NULL AND d.ceec_in IS NULL,
 																'LOADED',
 																IF(d.ceec_in IS NOT NULL AND d.ceec_out IS NULL, 'AT CEEC',
@@ -44980,12 +45015,12 @@
 						$reponse['roe_decl'] = 1;
 					}
 
-					$reponse['rie'] = ($this-> getMontantDeboursFactureDossier2($reponse['ref_fact'], 1, $reponse['id_dos']))/$reponse['roe_decl'];
-					$reponse['rie_per_ton'] = ($this-> getMontantDeboursFactureDossier2($reponse['ref_fact'], 1, $reponse['id_dos'])/$reponse['poids'])/$reponse['roe_decl'];
-					$reponse['rls'] = ($this-> getMontantDeboursFactureDossier2($reponse['ref_fact'], 3, $reponse['id_dos']))/$reponse['roe_decl'];
-					$reponse['rls_per_ton'] = ($this-> getMontantDeboursFactureDossier2($reponse['ref_fact'], 3, $reponse['id_dos'])/$reponse['poids'])/$reponse['roe_decl'];
-					$reponse['fsr'] = ($this-> getMontantDeboursFactureDossier2($reponse['ref_fact'], 4, $reponse['id_dos']))/$reponse['roe_decl'];
-					$reponse['fsr_per_ton'] = ($this-> getMontantDeboursFactureDossier2($reponse['ref_fact'], 4, $reponse['id_dos'])/$reponse['poids'])/$reponse['roe_decl'];
+					$reponse['rie'] = ($this-> getMontantDeboursFactureDossier2USD($reponse['ref_fact'], 1, $reponse['id_dos']));
+					$reponse['rie_per_ton'] = ($this-> getMontantDeboursFactureDossier2USD($reponse['ref_fact'], 1, $reponse['id_dos'])/$reponse['poids']);
+					$reponse['rls'] = ($this-> getMontantDeboursFactureDossier2USD($reponse['ref_fact'], 3, $reponse['id_dos']));
+					$reponse['rls_per_ton'] = ($this-> getMontantDeboursFactureDossier2USD($reponse['ref_fact'], 3, $reponse['id_dos'])/$reponse['poids']);
+					$reponse['fsr'] = ($this-> getMontantDeboursFactureDossier2USD($reponse['ref_fact'], 4, $reponse['id_dos']));
+					$reponse['fsr_per_ton'] = ($this-> getMontantDeboursFactureDossier2USD($reponse['ref_fact'], 4, $reponse['id_dos'])/$reponse['poids']);
 					
 					$reponse['occ_sample'] = $this-> getMontantDeboursFactureDossier2($reponse['ref_fact'], 9, $reponse['id_dos']);
 					$reponse['cgea'] = $this-> getMontantDeboursFactureDossier2($reponse['ref_fact'], 10, $reponse['id_dos']);
