@@ -138,6 +138,8 @@
                       <th style="">Notre Nº Ref #</th>
                       <th style="">Tally Ref #</th>
                       <th>Client</th>
+                      <th>Product Category</th>
+                      <th>Commodity</th>
                       <th>Poids</th>
                       <th>FOB (USD)</th>
                       <th>Scelle Electr.</th>
@@ -382,6 +384,8 @@
           {"data":"ref_dos"},
           {"data":"mca_b_ref"},
           {"data":"nom_cli"},
+          {"data":"nom_march"},
+          {"data":"commodity"},
           {"data":"poids",
             render: DataTable.render.number( null, null, 2, null ),
             className: 'dt-body-right'
