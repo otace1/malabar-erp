@@ -44958,12 +44958,15 @@
 									                dos.id_cli AS id_cli,
 									                dos.id_mod_trans AS id_mod_trans,
 									                dos.id_march AS id_march,
+									                dos.commodity AS commodity,
+									                march.nom_march AS nom_march,
 													((dos.fob_usd*dos.roe_inv)/dos.roe_decl) AS fob_en_usd
-												FROM facture_dossier fd, modele_facture mf, client cl, dossier dos, detail_facture_dossier det, debours deb
+												FROM facture_dossier fd, modele_facture mf, client cl, dossier dos, marchandise march, detail_facture_dossier det, debours deb
 												WHERE fd.id_mod_fact = mf.id_mod_fact
 													AND fd.note_debit = '0'
 													AND fd.ref_fact = det.ref_fact
 													AND det.id_dos = dos.id_dos
+													AND dos.id_march = march.id_march
 													AND det.id_deb = deb.id_deb
 													AND fd.id_cli = cl.id_cli
 													$sqlClient
@@ -44988,7 +44991,7 @@
 
 					$reponse['compteur'] = $compteur;
 					$reponse['montant'] = number_format($this-> getMontantFactureGlobale($reponse['ref_fact'])+(( ($this-> getMontantFactureDebours($reponse['ref_fact'], 27)*$this-> getFactureGlobale($reponse['ref_fact'])['taux_commission']) - $this-> getMontantFactureDebours($reponse['ref_fact'], 27))), 2, ',', ' ');
-					$reponse['commodity'] = $this-> getMarchandiseFacture($reponse['ref_fact'])['nom_march'];
+					// $reponse['commodity'] = $this-> getMarchandiseFacture($reponse['ref_fact'])['nom_march'];
 					$reponse['nbre_dossier'] = $this-> getNombreDossierFacture2($reponse['ref_fact']);
 					$reponse['liste_dossier'] = $this-> getRangDossierFacture($reponse['ref_fact']);
 					$reponse['feri'] = $this-> getMontantDeboursFactureDossier2($reponse['ref_fact'], 5, $reponse['id_dos']);
