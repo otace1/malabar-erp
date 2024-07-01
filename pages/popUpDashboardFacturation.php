@@ -83,6 +83,7 @@
                       <th>#</th>
                       <th>Notre Nº Ref #</th>
                       <th>Client</th>
+                      <th>Encoded By</th>
                       <th>Liquidation Ref.</th>
                       <th>Liquidation Date</th>
                       <th>Quittance Ref.</th>
@@ -138,6 +139,7 @@
                       <th style="">Notre Nº Ref #</th>
                       <th style="">Tally Ref #</th>
                       <th>Client</th>
+                      <th>Encoded By</th>
                       <th>Product Category</th>
                       <th>Commodity</th>
                       <th>Poids</th>
@@ -384,6 +386,7 @@
           {"data":"ref_dos"},
           {"data":"mca_b_ref"},
           {"data":"nom_cli"},
+          {"data":"nom_util"},
           {"data":"nom_march"},
           {"data":"commodity"},
           {"data":"poids",
@@ -476,6 +479,7 @@
           {"data":"compteur"},
           {"data":"ref_dos"},
           {"data":"nom_cli"},
+          {"data":"nom_util"},
           {"data":"ref_liq"},
           {"data":"date_liq"},
           {"data":"ref_quit"},
