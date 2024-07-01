@@ -44773,6 +44773,7 @@
 				$requete = $connexion-> query("SELECT dos.ref_dos AS ref_dos, 
 													dos.mca_b_ref AS mca_b_ref,
 													fd.ref_fact AS ref_fact, 
+													util.nom_util AS nom_util,
 													dos.po_ref AS po_ref,
 													dos.roe_decl AS roe_decl,
 													dos.container AS container,
@@ -44961,7 +44962,7 @@
 									                dos.commodity AS commodity,
 									                march.nom_march AS nom_march,
 													((dos.fob_usd*dos.roe_inv)/dos.roe_decl) AS fob_en_usd
-												FROM facture_dossier fd, modele_facture mf, client cl, dossier dos, marchandise march, detail_facture_dossier det, debours deb
+												FROM facture_dossier fd, modele_facture mf, client cl, dossier dos, marchandise march, detail_facture_dossier det, debours deb, utilisateur util
 												WHERE fd.id_mod_fact = mf.id_mod_fact
 													AND fd.note_debit = '0'
 													AND fd.ref_fact = det.ref_fact
@@ -44969,6 +44970,7 @@
 													AND dos.id_march = march.id_march
 													AND det.id_deb = deb.id_deb
 													AND fd.id_cli = cl.id_cli
+													AND fd.id_util = util.id_util
 													$sqlClient
 													$sqlTransit
 													$sqlUtilisateur
