@@ -5895,6 +5895,85 @@
     			';
     		 }$requeteMarchandise-> closeCursor();
 
+
+    		 return $tableau;
+		}
+
+		public function modal_facture_licence_globale($id_cli, $id_mod_lic){
+			include('connexion.php');
+			$entree['id_cli'] = $id_cli;
+			$entree['id_mod_lic'] = $id_mod_lic;
+			$compteur = 0;
+
+			$tableau = '
+	            <span class="text-md font-weight-bold">Invoicing License</span>
+	            <table class="table table-bordered table-striped text-nowrap table-hover table-sm small table-head-fixed table-dark">
+	              <thead>
+	                  <tr>
+	                      <th>#</th>
+	                      <th>License</th>
+	                      <th>Commodity</th>
+	                      <th>Files</th>
+	                      <th>Action</th>
+	                  </tr>
+	              </thead>
+	              <tbody>';
+
+			$requeteMarchandise = $connexion-> prepare("SELECT COUNT(dossier.id_dos) AS nbre, 
+																dossier.num_lic aS num_lic, 
+																marchandise.id_march AS id_march,
+    															marchandise.nom_march AS nom_march,
+    															modele_facture.id_mod_fact AS id_mod_fact,
+    															modele_facture.create_page AS create_page,
+    															mode_transport.id_mod_trans AS id_mod_trans,
+    															mode_transport.nom_mod_trans AS nom_mod_trans
+    														FROM facturation_licence_globale aff, 
+    															marchandise, modele_facture, mode_transport, dossier
+    														WHERE aff.id_cli = ?
+    															AND aff.id_mod_fact = modele_facture.id_mod_fact
+    															AND aff.id_mod_lic = ?
+                                                                AND dossier.id_cli = aff.id_cli
+    															AND dossier.id_march = marchandise.id_march
+    															AND dossier.id_mod_trans = mode_transport.id_mod_trans
+    															AND dossier.id_march = marchandise.id_march
+    															AND dossier.id_mod_lic = modele_facture.id_mod_lic
+    															AND dossier.id_mod_trans = mode_transport.id_mod_trans
+																AND dossier.ref_quit IS NOT NULL
+																AND dossier.ref_quit <> ''
+																AND dossier.ref_decl IS NOT NULL
+																AND dossier.ref_decl <> ''
+																AND dossier.ref_liq IS NOT NULL
+																AND dossier.ref_liq <> ''
+																AND dossier.not_fact = '0'
+																AND NOT EXISTS (
+																	SELECT fact.ref_fact
+																		FROM facture_dossier fact
+																		WHERE fact.num_lic LIKE dossier.num_lic
+																		-- GROUP BY num_lic
+																	)
+														GROUP BY dossier.num_lic, dossier.id_mod_trans
+														ORDER BY dossier.num_lic");
+    		$requeteMarchandise-> execute(array($entree['id_cli'], $entree['id_mod_lic']));
+    		while ($reponseMarchandise = $requeteMarchandise-> fetch()) {
+    			$compteur++;
+    			$tableau .= '
+    						<tr>
+    							<td>'.$compteur.'</td>
+    							<td>'.$reponseMarchandise['num_lic'].'</td>
+    							<td>'.$reponseMarchandise['nom_march'].'</td>
+    							<td>'.$reponseMarchandise['nbre'].'</td>
+    							<td style="text-align: center;">
+    								<a class="btn btn-xs btn-primary" href="'.$reponseMarchandise['create_page'].'?id_mod_lic_fact='.$id_mod_lic.'&id_cli='.$id_cli.'&amp;id_mod_lic_fact='.$id_mod_lic.'&amp;id_mod_fact='.$reponseMarchandise['id_mod_fact'].'&amp;id_march='.$reponseMarchandise['id_march'].'&amp;id_mod_trans='.$reponseMarchandise['id_mod_trans'].'&amp;num_lic='.$reponseMarchandise['num_lic'].'&amp;date_decl=">
+    									<i class="fa fa-calculator"></i>
+    								</a>
+    							</td>
+    						</tr>
+    			';
+    		 }$requeteMarchandise-> closeCursor();
+
+    		 $tableau .= '
+			              </tbody>
+		            </table>';
     		 return $tableau;
 		}
 
@@ -6336,6 +6415,20 @@
     		 }$requete-> closeCursor();
 
     		 return $tableau;
+		}
+
+		public function getFacturation_licence_globale($id_cli, $id_mod_lic){
+			include('connexion.php');
+			$entree['id_cli'] = $id_cli;
+			$entree['id_mod_lic'] = $id_mod_lic;
+
+			$requete = $connexion-> prepare("SELECT *
+												FROM facturation_licence_globale
+												WHERE id_cli = ?
+													AND id_mod_lic = ?");
+			$requete-> execute(array($entree['id_cli'], $entree['id_mod_lic']));
+			$reponse = $requete-> fetch();
+			return $reponse;
 		}
 
 		public function getDeboursClientModeleLicence($id_cli, $id_mod_lic, $id_march, $id_mod_trans){
@@ -8722,6 +8815,184 @@
 							</td>
 							<td style="text-align: center; border-right: 0.5px solid black; font-size: 6.5px;" width="11%">'
 								.$cost_2.
+							'&nbsp;&nbsp;</td>
+							<td style="text-align: right; border-right: 0.5px solid black; font-size: 6.5px;" width="11%">'
+								.number_format($reponse['ht_usd'], 2, ',', '.').
+							'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+							<td style="text-align: right; border-right: 0.5px solid black; font-size: 6.5px;" width="11.5%">'
+								.number_format($reponse['tva_usd'], 2, ',', '.').
+							'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+							<td style="text-align: right; border-right: 1px solid black; font-size: 6.5px;" width="11.5%">'
+								.number_format($reponse['ttc_usd'], 2, ',', '.').
+							'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+						</tr>
+					';
+
+			}$requete-> closeCursor();
+			$tbl .='
+					<tr>
+						<td style="text-align: left; border-left: 1px solid black; border-right: 0.5px solid black; border-bottom: 0.5px solid black; font-size: 8px;" width="49%"></td>
+						<td style="text-align: center; border-bottom: 0.5px solid black; font-size: 7px; border-right: 0.5px solid black;" colspan="2" width="6%"></td>
+						<td style="text-align: right; border-right: 0.5px solid black; border-bottom: 0.5px solid black; font-size: 8px;" width="11%"></td>
+						<td style="text-align: right; border-right: 0.5px solid black; border-bottom: 0.5px solid black; font-size: 8px;" width="11%"></td>
+						<td style="text-align: right; border-right: 0.5px solid black; border-bottom: 0.5px solid black; font-size: 8px;" width="11.5%"></td>
+						<td style="text-align: right; border-right: 1px solid black; border-bottom: 0.5px solid black; font-size: 7px;" width="11.5%"></td>
+					</tr>
+					';
+			$tbl .= '
+					<tr>
+						<td style="text-align: right; border-right: 0.5px solid black; border: 0.5px solid black; font-weight: bold; background-color: rgb(220,220,220); font-size: 8px;" width="49%">SUB-TOTAL   / SOUS-TOTAL &nbsp;&nbsp;
+						</td>
+						<td style="text-align: right; border-right: 0.5px solid black; border: 0.5px solid black; font-weight: bold; background-color: rgb(220,220,220); font-size: 8px;" width="6%">
+						</td>
+						<td style="text-align: center; border-right: 0.5px solid black; border-bottom: 0.5px solid black; font-weight: bold; background-color: rgb(220,220,220);" width="11%">'
+							.number_format($total_cost, 2, ',', '.').
+						'&nbsp;&nbsp;</td>
+						<td style="text-align: right; border-right: 0.5px solid black; border-bottom: 0.5px solid black; font-weight: bold; background-color: rgb(220,220,220);" width="11%">'
+							.number_format($sub_total, 2, ',', '.').
+						'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+						<td style="text-align: right; border-right: 0.5px solid black; border-bottom: 0.5px solid black; font-weight: bold; background-color: rgb(220,220,220);" width="11.5%">'
+							.number_format($total_tva, 2, ',', '.').
+						'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+						<td style="text-align: right; border-right: 1px solid black; border-bottom: 0.5px solid black; font-weight: bold;  background-color: rgb(220,220,220);" width="11.5%">'
+							.number_format($total_gen, 2, ',', '.').
+						'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+					</tr>';
+
+			return $tbl;
+		}
+
+		public function getDetailFactureLicenceGlobalExport($ref_fact, $id_t_deb){
+			include('connexion.php');
+			$entree['ref_fact'] = $ref_fact;
+			$entree['id_t_deb'] = $id_t_deb;
+
+			$total_cost = 0;
+			$sub_total = 0;
+			$total_tva = 0;
+			$total_gen = 0;
+
+			$unite = 0;
+			$cost = 0;
+			$unite = $this-> getLicence($this-> getFactureGlobale($ref_fact)['num_lic'])['poids'];
+			
+			$tbl = '
+					<tr>
+						<td style="text-align: left; font-weight: bold; border-left: 1px solid black; border-right: 0.5px solid black;" colspan="2" width="49%"></td>
+						<td style="text-align: center; border-right: 0.5px solid black;" colspan="2" width="6%"></td>
+						<td style="text-align: right; border-right: 0.5px solid black;" width="11%"></td>
+						<td style="text-align: right; border-right: 0.5px solid black;" width="11%"></td>
+						<td style="text-align: right; border-right: 0.5px solid black;" width="11.5%"></td>
+						<td style="text-align: right; border-right: 1px solid black;" width="11.5%"></td>
+					</tr>
+					';
+			$requete = $connexion-> prepare('SELECT SUM(dos.poids) AS nbre_poids,
+													(SUM(dos.poids)*50) AS gov_tax_50,
+													(SUM(dos.poids)*3) AS fere_3,
+													(SUM(dos.poids)*5) AS lmc_5,
+													(COUNT(dos.id_dos)*250) AS occ_250,
+													(COUNT(dos.id_dos)*80) AS cgea_80,
+													(COUNT(dos.id_dos)*40) AS dgda_seal_40,
+													COUNT(dos.id_dos) AS nbre_dos,
+													SUM(
+														IF(dos.poids<30,
+															1,
+															0)
+													) AS nbre_ceec_30,
+													(SUM(
+														IF(dos.poids<30,
+															1,
+															0)
+													)*125) AS ceec_30,
+													SUM(
+														IF(dos.poids>30,
+															1,
+															0)
+													) AS nbre_ceec_60,
+													(SUM(
+														IF(dos.poids>30,
+															1,
+															0)
+													)*250) AS ceec_60,
+													d.nom_deb AS nom_deb, d.id_deb AS id_deb,
+													det.tva AS tva,
+													d.abr_deb AS abr_deb,
+													SUM(det.montant) AS ht,
+													SUM( 
+														IF(det.usd="1", 
+															0,
+															det.montant
+														) 
+													) AS ht_cdf,
+													SUM( 
+														IF(det.usd="1", 
+															det.montant,
+															(det.montant/dos.roe_decl)
+														) 
+													) AS ht_usd,
+													SUM(
+														IF(det.usd="1", 
+															IF(det.tva="1",
+																det.montant*1.16,
+																det.montant
+															), 
+															IF(det.tva="1",
+																(det.montant/dos.roe_decl)*1.16,
+																(det.montant/dos.roe_decl)
+															)
+														)
+													) AS ttc_usd,
+													SUM(
+														IF(det.usd="1", 
+															IF(det.tva="1",
+																det.montant*0.16,
+																0
+															), 
+															IF(det.tva="1",
+																(det.montant/dos.roe_decl)*0.16,
+																0
+															)
+														)
+													) AS tva_usd,
+													IF(det.detail IS NOT NULL, 
+														CONCAT(": ", det.detail),
+														""
+													) AS detail,
+													det.unite AS unite,
+													COUNT(DISTINCT(dos.ref_decl)) AS qte,
+													dos.poids AS poids
+												FROM debours d, detail_facture_dossier det, dossier dos
+												WHERE det.ref_fact = ?
+													AND det.id_deb = d.id_deb
+													AND d.id_t_deb = ?
+													AND det.id_dos = dos.id_dos
+												GROUP BY d.id_deb');
+			$requete-> execute(array($entree['ref_fact'], $entree['id_t_deb']));
+			while($reponse = $requete-> fetch()){
+				if($reponse['tva'] == '0'){
+					$tva = '0';
+					$ttc = $reponse['ht_usd'];
+				}else{
+					$tva = round(($reponse['ht_usd'] * 0.16), 2);
+					$ttc = $reponse['ht_usd'] + round(($reponse['ht_usd'] * 0.16), 2);
+				}
+				$total_cost += $cost;
+				$sub_total += $reponse['ht_usd'];
+				$total_tva += $reponse['tva_usd'];
+				$total_gen += $reponse['ttc_usd'];
+
+
+				$tbl .= '
+						<tr>
+							<td style="text-align: left; border-left: 1px solid black; border-right: 0.5px solid black; font-size: 6.5px;" colspan="2" width="49%">&nbsp;&nbsp;'
+								.$reponse['nom_deb'].
+							'</td>
+							<td style="text-align: center; border-right: 0.5px solid black; font-size: 6.5px;" width="6%">'
+								.$unite.
+							'
+							</td>
+							<td style="text-align: center; border-right: 0.5px solid black; font-size: 6.5px;" width="11%">'
+								.number_format($cost, 2, ',', '.').
 							'&nbsp;&nbsp;</td>
 							<td style="text-align: right; border-right: 0.5px solid black; font-size: 6.5px;" width="11%">'
 								.number_format($reponse['ht_usd'], 2, ',', '.').
@@ -11542,6 +11813,322 @@
 						<td style="text-align: right; border: 1px solid black; font-size: 8px; font-weight: bold;" width="23%">CDF &nbsp;&nbsp;'
 							// .number_format($total_gen*$reponse['roe_decl'], 2, ',', '.').
 							.number_format($total_gen*$this-> getTauxFacture($entree['ref_fact'])['roe_decl'], 2, ',', '.').
+						'&nbsp;&nbsp;</td>
+					</tr>
+					';
+
+			}else {
+				$tbl .= '
+					<tr>
+						<td style="text-align: right; border: 0.5px solid black; font-weight: bold; background-color: rgb(220,220,220); font-size: 8px;" width="49%">TOTAL CLEARING COST IN USD / COUT TOTAL EN USD&nbsp;&nbsp;
+						</td>
+						<td style="text-align: right; border: 0.5px solid black; font-weight: bold; background-color: rgb(220,220,220); font-size: 8px;" width="6%">
+						</td>
+						<td style="text-align: center; border: 0.5px solid black; font-weight: bold; background-color: rgb(220,220,220);" width="11%">'
+							.number_format($total_cost, 2, ',', '.').
+						'&nbsp;&nbsp;</td>
+						<td style="text-align: right; border: 0.5px solid black; font-weight: bold; background-color: rgb(220,220,220);" width="11%">'
+							.number_format($sub_total, 2, ',', '.').
+						'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+						<td style="text-align: right; border: 0.5px solid black; font-weight: bold; background-color: rgb(220,220,220);" width="11.5%">'
+							.number_format($total_tva, 2, ',', '.').
+						'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+						<td style="text-align: right; border: 0.5px solid black; font-weight: bold;  background-color: rgb(220,220,220);" width="11.5%">'
+							.number_format($total_gen, 2, ',', '.').
+						'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+					</tr>
+					<tr>
+						<td width="100%"></td>
+					</tr>
+					<tr>
+						<td style="text-align: right; border: 0.5px solid black; font-size: 8px;" width="66%">ARSP Tax (1.2%  on the Agency Fees without TVA )&nbsp;&nbsp;
+						</td>
+						<td style="text-align: right; border: 0.5px solid black;" width="11%">'
+							.number_format($reponse['base_arsp'], 2, ',', '.').
+						'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+						<td style="text-align: right; border: 0.5px solid black;" width="11.5%">1.2% &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+						<td style="text-align: right; border: 0.5px solid black; " width="11.5%">'
+							.number_format($reponse['arsp'], 2, ',', '.').
+						'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+					</tr>
+					<tr>
+						<td width="100%"></td>
+					</tr>
+					<tr>
+						<td style="text-align: right; border: 0.5px solid black; font-weight: bold; background-color: rgb(220,220,220); font-size: 8px;" width="88.5%">NET PAYABLE AMOUNT EN USD&nbsp;&nbsp;
+						</td>
+						<td style="text-align: right; border: 0.5px solid black; font-weight: bold;  background-color: rgb(220,220,220);" width="11.5%">'
+							.number_format($total_gen-$reponse['arsp'], 2, ',', '.').
+						'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+					</tr>
+					<tr>
+						<td width="100%"></td>
+					</tr>
+					<tr>
+						<td style="text-align: left; font-size: 8px;" width="49%"></td>
+						<td style="text-align: center;" colspan="2" width="5.5%"></td>
+						<td style="text-align: right; font-size: 8px;" width="11%"></td>
+						<td style="text-align: right; font-size: 8px;" width="11.5%"></td>
+						<td style="text-align: right; border: 1px solid black; font-size: 8px; font-weight: bold;" width="23%">CDF &nbsp;&nbsp;'
+							// .number_format($total_gen*$reponse['roe_decl'], 2, ',', '.').
+							// .number_format(($total_gen-$reponse['arsp'])*$this-> getTauxFacture($entree['ref_fact'])['roe_decl'], 2, ',', '.').
+							.number_format(($total_gen-$reponse['arsp'])*$this-> getTauxFacture($entree['ref_fact'])['roe_decl'], 2, ',', '.').
+						'&nbsp;&nbsp;</td>
+					</tr>
+					';
+
+			}
+
+			
+			return $tbl;
+		}
+
+		public function getTotalFactureLicenceGlobalExport($ref_fact){
+			include('connexion.php');
+			$entree['ref_fact'] = $ref_fact;
+
+			$total_cost = 0;
+			$sub_total = 0;
+			$total_tva = 0;
+			$total_gen = 0;
+
+			$unite = 0;
+			$cost = 0;
+
+			$tbl = '
+					
+					';
+
+			$requete = $connexion-> prepare('SELECT d.nom_deb AS nom_deb, d.id_deb AS id_deb,
+													det.tva AS tva,
+													d.abr_deb AS abr_deb,
+													fact.taux AS roe_decl,
+													SUM(
+														IF(d.id_deb=1 OR d.id_deb=2 OR d.id_deb=3 OR d.id_deb=4 OR d.id_deb=5 OR d.id_deb=6 OR d.id_deb=7 OR d.id_deb=8,
+																IF(det.usd=1,
+																	det.montant/dos.poids,
+																	(det.montant/fact.taux)/dos.poids
+																),
+															IF(d.id_deb=11 AND dos.poids<30,
+																IF(det.usd=1,
+																	det.montant/1,
+																	(det.montant/fact.taux)/1
+																),
+																IF(d.id_deb=12 AND dos.poids>=30,
+																	IF(det.usd=1,
+																		det.montant/1,
+																		(det.montant/fact.taux)/1
+																	),
+																	IF(det.usd=1,
+																		det.montant/1,
+																		(det.montant/fact.taux)/1
+																	)
+																	)
+																)
+														)
+													) AS total_cost,
+													SUM(det.montant) AS ht,
+													SUM( 
+														IF(det.usd="1", 
+															0,
+															det.montant
+														) 
+													) AS ht_cdf,
+													SUM( 
+														IF(det.usd="1", 
+															det.montant,
+															(det.montant/fact.taux)
+														) 
+													) AS ht_usd,
+													SUM(
+														IF(det.usd="1", 
+															IF(det.tva="1",
+																det.montant*1.16,
+																det.montant
+															), 
+															IF(det.tva="1",
+																(det.montant/fact.taux)*1.16,
+																(det.montant/fact.taux)
+															)
+														)
+													) AS ttc_usd,
+													SUM(
+														IF(det.usd="1", 
+															IF(det.tva="1",
+																det.montant*0.16,
+																0
+															), 
+															IF(det.tva="1",
+																(det.montant/fact.taux)*0.16,
+																0
+															)
+														)
+													) AS tva_usd,
+													SUM(
+														IF(det.usd="1" AND det.tva="1",
+															det.montant*0.012,
+															0
+														)
+													) AS arsp,
+													SUM(
+														IF(det.usd="1" AND det.tva="1",
+															det.montant,
+															0
+														)
+													) AS base_arsp,
+													IF(det.detail IS NOT NULL, 
+														CONCAT(": ", det.detail),
+														""
+													) AS detail,
+													det.unite AS unite,
+													COUNT(DISTINCT(dos.ref_decl)) AS qte,
+													dos.poids AS poids,
+													fact.id_cli AS id_cli,
+													fact.statut_arsp AS statut_arsp
+												FROM debours d, detail_facture_dossier det, dossier dos, facture_dossier fact
+												WHERE det.ref_fact = ?
+													AND det.id_deb = d.id_deb
+													AND det.id_dos = dos.id_dos
+													AND det.ref_fact = fact.ref_fact
+												GROUP BY det.ref_fact');
+			$requete-> execute(array($entree['ref_fact']));
+			$reponse = $requete-> fetch();
+			// while($reponse = $requete-> fetch()){
+			// 	if($reponse['tva'] == '0'){
+			// 		$tva = '0';
+			// 		$ttc = $reponse['ht_usd'];
+			// 	}else{
+			// 		$tva = round(($reponse['ht_usd'] * 0.16), 2);
+			// 		$ttc = $reponse['ht_usd'] + round(($reponse['ht_usd'] * 0.16), 2);
+			// 	}
+
+			// 	if ($reponse['id_deb']=='1' || $reponse['id_deb']=='2' || $reponse['id_deb']=='3' || $reponse['id_deb']=='4' || $reponse['id_deb']=='5' || $reponse['id_deb']=='6' || $reponse['id_deb']=='7' || $reponse['id_deb']=='8') {
+					
+			// 		$unite = number_format($reponse['poids'], 2, ',', ' ');
+
+			// 	}else if($reponse['id_deb']=='11' && $reponse['poids']<30){
+			// 		$unite = 1;
+			// 	}else if($reponse['id_deb']=='12' && $reponse['poids']>30){
+			// 		$unite = 1;
+			// 	}else{
+			// 		$unite = 1;
+			// 	}
+
+			// 	$cost = $reponse['ht_usd']/$unite;
+
+			// 	$total_cost += $cost;
+			// 	$sub_total += $reponse['ht_usd'];
+			// 	$total_tva += $reponse['tva_usd'];
+			// 	$total_gen += $reponse['ttc_usd'];
+
+				$total_cost = 0;//$reponse['total_cost'];
+				$sub_total = $reponse['ht_usd'];
+				$total_tva = $reponse['tva_usd'];
+				$total_gen = $reponse['ttc_usd'];
+
+			if ($reponse['statut_arsp']=='1') {
+				$tbl .= '
+					<tr>
+						<td style="text-align: right; border: 0.5px solid black; font-weight: bold; background-color: rgb(220,220,220); font-size: 8px;" width="49%">TOTAL CLEARING COST IN USD / COUT TOTAL EN USD&nbsp;&nbsp;
+						</td>
+						<td style="text-align: right; border: 0.5px solid black; font-weight: bold; background-color: rgb(220,220,220); font-size: 8px;" width="6%">
+						</td>
+						<td style="text-align: center; border: 0.5px solid black; font-weight: bold; background-color: rgb(220,220,220);" width="11%">'
+							.number_format($total_cost, 2, ',', '.').
+						'&nbsp;&nbsp;</td>
+						<td style="text-align: right; border: 0.5px solid black; font-weight: bold; background-color: rgb(220,220,220);" width="11%">'
+							.number_format($sub_total, 2, ',', '.').
+						'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+						<td style="text-align: right; border: 0.5px solid black; font-weight: bold; background-color: rgb(220,220,220);" width="11.5%">'
+							.number_format($total_tva, 2, ',', '.').
+						'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+						<td style="text-align: right; border: 0.5px solid black; font-weight: bold;  background-color: rgb(220,220,220);" width="11.5%">'
+							.number_format($total_gen, 2, ',', '.').
+						'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+					</tr>
+					<tr>
+						<td width="100%"></td>
+					</tr>
+					<tr>
+						<td style="text-align: right; border: 0.5px solid black; font-size: 8px;" width="66%">ARSP Tax (1.2%  on the Agency Fees without TVA )&nbsp;&nbsp;
+						</td>
+						<td style="text-align: right; border: 0.5px solid black;" width="11%">'
+							.number_format($reponse['base_arsp'], 2, ',', '.').
+						'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+						<td style="text-align: right; border: 0.5px solid black;" width="11.5%">1.2% &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+						<td style="text-align: right; border: 0.5px solid black; " width="11.5%">'
+							.number_format($reponse['arsp'], 2, ',', '.').
+						'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+					</tr>
+					<tr>
+						<td width="100%"></td>
+					</tr>
+					<tr>
+						<td style="text-align: right; border: 0.5px solid black; font-weight: bold; background-color: rgb(220,220,220); font-size: 8px;" width="88.5%">NET PAYABLE AMOUNT EN USD&nbsp;&nbsp;
+						</td>
+						<td style="text-align: right; border: 0.5px solid black; font-weight: bold;  background-color: rgb(220,220,220);" width="11.5%">'
+							.number_format($total_gen-$reponse['arsp'], 2, ',', '.').
+						'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+					</tr>
+					<tr>
+						<td width="100%"></td>
+					</tr>
+					<tr>
+						<td style="text-align: left; font-size: 8px;" width="49%"></td>
+						<td style="text-align: center;" colspan="2" width="5.5%"></td>
+						<td style="text-align: right; font-size: 8px;" width="11%"></td>
+						<td style="text-align: right; font-size: 8px;" width="11.5%"></td>
+						<td style="text-align: right; border: 1px solid black; font-size: 8px; font-weight: bold;" width="23%">CDF &nbsp;&nbsp;'
+							// .number_format($total_gen*$reponse['roe_decl'], 2, ',', '.').
+							// .number_format(($total_gen-$reponse['arsp'])*$this-> getTauxFacture($entree['ref_fact'])['roe_decl'], 2, ',', '.').
+							.number_format(($total_gen-$reponse['arsp'])*$this-> getTauxFacture($entree['ref_fact'])['roe_decl'], 2, ',', '.').
+						'&nbsp;&nbsp;</td>
+					</tr>
+					';
+
+			}else if($reponse['id_cli']!='946' && $reponse['id_cli']!='904'){
+				$tbl .= '<tr>
+						<td style="text-align: left; font-weight: bold; border-left: 1px solid black; border-right: 0.5px solid black; border-top: 0.5px solid black;" colspan="2" width="49%"></td>
+						<td style="text-align: center; border-right: 0.5px solid black; border-top: 0.5px solid black;" colspan="2" width="5.5%"></td>
+						<td style="text-align: right; border-right: 0.5px solid black; border-top: 0.5px solid black;" width="11%"></td>
+						<td style="text-align: right; border-right: 0.5px solid black; border-top: 0.5px solid black;" width="11.5%"></td>
+						<td style="text-align: right; border-right: 0.5px solid black; border-top: 0.5px solid black;" width="11.5%"></td>
+						<td style="text-align: right; border-right: 1px solid black; border-top: 0.5px solid black;" width="11.5%"></td>
+					</tr>
+					<tr>
+						<td style="text-align: right; border-right: 0.5px solid black; border-left: 0.5px solid black; font-weight: bold; font-size: 8px;" width="49%">TOTAL CLEARING COST IN USD / COUT TOTAL EN USD &nbsp;&nbsp;
+						</td>
+						<td style="text-align: right; border-right: 0.5px solid black; border-left: 0.5px solid black; font-weight: bold; font-size: 8px;" width="5.5%">
+						</td>
+						<td style="text-align: center; border-right: 0.5px solid black; font-weight: bold;" width="11%">'
+							.number_format($total_cost, 2, ',', '.').
+						'&nbsp;&nbsp;</td>
+						<td style="text-align: center; border-right: 0.5px solid black; font-weight: bold;" width="11.5%">'
+							.number_format($sub_total, 2, ',', '.').
+						'&nbsp;&nbsp;</td>
+						<td style="text-align: center; border-right: 0.5px solid black; font-weight: bold;" width="11.5%">'
+							.number_format($total_tva, 2, ',', '.').
+						'&nbsp;&nbsp;</td>
+						<td style="text-align: right; border-right: 1px solid black; font-weight: bold; " width="11.5%">'
+							.number_format($total_gen, 2, ',', '.').
+						'&nbsp;&nbsp;</td>
+					</tr>
+					<tr>
+						<td style="text-align: left; border-left: 1px solid black; border-right: 0.5px solid black; border-bottom: 0.5px solid black; font-size: 8px;" width="49%"></td>
+						<td style="text-align: center; border-bottom: 0.5px solid black; font-size: 7px; border-right: 0.5px solid black;" colspan="2" width="5.5%"></td>
+						<td style="text-align: right; border-right: 0.5px solid black; border-bottom: 0.5px solid black; font-size: 8px;" width="11%"></td>
+						<td style="text-align: right; border-right: 0.5px solid black; border-bottom: 0.5px solid black; font-size: 8px;" width="11.5%"></td>
+						<td style="text-align: right; border-right: 0.5px solid black; border-bottom: 0.5px solid black; font-size: 8px;" width="11.5%"></td>
+						<td style="text-align: right; border-right: 1px solid black; border-bottom: 0.5px solid black; font-size: 7px;" width="11.5%"></td>
+					</tr>
+					<tr>
+						<td style="text-align: left; font-size: 8px;" width="49%"></td>
+						<td style="text-align: center;" colspan="2" width="5.5%"></td>
+						<td style="text-align: right; font-size: 8px;" width="11%"></td>
+						<td style="text-align: right; font-size: 8px;" width="11.5%"></td>
+						<td style="text-align: right; border: 1px solid black; font-size: 8px; font-weight: bold;" width="23%">CDF &nbsp;&nbsp;'
+							// .number_format($total_gen*$reponse['roe_decl'], 2, ',', '.').
+							.number_format($total_gen*$reponse['roe_decl'], 2, ',', '.').
 						'&nbsp;&nbsp;</td>
 					</tr>
 					';
@@ -17156,7 +17743,7 @@
 					$a = $this-> getTailleCompteur2($i);
 					// 2022-MTS-EXP-HC-037
 
-					if ($_GET['id_cli']=='845') {
+					if (isset($_GET['id_cli']) && $_GET['id_cli']=='845') {
 						$a = $this-> getTailleCompteur($i);
 						$code_march = '';
 					}else{
@@ -17168,7 +17755,7 @@
 					while($this-> verifierExistanceRefFactureDossier($code) == true){
 						$i++;
 
-						if ($_GET['id_cli']=='845') {
+						if (isset($_GET['id_cli']) && $_GET['id_cli']=='845') {
 							$a = $this-> getTailleCompteur($i);
 						}
 
@@ -17601,6 +18188,43 @@
 												VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
 			$requete-> execute(array($entree['ref_fact'], $entree['id_mod_fact'], $entree['id_cli'], $entree['id_util'], 
 									$entree['id_mod_lic'], $entree['type_fact'], $entree['information'], 
+									$entree['note_debit'], $entree['type_case'], $entree['taux'], $entree['id_mod_trans']));
+
+		}
+		
+		public function creerFactureLicenceGlobale($ref_fact, $id_mod_fact, $id_cli, $id_util, $id_mod_lic, $type_fact, $num_lic, $note_debit='0', $type_case=NULL, $taux=NULL, $id_mod_trans=1){
+			include('connexion.php');
+
+			$entree['ref_fact'] = $ref_fact;
+			$entree['id_mod_fact'] = $id_mod_fact;
+			$entree['id_cli'] = $id_cli;
+			$entree['id_util'] = $id_util;
+			$entree['id_mod_lic'] = $id_mod_lic;
+			$entree['type_fact'] = $type_fact;
+			$entree['num_lic'] = $num_lic;
+			$entree['note_debit'] = $note_debit;
+			$entree['type_case'] = $type_case;
+			$entree['taux'] = $taux;
+			$entree['id_mod_trans'] = $id_mod_trans;
+
+			// echo "<br>ref_fact = $ref_fact";
+			// echo "<br>id_mod_fact = $id_mod_fact";
+			// echo "<br>id_cli = $id_cli";
+			// echo "<br>id_util = $id_util";
+			// echo "<br>id_mod_lic = $id_mod_lic";
+			// echo "<br>type_fact = $type_fact";
+			// echo "<br>num_lic = $num_lic";
+			// echo "<br>note_debit = $note_debit";
+			// echo "<br>type_case = $type_case";
+			// echo "<br>taux = $taux";
+			// echo "<br>id_mod_trans = $id_mod_trans";
+
+			$requete = $connexion-> prepare('INSERT INTO facture_dossier(ref_fact, id_mod_fact, id_cli, id_util, 
+																			id_mod_lic, type_fact, num_lic, 
+																			note_debit, type_case, taux, id_mod_trans)
+												VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
+			$requete-> execute(array($entree['ref_fact'], $entree['id_mod_fact'], $entree['id_cli'], $entree['id_util'], 
+									$entree['id_mod_lic'], $entree['type_fact'], $entree['num_lic'], 
 									$entree['note_debit'], $entree['type_case'], $entree['taux'], $entree['id_mod_trans']));
 
 		}
@@ -19512,6 +20136,54 @@
 						$montant_input = '<input type="number" step="0.001" style="text-align: center;" class="bg-dark" name="montant_'.$compteur.'" id="montant_'.$reponseDebours['id_deb'].'" value="" onblur="getTotal()">';
 						$montant_tva_input = '';
 						
+					}else if ($reponseDebours['id_deb']=='5') {//FERE
+
+						$reponseDebours['montant'] = $reponseDebours['montant']*$this-> getDossier($id_dos)['poids'];
+
+						$unite_input = '<span id="unite_'.$compteur.'"></span>';
+						$montant_input = '<input type="number" step="0.001" style="text-align: center;" class="bg-dark" name="montant_'.$compteur.'" id="montant_'.$reponseDebours['id_deb'].'" value="'.$reponseDebours['montant'].'" onblur="getTotal()">';
+						$montant_tva_input = '';
+						
+					}else if ($reponseDebours['id_deb']=='6') {//LMC
+
+						$reponseDebours['montant'] = $reponseDebours['montant']*$this-> getDossier($id_dos)['poids'];
+
+						$unite_input = '<span id="unite_'.$compteur.'"></span>';
+						$montant_input = '<input type="number" step="0.001" style="text-align: center;" class="bg-dark" name="montant_'.$compteur.'" id="montant_'.$reponseDebours['id_deb'].'" value="'.$reponseDebours['montant'].'" onblur="getTotal()">';
+						$montant_tva_input = '';
+						
+					}else if ($reponseDebours['id_deb']=='8') {//Taxe Concentree
+
+						$reponseDebours['montant'] = $reponseDebours['montant']*$this-> getDossier($id_dos)['poids'];
+
+						$unite_input = '<span id="unite_'.$compteur.'"></span>';
+						$montant_input = '<input type="number" step="0.001" style="text-align: center;" class="bg-dark" name="montant_'.$compteur.'" id="montant_'.$reponseDebours['id_deb'].'" value="'.$reponseDebours['montant'].'" onblur="getTotal()">';
+						$montant_tva_input = '';
+						
+					}else if ($reponseDebours['id_deb']=='11') {//CEEC
+
+						$reponseDebours['montant'] = 0;
+
+						if (($this-> getDossier($id_dos)['poids'])<30) { // < 30
+							$reponseDebours['montant'] = 300;
+						}
+
+						$unite_input = '<span id="unite_'.$compteur.'"></span>';
+						$montant_input = '<input type="number" step="0.001" style="text-align: center;" class="bg-dark" name="montant_'.$compteur.'" id="montant_'.$reponseDebours['id_deb'].'" value="'.$reponseDebours['montant'].'" onblur="getTotal()">';
+						$montant_tva_input = '';
+						
+					}else if ($reponseDebours['id_deb']=='12') {//CEEC
+
+						$reponseDebours['montant'] = 0;
+
+						if (($this-> getDossier($id_dos)['poids'])>=30) { // >= 30
+							$reponseDebours['montant'] = 450;
+						}
+
+						$unite_input = '<span id="unite_'.$compteur.'"></span>';
+						$montant_input = '<input type="number" step="0.001" style="text-align: center;" class="bg-dark" name="montant_'.$compteur.'" id="montant_'.$reponseDebours['id_deb'].'" value="'.$reponseDebours['montant'].'" onblur="getTotal()">';
+						$montant_tva_input = '';
+						
 					}else{
 
 						$unite_input = '<span id="unite_'.$compteur.'"></span>';
@@ -19710,6 +20382,137 @@
 									</td>
 									<td width="50%">
 										'.$reponseDebours['nom_deb'].'
+									</td>
+									<td><input type="number" step="0.001" value="'.$unite.'" name="unite_'.$compteur.'" id="unite_'.$compteur.'" class="text-center"></td>
+									<td><input type="number" step="0.001" value="'.$montant.'" name="montant_'.$compteur.'" id="montant_'.$compteur.'" class="text-center"></td>
+									<td><select name="usd_'.$compteur.'" id="usd_'.$compteur.'" class="text-center">'.$select_monnaie.'</select></td>
+									<td><select name="tva_'.$compteur.'" id="tva_'.$compteur.'" class="text-center">'.$select_tva.'</select></td>
+								</tr>';
+
+					?>
+					
+					<?php
+				}$requeteDebours-> closeCursor();
+				$debours .= '</div>';
+
+			}$requeteTypeDebours-> closeCursor();
+			$debours .= '<input type="hidden" name="compteur" value="'.$compteur.'">';
+
+			return $debours;
+		}
+
+		public function getDeboursPourFactureLicenceGlobale($id_cli, $id_mod_lic, $num_lic){
+			include('connexion.php');
+			$entree['id_cli'] = $id_cli;
+			$entree['id_mod_lic'] = $id_mod_lic;
+			$compteur = 0;
+			$active = '';
+			$sqlTypeDebours = '';
+			$detail_input = '';
+			$usd_input = '';
+			$tva_input = '';
+			$montant_input = '';
+			$montant_tva_input = '';
+			$unite_input = '';
+
+			$debours = '';
+
+			$requeteTypeDebours = $connexion-> query("SELECT UPPER(nom_t_deb) AS nom_t_deb, id_t_deb
+														FROM type_debours
+														$sqlTypeDebours");
+			while($reponseTypeDebours = $requeteTypeDebours-> fetch()){
+				$debours .= '
+							<tr id="">
+								<th colspan="7" class="bg bg-secondary">
+									<u>'.$reponseTypeDebours['nom_t_deb'].'</u>
+								</th>
+							</tr>
+							<div>';
+				?>
+				<?php 
+				$requeteDebours = $connexion-> prepare("SELECT deb.abr_deb AS abr_deb, 
+														UPPER(REPLACE(deb.nom_deb, '\'', '')) AS nom_deb, 
+														deb.id_deb AS id_deb,
+														af.tva AS tva, af.usd AS usd, af.montant AS montant,
+														af.unite AS unite
+													FROM debours deb, aff_debours_facturation_licence_client af
+													WHERE deb.id_t_deb = ?
+														AND deb.id_deb = af.id_deb
+														AND af.id_mod_lic = ?
+														AND af.id_cli = ?
+													ORDER BY deb.id_deb ASC");
+				$requeteDebours-> execute(array($reponseTypeDebours['id_t_deb'], $entree['id_mod_lic'], $entree['id_cli']));
+				while($reponseDebours = $requeteDebours-> fetch()){
+					$compteur++;
+					$unite = '1';
+					$montant = $reponseDebours['montant'];
+					$select_monnaie = '';
+					$select_tva = '';
+
+					//Unite
+					if (empty($reponseDebours['unite']) || $reponseDebours['unite']=='') {
+						$unite = $this-> getLicence($num_lic)['poids'];
+						$reponseDebours['unite'] = 'Poids';
+					}else {
+						$unite = $this-> getNbreDossierLicence($num_lic);
+					}
+
+					//Monnaie
+					if ($reponseDebours['usd']=='1') {
+						$select_monnaie = '<option value="1">USD</option><option value="0">CDF</option>';
+					}else{
+						$select_monnaie = '<option value="0">CDF</option><option value="1">USD</option>';
+					}
+
+					//TVA
+					if ($reponseDebours['tva']=='1') {
+						$select_tva = '<option value="1">YES</option><option value="0">NO</option>';
+					}else{
+						$select_tva = '<option value="0">NO</option><option value="1">YES</option>';
+					}
+
+					//RLS 140$ par Escieu
+					if ($reponseDebours['id_deb']==3) {
+
+						// $unite = 140;
+
+					}
+					else if ($reponseDebours['id_deb'] == 7) { //GOV Tax 50$/T
+						
+						$montant = $this-> getLicence($num_lic)['poids']*50;
+
+					}
+					else if ($reponseDebours['id_deb'] == 5) { //FERE 3$/T
+						
+						$montant = $this-> getLicence($num_lic)['poids']*3;
+
+					}
+					else if ($reponseDebours['id_deb'] == 6) { //LMC 5$/T
+						
+						$montant = $this-> getLicence($num_lic)['poids']*5;
+
+					}
+					else if ($reponseDebours['id_deb'] == 11 ) { //CEEC 300
+						
+						$montant = $this-> getNbreDossierLicence($num_lic)*300;
+
+					}
+					else if ($reponseDebours['id_deb'] == 12) { //CEEC 450
+						
+						// $montant = 450;
+
+					}
+
+					$debours .= '<tr>
+									<td width="10%">
+										<input type="hidden" id="id_deb_'.$compteur.'" name="id_deb_'.$compteur.'" value="'.$reponseDebours['id_deb'].'">
+										'.$reponseDebours['abr_deb'].'
+									</td>
+									<td width="50%">
+										'.$reponseDebours['nom_deb'].'
+									</td>
+									<td>
+										'.$reponseDebours['unite'].'
 									</td>
 									<td><input type="number" step="0.001" value="'.$unite.'" name="unite_'.$compteur.'" id="unite_'.$compteur.'" class="text-center"></td>
 									<td><input type="number" step="0.001" value="'.$montant.'" name="montant_'.$compteur.'" id="montant_'.$compteur.'" class="text-center"></td>
