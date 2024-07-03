@@ -18,7 +18,7 @@
         <div class="row">
 
           <div class="col-md-12">
-            <span class="text-md font-weight-bold">Group by Licenses</span>
+            <span class="text-md font-weight-bold">Invoicing for Files Grouped by Licenses</span>
             <table class="table table-bordered table-striped text-nowrap table-hover table-sm small table-head-fixed table-dark">
               <thead>
                   <tr>
@@ -34,24 +34,7 @@
               </tbody>
             </table>
           </div>
-
-          <!-- <div class="col-md-6">
-            <span class="text-md font-weight-bold">Group by Declaration Date</span>
-            <table class="table table-bordered table-striped text-nowrap table-hover table-sm small table-head-fixed table-dark">
-              <thead>
-                  <tr>
-                      <th>#</th>
-                      <th>Commodity</th>
-                      <th>Transport</th>
-                      <th>Declaration Date</th>
-                      <th>Files</th>
-                      <th>Action</th>
-                  </tr>
-              </thead>
-              <tbody id="tableau_modele_facture_2">
-              </tbody>
-            </table>
-          </div> -->
+          <div class="col-md-12" id="modal_facture_licence_globale"></div>
         </div>
       </div>
       <!-- <div class="modal-footer justify-content-between">
@@ -296,7 +279,8 @@
             window.location="../deconnexion.php";
           }else{
             $('#tableau_modele_facture').html(data.tableau_modele_facture);
-            $('#tableau_modele_facture_2').html(data.tableau_modele_facture_2);
+            // $('#tableau_modele_facture_2').html(data.tableau_modele_facture_2);
+            $('#modal_facture_licence_globale').html(data.modal_facture_licence_globale);
             $('#modal_facture').modal("show");
           }
         }
