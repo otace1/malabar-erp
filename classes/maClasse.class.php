@@ -1480,6 +1480,19 @@
 			$requete-> execute(array($entree['nom_class'], $entree['id_cat_cmpte'], $entree['id_class']));
 		}
 		
+		public function edit_note_debit($ref_note_old, $date_create, $ref_note_new){
+			include('connexion.php');
+
+			$entree['ref_note_old'] = $ref_note_old;
+			$entree['date_create'] = $date_create;
+			$entree['ref_note_new'] = $ref_note_new;
+
+			$requete = $connexion-> prepare('UPDATE note_debit
+												SET date_create = ?, ref_note=?
+												WHERE ref_note = ?');
+			$requete-> execute(array($entree['date_create'], $entree['ref_note_new'], $entree['ref_note_old']));
+		}
+		
 		public function editJournal($id_jour, $nom_jour){
 			include('connexion.php');
 
@@ -57870,7 +57883,7 @@
 									                </button> <button class=\"btn btn-xs bg-primary square-btn-adjust\" onclick=\"validerNoteDebit(\'',note.ref_note,'\');\" title=\"Validate\">
 									                    <i class=\"fas fa-check\"></i> 
 									                </button> 
-									                <button class=\"btn btn-xs bg-warning square-btn-adjust\" onclick=\"modal_edit_note_debit(\'',note.ref_note,'\');\" title=\"Edit\">
+									                <button class=\"btn btn-xs bg-warning square-btn-adjust\" onclick=\"modal_edit_note_debit(\'',note.ref_note,'\', \'',note.date_create,'\');\" title=\"Edit\">
 									                    <i class=\"fas fa-edit\"></i> 
 									                </button>
 									                <button class=\"btn btn-xs bg-danger square-btn-adjust\" onclick=\"supprimerFacture(\'',note.ref_note,'\');\" title=\"Delete\">
@@ -57909,7 +57922,7 @@
 													CONCAT('<button class=\"btn btn-xs bg-info square-btn-adjust\" onclick=\"window.open(\'',mnd.view_note,'?ref_note=',note.ref_note,'\',\'pop3\',\'width=1000,height=800\');\" title=\"View note\">
 											                    <i class=\"fas fa-eye\"></i> 
 											                </button>
-									                <button class=\"btn btn-xs bg-warning square-btn-adjust\" onclick=\"modal_edit_note_debit(\'',note.ref_note,'\');\" title=\"Edit\">
+									                <button class=\"btn btn-xs bg-warning square-btn-adjust\" onclick=\"modal_edit_note_debit(\'',note.ref_note,'\', \'',note.date_create,'\');\" title=\"Edit\">
 									                    <i class=\"fas fa-edit\"></i> 
 									                </button>') AS action,
 													(
