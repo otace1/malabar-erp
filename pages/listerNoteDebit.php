@@ -231,8 +231,9 @@
 
 <div class="modal fade" id="modal_edit_note_debit">
   <div class="modal-dialog modal-lg">
-    <!-- <form id="edit_note_debit_form" method="POST" action="" data-parsley-validate enctype="multipart/form-data"> -->
+    <form id="edit_note_debit_form" method="POST" action="" data-parsley-validate enctype="multipart/form-data">
       <input type="hidden" name="operation" id="operation" value="edit_note_debit">
+      <input type="hidden" name="ref_note_old" id="ref_note_old">
     <div class="modal-content">
       <div class="modal-header ">
         <h4 class="modal-title"><i class="fa fa-edit"></i> Edit Debit Note</h4>
@@ -244,8 +245,13 @@
         <div class="row">
 
           <div class="col-md-4">
-            <label for="x_card_code" class="control-label mb-1">Debit Note Ref.</label>
-            <input type="text" id="ref_note_edit" class="form-control form-control-sm cc-exp bg-dark" disabled>
+            <label for="ref_note_edit" class="control-label mb-1">Debit Note Ref.</label>
+            <input type="text" id="ref_note_edit" name="ref_note" class="form-control form-control-sm cc-exp bg-dark" required>
+          </div>
+
+          <div class="col-md-4">
+            <label for="date_create_edit" class="control-label mb-1">Date</label>
+            <input type="datetime-local" id="date_create_edit" name="date_create" class="form-control form-control-sm cc-exp">
           </div>
 
           <div class="col-md-12">
@@ -271,12 +277,12 @@
           </div>
         </div>
       </div>
-      <!-- <div class="modal-footer justify-content-between">
+      <div class="modal-footer justify-content-between">
         <button type="button" class="btn-xs btn-danger" data-dismiss="modal">Cancelled</button>
         <button type="submit" name="ok" class="btn-xs btn-primary">Submit</button>
-      </div> -->
+      </div>
     </div>
-    <!-- </form> -->
+    </form>
     <!-- /.modal-content -->
   </div>
   <!-- /.modal-dialog -->
@@ -415,13 +421,13 @@
     }
   }
 
-  function modal_edit_note_debit(ref_note){
+  function modal_edit_note_debit(ref_note, date_create){
 
     $('#spinner-div').show();
     $.ajax({
       type: "POST",
       url: "ajax.php",
-      data: {ref_note: ref_note, operation: 'modal_edit_note_debit'},
+      data: {ref_note: ref_note, date_create: date_create, operation: 'modal_edit_note_debit'},
       dataType:"json",
       success:function(data){
         if (data.logout) {
@@ -429,6 +435,9 @@
           window.location="../deconnexion.php";
         }else{
           $('#ref_note_edit').val(ref_note);
+          $('#ref_note_old').val(ref_note);
+          // $('#label_ref_note').val(ref_note);
+          $('#date_create_edit').val(date_create);
           $('#detail_debit_note').html(data.detail_debit_note);
           calculOtherFee();
           $('#modal_edit_note_debit').modal('show');

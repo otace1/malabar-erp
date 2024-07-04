@@ -101,7 +101,7 @@
           </div>
           <div class="col-md-2">
             <div class="form-group">
-              <label for="inputEmail3" class="col-form-label">Horse</label>
+              <label for="inputEmail3" class="col-form-label">Horse/Wagon/AWB/Barge</label>
               <input type="text" class="form-control form-control-sm" name="horse" id="horse" onblur="maj_horse(id_dos.value, this.value)">
             </div>
           </div>
@@ -261,9 +261,9 @@
               <input type="number" step="0.0001" class="form-control form-control-sm" name="roe_decl" id="roe_decl_edit" onblur="maj_roe_decl(id_dos_edit.value, this.value); detail_invoice_acid(ref_fact_edit.value);">
             </div>
           </div>
-          <div class="col-md-2">
+          <div class="col-md-3">
             <div class="form-group">
-              <label for="inputEmail3" class="col-form-label">Horse</label>
+              <label for="inputEmail3" class="col-form-label">Horse/Wagon/AWB/Barge</label>
               <input type="text" class="form-control form-control-sm" name="horse" id="horse_edit" onblur="maj_horse(id_dos_edit.value, this.value)">
             </div>
           </div>

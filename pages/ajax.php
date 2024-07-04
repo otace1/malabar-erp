@@ -2832,6 +2832,13 @@
 
   		echo json_encode($reponse);
 
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='edit_note_debit'){
+
+  		$maClasse-> edit_note_debit($_POST['ref_note_old'], $_POST['date_create'], $_POST['ref_note']);
+  		$reponse['message'] = 'Done!';
+
+  		echo json_encode($reponse);
+
 	}elseif(isset($_POST['operation']) && $_POST['operation']=='edit_detail_depense'){
 
   		$maClasse-> edit_detail_depense($_POST['ref_note'], $_POST['id_dep_dos'], $_POST['montant']);
