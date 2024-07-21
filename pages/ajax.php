@@ -264,7 +264,17 @@
 	  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 9, $_POST['occ_samp_'.$i], $_POST['occ_samp_tva_'.$i], '1');
 	  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 10, $_POST['occ_cgea_'.$i], $_POST['occ_cgea_tva_'.$i], '1');
 	  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 11, $_POST['ceec_30_'.$i], $_POST['ceec_30_tva_'.$i], '1');
-	  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 12, $_POST['ceec_60_'.$i], $_POST['ceec_60_tva_'.$i], '1');
+	  					// Test CEEC Impala 
+	  					$dossier = $maClasse-> getDossier($_POST['id_dos_'.$i]);
+	  					if (!empty($maClasse-> verifierFonctionnalite($dossier['id_cli'], 1, $dossier['id_mod_lic'], $dossier['id_mod_trans'], $dossier['id_march']))) {
+	  						
+	  						$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 11, 300, '0', '1');
+	  						$maClasse-> creerDepenseDossier(8, $_POST['id_dos_'.$i], date('Y-m-d'), 150, 'ANNICK');
+
+	  					}else{
+	  						$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 12, $_POST['ceec_60_'.$i], $_POST['ceec_60_tva_'.$i], '1');
+	  					}
+	  					
 	  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 13, $_POST['dgda_seal_'.$i], $_POST['dgda_seal_tva_'.$i], '1');
 	  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 172, $_POST['dmc_ce_'.$i], $_POST['dmc_ce_tva_'.$i], '1');
 	  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 173, $_POST['dilolo_'.$i], $_POST['dilolo_tva_'.$i], '1');
@@ -2952,6 +2962,12 @@
 	}elseif(isset($_POST['operation']) && $_POST['operation']=='afficherDossierNewNoteDebitOther'){
 
   		$reponse['afficherDossierNewNoteDebitOther'] = $maClasse-> afficherDossierNewNoteDebitOther($_POST['id_cli'], $_POST['id_mod_lic'], $_POST['id_dep']);
+
+  		echo json_encode($reponse);
+
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='afficherDossierNewNoteDebitCEECImpala'){
+
+  		$reponse['afficherDossierNewNoteDebitCEECImpala'] = $maClasse-> afficherDossierNewNoteDebitCEECImpala($_POST['id_cli'], $_POST['id_mod_lic'], $_POST['id_dep']);
 
   		echo json_encode($reponse);
 
