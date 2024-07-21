@@ -7825,6 +7825,73 @@
 			return $tbl;
 		}
 
+		public function getDossierNoteDebitCEECImpala($ref_note){
+			include('connexion.php');
+			$entree['ref_note'] = $ref_note;
+
+			$tbl = '';
+			$compteur=0;
+			$liquidation_usd=0;
+			$liquidation_cdf=0;
+			$total_poids = 0;
+			$requete = $connexion-> prepare('SELECT dos.ref_dos AS ref_dos,
+													dos.destination AS destination,
+													dos.transporter AS transporter,
+													dos.horse AS horse,
+													dos.trailer_1 AS trailer_1,
+													dos.trailer_2 AS trailer_2,
+													dos.num_lot AS num_lot,
+													dos.poids AS poids,
+													dos.ref_liq AS ref_liq,
+													dos.ref_quit AS ref_quit,
+													dos.roe_decl AS roe_decl,
+													dos.montant_liq AS montant_liq,
+													DATE_FORMAT(dos.load_date, "%d/%m/%Y") AS load_date,
+													DATE_FORMAT(dos.date_liq, "%d/%m/%Y") AS date_liq,
+													DATE_FORMAT(dos.date_quit, "%d/%m/%Y") AS exit_drc,
+													-- IF(dos.cleared="1",
+													-- 	"CLEARED",
+													-- 	"TRANSIT") AS cleared
+													"CLEARED" AS cleared
+												FROM dossier dos, detail_note_debit det, depense_dossier depdos
+												WHERE dos.id_dos = depdos.id_dos
+													AND depdos.id_dep_dos = det.id_dep_dos
+													AND det.ref_note = ?
+												GROUP BY dos.id_dos');
+			$requete-> execute(array($entree['ref_note']));
+			while($reponse = $requete-> fetch()){
+				$compteur++;
+				$total_poids+=$reponse['poids'];
+				$tbl .= '
+						<tr>
+							<td width="3%" style="text-align: center; border: 1 solid black; font-size: 7px;">'.$compteur.'</td>
+							<td width="11%" style="text-align: center; border: 1 solid black; font-size: 7px;">'.$reponse['ref_dos'].'</td>
+							<td width="10%" style="text-align: center; border: 1 solid black; font-size: 7px;">'.$reponse['destination'].'</td>
+							<td width="10%" style="text-align: center; border: 1 solid black; font-size: 7px;">'.$reponse['transporter'].'</td>
+							<td width="9%" style="text-align: center; border: 1 solid black; font-size: 7px;">'.$reponse['horse'].'</td>
+							<td width="8%" style="text-align: center; border: 1 solid black; font-size: 7px;">'.$reponse['trailer_1'].'</td>
+							<td width="8%" style="text-align: center; border: 1 solid black; font-size: 7px;">'.$reponse['trailer_2'].'</td>
+							<td width="10%" style="text-align: center; border: 1 solid black; font-size: 7px;">'.$reponse['num_lot'].'</td>
+							<td width="7%" style="text-align: center; border: 1 solid black; font-size: 7px;">'.number_format($reponse['poids'], 3, ',', '.').'</td>
+							<td width="7%" style="text-align: center; border: 1 solid black; font-size: 7px;">'.$reponse['load_date'].'</td>
+							<td width="10%" style="text-align: center; border: 1 solid black; font-size: 7px;">'.$reponse['exit_drc'].'</td>
+							<td width="7%" style="text-align: center; border: 1 solid black; font-size: 7px;">'.$reponse['cleared'].'</td>
+						</tr>
+					';
+
+			}$requete-> closeCursor();
+
+			$tbl .= '
+					<tr>				
+						<td width="69%" style="text-align: center; border: 1 solid black; font-size: 7px;"></td>
+						<td width="7%" style="text-align: center; border: 1 solid black; font-size: 7px;">'.number_format($total_poids, 3, ',', '.').'</td>
+						<td width="24%" style="text-align: center; border: 1 solid black; font-size: 7px;"></td>
+					</tr>
+				';
+
+			return $tbl;
+		}
+
 		public function getDossierFactureExportSingle5($ref_fact){
 			include('connexion.php');
 			$entree['ref_fact'] = $ref_fact;
@@ -11580,6 +11647,165 @@
 			return $tbl;
 		}
 
+		public function getDetailNoteDebitCEECImpala($ref_note){
+			include('connexion.php');
+			$entree['ref_note'] = $ref_note;
+
+			$total_cost = 0;
+			$montant_ht = 0;
+			$tva = 0;
+			$montant_ttc = 0;
+
+			$unite = 0;
+			$cost = 0;
+			$compteur = 0;
+
+			$tbl = '
+					<tr>
+						<td style="text-align: left; border-left: 1px solid black; border-right: 0.5px solid black; font-size: 8px;" width="50%"></td>
+						<td style="text-align: center; border-right: 0.5px solid black; font-size: 8px;" width="10%"></td>
+						<td style="text-align: center; border-right: 0.5px solid black; font-size: 8px;" width="15%"></td>
+						<td style="text-align: center; border-right: 0.5px solid black; font-size: 8px;" width="10%"></td>
+						<td style="text-align: center; border-right: 1px solid black; font-size: 7px;" width="15%"></td>
+					</tr>
+					';
+			$requete = $connexion-> prepare("SELECT CONCAT('<b>',dos.ref_dos, '</b> | Lot Num.: <b>',dos.num_lot,'</b>') AS ref_dos,
+													det.montant AS montant_ht,
+													IF(det.tva='1',
+														det.montant*0.16,
+														0
+													) AS tva,
+													IF(det.tva='1',
+														det.montant*1.16,
+														det.montant
+													) AS montant_ttc,
+													UPPER(CONCAT(
+														IF(dos.horse IS NOT NULL,
+															dos.horse,
+															''),
+														IF(dos.trailer_1 IS NOT NULL,
+															CONCAT(' / ',dos.trailer_1),
+															''),
+														IF(dos.trailer_1 IS NOT NULL,
+															CONCAT(' / ',dos.trailer_2),
+															'')
+														)) AS truck,
+													dos.container AS container,
+													dos.poids AS poids,
+													-- UPPER(CONCAT(
+													-- 	IF(dos.horse IS NOT NULL,
+													-- 		dos.horse,
+													-- 		''),
+													-- 	IF(LENGTH(REPLACE(dos.trailer_1, ' ', ''))>5,
+													-- 		CONCAT(' / ',dos.trailer_1),
+													-- 		''),
+													-- 	IF(LENGTH(REPLACE(dos.trailer_1, ' ', ''))>5,
+													-- 		CONCAT(' / ',dos.trailer_2),
+													-- 		'')
+													-- 	)) AS truck,
+													dos.road_manif AS road_manif
+												FROM dossier dos, detail_note_debit det, depense_dossier depdos
+												WHERE dos.id_dos = depdos.id_dos
+													AND depdos.id_dep_dos = det.id_dep_dos
+													AND det.ref_note = ?");
+			$requete-> execute(array($entree['ref_note']));
+			while($reponse = $requete-> fetch()){
+				
+				$montant_ht += $reponse['montant_ht'];
+				$tva += $reponse['tva'];
+				$montant_ttc += $reponse['montant_ttc'];
+				$compteur++;
+
+				$tbl .= '
+						<tr>
+							<td style="text-align: left; border-left: 1px solid black; border-right: 0.5px solid black; font-size: 6px;" colspan="2" width="50%">'.$compteur.') '
+								.$reponse['ref_dos'].'</td>
+							<td style="text-align: center; border-right: 0.5px solid black; font-size: 6.5px;" width="10%">1</td>
+							<td style="text-align: center; border-right: 0.5px solid black; font-size: 6.5px;" width="15%">'
+								.number_format($reponse['montant_ht'], 2, ',', '.').
+							'&nbsp;&nbsp;</td>
+							<td style="text-align: center; border-right: 0.5px solid black; font-size: 6.5px;" width="10%">'
+								.number_format($reponse['tva'], 2, ',', '.').
+							'&nbsp;&nbsp;</td>
+							<td style="text-align: right; border-right: 1px solid black; font-size: 6.5px;" width="15%">'
+								.number_format($reponse['montant_ttc'], 2, ',', '.').
+							'&nbsp;&nbsp;</td>
+						</tr>
+					';
+
+			}$requete-> closeCursor();
+
+			if(!empty($this-> getNote($entree['ref_note'])['label_other_fee'])){
+				$montant_ht += $this-> getNote($entree['ref_note'])['other_fee'];
+				$montant_ttc += $this-> getNote($entree['ref_note'])['other_fee'];
+				$tbl .= '
+						<tr>
+							<td style="text-align: left; border-left: 1px solid black; border-right: 0.5px solid black; font-size: 6px;" colspan="2" width="50%">'.$this-> getNote($entree['ref_note'])['label_other_fee'].'</td>
+							<td style="text-align: center; border-right: 0.5px solid black; font-size: 6.5px;" width="10%">'.$this-> getNote($entree['ref_note'])['label_unite'].'</td>
+							<td style="text-align: center; border-right: 0.5px solid black; font-size: 6.5px;" width="15%">'
+								.number_format($this-> getNote($entree['ref_note'])['base'], 2, ',', '.').
+							'&nbsp;&nbsp;</td>
+							<td style="text-align: center; border-right: 0.5px solid black; font-size: 6.5px;" width="10%">'
+								.number_format(0, 2, ',', '.').
+							'&nbsp;&nbsp;</td>
+							<td style="text-align: right; border-right: 1px solid black; font-size: 6.5px;" width="15%">'
+								.number_format($this-> getNote($entree['ref_note'])['other_fee'], 2, ',', '.').
+							'&nbsp;&nbsp;</td>
+						</tr>
+					';
+			}
+
+			$tbl .='
+					<tr>
+						<td style="text-align: left; border-left: 1px solid black; border-right: 0.5px solid black; border-bottom: 0.5px solid black; font-size: 8px;" width="50%"></td>
+						<td style="text-align: center; border-right: 0.5px solid black; border-bottom: 0.5px solid black; font-size: 8px;" width="10%"></td>
+						<td style="text-align: center; border-right: 0.5px solid black; border-bottom: 0.5px solid black; font-size: 8px;" width="15%"></td>
+						<td style="text-align: center; border-right: 0.5px solid black; border-bottom: 0.5px solid black; font-size: 8px;" width="10%"></td>
+						<td style="text-align: center; border-right: 1px solid black; border-bottom: 0.5px solid black; font-size: 7px;" width="15%"></td>
+					</tr>
+					';
+			$tbl .= '
+					<tr>
+						<td style="text-align: center; border-right: 0.5px solid black; border: 0.5px solid black; font-weight: bold; background-color: rgb(192,192,192); font-size: 8px;" width="50%">TOTAL &nbsp;&nbsp;
+						</td>
+						<td style="text-align: center; border-right: 0.5px solid black; border: 0.5px solid black; font-weight: bold; font-size: 8px;" width="10%">
+						</td>
+						<td style="text-align: center; border-right: 0.5px solid black; border-bottom: 0.5px solid black; font-weight: bold;" width="15%">'
+							.number_format($montant_ht, 2, ',', '.').
+						'&nbsp;&nbsp;</td>
+						<td style="text-align: center; border-right: 0.5px solid black; border-bottom: 0.5px solid black; font-weight: bold;" width="10%">'
+							.number_format($tva, 2, ',', '.').
+						'&nbsp;&nbsp;</td>
+						<td style="text-align: right; border-right: 1px solid black; border-bottom: 0.5px solid black; font-weight: bold; " width="15%">'
+							.number_format($montant_ttc, 2, ',', '.').
+						'&nbsp;&nbsp;</td>
+					</tr>
+					<tr><td width="100%"></td></tr>
+					<tr>
+						<td width="60%"></td>
+						<td style="text-align: right; border: 0.5px solid black; font-weight: bold;" width="25%">Total excl. TVA&nbsp;&nbsp;</td>
+						<td style="text-align: right; border: 1px solid black; font-weight: bold; " width="15%">'
+							.number_format($montant_ht, 2, ',', '.').
+						'&nbsp;&nbsp;</td>
+					</tr>
+					<tr>
+						<td width="60%"></td>
+						<td style="text-align: right; border: 0.5px solid black; font-weight: bold;" width="25%">TVA 16%&nbsp;&nbsp;</td>
+						<td style="text-align: right; border: 1px solid black; font-weight: bold; " width="15%">'
+							.number_format($tva, 2, ',', '.').
+						'&nbsp;&nbsp;</td>
+					</tr>
+					<tr>
+						<td width="60%"></td>
+						<td style="text-align: right; border: 0.5px solid black; font-weight: bold;" width="25%">Grand Total&nbsp;&nbsp;</td>
+						<td style="text-align: right; border: 1px solid black; font-weight: bold; " width="15%">'
+							.number_format($montant_ttc, 2, ',', '.').
+						'&nbsp;&nbsp;</td>
+					</tr>';
+
+			return $tbl;
+		}
+
 		public function getTotalFactureExportSingle($ref_fact){
 			include('connexion.php');
 			$entree['ref_fact'] = $ref_fact;
@@ -14163,6 +14389,66 @@
 								<td>'.$compteur.'</td>
 								<td>'.$reponse['ref_dos'].'</td>
 								<td>'.$reponse['po_ref'].'</td>
+								<td>'.$reponse['nom_dep'].'</td>
+								<td class="text-center"><input type="number" step="0.001" class="text-right " name="montant_'.$compteur.'" value="'.$reponse['montant'].'"></td>
+								<td class="text-center">
+									<select  name="tva_'.$compteur.'"  id="tva_'.$compteur.'" class="">
+										<option value="0">NO</option>
+										<option value="1">YES</option>
+									</select>
+								</td>
+							</tr>';
+
+			}$requete-> closeCursor();
+
+			$tableau .='<input type="hidden" name="nbre" value="'.$compteur.'">';
+
+			return $tableau;
+
+		}
+
+		public function afficherDossierNewNoteDebitCEECImpala($id_cli, $id_mod_lic, $id_dep){
+			include("connexion.php");
+			$entree['id_mod_lic'] = $id_mod_lic;
+			$entree['id_cli'] = $id_cli;
+			$entree['id_dep'] = $id_dep;
+			// $entree['po_ref_2'] = $po_ref_2;
+
+			$compteur=0;
+
+			$tableau = '';
+
+
+			$requete = $connexion-> prepare("SELECT dep.nom_dep AS nom_dep,
+													dos.po_ref AS po_ref,
+													dos.ref_dos AS ref_dos,
+													dos.num_lot AS num_lot,
+													dos.poids AS poids,
+													dep.nom_dep AS nom_dep,
+													depdos.id_dep_dos AS id_dep_dos,
+													ROUND(depdos.montant, 2) AS montant
+												FROM dossier dos, depense_dossier depdos, depense dep
+												WHERE dos.id_dos = depdos.id_dos
+													AND depdos.id_dep = dep.id_dep
+													AND dep.id_dep = ?
+													AND dos.id_mod_lic = ?
+													-- AND SUBSTRING(dos.po_ref, 1, 3) = ?
+													AND depdos.id_dep_dos NOT IN (
+															SELECT id_dep_dos 
+															 FROM detail_note_debit 
+														)
+												ORDER BY dos.id_dos
+												LIMIT 0, 10");
+			$requete-> execute(array($entree['id_dep'], $entree['id_mod_lic']));
+			while ($reponse = $requete-> fetch()) {
+
+				$compteur++;
+				$tableau .='<tr>
+								<input type="hidden" name="id_dep_dos_'.$compteur.'" value="'.$reponse['id_dep_dos'].'">
+								<td>'.$compteur.'</td>
+								<td>'.$reponse['ref_dos'].'</td>
+								<td>'.$reponse['num_lot'].'</td>
+								<td class="text-right">'.number_format($reponse['poids'], 2, ',', ' ').'</td>
 								<td>'.$reponse['nom_dep'].'</td>
 								<td class="text-center"><input type="number" step="0.001" class="text-right " name="montant_'.$compteur.'" value="'.$reponse['montant'].'"></td>
 								<td class="text-center">
@@ -25955,6 +26241,29 @@
 			?>
 			</tr>
 			<?php */
+		}
+
+		public function verifierFonctionnalite($id_cli, $id_fonct, $id_mod_lic, $id_mod_trans, $id_march){
+			include('connexion.php');
+
+			$entree['id_fonct'] = $id_fonct;
+			$entree['id_cli'] = $id_cli;
+			$entree['id_mod_lic'] = $id_mod_lic;
+			$entree['id_mod_trans'] = $id_mod_trans;
+			$entree['id_march'] = $id_march;
+
+			$requete = $connexion-> prepare('SELECT *
+												FROM aff_fonctionnalite_client
+												WHERE id_cli = ?
+													AND id_fonct = ?
+													AND id_mod_lic = ?
+													AND id_mod_trans = ?
+													AND id_march = ?');
+			$requete-> execute(array($entree['id_cli'], $entree['id_fonct'], $entree['id_mod_lic'], $entree['id_mod_trans'], $entree['id_march']));
+
+			$reponse = $requete-> fetch();
+
+			return $reponse;
 		}
 
 		public function verifierDoublonFacture($ref_fact){
