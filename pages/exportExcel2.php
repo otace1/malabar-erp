@@ -1124,7 +1124,7 @@ while ($reponseModeTransport = $requeteModeTransport-> fetch()) {
 												d.cleared AS cleared,
 
 												
-												IF(d.id_mod_lic='2' AND d.id_mod_trans='1',
+												IF(d.id_mod_lic='2' AND d.id_mod_trans='1' AND d.cleared<>'2',
 													IF(d.date_crf IS NULL AND d.date_ad IS NULL AND d.date_assurance IS NULL,
 												      'AWAITING CRF/AD/INSURRANCE',
 												      IF(d.date_crf IS NULL AND d.date_ad IS NULL AND d.date_assurance IS NOT NULL,
