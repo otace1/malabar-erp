@@ -23,8 +23,19 @@
                 echo 'TABLEAU DE BORD FACTURE '.$maClasse-> getNomModeleLicence($_GET['id_mod_lic_fact']);
               }
             ?>
+            | <span id="label_monitoring"></span>
             <span class="float-right">
               <!-- <button class="btn btn-xs btn-info" ></button> -->
+              <button class="btn btn-primary btn-xs" onclick="$('#modal_search').modal('show');"><i class="fa fa-search"></i> Search</button>
+              <div class="btn-group">
+                <button type="button" class="btn btn-xs btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  <i class="fa fa-list"></i> View Other Report
+                </button>
+                <div class="dropdown-menu">
+                  <a class="dropdown-item" href="#" onclick="window.open('popFilesOgefrem.php?debut='+$('#debut').val()+'&fin='+$('#fin').val()+'&id_cli='+$('#id_cli').val(),'pop1','width=1200,height=700');">OGEFREM</a>
+                  <a class="dropdown-item" href="#" onclick="window.open('popFilesLMC.php?debut='+$('#debut').val()+'&fin='+$('#fin').val()+'&id_cli='+$('#id_cli').val(),'pop1','width=1200,height=700');">LMC</a>
+                </div>
+              </div>
               <div class="btn-group">
                 <button type="button" class="btn btn-xs btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                   <i class="fa fa-list"></i> View all files
@@ -177,26 +188,12 @@
                   <div class="col-12">
                     <div class="card">
                       <div class="card-header">
-                        <!-- <h5 class="card-title" style="font-weight: bold;">
-                          Monitoring
-                        </h5> -->
-                        
-<!-- 
-                        <div class="card-tools">
-                          <div class="row">
-                            <div class="col-md-4">
-                              <label for="x_card_code" class="control-label mb-1">Begin</label>
-                              <input id="debut" type="date" class="form-control cc-exp">
-                            </div>
-
-                          </div>
-                        </div> -->
-                        <button class="btn btn-primary btn-xs" onclick="$('#modal_search').modal('show');"><i class="fa fa-search"></i> Search</button>
+                        Users Report
                       </div>    
                       <!-- /.card-header -->
 
                       <div class="card-body table-responsive p-0">
-                        <span id="label_monitoring"></span>
+                        
                         <table class=" table table-dark table-head-fixed table-bordered table-hover text-nowrap table-sm">
                           <thead>
                             <tr class="bg bg-dark">

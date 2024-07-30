@@ -2728,6 +2728,14 @@
 
 		echo json_encode($maClasse-> dossier_ogefrem($_POST['id_cli']));
 
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='dossier_ogefrem_dashboard'){ 
+
+		echo json_encode($maClasse-> dossier_ogefrem_dashboard($_POST['debut'], $_POST['fin'], $_POST['id_cli']));
+
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='dossier_lmc_dashboard'){ 
+
+		echo json_encode($maClasse-> dossier_lmc_dashboard($_POST['debut'], $_POST['fin'], $_POST['id_cli']));
+
 	}elseif(isset($_POST['operation']) && $_POST['operation']=='modal_worksheet'){ 
 
 		$response = $maClasse-> getDossier($_POST['id_dos']);

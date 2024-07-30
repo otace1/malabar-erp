@@ -45,14 +45,16 @@
 
               <!-- /.card-header -->
               <div class="card-body table-responsive p-0 small">
-                <table id="dossier_ogefrem" class="table table-bordered table-hover text-nowrap table-head-fixed">
+                <table id="dossier_ogefrem" class="table table-bordered table-hover text-nowrap table-head-fixed table-sm">
                   <thead>
                     <tr class="">
                       <th style="" width="5px">#</th>
                       <th style="">Ref.Dossier</th>
                       <th>Client</th>
                       <th>Product</th>
+                      <th>Mode of Transport</th>
                       <th>Truck/Wagon</th>
+                      <th>Loading Date</th>
                       <th>OGEFREM Inv.Ref.</th>
                       <th>LMC Id.</th>
                       <th>Action</th>
@@ -267,7 +269,13 @@
       {"data":"nom_march",
         className: 'dt-body-center'
       },
+      {"data":"nom_mod_trans",
+        className: 'dt-body-center'
+      },
       {"data":"truck",
+        className: 'dt-body-center'
+      },
+      {"data":"load_date",
         className: 'dt-body-center'
       },
       {"data":"ogefrem_ref_fact",
