@@ -19771,13 +19771,31 @@
 														'Un, unit',
 														'UP(T ou M3)'
 													) AS ogrefrem_unit,
-													IF(dos.pied_container IN ('10', '20', '40'),
-														dos.pied_container,
-														3
+													IF(dos.pied_container='10',
+														25,
+														IF(dos.pied_container='20', 
+															50,
+															IF(dos.pied_container='30',
+																75,
+																IF(dos.pied_container='40',
+																	100,
+																	3
+																)
+															)
+														)
 													) AS ogrefrem_tax,
-													IF(dos.pied_container IN ('10', '20', '40'),
-														dos.poids*dos.pied_container,
-														dos.poids*3
+													IF(dos.pied_container='10',
+														25,
+														IF(dos.pied_container='20', 
+															50,
+															IF(dos.pied_container='30',
+																75,
+																IF(dos.pied_container='40',
+																	100,
+																	3*dos.poids
+																)
+															)
+														)
 													) AS ogrefrem_amount,
 													DATE_FORMAT(dos.load_date, '%d/%m/%Y') AS load_date,
 													march.nom_march AS nom_march,
