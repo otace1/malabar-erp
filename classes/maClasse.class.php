@@ -19705,7 +19705,9 @@
 													cl.code_cli AS code_cli,
 													dos.ogefrem_ref_fact AS ogefrem_ref_fact,
 													dos.lmc_id AS lmc_id,
+													dos.load_date AS load_date,
 													march.nom_march AS nom_march,
+													mt.nom_mod_trans AS nom_mod_trans,
 													CONCAT(
 														IF(dos.horse IS NOT NULL AND REPLACE(dos.horse, ' ', '') NOT LIKE '',
 															dos.horse,
@@ -19718,13 +19720,183 @@
 															'')
 													) AS truck,
 													CONCAT('<button class=\"btn btn-xs btn-info\" title=\"Feuille de calcul\" onclick=\"modal_edit_ogefrem(\'',dos.id_dos,'\');\"><i class=\"fa fa-edit\"></i></button>') AS btn_action
-												FROM dossier dos, client cl, marchandise march
+												FROM dossier dos, client cl, marchandise march, mode_transport mt
 												WHERE dos.id_cli = cl.id_cli
 													AND dos.id_mod_lic = 1
 													AND dos.id_march = march.id_march
+													AND dos.id_mod_trans = mt.id_mod_trans
 													$sqlClient
 												ORDER BY dos.id_dos DESC");
 			// $requete-> execute(array($entree['id_mod_lic']));
+			while ($reponse = $requete-> fetch()) {
+				$compteur++;
+
+				$reponse['compteur'] = $compteur;
+
+				$rows[] = $reponse;
+			}$requete-> closeCursor();
+
+
+			return $rows;
+
+		}
+
+		public function dossier_ogefrem_dashboard($debut, $fin, $id_cli){
+			include('connexion.php');
+			$entree['debut'] = $debut;
+			$entree['fin'] = $fin;
+
+			if (isset($id_cli) && ($id_cli != '')) {
+				$sqlClient = ' AND dos.id_cli = '.$id_cli;
+			}else{
+				$sqlClient = '';
+			}
+
+			$compteur = 0;
+			$rows = array();
+
+			$requete = $connexion-> prepare("SELECT dos.id_dos AS id_dos,
+													dos.ref_dos AS ref_dos,
+													cl.code_cli AS code_cli,
+													cl.nom_cli AS nom_cli,
+													dos.ogefrem_ref_fact AS ogefrem_ref_fact,
+													dos.lmc_id AS lmc_id,
+													dos.poids AS poids,
+													-- dos.ogrefrem_rubrique AS ogrefrem_rubrique,
+													IF(dos.pied_container IN ('10', '20', '40'),
+														CONCAT('Conteneur ',dos.pied_container),
+														'VRAC 3FT'
+													) AS ogrefrem_rubrique,
+													IF(dos.pied_container IN ('10', '20', '40'),
+														'Un, unit',
+														'UP(T ou M3)'
+													) AS ogrefrem_unit,
+													IF(dos.pied_container IN ('10', '20', '40'),
+														dos.pied_container,
+														3
+													) AS ogrefrem_tax,
+													IF(dos.pied_container IN ('10', '20', '40'),
+														dos.poids*dos.pied_container,
+														dos.poids*3
+													) AS ogrefrem_amount,
+													DATE_FORMAT(dos.load_date, '%d/%m/%Y') AS load_date,
+													march.nom_march AS nom_march,
+													mt.nom_mod_trans AS nom_mod_trans,
+													CONCAT(
+														IF(dos.horse IS NOT NULL AND REPLACE(dos.horse, ' ', '') NOT LIKE '',
+															dos.horse,
+															''),
+														IF(dos.trailer_1 IS NOT NULL AND REPLACE(dos.trailer_1, ' ', '') NOT LIKE '',
+															CONCAT(' / ', dos.trailer_1),
+															''),
+														IF(dos.trailer_2 IS NOT NULL AND REPLACE(dos.trailer_2, ' ', '') NOT LIKE '',
+															CONCAT(' / ', dos.trailer_2),
+															'')
+													) AS truck,
+													fd.ref_fact AS ref_fact,
+													DATE_FORMAT(fd.date_fact, '%d/%m/%Y') AS date_fact,
+													CONCAT('<button class=\"btn btn-xs btn-info\" title=\"Feuille de calcul\" onclick=\"modal_edit_ogefrem(\'',dos.id_dos,'\');\"><i class=\"fa fa-edit\"></i></button>') AS btn_action
+												FROM dossier dos
+													LEFT JOIN client cl
+														ON dos.id_cli = cl.id_cli
+													LEFT JOIN marchandise march
+														ON dos.id_march = march.id_march 
+													LEFT JOIN mode_transport mt
+														ON dos.id_mod_trans = mt.id_mod_trans
+													LEFT JOIN detail_facture_dossier det
+														ON det.id_dos = dos.id_dos
+													LEFT JOIN facture_dossier fd
+														ON det.ref_fact = fd.ref_fact
+												WHERE dos.id_mod_lic = 1
+													AND dos.load_date BETWEEN ? AND ?
+													$sqlClient
+												GROUP BY dos.id_dos");
+			$requete-> execute(array($entree['debut'], $entree['fin']));
+			while ($reponse = $requete-> fetch()) {
+				$compteur++;
+
+				$reponse['compteur'] = $compteur;
+
+				$rows[] = $reponse;
+			}$requete-> closeCursor();
+
+
+			return $rows;
+
+		}
+
+		public function dossier_lmc_dashboard($debut, $fin, $id_cli){
+			include('connexion.php');
+			$entree['debut'] = $debut;
+			$entree['fin'] = $fin;
+
+			if (isset($id_cli) && ($id_cli != '')) {
+				$sqlClient = ' AND dos.id_cli = '.$id_cli;
+			}else{
+				$sqlClient = '';
+			}
+
+			$compteur = 0;
+			$rows = array();
+
+			$requete = $connexion-> prepare("SELECT dos.id_dos AS id_dos,
+													dos.ref_dos AS ref_dos,
+													cl.code_cli AS code_cli,
+													cl.nom_cli AS nom_cli,
+													dos.ogefrem_ref_fact AS ogefrem_ref_fact,
+													dos.lmc_id AS lmc_id,
+													dos.poids AS poids,
+													-- dos.ogrefrem_rubrique AS ogrefrem_rubrique,
+													IF(dos.pied_container IN ('10', '20', '40'),
+														CONCAT('Conteneur ',dos.pied_container),
+														'VRAC 3FT'
+													) AS ogrefrem_rubrique,
+													-- IF(dos.pied_container IN ('10', '20', '40'),
+													-- 	'Un, unit',
+													-- 	'UP(T ou M3)'
+													-- ) AS ogrefrem_unit,
+													'MT' AS lmc_unit,
+													IF(dos.id_march=1,
+														5,
+														8
+													) AS lmc_tax,
+													IF(dos.id_march=1,
+														dos.poids*5,
+														dos.poids*8
+													) AS lmc_amount,
+													DATE_FORMAT(dos.load_date, '%d/%m/%Y') AS load_date,
+													march.nom_march AS nom_march,
+													mt.nom_mod_trans AS nom_mod_trans,
+													CONCAT(
+														IF(dos.horse IS NOT NULL AND REPLACE(dos.horse, ' ', '') NOT LIKE '',
+															dos.horse,
+															''),
+														IF(dos.trailer_1 IS NOT NULL AND REPLACE(dos.trailer_1, ' ', '') NOT LIKE '',
+															CONCAT(' / ', dos.trailer_1),
+															''),
+														IF(dos.trailer_2 IS NOT NULL AND REPLACE(dos.trailer_2, ' ', '') NOT LIKE '',
+															CONCAT(' / ', dos.trailer_2),
+															'')
+													) AS truck,
+													fd.ref_fact AS ref_fact,
+													DATE_FORMAT(fd.date_fact, '%d/%m/%Y') AS date_fact,
+													CONCAT('<button class=\"btn btn-xs btn-info\" title=\"Feuille de calcul\" onclick=\"modal_edit_ogefrem(\'',dos.id_dos,'\');\"><i class=\"fa fa-edit\"></i></button>') AS btn_action
+												FROM dossier dos
+													LEFT JOIN client cl
+														ON dos.id_cli = cl.id_cli
+													LEFT JOIN marchandise march
+														ON dos.id_march = march.id_march 
+													LEFT JOIN mode_transport mt
+														ON dos.id_mod_trans = mt.id_mod_trans
+													LEFT JOIN detail_facture_dossier det
+														ON det.id_dos = dos.id_dos
+													LEFT JOIN facture_dossier fd
+														ON det.ref_fact = fd.ref_fact
+												WHERE dos.id_mod_lic = 1
+													AND dos.load_date BETWEEN ? AND ?
+													$sqlClient
+												GROUP BY dos.id_dos");
+			$requete-> execute(array($entree['debut'], $entree['fin']));
 			while ($reponse = $requete-> fetch()) {
 				$compteur++;
 
