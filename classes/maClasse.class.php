@@ -8757,6 +8757,8 @@
 													(COUNT(dos.id_dos)*80) AS cgea_80,
 													(COUNT(dos.id_dos)*40) AS dgda_seal_40,
 													COUNT(dos.id_dos) AS nbre_dos,
+													dos.id_cli AS id_cli,
+													dos.id_march AS id_march,
 													SUM(
 														IF(dos.poids<30,
 															1,
@@ -8871,6 +8873,10 @@
 				}elseif($reponse['id_deb']=='101'){
 					$unite = number_format($this-> getMontantFactureTypeDeboursSansFinancialCost($ref_fact, '1'), 2, ',', '.');
 					$cost = '1%';
+					$cost_2 = $cost;
+				}elseif($reponse['id_deb']=='13' && $reponse['id_march']=='13' && $reponse['id_cli']=='951'){ // DGDA Seal 4X / BMS Cobalt
+					$unite = 4;
+					$cost = $reponse['ht_usd']/4;
 					$cost_2 = $cost;
 				}elseif($reponse['id_deb']=='13'){ // DGDA Seal 3x
 					$unite = 3;
@@ -20853,12 +20859,17 @@
 						$montant = $this-> getDossier($id_dos)['poids']*5;
 
 					}
-					else if ($reponseDebours['id_deb'] == 11 && $this-> getDossier($id_dos)['poids']<=30) { //CEEC 300
+					else if ($reponseDebours['id_deb'] == 8) { //TAX CONCENTREE
+						
+						$montant = $this-> getDossier($id_dos)['poids']*$reponseDebours['montant'];
+
+					}
+					else if ($reponseDebours['id_deb'] == 11 && $this-> getDossier($id_dos)['poids']<30) { //CEEC 300
 						
 						$montant = 300;
 
 					}
-					else if ($reponseDebours['id_deb'] == 12 && $this-> getDossier($id_dos)['poids']>30) { //CEEC 450
+					else if ($reponseDebours['id_deb'] == 12 && $this-> getDossier($id_dos)['poids']>=30) { //CEEC 450
 						
 						$montant = 450;
 
