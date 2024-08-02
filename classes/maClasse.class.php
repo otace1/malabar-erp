@@ -20854,6 +20854,11 @@
 						$montant = $this-> getDossier($id_dos)['poids']*3;
 
 					}
+					else if ($reponseDebours['id_deb'] == 6 && $reponseDebours['montant']>5) { //LMC
+						
+						$montant = $this-> getDossier($id_dos)['poids']*$reponseDebours['montant'];
+
+					}
 					else if ($reponseDebours['id_deb'] == 6) { //LMC 5$/T
 						
 						$montant = $this-> getDossier($id_dos)['poids']*5;
