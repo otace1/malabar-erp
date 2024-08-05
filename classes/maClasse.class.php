@@ -8874,11 +8874,13 @@
 					$unite = number_format($this-> getMontantFactureTypeDeboursSansFinancialCost($ref_fact, '1'), 2, ',', '.');
 					$cost = '1%';
 					$cost_2 = $cost;
-				}elseif($reponse['id_deb']=='13' && $reponse['id_march']=='13' && $reponse['id_cli']=='951'){ // DGDA Seal 4X / BMS Cobalt
-					$unite = 4;
-					$cost = $reponse['ht_usd']/4;
-					$cost_2 = $cost;
-				}elseif($reponse['id_deb']=='13'){ // DGDA Seal 3x
+				}
+				// elseif($reponse['id_deb']=='13' && $reponse['id_march']=='13' && $reponse['id_cli']=='951'){ // DGDA Seal 4X / BMS Cobalt
+				// 	$unite = 4;
+				// 	$cost = $reponse['ht_usd']/4;
+				// 	$cost_2 = $cost;
+				// }
+				elseif($reponse['id_deb']=='13'){ // DGDA Seal 3x
 					$unite = 3;
 					$cost = $reponse['ht_usd']/3;
 					$cost_2 = $cost;
