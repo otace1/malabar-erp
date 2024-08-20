@@ -17194,7 +17194,7 @@
 				$reponse['montant'] = $this-> getDossier($id_dos)['poids']*50;
 				$reponse['tva'] = '0';
 				return $reponse;
-			}else if ($id_deb == 5 && empty($this-> getDossier($id_dos)['pied_container']) && ($this-> getDossier($id_dos)['pied_container']!='N/A') && ($this-> getDossier($id_dos)['pied_container']!='NA')) { // FERE
+			}else if ($id_deb == 5 && (empty($this-> getDossier($id_dos)['pied_container']) || ($this-> getDossier($id_dos)['pied_container']!='N/A') || ($this-> getDossier($id_dos)['pied_container']!='NA')) ) { // FERE
 				$reponse['montant'] = $this-> getDossier($id_dos)['poids']*3;
 				$reponse['tva'] = '0';
 				return $reponse;
