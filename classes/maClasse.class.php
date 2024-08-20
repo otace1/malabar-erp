@@ -8950,6 +8950,185 @@
 			return $tbl;
 		}
 
+		public function get_tableau_kpis1($debut, $fin){
+			include('connexion.php');
+			$entree['debut'] = $debut;
+			$entree['fin'] = $fin;
+			$total_file = 0;
+			$total_avg = 0;
+			$compteur = 0;
+
+
+			$tbl = '';
+			$requete = $connexion-> prepare("SELECT CONCAT(MONTHNAME(date_quit), ' ', YEAR(date_quit)) AS mois,
+													COUNT(id_dos) AS nbre_dossier,
+													AVG(DATEDIFF(date_quit, date_liq)) AS avg_days
+												FROM dossier
+												WHERE date_quit BETWEEN ? AND ?
+												AND id_cli = 857
+												AND id_mod_lic = 2
+												AND cleared <> '2'
+												GROUP BY CONCAT(MONTH(date_quit),'-' , YEAR(date_quit))");
+
+			$requete-> execute(array($entree['debut'], $entree['fin']));
+			while($reponse = $requete-> fetch()){
+				$compteur++;
+				$pourcentage = (($reponse['avg_days']*100)/3);
+				if ($pourcentage>100) {
+					$bg = 'danger';
+				}else if ($pourcentage=100) {
+					$bg = 'primary';
+				}else if ($pourcentage>50 && $pourcentage<100) {
+					$bg = 'info';
+				}else {
+					$bg = 'success';
+				}
+
+				$total_file += $reponse['nbre_dossier'];
+				$total_avg += $reponse['avg_days'];
+
+				$tbl .= '
+						<tr>
+							<td>'.$reponse['mois'].'</td>
+							<td style="text-align: right;">'.number_format($reponse['nbre_dossier'], 0, ',', '.').'</td>
+							<td style="text-align: right;">
+								<div class="progress progress">
+		                        	<div class="progress-bar progress-bar-striped text-center bg-'.$bg.'" style="width: '.(($reponse['avg_days']*100)/3).'%">'.number_format($reponse['avg_days'], 2, ',', '.').'</div>
+		                      	</div>
+							</td>
+							<td style="text-align: right;">
+								<div class="progress progress">
+		                        	<div class="progress-bar progress-bar-striped  bg-success" style="width: 100%">3</div>
+		                      	</div>
+							</td>
+						</tr>
+					';
+
+			}$requete-> closeCursor();
+
+			$tbl .= '
+					<tr class="font-weight-bold">
+						<td>Total</td>
+						<td style="text-align: right;">'.number_format($total_file, 0, ',', '.').'</td>
+						<td style="text-align: right;">'.number_format($total_avg/$compteur, 2, ',', '.').'</td>
+						<td style="text-align: right;">'.number_format(3, 0, ',', '.').'</td>
+					</tr>
+				';
+
+			$tbl .= '
+					<tr class="font-weight-bold">
+						<td colspan="3">LNP Perfomance % </td>
+						<td class="text-right bg bg-warning  progress-bar-striped ">'.number_format((3/($total_avg/$compteur))*100, 2, ',', '.').'%</td>
+					</tr>
+				';
+
+			return $tbl;
+		}
+
+		public function get_tableau_kpis2($debut, $fin){
+			include('connexion.php');
+			$entree['debut'] = $debut;
+			$entree['fin'] = $fin;
+			$total_file = 0;
+			$total_avg = 0;
+			$compteur = 0;
+
+			$tbl = '';
+			$requete = $connexion-> prepare("SELECT CONCAT(MONTHNAME(wiski_arriv), ' ', YEAR(wiski_arriv)) AS mois,
+													COUNT(id_dos) AS nbre_dossier,
+													AVG(DATEDIFF(IF(dispatch_klsa IS NOT NULL, dispatch_klsa, CURRENT_DATE()), wiski_arriv)) AS avg_days
+												FROM dossier
+												WHERE wiski_arriv BETWEEN ? AND ?
+												AND id_cli = 857
+												AND id_mod_lic = 2
+												AND cleared <> '2'
+												GROUP BY CONCAT(MONTH(wiski_arriv),'-' , YEAR(wiski_arriv))");
+
+			$requete-> execute(array($entree['debut'], $entree['fin']));
+			while($reponse = $requete-> fetch()){
+				$compteur++;
+				$pourcentage = (($reponse['avg_days']*100)/3);
+				if ($pourcentage>100) {
+					$bg = 'danger';
+				}else if ($pourcentage=100) {
+					$bg = 'primary';
+				}else if ($pourcentage>50 && $pourcentage<100) {
+					$bg = 'info';
+				}else {
+					$bg = 'success';
+				}
+
+				$total_file += $reponse['nbre_dossier'];
+				$total_avg += $reponse['avg_days'];
+
+				$tbl .= '
+						<tr>
+							<td>'.$reponse['mois'].'</td>
+							<td style="text-align: right;">'.number_format($reponse['nbre_dossier'], 0, ',', '.').'</td>
+							<td style="text-align: right;">
+								<div class="progress progress">
+		                        	<div class="progress-bar progress-bar-striped text-center bg-'.$bg.'" style="width: '.(($reponse['avg_days']*100)/3).'%">'.number_format($reponse['avg_days'], 2, ',', '.').'</div>
+		                      	</div>
+							</td>
+							<td style="text-align: right;">
+								<div class="progress progress">
+		                        	<div class="progress-bar progress-bar-striped  bg-success" style="width: 100%">3</div>
+		                      	</div>
+							</td>
+						</tr>
+					';
+
+			}$requete-> closeCursor();
+
+			$tbl .= '
+					<tr class="font-weight-bold">
+						<td>Total</td>
+						<td style="text-align: right;">'.number_format($total_file, 0, ',', '.').'</td>
+						<td style="text-align: right;">'.number_format($total_avg/$compteur, 2, ',', '.').'</td>
+						<td style="text-align: right;">'.number_format(3, 0, ',', '.').'</td>
+					</tr>
+				';
+
+			$tbl .= '
+					<tr class="font-weight-bold">
+						<td colspan="3">Boder Clearance Perfomance % </td>
+						<td class="text-right bg bg-warning  progress-bar-striped ">'.number_format((3/($total_avg/$compteur))*100, 2, ',', '.').'%</td>
+					</tr>
+				';
+
+			return $tbl;
+		}
+
+		public function get_mois_kpis($debut, $fin){
+			include('connexion.php');
+			$entree['debut'] = $debut;
+			$entree['fin'] = $fin;
+			$mois = '';
+
+			$requete = $connexion-> prepare("SELECT CONCAT(MONTHNAME(wiski_arriv), ' ', YEAR(wiski_arriv)) AS mois,
+													COUNT(id_dos) AS nbre_dossier,
+													AVG(DATEDIFF(IF(dispatch_klsa IS NOT NULL, dispatch_klsa, CURRENT_DATE()), wiski_arriv)) AS avg_days
+												FROM dossier
+												WHERE wiski_arriv BETWEEN ? AND ?
+												AND id_cli = 857
+												AND id_mod_lic = 2
+												AND cleared <> '2'
+												-- GROUP BY CONCAT(MONTH(wiski_arriv),'-' , YEAR(wiski_arriv))
+												");
+
+			$requete-> execute(array($entree['debut'], $entree['fin']));
+			while($reponse = $requete-> fetch()){
+
+				$data_mois = $reponse['mois'];
+
+				// $mois .= '\''.$reponse['mois'].'\', ';
+				$mois .= $reponse['mois'];
+
+			}$requete-> closeCursor();
+
+			return $mois;
+		}
+
 		public function getDetailFactureLicenceGlobalExport($ref_fact, $id_t_deb){
 			include('connexion.php');
 			$entree['ref_fact'] = $ref_fact;
@@ -17015,7 +17194,7 @@
 				$reponse['montant'] = $this-> getDossier($id_dos)['poids']*50;
 				$reponse['tva'] = '0';
 				return $reponse;
-			}else if ($id_deb == 5 && empty($this-> getDossier($id_dos)['pied_container'])) { // FERE
+			}else if ($id_deb == 5 && empty($this-> getDossier($id_dos)['pied_container']) && ($this-> getDossier($id_dos)['pied_container']!='N/A') && ($this-> getDossier($id_dos)['pied_container']!='NA')) { // FERE
 				$reponse['montant'] = $this-> getDossier($id_dos)['poids']*3;
 				$reponse['tva'] = '0';
 				return $reponse;
