@@ -6293,6 +6293,36 @@
     		 return $tableau;
 		}
 
+		public function tableau_client_cvee(){
+			include('connexion.php');
+			// $entree['id_cli'] = $id_cli;
+			// $entree['id_mod_lic'] = $id_mod_lic;
+			$compteur = 0;
+
+			$tableau = '';
+
+			$requete = $connexion-> query("SELECT cl.nom_cli AS nom_cli,
+													cl.code_cli AS code_cli,
+													cl.id_cli AS id_cli
+												FROM client cl, affectation_client_modele_licence aff
+												WHERE cl.id_cli = aff.id_cli
+													AND aff.id_mod_lic = 1
+													ORDER BY cl.code_cli");
+    		// $requete-> execute(array($entree['id_mod_lic']));
+    		while ($reponse = $requete-> fetch()) {
+    			$compteur++;
+    			$tableau .= '
+    						<tr onMouseOver="this.style.cursor=\'pointer\'" onclick="window.location.replace(\'list_cvee.php?id_cli='.$reponse['id_cli'].'\');">
+    							<td>'.$compteur.'</td>
+    							<td>'.$reponse['code_cli'].'</td>
+    							<td>'.$reponse['nom_cli'].'</td>
+    						</tr>
+    			';
+    		 }$requete-> closeCursor();
+
+    		 return $tableau;
+		}
+
 		public function search_client_ogefrem($mot_cle){
 			include('connexion.php');
 			// $entree['id_cli'] = $id_cli;
@@ -19907,6 +19937,66 @@
 															'')
 													) AS truck,
 													CONCAT('<button class=\"btn btn-xs btn-info\" title=\"Feuille de calcul\" onclick=\"modal_edit_ogefrem(\'',dos.id_dos,'\');\"><i class=\"fa fa-edit\"></i></button>') AS btn_action
+												FROM dossier dos, client cl, marchandise march, mode_transport mt
+												WHERE dos.id_cli = cl.id_cli
+													AND dos.id_mod_lic = 1
+													AND dos.id_march = march.id_march
+													AND dos.id_mod_trans = mt.id_mod_trans
+													$sqlClient
+												ORDER BY dos.id_dos DESC");
+			// $requete-> execute(array($entree['id_mod_lic']));
+			while ($reponse = $requete-> fetch()) {
+				$compteur++;
+
+				$reponse['compteur'] = $compteur;
+
+				$rows[] = $reponse;
+			}$requete-> closeCursor();
+
+
+			return $rows;
+
+		}
+
+		public function dossier_cvee($id_cli){
+			include('connexion.php');
+			// $entree['id_mod_lic'] = $id_mod_lic;
+
+			if (isset($id_cli) && ($id_cli != '')) {
+				$sqlClient = ' AND dos.id_cli = '.$id_cli;
+			}else{
+				$sqlClient = '';
+			}
+
+			$compteur = 0;
+			$rows = array();
+
+			$requete = $connexion-> query("SELECT dos.id_dos AS id_dos,
+													dos.ref_dos AS ref_dos,
+													cl.code_cli AS code_cli,
+													dos.ogefrem_ref_fact AS ogefrem_ref_fact,
+													dos.lmc_id AS lmc_id,
+													dos.load_date AS load_date,
+													dos.num_lot AS num_lot,
+													dos.num_lic AS num_lic,
+													dos.road_manif AS road_manif,
+													dos.ref_cvee AS ref_cvee,
+													dos.fob_cvee AS fob_cvee,
+													dos.poids AS poids,
+													march.nom_march AS nom_march,
+													mt.nom_mod_trans AS nom_mod_trans,
+													CONCAT(
+														IF(dos.horse IS NOT NULL AND REPLACE(dos.horse, ' ', '') NOT LIKE '',
+															dos.horse,
+															''),
+														IF(dos.trailer_1 IS NOT NULL AND REPLACE(dos.trailer_1, ' ', '') NOT LIKE '',
+															CONCAT(' / ', dos.trailer_1),
+															''),
+														IF(dos.trailer_2 IS NOT NULL AND REPLACE(dos.trailer_2, ' ', '') NOT LIKE '',
+															CONCAT(' / ', dos.trailer_2),
+															'')
+													) AS truck,
+													CONCAT('<button class=\"btn btn-xs btn-info\" title=\"Feuille de calcul\" onclick=\"modal_edit_cvee(\'',dos.id_dos,'\');\"><i class=\"fa fa-edit\"></i></button>') AS btn_action
 												FROM dossier dos, client cl, marchandise march, mode_transport mt
 												WHERE dos.id_cli = cl.id_cli
 													AND dos.id_mod_lic = 1
@@ -39146,7 +39236,15 @@
 													IF(cod IS NOT NULL AND cod <> 'TBC', cod, IF(ref_av IS NOT NULL, ref_av, IF(ref_crf IS NOT NULL, ref_crf, NULL))) AS cod,
 													DATE_FORMAT(d.date_decl, '%d/%m/%Y') AS date_decl,
 													DATE_FORMAT(d.date_liq, '%d/%m/%Y') AS date_liq,
-													DATE_FORMAT(d.date_quit, '%d/%m/%Y') AS date_quit
+													DATE_FORMAT(d.date_quit, '%d/%m/%Y') AS date_quit,
+													IF(d.id_mod_lic=1,
+														d.fob_cvee,
+														d.montant_decl
+													) AS montant_decl,
+													IF(d.id_mod_lic=1,
+														d.ref_cvee,
+														d.cod
+													) AS cod
 												FROM dossier d, client cl
 												WHERE d.num_lic = ?
 													AND d.id_cli =  cl.id_cli
@@ -44807,7 +44905,8 @@
 
 			$requete = $connexion-> prepare("SELECT l.*, cl.*, 
 													IF(l.poids IS NULL OR l.poids='', 0, l.poids) AS poids_lic,
-													IF(l.consommable='1', 'Consommable', 'Divers') AS label_consommable
+													IF(l.consommable='1', 'Consommable', 'Divers') AS label_consommable,
+													l.id_mod_lic AS id_mod_lic
 												FROM licence l, client cl
 												WHERE l.num_lic = ?
 													AND l.id_cli = cl.id_cli");
