@@ -427,7 +427,7 @@
             </a>
           </li>
           <li class="nav-item"  style="">
-            <a href="kpi_tracking.php?debut=<?php echo date('Y-m-d');?>&fin=<?php echo date('Y-m-d');?>" class="nav-link" style=" font-weight: bold;">
+            <a href="kpi_tracking.php?debut=<?php echo date('Y');?>-01-01&fin=<?php echo date('Y-m-d');?>" class="nav-link" style=" font-weight: bold;">
               <img src="../images/kpi.png" width="23px">
               <span class="">
               <p style="">
@@ -438,6 +438,29 @@
 
             <?php
               $maClasse-> afficherMenuTracking();
+            }
+
+        if(!empty($maClasse-> getAffectationUtilisateurModule($_SESSION['id_util'], 16))){
+          ?>
+          <a href="#" class="nav-link active bg-danger">
+              <!-- <img src="../images/gestion-des-risques.png" width="25px"> -->
+              <span class="">
+              <p>
+                CVEE<br>
+              </p></span>
+            </a>
+          </li>
+            <li class="nav-item">
+                <!-- <a href="pv_contentieux.php" class="nav-link"> -->
+                <a href="#" class="nav-link" onclick="modal_client_cvee()">
+                  <i class="fa fa-list"></i>
+                  <p>Directory</p>
+                </a>
+            </li>
+
+            <?php
+              // $maClasse-> afficherMenuFinanceOPS();
+              echo '<hr>';
             }
 
         if(!empty($maClasse-> getAffectationUtilisateurModule($_SESSION['id_util'], 15))){

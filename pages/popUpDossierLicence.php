@@ -104,8 +104,19 @@
                                   <tr>
                                     <th style="text-align: center; ">#</th>
                                     <th style="text-align: center; ">MCA FILE REF</th>
+                                    <?php
+                                      if ($maClasse-> getLicence($_GET['num_lic'])['id_mod_lic']=='1') {
+                                    ?>
+                                    <th style="text-align: center; ">REF CVEE</th>
+                                    <th style="text-align: center; ">MONTANT CVEE</th>
+                                    <?php
+                                      }else{
+                                    ?>
                                     <th style="text-align: center; ">REF AV</th>
                                     <th style="text-align: center; ">MONTANT AV</th>
+                                    <?php
+                                      }
+                                    ?>
                                     <th style="text-align: center; ">N<sup><u>o</u></sup> E</th>
                                     <th style="text-align: center; ">Date E</th>
                                     <th style="text-align: center; ">N<sup><u>o</u></sup> L</th>

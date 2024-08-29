@@ -3456,6 +3456,44 @@
 
   		echo json_encode($reponse);
 
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='get_tableau_kpis'){
+
+  		$reponse['get_tableau_kpis1'] = $maClasse-> get_tableau_kpis1($_POST['debut'], $_POST['fin']);
+  		$reponse['get_tableau_kpis2'] = $maClasse-> get_tableau_kpis2($_POST['debut'], $_POST['fin']);
+  		$reponse['mois_kpis'] = $maClasse-> get_mois_kpis($_POST['debut'], $_POST['fin']);
+
+  		echo json_encode($reponse);
+
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='modal_client_cvee'){ 
+
+		$response['tableau_client_cvee'] = $maClasse-> tableau_client_cvee();
+
+		echo json_encode($response);
+
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='search_client_cvee'){ 
+
+		$response['tableau_client_cvee'] = $maClasse-> search_client_cvee($_POST['mot_cle']);
+
+		echo json_encode($response);
+
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='dossier_cvee'){ 
+
+		echo json_encode($maClasse-> dossier_cvee($_POST['id_cli']));
+
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='update_CVEE'){ 
+		
+      	//ref_cvee
+      	if (isset($_POST['ref_cvee']) && ($_POST['ref_cvee'] != '')) {
+        	$maClasse-> MAJ_ref_cvee($_POST['id_dos'], $_POST['ref_cvee']);
+      	}
+      	//fob_cvee
+      	if (isset($_POST['fob_cvee']) && ($_POST['fob_cvee'] != '')) {
+        	$maClasse-> MAJ_fob_cvee($_POST['id_dos'], $_POST['fob_cvee']);
+      	}
+
+		$response['message'] = 'Done!';
+		echo json_encode($response);
+
 	}
 
 

@@ -132,6 +132,48 @@
   <!-- /.modal-dialog -->
 </div>
 
+<div class="modal fade" id="modal_client_cvee">
+  <div class="modal-dialog modal-md">
+    <div class="modal-content">
+      <div class="modal-header btn-dark">
+        <h4 class="modal-title"><i class="fa fa-list"></i> Clients </h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <input type="text" id="search_client_cvee" class="form-control form-control-sm" placeholder="e.g.: KAMOA" onkeyup="search_client_cvee(this.value);">
+          <hr>
+
+          <div class="col-md-12 table-responsive p-0 " style="height: 500px;">
+            <table class="table table-bordered table-striped text-nowrap table-hover  text-nowrap table-head-fixed table-dark">
+              <thead>
+                  <tr>
+                      <th>#</th>
+                      <th>Code</th>
+                      <th>Client</th>
+                      <!-- <th>Pending Files</th> -->
+                      <!-- <th colspan="2">Action</th> -->
+                  </tr>
+              </thead>
+              <tbody id="tableau_client_cvee">
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <!-- <div class="modal-footer justify-content-between">
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Annuler</button>
+        <button type="submit" name="creerAV" class="btn btn-primary">Valider</button>
+      </div> -->
+    </div>
+    <!-- </form> -->
+    <!-- /.modal-content -->
+  </div>
+  <!-- /.modal-dialog -->
+</div>
+
 <div class="modal fade" id="modal_depense_modele_licence">
   <div class="modal-dialog modal-md">
     <div class="modal-content">
@@ -389,6 +431,48 @@
             window.location="../deconnexion.php";
           }else{
             $('#tableau_client_ogefrem').html(data.tableau_client_ogefrem);
+          }
+        }
+      });
+
+
+    }
+
+    function modal_client_cvee(){
+
+      $.ajax({
+        type: "POST",
+        url: "ajax.php",
+        data: {operation: 'modal_client_cvee'},
+        dataType:"json",
+        success:function(data){
+          if (data.logout) {
+            alert(data.logout);
+            window.location="../deconnexion.php";
+          }else{
+            $('#tableau_client_cvee').html(data.tableau_client_cvee);
+            $('#modal_client_cvee').modal("show");
+            document.getElementById("search_client_cvee").focus();
+          }
+        }
+      });
+
+
+    }
+
+    function search_client_cvee(mot_cle){
+
+      $.ajax({
+        type: "POST",
+        url: "ajax.php",
+        data: {mot_cle: mot_cle, operation: 'search_client_cvee'},
+        dataType:"json",
+        success:function(data){
+          if (data.logout) {
+            alert(data.logout);
+            window.location="../deconnexion.php";
+          }else{
+            $('#tableau_client_cvee').html(data.tableau_client_cvee);
           }
         }
       });
