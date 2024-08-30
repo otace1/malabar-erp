@@ -562,7 +562,8 @@
         }
       },
       complete: function () {
-          $('#spinner-div').hide();//Request is complete so hide spinner
+        
+        $('#spinner-div').hide();//Request is complete so hide spinner
       }
     });
 
@@ -751,7 +752,7 @@
     $('#fob_en_usd_label').html('FOB (USD): '+new Intl.NumberFormat('en-DE').format(Math.round(fob_en_usd_label*1000)/1000));
     $('#fob_en_usd_label').addClass('text-sm font-weight-bold float-right badge badge-dark');
     // $('#debours').html('');
-    getTableauImportInvoiceSingle2($('#id_mod_fact').val(), $('#id_dos').val(), $('#id_mod_lic').val(), $('#id_march').val(), $('#id_mod_trans').val(), '1');
+    // getTableauImportInvoiceSingle2($('#id_mod_fact').val(), $('#id_dos').val(), $('#id_mod_lic').val(), $('#id_march').val(), $('#id_mod_trans').val(), '1');
 
   }
 
@@ -1641,7 +1642,8 @@
     }
    
 
-    if (Math.round(tresco*1000)/1000 > 0) {
+    // if (Math.round(tresco*1000)/1000 > 0) {
+    if (tresco > 0) {
       $('#tresco').val(tresco.toFixed(2));
     }else{
       $('#tresco').val('');
