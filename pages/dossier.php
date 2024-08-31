@@ -188,6 +188,10 @@ for ($i=1; $i <= 15 ; $i++) {
         $maClasse-> MAJ_t1($_POST['id_dos_'.$i], $_POST['t1_'.$i]);
       }
 
+      if (isset($_POST['t1_date_'.$i]) && ($_POST['t1_date_'.$i] != '')) {
+        $maClasse-> MAJ_t1_date($_POST['id_dos_'.$i], $_POST['t1_date_'.$i]);
+      }
+
       if (isset($_POST['poids_'.$i]) && ($_POST['poids_'.$i] != '')) {
         $maClasse-> MAJ_poids($_POST['id_dos_'.$i], $_POST['poids_'.$i]);
       }
