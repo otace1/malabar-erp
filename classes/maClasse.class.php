@@ -56462,6 +56462,25 @@
 
 		}  
 
+		public function MAJ_t1_date($id_dos, $t1_date){
+			
+			//Log
+			if ($this-> getDossier($id_dos)['t1_date'] != $t1_date) {
+				
+				// $colonne = $this-> getNomColonneClient('t1_date', $_GET['id_cli'], $_GET['id_mod_trans'], $_GET['id_mod_trac']);
+				$this-> creerLogDossier('T1 Date', $t1_date, $id_dos, $_SESSION['id_util']);
+
+			}
+
+			include('connexion.php');
+			$entree['id_dos'] = $id_dos;
+			$entree['t1_date'] = $t1_date;
+			$requete = $connexion-> prepare("UPDATE dossier SET t1_date = ?
+												WHERE id_dos = ?");
+			$requete-> execute(array($entree['t1_date'], $entree['id_dos']));
+
+		}  
+
 		public function MAJ_poids($id_dos, $poids){
 			
 			//Log
