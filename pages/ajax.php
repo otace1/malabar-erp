@@ -2736,6 +2736,10 @@
 
 		echo json_encode($maClasse-> dossier_lmc_dashboard($_POST['debut'], $_POST['fin'], $_POST['id_cli']));
 
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='dossier_loading_dashboard'){ 
+
+		echo json_encode($maClasse-> dossier_loading_dashboard($_POST['debut'], $_POST['fin'], $_POST['id_cli']));
+
 	}elseif(isset($_POST['operation']) && $_POST['operation']=='modal_worksheet'){ 
 
 		$response = $maClasse-> getDossier($_POST['id_dos']);
@@ -3493,6 +3497,14 @@
 
 		$response['message'] = 'Done!';
 		echo json_encode($response);
+
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='dossier_loading_dashboard'){ 
+
+		echo json_encode($maClasse-> dossier_loading_dashboard($_POST['debut'], $_POST['fin'], $_POST['id_cli']));
+
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='dossier_dispatch_dashboard'){ 
+
+		echo json_encode($maClasse-> dossier_dispatch_dashboard($_POST['debut'], $_POST['fin'], $_POST['id_cli']));
 
 	}
 

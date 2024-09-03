@@ -34,6 +34,8 @@
                 <div class="dropdown-menu">
                   <a class="dropdown-item" href="#" onclick="window.open('popFilesOgefrem.php?debut='+$('#debut').val()+'&fin='+$('#fin').val()+'&id_cli='+$('#id_cli').val(),'pop1','width=1200,height=700');">OGEFREM</a>
                   <a class="dropdown-item" href="#" onclick="window.open('popFilesLMC.php?debut='+$('#debut').val()+'&fin='+$('#fin').val()+'&id_cli='+$('#id_cli').val(),'pop1','width=1200,height=700');">LMC</a>
+                  <a class="dropdown-item" href="#" onclick="window.open('popFilesLoading.php?debut='+$('#debut').val()+'&fin='+$('#fin').val()+'&id_cli='+$('#id_cli').val(),'pop1','width=1200,height=700');">Loading</a>
+                  <a class="dropdown-item" href="#" onclick="window.open('popFilesDispatch.php?debut='+$('#debut').val()+'&fin='+$('#fin').val()+'&id_cli='+$('#id_cli').val(),'pop1','width=1200,height=700');">Dispacth</a>
                 </div>
               </div>
               <div class="btn-group">
@@ -577,6 +579,7 @@ if(isset($_GET['id_mod_lic_fact']) && isset($_GET['id_mod_lic_fact'])){
 
   function afficherMonitoringFacturation(id_mod_lic, debut=null, fin=null){
     $('#spinner-div').show();
+    $('#modal_search').modal('hide');
     $.ajax({
       type: 'post',
       url: 'ajax.php',
@@ -596,7 +599,6 @@ if(isset($_GET['id_mod_lic_fact']) && isset($_GET['id_mod_lic_fact'])){
           $('#btn_info_dossiers_factures').html(data.btn_info_dossiers_factures);
           $('#afficherMonitoringFacturation').html(data.afficherMonitoringFacturation);
           afficherMonitoringFile();
-          $('#modal_search').modal('hide');
         }
       },
       complete: function () {
