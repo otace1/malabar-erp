@@ -20425,7 +20425,7 @@
 														ON det.ref_fact = fd.ref_fact
 												WHERE dos.id_mod_lic = 1
 													AND (
-															(dos.load_date BETWEEN ? AND ?)
+															(dos.dispatch_date BETWEEN ? AND ?)
 															OR 
 															(dos.sncc_sakania BETWEEN ? AND ?)
 														)
