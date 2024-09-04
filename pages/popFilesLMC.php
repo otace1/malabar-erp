@@ -37,7 +37,7 @@
                       <th>Product</th>
                       <th>UNITE (Unit_of_Measurements)</th>
                       <th>TAX_UNITAIRE (Unit_Rate)</th>
-                      <th>OGEFREM Amount</th>
+                      <th>LMC Amount</th>
                     </tr>
                   </thead>
                   <tbody class="text-nowrap">
