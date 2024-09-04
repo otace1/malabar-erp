@@ -3524,6 +3524,10 @@
 
 		echo json_encode($maClasse-> dossier_dispatch_dashboard($_POST['debut'], $_POST['fin'], $_POST['id_cli']));
 
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='dossier_no_dispatch_dashboard'){ 
+
+		echo json_encode($maClasse-> dossier_no_dispatch_dashboard($_POST['debut'], $_POST['fin'], $_POST['id_cli']));
+
 	}
 
 

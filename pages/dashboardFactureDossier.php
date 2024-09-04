@@ -36,6 +36,7 @@
                   <a class="dropdown-item" href="#" onclick="window.open('popFilesLMC.php?debut='+$('#debut').val()+'&fin='+$('#fin').val()+'&id_cli='+$('#id_cli').val(),'pop1','width=1200,height=700');">LMC</a>
                   <a class="dropdown-item" href="#" onclick="window.open('popFilesLoading.php?debut='+$('#debut').val()+'&fin='+$('#fin').val()+'&id_cli='+$('#id_cli').val(),'pop1','width=1200,height=700');">Loading</a>
                   <a class="dropdown-item" href="#" onclick="window.open('popFilesDispatch.php?debut='+$('#debut').val()+'&fin='+$('#fin').val()+'&id_cli='+$('#id_cli').val(),'pop1','width=1200,height=700');">Dispacth</a>
+                  <a class="dropdown-item" href="#" onclick="window.open('popFilesNotDispatch.php?debut='+$('#debut').val()+'&fin='+$('#fin').val()+'&id_cli='+$('#id_cli').val(),'pop1','width=1200,height=700');">Not Dispatched</a>
                 </div>
               </div>
               <div class="btn-group">

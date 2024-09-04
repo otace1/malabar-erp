@@ -51,6 +51,11 @@
                       <th>Gov Docs In</th>
                       <th>Gov Docs Out</th>
                       <th>Disp_Date / BS_Date</th>
+                      <th>Dispatch IMPALA-SNCC</th>
+                      <th>Docs Transmitted SNCC</th>
+                      <th>Dispatch Date SNCC-SAKANIA</th>
+                      <th>SAKANIA Arrival Date</th>
+                      <th>Exit DRC Date</th>
                       <th>CLEARING STATUS</th>
                       <th>STATUS</th>
                       <th>REMARKS</th>
@@ -193,6 +198,21 @@
           className: 'dt-body-center'
         },
         {"data":"dispatch_date",
+          className: 'dt-body-center'
+        },
+        {"data":"impala_sncc",
+          className: 'dt-body-center'
+        },
+        {"data":"docs_sncc",
+          className: 'dt-body-center'
+        },
+        {"data":"sncc_sakania",
+          className: 'dt-body-center'
+        },
+        {"data":"sakania_date",
+          className: 'dt-body-center'
+        },
+        {"data":"exit_drc",
           className: 'dt-body-center'
         },
         {"data":"cleared",

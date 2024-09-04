@@ -16,12 +16,12 @@
           <div class="col-12">
             <div class="card">
               <div class="card-header">
-                <h5>Dispatch Report | Between <?php echo $_GET['debut']?> and <?php echo $_GET['fin']?></h5>
+                <h5>Loading Report | Between <?php echo $_GET['debut']?> and <?php echo $_GET['fin']?></h5>
               </div>    
               <!-- /.card-header -->
               <div class="card-body table-responsive">
                 
-                <table id="dossier_dispatch_dashboard" class="table table-bordered table-hover table-responsive table-sm small">
+                <table id="dossier_no_dispatch_dashboard" class="table table-bordered table-hover table-responsive table-sm small">
                   <thead>
                     <tr class="">
                       <th style="" width="5px">#</th>
@@ -89,7 +89,7 @@
 
     <script type="text/javascript">
     $('#spinner-div').show();
-    $('#dossier_dispatch_dashboard').DataTable({
+    $('#dossier_no_dispatch_dashboard').DataTable({
        lengthMenu: [
           [10, 20, 50, -1],
           [10, 20, 50, 500, 'All'],
@@ -100,7 +100,7 @@
           {
             extend: 'excel',
             text: '<i class="fa fa-file-excel"></i>',
-            title: 'Dispatch_report_between_<?php echo $_GET['debut'];?>_and_<?php echo $_GET['fin'];?>',
+            title: 'Not_dispatched_report_between_<?php echo $_GET['debut'];?>_and_<?php echo $_GET['fin'];?>',
             className: 'btn btn-success'
           }
       ],
@@ -122,7 +122,7 @@
             "id_cli": "<?php echo $_GET['id_cli'];?>",
             "debut": "<?php echo $_GET['debut'];?>",
             "fin": "<?php echo $_GET['fin'];?>",  
-            "operation": "dossier_dispatch_dashboard"
+            "operation": "dossier_no_dispatch_dashboard"
         }
       },
       "columns":[
