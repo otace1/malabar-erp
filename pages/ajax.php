@@ -275,7 +275,15 @@
 	  						$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 12, $_POST['ceec_60_'.$i], $_POST['ceec_60_tva_'.$i], '1');
 	  					}
 	  					
+	  					//DGDA Seal
 	  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 13, $_POST['dgda_seal_'.$i], $_POST['dgda_seal_tva_'.$i], '1');
+	  					//-- Additionnal Fee KIPOI
+	  					if ($_POST['id_cli']==905) {
+	  						$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 216, 25, '0', '1');
+	  					}
+
+	  					//DGDA Seal
+
 	  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 172, $_POST['dmc_ce_'.$i], $_POST['dmc_ce_tva_'.$i], '1');
 	  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 173, $_POST['dilolo_'.$i], $_POST['dilolo_tva_'.$i], '1');
 	  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 15, $_POST['assay_'.$i], $_POST['assay_tva_'.$i], '1');
@@ -557,7 +565,17 @@
 	  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 10, $_POST['occ_cgea_'.$i], $_POST['occ_cgea_tva_'.$i], '1');
 	  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 11, $_POST['ceec_30_'.$i], $_POST['ceec_30_tva_'.$i], '1');
 	  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 12, $_POST['ceec_60_'.$i], $_POST['ceec_60_tva_'.$i], '1');
+
+	  					//DGDA Seal
 	  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 13, $_POST['dgda_seal_'.$i], $_POST['dgda_seal_tva_'.$i], '1');
+	  					
+	  					//-- Additionnal Fee KIPOI
+	  					if ($_POST['id_cli']==905) {
+	  						$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 216, 25, '0', '1');
+	  					}
+
+	  					//DGDA Seal
+
 	  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 172, $_POST['dmc_ce_'.$i], $_POST['dmc_ce_tva_'.$i], '1');
 	  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 173, $_POST['dilolo_'.$i], $_POST['dilolo_tva_'.$i], '1');
 	  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 15, $_POST['assay_'.$i], $_POST['assay_tva_'.$i], '1');
