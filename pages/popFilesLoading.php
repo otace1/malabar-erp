@@ -55,6 +55,7 @@
                       <th>Docs Transmitted SNCC</th>
                       <th>Dispatch Date SNCC-SAKANIA</th>
                       <th>SAKANIA Arrival Date</th>
+                      <th>Border Arrival Date</th>
                       <th>Exit DRC Date</th>
                       <th>CLEARING STATUS</th>
                       <th>STATUS</th>
@@ -210,6 +211,9 @@
           className: 'dt-body-center'
         },
         {"data":"sakania_date",
+          className: 'dt-body-center'
+        },
+        {"data":"klsa_arriv",
           className: 'dt-body-center'
         },
         {"data":"exit_drc",

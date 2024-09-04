@@ -16,10 +16,10 @@
           <div class="col-12">
             <div class="card">
               <div class="card-header">
-                <h5>Loading Report | Between <?php echo $_GET['debut']?> and <?php echo $_GET['fin']?></h5>
+                <h5>Not Dispatched Report | Between <?php echo $_GET['debut']?> and <?php echo $_GET['fin']?></h5>
               </div>    
               <!-- /.card-header -->
-              <div class="card-body table-responsive">
+              <div class="card-body table-responsive p-0">
                 
                 <table id="dossier_no_dispatch_dashboard" class="table table-bordered table-hover table-responsive table-sm small">
                   <thead>
@@ -55,6 +55,7 @@
                       <th>Docs Transmitted SNCC</th>
                       <th>Dispatch Date SNCC-SAKANIA</th>
                       <th>SAKANIA Arrival Date</th>
+                      <th>Border Arrival Date</th>
                       <th>Exit DRC Date</th>
                       <th>CLEARING STATUS</th>
                       <th>STATUS</th>
@@ -210,6 +211,9 @@
           className: 'dt-body-center'
         },
         {"data":"sakania_date",
+          className: 'dt-body-center'
+        },
+        {"data":"klsa_arriv",
           className: 'dt-body-center'
         },
         {"data":"exit_drc",
