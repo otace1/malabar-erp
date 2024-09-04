@@ -20544,7 +20544,7 @@
 													LEFT JOIN facture_dossier fd
 														ON det.ref_fact = fd.ref_fact
 												WHERE dos.id_mod_lic = 1
-													AND dos.load_date IS NULL
+													AND dos.dispatch_date IS NULL
 													AND dos.sncc_sakania IS NULL
 													AND dos.ref_dos NOT LIKE '%EX21-%'
 													AND dos.ref_dos NOT LIKE '%EX22-%'
