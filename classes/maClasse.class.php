@@ -20264,6 +20264,11 @@
 													DATE_FORMAT(dos.gov_in, '%d/%m/%Y') AS gov_in,
 													DATE_FORMAT(dos.gov_out, '%d/%m/%Y') AS gov_out,
 													DATE_FORMAT(dos.dispatch_date, '%d/%m/%Y') AS dispatch_date,
+													DATE_FORMAT(dos.impala_sncc, '%d/%m/%Y') AS impala_sncc,
+													DATE_FORMAT(dos.docs_sncc, '%d/%m/%Y') AS docs_sncc,
+													DATE_FORMAT(dos.sncc_sakania, '%d/%m/%Y') AS sncc_sakania,
+													DATE_FORMAT(dos.sakania_date, '%d/%m/%Y') AS sakania_date,
+													DATE_FORMAT(dos.exit_drc, '%d/%m/%Y') AS exit_drc,
 													march.nom_march AS nom_march,
 													mt.nom_mod_trans AS nom_mod_trans,
 													IF(dos.cleared='1', 'TRANSIT', 'CLEARED') AS cleared,
@@ -20281,8 +20286,8 @@
 															'')
 													) AS truck,
 													fd.ref_fact AS ref_fact,
-													IF(dos.dispatch_date IS NOT NULL, 
-														DATEDIFF(dos.dispatch_date, dos.load_date),
+													IF(IF(dos.dispatch_date IS NOT NULL, dos.dispatch_date, dos.sncc_sakania) IS NOT NULL, 
+														DATEDIFF(IF(dos.dispatch_date IS NOT NULL, dos.dispatch_date, dos.sncc_sakania), dos.load_date),
 														DATEDIFF(CURRENT_DATE(), dos.load_date)
 													) AS delays,
 													DATE_FORMAT(fd.date_fact, '%d/%m/%Y') AS date_fact,
@@ -20377,6 +20382,11 @@
 													DATE_FORMAT(dos.gov_in, '%d/%m/%Y') AS gov_in,
 													DATE_FORMAT(dos.gov_out, '%d/%m/%Y') AS gov_out,
 													DATE_FORMAT(dos.dispatch_date, '%d/%m/%Y') AS dispatch_date,
+													DATE_FORMAT(dos.impala_sncc, '%d/%m/%Y') AS impala_sncc,
+													DATE_FORMAT(dos.docs_sncc, '%d/%m/%Y') AS docs_sncc,
+													DATE_FORMAT(dos.sncc_sakania, '%d/%m/%Y') AS sncc_sakania,
+													DATE_FORMAT(dos.sakania_date, '%d/%m/%Y') AS sakania_date,
+													DATE_FORMAT(dos.exit_drc, '%d/%m/%Y') AS exit_drc,
 													march.nom_march AS nom_march,
 													mt.nom_mod_trans AS nom_mod_trans,
 													IF(dos.cleared='1', 'TRANSIT', 'CLEARED') AS cleared,
@@ -20394,8 +20404,8 @@
 															'')
 													) AS truck,
 													fd.ref_fact AS ref_fact,
-													IF(dos.dispatch_date IS NOT NULL, 
-														DATEDIFF(dos.dispatch_date, dos.load_date),
+													IF(IF(dos.dispatch_date IS NOT NULL, dos.dispatch_date, dos.sncc_sakania) IS NOT NULL, 
+														DATEDIFF(IF(dos.dispatch_date IS NOT NULL, dos.dispatch_date, dos.sncc_sakania), dos.load_date),
 														DATEDIFF(CURRENT_DATE(), dos.load_date)
 													) AS delays,
 													DATE_FORMAT(fd.date_fact, '%d/%m/%Y') AS date_fact,
@@ -20412,10 +20422,135 @@
 													LEFT JOIN facture_dossier fd
 														ON det.ref_fact = fd.ref_fact
 												WHERE dos.id_mod_lic = 1
-													AND dos.dispatch_date BETWEEN ? AND ?
+													AND (
+															(dos.load_date BETWEEN ? AND ?)
+															OR 
+															(dos.sncc_sakania BETWEEN ? AND ?)
+														)
 													$sqlClient
 												GROUP BY dos.id_dos");
-			$requete-> execute(array($entree['debut'], $entree['fin']));
+			$requete-> execute(array($entree['debut'], $entree['fin'], $entree['debut'], $entree['fin']));
+			while ($reponse = $requete-> fetch()) {
+				$compteur++;
+
+				$reponse['compteur'] = $compteur;
+				$reponse['date_exp'] = $this-> getDateExpirationLicence($reponse['num_lic']);
+				// $reponse['delays'] -= $this-> getWeekendsAndHolidays($this-> getDataRow('load_date', $reponse['id_dos']), $this-> getDataRow('dispatch_date', $reponse['id_dos']));
+
+				$rows[] = $reponse;
+			}$requete-> closeCursor();
+
+
+			return $rows;
+
+		}
+
+		public function dossier_no_dispatch_dashboard($debut, $fin, $id_cli){
+			include('connexion.php');
+			$entree['debut'] = $debut;
+			$entree['fin'] = $fin;
+
+			if (isset($id_cli) && ($id_cli != '')) {
+				$sqlClient = ' AND dos.id_cli = '.$id_cli;
+			}else{
+				$sqlClient = '';
+			}
+
+			$compteur = 0;
+			$rows = array();
+
+			$requete = $connexion-> query("SELECT dos.id_dos AS id_dos,
+													dos.ref_dos AS ref_dos,
+													cl.code_cli AS code_cli,
+													cl.nom_cli AS nom_cli,
+													dos.ogefrem_ref_fact AS ogefrem_ref_fact,
+													dos.lmc_id AS lmc_id,
+													dos.poids AS poids,
+													dos.num_lot AS num_lot,
+													dos.num_lic AS num_lic,
+													dos.ref_liq AS ref_liq,
+													-- dos.ogrefrem_rubrique AS ogrefrem_rubrique,
+													IF(dos.pied_container IN ('10', '20', '40'),
+														CONCAT('Conteneur ',dos.pied_container),
+														'VRAC 3FT'
+													) AS ogrefrem_rubrique,
+													-- IF(dos.pied_container IN ('10', '20', '40'),
+													-- 	'Un, unit',
+													-- 	'UP(T ou M3)'
+													-- ) AS ogrefrem_unit,
+													'MT' AS lmc_unit,
+													IF(dos.id_march=1,
+														5,
+														8
+													) AS lmc_tax,
+													IF(dos.id_march=1,
+														dos.poids*5,
+														dos.poids*8
+													) AS lmc_amount,
+													DATE_FORMAT(dos.load_date, '%d/%m/%Y') AS load_date,
+													DATE_FORMAT(dos.doc_receiv, '%d/%m/%Y') AS doc_receiv,
+													DATE_FORMAT(dos.pv_mine, '%d/%m/%Y') AS pv_mine,
+													DATE_FORMAT(dos.demande_attestation, '%d/%m/%Y') AS demande_attestation,
+													DATE_FORMAT(dos.assay_date, '%d/%m/%Y') AS assay_date,
+													DATE_FORMAT(dos.ceec_in, '%d/%m/%Y') AS ceec_in,
+													DATE_FORMAT(dos.ceec_out, '%d/%m/%Y') AS ceec_out,
+													DATE_FORMAT(dos.min_div_in, '%d/%m/%Y') AS min_div_in,
+													DATE_FORMAT(dos.min_div_out, '%d/%m/%Y') AS min_div_out,
+													DATE_FORMAT(dos.date_decl, '%d/%m/%Y') AS date_decl,
+													DATE_FORMAT(dos.dgda_in, '%d/%m/%Y') AS dgda_in,
+													DATE_FORMAT(dos.date_liq, '%d/%m/%Y') AS date_liq,
+													DATE_FORMAT(dos.date_quit, '%d/%m/%Y') AS date_quit,
+													DATE_FORMAT(dos.dgda_out, '%d/%m/%Y') AS dgda_out,
+													DATE_FORMAT(dos.gov_in, '%d/%m/%Y') AS gov_in,
+													DATE_FORMAT(dos.gov_out, '%d/%m/%Y') AS gov_out,
+													DATE_FORMAT(dos.dispatch_date, '%d/%m/%Y') AS dispatch_date,
+													DATE_FORMAT(dos.impala_sncc, '%d/%m/%Y') AS impala_sncc,
+													DATE_FORMAT(dos.docs_sncc, '%d/%m/%Y') AS docs_sncc,
+													DATE_FORMAT(dos.sncc_sakania, '%d/%m/%Y') AS sncc_sakania,
+													DATE_FORMAT(dos.sakania_date, '%d/%m/%Y') AS sakania_date,
+													DATE_FORMAT(dos.exit_drc, '%d/%m/%Y') AS exit_drc,
+													march.nom_march AS nom_march,
+													mt.nom_mod_trans AS nom_mod_trans,
+													IF(dos.cleared='1', 'TRANSIT', 'CLEARED') AS cleared,
+													dos.statut AS statut,
+													dos.remarque AS remarque,
+													CONCAT(
+														IF(dos.horse IS NOT NULL AND REPLACE(dos.horse, ' ', '') NOT LIKE '',
+															dos.horse,
+															''),
+														IF(dos.trailer_1 IS NOT NULL AND REPLACE(dos.trailer_1, ' ', '') NOT LIKE '',
+															CONCAT(' / ', dos.trailer_1),
+															''),
+														IF(dos.trailer_2 IS NOT NULL AND REPLACE(dos.trailer_2, ' ', '') NOT LIKE '',
+															CONCAT(' / ', dos.trailer_2),
+															'')
+													) AS truck,
+													fd.ref_fact AS ref_fact,
+													IF(IF(dos.dispatch_date IS NOT NULL, dos.dispatch_date, dos.sncc_sakania) IS NOT NULL, 
+														DATEDIFF(IF(dos.dispatch_date IS NOT NULL, dos.dispatch_date, dos.sncc_sakania), dos.load_date),
+														DATEDIFF(CURRENT_DATE(), dos.load_date)
+													) AS delays,
+													DATE_FORMAT(fd.date_fact, '%d/%m/%Y') AS date_fact,
+													CONCAT('<button class=\"btn btn-xs btn-info\" title=\"Feuille de calcul\" onclick=\"modal_edit_ogefrem(\'',dos.id_dos,'\');\"><i class=\"fa fa-edit\"></i></button>') AS btn_action
+												FROM dossier dos
+													LEFT JOIN client cl
+														ON dos.id_cli = cl.id_cli
+													LEFT JOIN marchandise march
+														ON dos.id_march = march.id_march 
+													LEFT JOIN mode_transport mt
+														ON dos.id_mod_trans = mt.id_mod_trans
+													LEFT JOIN detail_facture_dossier det
+														ON det.id_dos = dos.id_dos
+													LEFT JOIN facture_dossier fd
+														ON det.ref_fact = fd.ref_fact
+												WHERE dos.id_mod_lic = 1
+													AND dos.load_date IS NULL
+													AND dos.sncc_sakania IS NULL
+													AND dos.ref_dos NOT LIKE '%EX21-%'
+													AND dos.ref_dos NOT LIKE '%EX22-%'
+													$sqlClient
+												GROUP BY dos.id_dos");
+			// $requete-> execute(array($entree['debut'], $entree['fin'], $entree['debut'], $entree['fin']));
 			while ($reponse = $requete-> fetch()) {
 				$compteur++;
 
