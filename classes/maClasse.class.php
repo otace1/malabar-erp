@@ -59448,7 +59448,7 @@
 													</span>') AS support_doc,
 												IF(df.fichier_fact IS NOT NULL,
 													CONCAT('<span class=\"btn btn-xs btn-info\" title=\"Support Document\" onclick=\"window.open(\'../demande_fond/',df.id_df,'/',df.fichier_fact,'\',\'Support\',\'width=600,height=700\');\">
-														<i class=\"fa fa-clipper\"></i>
+														<i class=\"fa fa-paperclip\"></i>
 													</span>'),
 													'') AS btn_fichier_fact,
 												CONCAT('<span class=\"btn btn-xs btn-info\" title=\"Support Document\" onclick=\"window.open(\'../demande_fond/',df.id_df,'/',df.fichier_df,'\',\'Support\',\'width=600,height=700\');\">
@@ -59468,6 +59468,8 @@
 			$reponse=$requete-> fetch();
 			$reponse['nom_util_visa_dept'] = $this-> getUtilisateur($reponse['id_util_visa_dept'])['nom_util'];
 			$reponse['nom_util_visa_fin'] = $this-> getUtilisateur($reponse['id_util_visa_fin'])['nom_util'];
+			$reponse['nom_util_decaiss'] = $this-> getUtilisateur($reponse['id_util_decaiss'])['nom_util'];
+			$reponse['nom_util_recep_fond'] = $this-> getUtilisateur($reponse['id_util_recep_fond'])['nom_util'];
 			return $reponse;
 		}
 
