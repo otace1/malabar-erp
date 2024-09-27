@@ -49,10 +49,23 @@ function afficherDossierLicenceTransmisionApurementExcel($num_lic, $id_trans_ap,
 			-> setCellValue('J'.$row, $maClasse-> getPartielleCRF($reponseDossier['ref_crf_2'])['fob'])
 			-> setCellValue('K'.$row, $reponseDossier['ref_fact'])
 			-> setCellValue('L'.$row, $reponseDossier['ref_decl'])
-			-> setCellValue('M'.$row, $reponseDossier['ref_assurance'])
-			-> setCellValue('N'.$row, $reponseDossier['road_manif'])
-			-> setCellValue('O'.$row, $reponseDossier['type_apurement'])
-			-> setCellValue('P'.$row, $reponseDossier['remarque_apurement']);
+			-> setCellValue('M'.$row, $reponseDossier['date_decl'])
+			-> setCellValue('N'.$row, $reponseDossier['ref_liq'])
+			-> setCellValue('O'.$row, $reponseDossier['date_liq'])
+			-> setCellValue('P'.$row, $reponseDossier['ref_quit'])
+			-> setCellValue('Q'.$row, $reponseDossier['date_quit'])
+			-> setCellValue('R'.$row, $reponseDossier['ref_assurance'])
+			-> setCellValue('S'.$row, $reponseDossier['road_manif'])
+			-> setCellValue('T'.$row, $reponseDossier['type_apurement'])
+			-> setCellValue('U'.$row, $reponseDossier['remarque_apurement']);
+
+		$excel->getActiveSheet()->getStyle('M'.$row)->getNumberFormat()
+             ->setFormatCode('dd/mm/yyyy');
+		$excel->getActiveSheet()->getStyle('O'.$row)->getNumberFormat()
+             ->setFormatCode('dd/mm/yyyy');
+		$excel->getActiveSheet()->getStyle('Q'.$row)->getNumberFormat()
+             ->setFormatCode('dd/mm/yyyy');
+
 
 		alignement('A'.$row);
 		alignement('B'.$row);
@@ -65,6 +78,11 @@ function afficherDossierLicenceTransmisionApurementExcel($num_lic, $id_trans_ap,
 		alignement('N'.$row);
 		alignement('O'.$row);
 		alignement('P'.$row);
+		alignement('Q'.$row);
+		alignement('R'.$row);
+		alignement('S'.$row);
+		alignement('T'.$row);
+		alignement('U'.$row);
 
 		$row++;
 		$compteur++;

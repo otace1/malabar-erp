@@ -153,10 +153,15 @@ $indiceSheet = 0;
 			-> setCellValue('J7', 'MONTANT AV')
 			-> setCellValue('K7', 'REF. FACTURE')
 			-> setCellValue('L7', 'REF. DECLARATION')
-			-> setCellValue('M7', 'REF. ASSURANCE')
-			-> setCellValue('N7', 'BL/LTA')
-			-> setCellValue('O7', 'TYPE PAIEMENT')
-			-> setCellValue('P7', 'REMARQUE');
+			-> setCellValue('M7', 'DATE DECLARATION')
+			-> setCellValue('N7', 'REF. LIQUIDATION')
+			-> setCellValue('O7', 'DATE LIQUIDATION')
+			-> setCellValue('P7', 'REF. QUITTANCE')
+			-> setCellValue('Q7', 'DATE QUITTANCE')
+			-> setCellValue('R7', 'REF. ASSURANCE')
+			-> setCellValue('S7', 'BL/LTA')
+			-> setCellValue('T7', 'TYPE PAIEMENT')
+			-> setCellValue('U7', 'REMARQUE');
 
 
 		cellColor('A'.$row, '000000');
@@ -175,6 +180,11 @@ $indiceSheet = 0;
 		cellColor('N'.$row, '000000');
 		cellColor('O'.$row, '000000');
 		cellColor('P'.$row, '000000');
+		cellColor('Q'.$row, '000000');
+		cellColor('R'.$row, '000000');
+		cellColor('S'.$row, '000000');
+		cellColor('T'.$row, '000000');
+		cellColor('U'.$row, '000000');
 
 
 		alignement('A'.$row);
@@ -193,6 +203,11 @@ $indiceSheet = 0;
 		alignement('N'.$row);
 		alignement('O'.$row);
 		alignement('P'.$row);
+		alignement('Q'.$row);
+		alignement('R'.$row);
+		alignement('S'.$row);
+		alignement('T'.$row);
+		alignement('U'.$row);
 
 		$excel->getActiveSheet()
 			->getStyle('A'.$row)->applyFromArray($styleHeader);
@@ -226,8 +241,18 @@ $indiceSheet = 0;
 			->getStyle('O'.$row)->applyFromArray($styleHeader);
 		$excel->getActiveSheet()
 			->getStyle('P'.$row)->applyFromArray($styleHeader);
+		$excel->getActiveSheet()
+			->getStyle('Q'.$row)->applyFromArray($styleHeader);
+		$excel->getActiveSheet()
+			->getStyle('R'.$row)->applyFromArray($styleHeader);
+		$excel->getActiveSheet()
+			->getStyle('S'.$row)->applyFromArray($styleHeader);
+		$excel->getActiveSheet()
+			->getStyle('T'.$row)->applyFromArray($styleHeader);
+		$excel->getActiveSheet()
+			->getStyle('U'.$row)->applyFromArray($styleHeader);
 
-		$excel-> getActiveSheet()-> getStyle('A'.$row.':P'.$row)-> applyFromArray(
+		$excel-> getActiveSheet()-> getStyle('A'.$row.':U'.$row)-> applyFromArray(
 			array(
 				'borders' => array(
 					'allborders' => array(
@@ -331,7 +356,7 @@ $indiceSheet = 0;
 		//----------- FIN Récuperation des LICENCES ------------
 
 		//Bordure des Cellules
-		$excel-> getActiveSheet()-> getStyle('A8:P'.($row-1))-> applyFromArray(
+		$excel-> getActiveSheet()-> getStyle('A8:U'.($row-1))-> applyFromArray(
 			array(
 				'borders' => array(
 					'allborders' => array(
@@ -347,7 +372,7 @@ $indiceSheet = 0;
 		//$excel-> getActiveSheet()-> getColumnDimension('')-> setWidth(25);
 		$incrementColonne = 3;
 		$lettre = 'C';
-		while ($incrementColonne <= 14) {
+		while ($incrementColonne <= 20) {
 
 			if ($lettre == 'C') {
 				$excel-> getActiveSheet()-> getColumnDimension("$lettre")-> setWidth(35);
