@@ -11161,6 +11161,7 @@
 			while($reponse = $requete-> fetch()){
 				$cost_2 = '';
 				$cif_split = '';
+				$unite = 'Per Declaration';
 				if($reponse['tva'] == '0'){
 					$tva = '0';
 					$ttc = $reponse['ht_usd'];
@@ -21100,6 +21101,7 @@
 			$entree['id_mod_lic'] = $id_mod_lic;
 			$entree['id_march'] = $id_march;
 			$entree['id_mod_trans'] = $id_mod_trans;
+			$entree['id_dos'] = $id_dos;
 			$compteur = 0;
 			$active = '';
 			$sqlTypeDebours = '';
@@ -21376,6 +21378,75 @@
 					
 					<?php
 				}$requeteDebours-> closeCursor();
+
+				//---------- Depense KAMOA
+				$requeteDebours = $connexion-> prepare("SELECT deb.abr_deb AS abr_deb, 
+														-- UPPER(REPLACE(deb.nom_deb, '\'', '')) AS nom_deb, 
+														deb.nom_deb AS nom_deb, 
+														deb.id_deb AS id_deb,
+														ROUND(depdos.montant, 2) AS montant
+													FROM debours deb, depense dep, depense_dossier depdos, dossier dos
+													WHERE deb.id_t_deb = ?
+														AND deb.id_deb = dep.id_deb
+														AND dep.id_dep = depdos.id_dep
+														AND depdos.id_dos = dos.id_dos
+														AND dos.id_dos = ?
+													ORDER BY deb.rang, deb.id_deb ASC");
+				$requeteDebours-> execute(array($reponseTypeDebours['id_t_deb'], $entree['id_dos']));
+				while($reponseDebours = $requeteDebours-> fetch()){
+					$compteur++;
+					$montant_tva_input = '';
+
+					// if ($this-> getDossier($id_dos)['num_lic'] == 'UNDER VALUE' && !empty( $this-> getMontantDeboursUnderValue($this-> getDossier($id_dos)['id_cli'], $reponseDebours['id_deb'], $this-> getDossier($id_dos)['id_mod_lic'], $this-> getDossier($id_dos)['id_mod_trans'], $this-> getDossier($id_dos)['id_march']))) {
+					
+					$mask_tva = '';
+					
+
+					$unite_input = '<span id="unite_'.$compteur.'"></span>';
+					$montant_input = '<input type="number" step="0.001" style="text-align: center;" class="bg-dark" name="montant_'.$compteur.'" id="montant_'.$reponseDebours['id_deb'].'" value="'.$reponseDebours['montant'].'" onblur="getTotal()">';
+					$montant_tva_input = '';
+					
+					$detail_input = '';
+					$usd_input = '<option value="1">USD</option><option value="0">CDF</option>';
+					$tva_input = '<option value="0">NO</option><option value="1">YES</option><option value="1">YES</option><option value="0">NO</option>';
+
+					$debours .= '<tr>
+									<td width="10%">
+										<input type="hidden" id="id_deb_'.$compteur.'" name="id_deb_'.$compteur.'" value="'.$reponseDebours['id_deb'].'">
+										'.$reponseDebours['abr_deb'].'
+									</td>
+									<td width="50%">
+										'.$reponseDebours['nom_deb'].$detail_input.'
+									</td>
+									<td style="text-align: center;">
+										'.$unite_input.'
+									</td>
+									<td style="text-align: center;">
+										'.$montant_input.'
+
+									</td>
+									<td style="text-align: center;">
+										<select name="usd_'.$compteur.'" id="usd_'.$compteur.'" onchange="getTotal()">
+											'.$usd_input.'
+										</select>
+									</td>
+									<td style="text-align: center;">
+										<select name="tva_'.$compteur.'" id="tva_'.$mask_tva.'" onchange="getTotal();calculDroit();">
+											'.$tva_input.'
+										</select>
+									</td>
+									<td style="text-align: center;">
+										'.$montant_tva_input.'
+
+									</td>
+								</tr>';
+
+					?>
+					
+					<?php
+				}$requeteDebours-> closeCursor();
+
+				//---------- Fin Depense KAMOA
 				$debours .= '</div>';
 
 			}$requeteTypeDebours-> closeCursor();
@@ -45756,6 +45827,9 @@
 			$reponse = $requete-> fetch();
 			if($reponse){
 				return $reponse;
+			}else{
+				$reponse['nom_util']=null;
+				return $reponse;
 			}
         }
         
@@ -46440,7 +46514,7 @@
 			return $reponse['nbre'];
 		}
 
-		public function getListeUploadDepense(){
+		public function getListeUploadDepenseBackUp(){
 			include('connexion.php');
 			// $entree['id_mod_lic'] = $id_mod_lic;
 
@@ -46452,6 +46526,27 @@
 				<a class="dropdown-item" href="#" onclick="modal_upload_depense('<?php echo $reponse['id_dep'];?>', '<?php echo $reponse['nom_dep'];?>');"><?php echo $reponse['nom_dep'];?></a>
 				<?php
 			}$requete-> closeCursor();
+			
+		}
+
+		public function getListeUploadDepense(){
+			include('connexion.php');
+			// $entree['id_mod_lic'] = $id_mod_lic;
+			$table = '';
+			$compteur = 0;
+
+			$requete = $connexion-> query("SELECT *
+											FROM depense");
+			// $requete-> execute(array($entree['id_mod_lic']));
+			while ($reponse = $requete-> fetch()) {
+				$compteur++;
+				$table .='<tr onMouseOver="this.style.cursor=\'pointer\'" onclick="modal_upload_depense('.$reponse['id_dep'].', \''.$reponse['nom_dep'].'\');">
+							<td>'.$compteur.'</td>
+							<td>'.$reponse['nom_dep'].'</td>
+						</tr>';
+			}$requete-> closeCursor();
+
+			return $table;
 			
 		}
 
@@ -50507,6 +50602,58 @@
 
 		//Methodes permettant de Selectionner 
 
+		public function selectionnerUserVisaDept(){
+			include('connexion.php');
+			// $entree['id_role'] = $id_role;
+			$requete = $connexion-> query("SELECT id_util, nom_util
+											FROM utilisateur
+											WHERE visa_dept_df = '1'");
+			// $requete-> execute(array($entree['id_role']));
+
+			while($reponse = $requete-> fetch()){
+
+				?>
+				<option value="<?php echo $reponse['id_util']; ?>">
+					<?php echo $reponse['nom_util']; ?>
+				</option>
+				<?php
+			}$requete-> closeCursor();
+		}
+
+		public function selectionnerSite(){
+			include('connexion.php');
+			// $entree['id_role'] = $id_role;
+			$requete = $connexion-> query("SELECT *
+											FROM site");
+			// $requete-> execute(array($entree['id_role']));
+
+			while($reponse = $requete-> fetch()){
+
+				?>
+				<option value="<?php echo $reponse['id_site']; ?>">
+					<?php echo $reponse['nom_site']; ?>
+				</option>
+				<?php
+			}$requete-> closeCursor();
+		}
+
+		public function selectionnerDepartement(){
+			include('connexion.php');
+			// $entree['id_role'] = $id_role;
+			$requete = $connexion-> query("SELECT *
+											FROM departement");
+			// $requete-> execute(array($entree['id_role']));
+
+			while($reponse = $requete-> fetch()){
+
+				?>
+				<option value="<?php echo $reponse['id_dept']; ?>">
+					<?php echo $reponse['nom_dept']; ?>
+				</option>
+				<?php
+			}$requete-> closeCursor();
+		}
+
 		public function selectionnerModeleLicence(){
 			include('connexion.php');
 			// $entree['id_role'] = $id_role;
@@ -51705,6 +51852,25 @@
 			$requete = $connexion-> prepare("INSERT INTO depense_dossier(id_dep, id_dos, date_dep, montant, assigned_to, id_util)
 												VALUES(?, ?, ?, ?, ?, ?)");
 			$requete-> execute(array($entree['id_dep'], $entree['id_dos'], $entree['date_dep'], $entree['montant'], $entree['assigned_to'], $_SESSION['id_util']));
+			
+
+		}
+
+
+		public function creerDossierDemandeFond($id_dep, $id_dos, $id_df, $montant){
+			include("connexion.php");
+			$entree['id_dep'] = $id_dep;
+			$entree['id_dos'] = $id_dos;
+			$entree['id_df'] = $id_df;
+			$entree['montant'] = $montant;
+
+			// if ($entree['id_df'] == '') {
+			// 	$entree['id_df'] = NULL;
+			// }
+
+			$requete = $connexion-> prepare("INSERT INTO dossier_demande_fond(id_dep, id_dos, id_df, montant, id_util)
+												VALUES(?, ?, ?, ?, ?)");
+			$requete-> execute(array($entree['id_dep'], $entree['id_dos'], $entree['id_df'], $entree['montant'], $_SESSION['id_util']));
 			
 
 		}
@@ -53881,6 +54047,49 @@
 			?>
 			<option value="<?php echo $reponse['id_cli'];?>">
 				<?php echo $reponse['nom_cli'];?>
+			</option>
+			<?php
+			}$requete-> closeCursor();
+
+		}
+
+		public function selectionnerDepense(){
+			include('connexion.php');
+			//$entree['id_mod_lic'] = $id_mod_lic;
+
+			$requete = $connexion-> query("SELECT *
+												FROM depense
+												ORDER BY nom_dep");
+			//$requete-> execute(array($entree['id_mod_lic']));
+
+			while($reponse = $requete-> fetch()){
+			?>
+			<option value="<?php echo $reponse['id_dep'];?>">
+				<?php echo $reponse['nom_dep'];?>
+			</option>
+			<?php
+			}$requete-> closeCursor();
+
+		}
+
+		public function selectionnerDeboursDF(){
+			include('connexion.php');
+			//$entree['id_mod_lic'] = $id_mod_lic;
+
+			$requete = $connexion-> query("SELECT deb.id_deb AS id_deb,
+													deb.nom_deb AS nom_deb
+												FROM debours deb, affectation_debours_client_modele_licence aff
+												WHERE deb.id_t_deb = '1'
+													AND deb.id_deb = aff.id_deb
+													AND aff.id_mod_lic = 2
+												GROUP BY deb.id_deb
+												ORDER BY deb.nom_deb");
+			//$requete-> execute(array($entree['id_mod_lic']));
+
+			while($reponse = $requete-> fetch()){
+			?>
+			<option value="<?php echo $reponse['id_deb'];?>">
+				<?php echo $reponse['nom_deb'];?>
 			</option>
 			<?php
 			}$requete-> closeCursor();
@@ -59141,6 +59350,235 @@
 		}
 
 		//FIN Methode permettant de supprimer
+
+		function creer_demande_fond($id_dept, $id_site, $beneficiaire, $id_cli, $cash, $montant, $usd, $libelle, $id_util_visa_dept, $id_dep){
+			include("connexion.php");
+
+			$entree['id_dept'] = $id_dept;
+			$entree['id_site'] = $id_site;
+			$entree['beneficiaire'] = $beneficiaire;
+			$entree['id_cli'] = $id_cli;
+			$entree['cash'] = $cash;
+			$entree['montant'] = $montant;
+			$entree['usd'] = $usd;
+			$entree['libelle'] = $libelle;
+			$entree['id_util_visa_dept'] = $id_util_visa_dept;
+			$entree['id_dep'] = $id_dep;
+
+			$requete = $connexion-> prepare('INSERT INTO demande_fond(id_dept, id_site, beneficiaire, id_cli, 
+																		cash, montant, usd, libelle, id_util_visa_dept, id_util, id_dep)
+												VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
+			$requete-> execute(array($entree['id_dept'], $entree['id_site'], $entree['beneficiaire'], $entree['id_cli'], $entree['cash'], $entree['montant'], $entree['usd'], $entree['libelle'], $entree['id_util_visa_dept'], $_SESSION['id_util'], $_POST['id_dep']));
+
+		}
+
+		public function demande_fond($statut){
+			include('connexion.php');
+
+
+			if ($statut == 'no_dept') {
+				$sqlStatut = ' AND df.date_visa_dept IS NULL ';
+			}else if ($statut == 'no_dir') {
+				$sqlStatut = ' AND df.date_visa_dept IS NOT NULL 
+								AND df.date_visa_dir IS NULL 
+								AND df.a_facturer = \'1\' ';
+			}else if ($statut == 'no_fin') {
+				$sqlStatut = ' AND df.date_visa_dept IS NOT NULL 
+								AND df.date_visa_fin IS NULL 
+								AND (
+										df.a_facturer = \'0\'
+										OR
+										(df.date_visa_dir IS NOT NULL AND df.a_facturer = \'1\')
+									)';
+			}else if ($statut == 'ok') {
+				$sqlStatut = ' AND df.date_visa_fin IS NOT NULL';
+			}else if ($statut == 'no_decaiss') {
+				$sqlStatut = ' AND df.date_visa_fin IS NOT NULL 
+								AND df.date_decaiss IS NULL';
+			}else if ($statut == 'decaiss') {
+				$sqlStatut = ' AND df.date_decaiss IS NOT NULL';
+			}
+
+			$compteur = 0;
+			$rows = array();
+
+			$requete = $connexion-> query("SELECT df.*,
+												DATE_FORMAT(df.date_create, '%d/%m/%Y') AS date_df,
+												cl.nom_cli AS nom_cli,
+												site.nom_site AS nom_site,
+												dept.nom_dept AS nom_dept,
+												util.nom_util AS nom_util,
+												CONCAT('<span class=\"btn btn-xs btn-info\"\" onclick=\"modal_afficher_df(\'',df.id_df,'\')\">
+																<i class=\"fa fa-arrow-circle-right\"></i>
+															</span>') AS btn_action
+											FROM demande_fond df, site, departement dept, client cl, utilisateur util
+											WHERE df.id_site = site.id_site
+												AND df.id_dept = dept.id_dept
+												AND df.id_cli = cl.id_cli
+												AND df.id_util = util.id_util
+											$sqlStatut");
+
+			while ($reponse = $requete-> fetch()) {
+				$compteur++;
+
+				$reponse['compteur'] = $compteur;
+
+				$rows[] = $reponse;
+			}$requete-> closeCursor();
+
+
+			return $rows;
+
+		}
+
+		public function getDemandeFond($id_df){
+			include('connexion.php');
+			$entree['id_df'] = $id_df;
+
+			$requete = $connexion-> prepare("SELECT df.*,
+												DATE_FORMAT(df.date_create, '%d/%m/%Y') AS date_df,
+												cl.nom_cli AS nom_cli,
+												site.nom_site AS nom_site,
+												util.nom_util AS nom_util,
+												dept.nom_dept AS nom_dept,
+												IF(df.cash='1', 'Cash', 'Bank') AS type_payment,
+												IF(df.usd='1', 'USD', 'CDF') AS monnaie,
+												CONCAT('<span class=\"btn btn-xs btn-info\" title=\"Support Document\" onclick=\"window.open(\'../demande_fond/',df.id_df,'/',df.fichier_df,'\',\'Support\',\'width=600,height=700\');\">
+														<i class=\"fa fa-folder-open\"></i>
+													</span>') AS support_doc,
+												IF(df.fichier_fact IS NOT NULL,
+													CONCAT('<span class=\"btn btn-xs btn-info\" title=\"Support Document\" onclick=\"window.open(\'../demande_fond/',df.id_df,'/',df.fichier_fact,'\',\'Support\',\'width=600,height=700\');\">
+														<i class=\"fa fa-clipper\"></i>
+													</span>'),
+													'') AS btn_fichier_fact,
+												CONCAT('<span class=\"btn btn-xs btn-info\" title=\"Support Document\" onclick=\"window.open(\'../demande_fond/',df.id_df,'/',df.fichier_df,'\',\'Support\',\'width=600,height=700\');\">
+														<i class=\"fa fa-folder-open\"></i>
+													</span>') AS support_doc
+												-- ,
+												-- CONCAT('<span class=\"btn btn-xs btn-info\"\" onclick=\"modal_afficher_df(\'',df.id_df,'\')\">
+												-- 				<i class=\"fa fa-arrow-circle-right\"></i>
+												-- 			</span>') AS btn_action
+											FROM demande_fond df, site, departement dept, client cl, utilisateur util
+											WHERE df.id_site = site.id_site
+												AND df.id_dept = dept.id_dept
+												AND df.id_cli = cl.id_cli
+												AND df.id_util = util.id_util
+												AND df.id_df = ?");
+			$requete-> execute(array($entree['id_df']));
+			$reponse=$requete-> fetch();
+			$reponse['nom_util_visa_dept'] = $this-> getUtilisateur($reponse['id_util_visa_dept'])['nom_util'];
+			$reponse['nom_util_visa_fin'] = $this-> getUtilisateur($reponse['id_util_visa_fin'])['nom_util'];
+			return $reponse;
+		}
+
+		public function visa_dept_df($id_df, $a_facturer, $montant_fact){
+			include('connexion.php');
+			$entree['id_df'] = $id_df;
+			$entree['a_facturer'] = $a_facturer;
+			$entree['montant_fact'] = $montant_fact;
+
+			$requete = $connexion-> prepare("UPDATE demande_fond
+												SET a_facturer = ?, montant_fact = ?, 
+													id_util_visa_dept = ?, date_visa_dept = NOW()
+												WHERE id_df = ?");
+			$requete-> execute(array($entree['a_facturer'], $entree['montant_fact'], $_SESSION['id_util'], $entree['id_df']));
+			// return $reponse;
+		}
+
+		public function ok_visa_dir_df($id_df){
+			include('connexion.php');
+			$entree['id_df'] = $id_df;
+
+			$requete = $connexion-> prepare("UPDATE demande_fond
+												SET id_util_visa_dir = ?, date_visa_dir = NOW()
+												WHERE id_df = ?");
+			$requete-> execute(array($_SESSION['id_util'], $entree['id_df']));
+			// return $reponse;
+		}
+
+		public function ok_visa_fin_df($id_df){
+			include('connexion.php');
+			$entree['id_df'] = $id_df;
+
+			$requete = $connexion-> prepare("UPDATE demande_fond
+												SET id_util_visa_fin = ?, date_visa_fin = NOW()
+												WHERE id_df = ?");
+			$requete-> execute(array($_SESSION['id_util'], $entree['id_df']));
+			// return $reponse;
+		}
+
+		public function getLastDemandeFond(){
+			include('connexion.php');
+			// $entree['id_df'] = $id_df;
+
+			$requete = $connexion-> prepare("SELECT * 
+												FROM demande_fond 
+												WHERE id_util = ? 
+												ORDER BY id_df DESC 
+												LIMIT 0, 1");
+			$requete-> execute(array($_SESSION['id_util']));
+			$reponse = $requete-> fetch();
+			return $reponse;
+		}
+
+		public function inserer_fichier_df($id_df, $fichier_df){
+			include('connexion.php');
+			$entree['id_df'] = $id_df;
+			$entree['fichier_df'] = $fichier_df;
+
+			$requete = $connexion-> prepare("UPDATE demande_fond
+												SET fichier_df = ?
+												WHERE id_df = ?");
+			$requete-> execute(array($entree['fichier_df'], $entree['id_df']));
+			// return $reponse;
+		}
+
+		public function inserer_fichier_fact($id_df, $fichier_fact){
+			include('connexion.php');
+			$entree['id_df'] = $id_df;
+			$entree['fichier_fact'] = $fichier_fact;
+
+			$requete = $connexion-> prepare("UPDATE demande_fond
+												SET fichier_fact = ?
+												WHERE id_df = ?");
+			$requete-> execute(array($entree['fichier_fact'], $entree['id_df']));
+			// return $reponse;
+		}
+
+		public function modal_search_dossier_df($id_cli, $ligne, $mot_cle=null){
+			include('connexion.php');
+			$compteur=0;
+			$entree['id_cli'] = $id_cli;
+
+			$sqlMotCle = '';
+
+			if (!empty($mot_cle) && ($mot_cle!='')) {
+				$sqlMotCle = 'AND (cl.code_cli LIKE "%'.$mot_cle.'%" OR cl.nom_cli LIKE "%'.$mot_cle.'%" OR dos.ref_dos LIKE"%'.$mot_cle.'%")';
+			}
+			// echo $mot_cle;
+			$table = '';
+			
+			$requete = $connexion-> prepare("SELECT dos.ref_dos AS ref_dos,
+															dos.id_dos AS id_dos
+														FROM dossier dos, client cl
+														WHERE dos.id_cli = ?
+															AND dos.id_cli = cl.id_cli
+															AND dos.not_fact = '0'
+															$sqlMotCle
+														ORDER BY dos.id_dos DESC");
+			$requete-> execute(array($entree['id_cli']));
+			while($reponse = $requete-> fetch()){
+				$compteur++;
+				$table .='
+    					<tr onMouseOver="this.style.cursor=\'pointer\'" onclick="get_dossier(\''.$reponse['id_dos'].'\', \''.$reponse['ref_dos'].'\', \''.$ligne.'\');">
+							<td>'.$compteur.'</td>
+							<td>'.$reponse['ref_dos'].'</td>
+						</tr>';
+			}$requete-> closeCursor();
+			
+			return $table;
+
+		}
 
 	}
 ?>
