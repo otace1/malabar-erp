@@ -46536,7 +46536,8 @@
 			$compteur = 0;
 
 			$requete = $connexion-> query("SELECT *
-											FROM depense");
+											FROM depense
+											ORDER BY nom_dep");
 			// $requete-> execute(array($entree['id_mod_lic']));
 			while ($reponse = $requete-> fetch()) {
 				$compteur++;
