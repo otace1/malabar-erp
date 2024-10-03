@@ -126,7 +126,7 @@ $marchandise = $maClasse-> getMarchandiseFacture($_GET['ref_fact'])['nom_march']
 $fournisseur = $maClasse-> getFournisseurFacture($_GET['ref_fact'])['supplier'];
 $info_fact = $maClasse-> getFactureGlobale($_GET['ref_fact'])['information'];
 
-$taxe = $maClasse-> getDetailFactureExportSingle2($_GET['ref_fact'], '1');
+$taxe = $maClasse-> getDetailFactureExportMultiple($_GET['ref_fact'], '1');
 
 $autres_charges = $maClasse-> getDetailFactureExportMultiple($_GET['ref_fact'], '2');
 

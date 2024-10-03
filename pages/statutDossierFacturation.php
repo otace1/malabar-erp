@@ -103,7 +103,7 @@
               </div>    
               <!-- /.card-header -->
               <div class="card-body table-responsive p-0">
-                <table id="file_data" cellspacing="0" width="100%" class="table text-center display compact table-bordered table-striped table-dark table-sm text-nowrap">
+                <table id="file_data" cellspacing="0" width="100%" class="table text-center display compact table-bordered table-striped table-sm text-nowrap">
                   <thead>
                     <tr>
                       <th style="">#</th>
@@ -112,10 +112,10 @@
                       <th style="">Status</th>
                       <th style="">Invoice Ref.</th>
                       <th style="">Invoice Date</th>
-                      <th style="">Commodity</th>
+                      <th style="">Category</th>
+                      <th style="">Description</th>
                       <th style="">License</th>
                       <th style="">Comm. Inv. / Lot Num.</th>
-                      <th style="">Commodity</th>
                       <th style="">Decl. Ref.</th>
                       <th style="">Decl. Date</th>
                       <th style="">Liq. Ref.</th>
@@ -213,6 +213,20 @@
             <input type="date" name="date_quit" id="date_quit" class="form-control form-control-sm cc-exp">
           </div>
 
+          <div class="col-md-6">
+            <label for="x_card_code" class="control-label mb-1">Commodity Category</label>
+            <select name="id_march" id="id_march" class="form-control form-control-sm cc-exp">
+              <?php
+                $maClasse-> selectionnerMarchandiseClientModeleLicence2($_GET['id_cli'], $_GET['id_mod_lic_fact']);
+              ?>
+            </select>
+          </div>
+
+          <div class="col-md-6">
+            <label for="x_card_code" class="control-label mb-1">Commodity Description</label>
+            <textarea name="commodity" id="commodity" class="form-control form-control-sm cc-exp bg bg-light" disabled></textarea>
+          </div>
+
         </div>
       </div>
       <div class="modal-footer justify-content-between">
@@ -259,6 +273,8 @@
           $('#date_liq').val(data.date_liq);
           $('#ref_quit').val(data.ref_quit);
           $('#date_quit').val(data.date_quit);
+          $('#id_march').val(data.id_march);
+          $('#commodity').val(data.commodity);
           $('#modal_edit_statut_dossier_facturation').modal('show');
         }
       },
@@ -351,10 +367,10 @@
       {"data":"statut"},
       {"data":"ref_fact"},
       {"data":"date_fact"},
+      {"data":"nom_march"},
       {"data":"commodity"},
       {"data":"num_lic"},
       {"data":"ref_fact_dos"},
-      {"data":"commodity"},
       {"data":"ref_decl"},
       {"data":"date_decl"},
       {"data":"ref_liq"},

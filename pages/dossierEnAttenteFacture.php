@@ -103,7 +103,8 @@
                     <tr class="">
                       <th style="" width="5px">#</th>
                       <th style="">File Ref.</th>
-                      <th style="">Commodity</th>
+                      <th style="">Category</th>
+                      <th style="">Description</th>
                       <th style=" text-align: center;">Decl.Ref.</th>
                       <th style=" text-align: center;">Decl.Date</th>
                       <th style=" text-align: center;">Liq.Ref.</th>
@@ -139,7 +140,8 @@
                     <tr class="">
                       <th style="">#</th>
                       <th style="">File Ref.</th>
-                      <th style="">Commodity</th>
+                      <th style="">Category</th>
+                      <th style="">Description</th>
                       <th style=" text-align: center;">Decl.Ref.</th>
                       <th style=" text-align: center;">Decl.Date</th>
                       <th style=" text-align: center;">Liq.Ref.</th>
@@ -209,7 +211,182 @@
   <!-- /.modal-dialog -->
 </div>
 
+<div class="modal fade " id="modal_edit_statut_dossier_facturation">
+  <div class="modal-dialog modal-md">
+    <form id="form_edit_statut_dossier_facturation" method="POST" action="" data-parsley-validate enctype="multipart/form-data">
+      <input type="hidden" name="id_dos" id="id_dos">
+      <input type="hidden" name="operation" id="operation" value="edit_statut_dossier_facturation">
+    <div class="modal-content">
+      <div class="modal-header ">
+        <h4 class="modal-title"><i class="fa fa-edit"></i> Edit </h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+
+          <div class="col-md-6">
+            <label for="x_card_code" class="control-label mb-1">File Ref.</label>
+            <input name="ref_dos" id="ref_dos" class="form-control form-control-sm cc-exp bg bg-dark" disabled>
+          </div>
+
+          <div class="col-md-6">
+            <label for="x_card_code" class="control-label mb-1">Tally Ref.</label>
+            <input name="mca_b_ref" id="mca_b_ref" class="form-control form-control-sm cc-exp">
+          </div>
+
+          <div class="col-md-6">
+            <label for="x_card_code" class="control-label mb-1">Invoicing</label>
+            <select name="not_fact" id="not_fact" class="form-control form-control-sm cc-exp" required>
+              <option></option>
+              <option value="0">Activated</option>
+              <option value="1">Disactivated</option>
+              <option value="2">Excel Invoice</option>
+            </select>
+          </div>
+
+          <div class="col-md-6">
+            <label for="x_card_code" class="control-label mb-1">Excel Inv. Ref.</label>
+            <input type="text" name="ref_fact_excel" id="ref_fact_excel" class="form-control form-control-sm cc-exp bg bg-warning">
+          </div>
+
+          <div class="col-md-6">
+            <label for="x_card_code" class="control-label mb-1">Declaration Ref.</label>
+            <input type="text" name="ref_decl" id="ref_decl" class="form-control form-control-sm cc-exp">
+          </div>
+
+          <div class="col-md-6">
+            <label for="x_card_code" class="control-label mb-1">Declaration Date</label>
+            <input type="date" name="date_decl" id="date_decl" class="form-control form-control-sm cc-exp">
+          </div>
+
+          <div class="col-md-6">
+            <label for="x_card_code" class="control-label mb-1">Liquidation Ref.</label>
+            <input type="text" name="ref_liq" id="ref_liq" class="form-control form-control-sm cc-exp">
+          </div>
+
+          <div class="col-md-6">
+            <label for="x_card_code" class="control-label mb-1">Liquidation Date</label>
+            <input type="date" name="date_liq" id="date_liq" class="form-control form-control-sm cc-exp">
+          </div>
+
+          <div class="col-md-6">
+            <label for="x_card_code" class="control-label mb-1">Quittance Ref.</label>
+            <input type="text" name="ref_quit" id="ref_quit" class="form-control form-control-sm cc-exp">
+          </div>
+
+          <div class="col-md-6">
+            <label for="x_card_code" class="control-label mb-1">Quittance Date</label>
+            <input type="date" name="date_quit" id="date_quit" class="form-control form-control-sm cc-exp">
+          </div>
+
+          <div class="col-md-6">
+            <label for="x_card_code" class="control-label mb-1">Commodity Category</label>
+            <select name="id_march" id="id_march" class="form-control form-control-sm cc-exp">
+              <?php
+                $maClasse-> selectionnerMarchandiseClientModeleLicence2($_GET['id_cli'], $_GET['id_mod_lic_fact']);
+              ?>
+            </select>
+          </div>
+
+          <div class="col-md-6">
+            <label for="x_card_code" class="control-label mb-1">Commodity Description</label>
+            <textarea name="commodity" id="commodity" class="form-control form-control-sm cc-exp bg bg-light" disabled></textarea>
+          </div>
+
+        </div>
+      </div>
+      <div class="modal-footer justify-content-between">
+        <button type="button" class="btn btn-xs btn-danger" data-dismiss="modal">Cancel</button>
+        <button type="submit" name="" class="btn btn-xs btn-primary">Submit</button>
+      </div>
+    </div>
+    </form>
+    <!-- /.modal-content -->
+  </div>
+  <!-- /.modal-dialog -->
+</div>
+
 <script type="text/javascript">
+
+  function modal_edit_statut_dossier_facturation(id_dos){
+    $('#spinner-div').show();
+    $.ajax({
+      type: 'post',
+      url: 'ajax.php',
+      data: {id_dos: id_dos, operation: 'modal_edit_statut_dossier_facturation'},
+      dataType: 'json',
+      success:function(data){
+        if (data.logout) {
+          alert(data.logout);
+          window.location="../deconnexion.php";
+        }else{
+          $('#id_dos').val(data.id_dos);
+          $('#ref_dos').val(data.ref_dos);
+          $('#mca_b_ref').val(data.mca_b_ref);
+          $('#not_fact').val(data.not_fact);
+          $('#ref_fact_excel').val(data.ref_fact_excel);
+          $('#ref_decl').val(data.ref_decl);
+          $('#date_decl').val(data.date_decl);
+          $('#ref_liq').val(data.ref_liq);
+          $('#date_liq').val(data.date_liq);
+          $('#ref_quit').val(data.ref_quit);
+          $('#date_quit').val(data.date_quit);
+          $('#id_march').val(data.id_march);
+          $('#commodity').val(data.commodity);
+          $('#modal_edit_statut_dossier_facturation').modal('show');
+        }
+      },
+      complete: function () {
+          $('#spinner-div').hide();//Request is complete so hide spinner
+      }
+    });
+
+  }
+
+  $(document).ready(function(){
+
+      $('#form_edit_statut_dossier_facturation').submit(function(e){
+
+              e.preventDefault();
+
+        if(confirm('Do really you want to submit ?')) {
+
+          var fd = new FormData(this);
+          $('#spinner-div').show();
+
+          $.ajax({
+            type: 'post',
+            url: 'ajax.php',
+            processData: false,
+            contentType: false,
+            data: fd,
+            dataType: 'json',
+            success:function(data){
+              if (data.logout) {
+                alert(data.logout);
+                window.location="../deconnexion.php";
+              }else if(data.message){
+                $('#modal_edit_statut_dossier_facturation').modal('hide');
+                $( '#form_edit_statut_dossier_facturation' ).each(function(){
+                    this.reset();
+                });
+                $('#afficherDossierEnAttenteFactureAjaxWithSupportDocs').DataTable().ajax.reload();
+                $('#afficherDossierEnAttenteFactureAjaxAwaitingSupportDocs').DataTable().ajax.reload();
+                alert(data.message);
+              }
+            },
+            complete: function () {
+                $('#spinner-div').hide();//Request is complete so hide spinner
+            }
+          });
+
+        }
+
+      });
+    
+  });
 
   function find_support_doc(id_dos) {
     $.ajax({
@@ -285,6 +462,7 @@
     "columns":[
       {"data":"compteur"},
       {"data":"ref_dos"},
+      {"data":"nom_march"},
       {"data":"commodity"},
       {"data":"ref_decl",
         className: 'dt-body-center'
@@ -352,6 +530,7 @@
     "columns":[
       {"data":"compteur"},
       {"data":"ref_dos"},
+      {"data":"nom_march"},
       {"data":"commodity"},
       {"data":"ref_decl",
         className: 'dt-body-center'
