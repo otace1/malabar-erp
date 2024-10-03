@@ -3499,7 +3499,7 @@
 			            </li>
 		              	<li class="nav-item">
 			                <!-- <a href="statutDossierFacturation.php?type_fact=globale&id_mod_lic_fact=<?php echo $id_mod_lic;?>&id_cli=<?php echo $reponse['id_cli'];?>" class="nav-link"> -->
-			                <a  onclick="window.open('statutDossierFacturation.php?type_fact=globale&id_mod_lic_fact=<?php echo $id_mod_lic;?>&id_cli=<?php echo $reponse['id_cli'];?>','pop1','width=1000,height=800');" class="nav-link">
+			                <a  onclick="window.open('statutDossierFacturation.php?type_fact=globale&id_mod_lic_fact=<?php echo $id_mod_lic;?>&id_cli=<?php echo $reponse['id_cli'];?>','pop1','width=1200,height=800');" class="nav-link">
 			                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-list nav-icon"></i>
 			                  <p>View Files</p>
 			                </a>
@@ -3732,10 +3732,12 @@
 													)
 													AS statut,
 													IF(facture_dossier.note_debit='0', facture_dossier.ref_fact, NULL) AS ref_fact,
-													IF(marchandise.nom_march IS NOT NULL,
-														marchandise.nom_march,
-														dossier.commodity
-													) AS commodity,
+													-- IF(marchandise.nom_march IS NOT NULL,
+													-- 	marchandise.nom_march,
+													-- 	dossier.commodity
+													-- ) AS commodity,
+													marchandise.nom_march AS nom_march,
+													dossier.commodity AS commodity,
 													dossier.num_lic AS num_lic,
 													DATE_FORMAT(facture_dossier.date_fact, '%d/%m/%Y') AS date_fact,
 													IF(dossier.id_mod_lic='2',
@@ -23150,11 +23152,13 @@
 
 			$requete = $connexion-> prepare("SELECT dossier.ref_dos AS ref_dos,
 													dossier.id_dos,
-													IF(marchandise.nom_march IS NOT NULL,
-														marchandise.nom_march,
-														dossier.commodity
-														)
-													 AS commodity,
+													-- IF(marchandise.nom_march IS NOT NULL,
+													-- 	marchandise.nom_march,
+													-- 	dossier.commodity
+													-- 	)
+													--  AS commodity,
+													marchandise.nom_march AS nom_march,
+													dossier.commodity AS commodity,
 													dossier.ref_decl AS ref_decl,
 													dossier.date_decl AS date_decl,
 													-- DATE_FORMAT(dossier.date_decl, '%d/%m/%Y') AS date_decl,
@@ -23174,6 +23178,7 @@
 														  <div class=\"dropdown-menu\" aria-labelledby=\"dropdownMenuButton\">
 														    <a class=\"dropdown-item text-sm text-warning\" href=\"#\" onclick=\"MAJ_support_doc(',dossier.id_dos,',\'',dossier.ref_dos,'\',0)\"><i class=\"fa fa-times\"></i> Unconfirm support documents</a>
 														    <a class=\"dropdown-item text-sm text-danger\" href=\"#\" onclick=\"MAJ_not_fact(',dossier.id_dos,',\'',dossier.ref_dos,'\',',dossier.id_cli,',',dossier.id_mod_lic,')\"><i class=\"fa fa-times\"></i> Disable invoicing</a>
+														    <a class=\'dropdown-item text-sm\' onclick=\'modal_edit_statut_dossier_facturation(',dossier.id_dos,')\'><i class=\'fa fa-edit\'></i> Edit File</a>
 														  </div>
 														</div>'),
 														CONCAT('<div class=\"dropdown\">
@@ -23183,6 +23188,7 @@
 														  <div class=\"dropdown-menu\" aria-labelledby=\"dropdownMenuButton\">
 														    <a class=\"dropdown-item text-sm text-primary\" href=\"#\" onclick=\"MAJ_support_doc(',dossier.id_dos,',\'',dossier.ref_dos,'\',1)\"><i class=\"fa fa-check\"></i> Confirm support documents</a>
 														    <a class=\"dropdown-item text-sm text-danger\" href=\"#\" onclick=\"MAJ_not_fact(',dossier.id_dos,',\'',dossier.ref_dos,'\',',dossier.id_cli,',',dossier.id_mod_lic,')\"><i class=\"fa fa-times\"></i> Disable invoicing</a>
+														    <a class=\'dropdown-item text-sm\' onclick=\'modal_edit_statut_dossier_facturation(',dossier.id_dos,')\'><i class=\'fa fa-edit\'></i> Edit File</a>
 														  </div>
 														</div>')
 													) AS btn_action
@@ -56561,6 +56567,24 @@
 			$requete = $connexion-> prepare("UPDATE dossier SET temporelle = ?
 												WHERE id_dos = ?");
 			$requete-> execute(array($entree['temporelle'], $entree['id_dos']));
+
+		} 
+
+		public function MAJ_id_march($id_dos, $id_march){
+
+			//Log
+			if ($this-> getDossier($id_dos)['id_march'] != $id_march) {
+				
+				$this-> creerLogDossier('ID Commodity Cat.', $id_march, $id_dos, $_SESSION['id_util']);
+
+			}
+
+			include('connexion.php');
+			$entree['id_dos'] = $id_dos;
+			$entree['id_march'] = $id_march;
+			$requete = $connexion-> prepare("UPDATE dossier SET id_march = ?
+												WHERE id_dos = ?");
+			$requete-> execute(array($entree['id_march'], $entree['id_dos']));
 
 		} 
 
