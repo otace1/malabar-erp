@@ -47039,6 +47039,7 @@
 									                dos.id_march AS id_march,
 									                dos.commodity AS commodity,
 									                march.nom_march AS nom_march,
+									                dos.code_tarif AS code_tarif,
 													((dos.fob_usd*dos.roe_inv)/dos.roe_decl) AS fob_en_usd
 												FROM facture_dossier fd, modele_facture mf, client cl, dossier dos, marchandise march, detail_facture_dossier det, debours deb, utilisateur util
 												WHERE fd.id_mod_fact = mf.id_mod_fact
