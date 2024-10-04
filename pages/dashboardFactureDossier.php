@@ -223,7 +223,7 @@
             </section>
           </div>
 
-          <div class="col-md-4 col-sm-6 col-12">
+          <div class="col-md-3 col-sm-6 col-12">
              <section class="content">
               <div class="container-fluid" style="">
                 <div class="row">
@@ -265,6 +265,46 @@
                               <td>Disabled</td>
                               <td style="text-align: right;"><span class="badge badge-danger text-sm" id="nbre_disabled"></span></td>
                             </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <!-- /.card-body -->
+                    </div>
+                    <!-- /.card -->
+                  </div>
+
+                </div>
+              </div><!-- /.container-fluid -->
+            </section>
+          </div>
+
+          <div class="col-md-3 col-sm-6 col-12">
+             <section class="content">
+              <div class="container-fluid" style="">
+                <div class="row">
+                  <div class="col-12">
+                    <div class="card">
+                      <div class="card-header">
+                        <h5 class="card-title" style="font-weight: bold;">
+                          <i class="fa fa-exclamation-triangle"></i> Pending By Category
+                        </h5>
+                        <div class="float-right">
+                          
+                        </div>
+                      </div>    
+                      <!-- /.card-header -->
+
+                      <div class="card-body table-responsive p-0">
+                        <span id="label_monitoring"></span>
+                        <table class=" table table-head-fixed table-bordered table-hover text-nowrap table-sm">
+                          <thead>
+                            <tr class="">
+                              <th>Commodity</th>
+                              <th width="20%">Nbre</th>
+                            </tr>
+                          </thead>
+                          <tbody id="getReportPendingInvoiceCommodityCategory">
+                            
                           </tbody>
                         </table>
                       </div>
@@ -381,7 +421,30 @@ if(isset($_GET['id_mod_lic_fact']) && isset($_GET['id_mod_lic_fact'])){
 <script type="text/javascript">
   $(document).ready(function(){
     afficherMonitoringFile();
+    getReportPendingInvoiceCommodityCategory();
   });
+
+  function getReportPendingInvoiceCommodityCategory(){
+    $('#spinner-div').show();
+    $.ajax({
+      type: 'post',
+      url: 'ajax.php',
+      data: {operation: 'getReportPendingInvoiceCommodityCategory', id_mod_lic: <?php echo $_GET['id_mod_lic_fact'];?>},
+      dataType: 'json',
+      success:function(data){
+        if (data.logout) {
+          alert(data.logout);
+          window.location="../deconnexion.php";
+        }else{
+          $('#getReportPendingInvoiceCommodityCategory').html(data.getReportPendingInvoiceCommodityCategory);
+        }
+      },
+      complete: function () {
+          $('#spinner-div').hide();//Request is complete so hide spinner
+      }
+    });
+
+  }
 
   function afficherMonitoringFile(){
     $('#spinner-div').show();

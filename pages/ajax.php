@@ -3124,8 +3124,15 @@
 
   		echo json_encode($reponse);
 
+	}else if(isset($_POST['operation']) && $_POST['operation']=='getReportPendingInvoiceCommodityCategory'){
+
+  		$reponse['getReportPendingInvoiceCommodityCategory'] = $maClasse-> getReportPendingInvoiceCommodityCategory($_POST['id_mod_lic']);
+  		echo json_encode($reponse);
+
 	}else if ($_POST['operation']=="statutDossier2") {
 		echo json_encode($maClasse-> afficherStatutDossierFactureAjax2($_POST['statut'], $_POST['id_mod_lic'], $_POST['id_cli']));
+	}else if ($_POST['operation']=="reportPendingInvoiceCommodityCategory") {
+		echo json_encode($maClasse-> reportPendingInvoiceCommodityCategory($_POST['id_mod_lic'], $_POST['id_march']));
 	}elseif(isset($_POST['operation']) && $_POST['operation']=='getDeboursPourFactureClientModeleLicenceAjaxChange'){// On recupere le modele a facturer
   		$reponse['debours'] = $maClasse-> getDeboursPourFactureClientModeleLicenceAjaxChange($_POST['id_cli'], $_POST['id_mod_lic'], $_POST['id_march'], $_POST['id_mod_trans'], $_POST['id_dos']);
   		// $reponse['template_invoice'] = $maClasse-> selectionnerMarchandiseTemplateFacture($reponse['id_cli'], $reponse['id_mod_trans'], $reponse['id_mod_lic']);
