@@ -4044,6 +4044,79 @@
 
 		}
 
+		public function reportPendingInvoiceCommodityCategory($id_mod_lic, $id_march){
+			include("connexion.php");
+			$entree['id_march'] = $id_march;
+			$entree['id_mod_lic'] = $id_mod_lic;
+			//$entree['type_fact'] = $type_fact;
+			$compteur=0;
+
+			$bg = "";
+			$badge = '';
+			$btn = '';
+			$etat ='';
+
+			$debut = $compteur;
+			$rows = array();
+
+			$sql = '';
+
+				$sql = "SELECT 1 AS compteur,
+							CONCAT(dossier.ref_dos,' <button class=\'btn btn-warning btn-xs\' onclick=\'modal_edit_statut_dossier_facturation(',dossier.id_dos,')\'><i class=\'fa fa-edit\'></i></button>') AS ref_dos,
+							NULL AS ref_fact,
+							marchandise.nom_march AS nom_march,
+							dossier.commodity AS commodity,
+							dossier.num_lic AS num_lic,
+							NULL AS date_fact,
+							IF(dossier.id_mod_lic='2',
+								dossier.ref_fact,
+								dossier.num_lot
+								)
+							 AS ref_fact_dos,
+							dossier.ref_decl AS ref_decl,
+							DATE_FORMAT(dossier.date_decl, '%d/%m/%Y') AS date_decl,
+							dossier.ref_liq AS ref_liq,
+							DATE_FORMAT(dossier.date_liq, '%d/%m/%Y') AS date_liq,
+							dossier.ref_quit AS ref_quit,
+							DATE_FORMAT(dossier.date_quit, '%d/%m/%Y') AS date_quit,
+							'<span class=\'badge badge-info font-weight-bold\'>Waiting to be invoiced</span>' AS statut,
+							dossier.mca_b_ref AS mca_b_ref
+						FROM dossier, marchandise
+						WHERE dossier.id_mod_lic = ?
+							AND dossier.id_march = marchandise.id_march
+							AND dossier.id_march = ?
+							AND dossier.date_decl IS NOT NULL
+							AND dossier.ref_decl IS NOT NULL
+							AND dossier.date_liq IS NOT NULL
+							AND dossier.ref_liq IS NOT NULL
+							AND dossier.date_quit IS NOT NULL
+							AND dossier.ref_quit IS NOT NULL
+							AND dossier.id_cli <> 1
+							AND dossier.not_fact = '0'
+							AND dossier.id_dos NOT IN (
+								SELECT DISTINCT(dos.id_dos) 
+									FROM facture_dossier fd, detail_facture_dossier det, dossier dos
+									WHERE fd.ref_fact = det.ref_fact
+										AND fd.note_debit = '0'
+										AND det.id_dos = dos.id_dos
+							)
+						-- GROUP BY dossier.id_dos
+						ORDER BY dossier.id_dos ASC";
+
+			$requete = $connexion-> prepare($sql);
+			$requete-> execute(array($entree['id_mod_lic'], $entree['id_march']));
+			while ($reponse = $requete-> fetch()) {
+				$compteur++;
+
+				$reponse['compteur'] = $compteur;
+				$rows[] = $reponse;
+
+			}$requete-> closeCursor();
+
+			return $rows;
+
+		}
+
 		public function afficherAllCompteAjax(){
 			include("connexion.php");
 
@@ -46551,6 +46624,41 @@
 							<td>'.$compteur.'</td>
 							<td>'.$reponse['nom_dep'].'</td>
 						</tr>';
+			}$requete-> closeCursor();
+
+			return $table;
+			
+		}
+
+		public function getReportPendingInvoiceCommodityCategory($id_mod_lic){
+			include('connexion.php');
+			$entree['id_mod_lic'] = $id_mod_lic;
+			$table = '';
+			$compteur = 0;
+
+			$requete = $connexion-> prepare("SELECT march.nom_march AS nom_march,
+												march.id_march AS id_march,
+												COUNT(dos.id_dos) AS nbre
+											FROM marchandise march, dossier dos
+											WHERE dos.id_march = march.id_march
+												AND dos.id_mod_lic = ?
+												AND dos.not_fact = '0'
+												AND dos.date_decl IS NOT NULL
+												AND dos.ref_decl IS NOT NULL
+												AND dos.date_liq IS NOT NULL
+												AND dos.ref_liq IS NOT NULL
+												AND dos.date_quit IS NOT NULL
+												AND dos.ref_quit IS NOT NULL
+												AND dos.id_dos NOT IN (SELECT id_dos FROM detail_facture_dossier)
+											GROUP BY march.id_march
+											ORDER BY march.nom_march");
+			$requete-> execute(array($entree['id_mod_lic']));
+			while ($reponse = $requete-> fetch()) {
+				$compteur++;
+				$table .='<tr onMouseOver="this.style.cursor=\'pointer\'" onclick="window.open(\'reportPendingInvoiceCommodityCategory.php?id_mod_lic='.$id_mod_lic.'&id_march='.$reponse['id_march'].'&nom_march='.$reponse['nom_march'].'\',\'Pending Invoice\',\'width=1000,height=800\');">
+                              <td>'.$reponse['nom_march'].'</td>
+                              <td style="text-align: right; font-weight: bold;">'.number_format($reponse['nbre'], 0, ',', ' ').'</td>
+                            </tr>';
 			}$requete-> closeCursor();
 
 			return $table;
