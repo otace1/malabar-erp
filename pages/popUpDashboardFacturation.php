@@ -142,6 +142,7 @@
                       <th>Encoded By</th>
                       <th>Product Category</th>
                       <th>Commodity</th>
+                      <th>Tarif Code</th>
                       <th>Poids</th>
                       <th>FOB (USD)</th>
                       <th>Scelle Electr.</th>
@@ -389,6 +390,7 @@
           {"data":"nom_util"},
           {"data":"nom_march"},
           {"data":"commodity"},
+          {"data":"code_tarif"},
           {"data":"poids",
             render: DataTable.render.number( null, null, 2, null ),
             className: 'dt-body-right'
