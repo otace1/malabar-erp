@@ -21616,11 +21616,17 @@
 						if (strlen(trim($this-> getDossier($id_dos)['horse']))>=5) {
 							$montant += 140;
 						}
+
 						if (strlen(trim($this-> getDossier($id_dos)['trailer_1']))>=5) {
 							$montant += 140;
 						}
+
 						if (strlen(trim($this-> getDossier($id_dos)['trailer_2']))>=5) {
 							$montant += 140;
+						}
+
+						if (strlen(trim($this-> getDossier($id_dos)['id_mod_trans']))==4) {
+							$montant == 280;
 						}
 
 						$unite = $montant/140;
