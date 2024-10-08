@@ -21625,8 +21625,8 @@
 							$montant += 140;
 						}
 
-						if (strlen(trim($this-> getDossier($id_dos)['id_mod_trans']))==4) {
-							$montant == 280;
+						if ($this-> getDossier($id_dos)['id_mod_trans']==4) {
+							$montant = 280;
 						}
 
 						$unite = $montant/140;
