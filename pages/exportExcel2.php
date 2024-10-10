@@ -67,7 +67,7 @@ $requeteModeTransport-> execute(array($_GET['id_cli']));
 while ($reponseModeTransport = $requeteModeTransport-> fetch()) {
 
 	//Pour EXPORT créer des tableurs par licence et modes de transport
-	if ($_GET['id_mod_trac'] == '1' && $_GET['id_march'] != '18' && $_GET['id_cli'] != '876' && $_GET['id_cli'] != '878' && $_GET['id_cli'] != '879' != '878' && $_GET['id_cli'] != '857' && $_GET['id_cli'] != '929') {
+	if ($_GET['id_mod_trac'] == '1' && $_GET['id_march'] != '18' && $_GET['id_cli'] != '876' && $_GET['id_cli'] != '878' && $_GET['id_cli'] != '879' && $_GET['id_cli'] != '878' && $_GET['id_cli'] != '857' && $_GET['id_cli'] != '929') {
 		
 		//--- Recuperation d'années -------
 		if(isset($_GET['annee']) && ($_GET['annee']!='')){
