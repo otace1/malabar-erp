@@ -30,6 +30,45 @@
           <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
           <?php
+
+
+          if(!empty($maClasse-> getAffectationUtilisateurModule($_SESSION['id_util'], 17))){
+          ?>
+          <a href="#" class="nav-link active bg-danger">
+              <!-- <img src="../images/gestion-des-risques.png" width="25px"> -->
+              <span class="">
+              <p>
+                <?php
+                  if ($maClasse-> getUtilisateur($_SESSION['id_util'])['langue']=='ENG') {
+                    echo 'PAYMENT REQUEST';
+                  }else if ($maClasse-> getUtilisateur($_SESSION['id_util'])['langue']=='FR') {
+                    echo 'DEMANDE DE FOND';
+                  }
+                ?>
+                <br>
+              </p></span>
+            </a>
+          </li>
+            <li class="nav-item">
+                <a href="demande_fond.php" class="nav-link">
+                <!-- <a href="#" class="nav-link" onclick="modal_client_cvee()"> -->
+                  <i class="fa fa-list"></i>
+                  <?php
+                    if ($maClasse-> getUtilisateur($_SESSION['id_util'])['langue']=='ENG') {
+                      echo 'Directory';
+                    }else if ($maClasse-> getUtilisateur($_SESSION['id_util'])['langue']=='FR') {
+                      echo 'Repertoire';
+                    }
+                  ?>
+                </a>
+            </li>
+
+            <?php
+              // $maClasse-> afficherMenuFinanceOPS();
+              echo '<hr>';
+            }
+
+
             if(!empty($maClasse-> getAffectationUtilisateurModule($_SESSION['id_util'], 14))){
           ?>
            <li class="nav-item has-treeview">
