@@ -33,7 +33,7 @@ $pdf->SetMargins(5,3 ,5);
 // set document information
 $pdf->SetCreator(PDF_CREATOR);
 $pdf->SetAuthor('');
-$pdf->SetTitle('Feuille de calcul '.$_GET['id_df']);
+$pdf->SetTitle('Demande de Fond '.$_GET['id_df']);
 $pdf->SetSubject('act');
 $pdf->SetKeywords('act');
 
@@ -69,6 +69,7 @@ $pdf->Image('../images/malabar2.png', 4, 10, 70, '', '', '', '', false, 300);
 $demande_fond = $maClasse-> getDemandeFond($_GET['id_df']);
 
 $id_df = $_GET['id_df'];
+$dossier = $maClasse-> getDossierDemandeDossier($_GET['id_df']);
 $date_df = $demande_fond['date_df'];
 $nom_dept = $demande_fond['nom_dept'];
 $beneficiaire = $demande_fond['beneficiaire'];
@@ -97,16 +98,44 @@ if (!empty($demande_fond['date_decaiss'])) {
 $nom_util_visa_fin = $demande_fond['nom_util_visa_fin'];
 $date_visa_fin = $demande_fond['date_visa_fin'];
 
-$nom_util_recep_fond = $demande_fond['nom_util_recep_fond'];
+$nom_util_visa_fin = $demande_fond['nom_util_visa_fin'];
+$date_visa_fin = $demande_fond['date_visa_fin'];
 
-$nuts = new nuts(number_format($demande_fond['montant'], 2, '.', ''), 'USD');
+$nom_util_visa_dir = $demande_fond['nom_util_visa_dir'];
+$date_visa_dir = $demande_fond['date_visa_dir'];
+
+$nom_recep_fond = $demande_fond['nom_recep_fond'];
+
+$nuts = new nuts(number_format($demande_fond['montant'], 2, '.', ''), $monnaie);
 
 $montant_mvt_lettre = ucfirst($nuts->convert('fr-FR'));
 
+$text_a_facture = '';
+
+if ($demande_fond['a_facturer']=='1') {
+	
+	$nuts = new nuts(number_format($demande_fond['montant_fact'], 2, '.', ''), $monnaie);
+
+	$montant_fact = ucfirst($nuts->convert('fr-FR'));
+
+	$text_a_facture = '
+				<tr>
+					<td width="30%" style="border-left: solid 1px black;">Chargeback: </td>
+					<td width="30%" style=" border-bottom: 0.5px dotted grey;"><b>'.number_format($demande_fond['montant_fact'], 2, '.', '').'</b> </td>
+					<td width="10%" style="">Devise: </td>
+					<td width="10%" style="border-bottom: 0.5px dotted grey;"><b>'.$monnaie.'</b> </td>
+					<td width="20%" style="border-right: solid 1px black; "></td>
+				</tr>
+				<tr>
+					<td width="30%" style="border-left: solid 1px black;">Montant en lettre: </td>
+					<td width="70%" style="border-right: solid 1px black; border-bottom: 0.5px dotted grey;"><b>'.$montant_fact.'</b> </td>
+				</tr>';
+
+}
 
 if(isset($_GET['id_df'])){
 
-$logo = '<img src="../images/malabar2.png" width="250px">';
+$logo = '<img src="../images/malabar2.png" width="200px">';
 
 $tbl = <<<EOD
     <html>
@@ -159,6 +188,7 @@ $tbl = <<<EOD
 			<td width="30%" style="border-left: solid 1px black;">Montant en lettre: </td>
 			<td width="70%" style="border-right: solid 1px black; border-bottom: 0.5px dotted grey;"><b>$montant_mvt_lettre</b> </td>
 		</tr>
+		$text_a_facture
 		<tr>
 			<td width="30%" style="border-left: solid 1px black;">Client: </td>
 			<td width="70%" style="border-right: solid 1px black; border-bottom: 0.5px dotted grey;"><b>$nom_cli</b> </td>
@@ -176,8 +206,9 @@ $tbl = <<<EOD
 			<td width="100%" style="text-align: center;border: solid 1px black;"><u>AUTORISATION</u></td>
 		</tr>
 		<tr>
-			<td width="50%" style="border-top: solid 1px black; border: solid 1px black;">Department: <br><br><b>$nom_util_visa_dept</b> <br><b>$date_visa_dept</b><br></td>
-			<td width="50%" style="border-top: solid 1px black; border: solid 1px black; border: solid 1px black;">Finance: <br><br><b>$nom_util_visa_fin</b> <br><b>$date_visa_fin</b><br></td>
+			<td width="34%" style="border-top: solid 1px black; border: solid 1px black;">Department: <br><br><b>$nom_util_visa_dept</b> <br><b>$date_visa_dept</b><br></td>
+			<td width="33%" style="border-top: solid 1px black; border: solid 1px black; border: solid 1px black;">For Chargeback: <br><br><b>$nom_util_visa_dir</b> <br><b>$date_visa_dir</b><br></td>
+			<td width="33%" style="border-top: solid 1px black; border: solid 1px black; border: solid 1px black;">Finance: <br><br><b>$nom_util_visa_fin</b> <br><b>$date_visa_fin</b><br></td>
 		</tr>
 	</table>
 	<table  cellpadding="3">
@@ -189,7 +220,59 @@ $tbl = <<<EOD
 		</tr>
 		<tr>
 			<td width="50%" style="border-top: solid 1px black; border: solid 1px black;">Caissier: <br><br><b>$nom_util_decaiss</b> <br><b>$date_decaiss</b><br></td>
-			<td width="50%" style="border-top: solid 1px black; border: solid 1px black; border: solid 1px black;">Pour Reception: <br><br><b>$nom_util_recep_fond</b><br></td>
+			<td width="50%" style="border-top: solid 1px black; border: solid 1px black; border: solid 1px black;">Pour Reception: <br><br><b>$nom_recep_fond</b><br><b>$date_decaiss</b></td>
+		</tr>
+	</table>
+	</bodystyle="font-weight: bold;">
+	</html>
+        
+EOD;
+$pdf->writeHTML($tbl, true, false, false, false, '');
+
+// add a page
+$pdf->AddPage('P', 'A5');
+$tbl = <<<EOD
+    <html>
+    <head>
+        <meta http-equiv = " content-type " content = " text/html; charset=utf-8" />
+    </head>
+    <body style="font-weight: bold;" style="">
+	<table cellpadding="2">
+		<br>
+		<br>
+		<br>
+		<tr>
+			<td width="5%" style=""></td>
+			<td width="80%" style="">$logo</td>
+			<td width="5%" style=""></td>
+		</tr>
+		<br>
+		<tr>
+			<td width="5%" style=""></td>
+			<td width="83%" style="">DETAILS - DEMANDE DE FONDS No. $id_df</td>
+		</tr>
+		<tr>
+			<td width="5%" style="text-align: center; border: 1 solid black; font-weight: bold;"><span><br>#<br></span></td>
+			<td width="30%" style="text-align: center; border: 1 solid black; font-weight: bold;"><span><br>MCA File No<br></span></td>
+			<td width="45%" style="text-align: center; border: 1 solid black; font-weight: bold;"><span><br>Expense<br></span></td>
+			<td width="20%" style="text-align: center; border: 1 solid black; font-weight: bold;"><span><br>Amount<br></span></td>
+		</tr>
+		$dossier
+		
+		<br>
+		<br>
+		<br>
+		<tr>
+			<td width="5%" style=""></td>
+			<td width="90%" style="text-align: right;"></td>
+			<td width="5%" style=""></td>
+		</tr>
+		<br>
+		<br>
+		<tr>
+			<td width="5%" style=""></td>
+			<td width="90%" style="text-align: center;">$sceau</td>
+			<td width="5%" style=""></td>
 		</tr>
 	</table>
 	</bodystyle="font-weight: bold;">

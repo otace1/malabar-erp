@@ -677,6 +677,9 @@
 		}
 		echo json_encode($maClasse-> getListeFactures($_POST['statut'], $id_mod_lic, $id_util, $debut, $fin, $_POST['id_cli']));
 		
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='pay_report'){ 
+		echo json_encode($maClasse-> pay_report($_POST['statut']));
+		
 	}elseif(isset($_POST['operation']) && $_POST['operation']=='rapportOperations'){ // On Recupere les data pour rapport Operations
 		$response['nbre_dossier_encours'] = $maClasse-> getNbreDossier('Dossiers En Cours');
 		$response['nbre_dossier_non_declare'] = $maClasse-> getNbreDossier('Dossiers non declarés');
@@ -3593,6 +3596,7 @@
 		$response['visa_dept_df'] = $maClasse-> getUtilisateur($_SESSION['id_util'])['visa_dept_df'];
 		$response['visa_dir_df'] = $maClasse-> getUtilisateur($_SESSION['id_util'])['visa_dir_df'];
 		$response['visa_fin_df'] = $maClasse-> getUtilisateur($_SESSION['id_util'])['visa_fin_df'];
+		$response['decaiss_df'] = $maClasse-> getUtilisateur($_SESSION['id_util'])['decaiss_df'];
 
 		echo json_encode($response);
 
@@ -3635,6 +3639,50 @@
 
 		echo json_encode($response);
 
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='reject_dept_df'){ 
+
+		$maClasse-> reject_dept($_POST['id_df'], $_POST['motif_reject_dept']);
+		$response['message'] = '
+	    				<div class="alert alert-danger alert-dismissible" role="alert">
+		                  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+		                  <i class="fa fa-times"></i> The payment request <b>No.'.$_POST['id_df'].'</b> has been refused by the departement!
+		                </div>';
+
+		echo json_encode($response);
+
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='decaiss_df'){ 
+
+		if (!empty($_FILES)) {
+
+    		$file = $_FILES['fichier_decaiss'];
+    		$filename = $file['name'];
+    		$ext = pathinfo($filename, PATHINFO_EXTENSION);
+
+    		$fichier_decaiss = uniqid();
+    		$id_df = $_POST['id_df'];
+    		// $id_df = str_replace("/", "_", "$id_df");
+			
+			$dossier = '../demande_fond/'.$id_df;
+
+			if(!is_dir($dossier)){
+				mkdir("../demande_fond/$id_df", 0777);
+			}
+			$uploadFile = $dossier.'/'.$fichier_decaiss.'.'.$ext;
+			move_uploaded_file($file['tmp_name'], $uploadFile);
+
+    		$maClasse-> inserer_fichier_decaiss($id_df, $fichier_decaiss.'.'.$ext);
+
+    	}
+
+		$maClasse-> decaiss_df($_POST['id_df'], $_POST['ref_decaiss'], $_POST['montant_decaiss'], $_POST['nom_recep_fond']);
+		$response['message'] = '
+	    				<div class="alert alert-success alert-dismissible" role="alert">
+		                  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+		                  <i class="fa fa-check"></i> The payment request <b>No.'.$_POST['id_df'].'</b> has been paid!
+		                </div>';
+
+		echo json_encode($response);
+
 	}elseif(isset($_POST['operation']) && $_POST['operation']=='ok_visa_dir_df'){ 
 
 		$maClasse-> ok_visa_dir_df($_POST['id_df']);
@@ -3661,6 +3709,27 @@
 	}elseif(isset($_POST['operation']) && $_POST['operation']=='modal_search_dossier_df'){ 
 
 		$response['table_dossier_df'] = $maClasse-> modal_search_dossier_df($_POST['id_cli'], $_POST['ligne'], $_POST['mot_cle']);
+
+		echo json_encode($response);
+
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='check_date_error'){ 
+
+		$response['date_error'] = $maClasse-> check_date_error($_POST['id_dos']);
+
+		echo json_encode($response);
+
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='getNombreNotificationRequestFund'){ 
+
+		//dgda
+		$response['nbre_dossier_no_apurement_dgda'] = $maClasse-> nbre_dossier_no_apurement_dgda($_POST['id_cli'], $_POST['id_mod_lic']);
+		$response['nbre_transmis_no_ar_dgda'] = $maClasse-> nbre_transmis_no_ar_dgda($_POST['id_cli'], $_POST['id_mod_lic']);
+		//occ
+		$response['nbre_dossier_no_apurement_occ'] = $maClasse-> nbre_dossier_no_apurement_occ($_POST['id_cli'], $_POST['id_mod_lic']);
+		$response['nbre_transmis_no_ar_occ'] = $maClasse-> nbre_transmis_no_ar_occ($_POST['id_cli'], $_POST['id_mod_lic']);
+
+		$response['nbre_dossier_sans_fob_apurement'] = $maClasse-> nbre_dossier_sans_fob_apurement($_POST['id_cli'], $_POST['id_mod_lic']);
+		
+		$response['nbre_dossier_sans_manifeste_apurement'] = $maClasse-> nbre_dossier_sans_manifeste_apurement($_POST['id_cli'], $_POST['id_mod_lic']);
 
 		echo json_encode($response);
 
