@@ -30906,6 +30906,20 @@
 					<?php
 
 				}
+				else if($reponse['id_col'] == '132'){
+					if ( $this-> getDataRow($reponse['champ_col'], $id_dos)!=null) {
+						$textColor = '';
+					}else{
+						$textColor = 'color: rgb(255,215,0); background-color: grey;';
+					}
+
+				?>
+				<td class=" <?php echo $bg;?>" style="border: 1px solid black;">
+					<input  <?php echo $this-> getDataUtilisateur($_SESSION['id_util'])['tracking_enab'];?>  type="<?php echo $reponse['type_col'];?>" <?php echo $reponse['attribut_col'];?> style="text-transform:uppercase; <?php echo $textColor;?>" name="<?php echo $reponse['champ_col'];?>_<?php echo $compteur;?>" value="<?php echo round($this-> getDataRow($reponse['champ_col'], $id_dos));?>" onchange="check_date_error('<?php echo $id_dos;?>');">
+				</td>
+				<?php
+
+				}
 				else{
 					if ( $this-> getDataRow($reponse['champ_col'], $id_dos)!=null) {
 						$textColor = '';
@@ -58579,6 +58593,24 @@
 			$requete = $connexion-> prepare("UPDATE dossier SET dgda_seal = ?
 												WHERE id_dos = ?");
 			$requete-> execute(array($entree['dgda_seal'], $entree['id_dos']));
+
+		} 
+		public function MAJ_total_dgda_seal($id_dos, $total_dgda_seal){
+			
+			//Log
+			if ($this-> getDossier($id_dos)['total_dgda_seal'] != $total_dgda_seal) {
+				
+				$colonne = $this-> getNomColonneClient('total_dgda_seal', $_GET['id_cli'], $_GET['id_mod_trans'], $_GET['id_mod_trac']);
+				$this-> creerLogDossier($colonne, $total_dgda_seal, $id_dos, $_SESSION['id_util']);
+
+			}
+
+			include('connexion.php');
+			$entree['id_dos'] = $id_dos;
+			$entree['total_dgda_seal'] = $total_dgda_seal;
+			$requete = $connexion-> prepare("UPDATE dossier SET total_dgda_seal = ?
+												WHERE id_dos = ?");
+			$requete-> execute(array($entree['total_dgda_seal'], $entree['id_dos']));
 
 		} 
 		public function MAJ_dispatch_pweto($id_dos, $dispatch_pweto){
