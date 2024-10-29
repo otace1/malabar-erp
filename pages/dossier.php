@@ -573,6 +573,10 @@ for ($i=1; $i <= 15 ; $i++) {
         $maClasse-> MAJ_dgda_seal($_POST['id_dos_'.$i], $_POST['dgda_seal_'.$i]);
       }
 
+      if (isset($_POST['total_dgda_seal_'.$i]) && ($_POST['total_dgda_seal_'.$i] != '')) {
+        $maClasse-> MAJ_total_dgda_seal($_POST['id_dos_'.$i], $_POST['total_dgda_seal_'.$i]);
+      }
+
       if (isset($_POST['dispatch_pweto_'.$i]) && ($_POST['dispatch_pweto_'.$i] != '')) {
         $maClasse-> MAJ_dispatch_pweto($_POST['id_dos_'.$i], $_POST['dispatch_pweto_'.$i]);
       }
@@ -2563,6 +2567,30 @@ if (($maClasse-> verifierRegimeSuspensionSansDateExtreme($_GET['id_cli'], $_GET[
       });
 
     }
+
+  }
+
+  function check_date_error(id_dos){
+
+    $.ajax({
+      type: "POST",
+      url: "ajax.php",
+      data: { id_dos: id_dos, operation: 'check_date_error'},
+      dataType:"json",
+      success:function(data){
+        if (data.logout) {
+          alert(data.logout);
+          window.location="../deconnexion.php";
+        }else if (data.date_error==true) {
+          $alert('Error!!!! Date Error.');
+        }else{
+          $('#msg_check_camion').html('');
+        }
+      },
+      complete: function () {
+          // $('#spinner-div').hide();//Request is complete so hide spinner
+      }
+    });
 
   }
 </script>
