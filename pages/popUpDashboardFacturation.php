@@ -82,6 +82,8 @@
                       ?>
                       <th>#</th>
                       <th>Notre Nº Ref #</th>
+                      <th>Lot Num.</th>
+                      <th>License Num.</th>
                       <th>Client</th>
                       <th>Encoded By</th>
                       <th>Liquidation Ref.</th>
@@ -480,6 +482,8 @@
         "columns":[
           {"data":"compteur"},
           {"data":"ref_dos"},
+          {"data":"num_lot"},
+          {"data":"num_lic"},
           {"data":"nom_cli"},
           {"data":"nom_util"},
           {"data":"ref_liq"},
