@@ -47053,6 +47053,8 @@
 													util.nom_util AS nom_util,
 													dos.po_ref AS po_ref,
 													dos.roe_decl AS roe_decl,
+													dos.num_lot AS num_lot,
+													dos.num_lic AS num_lic,
 													dos.container AS container,
 													dos.pied_container AS pied_container,
 									                IF(dos.roe_liq IS NOT NULL,
