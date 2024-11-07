@@ -21239,6 +21239,8 @@
 				while($reponseDebours = $requeteDebours-> fetch()){
 					$compteur++;
 					$montant_tva_input = '';
+					$label_depense = '';
+					$bg_depense = '';
 
 					// if ($this-> getDossier($id_dos)['num_lic'] == 'UNDER VALUE' && !empty( $this-> getMontantDeboursUnderValue($this-> getDossier($id_dos)['id_cli'], $reponseDebours['id_deb'], $this-> getDossier($id_dos)['id_mod_lic'], $this-> getDossier($id_dos)['id_mod_trans'], $this-> getDossier($id_dos)['id_march']))) {
 					if ($this-> getDossier($id_dos)['fob_en_usd'] < 2500 && !empty( $this-> getMontantDeboursUnderValue($this-> getDossier($id_dos)['id_cli'], $reponseDebours['id_deb'], $this-> getDossier($id_dos)['id_mod_lic'], $this-> getDossier($id_dos)['id_mod_trans'], $this-> getDossier($id_dos)['id_march']))) {
@@ -21406,6 +21408,15 @@
 						$montant_input = '<input type="number" step="0.001" style="text-align: center;" class="bg-dark" name="montant_'.$compteur.'" id="montant_'.$reponseDebours['id_deb'].'" value="'.$reponseDebours['montant'].'" onblur="getTotal()">';
 						$montant_tva_input = '';
 						
+					}else if($this-> check_depense_debours_dossier($id_dos, $reponseDebours['id_deb'])>0){
+
+						$bg_depense = ' text-warning font-weight-bold';
+						$label_depense = ' ( Expense ) ';
+
+						$unite_input = '<span id="unite_'.$compteur.'"></span>';
+						$montant_input = '<input type="number" step="0.001" style="text-align: center;" class="bg-dark" name="montant_'.$compteur.'" id="montant_'.$reponseDebours['id_deb'].'" value="'.$this-> check_depense_debours_dossier($id_dos, $reponseDebours['id_deb']).'" onblur="getTotal()">';
+						$montant_tva_input = '';
+						
 					}else{
 
 						$unite_input = '<span id="unite_'.$compteur.'"></span>';
@@ -21437,8 +21448,8 @@
 										<input type="hidden" id="id_deb_'.$compteur.'" name="id_deb_'.$compteur.'" value="'.$reponseDebours['id_deb'].'">
 										'.$reponseDebours['abr_deb'].'
 									</td>
-									<td width="50%">
-										'.$reponseDebours['nom_deb'].$detail_input.'
+									<td width="50%" class="'.$bg_depense.'">
+										'.$reponseDebours['nom_deb'].$label_depense.$detail_input.'
 									</td>
 									<td style="text-align: center;">
 										'.$unite_input.'
@@ -21479,15 +21490,17 @@
 														AND deb.id_deb = dep.id_deb
 														AND dep.id_dep = depdos.id_dep
 														AND depdos.id_dos = dos.id_dos
+														and deb.id_deb not in (
+													    		SELECT aff.id_deb
+													        		FROM affectation_debours_client_modele_licence aff
+													        		where aff.id_cli = ?
+													    	)
 														AND dos.id_dos = ?
 													ORDER BY deb.rang, deb.id_deb ASC");
-				$requeteDebours-> execute(array($reponseTypeDebours['id_t_deb'], $entree['id_dos']));
+				$requeteDebours-> execute(array($reponseTypeDebours['id_t_deb'], $entree['id_cli'], $entree['id_dos']));
 				while($reponseDebours = $requeteDebours-> fetch()){
 					$compteur++;
 					$montant_tva_input = '';
-
-					// if ($this-> getDossier($id_dos)['num_lic'] == 'UNDER VALUE' && !empty( $this-> getMontantDeboursUnderValue($this-> getDossier($id_dos)['id_cli'], $reponseDebours['id_deb'], $this-> getDossier($id_dos)['id_mod_lic'], $this-> getDossier($id_dos)['id_mod_trans'], $this-> getDossier($id_dos)['id_march']))) {
-					
 					$mask_tva = '';
 					
 
@@ -21504,7 +21517,7 @@
 										<input type="hidden" id="id_deb_'.$compteur.'" name="id_deb_'.$compteur.'" value="'.$reponseDebours['id_deb'].'">
 										'.$reponseDebours['abr_deb'].'
 									</td>
-									<td width="50%">
+									<td width="50%" class="font-weight-bold text-warning">
 										'.$reponseDebours['nom_deb'].$detail_input.'
 									</td>
 									<td style="text-align: center;">
@@ -21542,6 +21555,31 @@
 			$debours .= '<input type="hidden" name="compteur" value="'.$compteur.'">';
 
 			return $debours;
+		}
+
+		public function check_depense_debours_dossier($id_dos, $id_deb){
+			include('connexion.php');
+			$entree['id_dos'] = $id_dos;
+			$entree['id_deb'] = $id_deb;
+
+			$requete = $connexion-> prepare("SELECT SUM(depdos.montant) AS montant
+												FROM depense dep, depense_dossier depdos, dossier dos
+												WHERE dep.id_deb = ?
+													AND dep.id_dep = depdos.id_dep
+													AND depdos.id_dep_dos NOT IN (SELECT id_dep_dos FROM detail_note_debit)
+													AND CONCAT(depdos.id_dos,'-',dep.id_deb) NOT IN (
+															SELECT CONCAT(det.id_dos,'-',det.id_deb)
+																FROM detail_facture_dossier det
+														)
+													AND depdos.id_dos = dos.id_dos
+													AND dos.id_dos = ?");
+			$requete-> execute(array($entree['id_deb'], $entree['id_dos']));
+			$reponse=$requete-> fetch();
+			if($reponse){
+				return $reponse['montant'];
+			}else{
+				return null;
+			}
 		}
 
 		public function getDeboursPourFactureClientExport($id_cli, $id_mod_lic, $id_march, $id_mod_trans, $id_dos=NULL){
@@ -24536,6 +24574,10 @@
 												WHERE dep.id_dep = ?
 													AND dep.id_dep = depdos.id_dep
 													AND depdos.id_dep_dos NOT IN (SELECT id_dep_dos FROM detail_note_debit)
+													AND CONCAT(depdos.id_dos,'-',dep.id_deb) NOT IN (
+															SELECT CONCAT(det.id_dos,'-',det.id_deb)
+																FROM detail_facture_dossier det
+														)
 													AND depdos.id_dos = dos.id_dos
 													AND dos.id_mod_lic = ?
 												GROUP BY dep.id_dep
@@ -47654,6 +47696,10 @@
 														SELECT id_dep_dos 
 														 FROM detail_note_debit 
 													)
+												AND CONCAT(depdos.id_dos,'-',dep.id_deb) NOT IN (
+															SELECT CONCAT(det.id_dos,'-',det.id_deb)
+																FROM detail_facture_dossier det
+														)
 												AND dep.id_dep = ?");
 			$requete-> execute(array($entree['id_mod_lic'], $entree['id_dep']));
 			while($reponse = $requete-> fetch()){
