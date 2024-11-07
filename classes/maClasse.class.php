@@ -56457,6 +56457,86 @@
 
 		} 
 
+		//ceec_ref
+		public function maj_ceec_ref($id_dos, $ceec_ref){
+
+			//Log
+			if ($this-> getDossier($id_dos)['ceec_ref'] != $ceec_ref) {
+				
+				// $colonne = $this-> getNomColonneClient('ceec_ref', $_GET['id_cli'], $_GET['id_mod_trans'], $_GET['id_mod_trac']);
+				$this-> creerLogDossier('ceec_ref', $ceec_ref, $id_dos, $_SESSION['id_util']);
+
+			}
+
+			include('connexion.php');
+			$entree['id_dos'] = $id_dos;
+			$entree['ceec_ref'] = $ceec_ref;
+			$requete = $connexion-> prepare("UPDATE dossier SET ceec_ref = ?
+												WHERE id_dos = ?");
+			$requete-> execute(array($entree['ceec_ref'], $entree['id_dos']));
+
+		} 
+
+		//cgea_ref
+		public function maj_cgea_ref($id_dos, $cgea_ref){
+
+			//Log
+			if ($this-> getDossier($id_dos)['cgea_ref'] != $cgea_ref) {
+				
+				// $colonne = $this-> getNomColonneClient('cgea_ref', $_GET['id_cli'], $_GET['id_mod_trans'], $_GET['id_mod_trac']);
+				$this-> creerLogDossier('cgea_ref', $cgea_ref, $id_dos, $_SESSION['id_util']);
+
+			}
+
+			include('connexion.php');
+			$entree['id_dos'] = $id_dos;
+			$entree['cgea_ref'] = $cgea_ref;
+			$requete = $connexion-> prepare("UPDATE dossier SET cgea_ref = ?
+												WHERE id_dos = ?");
+			$requete-> execute(array($entree['cgea_ref'], $entree['id_dos']));
+
+		} 
+
+		//rcv_ref
+		public function maj_rcv_ref($id_dos, $rcv_ref){
+
+			//Log
+			if ($this-> getDossier($id_dos)['rcv_ref'] != $rcv_ref) {
+				
+				// $colonne = $this-> getNomColonneClient('rcv_ref', $_GET['id_cli'], $_GET['id_mod_trans'], $_GET['id_mod_trac']);
+				$this-> creerLogDossier('rcv_ref', $rcv_ref, $id_dos, $_SESSION['id_util']);
+
+			}
+
+			include('connexion.php');
+			$entree['id_dos'] = $id_dos;
+			$entree['rcv_ref'] = $rcv_ref;
+			$requete = $connexion-> prepare("UPDATE dossier SET rcv_ref = ?
+												WHERE id_dos = ?");
+			$requete-> execute(array($entree['rcv_ref'], $entree['id_dos']));
+
+		} 
+
+		//seguce_pay_date
+		public function maj_seguce_pay_date($id_dos, $seguce_pay_date){
+
+			//Log
+			if ($this-> getDossier($id_dos)['seguce_pay_date'] != $seguce_pay_date) {
+				
+				// $colonne = $this-> getNomColonneClient('seguce_pay_date', $_GET['id_cli'], $_GET['id_mod_trans'], $_GET['id_mod_trac']);
+				$this-> creerLogDossier('seguce_pay_date', $seguce_pay_date, $id_dos, $_SESSION['id_util']);
+
+			}
+
+			include('connexion.php');
+			$entree['id_dos'] = $id_dos;
+			$entree['seguce_pay_date'] = $seguce_pay_date;
+			$requete = $connexion-> prepare("UPDATE dossier SET seguce_pay_date = ?
+												WHERE id_dos = ?");
+			$requete-> execute(array($entree['seguce_pay_date'], $entree['id_dos']));
+
+		} 
+
 		//note_autre_frais
 		public function maj_note_autre_frais($id_dos, $note_autre_frais){
 
