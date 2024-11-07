@@ -184,6 +184,23 @@ for ($i=1; $i <= 15 ; $i++) {
         $maClasse-> MAJ_autre_frais_dos($_POST['id_dos_'.$i], $_POST['autre_frais_dos_'.$i]);
       }
       //----
+      // ceec_ref
+      if (isset($_POST['ceec_ref_'.$i]) && ($_POST['ceec_ref_'.$i] != '')) {
+        $maClasse-> MAJ_ceec_ref($_POST['id_dos_'.$i], $_POST['ceec_ref_'.$i]);
+      }
+      // cgea_ref
+      if (isset($_POST['cgea_ref_'.$i]) && ($_POST['cgea_ref_'.$i] != '')) {
+        $maClasse-> MAJ_cgea_ref($_POST['id_dos_'.$i], $_POST['cgea_ref_'.$i]);
+      }
+      // rcv_ref
+      if (isset($_POST['rcv_ref_'.$i]) && ($_POST['rcv_ref_'.$i] != '')) {
+        $maClasse-> MAJ_rcv_ref($_POST['id_dos_'.$i], $_POST['rcv_ref_'.$i]);
+      }
+      // seguce_pay_date
+      if (isset($_POST['seguce_pay_date_'.$i]) && ($_POST['seguce_pay_date_'.$i] != '')) {
+        $maClasse-> MAJ_seguce_pay_date($_POST['id_dos_'.$i], $_POST['seguce_pay_date_'.$i]);
+      }
+
       if (isset($_POST['t1_'.$i]) && ($_POST['t1_'.$i] != '')) {
         $maClasse-> MAJ_t1($_POST['id_dos_'.$i], $_POST['t1_'.$i]);
       }
