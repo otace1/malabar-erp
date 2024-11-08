@@ -89,6 +89,7 @@
                       <th>Client</th>
                       <th>Depart.</th>
                       <th>Requestor</th>
+                      <th>Category</th>
                       <th>Currency</th>
                       <th>Amount</th>
                       <th>Statut</th>
@@ -686,7 +687,7 @@
 
             $('#detail_df').html('<tr><td colspan="2" class="text-center"><span class="text-sm badge badge-warning">Awaiting Departement Approval</span></td></tr><tr><td>Reference: </td><td><b>'+data.id_df+'</b></td></tr><tr><td>Date: </td><td><b>'+data.date_create+'</b></td></tr><tr><td>Departement: </td><td><b>'+data.nom_dept+'</b></td></tr><tr><td>Location: </td><td><b>'+data.nom_site+'</b></td></tr><tr><td>Requestor: </td><td><b>'+data.nom_util+'</b></td></tr><tr><td>Type Payment: </td><td><b>'+data.type_payment+'</b></td></tr><tr><td>Amount: </td><td><b>'+data.monnaie+' '+new Intl.NumberFormat().format(data.montant)+'</b></td></tr><tr><td>Motif: </td><td><b>'+data.libelle+'</b></td></tr><tr><td>Beneficiary: </td><td><b>'+data.beneficiaire+'</b></td></tr><tr><td>Client: </td><td><b>'+data.nom_cli+'</b></td></tr><tr><td>Support Doc.: </td><td><b>'+data.support_doc+'</b></td></tr><tr><td>Action: </td><td>'+btn_visa_dept_df+'</td></tr>');
 
-          }else if (data.date_visa_dept!=null && data.date_visa_dir==null && data.a_facturer=='1') {
+          }else if (data.date_visa_dept!=null && data.date_visa_dir==null && (data.a_facturer=='1' || data.cash=='1')) {
 
             $('#detail_df').html('<tr><td colspan="2" class="text-center"><span class="text-sm badge badge-info">Awaiting Management Approval</span></td></tr><tr><td>Reference: </td><td><b>'+data.id_df+'</b></td></tr><tr><td>Date: </td><td><b>'+data.date_create+'</b></td></tr><tr><td>Departement: </td><td><b>'+data.nom_dept+'</b></td></tr><tr><td>Location: </td><td><b>'+data.nom_site+'</b></td></tr><tr><td>Requestor: </td><td><b>'+data.nom_util+'</b></td></tr><tr><td>Type Payment: </td><td><b>'+data.type_payment+'</b></td></tr><tr><td>Amount: </td><td><b>'+data.monnaie+' '+new Intl.NumberFormat().format(data.montant)+'</b></td><tr><td>Chargeback: </td><td class="bg bg-warning"><b>'+data.monnaie+' '+new Intl.NumberFormat().format(data.montant_fact)+'</b> <b>'+data.btn_fichier_fact+'</b></td></tr><tr><td>Motif: </td><td><b>'+data.libelle+'</b></td></tr><tr><td>Beneficiary: </td><td><b>'+data.beneficiaire+'</b></td></tr><tr><td>Client: </td><td><b>'+data.nom_cli+'</b></td></tr><tr><td>Support Doc.: </td><td><b>'+data.support_doc+'</b></td></tr><tr><td>Depart.Approval: </td><td><b>'+data.nom_util_visa_dept+' | '+data.date_visa_dept+'</b></td></tr><tr><td>Action: </td><td>'+btn_visa_dir_df+'</td></tr>');
 
@@ -757,6 +758,9 @@
         className: 'dt-body-center'
       },
       {"data":"nom_util"},
+      {"data":"label_cash",
+        className: 'dt-body-center'
+      },
       {"data":"monnaie",
         className: 'dt-body-center'
       },

@@ -135,7 +135,7 @@
                   </div>
                   <div class="col-md-3">
                     <label for="fichier_df">Support Doc.</label>
-                    <input type="file" name="fichier_df" id="fichier_df" class="form-control form-control-sm" required>
+                    <input type="file" name="fichier_df" id="fichier_df" class="form-control form-control-sm">
                   </div>
                 </div>
 
