@@ -47516,17 +47516,162 @@
 
 		}
 
-		public function pay_report($statut=null){
+		public function pay_report_dossier($statut, $date_create_debut, $date_create_fin, $date_visa_dept_debut, $date_visa_dept_fin, $date_visa_fin_debut, $date_visa_fin_fin, $date_decaiss_debut, $date_decaiss_fin, $id_dep, $id_dos){
 			include('connexion.php');
-			// $entree['id_mod_lic'] = $id_mod_lic;
+			$entree['id_dos'] = $id_dos;
 
 			$compteur = 0;
 			$rows = array();
 
-			$sqlStatut = "";
-			// if (isset($id_mod_lic) && ($id_mod_lic != '')) {
-			// 	$sqlStatut = ' AND dos.id_mod_lic = "'.$id_mod_lic.'" ';
+			// statut
+			$sql_statut= "";
+			if (isset($statut) && ($statut != '')) {
+				
+				if ($statut=="Awaiting Dept. Approval") {
+					$sql_statut = ' AND df.date_visa_dept IS NULL';
+				}else if ($statut=="Awaiting Management Approval") {
+					$sql_statut = ' AND df.date_visa_dept IS NOT NULL AND (df.a_facturer="1" OR df.date_visa_dir IS NULL)';
+				}else if ($statut=="Awaiting Finance Approval") {
+					$sql_statut = ' AND df.date_visa_dept IS NOT NULL AND (df.a_facturer="0" OR df.date_visa_dir IS NOT NULL) AND df.date_visa_fin IS NULL';
+				}else if ($statut=="Pending payment") {
+					$sql_statut = ' AND df.date_visa_fin IS NOT NULL AND df.date_decaiss IS NULL';
+				}
+
+			}
+			// date_create
+			$sql_date_create= "";
+			if (isset($date_create_debut) && ($date_create_debut != '')) {
+				$sql_date_create = ' AND DATE(df.date_create) BETWEEN "'.$date_create_debut.'" AND "'.$date_create_fin.'" ';
+			}
+			// date_visa_dept
+			$sql_date_visa_dept= "";
+			if (isset($date_visa_dept_debut) && ($date_visa_dept_debut != '')) {
+				$sql_date_visa_dept = ' AND DATE(df.date_visa_dept) BETWEEN "'.$date_visa_dept_debut.'" AND "'.$date_visa_dept_fin.'" ';
+			}
+			// date_visa_fin
+			$sql_date_visa_fin= "";
+			if (isset($date_visa_fin_debut) && ($date_visa_fin_debut != '')) {
+				$sql_date_visa_fin = ' AND DATE(df.date_visa_fin) BETWEEN "'.$date_visa_fin_debut.'" AND "'.$date_visa_fin_fin.'" ';
+			}
+			// date_decaiss
+			$sql_date_decaiss= "";
+			if (isset($date_decaiss_debut) && ($date_decaiss_debut != '')) {
+				$sql_date_decaiss = ' AND DATE(df.date_decaiss) BETWEEN "'.$date_decaiss_debut.'" AND "'.$date_decaiss_fin.'" ';
+			}
+
+			// id_dep
+			$sql_id_dep= "";
+			if (isset($id_dep) && ($id_dep != '')) {
+				$sql_id_dep = ' AND df.id_dep = "'.$id_dep.'"';
+			}
+
+			// $sqlClient = "";
+			// if (isset($id_cli) && ($id_cli != '')) {
+			// 	$sqlClient = ' AND dos.id_cli = "'.$id_cli.'" ';
 			// }
+
+			$requete = $connexion-> prepare("SELECT df.*,
+												DATE_FORMAT(df.date_create, '%d/%m/%Y') AS date_df,
+												cl.nom_cli AS nom_cli,
+												site.nom_site AS nom_site,
+												dept.nom_dept AS nom_dept,
+												util.nom_util AS nom_util,
+												IF(df.usd='1', 'USD', 'CDF') AS monnaie,
+												IF(df.id_util_reject_dept IS NOT NULL,
+													'Rejected',
+													IF(df.date_visa_dept IS NULL,
+														'Awaiting Dept. Approval',
+														IF(df.date_visa_dir IS NULL AND (df.a_facturer = '1' OR df.cash='1'),
+															'Awaiting Management Approval',
+															IF(df.date_visa_fin IS NULL,
+																'Awaiting Finance Approval',
+																IF(df.date_decaiss IS NULL,
+																	'Pending payment',
+																	'Paid'
+																)
+															)
+														)
+													)
+												) AS statut,
+												CONCAT('<a href=\"#\" class=\"text-dark\" title=\"Dossiers affectés\" onclick=\"window.open(\'generateur_demande_fond.php?id_df=',df.id_df,'\',\'pop12\',\'width=1100,height=900\');\">
+														<i class=\"fa fa-print\"></i>
+													</a>') AS btn_action
+											FROM demande_fond df, site, departement dept, client cl, utilisateur util,
+												depense_dossier depdos
+											WHERE df.id_site = site.id_site
+												AND df.id_dept = dept.id_dept
+												AND df.id_cli = cl.id_cli
+												AND df.id_util = util.id_util
+												AND df.id_df = depdos.id_df
+												AND depdos.id_dos = ?
+												$sql_date_create
+												$sql_date_visa_dept
+												$sql_date_visa_fin
+												$sql_id_dep
+												$sql_statut
+												$sql_date_decaiss
+										");
+			$requete-> execute(array($entree['id_dos']));
+			while($reponse = $requete-> fetch()){
+				$compteur++;
+
+				$reponse['compteur'] = $compteur;
+				$rows[] = $reponse;
+
+			}$requete-> closeCursor();
+			
+			return $rows;
+
+		}
+
+		public function pay_report($statut, $date_create_debut, $date_create_fin, $date_visa_dept_debut, $date_visa_dept_fin, $date_visa_fin_debut, $date_visa_fin_fin, $date_decaiss_debut, $date_decaiss_fin, $id_dep){
+			include('connexion.php');
+			// $entree['id_dos'] = $id_dos;
+
+			$compteur = 0;
+			$rows = array();
+
+			// statut
+			$sql_statut= "";
+			if (isset($statut) && ($statut != '')) {
+				
+				if ($statut=="Awaiting Dept. Approval") {
+					$sql_statut = ' AND df.date_visa_dept IS NULL';
+				}else if ($statut=="Awaiting Management Approval") {
+					$sql_statut = ' AND df.date_visa_dept IS NOT NULL AND (df.a_facturer="1" OR df.date_visa_dir IS NULL)';
+				}else if ($statut=="Awaiting Finance Approval") {
+					$sql_statut = ' AND df.date_visa_dept IS NOT NULL AND (df.a_facturer="0" OR df.date_visa_dir IS NOT NULL) AND df.date_visa_fin IS NULL';
+				}else if ($statut=="Pending payment") {
+					$sql_statut = ' AND df.date_visa_fin IS NOT NULL AND df.date_decaiss IS NULL';
+				}
+
+			}
+			// date_create
+			$sql_date_create= "";
+			if (isset($date_create_debut) && ($date_create_debut != '')) {
+				$sql_date_create = ' AND DATE(df.date_create) BETWEEN "'.$date_create_debut.'" AND "'.$date_create_fin.'" ';
+			}
+			// date_visa_dept
+			$sql_date_visa_dept= "";
+			if (isset($date_visa_dept_debut) && ($date_visa_dept_debut != '')) {
+				$sql_date_visa_dept = ' AND DATE(df.date_visa_dept) BETWEEN "'.$date_visa_dept_debut.'" AND "'.$date_visa_dept_fin.'" ';
+			}
+			// date_visa_fin
+			$sql_date_visa_fin= "";
+			if (isset($date_visa_fin_debut) && ($date_visa_fin_debut != '')) {
+				$sql_date_visa_fin = ' AND DATE(df.date_visa_fin) BETWEEN "'.$date_visa_fin_debut.'" AND "'.$date_visa_fin_fin.'" ';
+			}
+			// date_decaiss
+			$sql_date_decaiss= "";
+			if (isset($date_decaiss_debut) && ($date_decaiss_debut != '')) {
+				$sql_date_decaiss = ' AND DATE(df.date_decaiss) BETWEEN "'.$date_decaiss_debut.'" AND "'.$date_decaiss_fin.'" ';
+			}
+
+			// id_dep
+			$sql_id_dep= "";
+			if (isset($id_dep) && ($id_dep != '')) {
+				$sql_id_dep = ' AND df.id_dep = "'.$id_dep.'"';
+			}
 
 			// $sqlClient = "";
 			// if (isset($id_cli) && ($id_cli != '')) {
@@ -47544,8 +47689,8 @@
 													'Rejected',
 													IF(df.date_visa_dept IS NULL,
 														'Awaiting Dept. Approval',
-														IF(df.date_visa_dir IS NULL AND df.a_facturer = '1',
-															'Awaiting chargeback Approval',
+														IF(df.date_visa_dir IS NULL AND (df.a_facturer = '1' OR df.cash='1'),
+															'Awaiting Management Approval',
 															IF(df.date_visa_fin IS NULL,
 																'Awaiting Finance Approval',
 																IF(df.date_decaiss IS NULL,
@@ -47556,17 +47701,25 @@
 														)
 													)
 												) AS statut,
-												CONCAT('<span class=\"btn btn-xs btn-info\"\" onclick=\"modal_afficher_df(\'',df.id_df,'\')\">
-																<i class=\"fa fa-arrow-circle-right\"></i>
-															</span>') AS btn_action
-											FROM demande_fond df, site, departement dept, client cl, utilisateur util
+												CONCAT('<a href=\"#\" class=\"text-dark\" title=\"Dossiers affectés\" onclick=\"window.open(\'generateur_demande_fond.php?id_df=',df.id_df,'\',\'pop12\',\'width=1100,height=900\');\">
+														<i class=\"fa fa-print\"></i>
+													</a>') AS btn_action
+											FROM demande_fond df, site, departement dept, client cl, utilisateur util,
+												depense_dossier depdos
 											WHERE df.id_site = site.id_site
 												AND df.id_dept = dept.id_dept
 												AND df.id_cli = cl.id_cli
 												AND df.id_util = util.id_util
-											$sqlStatut
+												AND df.id_df = depdos.id_df
+												-- AND depdos.id_dos = ?
+												$sql_date_create
+												$sql_date_visa_dept
+												$sql_date_visa_fin
+												$sql_id_dep
+												$sql_statut
+												$sql_date_decaiss
 										");
-			// $requete-> execute(array($entree['id_mod_lic']));
+			// $requete-> execute(array($entree['id_dos']));
 			while($reponse = $requete-> fetch()){
 				$compteur++;
 
@@ -52174,24 +52327,43 @@
 
 		}
 
-
-		public function creerDossierDemandeFond($id_dep, $id_dos, $id_df, $montant){
+		public function creerDepenseDossierDF($id_dep, $id_dos, $date_dep, $montant, $id_df){
 			include("connexion.php");
 			$entree['id_dep'] = $id_dep;
 			$entree['id_dos'] = $id_dos;
-			$entree['id_df'] = $id_df;
+			$entree['date_dep'] = date('Y-m-d');
 			$entree['montant'] = $montant;
+			$entree['id_df'] = $id_df;
 
-			// if ($entree['id_df'] == '') {
-			// 	$entree['id_df'] = NULL;
+			// if ($entree['date_dep'] == '') {
+			// 	$entree['date_dep'] = NULL;
 			// }
 
-			$requete = $connexion-> prepare("INSERT INTO dossier_demande_fond(id_dep, id_dos, id_df, montant, id_util)
-												VALUES(?, ?, ?, ?, ?)");
-			$requete-> execute(array($entree['id_dep'], $entree['id_dos'], $entree['id_df'], $entree['montant'], $_SESSION['id_util']));
+			$requete = $connexion-> prepare("INSERT INTO depense_dossier(id_dep, id_dos, date_dep, montant, id_df, id_util)
+												VALUES(?, ?, ?, ?, ?, ?)");
+			$requete-> execute(array($entree['id_dep'], $entree['id_dos'], $entree['date_dep'], $entree['montant'], $entree['id_df'], $_SESSION['id_util']));
 			
 
 		}
+
+
+		// public function creerDossierDemandeFond($id_dep, $id_dos, $id_df, $montant){
+		// 	include("connexion.php");
+		// 	$entree['id_dep'] = $id_dep;
+		// 	$entree['id_dos'] = $id_dos;
+		// 	$entree['id_df'] = $id_df;
+		// 	$entree['montant'] = $montant;
+
+		// 	// if ($entree['id_df'] == '') {
+		// 	// 	$entree['id_df'] = NULL;
+		// 	// }
+
+		// 	$requete = $connexion-> prepare("INSERT INTO dossier_demande_fond(id_dep, id_dos, id_df, montant, id_util)
+		// 										VALUES(?, ?, ?, ?, ?)");
+		// 	$requete-> execute(array($entree['id_dep'], $entree['id_dos'], $entree['id_df'], $entree['montant'], $_SESSION['id_util']));
+			
+
+		// }
 
 		public function creerBureauDouane($nom_bur_douane){
 			include("connexion.php");
@@ -59885,6 +60057,120 @@
 
 		}
 
+		public function demande_fond_bank($statut=null){
+			include('connexion.php');
+
+			$sqlStatut = '';
+
+			$compteur = 0;
+			$rows = array();
+
+			$requete = $connexion-> query("SELECT df.*,
+												DATE_FORMAT(df.date_create, '%d/%m/%Y') AS date_df,
+												cl.nom_cli AS nom_cli,
+												site.nom_site AS nom_site,
+												dept.nom_dept AS nom_dept,
+												util.nom_util AS nom_util,
+												IF(df.usd='1', 'USD', 'CDF') AS monnaie,
+												IF(df.cash='1', 'CASH', 'BANK') AS label_cash,
+												IF(df.id_util_reject_dept IS NOT NULL,
+													'Rejected',
+													IF(df.date_visa_dept IS NULL,
+														'Awaiting Dept. Approval',
+														IF(df.date_visa_dir IS NULL AND (df.a_facturer = '1' OR df.cash='1'),
+															'Awaiting Management Approval',
+															IF(df.date_visa_fin IS NULL,
+																'Awaiting Finance Approval',
+																IF(df.date_decaiss IS NULL,
+																	'Pending payment',
+																	'Paid'
+																)
+															)
+														)
+													)
+												) AS statut,
+												CONCAT('<span class=\"btn btn-xs btn-info\"\" onclick=\"modal_afficher_df(\'',df.id_df,'\')\">
+																<i class=\"fa fa-arrow-circle-right\"></i>
+															</span>') AS btn_action
+											FROM demande_fond df, site, departement dept, client cl, utilisateur util
+											WHERE df.id_site = site.id_site
+												AND df.id_dept = dept.id_dept
+												AND df.id_cli = cl.id_cli
+												AND df.id_util = util.id_util
+												AND df.cash = '0'
+											$sqlStatut
+											ORDER BY df.id_df DESC");
+
+			while ($reponse = $requete-> fetch()) {
+				$compteur++;
+
+				$reponse['compteur'] = $compteur;
+
+				$rows[] = $reponse;
+			}$requete-> closeCursor();
+
+
+			return $rows;
+
+		}
+
+		public function demande_fond_cash($statut=null){
+			include('connexion.php');
+
+			$sqlStatut = '';
+
+			$compteur = 0;
+			$rows = array();
+
+			$requete = $connexion-> query("SELECT df.*,
+												DATE_FORMAT(df.date_create, '%d/%m/%Y') AS date_df,
+												cl.nom_cli AS nom_cli,
+												site.nom_site AS nom_site,
+												dept.nom_dept AS nom_dept,
+												util.nom_util AS nom_util,
+												IF(df.usd='1', 'USD', 'CDF') AS monnaie,
+												IF(df.cash='1', 'CASH', 'BANK') AS label_cash,
+												IF(df.id_util_reject_dept IS NOT NULL,
+													'Rejected',
+													IF(df.date_visa_dept IS NULL,
+														'Awaiting Dept. Approval',
+														IF(df.date_visa_dir IS NULL AND (df.a_facturer = '1' OR df.cash='1'),
+															'Awaiting Management Approval',
+															IF(df.date_visa_fin IS NULL,
+																'Awaiting Finance Approval',
+																IF(df.date_decaiss IS NULL,
+																	'Pending payment',
+																	'Paid'
+																)
+															)
+														)
+													)
+												) AS statut,
+												CONCAT('<span class=\"btn btn-xs btn-info\"\" onclick=\"modal_afficher_df(\'',df.id_df,'\')\">
+																<i class=\"fa fa-arrow-circle-right\"></i>
+															</span>') AS btn_action
+											FROM demande_fond df, site, departement dept, client cl, utilisateur util
+											WHERE df.id_site = site.id_site
+												AND df.id_dept = dept.id_dept
+												AND df.id_cli = cl.id_cli
+												AND df.id_util = util.id_util
+												AND df.cash = '1'
+											$sqlStatut
+											ORDER BY df.id_df DESC");
+
+			while ($reponse = $requete-> fetch()) {
+				$compteur++;
+
+				$reponse['compteur'] = $compteur;
+
+				$rows[] = $reponse;
+			}$requete-> closeCursor();
+
+
+			return $rows;
+
+		}
+
 		public function getDemandeFond($id_df){
 			include('connexion.php');
 			$entree['id_df'] = $id_df;
@@ -59942,7 +60228,7 @@
 			$requete = $connexion-> prepare('SELECT dos.ref_dos AS ref_dos,
 													ddf.montant AS montant,
 													dep.nom_dep AS nom_dep
-												FROM dossier dos, demande_fond df, dossier_demande_fond ddf, depense dep
+												FROM dossier dos, demande_fond df, depense_dossier ddf, depense dep
 												WHERE dos.id_dos = ddf.id_dos
 													AND ddf.id_dep = dep.id_dep
 													AND ddf.id_df = df.id_df
@@ -60113,6 +60399,41 @@
 				$compteur++;
 				$table .='
     					<tr onMouseOver="this.style.cursor=\'pointer\'" onclick="get_dossier(\''.$reponse['id_dos'].'\', \''.$reponse['ref_dos'].'\', \''.$ligne.'\');">
+							<td>'.$compteur.'</td>
+							<td>'.$reponse['ref_dos'].'</td>
+						</tr>';
+			}$requete-> closeCursor();
+			
+			return $table;
+
+		}
+
+		public function modal_search_dossier_df_report($mot_cle=null){
+			include('connexion.php');
+			$compteur=0;
+			// $entree['id_cli'] = $id_cli;
+
+			$sqlMotCle = '';
+
+			if (!empty($mot_cle) && ($mot_cle!='')) {
+				$sqlMotCle = 'AND (cl.code_cli LIKE "%'.$mot_cle.'%" OR cl.nom_cli LIKE "%'.$mot_cle.'%" OR dos.ref_dos LIKE"%'.$mot_cle.'%")';
+			}
+			// echo $mot_cle;
+			$table = '';
+			
+			$requete = $connexion-> query("SELECT dos.ref_dos AS ref_dos,
+															dos.id_dos AS id_dos
+														FROM dossier dos, client cl, depense_dossier depdos, demande_fond df
+														WHERE dos.id_cli = cl.id_cli
+															$sqlMotCle
+															AND dos.id_dos = depdos.id_dos
+															AND depdos.id_df = df.id_df
+														ORDER BY dos.id_dos DESC");
+			// $requete-> execute(array($entree['id_cli']));
+			while($reponse = $requete-> fetch()){
+				$compteur++;
+				$table .='
+    					<tr onMouseOver="this.style.cursor=\'pointer\'" onclick="get_dossier(\''.$reponse['id_dos'].'\', \''.$reponse['ref_dos'].'\');">
 							<td>'.$compteur.'</td>
 							<td>'.$reponse['ref_dos'].'</td>
 						</tr>';
