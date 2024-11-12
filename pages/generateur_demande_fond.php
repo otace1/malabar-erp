@@ -207,7 +207,7 @@ $tbl = <<<EOD
 		</tr>
 		<tr>
 			<td width="34%" style="border-top: solid 1px black; border: solid 1px black;">Department: <br><br><b>$nom_util_visa_dept</b> <br><b>$date_visa_dept</b><br></td>
-			<td width="33%" style="border-top: solid 1px black; border: solid 1px black; border: solid 1px black;">For Chargeback: <br><br><b>$nom_util_visa_dir</b> <br><b>$date_visa_dir</b><br></td>
+			<td width="33%" style="border-top: solid 1px black; border: solid 1px black; border: solid 1px black;">Management Approval: <br><br><b>$nom_util_visa_dir</b> <br><b>$date_visa_dir</b><br></td>
 			<td width="33%" style="border-top: solid 1px black; border: solid 1px black; border: solid 1px black;">Finance: <br><br><b>$nom_util_visa_fin</b> <br><b>$date_visa_fin</b><br></td>
 		</tr>
 	</table>

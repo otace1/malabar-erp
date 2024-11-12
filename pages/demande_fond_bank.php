@@ -19,9 +19,9 @@
            <i class="fa fa-calculator nav-icon"></i>
             <?php
               if ($maClasse-> getUtilisateur($_SESSION['id_util'])['langue']=='ENG') {
-                echo 'Directory';
+                echo 'Directory | Bank';
               }else if ($maClasse-> getUtilisateur($_SESSION['id_util'])['langue']=='FR') {
-                echo 'Repertoire';
+                echo 'Repertoire | Banque';
               }
             ?>
 
@@ -36,22 +36,7 @@
                   }
                 ?>
               </button>
-              <?php
-                if ($maClasse-> getUtilisateur($_SESSION['id_util'])['view_report_payment']=='1') {
-                ?>
-                <button class="btn btn-xs btn-info" onclick="$('#modal_search').modal('show');">
-                <i class="fa fa-search"></i>
-                <?php
-                  if ($maClasse-> getUtilisateur($_SESSION['id_util'])['langue']=='ENG') {
-                    echo 'Report';
-                  }else if ($maClasse-> getUtilisateur($_SESSION['id_util'])['langue']=='FR') {
-                    echo 'Rapport';
-                  }
-                ?>
-              </button>
-                <?php
-                }
-              ?>
+              
             </div>
 
           </h3>
@@ -76,9 +61,9 @@
                 <h5>
                   <?php
                     if ($maClasse-> getUtilisateur($_SESSION['id_util'])['langue']=='ENG') {
-                      echo 'Request Table';
+                      echo 'Request Table | Bank';
                     }else if ($maClasse-> getUtilisateur($_SESSION['id_util'])['langue']=='FR') {
-                      echo 'Table des Requettes';
+                      echo 'Table des Requettes | Banque';
                     }
                   ?>
                 </h5>
@@ -200,46 +185,13 @@
       <input type="hidden" name="operation" value="reject_dept_df"> -->
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title"><i class="fa fa-search"></i> Report</h5>
+        <h5 class="modal-title"><i class="fa fa-times"></i> Refusal</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body">
         <div class="row">
-          <div class="col-md-12">
-            <label for="statut_search">Status</label>
-            <select name="statut_search" id="statut_search" class="form-control form-control-sm ">
-              <option></option>
-              <option value="Awaiting Dept. Approval">Awaiting Dept. Approval</option>
-              <option value="Awaiting Management Approval">Awaiting Management Approval</option>
-              <option value="Awaiting Finance Approval">Awaiting Finance Approval</option>
-              <option value="Pending payment">Pending payment</option>
-              <option value="Paid">Paid</option>
-              <option value="Rejected">Rejected</option>
-            </select>
-          </div>
-          
-          <div class="col-md-12">
-            <label for="id_dep">Expense Type</label>
-            <select name="id_dep" id="id_dep_search" class="form-control form-control-sm" required>
-              <option></option>
-              <?php
-                $maClasse-> selectionnerDepense();
-              ?>
-            </select>
-          </div>
-          <div class="col-md-12">
-            <label for="id_dep">MCA File Ref.</label>
-            <div class="input-group input-group-sm">
-              <input type="hidden" name="id_dos" id="id_dos_search">
-              <input type="text" id="label_ref_dos" class="form-control" disabled>
-              <span class="input-group-append">
-                <button type="button" class="btn btn-info btn-flat" onclick="modal_search_dossier_df_report()"><i class="fa fa-search"></i></button>
-                <button type="button" class="btn btn-danger btn-flat" onclick="$('#id_dos_search').val('');$('#label_ref_dos').val('');"><i class="fa fa-times"></i></button>
-              </span>
-            </div>
-          </div>
           <div class="col-md-12"><u><b>Create Date</b></u></div>
           <div class="col-md-6">
             <label for="date_create_debut_search">From</label>
@@ -276,6 +228,18 @@
             <label for="date_decaiss_fin_search">To</label>
             <input type="date" name="date_decaiss_fin_search" id="date_decaiss_fin_search" class="form-control form-control-sm ">
           </div>
+          <div class="col-md-12">
+            <label for="statut_search">Status</label>
+            <select name="statut_search" id="statut_search" class="form-control form-control-sm ">
+              <option></option>
+              <option value="Awaiting Dept. Approval">Awaiting Dept. Approval</option>
+              <option value="Awaiting chargeback Approval">Awaiting chargeback Approval</option>
+              <option value="Awaiting Finance Approval">Awaiting Finance Approval</option>
+              <option value="Pending payment">Pending payment</option>
+              <option value="Paid">Paid</option>
+              <option value="Rejected">Rejected</option>
+            </select>
+          </div>
         </div>
         <!-- <div class="form-group">
           
@@ -283,7 +247,7 @@
       </div>
       <div class="modal-footer justify-content-between">
         <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal">Cancel</button>
-        <button type="button" class="btn btn-sm btn-primary" onclick="window.open('popUpRapportPay.php?statut='+statut_search.value+'&date_create_debut='+date_create_debut_search.value+'&date_create_fin='+date_create_fin_search.value+'&date_visa_dept_debut='+date_visa_dept_debut_search.value+'&date_visa_dept_fin='+date_visa_dept_fin_search.value+'&date_visa_fin_debut='+date_visa_fin_debut_search.value+'&date_visa_fin_fin='+date_visa_fin_fin_search.value+'&date_decaiss_debut='+date_decaiss_debut_search.value+'&date_decaiss_fin='+date_decaiss_fin_search.value+'&id_dep='+id_dep_search.value+'&id_dos='+id_dos_search.value,'pop1','width=1300,height=900')">Submit</button>
+        <button type="button" class="btn btn-sm btn-primary" onclick="window.open('popUpRapportPay.php?statut='+statut_search.value+'&date_create_debut='+date_create_debut_search.value+'&date_create_fin='+date_create_fin_search.value+'&date_visa_dept_debut='+date_visa_dept_debut_search.value+'&date_visa_dept_fin='+date_visa_dept_fin_search.value+'&date_visa_fin_debut='+date_visa_fin_debut_search.value+'&date_visa_fin_fin='+date_visa_fin_fin_search.value,'pop1','width=1300,height=900')">Submit</button>
       </div>
     </div>
     <!-- </form> -->
@@ -292,78 +256,77 @@
   <!-- /.modal-dialog -->
 </div>
 
-<div class="modal fade" id="modal_search_dossier_df_report">
+<div class="modal fade" id="modal_reject_dept_df">
   <div class="modal-dialog modal-sm">
+    <form action="" method="POST" id="form_reject_dept_df">
+      <input type="hidden" name="id_df" id="id_df_reject_dept">
+      <input type="hidden" name="operation" value="reject_dept_df">
     <div class="modal-content">
       <div class="modal-header">
-        <h4 class="modal-title"><i class="fa fa-search"></i> File </h4>
+        <h5 class="modal-title"><i class="fa fa-times"></i> Refusal</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body">
-        <div class="row">
-          <input type="hidden" id="index_ligne">
-
-          <input type="text" class="form-control form-control-sm" placeholder="MCA-RF24-096" onkeyup="modal_search_dossier_df_report(this.value);">
-          <hr>
-          <div class="col-md-12 table-responsive p-0 " style="height: 500px;">
-            <table class="table table-bordered table-striped text-nowrap table-hover table-sm small text-nowrap table-head-fixed ">
-              <thead>
-                  <tr>
-                  <tr>
-                      <th>#</th>
-                      <th>MCA File Ref.</th>
-                  </tr>
-              </thead>
-              <tbody id="table_dossier_df">
-              </tbody>
-            </table>
-          </div>
+        <div class="form-group">
+          <label for="motif_reject_dept">Reason for Refusal</label>
+          <textarea name="motif_reject_dept" id="motif_reject_dept" class="form-control form-control-sm "></textarea>
         </div>
       </div>
-      <!-- <div class="modal-footer justify-content-between">
-        <button type="button" class="btn btn-danger" data-dismiss="modal">Annuler</button>
-        <button type="submit" name="creerAV" class="btn btn-primary">Valider</button>
-      </div> -->
+      <div class="modal-footer justify-content-between">
+        <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal">Cancel</button>
+        <button type="submit" class="btn btn-sm btn-primary">Submit</button>
+      </div>
     </div>
-    <!-- </form> -->
+    </form>
+    <!-- /.modal-content -->
+  </div>
+  <!-- /.modal-dialog -->
+</div>
+
+<div class="modal fade" id="modal_decaiss_df">
+  <div class="modal-dialog modal-sm">
+    <form action="" method="POST" id="form_decaiss_df">
+      <input type="hidden" name="id_df" id="id_df_decaiss">
+      <input type="hidden" name="operation" value="decaiss_df">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title"><i class="fa fa-check"></i> Payment</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label for="ref_decaiss">Voucher Ref.</label>
+          <input type="text" name="ref_decaiss" id="ref_decaiss" class="form-control form-control-sm " required>
+        </div>
+        <div class="form-group">
+          <label for="montant_decaiss">Amount</label>
+          <input type="number" step="0.0001" name="montant_decaiss" id="montant_decaiss" class="form-control form-control-sm " required>
+        </div>
+        <div class="form-group">
+          <label for="nom_recep_fond">Receipt By</label>
+          <input type="text" name="nom_recep_fond" id="nom_recep_fond" class="form-control form-control-sm " required>
+        </div>
+        <div class="form-group">
+          <label for="fichier_decaiss">Voucher File</label>
+          <input type="file" name="fichier_decaiss" id="fichier_decaiss" class="form-control form-control-sm " required>
+        </div>
+      </div>
+      <div class="modal-footer justify-content-between">
+        <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal">Cancel</button>
+        <button type="submit" class="btn btn-sm btn-primary">Submit</button>
+      </div>
+    </div>
+    </form>
     <!-- /.modal-content -->
   </div>
   <!-- /.modal-dialog -->
 </div>
 
 <script type="text/javascript">
-
-  function get_dossier(id_dos, ref_dos){
-    $('#id_dos_search').val(id_dos);
-    $('#label_ref_dos').val(ref_dos);
-    $('#modal_search_dossier_df_report').modal('hide');
-  }
-
-  function modal_search_dossier_df_report(mot_cle=null){
-    $('#spinner-div').show();
-
-   $.ajax({
-     type: "POST",
-     url: "ajax.php",
-     data: {mot_cle: mot_cle, operation: 'modal_search_dossier_df_report'},
-     dataType:"json",
-     success:function(data){
-       if (data.logout) {
-         alert(data.logout);
-         window.location="../deconnexion.php";
-       }else{
-         $('#table_dossier_df').html(data.table_dossier_df);
-         $('#modal_search_dossier_df_report').modal('show');
-       }
-     },
-     complete: function () {
-         $('#spinner-div').hide();//Request is complete so hide spinner
-     }
-   });
-
-  }
 
   $(document).ready(function(){
 
@@ -769,7 +732,7 @@
       },
       "data": {
           "statut": "no_dept",
-          "operation": "demande_fond"
+          "operation": "demande_fond_bank"
       }
     },
     "columns":[

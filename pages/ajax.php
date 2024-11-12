@@ -678,7 +678,12 @@
 		echo json_encode($maClasse-> getListeFactures($_POST['statut'], $id_mod_lic, $id_util, $debut, $fin, $_POST['id_cli']));
 		
 	}elseif(isset($_POST['operation']) && $_POST['operation']=='pay_report'){ 
-		echo json_encode($maClasse-> pay_report($_POST['statut']));
+
+		if (!empty($_POST['id_dos'])) {
+			echo json_encode($maClasse-> pay_report_dossier($_POST['statut'], $_POST['date_create_debut'], $_POST['date_create_fin'], $_POST['date_visa_dept_debut'], $_POST['date_visa_dept_fin'], $_POST['date_visa_fin_debut'], $_POST['date_visa_fin_fin'], $_POST['date_decaiss_debut'], $_POST['date_decaiss_fin'], $_POST['id_dep'], $_POST['id_dos']));
+		}else {
+			echo json_encode($maClasse-> pay_report($_POST['statut'], $_POST['date_create_debut'], $_POST['date_create_fin'], $_POST['date_visa_dept_debut'], $_POST['date_visa_dept_fin'], $_POST['date_visa_fin_debut'], $_POST['date_visa_fin_fin'], $_POST['date_decaiss_debut'], $_POST['date_decaiss_fin'], $_POST['id_dep']));
+		}
 		
 	}elseif(isset($_POST['operation']) && $_POST['operation']=='rapportOperations'){ // On Recupere les data pour rapport Operations
 		$response['nbre_dossier_encours'] = $maClasse-> getNbreDossier('Dossiers En Cours');
@@ -3568,8 +3573,9 @@
     	for ($i=0; $i <= $_POST['nbre'] ; $i++) { 
 
     		if (isset($_POST['id_dos_'.$i])) {
+
+    			$maClasse-> creerDepenseDossierDF($_POST['id_dep'], $_POST['id_dos_'.$i], date('Y-m-d'), $_POST['montant_'.$i], $id_df);
     			
-    			$maClasse-> creerDossierDemandeFond($_POST['id_dep'], $_POST['id_dos_'.$i], $id_df, $_POST['montant_'.$i]);
 
     		}
 
@@ -3588,6 +3594,14 @@
 	}elseif(isset($_POST['operation']) && $_POST['operation']=='demande_fond'){ 
 
 		echo json_encode($maClasse-> demande_fond($_POST['statut']));
+
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='demande_fond_bank'){ 
+
+		echo json_encode($maClasse-> demande_fond_bank($_POST['statut']));
+
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='demande_fond_cash'){ 
+
+		echo json_encode($maClasse-> demande_fond_cash($_POST['statut']));
 
 	}elseif(isset($_POST['operation']) && $_POST['operation']=='getDemandeFond'){ 
 
@@ -3709,6 +3723,12 @@
 	}elseif(isset($_POST['operation']) && $_POST['operation']=='modal_search_dossier_df'){ 
 
 		$response['table_dossier_df'] = $maClasse-> modal_search_dossier_df($_POST['id_cli'], $_POST['ligne'], $_POST['mot_cle']);
+
+		echo json_encode($response);
+
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='modal_search_dossier_df_report'){ 
+
+		$response['table_dossier_df'] = $maClasse-> modal_search_dossier_df_report($_POST['mot_cle']);
 
 		echo json_encode($response);
 

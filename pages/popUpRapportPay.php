@@ -16,12 +16,28 @@
           <div class="col-12">
             <div class="card">
               <div class="card-header">
-                <h5><i class="fa fa-folder-open nav-icon"></i> 
-                  <?php 
-                  
-                  ?>
+                <h5><i class="fa fa-folder-open nav-icon"></i> Reporting 
                 </h5>
-
+                  <?php 
+                    if(!empty($_GET['statut'])){
+                      echo 'Status: <b>'.$_GET['statut'].'</b>';
+                    }
+                    if(!empty($_GET['id_dos'])){
+                      echo '<br>File: <b>'.$maClasse-> getDossier($_GET['id_dos'])['ref_dos'].'</b>';
+                    }
+                    if(!empty($_GET['date_create_debut'])){
+                      echo '<br>Created Between: <b>'.$_GET['date_create_debut'].'</b> AND <b>'.$_GET['date_create_fin'].'</b> ';
+                    }
+                    if(!empty($_GET['date_visa_dept_debut'])){
+                      echo '<br>Depart.Approval Between: <b>'.$_GET['date_visa_dept_debut'].'</b> AND <b>'.$_GET['date_visa_dept_fin'].'</b> ';
+                    }
+                    if(!empty($_GET['date_visa_fin_debut'])){
+                      echo '<br>Finance Approval Between: <b>'.$_GET['date_visa_fin_debut'].'</b> AND <b>'.$_GET['date_visa_fin_fin'].'</b> ';
+                    }
+                    if(!empty($_GET['date_decaiss_debut'])){
+                      echo '<br>Payed Between: <b>'.$_GET['date_decaiss_debut'].'</b> AND <b>'.$_GET['date_decaiss_fin'].'</b> ';
+                    }
+                  ?>
                 <div class="card-tools">
                 </div>
               </div>    
@@ -101,9 +117,9 @@
             'excel',
             'pageLength', 'colvis'
         ],
-        fixedColumns: {
-          left: 3
-        },
+        // fixedColumns: {
+        //   left: 3
+        // },
         paging: false,
         scrollCollapse: true,
         scrollX: true,
@@ -122,8 +138,7 @@
           "method":"post",
           "dataSrc":{
               "id_cli": ""
-          },
-          "data": {
+          },          "data": {
               "id_cli": "",
               "statut": "<?php echo $_GET['statut'];?>",
               "date_create_debut": "<?php echo $_GET['date_create_debut'];?>",
@@ -132,6 +147,10 @@
               "date_visa_dept_fin": "<?php echo $_GET['date_visa_dept_fin'];?>",
               "date_visa_fin_debut": "<?php echo $_GET['date_visa_fin_debut'];?>",
               "date_visa_fin_fin": "<?php echo $_GET['date_visa_fin_fin'];?>",
+              "date_decaiss_debut": "<?php echo $_GET['date_decaiss_debut'];?>",
+              "date_decaiss_fin": "<?php echo $_GET['date_decaiss_fin'];?>",
+              "id_dep": "<?php echo $_GET['id_dep'];?>",
+              "id_dos": "<?php echo $_GET['id_dos'];?>",
               "operation": "pay_report"
           }
         },

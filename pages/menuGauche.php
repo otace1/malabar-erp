@@ -49,6 +49,45 @@
               </p></span>
             </a>
           </li>
+              <?php
+              if ($maClasse-> getUtilisateur($_SESSION['id_util'])['view_bank_payment']=='1') {
+                ?>
+              <li class="nav-item">
+                <a href="demande_fond_bank.php" class="nav-link">
+                <!-- <a href="#" class="nav-link" onclick="modal_client_cvee()"> -->
+                  <i class="fa fa-list"></i>
+                  <?php
+                    if ($maClasse-> getUtilisateur($_SESSION['id_util'])['langue']=='ENG') {
+                      echo 'Bank';
+                    }else if ($maClasse-> getUtilisateur($_SESSION['id_util'])['langue']=='FR') {
+                      echo 'Banque';
+                    }
+                  ?>
+                </a>
+              </li>
+                <?php
+              }
+
+              if ($maClasse-> getUtilisateur($_SESSION['id_util'])['view_cash_payment']=='1') {
+                ?>
+            <li class="nav-item">
+                <a href="demande_fond_cash.php" class="nav-link">
+                <!-- <a href="#" class="nav-link" onclick="modal_client_cvee()"> -->
+                  <i class="fa fa-list"></i>
+                  <?php
+                    if ($maClasse-> getUtilisateur($_SESSION['id_util'])['langue']=='ENG') {
+                      echo 'Cash';
+                    }else if ($maClasse-> getUtilisateur($_SESSION['id_util'])['langue']=='FR') {
+                      echo 'Cash';
+                    }
+                  ?>
+                </a>
+              </li>
+                <?php
+              }
+
+              if ($maClasse-> getUtilisateur($_SESSION['id_util'])['view_default_payment']=='1') {
+                ?>
             <li class="nav-item">
                 <a href="demande_fond.php" class="nav-link">
                 <!-- <a href="#" class="nav-link" onclick="modal_client_cvee()"> -->
@@ -63,6 +102,10 @@
                 </a>
             </li>
 
+                <?php
+              }
+              ?>
+          
             <?php
               // $maClasse-> afficherMenuFinanceOPS();
               echo '<hr>';
