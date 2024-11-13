@@ -21480,74 +21480,79 @@
 				}$requeteDebours-> closeCursor();
 
 				//---------- Depense KAMOA
-				$requeteDebours = $connexion-> prepare("SELECT deb.abr_deb AS abr_deb, 
-														-- UPPER(REPLACE(deb.nom_deb, '\'', '')) AS nom_deb, 
-														deb.nom_deb AS nom_deb, 
-														deb.id_deb AS id_deb,
-														ROUND(depdos.montant, 2) AS montant
-													FROM debours deb, depense dep, depense_dossier depdos, dossier dos
-													WHERE deb.id_t_deb = ?
-														AND deb.id_deb = dep.id_deb
-														AND dep.id_dep = depdos.id_dep
-														AND depdos.id_dos = dos.id_dos
-														and deb.id_deb not in (
-													    		SELECT aff.id_deb
-													        		FROM affectation_debours_client_modele_licence aff
-													        		where aff.id_cli = ?
-													    	)
-														AND dos.id_dos = ?
-													ORDER BY deb.rang, deb.id_deb ASC");
-				$requeteDebours-> execute(array($reponseTypeDebours['id_t_deb'], $entree['id_cli'], $entree['id_dos']));
-				while($reponseDebours = $requeteDebours-> fetch()){
-					$compteur++;
-					$montant_tva_input = '';
-					$mask_tva = '';
-					
+				// if ($entree['id_cli']==857) {
+				if ($entree['id_cli']==857) {
+					$requeteDebours = $connexion-> prepare("SELECT deb.abr_deb AS abr_deb, 
+															UPPER(REPLACE(deb.nom_deb, '\'', '')) AS nom_deb, 
+															-- deb.nom_deb AS nom_deb, 
+															deb.id_deb AS id_deb,
+															ROUND(depdos.montant, 2) AS montant
+														FROM debours deb, depense dep, depense_dossier depdos, dossier dos
+														WHERE deb.id_t_deb = ?
+															AND deb.id_deb = dep.id_deb
+															AND dep.id_dep = depdos.id_dep
+															AND depdos.charge_back = '1'
+															AND depdos.id_dos = dos.id_dos
+															and deb.id_deb not in (
+														    		SELECT aff.id_deb
+														        		FROM affectation_debours_client_modele_licence aff
+														        		where aff.id_cli = ?
+														    	)
+															AND dos.id_dos = ?
+														ORDER BY deb.rang, deb.id_deb ASC");
+					$requeteDebours-> execute(array($reponseTypeDebours['id_t_deb'], $entree['id_cli'], $entree['id_dos']));
+					while($reponseDebours = $requeteDebours-> fetch()){
+						$compteur++;
+						$montant_tva_input = '';
+						$mask_tva = '';
+						
 
-					$unite_input = '<span id="unite_'.$compteur.'"></span>';
-					$montant_input = '<input type="number" step="0.001" style="text-align: center;" class="bg-dark" name="montant_'.$compteur.'" id="montant_'.$reponseDebours['id_deb'].'" value="'.$reponseDebours['montant'].'" onblur="getTotal()">';
-					$montant_tva_input = '';
-					
-					$detail_input = '';
-					$usd_input = '<option value="1">USD</option><option value="0">CDF</option>';
-					$tva_input = '<option value="0">NO</option><option value="1">YES</option><option value="1">YES</option><option value="0">NO</option>';
+						$unite_input = '<span id="unite_'.$compteur.'"></span>';
+						$montant_input = '<input type="number" step="0.001" style="text-align: center;" class="bg-dark" name="montant_'.$compteur.'" id="montant_'.$reponseDebours['id_deb'].'" value="'.$reponseDebours['montant'].'" onblur="getTotal()">';
+						$montant_tva_input = '';
+						
+						$detail_input = '';
+						$usd_input = '<option value="1">USD</option><option value="0">CDF</option>';
+						$tva_input = '<option value="0">NO</option><option value="1">YES</option><option value="1">YES</option><option value="0">NO</option>';
 
-					$debours .= '<tr>
-									<td width="10%">
-										<input type="hidden" id="id_deb_'.$compteur.'" name="id_deb_'.$compteur.'" value="'.$reponseDebours['id_deb'].'">
-										'.$reponseDebours['abr_deb'].'
-									</td>
-									<td width="50%" class="font-weight-bold text-warning">
-										'.$reponseDebours['nom_deb'].$detail_input.'
-									</td>
-									<td style="text-align: center;">
-										'.$unite_input.'
-									</td>
-									<td style="text-align: center;">
-										'.$montant_input.'
+						$debours .= '<tr>
+										<td width="10%">
+											<input type="hidden" id="id_deb_'.$compteur.'" name="id_deb_'.$compteur.'" value="'.$reponseDebours['id_deb'].'">
+											'.$reponseDebours['abr_deb'].'
+										</td>
+										<td width="50%" class="font-weight-bold text-warning">
+											'.$reponseDebours['nom_deb'].$detail_input.'
+										</td>
+										<td style="text-align: center;">
+											'.$unite_input.'
+										</td>
+										<td style="text-align: center;">
+											'.$montant_input.'
 
-									</td>
-									<td style="text-align: center;">
-										<select name="usd_'.$compteur.'" id="usd_'.$compteur.'" onchange="getTotal()">
-											'.$usd_input.'
-										</select>
-									</td>
-									<td style="text-align: center;">
-										<select name="tva_'.$compteur.'" id="tva_'.$mask_tva.'" onchange="getTotal();calculDroit();">
-											'.$tva_input.'
-										</select>
-									</td>
-									<td style="text-align: center;">
-										'.$montant_tva_input.'
+										</td>
+										<td style="text-align: center;">
+											<select name="usd_'.$compteur.'" id="usd_'.$compteur.'" onchange="getTotal()">
+												'.$usd_input.'
+											</select>
+										</td>
+										<td style="text-align: center;">
+											<select name="tva_'.$compteur.'" id="tva_'.$mask_tva.'" onchange="getTotal();calculDroit();">
+												'.$tva_input.'
+											</select>
+										</td>
+										<td style="text-align: center;">
+											'.$montant_tva_input.'
 
-									</td>
-								</tr>';
+										</td>
+									</tr>';
 
-					?>
-					
-					<?php
-				}$requeteDebours-> closeCursor();
+						?>
+						
+						<?php
+					}$requeteDebours-> closeCursor();
 
+				}
+				
 				//---------- Fin Depense KAMOA
 				$debours .= '</div>';
 
@@ -24573,6 +24578,7 @@
 												FROM depense dep, depense_dossier depdos, dossier dos
 												WHERE dep.id_dep = ?
 													AND dep.id_dep = depdos.id_dep
+													AND depdos.charge_back = '1'
 													AND depdos.id_dep_dos NOT IN (SELECT id_dep_dos FROM detail_note_debit)
 													AND CONCAT(depdos.id_dos,'-',dep.id_deb) NOT IN (
 															SELECT CONCAT(det.id_dos,'-',det.id_deb)
@@ -47845,6 +47851,7 @@
 												AND dos.id_mod_lic = ?
 												AND dos.id_cli = cl.id_cli
 												AND depdos.id_dep = dep.id_dep
+												AND depdos.charge_back = '1'
 												AND depdos.id_dep_dos NOT IN (
 														SELECT id_dep_dos 
 														 FROM detail_note_debit 
@@ -52339,9 +52346,26 @@
 			// 	$entree['date_dep'] = NULL;
 			// }
 
-			$requete = $connexion-> prepare("INSERT INTO depense_dossier(id_dep, id_dos, date_dep, montant, id_df, id_util)
-												VALUES(?, ?, ?, ?, ?, ?)");
+			$requete = $connexion-> prepare("INSERT INTO depense_dossier(id_dep, id_dos, date_dep, montant, id_df, charge_back, id_util)
+												VALUES(?, ?, ?, ?, ?, '0', ?)");
 			$requete-> execute(array($entree['id_dep'], $entree['id_dos'], $entree['date_dep'], $entree['montant'], $entree['id_df'], $_SESSION['id_util']));
+			
+
+		}
+
+
+		public function depense_dossier_chargeback_DF($id_df){
+			include("connexion.php");
+			$entree['id_df'] = $id_df;
+
+			// if ($entree['date_dep'] == '') {
+			// 	$entree['date_dep'] = NULL;
+			// }
+
+			$requete = $connexion-> prepare("UPDATE depense_dossier	
+												SET charge_back = '1'
+												WHERE id_df = ?");
+			$requete-> execute(array($entree['id_df']));
 			
 
 		}
@@ -60440,6 +60464,32 @@
 			}$requete-> closeCursor();
 			
 			return $table;
+
+		}
+
+		public function get_licence_for_excel_tracking($id_cli){
+			include('connexion.php');
+			$compteur=0;
+			$entree['id_cli'] = $id_cli;
+
+			$table = '';
+			
+			$requete = $connexion-> prepare("SELECT num_lic,
+													SUBSTRING(num_lic, 1, 10) AS label_num_lic
+												FROM licence
+												WHERE id_cli = ?
+													AND id_mod_lic = 2");
+			// $requete-> execute(array($entree['id_cli']));
+			while($reponse = $requete-> fetch()){
+				$compteur++;
+				?>
+				<a class="dropdown-item"onclick="window.location.replace('exportExcelMMGImport.php?id_cli=<?php echo $_GET['id_cli']; ?>&id_mod_trans=<?php echo $_GET['id_mod_trans']; ?>&id_mod_trac=<?php echo $_GET['id_mod_trac']; ?>&commodity=<?php echo $_GET['commodity']; ?>&statut=<?php echo $_GET['statut'];?>&id_march=<?php echo $_GET['id_march'];?>&num_lic=<?php echo $reponse['num_lic'];?>','pop1','width=80,height=80');">
+                         <?php echo $reponse['label_num_lic'];?>
+                </a>
+				<?php
+			}$requete-> closeCursor();
+			
+			// return $table;
 
 		}
 
