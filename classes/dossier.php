@@ -1,5 +1,5 @@
 <?php
-  include("tete.php");
+  include("tetePopCDN.php");
   include("menuHaut.php");
   include("menuGauche.php");
   //include('dossierExcel.php');
@@ -49,6 +49,14 @@
     ?>
     <script type="text/javascript">
       window.location = 'dossier.php?id_cli=<?php echo $_GET['id_cli'];?>&id_march=<?php echo $_GET['id_march'];?>&num_lic=<?php echo $_GET['num_lic'];?>&id_mod_trac=<?php echo $_GET['id_mod_trac'];?>&id_mod_trans=<?php echo $_GET['id_mod_trans'];?>&commodity=<?php echo $_POST['commodity'];?>&statut=<?php echo $_GET['statut'];?>&cleared=<?php echo $_GET['cleared'];?>';
+    </script>
+    <?php
+  }
+
+  if( isset($_POST['rechercheLicence']) ){
+    ?>
+    <script type="text/javascript">
+      window.open('popUpDossierLicence.php?num_lic=<?php echo $_POST['num_lic'];?>&couleur=dark','pop1','width=1300,height=900');
     </script>
     <?php
   }
@@ -141,6 +149,10 @@ for ($i=1; $i <= 15 ; $i++) {
         $maClasse-> MAJ_mca_b_ref($_POST['id_dos_'.$i], $_POST['mca_b_ref_'.$i]);
       }
 
+      if (isset($_POST['container_'.$i]) && ($_POST['container_'.$i] != '')) {
+        $maClasse-> MAJ_container($_POST['id_dos_'.$i], $_POST['container_'.$i]);
+      }
+
       if (isset($_POST['ref_quit_'.$i]) && ($_POST['ref_quit_'.$i] != '')) {
         $maClasse-> MAJ_ref_quit($_POST['id_dos_'.$i], $_POST['ref_quit_'.$i]);
         if ($_GET['id_mod_trac'] == '2') {
@@ -172,8 +184,29 @@ for ($i=1; $i <= 15 ; $i++) {
         $maClasse-> MAJ_autre_frais_dos($_POST['id_dos_'.$i], $_POST['autre_frais_dos_'.$i]);
       }
       //----
+      // ceec_ref
+      if (isset($_POST['ceec_ref_'.$i]) && ($_POST['ceec_ref_'.$i] != '')) {
+        $maClasse-> MAJ_ceec_ref($_POST['id_dos_'.$i], $_POST['ceec_ref_'.$i]);
+      }
+      // cgea_ref
+      if (isset($_POST['cgea_ref_'.$i]) && ($_POST['cgea_ref_'.$i] != '')) {
+        $maClasse-> MAJ_cgea_ref($_POST['id_dos_'.$i], $_POST['cgea_ref_'.$i]);
+      }
+      // rcv_ref
+      if (isset($_POST['rcv_ref_'.$i]) && ($_POST['rcv_ref_'.$i] != '')) {
+        $maClasse-> MAJ_rcv_ref($_POST['id_dos_'.$i], $_POST['rcv_ref_'.$i]);
+      }
+      // seguce_pay_date
+      if (isset($_POST['seguce_pay_date_'.$i]) && ($_POST['seguce_pay_date_'.$i] != '')) {
+        $maClasse-> MAJ_seguce_pay_date($_POST['id_dos_'.$i], $_POST['seguce_pay_date_'.$i]);
+      }
+
       if (isset($_POST['t1_'.$i]) && ($_POST['t1_'.$i] != '')) {
         $maClasse-> MAJ_t1($_POST['id_dos_'.$i], $_POST['t1_'.$i]);
+      }
+
+      if (isset($_POST['t1_date_'.$i]) && ($_POST['t1_date_'.$i] != '')) {
+        $maClasse-> MAJ_t1_date($_POST['id_dos_'.$i], $_POST['t1_date_'.$i]);
       }
 
       if (isset($_POST['poids_'.$i]) && ($_POST['poids_'.$i] != '')) {
@@ -190,6 +223,14 @@ for ($i=1; $i <= 15 ; $i++) {
       
       if (isset($_POST['trailer_2_'.$i]) && ($_POST['trailer_2_'.$i] != '')) {
         $maClasse-> MAJ_trailer_2($_POST['id_dos_'.$i], $_POST['trailer_2_'.$i]);
+      }
+      
+      if (isset($_POST['pied_container_'.$i]) && ($_POST['pied_container_'.$i] != '')) {
+        $maClasse-> MAJ_pied_container($_POST['id_dos_'.$i], $_POST['pied_container_'.$i]);
+      }
+      
+      if (isset($_POST['container_'.$i]) && ($_POST['container_'.$i] != '')) {
+        $maClasse-> MAJ_container($_POST['id_dos_'.$i], $_POST['container_'.$i]);
       }
       
       if (isset($_POST['crossing_date_'.$i]) && ($_POST['crossing_date_'.$i] != '')) {
@@ -212,8 +253,28 @@ for ($i=1; $i <= 15 ; $i++) {
         $maClasse-> MAJ_date_crf($_POST['id_dos_'.$i], $_POST['date_crf_'.$i]);
       }
 
+      if (isset($_POST['ir_crf_'.$i]) && ($_POST['ir_crf_'.$i] != '')) {
+        $maClasse-> MAJ_ir_crf($_POST['id_dos_'.$i], $_POST['ir_crf_'.$i]);
+      }
+
+      if (isset($_POST['date_ad_'.$i]) && ($_POST['date_ad_'.$i] != '')) {
+        $maClasse-> MAJ_date_ad($_POST['id_dos_'.$i], $_POST['date_ad_'.$i]);
+      }
+
+      if (isset($_POST['date_assurance_'.$i]) && ($_POST['date_assurance_'.$i] != '')) {
+        $maClasse-> MAJ_date_assurance($_POST['id_dos_'.$i], $_POST['date_assurance_'.$i]);
+      }
+
       if (isset($_POST['date_preal_'.$i]) && ($_POST['date_preal_'.$i] != '')) {
         $maClasse-> MAJ_date_preal($_POST['id_dos_'.$i], $_POST['date_preal_'.$i]);
+      }
+
+      if (isset($_POST['frontiere_'.$i]) && ($_POST['frontiere_'.$i] != '')) {
+        $maClasse-> MAJ_frontiere($_POST['id_dos_'.$i], $_POST['frontiere_'.$i]);
+      }
+
+      if (isset($_POST['entrepot_frontiere_'.$i]) && ($_POST['entrepot_frontiere_'.$i] != '')) {
+        $maClasse-> MAJ_entrepot_frontiere($_POST['id_dos_'.$i], $_POST['entrepot_frontiere_'.$i]);
       }
 
       if (isset($_POST['po_ref_'.$i]) && ($_POST['po_ref_'.$i] != '')) {
@@ -264,13 +325,28 @@ for ($i=1; $i <= 15 ; $i++) {
         $maClasse-> MAJ_commodity($_POST['id_dos_'.$i], $_POST['commodity_'.$i]);
       }
 
+      if (isset($_POST['regime_'.$i]) && ($_POST['regime_'.$i] != '')) {
+        $maClasse-> MAJ_regime($_POST['id_dos_'.$i], $_POST['regime_'.$i]);
+      }
+
       if (isset($_POST['fob_'.$i]) && ($_POST['fob_'.$i] != '')) {
         $maClasse-> MAJ_fob($_POST['id_dos_'.$i], $_POST['fob_'.$i]);
-        echo '<br>FOB = '.$_POST['fob_'.$i];
+        //echo '<br>FOB = '.$_POST['fob_'.$i];
       }
 
       if (isset($_POST['fret_'.$i]) && ($_POST['fret_'.$i] != '')) {
         $maClasse-> MAJ_fret($_POST['id_dos_'.$i], $_POST['fret_'.$i]);
+      }
+
+      //ogefrem_ref_fact
+      if (isset($_POST['ogefrem_ref_fact_'.$i]) && ($_POST['ogefrem_ref_fact_'.$i] != '')) {
+        // echo '<script>alert("'.$_POST['ogefrem_ref_fact_'.$i].'")</script>';
+        $maClasse-> MAJ_ogefrem_ref_fact($_POST['id_dos_'.$i], $_POST['ogefrem_ref_fact_'.$i]);
+      }
+
+      //lmc_id
+      if (isset($_POST['lmc_id_'.$i]) && ($_POST['lmc_id_'.$i] != '')) {
+        $maClasse-> MAJ_lmc_id($_POST['id_dos_'.$i], $_POST['lmc_id_'.$i]);
       }
 
       if (isset($_POST['assurance_'.$i]) && ($_POST['assurance_'.$i] != '')) {
@@ -283,10 +359,6 @@ for ($i=1; $i <= 15 ; $i++) {
 
       if (isset($_POST['remarque_'.$i]) && ($_POST['remarque_'.$i] != '')) {
         $maClasse-> MAJ_remarque($_POST['id_dos_'.$i], $_POST['remarque_'.$i]);
-      }
-
-      if (isset($_POST['cleared_'.$i]) && ($_POST['cleared_'.$i] != '')) {
-        $maClasse-> MAJ_cleared($_POST['id_dos_'.$i], $_POST['cleared_'.$i]);
       }
 
       
@@ -371,7 +443,7 @@ for ($i=1; $i <= 15 ; $i++) {
 
       if (isset($_POST['min_div_out_'.$i]) && ($_POST['min_div_out_'.$i] != '')) {
         $maClasse-> MAJ_min_div_out($_POST['id_dos_'.$i], $_POST['min_div_out_'.$i]);
-          $maClasse-> MAJ_statut($_POST['id_dos_'.$i], 'MINE DIV OUT');
+          $maClasse-> MAJ_statut($_POST['id_dos_'.$i], 'MINE DIVISION OUT');
       }
 
       if (isset($_POST['ref_decl_'.$i]) && ($_POST['ref_decl_'.$i] != '')) {
@@ -518,6 +590,10 @@ for ($i=1; $i <= 15 ; $i++) {
         $maClasse-> MAJ_dgda_seal($_POST['id_dos_'.$i], $_POST['dgda_seal_'.$i]);
       }
 
+      if (isset($_POST['total_dgda_seal_'.$i]) && ($_POST['total_dgda_seal_'.$i] != '')) {
+        $maClasse-> MAJ_total_dgda_seal($_POST['id_dos_'.$i], $_POST['total_dgda_seal_'.$i]);
+      }
+
       if (isset($_POST['dispatch_pweto_'.$i]) && ($_POST['dispatch_pweto_'.$i] != '')) {
         $maClasse-> MAJ_dispatch_pweto($_POST['id_dos_'.$i], $_POST['dispatch_pweto_'.$i]);
       }
@@ -593,6 +669,18 @@ for ($i=1; $i <= 15 ; $i++) {
         $maClasse-> MAJ_warehouse_arriv($_POST['id_dos_'.$i], $_POST['warehouse_arriv_'.$i]);
       }
 
+      if (isset($_POST['warehouse_dep_'.$i]) && ($_POST['warehouse_dep_'.$i] != '')) {
+        $maClasse-> MAJ_warehouse_dep($_POST['id_dos_'.$i], $_POST['warehouse_dep_'.$i]);
+      }
+
+      if (isset($_POST['cleared_'.$i]) && ($_POST['cleared_'.$i] != '')) {
+        $maClasse-> MAJ_cleared($_POST['id_dos_'.$i], $_POST['cleared_'.$i]);
+      }
+
+      if (isset($_POST['cleared_'.$i]) && ($_POST['cleared_'.$i] == '2')) {
+        $maClasse-> MAJ_statut($_POST['id_dos_'.$i], 'CANCELLED');
+      }
+
       if (isset($_POST['cleared_'.$i]) && ($_POST['cleared_'.$i] != '')) {
         $maClasse-> MAJ_cleared($_POST['id_dos_'.$i], $_POST['cleared_'.$i]);
 
@@ -605,6 +693,18 @@ for ($i=1; $i <= 15 ; $i++) {
       if (isset($_POST['statut_'.$i]) && ($_POST['statut_'.$i] == 'CLEARING COMPLETED')) {
         $maClasse-> MAJ_cleared($_POST['id_dos_'.$i], 1);
       }
+
+      if (isset($_POST['statut_'.$i]) && ($_POST['statut_'.$i] == 'EXIT DRC')) {
+        $maClasse-> MAJ_cleared($_POST['id_dos_'.$i], 1);
+      }
+
+      if (isset($_POST['statut_'.$i]) && ($_POST['statut_'.$i] == 'CANCELLED')) {
+        $maClasse-> MAJ_cleared($_POST['id_dos_'.$i], 2);
+      }
+
+      //MAJ de tous les dossiers cleared = '' ou cleared is null
+      //$maClasse-> MAJ_cleared_is_null();
+
       /*
       if (isset($_POST['_'.$i]) && ($_POST['_'.$i] != '')) {
         $maClasse-> MAJ_($_POST['id_dos_'.$i], $_POST['_'.$i]);
@@ -625,7 +725,7 @@ for ($i=1; $i <= 15 ; $i++) {
     $maClasse-> creerEBTracking($_POST['num_lic'], $_POST['date_val'], $_POST['poids'], 
                                 $_POST['unit_mes'], $_GET['id_cli'], $_GET['id_march'], 
                                 $_POST['date_exp'], $_SESSION['id_util'], $_POST['destination'], 
-                                $_POST['acheteur'], $_POST['id_mod_trans']);
+                                $_POST['acheteur'], $_POST['id_mod_trans'], $_POST['id_banq']);
 
   }
 
@@ -640,6 +740,8 @@ for ($i=1; $i <= 15 ; $i++) {
   }
 
 ?>
+
+                      <input type="hidden" id="annee">
   <!-- /.navbar -->
 
   <!-- Main Sidebar Container -->
@@ -667,13 +769,13 @@ for ($i=1; $i <= 15 ; $i++) {
                     if(isset($_POST['creerDossier'])){
                         if($_GET['id_mod_trac'] == '2'){
 
-                          if ($_GET['id_cli'] == 869 && $_GET['id_march'] == 6 && $_GET['id_mod_trac'] == 2) {
+                          if ($_GET['id_cli'] == 869 && $_GET['id_mod_trac'] == 2 && $_GET['id_march'] != 11) {
 
                             for ($i=1; $i <= $_POST['nbre'] ; $i++) {
 
                               if ( isset($_POST['ref_dos_'.$i]) && ($_POST['ref_dos_'.$i]!='') && isset($_POST['num_lic_'.$i]) && ($_POST['num_lic_'.$i]!='') && isset($_POST['poids_'.$i]) && ($_POST['poids_'.$i] != '') ) {
 
-                                $maClasse-> creerDossierIBAcid($_POST['ref_dos_'.$i], $_GET['id_cli'], 
+                                $maClasse-> creerDossierIBAcid($_POST['ref_dos_'.$i], $_POST['mca_b_ref_'.$i], $_GET['id_cli'], 
                                                         $_POST['ref_fact_'.$i], $_POST['t1_'.$i], 
                                                         $_POST['poids_'.$i], $_POST['num_lic_'.$i], 
                                                         $_GET['id_mod_trac'], $_GET['id_march'], 
@@ -682,14 +784,15 @@ for ($i=1; $i <= 15 ; $i++) {
                                                         $_POST['trailer_2_'.$i], $_POST['klsa_arriv_'.$i], 
                                                         $_POST['crossing_date_'.$i], 
                                                         $_POST['wiski_arriv_'.$i], $_POST['wiski_dep_'.$i],
-                                                        $_POST['ref_crf_'.$i], $_POST['date_crf_'.$i]);
+                                                        $_POST['ref_crf_'.$i], $_POST['date_crf_'.$i], $_POST['fob_'.$i]);
                               }
 
                             }
 
                           }else{
 
-                            $maClasse-> creerDossierIB($_POST['ref_dos'], $_GET['id_cli'], $_POST['ref_fact'], 
+                            $maClasse-> creerDossierIB($_POST['ref_dos'], 
+                                                      $_POST['mca_b_ref'], $_GET['id_cli'], $_POST['ref_fact'], 
                                                       $_POST['fob'],$_POST['fret'], $_POST['assurance'], 
                                                       $_POST['autre_frais'], $_POST['num_lic'], $_GET['id_mod_trac'], 
                                                       $_GET['id_march'], $_GET['id_mod_trans'],
@@ -697,10 +800,25 @@ for ($i=1; $i <= 15 ; $i++) {
                                                       $_POST['road_manif'], $_POST['date_preal'], $_POST['t1'], 
                                                       $_POST['poids'], $_POST['po_ref'], $_POST['commodity'], 
                                                       $_POST['horse'], $_POST['trailer_1'], $_POST['trailer_2'], 
-                                                      $_POST['cod'], $_POST['date_crf'], NULL, $_POST['supplier']);
+                                                      $_POST['cod'], $_POST['date_crf'], NULL, $_POST['supplier'], 
+                                                      $_POST['temporelle'], 
+                                                      $_POST['frontiere'], 
+                                                      $_POST['regime']);
 
                           }
 
+                        }
+                        else if($_GET['id_mod_trac'] == '1' && ($_GET['id_march'] == '18' || $_GET['id_march'] == '21' || $_GET['id_march'] == '22')){
+                          $maClasse-> creerDossierIB($_POST['ref_dos'], $_POST['mca_b_ref'], $_GET['id_cli'], $_POST['ref_fact'], 
+                                                      $_POST['fob'],$_POST['fret'], $_POST['assurance'], 
+                                                      $_POST['autre_frais'], $_POST['num_lic'], $_GET['id_mod_trac'], 
+                                                      $_GET['id_march'], $_GET['id_mod_trans'],
+                                                      NULL, $_POST['cod'], $_SESSION['id_util'],
+                                                      $_POST['road_manif'], $_POST['date_preal'], $_POST['t1'], 
+                                                      $_POST['poids'], $_POST['po_ref'], $_POST['commodity'], 
+                                                      $_POST['horse'], $_POST['trailer_1'], $_POST['trailer_2'], 
+                                                      $_POST['cod'], $_POST['date_crf'], NULL, $_POST['supplier'], 
+                                                      $_POST['temporelle']);
                         }
                         else if($_GET['id_mod_trac'] == '1'){
 
@@ -744,7 +862,8 @@ for ($i=1; $i <= 15 ; $i++) {
                                                       $_POST['trailer_2_'.$i], $_POST['site_load_'.$i], 
                                                       $_POST['destination_'.$i], $_POST['transporter_'.$i], 
                                                       $_POST['nbr_bags_'.$i], $_POST['poids_'.$i], 
-                                                      $_POST['load_date_'.$i], $_POST['dgda_seal_'.$i]);
+                                                      $_POST['load_date_'.$i], $_POST['dgda_seal_'.$i], 
+                                                      $_POST['container_'.$i], $_POST['pied_container_'.$i]);
 
                               }
 
@@ -768,83 +887,138 @@ for ($i=1; $i <= 15 ; $i++) {
                     <i class="fa fa-plus"></i>
                 </button>-->
                 <?php
-                if($_GET['id_mod_trac'] == '1'){
+                if($_GET['id_mod_trac'] == '1' && $_SESSION['id_role'] != '7' && $_SESSION['id_role'] != '8' && $_SESSION['id_role'] != '9' && $_SESSION['id_role'] != '10' && $_GET['id_march'] != '18' && $_GET['id_march'] != '21' && $_GET['id_march'] != '22'){
                   ?>
-                <button class="btn btn-info square-btn-adjust" data-toggle="modal" data-target=".nouveauDossierExport" <?php echo $maClasse-> getDataUtilisateur($_SESSION['id_util'])['tracking_enab']?>>
+                <!-- <button class="btn btn-xs btn-info square-btn-adjust" data-toggle="modal" data-target=".nouveauDossierExport" <?php echo $maClasse-> getDataUtilisateur($_SESSION['id_util'])['tracking_enab']?>>
+                    <i class="fa fa-plus"></i> Nouveau Dossier
+                </button> -->
+                <button class="btn btn-xs btn-info square-btn-adjust" onclick="modal_nouveauDossierLicence();" <?php echo $maClasse-> getDataUtilisateur($_SESSION['id_util'])['tracking_enab']?>>
+                    <i class="fa fa-plus"></i> Nouveau Dossier
+                </button>
+                  <?php
+                }else if($_GET['id_mod_trac'] == '1' && $_SESSION['id_role'] != '7' && $_SESSION['id_role'] != '8' && $_SESSION['id_role'] != '9' && $_SESSION['id_role'] != '10' && ($_GET['id_march'] == '18' || $_GET['id_march'] == '21' || $_GET['id_march'] = '22')){
+                  ?>
+                <button class="btn btn-xs btn-info square-btn-adjust" data-toggle="modal" data-target=".nouveauDossier" <?php echo $maClasse-> getDataUtilisateur($_SESSION['id_util'])['tracking_enab']?>>
                     <i class="fa fa-plus"></i> Nouveau Dossier
                 </button>
                   <?php
                 }else if($_GET['id_mod_trac'] == '2'){
-                  if ($_GET['id_cli'] == 869 && $_GET['id_march'] == 6) {
+                  if ($_GET['id_cli'] == 869 && $_GET['id_march'] != '11' && $_GET['id_march'] != '25' && $_GET['id_march'] != '26' && $_SESSION['id_role'] != '7' && $_SESSION['id_role'] != '8' && $_SESSION['id_role'] != '9' && $_SESSION['id_role'] != '10') {
                     ?>
-                  <button class="btn btn-info square-btn-adjust" data-toggle="modal" data-target=".nouveauDossierAcid" <?php echo $maClasse-> getDataUtilisateur($_SESSION['id_util'])['tracking_enab']?>>
+                  <button class="btn btn-xs btn-info square-btn-adjust" data-toggle="modal" onclick="modal_nouveauDossierLicence();" <?php echo $maClasse-> getDataUtilisateur($_SESSION['id_util'])['tracking_enab']?>>
                       <i class="fa fa-plus"></i> Nouveau Dossier
                   </button>
                     <?php
-                  }else{
+                  }else if ($_SESSION['id_role'] != '7' && $_SESSION['id_role'] != '8' && $_SESSION['id_role'] != '9' && $_SESSION['id_role'] != '10'){
                     ?>
-                  <button class="btn btn-info square-btn-adjust" data-toggle="modal" data-target=".nouveauDossier" <?php echo $maClasse-> getDataUtilisateur($_SESSION['id_util'])['tracking_enab']?>>
+                  <button class="btn btn-xs btn-info square-btn-adjust" data-toggle="modal" data-target=".nouveauDossier" <?php echo $maClasse-> getDataUtilisateur($_SESSION['id_util'])['tracking_enab']?>>
                       <i class="fa fa-plus"></i> Nouveau Dossier
                   </button>
                     <?php
                   }
                 }
                 ?>
-                <!--<button class="btn btn-dark square-btn-adjust" data-toggle="modal" data-target=".rechercheClient1">-->
+                <!--<button class="btn btn-xs btn-dark square-btn-adjust" data-toggle="modal" data-target=".rechercheClient1">-->
                   <?php
                 if($_GET['id_mod_trac'] == '1'){
                   ?>
-                  <button class="btn btn-dark square-btn-adjust" data-toggle="modal" data-target=".rechercheClientLicence">
-                    <i class="fa fa-filter"></i> Filtrage Licence
+                  <button class="btn btn-xs btn-dark square-btn-adjust" data-toggle="modal" data-target=".rechercheClientLicence">
+                    <i class="fa fa-filter"></i> Licence
                 </button>
                   <?php
                 }if(($_GET['id_mod_trac'] == '2') && ($_GET['id_cli'] == '869') && ($_GET['id_march'] == '6')){
                   ?>
-                  <button class="btn btn-dark square-btn-adjust" data-toggle="modal" data-target=".rechercheClientLicence">
-                    <i class="fa fa-filter"></i> Filtrage Licence
+                  <button class="btn btn-xs btn-dark square-btn-adjust" data-toggle="modal" data-target=".rechercheClientLicence">
+                    <i class="fa fa-filter"></i> Licence
                 </button>
                   <?php
-                }else if($_GET['id_mod_trac'] == '2'){
+                }/*else if($_GET['id_mod_trac'] == '2'){
                   ?>
-                <button class="btn btn-dark square-btn-adjust" data-toggle="modal" data-target=".rechercheMarchandise">
+                <button class="btn btn-xs btn-dark square-btn-adjust" data-toggle="modal" data-target=".rechercheMarchandise">
                     <i class="fa fa-filter"></i> Filtrage Marchandise
                 </button>
                   <?php
-                }
+                }*/
                 ?>
-                <button class="btn btn-secondary square-btn-adjust" data-toggle="modal" data-target=".rechercheStatus">
-                    <i class="fa fa-filter"></i> Filtrage Status
+                <!-- <button class="btn btn-xs btn-secondary square-btn-adjust" data-toggle="modal" data-target=".rechercheStatus">
+                    <i class="fa fa-filter"></i> File Status
+                </button> -->
+                <button class="btn btn-xs btn-secondary dropdown-toggle dropdown-icon" data-toggle="dropdown">
+                    <i class="fa fa-list"></i> Statut Licence
+                    <div class="dropdown-menu" role="menu">
+                      <a class="dropdown-item" href="#" onclick="window.open('popUpStatutLicence.php?id_cli=<?php echo $_GET['id_cli']; ?>&id_mod_lic=<?php echo $_GET['id_mod_trac']; ?>','popUpStatutLicence','width=1500,height=950');">
+                        <?php echo $maClasse-> getNomClient($_GET['id_cli']);?>
+                      </a>
+                      <a class="dropdown-item" href="#" onclick="window.open('popUpStatutLicence.php?id_cli=&id_mod_lic=<?php echo $_GET['id_mod_trac']; ?>','popUpStatutLicence2','width=1500,height=950');">
+                        Autres
+                      </a>
+                    </div>
                 </button>
-                <button class="btn bg-olive square-btn-adjust" data-toggle="modal" data-target=".rechercheClearingStatus">
-                    <i class="fa fa-filter"></i> Filtrage Clearing Status
+                <button class="btn btn-xs bg-olive square-btn-adjust" data-toggle="modal" data-target=".rechercheClearingStatus">
+                    <i class="fa fa-filter"></i> Clearing Status
+                </button>
+                <button class="btn btn-xs bg-dark square-btn-adjust" data-toggle="modal" data-target=".rechercheLicence">
+                    <i class="fa fa-search"></i> Search Licence
                 </button>
                  <?php
-                if($_GET['id_mod_trac'] == '1'){
+                if($_GET['id_mod_trac'] == '1' && $_SESSION['id_role'] != '7' && $_SESSION['id_role'] != '8' && $_SESSION['id_role'] != '9' && $_SESSION['id_role'] != '10'){
                   ?>
-                  <button class="btn bg bg-teal square-btn-adjust" data-toggle="modal" data-target=".nouvelleLicence">
-                    <i class="fa fa-plus"></i> Nouvelle Licence
+                  <button class="btn btn-xs bg bg-teal square-btn-adjust" data-toggle="modal" data-target=".nouvelleLicence">
+                    <i class="fa fa-plus"></i> Licence
                 </button>
-                  <button class="btn bg bg-dark square-btn-adjust" data-toggle="modal" data-target=".activationLicence">
+                  <button class="btn btn-xs bg bg-dark square-btn-adjust" data-toggle="modal" data-target=".activationLicence">
                     <i class="fa fa-cogs"></i> Activation Licences
                 </button>
                   <?php
-                }?>
+                }
+                if ($_SESSION['id_role'] != '7') {
+                ?>
+
+                <button class="btn btn-xs bg-primary square-btn-adjust" onclick="window.open('popDossierSansPoids.php?id_cli=<?php echo $_GET['id_cli']; ?>&id_mod_trans=<?php echo $_GET['id_mod_trans']; ?>&id_mod_trac=<?php echo $_GET['id_mod_trac']; ?>&commodity=<?php echo $_GET['commodity']; ?>&statut=<?php echo $_GET['statut'];?>&id_march=<?php echo $_GET['id_march'];?>','pop1','width=900,height=950');">
+                    <i class="fa fa-edit"></i> Weight Update <sup><span class="badge badge-danger"><?php echo number_format($maClasse-> getNbreDossierSansPoids($_GET['id_cli'], $_GET['id_mod_trans'], $_GET['id_mod_trac']), 0, '', '');?></span></sup>
+                </button>
+
+                <button class="btn btn-xs bg-dark square-btn-adjust" onclick="window.open('popUpDossierSansFOB.php?id_cli=<?php echo $_GET['id_cli']; ?>&id_mod_trans=<?php echo $_GET['id_mod_trans']; ?>&id_mod_trac=<?php echo $_GET['id_mod_trac']; ?>&commodity=<?php echo $_GET['commodity']; ?>&statut=<?php echo $_GET['statut'];?>&id_march=<?php echo $_GET['id_march'];?>','pop1','width=900,height=950');">
+                    <i class="fa fa-edit"></i> Fob Update <sup><span class="badge badge-danger"><?php echo number_format($maClasse-> getNbreDossierSansFob($_GET['id_cli'], $_GET['id_mod_trans'], $_GET['id_mod_trac']), 0, '', '');?></span></sup>
+                </button>
+                <?php
+                }
+
+                if ($maClasse-> verifierRegimeSuspensionSansDateExtreme($_GET['id_cli'], $_GET['id_mod_trans'], $_GET['id_mod_trac'])>0) {
+                 ?>
+                 <button class="clignote btn btn-xs bg-danger square-btn-adjust"  data-toggle="modal" data-target=".regimeSuspens">
+                      <i class="fa fa-exclamation-triangle"></i> Regime suspensif
+                  </button>
+                 <?php
+                }
+                ?>
                 </h3>
                   <div class="card-tools">
+                    <form method="POST" action="">
+                        <div class="input-group input-group-sm">
+                          <input type="text" name="ref_dos" class="form-control float-right" placeholder="Entrez le numéro">
+
+                          <div class="input-group-append">
+                            <button type="submit" name="rech" class="btn btn-info"><i class="fas fa-search"></i></button>
+                          </div>
+                        </div>
+                    </form>
                     <?php
-                      if($_GET['id_mod_trac'] == '1'){
+                     /* if($_GET['id_mod_trac'] == '1' && $_SESSION['id_role'] != '7' && $_SESSION['id_role'] != '8' && $_SESSION['id_role'] != '9' && $_SESSION['id_role'] != '10'){
                         ?>  
-                    <button class="btn btn-info square-btn-adjust" data-toggle="modal" data-target=".updateExport" <?php echo $maClasse-> getDataUtilisateur($_SESSION['id_util'])['tracking_enab']?>>
+                    <button class="btn btn-xs btn-info square-btn-adjust" data-toggle="modal" data-target=".updateExport" <?php echo $maClasse-> getDataUtilisateur($_SESSION['id_util'])['tracking_enab']?>>
                         <i class="fa fa-edit"></i> Update Multiple Files
                     </button>
                         <?php
-                      }else if($_GET['id_mod_trac'] == '2'){
+                      }else */if(/*$_GET['id_mod_trac'] == '2' && */$_SESSION['id_role'] != '7' && $_SESSION['id_role'] != '8' && $_SESSION['id_role'] != '9' && $_SESSION['id_role'] != '10'){
                         ?>  
-                    <button class="btn btn-info square-btn-adjust" data-toggle="modal" data-target=".update" <?php echo $maClasse-> getDataUtilisateur($_SESSION['id_util'])['tracking_enab']?>>
+                    <button class="btn btn-xs btn-info square-btn-adjust" data-toggle="modal" data-target=".update" <?php echo $maClasse-> getDataUtilisateur($_SESSION['id_util'])['tracking_enab']?>>
                         <i class="fa fa-edit"></i> Update Multiple Files
                     </button>
                         <?php
                       }
+                      
+                      //echo date('y');
                     ?>
                     
                     <!--<button class="btn btn-success square-btn-adjust" onclick="tableToExcel('exportationExcel', 'Trackings')">
@@ -855,9 +1029,23 @@ for ($i=1; $i <= 15 ; $i++) {
                     </button>-->
 
                     <?php
-                      if ($_GET['id_cli'] == 869 && $_GET['id_mod_trac'] == 2) {
+                      if ($_GET['id_cli'] == 869 && $_GET['id_mod_trac'] == 2 && $_GET['id_march'] != 11) {
                         ?>
-                    <button class="btn btn-success square-btn-adjust" onclick="window.location.replace('exportExcelMMGImport.php?id_cli=<?php echo $_GET['id_cli']; ?>&id_mod_trans=<?php echo $_GET['id_mod_trans']; ?>&id_mod_trac=<?php echo $_GET['id_mod_trac']; ?>&commodity=<?php echo $_GET['commodity']; ?>&statut=<?php echo $_GET['statut'];?>&id_march=<?php echo $_GET['id_march'];?>','pop1','width=80,height=80');">
+                    <!-- <button class="btn btn-xs btn-success square-btn-adjust" onclick="window.location.replace('exportExcelMMGImport.php?id_cli=<?php echo $_GET['id_cli']; ?>&id_mod_trans=<?php echo $_GET['id_mod_trans']; ?>&id_mod_trac=<?php echo $_GET['id_mod_trac']; ?>&commodity=<?php echo $_GET['commodity']; ?>&statut=<?php echo $_GET['statut'];?>&id_march=<?php echo $_GET['id_march'];?>','pop1','width=80,height=80');">
+                      <i class="fas fa-file-excel"></i> Export
+                    </button> -->
+                     <button type="button" class="btn btn-xs small btn-success dropdown-toggle dropdown-icon" data-toggle="dropdown">
+                      <i class="fas fa-file-excel"></i> Export
+                      <div class="dropdown-menu small" role="menu">
+                        <?php
+                          $maClasse-> get_licence_for_excel_tracking($_GET['id_cli']);
+                        ?>
+                      </div>
+                    </button>
+                        <?php
+                      }elseif ($_GET['id_cli'] == 869 && $_GET['id_mod_trac'] == 2) {
+                        ?>
+                    <button class="btn btn-xs btn-success square-btn-adjust" onclick="window.location.replace('exportExcelMMGImport2.php?id_cli=<?php echo $_GET['id_cli']; ?>&id_mod_trans=<?php echo $_GET['id_mod_trans']; ?>&id_mod_trac=<?php echo $_GET['id_mod_trac']; ?>&commodity=<?php echo $_GET['commodity']; ?>&statut=<?php echo $_GET['statut'];?>&id_march=<?php echo $_GET['id_march'];?>','pop1','width=80,height=80');">
                       <i class="fas fa-file-excel"></i> Export
                     </button>
                         <?php
@@ -866,13 +1054,35 @@ for ($i=1; $i <= 15 ; $i++) {
                     <!-- <button class="btn btn-success square-btn-adjust" onclick="window.location.replace('exportExcel2.php?id_cli=<?php echo $_GET['id_cli']; ?>&id_mod_trans=<?php echo $_GET['id_mod_trans']; ?>&id_mod_trac=<?php echo $_GET['id_mod_trac']; ?>&commodity=<?php echo $_GET['commodity']; ?>&statut=<?php echo $_GET['statut'];?>&id_march=<?php echo $_GET['id_march'];?>','pop1','width=80,height=80');">
                       <i class="fas fa-file-excel"></i> Export
                     </button> -->
-                    <button type="button" class="btn btn-success dropdown-toggle dropdown-icon" data-toggle="dropdown">
+                    <button type="button" class="btn btn-xs small btn-success dropdown-toggle dropdown-icon" data-toggle="dropdown">
                       <i class="fas fa-file-excel"></i> Export
-                      <div class="dropdown-menu" role="menu">
-                        <a class="dropdown-item"onclick="window.location.replace('exportExcel2.php?id_cli=<?php echo $_GET['id_cli']; ?>&id_mod_trans=<?php echo $_GET['id_mod_trans']; ?>&id_mod_trac=<?php echo $_GET['id_mod_trac']; ?>&commodity=<?php echo $_GET['commodity']; ?>&statut=<?php echo $_GET['statut'];?>&id_march=<?php echo $_GET['id_march'];?>','pop1','width=80,height=80');">
+                      <div class="dropdown-menu small" role="menu">
+                        <!--<a class="dropdown-item"onclick="window.location.replace('exportExcelAll.php?id_cli=<?php echo $_GET['id_cli']; ?>&id_mod_trans=<?php echo $_GET['id_mod_trans']; ?>&id_mod_trac=<?php echo $_GET['id_mod_trac']; ?>&commodity=<?php echo $_GET['commodity']; ?>&statut=<?php echo $_GET['statut'];?>&id_march=<?php echo $_GET['id_march'];?>','pop1','width=80,height=80');">
                           Export All Files
                         </a>
+                        <a class="dropdown-item" href="#"><hr></a>-->
+                        <a class="dropdown-item"onclick="window.location.replace('exportExcel2.php?id_cli=<?php echo $_GET['id_cli']; ?>&id_mod_trans=<?php echo $_GET['id_mod_trans']; ?>&id_mod_trac=<?php echo $_GET['id_mod_trac']; ?>&commodity=<?php echo $_GET['commodity']; ?>&statut=<?php echo $_GET['statut'];?>&id_march=&annee=2024','pop1','width=80,height=80');">
+                          Export All 2024 Files
+                        </a>
+                        <a class="dropdown-item"onclick="window.location.replace('exportExcel2.php?id_cli=<?php echo $_GET['id_cli']; ?>&id_mod_trans=<?php echo $_GET['id_mod_trans']; ?>&id_mod_trac=<?php echo $_GET['id_mod_trac']; ?>&commodity=<?php echo $_GET['commodity']; ?>&statut=<?php echo $_GET['statut'];?>&id_march=<?php echo $_GET['id_march'];?>&annee=2024','pop1','width=80,height=80');">
+                          Export <?php echo $maClasse-> getMarchandise($_GET['id_march']);?> 2024 Files
+                        </a>
                         <a class="dropdown-item" href="#"><hr></a>
+                        <a class="dropdown-item"onclick="window.location.replace('exportExcel2.php?id_cli=<?php echo $_GET['id_cli']; ?>&id_mod_trans=<?php echo $_GET['id_mod_trans']; ?>&id_mod_trac=<?php echo $_GET['id_mod_trac']; ?>&commodity=<?php echo $_GET['commodity']; ?>&statut=<?php echo $_GET['statut'];?>&id_march=&annee=2023','pop1','width=80,height=80');">
+                          Export All 2023 Files
+                        </a>
+                        <a class="dropdown-item"onclick="window.location.replace('exportExcel2.php?id_cli=<?php echo $_GET['id_cli']; ?>&id_mod_trans=<?php echo $_GET['id_mod_trans']; ?>&id_mod_trac=<?php echo $_GET['id_mod_trac']; ?>&commodity=<?php echo $_GET['commodity']; ?>&statut=<?php echo $_GET['statut'];?>&id_march=<?php echo $_GET['id_march'];?>&annee=2023','pop1','width=80,height=80');">
+                          Export <?php echo $maClasse-> getMarchandise($_GET['id_march']);?> 2023 Files
+                        </a>
+                        <a class="dropdown-item" href="#"><hr></a>
+                        <a class="dropdown-item"onclick="window.location.replace('exportExcel2.php?id_cli=<?php echo $_GET['id_cli']; ?>&id_mod_trans=<?php echo $_GET['id_mod_trans']; ?>&id_mod_trac=<?php echo $_GET['id_mod_trac']; ?>&commodity=<?php echo $_GET['commodity']; ?>&statut=<?php echo $_GET['statut'];?>&id_march=&annee=2022','pop1','width=80,height=80');">
+                          Export 2022 Files
+                        </a>
+                        <a class="dropdown-item" href="#"><hr></a>
+                        <a class="dropdown-item"onclick="window.location.replace('exportExcel2.php?id_cli=<?php echo $_GET['id_cli']; ?>&id_mod_trans=<?php echo $_GET['id_mod_trans']; ?>&id_mod_trac=<?php echo $_GET['id_mod_trac']; ?>&commodity=<?php echo $_GET['commodity']; ?>&statut=<?php echo $_GET['statut'];?>&id_march=&annee=2021','pop1','width=80,height=80');">
+                          Export 2021 Files
+                        </a>
+                        <!-- <a class="dropdown-item" href="#"><hr></a>
                         <a class="dropdown-item"onclick="window.location.replace('exportExcel2.php?id_cli=<?php echo $_GET['id_cli']; ?>&id_mod_trans=<?php echo $_GET['id_mod_trans']; ?>&id_mod_trac=<?php echo $_GET['id_mod_trac']; ?>&commodity=<?php echo $_GET['commodity']; ?>&statut=<?php echo $_GET['statut'];?>&id_march=<?php echo $_GET['id_march'];?>&annee=2021','pop1','width=80,height=80');">
                           Export 2021 Files
                         </a>
@@ -880,6 +1090,10 @@ for ($i=1; $i <= 15 ; $i++) {
                         <a class="dropdown-item"onclick="window.location.replace('exportExcel2.php?id_cli=<?php echo $_GET['id_cli']; ?>&id_mod_trans=<?php echo $_GET['id_mod_trans']; ?>&id_mod_trac=<?php echo $_GET['id_mod_trac']; ?>&commodity=<?php echo $_GET['commodity']; ?>&statut=<?php echo $_GET['statut'];?>&id_march=<?php echo $_GET['id_march'];?>&annee=2020','pop1','width=80,height=80');">
                           Export 2020 Files
                         </a>
+                        <a class="dropdown-item" href="#"><hr></a>
+                        <a class="dropdown-item"onclick="window.location.replace('exportExcelLocation.php?id_cli=<?php echo $_GET['id_cli']; ?>&id_mod_trans=<?php echo $_GET['id_mod_trans']; ?>&id_mod_trac=<?php echo $_GET['id_mod_trac']; ?>&commodity=<?php echo $_GET['commodity']; ?>&statut=<?php echo $_GET['statut'];?>&id_march=<?php echo $_GET['id_march'];?>&annee=2020','pop1','width=80,height=80');">
+                          Export Files Sorted By Location
+                        </a>-->
                         <a class="dropdown-item" href="#"><hr></a>
                       </div>
                     </button>
@@ -893,30 +1107,8 @@ for ($i=1; $i <= 15 ; $i++) {
               </div>
               <!-- /.card-header -->
 
-    <div id="alert_message"></div>
-
-              <div class="card-body table-responsive p-0">
-                <table id="user_data_2" cellspacing="0" width="100%" class="tableau1  table table-hover text-nowrap table-sm">
-                  <thead>
-                    <?php
-                      $maClasse-> afficherEnTeteTableau($_GET['id_mod_trac'], $_GET['id_cli'], $_GET['id_mod_trans']);
-                      /*if ($_GET['id_mod_trans'] == '1') {
-                        //include("enTeteAcid.php");
-                        include("enTeteImportRoute.php");
-
-                      }else if ($_GET['id_mod_trans'] == '3') {
-                        //include("enTeteAcid.php");
-                        include("enTeteImportAir.php");
-
-                      }*/
-                    ?>
-                  </thead>
-                  <tbody>
-                    <form method="POST" action="">
-                    <?php
-                        
-
-
+                <?php
+                  
                         $nombre_dossier_par_page = $maClasse-> getUtilisateur($_SESSION['id_util'])['ligne'];
                         $debut_affichage_pagination = 1;
 
@@ -933,28 +1125,84 @@ for ($i=1; $i <= 15 ; $i++) {
                               $page_actuelle = $nombre_de_pages ;
                            }
 
+                           $page = $_GET['page'];
                         }
                         else
                         {
                            $page_actuelle=1; // La page actuelle est la n°1
+                           $page = 1;
                         }
                         $premiere_entree=($page_actuelle-1)*$nombre_dossier_par_page; // On calcul la première entrée à lire
                         
+
+                ?>
+            <form method="POST" action="">
+                <div class="row">
+                    <div class="col-md-2">
+                      <button type="submit" class="btn btn-xs btn-success" name="update" <?php echo $maClasse-> getDataUtilisateur($_SESSION['id_util'])['tracking_enab'];?>>
+                        Mettre à jour
+                      </button>
+                    </div>
+                  </div>
+                  
+              <div class="card-body table-responsive p-0 cadre-tableau-de-donnees">
+    <div id="alert_message"></div>
+
+                <table id="user_data_2" cellspacing="0" width="100%" class="tableau-de-donnees  table table-hover text-nowrap table-sm small">
+                  <thead>
+                    <?php
+                      $maClasse-> afficherEnTeteTableau($_GET['id_mod_trac'], $_GET['id_cli'], $_GET['id_mod_trans']);
+                      /*if ($_GET['id_mod_trans'] == '1') {
+                        //include("enTeteAcid.php");
+                        include("enTeteImportRoute.php");
+                      }else if ($_GET['id_mod_trans'] == '3') {
+                        //include("enTeteAcid.php");
+                        include("enTeteImportAir.php");
+                      }*/
+                    ?>
+                  </thead>
+                  <tbody>
+                    <?php
+                        
+
+                        if (isset($_POST['rech'])) {
+                          
+                          $maClasse-> afficherRowDossierClientModeTransportModeLicence2Recherche($_POST['ref_dos'], $_GET['id_cli'], 
+                                                $_GET['id_mod_trans'], $_GET['id_mod_trac'], $_GET['commodity'], 
+                                                $_GET['id_march'], $_GET['statut'], $_GET['num_lic'], $_GET['cleared']);
+                          ?>
+                          <tr>
+                            <td class="col_1 bg-teal"><hr></td>
+                            <td class="col_6 bg-teal"><hr></td>
+                            <td><hr></td>
+                          </tr>
+                          <?php
+                          $premiere_entree=(($page_actuelle-1)*$nombre_dossier_par_page)+1; // On calcul la première entrée à lire
+                        }
+
 
                         $maClasse-> afficherRowDossierClientModeTransportModeLicence2($_GET['id_cli'], 
                                                 $_GET['id_mod_trans'], $_GET['id_mod_trac'], $_GET['commodity'], 
                                                 $premiere_entree, $nombre_dossier_par_page, $_GET['id_march'], 
                                                 $_GET['statut'], $_GET['num_lic'], $_GET['cleared']);
 
-                        /*$maClasse-> afficherDossierClientModeTransportModeLicence2($_GET['id_cli'], 
-                                                $_GET['id_mod_trans'], $_GET['id_mod_trac'], $_GET['commodity'], 
-                                                $premiere_entree, $nombre_dossier_par_page);*/
 
                     ?>
+                      </tbody>
+                    </table>
+                  </div>
+                  <input type="hidden" name="nbre" value="<?php echo ($premiere_entree+$maClasse-> getUtilisateur($_SESSION['id_util'])['ligne']);?>">
+                  <div class="row">
+                    <div class="col-md-2">
+                      <button type="submit" class="btn btn-xs btn-success" name="update" <?php echo $maClasse-> getDataUtilisateur($_SESSION['id_util'])['tracking_enab'];?>>
+                        Mettre à jour
+                      </button>
+                    </div>
+                  </div>
+                  
+                    
+        
                     </form>
-                  </tbody>
-                </table>
-              </div>
               <div>
                 <hr>
               </div>
@@ -1041,7 +1289,7 @@ for ($i=1; $i <= 15 ; $i++) {
     <!-- /.content -->
   </div>
   <?php include("pied.php");?>
-  <?php include("script.php");?>
+  <?php //include("script.php");?>
 
 <?php
 if(isset($_GET['id_mod_trac'])){
@@ -1150,6 +1398,37 @@ if(isset($_GET['id_mod_trac'])){
       <div class="modal-footer justify-content-between">
         <button type="button" class="btn btn-danger" data-dismiss="modal">Annuler</button>
         <button type="submit" name="rechercheClearingStatus" class="btn btn-primary">Valider</button>
+      </div>
+    </div>
+    </form>
+    <!-- /.modal-content -->
+  </div>
+  <!-- /.modal-dialog -->
+</div>
+
+<div class="modal fade rechercheLicence" id="modal-default">
+  <div class="modal-dialog modal-md">
+    <form id="demo-form2" method="POST" action="" data-parsley-validate enctype="multipart/form-data">
+    <div class="modal-content">
+      <div class="modal-header ">
+        <h4 class="modal-title"><i class="fa fa-search"></i> Search LICENCE.</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+
+          <div class="col-md-12">
+            <label for="x_card_code" class="control-label mb-1">NUMERO DE LA LICENCE</label>
+            <input name="num_lic" class="form-control cc-exp" required>
+          </div>
+
+        </div>
+      </div>
+      <div class="modal-footer justify-content-between">
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Annuler</button>
+        <button type="submit" name="rechercheLicence" class="btn btn-primary">Valider</button>
       </div>
     </div>
     </form>
@@ -1271,6 +1550,14 @@ if(isset($_GET['id_mod_trac'])){
             </select>
           </div>
 
+          <div class="col-md-4">
+            <label for="x_card_code" class="control-label mb-1">BANQUE</label>
+            <select name="id_banq" type="text" class="form-control cc-exp" required>
+              <option></option>
+              <?php $maClasse-> selectionnerBanque();?>
+            </select>
+          </div>
+
         </div>
       </div>
       <div class="modal-footer justify-content-between">
@@ -1340,7 +1627,7 @@ if(isset($_GET['id_mod_trac']) && ($_GET['id_mod_trac']=='1')){
 
 
 <?php
-if(isset($_GET['id_mod_trac'])){
+if( isset($_GET['id_mod_trac']) && ($_GET['id_mod_trac']=='2' && $_GET['id_cli']!='869') || ($_GET['id_mod_trac']=='2' && $_GET['id_march']=='11') || ($_GET['id_mod_trac']=='2' && $_GET['id_march']=='25') || ($_GET['id_mod_trac']=='2' && $_GET['id_march']=='26') ){
 
   $modele = $maClasse-> getElementModeleLicence($_GET['id_mod_trac']);
 ?>
@@ -1357,167 +1644,752 @@ if(isset($_GET['id_mod_trac'])){
       </div>
       <div class="modal-body">
         <div class="row">
+<!-- ------------------------------------------------------------------ -->
+        <div class="col-md-12">
+          <span id="msg_check_camion"></span>
+        </div>
+        <div class="col-md-12">
+          
+            <div class="card">
+              <div class="card-header d-flex p-0">
+                <h3 class="card-title p-3"></h3>
+                <ul class="nav nav-pills ml-auto p-2">
+                  <li class="nav-item"><a class="nav-link active" href="#tab_1" data-toggle="tab">FORMULAIRE</a></li>
+                  <li class="nav-item"><a class="nav-link" href="#tab_2" data-toggle="tab">DOCUMENTS</a></li>
+                </ul>
+              </div><!-- /.card-header -->
+              <div class="card-body">
+                <div class="tab-content">
+                  <div class="tab-pane active" id="tab_1">
+                    <div class="row">
+                      
+                      <input type="hidden" name="id_cli" id="id_cli" value="<?php echo $_GET['id_cli'];?>" class="form-control form-control-sm cc-exp" required>
 
-          <div class="col-md-3">
-            <label for="x_card_code" class="control-label mb-1">CLIENT</label>
-            <select name="id_cli" id="id_cli" onchange="xajax_selectionnerLicencePourClientModele(this.value, <?php echo $_GET['id_mod_trac'];?>),xajax_afficherRefDos(this.value, <?php echo $_GET['id_mod_trans'];?>, <?php echo $_GET['id_march'];?>), xajax_afficherFobMaxLicence(num_lic.value),xajax_selectionnerAVPourLicence(num_lic.value),xajax_afficherMaskAV(av.value)" class="form-control cc-exp" required>
-                <option value="<?php echo $_GET['id_cli'];?>"><?php echo $maClasse-> getNomClient($_GET['id_cli']);?></option>
-                <?php
-                    //$maClasse->selectionnerClientModeleLicence($modele['id_mod_lic']);
-                  
-                ?>
-            </select>
-          </div>
+                      <div class="col-md-3">
+                        <label for="x_card_code" class="control-label mb-1">MCA FILE NUMBER</label>
+                        <input type="text" name="ref_dos" id="ref_dos_a" onblur="function_mca_b_ref_a()" value="<?php echo $maClasse-> getMcaFile($_GET['id_cli'], $_GET['id_mod_trans']);?>" class="form-control form-control-sm cc-exp" required>
+                      </div>
+                
+                      <div class="col-md-3">
+                        <label for="x_card_code" class="control-label mb-1">PRE-ALERT DATE</label>
+                        <input type="date" id="date_new" onchange="is_weekend(this.value);" name="date_preal" class="form-control form-control-sm cc-exp">
+                      </div>
 
-          <div class="col-md-3">
-            <label for="x_card_code" class="control-label mb-1">MCA FILE NUMBER</label>
-            <input type="text" name="ref_dos" value="<?php echo $maClasse-> getMcaFile($_GET['id_cli'], $_GET['id_mod_trans']);?>" class="form-control cc-exp" required>
-          </div>
+                      <div class="col-md-3">
+                        <label for="x_card_code" class="control-label mb-1">N<sup><u>o</u></sup> FACTURE</label>
+                        <input type="text" name="ref_fact" class="form-control form-control-sm cc-exp" required>
+                      </div>
+
+                      <!--<div class="col-md-3">
+                        <label for="x_card_code" class="control-label mb-1">DATE FACTURE</label>
+                        <input type="date"  onchange="is_weekend(this.value);" name="date_fact" max="<?php echo date('Y-m-d');?>" class="form-control form-control-sm cc-exp" required>
+                      </div>-->
+
+                      <?php
+                        if ($maClasse-> verifierSouscriptionLicence($_GET['id_cli'], $_GET['id_mod_trac'])==true) {
+                          ?>
+                      <!-- <script type="text/javascript" src="../classes/script.js"></script> -->
+                      <script type="text/javascript">
+
+                        function getBalanceLicence(val){
+                          $.ajax({
+                            type: "POST",
+                            url: "../classes/get_balance_licence.php",
+                            data: 'num_lic='+val,
+                            dataType:"json",
+                            success:function(data){
+                              // //console.log(data.balance_fob_licence);
+                              // $('#balance_fob_licence').html(data.balance_fob_licence);
+                              // $('#balance_poids_licence').html(data.balance_poids_licence);
+                            }
+
+                          });
+                        }
+
+                        function getDataLicence(val){
+                          $.ajax({
+                            type: "POST",
+                            url: "../classes/get_data_licence.php",
+                            data: 'num_lic='+val,
+                            dataType:"json",
+                            success:function(data){
+                              console.log(data.plus);
+                              $('#fob').html(data.fob);
+                              $('#poids').html(data.poids);
+                              $('#cod').html(data.cod);
+                              $('#id_part').html(data.id_part);
+                              $('#plus').html(data.plus);
+                              $('#balance_fob_licence').html(data.balance_fob_licence);
+                            }
+
+                          });
+                        }
+
+                        function getDataPartielle(val){
+                          $.ajax({
+                            type: "POST",
+                            url: "../classes/get_data_partielle.php",
+                            data: 'id_part='+val,
+                            dataType:"json",
+                            success:function(data){
+                              console.log(data.fob);
+                              console.log(data.fob_old);
+                              console.log(data.fob_part);
+                              console.log(data.fob_dossier);
+                              console.log(data.cod_hidden);
+                              // $('#fob').html(data.fob);
+                              $('#poids').html(data.poids);
+                              $('#balance_fob_partielle').html(data.balance_fob_partielle);
+                              $('#balance_poids_licence').html(data.balance_poids_licence);
+                              $('#cod_hidden').html(data.cod_hidden);
+                            }
+
+                          });
+                        }
+
+                      </script>
+                      <div class="col-md-3">
+                        <label for="x_card_code" class="control-label mb-1">LICENCE </label>
+                        <!-- <input type="text" id="txtCountry" name="num_lic" autocomplete="off" class="form-control form-control-sm cc-exp" required> -->
+                        <select name="num_lic" id="num_lic" class="form-control form-control-sm cc-exp" onchange="getBalanceLicence(this.value);getDataLicence(this.value);" required>
+                          <option></option>
+                          <option value="UNDER VALUE">UNDER VALUE</option>
+                            <?php
+                              $maClasse->selectionnerLicenceEnCoursModeleClient($_GET['id_mod_trac'], $_GET['id_cli']);
+                            ?>
+                        </select>
+                      </div>
+
+                      <input type="hidden" name="supplier" value="" class="form-control form-control-sm cc-exp">
+                      <div class="col-md-3">
+                        <label for="x_card_code" class="control-label mb-1">BALANCE FOB LICENCE</label>
+                        
+                        <!-- <input type="text" id="balance_fob_licence" name="balance_fob" class="form-control form-control-sm cc-exp"> -->
+                        <span id="balance_fob_licence" class="balance_fob_licence" name="balance_fob_licence"></span>
+                      </div>
+             
+                      <div class="col-md-3">
+                        <label for="x_card_code" class="control-label mb-1">CRF REF</label>
+                        <!-- <input type="text" name="cod" class="form-control form-control-sm cc-exp"> -->
+                        <span id="cod"></span>
+                        <span id="cod_hidden"></span>
+                      </div>
+
+                      <div class="col-md-3">
+                        <label for="x_card_code" class="control-label mb-1">PARTIELLE <span id="plus"></span></label>
+                        <!-- <input type="text" name="cod" class="form-control form-control-sm cc-exp"> -->
+                        <span id="id_part"></span>
+                      </div>
+
+                      <div class="col-md-3">
+                        <label for="x_card_code" class="control-label mb-1">BALANCE FOB PARTIELLE</label>
+                        
+                        <!-- <input type="text" id="balance_fob_licence" name="balance_fob" class="form-control form-control-sm cc-exp"> -->
+                        <span id="balance_fob_partielle" name="balance_fob_partielle"></span>
+                      </div>
+             
+                      <div class="col-md-3">
+                        <label for="x_card_code" class="control-label mb-1">FOB DECLAREE</label>
+                        <span id="fob" class="fob" name="fob"></span>
+                        <!-- <input type="number" min="0" step="0.001" name="fob" class="form-control form-control-sm cc-exp"> -->
+                      </div>
+             
+                      <div class="col-md-3">
+                        <label for="x_card_code" class="control-label mb-1">FRET</label>
+                        <!--<span id="fret"></span>-->
+                        <input type="number" min="0" step="0.001" name="fret" class="form-control form-control-sm cc-exp">
+                      </div>
+
+                      <div class="col-md-3">
+                        <label for="x_card_code" class="control-label mb-1">ASSURANCE</label>
+                        <!--<span id="assurance"></span>-->
+                        <input type="number" min="0" step="0.001" name="assurance" class="form-control form-control-sm cc-exp">
+                      </div>
+
+                      <div class="col-md-3">
+                        <label for="x_card_code" class="control-label mb-1">AUTRE FRAIS</label>
+                        <!--<span id="autre_frais"></span>-->
+                        <input type="number" min="0" step="0.001" name="autre_frais" class="form-control form-control-sm cc-exp">
+                      </div>
+
+                      <div class="col-md-3">
+                        <label for="x_card_code" class="control-label mb-1">BALANCE WEIGHT</label>
+                        
+                        <!-- <input type="text" id="balance_fob_licence" name="balance_fob" class="form-control form-control-sm cc-exp"> -->
+                        <span id="balance_poids_licence" class="balance_poids_licence" name="balance_poids_licence"></span>
+                      </div>
+             
+                      <div class="col-md-3">
+                        <label for="x_card_code" class="control-label mb-1">WEIGHT</label>
+                        <!-- <input type="number" min="0" step="0.001" name="poids" class="form-control form-control-sm cc-exp"> -->
+                        <span id="poids"></span>
+                      </div>
+
+                      <!-- <input type="hidden" name="cod" value="" class="form-control form-control-sm cc-exp">  -->
+
+                          <?php
+                        }else{
+                          ?>
+
+                      <div class="col-md-3">
+                        <label for="x_card_code" class="control-label mb-1">LICENCE </label>
+                        <input type="text" id="txtCountry" name="num_lic" autocomplete="off" class="form-control form-control-sm cc-exp" required>
+                        <!-- <select name="num_lic" id="num_lic" class="form-control form-control-sm cc-exp" onchange="xajax_afficherFobMaxLicence(this.value),xajax_selectionnerAVPourLicence(this.value),xajax_afficherMaskAV(av.value)" required>
+                          <option></option>
+                          <option value="UNDER VALUE">UNDER VALUE</option>
+                            <?php
+                              //$maClasse->selectionnerLicenceEnCoursModeleClient($_GET['id_mod_trac'], $_GET['id_cli']);
+                            ?>
+                        </select> -->
+                      </div>
+
+                      <!-- <input type="hidden" name="supplier" value="" class="form-control form-control-sm cc-exp"> -->
+                      <div class="col-md-3">
+                        <label for="x_card_code" class="control-label mb-1">FOURNISSEUR</label>
+                        
+                        <input type="text" name="supplier" class="form-control form-control-sm cc-exp">
+                      </div>
+             
+                      <div class="col-md-3">
+                        <label for="x_card_code" class="control-label mb-1">FOB DECLAREE</label>
+                        <!-- <span id="fob"></span> -->
+                        <input type="number" min="0" step="0.001" name="fob" class="form-control form-control-sm cc-exp">
+                      </div>
+             
+                      <div class="col-md-3">
+                        <label for="x_card_code" class="control-label mb-1">FRET</label>
+                        <!--<span id="fret"></span>-->
+                        <input type="number" min="0" step="0.001" name="fret" class="form-control form-control-sm cc-exp">
+                      </div>
+
+                      <div class="col-md-3">
+                        <label for="x_card_code" class="control-label mb-1">ASSURANCE</label>
+                        <!--<span id="assurance"></span>-->
+                        <input type="number" min="0" step="0.001" name="assurance" class="form-control form-control-sm cc-exp">
+                      </div>
+
+                      <div class="col-md-3">
+                        <label for="x_card_code" class="control-label mb-1">AUTRE FRAIS</label>
+                        <input type="number" min="0" step="0.001" name="autre_frais" class="form-control form-control-sm cc-exp">
+                      </div>
+
+                      <div class="col-md-3">
+                        <label for="x_card_code" class="control-label mb-1">WEIGHT</label>
+                        <input type="number" min="0" step="0.001" name="poids" class="form-control form-control-sm cc-exp">
+                        <!-- <span id="poids"></span> -->
+                      </div>
+
+                      <div class="col-md-3">
+                        <label for="x_card_code" class="control-label mb-1">CRF REF</label>
+                        <input type="text" name="cod" class="form-control form-control-sm cc-exp">
+                      </div>
+
+                          <?php
+                        }
+                      ?>
+
+                      <div class="col-md-3">
+                        <label for="x_card_code" class="control-label mb-1">CRF RECEIVED DATE</label>
+                        <input type="date"  onchange="is_weekend(this.value);" name="date_crf" class="form-control form-control-sm cc-exp">
+                      </div>
+
+                      <div class="col-md-3">
+                        <label for="x_card_code" class="control-label mb-1">PO REF</label>
+                        <input type="text" name="po_ref" class="form-control form-control-sm cc-exp">
+                      </div>
+
+                      <!--<div class="col-md-3">
+                        <label for="x_card_code" class="control-label mb-1">AV LICENCE</label>
+                        <select name="ref_av" id="av" class="form-control form-control-sm cc-exp" onchange="xajax_afficherMaskAV(this.value)" >
+                          <option value=""></option>
+                            <?php
+                              //$maClasse->selectionnerLicenceEnCoursModele($_GET['id_mod_trac']);
+                            ?>
+                        </select>
+                      </div>-->
+
+                      <!--<div class="col-md-3">
+                        <label for="x_card_code" class="control-label mb-1">AV AVEC MASK</label>
+                        <span id="cod_dos_1"></span>
+                      </div>-->
+             
+                      <div class="col-md-3">
+                        <label for="x_card_code" class="control-label mb-1">T1</label>
+                        <input type="text" name="t1" class="form-control form-control-sm cc-exp">
+                      </div>
+
+                      <div class="col-md-3">
+                        <label for="x_card_code" class="control-label mb-1">COMMODITY</label>
+                        <input type="text" name="commodity" class="form-control form-control-sm cc-exp">
+                      </div>
+                      <?php
+                      if($_GET['id_mod_trans'] == '1'){
+                        ?>
+
+                      <div class="col-md-3">
+                        <label for="x_card_code" class="control-label mb-1">ROAD MANIF</label>
+                        <input type="text" name="road_manif" class="form-control form-control-sm cc-exp" onblur="check_camion(horse.value, trailer_1.value, trailer_2.value, this.value);">
+                      </div>
+
+                      <div class="col-md-3">
+                        <label for="x_card_code" class="control-label mb-1">HORSE</label>
+                        <input type="text" name="horse" id="horse" class="form-control form-control-sm cc-exp" onblur="check_camion(this.value, trailer_1.value, trailer_2.value, road_manif.value);">
+                      </div>
+
+                      <div class="col-md-3">
+                        <label for="x_card_code" class="control-label mb-1">TRAILER 1</label>
+                        <input type="text" name="trailer_1" id="trailer_1" class="form-control form-control-sm cc-exp" onblur="check_camion(horse.value, this.value, trailer_2.value, road_manif.value);">
+                      </div>
+
+                      <div class="col-md-3">
+                        <label for="x_card_code" class="control-label mb-1">TRAILER 2/CONTAINER</label>
+                        <input type="text" name="trailer_2" id="trailer_2" class="form-control form-control-sm cc-exp" onblur="check_camion(horse.value, trailer_1.value, this.value, road_manif.value);">
+                      </div>
+
+                        <?php
+                      }else if($_GET['id_mod_trans'] == '4'){
+                        ?>
+
+                      <div class="col-md-3">
+                        <label for="x_card_code" class="control-label mb-1">RAIL MANIFEST</label>
+                        <input type="text" name="road_manif" class="form-control form-control-sm cc-exp">
+                      </div>
+
+                      <div class="col-md-3">
+                        <label for="x_card_code" class="control-label mb-1">WAGON</label>
+                        <input type="text" name="horse" class="form-control form-control-sm cc-exp">
+                      </div>
+
+                      <input type="hidden" name="trailer_1" value="N/A">
+                      <input type="hidden" name="trailer_2" value="N/A">
+                        <?php
+                      }else{
+                        ?>
+
+                      <div class="col-md-3">
+                        <label for="x_card_code" class="control-label mb-1">AWB NUM.</label>
+                        <input type="text" name="horse" class="form-control form-control-sm cc-exp">
+                      </div>
+                      <input type="hidden" name="trailer_1" value="N/A">
+                      <input type="hidden" name="trailer_2" value="N/A">
+                      <input type="hidden" name="road_manif" value="N/A">
+                        <?php
+                      }
+                      ?>
+
+                      <div class="col-md-3">
+                        <label for="x_card_code" class="control-label mb-1">ENTRY POINT</label>
+                        <select name="frontiere" class="form-control form-control-sm cc-exp" required>
+                          <option></option>
+                          <?php
+                            $maClasse-> selectionnerFrontiere2();
+                          ?>
+                        </select>
+                      </div>
+
+                      <div class="col-md-3">
+                        <label for="x_card_code" class="control-label mb-1">REGIME DOUANIER</label>
+                        <select name="regime" class="form-control form-control-sm cc-exp" required>
+                          <option></option>
+                          <?php
+                            $maClasse-> selectionnerRegime2($_GET['id_mod_trac']);
+                          ?>
+                        </select>
+                      </div>
+
+                      <div class="col-md-3">
+                        <label for="x_card_code" class="control-label mb-1">REGIME SUSPENSIF</label>
+                        <select name="temporelle" class="form-control form-control-sm cc-exp" required>
+                          <option></option>
+                          <option value="0">NO</option>
+                          <option value="1">YES</option>
+                        </select>
+                      </div>
+
+                      <div class="col-md-3">
+                        <label for="x_card_code" class="control-label mb-1">Tally Ref.</label>
+                        <input type="text" id="mca_b_ref_a" name="mca_b_ref" class="form-control form-control-sm cc-exp" required>
+                      </div>
+
+                    </div>
+                  </div>
+                  <!-- /.tab-pane -->
+                  <div class="tab-pane" id="tab_2">
+                    <div class="row">
+                      <?php
+                        $maClasse-> afficherDocumentDossierCreate($_GET['id_mod_trac']);
+                      ?>
+                    </div>
+                  </div>
+                  <!-- /.tab-pane -->
+                </div>
+                <!-- /.tab-content -->
+              </div><!-- /.card-body -->
+            </div>
+        </div>
+<!-- ------------------------------------------------------------------ -->
+          
+        </div>
+      </div>
+      <div class="modal-footer justify-content-between">
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Annuler</button>
+        <button type="submit" name="creerDossier" class="btn btn-primary">Valider</button>
+      </div>
+    </div>
+    </form>
+    <!-- /.modal-content -->
+  </div>
+  <!-- /.modal-dialog -->
+</div>
+<script type="text/javascript">
+  
+  $(document).ready(function(){
+    function_mca_b_ref_a();
+  });
+
+  function function_mca_b_ref_a() {
+    var code='';
+    var today   = new Date();
+    var annee = today.getYear();
+    $('#annee').val(annee);
     
-          <div class="col-md-3">
-            <label for="x_card_code" class="control-label mb-1">N<sup><u>o</u></sup> FACTURE</label>
-            <input type="text" name="ref_fact" class="form-control cc-exp" required>
-          </div>
+    // const xmas = new Date("1995-12-25");
+    // const year = xmas.getYear(); // returns 95
 
-          <!--<div class="col-md-3">
-            <label for="x_card_code" class="control-label mb-1">DATE FACTURE</label>
-            <input type="date"  onchange="is_weekend(this.value);" name="date_fact" max="<?php echo date('Y-m-d');?>" class="form-control cc-exp" required>
-          </div>-->
+    if (<?php echo $_GET['id_mod_trac'];?>=='2') {// Import
 
-          <div class="col-md-3">
-            <label for="x_card_code" class="control-label mb-1">LICENCE </label>
-            <input type="text" id="txtCountry" name="num_lic" autocomplete="off" class="form-control cc-exp" required>
-            <!--<select name="num_lic" id="num_lic" class="form-control cc-exp" onchange="xajax_afficherFobMaxLicence(this.value),xajax_selectionnerAVPourLicence(this.value),xajax_afficherMaskAV(av.value)" required>
-              <option></option>
-              <option value="UNDER VALUE">UNDER VALUE</option>
-                <?php
-                  $maClasse->selectionnerLicenceEnCoursModeleClient($_GET['id_mod_trac'], $_GET['id_cli']);
-                ?>
-            </select>-->
-          </div>
+      if (<?php echo $_GET['id_mod_trans'];?>=='1') {
 
-          <!--<div class="col-md-3">
-            <label for="x_card_code" class="control-label mb-1">BALANCE LICENCE</label>
-            <span id="balance_fob"></span>
-          </div>-->
- 
-          <div class="col-md-3">
-            <label for="x_card_code" class="control-label mb-1">FOURNISSEUR</label>
-            <!--<span id="fob"></span>-->
-            <input type="text" name="supplier" class="form-control cc-exp">
-          </div>
- 
-          <div class="col-md-3">
-            <label for="x_card_code" class="control-label mb-1">FOB DECLAREE</label>
-            <!--<span id="fob"></span>-->
-            <input type="number" min="0" step="0.001" name="fob" class="form-control cc-exp">
-          </div>
- 
-          <div class="col-md-3">
-            <label for="x_card_code" class="control-label mb-1">FRET</label>
-            <!--<span id="fret"></span>-->
-            <input type="number" min="0" step="0.001" name="fret" class="form-control cc-exp">
-          </div>
+        code = 'IMP-RR-'+$('#ref_dos_a').val().substr(0, 3)+$('#annee').val().substr(1)+'-'+$('#ref_dos_a').val().substr(9);
 
-          <div class="col-md-3">
-            <label for="x_card_code" class="control-label mb-1">ASSURANCE</label>
-            <!--<span id="assurance"></span>-->
-            <input type="number" min="0" step="0.001" name="assurance" class="form-control cc-exp">
-          </div>
+      }else if (<?php echo $_GET['id_mod_trans'];?>=='3') {
 
-          <div class="col-md-3">
-            <label for="x_card_code" class="control-label mb-1">AUTRE FRAIS</label>
-            <!--<span id="autre_frais"></span>-->
-            <input type="number" min="0" step="0.001" name="autre_frais" class="form-control cc-exp">
-          </div>
+        code = 'IMP-AW-'+$('#ref_dos_a').val().substr(0, 3)+$('#annee').val().substr(1)+'-'+$('#ref_dos_a').val().substr(9);
 
-          <div class="col-md-3">
-            <label for="x_card_code" class="control-label mb-1">WEIGHT</label>
-            <input type="number" min="0" step="0.001" name="poids" class="form-control cc-exp">
-          </div>
+      }else{
 
-          <div class="col-md-3">
-            <label for="x_card_code" class="control-label mb-1">PO REF</label>
-            <input type="text" name="po_ref" class="form-control cc-exp">
-          </div>
+        code = 'IMP-W-'+$('#ref_dos_a').val().substr(0, 3)+$('#annee').val().substr(1)+'-'+$('#ref_dos_a').val().substr(9);
 
-          <!--<div class="col-md-3">
-            <label for="x_card_code" class="control-label mb-1">AV LICENCE</label>
-            <select name="ref_av" id="av" class="form-control cc-exp" onchange="xajax_afficherMaskAV(this.value)" >
-              <option value=""></option>
-                <?php
-                  //$maClasse->selectionnerLicenceEnCoursModele($_GET['id_mod_trac']);
-                ?>
-            </select>
-          </div>-->
+      }
 
-          <!--<div class="col-md-3">
-            <label for="x_card_code" class="control-label mb-1">AV AVEC MASK</label>
-            <span id="cod_dos_1"></span>
-          </div>-->
- 
-          <div class="col-md-3">
-            <label for="x_card_code" class="control-label mb-1">CRF REF</label>
-            <input type="text" name="cod" class="form-control cc-exp">
-          </div>
+    }
 
-          <div class="col-md-3">
-            <label for="x_card_code" class="control-label mb-1">CRF RECEIVED DATE</label>
-            <input type="date"  onchange="is_weekend(this.value);" name="date_crf" class="form-control cc-exp">
-          </div>
+    console.log(code);
+    $('#mca_b_ref_a').val(code);
+    // console.log($('#ref_dos_a').val());
+  }
 
-          <div class="col-md-3">
-            <label for="x_card_code" class="control-label mb-1">PRE-ALERT DATE</label>
-            <input type="date" id="date_new" onchange="is_weekend(this.value);" name="date_preal" class="form-control cc-exp">
-          </div>
+</script>
+<?php
+}else if(isset($_GET['id_mod_trac']) && $_GET['id_mod_trac']=='1' && ($_GET['id_march'] == '18' || $_GET['id_march'] == '21' || $_GET['id_march'] == '22') && $_GET['id_cli']!='869'){
 
-          <div class="col-md-3">
-            <label for="x_card_code" class="control-label mb-1">T1</label>
-            <input type="text" name="t1" class="form-control cc-exp">
-          </div>
+  $modele = $maClasse-> getElementModeleLicence($_GET['id_mod_trac']);
+?>
 
-          <div class="col-md-3">
-            <label for="x_card_code" class="control-label mb-1">COMMODITY</label>
-            <input type="text" name="commodity" class="form-control cc-exp">
-          </div>
-          <?php
-          if($_GET['id_mod_trans'] == '1'){
-            ?>
+<div class="modal fade nouveauDossier" id="modal-default">
+  <div class="modal-dialog modal-xl">
+    <form id="demo-form2" method="POST" action="" data-parsley-validate enctype="multipart/form-data">
+    <div class="modal-content">
+      <div class="modal-header ">
+        <h4 class="modal-title"><i class="fa fa-plus"></i> Nouveau dossier .</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+<!-- ------------------------------------------------------------------ -->
+        <div class="col-md-12">
+          
+            <div class="card">
+              <div class="card-header d-flex p-0">
+                <h3 class="card-title p-3"></h3>
+                <ul class="nav nav-pills ml-auto p-2">
+                  <li class="nav-item"><a class="nav-link active" href="#tab_1" data-toggle="tab">FORMULAIRE</a></li>
+                  <li class="nav-item"><a class="nav-link" href="#tab_2" data-toggle="tab">DOCUMENTS</a></li>
+                </ul>
+              </div><!-- /.card-header -->
+              <div class="card-body">
+                <div class="tab-content">
+                  <div class="tab-pane active" id="tab_1">
+                    <div class="row">
+                      
 
-          <div class="col-md-3">
-            <label for="x_card_code" class="control-label mb-1">ROAD MANIF</label>
-            <input type="text" name="road_manif" class="form-control cc-exp">
-          </div>
+                      <div class="col-md-3">
+                        <label for="x_card_code" class="control-label mb-1">CLIENT</label>
+                        <select name="id_cli" id="id_cli" onchange="xajax_selectionnerLicencePourClientModele(this.value, <?php echo $_GET['id_mod_trac'];?>),xajax_afficherRefDos(this.value, <?php echo $_GET['id_mod_trans'];?>, <?php echo $_GET['id_march'];?>), xajax_afficherFobMaxLicence(num_lic.value),xajax_selectionnerAVPourLicence(num_lic.value),xajax_afficherMaskAV(av.value)" class="form-control cc-exp" required>
+                            <option value="<?php echo $_GET['id_cli'];?>"><?php echo $maClasse-> getNomClient($_GET['id_cli']);?></option>
+                            <?php
+                                //$maClasse->selectionnerClientModeleLicence($modele['id_mod_lic']);
+                              
+                            ?>
+                        </select>
+                      </div>
 
-          <div class="col-md-3">
-            <label for="x_card_code" class="control-label mb-1">HORSE</label>
-            <input type="text" name="horse" class="form-control cc-exp">
-          </div>
+                      <div class="col-md-3">
+                        <label for="x_card_code" class="control-label mb-1">MCA FILE NUMBER</label>
+                        <input type="text" name="ref_dos" id="ref_dos_c" onblur="function_mca_b_ref_c()" value="<?php echo $maClasse-> getMcaFileExport($_GET['id_cli'], $_GET['id_mod_trans'], $_GET['id_march'], $_GET['id_mod_trac'], 1);?>" class="form-control cc-exp" required>
+                      </div>
+                
+                      <div class="col-md-3">
+                        <label for="x_card_code" class="control-label mb-1">N<sup><u>o</u></sup> FACTURE</label>
+                        <input type="text" name="ref_fact" class="form-control cc-exp" required>
+                      </div>
 
-          <div class="col-md-3">
-            <label for="x_card_code" class="control-label mb-1">TRAILER 1</label>
-            <input type="text" name="trailer_1" class="form-control cc-exp">
-          </div>
+                      <!--<div class="col-md-3">
+                        <label for="x_card_code" class="control-label mb-1">DATE FACTURE</label>
+                        <input type="date"  onchange="is_weekend(this.value);" name="date_fact" max="<?php echo date('Y-m-d');?>" class="form-control cc-exp" required>
+                      </div>-->
 
-          <div class="col-md-3">
-            <label for="x_card_code" class="control-label mb-1">TRAILER 2/CONTAINER</label>
-            <input type="text" name="trailer_2" class="form-control cc-exp">
-          </div>
+                      <?php
+                        if ($maClasse-> verifierSouscriptionLicence($_GET['id_cli'], $_GET['id_mod_trac'])==true) {
+                          ?>
 
-            <?php
-          }else{
-            ?>
+                      <div class="col-md-3">
+                        <label for="x_card_code" class="control-label mb-1">LICENCE </label>
+                        <!-- <input type="text" id="txtCountry" name="num_lic" autocomplete="off" class="form-control cc-exp" required> -->
+                        <select name="num_lic" id="num_lic" class="form-control cc-exp" onchange="" required>
+                          <option></option>
+                          <option value="UNDER VALUE">UNDER VALUE</option>
+                            <?php
+                              $maClasse->selectionnerLicenceEnCoursModeleClient($_GET['id_mod_trac'], $_GET['id_cli']);
+                            ?>
+                        </select>
+                      </div>
 
-          <div class="col-md-3">
-            <label for="x_card_code" class="control-label mb-1">AWB NUM.</label>
-            <input type="text" name="horse" class="form-control cc-exp">
-          </div>
-          <input type="hidden" name="trailer_1" value="N/A">
-          <input type="hidden" name="trailer_2" value="N/A">
-          <input type="hidden" name="road_manif" value="N/A">
-            <?php
-          }
-          ?>
+                      <input type="hidden" name="supplier" value="" class="form-control cc-exp">
+                      <!-- <div class="col-md-3">
+                        <label for="x_card_code" class="control-label mb-1">FOURNISSEUR</label>
+                        
+                        <input type="text" name="supplier" class="form-control cc-exp">
+                      </div> -->
+             
+                      <div class="col-md-3">
+                        <label for="x_card_code" class="control-label mb-1">FOB DECLAREE</label>
+                        <!-- <span id="fob"></span> -->
+                        <input type="number" min="0" step="0.001" name="fob" class="form-control cc-exp">
+                      </div>
+             
+                      <div class="col-md-3">
+                        <label for="x_card_code" class="control-label mb-1">FRET</label>
+                        <!--<span id="fret"></span>-->
+                        <input type="number" min="0" step="0.001" name="fret" class="form-control cc-exp">
+                      </div>
+
+                      <div class="col-md-3">
+                        <label for="x_card_code" class="control-label mb-1">ASSURANCE</label>
+                        <!--<span id="assurance"></span>-->
+                        <input type="number" min="0" step="0.001" name="assurance" class="form-control cc-exp">
+                      </div>
+
+                      <div class="col-md-3">
+                        <label for="x_card_code" class="control-label mb-1">AUTRE FRAIS</label>
+                        <!--<span id="autre_frais"></span>-->
+                        <input type="number" min="0" step="0.001" name="autre_frais" class="form-control cc-exp">
+                      </div>
+
+                      <div class="col-md-3">
+                        <label for="x_card_code" class="control-label mb-1">WEIGHT</label>
+                        <input type="number" min="0" step="0.001" name="poids" class="form-control cc-exp">
+                      </div>
+
+                      <input type="hidden" name="cod" value="" class="form-control cc-exp"> 
+<!-- 
+                      <div class="col-md-3">
+                        <label for="x_card_code" class="control-label mb-1">CRF REF</label>
+                        <input type="text" name="cod" class="form-control cc-exp">
+                      </div> -->
+
+                          <?php
+                        }else{
+                          ?>
+
+                      <div class="col-md-3">
+                        <label for="x_card_code" class="control-label mb-1">LICENCE </label>
+                        <input type="text" id="txtCountry" name="num_lic" autocomplete="off" class="form-control cc-exp" required>
+                        <!-- <select name="num_lic" id="num_lic" class="form-control cc-exp" onchange="xajax_afficherFobMaxLicence(this.value),xajax_selectionnerAVPourLicence(this.value),xajax_afficherMaskAV(av.value)" required>
+                          <option></option>
+                          <option value="UNDER VALUE">UNDER VALUE</option>
+                            <?php
+                              //$maClasse->selectionnerLicenceEnCoursModeleClient($_GET['id_mod_trac'], $_GET['id_cli']);
+                            ?>
+                        </select> -->
+                      </div>
+
+                      <input type="hidden" name="supplier" value="" class="form-control cc-exp">
+                      <!-- <div class="col-md-3">
+                        <label for="x_card_code" class="control-label mb-1">FOURNISSEUR</label>
+                        
+                        <input type="text" name="supplier" class="form-control cc-exp">
+                      </div> -->
+             
+                      <div class="col-md-3">
+                        <label for="x_card_code" class="control-label mb-1">FOB DECLAREE</label>
+                        <!-- <span id="fob"></span> -->
+                        <input type="number" min="0" step="0.001" name="fob" class="form-control cc-exp">
+                      </div>
+             
+                      <div class="col-md-3">
+                        <label for="x_card_code" class="control-label mb-1">FRET</label>
+                        <!--<span id="fret"></span>-->
+                        <input type="number" min="0" step="0.001" name="fret" class="form-control cc-exp">
+                      </div>
+
+                      <div class="col-md-3">
+                        <label for="x_card_code" class="control-label mb-1">ASSURANCE</label>
+                        <!--<span id="assurance"></span>-->
+                        <input type="number" min="0" step="0.001" name="assurance" class="form-control cc-exp">
+                      </div>
+
+                      <div class="col-md-3">
+                        <label for="x_card_code" class="control-label mb-1">AUTRE FRAIS</label>
+                        <!--<span id="autre_frais"></span>-->
+                        <input type="number" min="0" step="0.001" name="autre_frais" class="form-control cc-exp">
+                      </div>
+
+                      <div class="col-md-3">
+                        <label for="x_card_code" class="control-label mb-1">WEIGHT</label>
+                        <input type="number" min="0" step="0.001" name="poids" class="form-control cc-exp">
+                      </div>
+
+                      <input type="hidden" name="cod" value="" class="form-control cc-exp"> 
+<!-- 
+                      <div class="col-md-3">
+                        <label for="x_card_code" class="control-label mb-1">CRF REF</label>
+                        <input type="text" name="cod" class="form-control cc-exp">
+                      </div> -->
+
+                          <?php
+                        }
+                      ?>
+                      <input type="hidden" name="po_ref" value="" class="form-control cc-exp"> 
+                      <input type="hidden"  onchange="is_weekend(this.value);" value="" name="date_crf" class="form-control cc-exp">
+                      <!-- <div class="col-md-3">
+                        <label for="x_card_code" class="control-label mb-1">CRF RECEIVED DATE</label>
+                        <input type="date"  onchange="is_weekend(this.value);" name="date_crf" class="form-control cc-exp">
+                      </div>
+                      <div class="col-md-3">
+                        <label for="x_card_code" class="control-label mb-1">PO REF</label>
+                        <input type="text" name="po_ref" class="form-control cc-exp">
+                      </div> -->
+
+                      <!--<div class="col-md-3">
+                        <label for="x_card_code" class="control-label mb-1">AV LICENCE</label>
+                        <select name="ref_av" id="av" class="form-control cc-exp" onchange="xajax_afficherMaskAV(this.value)" >
+                          <option value=""></option>
+                            <?php
+                              //$maClasse->selectionnerLicenceEnCoursModele($_GET['id_mod_trac']);
+                            ?>
+                        </select>
+                      </div>-->
+
+                      <!--<div class="col-md-3">
+                        <label for="x_card_code" class="control-label mb-1">AV AVEC MASK</label>
+                        <span id="cod_dos_1"></span>
+                      </div>-->
+             
+                      <div class="col-md-3">
+                        <label for="x_card_code" class="control-label mb-1">PRE-ALERT DATE</label>
+                        <input type="date" id="date_new" onchange="is_weekend(this.value);" name="date_preal" class="form-control cc-exp">
+                      </div>
+
+                      <!-- <div class="col-md-3">
+                        <label for="x_card_code" class="control-label mb-1">T1</label>
+                        <input type="text" name="t1" class="form-control cc-exp">
+                      </div> -->
+                      <input type="hidden" name="t1" value="">
+                      <input type="hidden" name="nbre" value="1">
+                      <div class="col-md-3">
+                        <label for="x_card_code" class="control-label mb-1">COMMODITY</label>
+                        <input type="text" name="commodity" class="form-control cc-exp">
+                      </div>
+                      <?php
+                      if($_GET['id_mod_trans'] == '1'){
+                        ?>
+
+                      <div class="col-md-3">
+                        <label for="x_card_code" class="control-label mb-1">ROAD MANIF</label>
+                        <input type="text" name="road_manif" class="form-control cc-exp">
+                      </div>
+
+                      <div class="col-md-3">
+                        <label for="x_card_code" class="control-label mb-1">HORSE</label>
+                        <input type="text" name="horse" class="form-control cc-exp">
+                      </div>
+
+                      <div class="col-md-3">
+                        <label for="x_card_code" class="control-label mb-1">TRAILER 1</label>
+                        <input type="text" name="trailer_1" class="form-control cc-exp">
+                      </div>
+
+                      <div class="col-md-3">
+                        <label for="x_card_code" class="control-label mb-1">TRAILER 2/CONTAINER</label>
+                        <input type="text" name="trailer_2" class="form-control cc-exp">
+                      </div>
+
+                        <?php
+                      }else if($_GET['id_mod_trans'] == '4'){
+                        ?>
+
+                      <div class="col-md-3">
+                        <label for="x_card_code" class="control-label mb-1">RAIL MANIFEST</label>
+                        <input type="text" name="road_manif" class="form-control cc-exp">
+                      </div>
+
+                      <div class="col-md-3">
+                        <label for="x_card_code" class="control-label mb-1">WAGON</label>
+                        <input type="text" name="horse" class="form-control cc-exp">
+                      </div>
+
+                      <input type="hidden" name="trailer_1" value="N/A">
+                      <input type="hidden" name="trailer_2" value="N/A">
+                        <?php
+                      }else{
+                        ?>
+
+                      <div class="col-md-3">
+                        <label for="x_card_code" class="control-label mb-1">AWB NUM.</label>
+                        <input type="text" name="horse" class="form-control cc-exp">
+                      </div>
+                      <input type="hidden" name="trailer_1" value="N/A">
+                      <input type="hidden" name="trailer_2" value="N/A">
+                      <input type="hidden" name="road_manif" value="N/A">
+                        <?php
+                      }
+                      ?>
+
+                      <div class="col-md-3">
+                        <label for="x_card_code" class="control-label mb-1">REGIME SUSPENSIF</label>
+                        <select name="temporelle" class="form-control cc-exp" required>
+                          <option></option>
+                          <option value="0">NO</option>
+                          <option value="1">YES</option>
+                        </select>
+                      </div>
+
+                      <div class="col-md-3">
+                        <label for="x_card_code" class="control-label mb-1">Tally Ref.</label>
+                        <input type="text" id="mca_b_ref_c" name="mca_b_ref" class="form-control form-control-sm cc-exp" required>
+                      </div>
+
+                    </div>
+                  </div>
+                  <!-- /.tab-pane -->
+                  <div class="tab-pane" id="tab_2">
+                    <div class="row">
+                      <?php
+                        $maClasse-> afficherDocumentDossierCreate($_GET['id_mod_trac']);
+                      ?>
+                    </div>
+                  </div>
+                  <!-- /.tab-pane -->
+                </div>
+                <!-- /.tab-content -->
+              </div><!-- /.card-body -->
+            </div>
+        </div>
+<!-- ------------------------------------------------------------------ -->
+          
         </div>
       </div>
       <div class="modal-footer justify-content-between">
@@ -1531,21 +2403,65 @@ if(isset($_GET['id_mod_trac'])){
   <!-- /.modal-dialog -->
 </div>
 
+<script type="text/javascript">
+  
+  $(document).ready(function(){
+    function_mca_b_ref_c();
+  });
+
+  function function_mca_b_ref_c() {
+    var code='';
+    var today   = new Date();
+    var annee = today.getYear();
+    $('#annee').val(annee);
+    
+    // const xmas = new Date("1995-12-25");
+    // const year = xmas.getYear(); // returns 95
+
+    if (<?php echo $_GET['id_mod_trac'];?>=='2' || (<?php echo $_GET['id_mod_trac'];?>=='1' && <?php echo $_GET['id_march'];?>=='21')) {// Import
+
+      if (<?php echo $_GET['id_mod_trans'];?>=='1') {
+
+        code = 'IMP-RR-'+$('#ref_dos_c').val().substr(0, 3)+$('#annee').val().substr(1)+$('#ref_dos_c').val().substr(9);
+
+      }else if (<?php echo $_GET['id_mod_trans'];?>=='3') {
+
+        code = 'IMP-AW-'+$('#ref_dos_c').val().substr(0, 3)+$('#annee').val().substr(1)+$('#ref_dos_c').val().substr(9);
+
+      }else{
+
+        code = 'IMP-W-'+$('#ref_dos_c').val().substr(0, 3)+$('#annee').val().substr(1)+$('#ref_dos_c').val().substr(9);
+
+      }
+
+    }
+
+    console.log(code);
+    $('#mca_b_ref_c').val(code);
+    // console.log($('#ref_dos_a').val());
+  }
+
+</script>
 <?php
+}else if($_GET['id_mod_trac']=='2' && $_GET['id_cli']=='869' && $_GET['id_march']!='11'){
+  include('nouveauDossierAcid.php');
+}else{
+
+include('nouveauExport.php');
+// include('updateMutipleExport.php');
+
 }
 ?>
 
 
 <?php
 
-include('nouveauExport.php');
-include('nouveauDossierAcid.php');
-include('updateMutipleExport.php');
-
 if(isset($_GET['id_mod_trac']) && isset($_GET['id_mod_trac'])){
+  
 
   $modele = $maClasse-> getElementModeleLicence($_GET['id_mod_trac']);
   //$marchandise = $maClasse-> getElementMarchandise($_GET['id_march']);
+  
 ?>
 
 <div class="modal fade update" id="modal-default">
@@ -1590,121 +2506,6 @@ if(isset($_GET['id_mod_trac']) && isset($_GET['id_mod_trac'])){
           <?php
             $maClasse-> afficherRowUpdate($_GET['id_mod_trac'], $_GET['id_cli'], $_GET['id_mod_trans']);
           ?>
-<!-- 
-          <div class="col-md-3">
-            <label for="x_card_code" class="control-label mb-1">K'lesa arrival date</label>
-            <input type="date"  onchange="is_weekend(this.value);" name="klsa_arriv" class="form-control cc-exp">
-          </div>
-
-          <div class="col-md-3">
-            <label for="x_card_code" class="control-label mb-1">Crossing Date</label>
-            <input type="date"  onchange="is_weekend(this.value);" max="<?php echo date('Y-m-d');?>" name="crossing_date" class="form-control cc-exp">
-          </div>
-
-          <div class="col-md-3">
-            <label for="x_card_code" class="control-label mb-1">Wiski arrival date</label>
-            <input type="date"  onchange="is_weekend(this.value);" max="<?php echo date('Y-m-d');?>" name="wiski_arriv" class="form-control cc-exp">
-          </div>
-
-          <div class="col-md-3">
-            <label for="x_card_code" class="control-label mb-1">Departure date Wiski</label>
-            <input type="date"  onchange="is_weekend(this.value);" max="<?php echo date('Y-m-d');?>" name="wiski_dep" class="form-control cc-exp">
-          </div>
-
-          <div class="col-md-3">
-            <label for="x_card_code" class="control-label mb-1">AMICONGO ARRIVAL DATE</label>
-            <input type="date"  onchange="is_weekend(this.value);" max="<?php echo date('Y-m-d');?>" name="amicong_arriv" class="form-control cc-exp">
-          </div>
-
-          <div class="col-md-3">
-            <label for="x_card_code" class="control-label mb-1">INSP REPORT RECEIVED DATE</label>
-            <input type="date"  onchange="is_weekend(this.value);" max="<?php echo date('Y-m-d');?>" name="insp_receiv" class="form-control cc-exp">
-          </div>
-
-          <div class="col-md-3">
-            <label for="x_card_code" class="control-label mb-1">CLEARED BASED ON IR</label>
-            <select name="ir" class="form-control cc-exp">
-              <option></option>
-              <option value="YES">YES</option>
-              <option value="NO">NO</option>
-            </select>
-          </div>
-
-          <div class="col-md-3">
-            <label for="x_card_code" class="control-label mb-1">CRF Reference</label>
-            <input type="text" name="ref_crf" class="form-control cc-exp">
-          </div>
-
-          <div class="col-md-3">
-            <label for="x_card_code" class="control-label mb-1">CRF Received Date</label>
-            <input type="date"  onchange="is_weekend(this.value);" max="<?php echo date('Y-m-d');?>" name="date_crf" class="form-control cc-exp">
-          </div>
-
-          <div class="col-md-3">
-            <label for="x_card_code" class="control-label mb-1">Declaration Reference</label>
-            <input type="text" name="ref_decl" class="form-control cc-exp">
-          </div>
-
-          <div class="col-md-3">
-            <label for="x_card_code" class="control-label mb-1">DGDA In</label>
-            <input type="date"  onchange="is_weekend(this.value);" max="<?php echo date('Y-m-d');?>" name="dgda_in" class="form-control cc-exp">
-          </div>
-
-          <div class="col-md-3">
-            <label for="x_card_code" class="control-label mb-1">Liquidation Reference</label>
-            <input type="text" name="ref_liq" class="form-control cc-exp">
-          </div>
-
-          <div class="col-md-3">
-            <label for="x_card_code" class="control-label mb-1">Date Liquidation</label>
-            <input type="date"  onchange="is_weekend(this.value);" max="<?php echo date('Y-m-d');?>" name="date_liq" class="form-control cc-exp">
-          </div>
-
-          <div class="col-md-3">
-            <label for="x_card_code" class="control-label mb-1">Quittance Reference</label>
-            <input type="text" name="ref_quit" class="form-control cc-exp">
-          </div>
-
-          <div class="col-md-3">
-            <label for="x_card_code" class="control-label mb-1">Date Quittance</label>
-            <input type="date"  onchange="is_weekend(this.value);" max="<?php echo date('Y-m-d');?>" name="date_quit" class="form-control cc-exp">
-          </div>
-
-          <div class="col-md-3">
-            <label for="x_card_code" class="control-label mb-1">DGDA Out</label>
-            <input type="date"  onchange="is_weekend(this.value);" max="<?php echo date('Y-m-d');?>" name="dgda_out" class="form-control cc-exp">
-          </div>
-
-          <div class="col-md-3">
-            <label for="x_card_code" class="control-label mb-1">CUSTOM DELIVER DATE</label>
-            <input type="date"  onchange="is_weekend(this.value);" max="<?php echo date('Y-m-d');?>" name="custom_deliv" class="form-control cc-exp">
-          </div>
-
-          <div class="col-md-3">
-            <label for="x_card_code" class="control-label mb-1">CLEARING STATUS</label>
-            <select name="cleared" class="form-control cc-exp">
-              <option></option>
-              <option value="0">TRANSIT</option>
-              <option value="1">CLEARED</option>
-              <option value="2">CANCELLED</option>
-            </select>
-          </div>
-
-          <div class="col-md-3">
-            <label for="x_card_code" class="control-label mb-1">DISPACTH/DELIVER DATE</label>
-            <input type="date"  onchange="is_weekend(this.value);" max="<?php echo date('Y-m-d');?>" name="dispatch_deliv" class="form-control cc-exp">
-          </div>
-
-          <div class="col-md-6">
-            <label for="x_card_code" class="control-label mb-1">STATUS</label>
-            <input type="text" name="statut" class="form-control cc-exp">
-          </div>
-
-          <div class="col-md-6">
-            <label for="x_card_code" class="control-label mb-1">REMARQUE</label>
-            <input type="text" name="remarque" class="form-control cc-exp">
-          </div>
- -->
         </div>
       </div>
       <div class="modal-footer justify-content-between">
@@ -1719,5 +2520,102 @@ if(isset($_GET['id_mod_trac']) && isset($_GET['id_mod_trac'])){
 </div>
 
 <?php
+
 }
 ?>
+<?php
+if (($maClasse-> verifierRegimeSuspensionSansDateExtreme($_GET['id_cli'], $_GET['id_mod_trans'], $_GET['id_mod_trac'])>0) || ($maClasse-> verifierRegimeSuspensionDateExtremeExpire($_GET['id_cli'], $_GET['id_mod_trans'], $_GET['id_mod_trac'])>0)) {
+ ?>
+<div class="modal fade regimeSuspens" id="modal-default">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header ">
+        <h4 class="modal-title"><i class="fa fa-exclamation-triangle"></i> Alert Regime de Suspensif.</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+
+          <div class="col-md-3">
+            <button class="btn btn-xs bg-dark square-btn-adjust" onclick="window.open('popUpDossierRegSuspens.php?id_cli=<?php echo $_GET['id_cli']; ?>&id_mod_trans=<?php echo $_GET['id_mod_trans']; ?>&id_mod_trac=<?php echo $_GET['id_mod_trac']; ?>&commodity=<?php echo $_GET['commodity']; ?>&statut=<?php echo $_GET['statut'];?>&id_march=<?php echo $_GET['id_march'];?>','pop1','width=1000,height=950');">
+                Sans Date Extrème <span class="badge badge-danger"><?php echo number_format($maClasse-> verifierRegimeSuspensionSansDateExtreme($_GET['id_cli'], $_GET['id_mod_trans'], $_GET['id_mod_trac']), 0, '', '');?></span>
+            </button>
+          </div>
+
+          <div class="col-md-3">
+            <button class="btn btn-xs bg-info square-btn-adjust" onclick="window.open('popUpDossierRegSuspensDateExtremeExpire.php?id_cli=<?php echo $_GET['id_cli']; ?>&id_mod_trans=<?php echo $_GET['id_mod_trans']; ?>&id_mod_trac=<?php echo $_GET['id_mod_trac']; ?>&commodity=<?php echo $_GET['commodity']; ?>&statut=<?php echo $_GET['statut'];?>&id_march=<?php echo $_GET['id_march'];?>','pop1','width=1000,height=950');">
+                Echéance Expirée <span class="badge badge-danger"><?php echo number_format($maClasse-> verifierRegimeSuspensionDateExtremeExpire($_GET['id_cli'], $_GET['id_mod_trans'], $_GET['id_mod_trac']), 0, '', '');?></span>
+            </button>
+          </div>
+
+        </div>
+      </div>
+      <div class="modal-footer justify-content-between">
+       <!--  <button type="button" class="btn btn-danger" data-dismiss="modal">Annuler</button>
+        <button type="submit" name="rechercheLicence" class="btn btn-primary">Valider</button> -->
+      </div>
+    </div>
+    <!-- /.modal-content -->
+  </div>
+  <!-- /.modal-dialog -->
+</div>
+<?php
+}
+?>
+
+<script type="text/javascript">
+
+  function check_camion(horse, trailer_1, trailer_2, road_manif){
+
+    if ($('#horse').val()===null && $('#horse').val()==='' ) {}else{
+
+      $.ajax({
+        type: "POST",
+        url: "ajax.php",
+        data: { horse: horse, trailer_1: trailer_1, trailer_2: trailer_2, road_manif: road_manif, operation: 'check_camion'},
+        dataType:"json",
+        success:function(data){
+          if (data.logout) {
+            alert(data.logout);
+            window.location="../deconnexion.php";
+          }else if (data.msg_check_camion) {
+            $('#msg_check_camion').html(data.msg_check_camion);
+          }else{
+            $('#msg_check_camion').html('');
+          }
+        },
+        complete: function () {
+            // $('#spinner-div').hide();//Request is complete so hide spinner
+        }
+      });
+
+    }
+
+  }
+
+  function check_date_error(id_dos){
+
+    $.ajax({
+      type: "POST",
+      url: "ajax.php",
+      data: { id_dos: id_dos, operation: 'check_date_error'},
+      dataType:"json",
+      success:function(data){
+        if (data.logout) {
+          alert(data.logout);
+          window.location="../deconnexion.php";
+        }else if (data.date_error==true) {
+          $alert('Error!!!! Date Error.');
+        }else{
+          $('#msg_check_camion').html('');
+        }
+      },
+      complete: function () {
+          // $('#spinner-div').hide();//Request is complete so hide spinner
+      }
+    });
+
+  }
+</script>
