@@ -47710,13 +47710,11 @@
 												CONCAT('<a href=\"#\" class=\"text-dark\" title=\"Dossiers affectés\" onclick=\"window.open(\'generateur_demande_fond.php?id_df=',df.id_df,'\',\'pop12\',\'width=1100,height=900\');\">
 														<i class=\"fa fa-print\"></i>
 													</a>') AS btn_action
-											FROM demande_fond df, site, departement dept, client cl, utilisateur util,
-												depense_dossier depdos
+											FROM demande_fond df, site, departement dept, client cl, utilisateur util
 											WHERE df.id_site = site.id_site
 												AND df.id_dept = dept.id_dept
 												AND df.id_cli = cl.id_cli
 												AND df.id_util = util.id_util
-												AND df.id_df = depdos.id_df
 												-- AND depdos.id_dos = ?
 												$sql_date_create
 												$sql_date_visa_dept
@@ -60479,7 +60477,7 @@
 												FROM licence
 												WHERE id_cli = ?
 													AND id_mod_lic = 2");
-			// $requete-> execute(array($entree['id_cli']));
+			$requete-> execute(array($entree['id_cli']));
 			while($reponse = $requete-> fetch()){
 				$compteur++;
 				?>
