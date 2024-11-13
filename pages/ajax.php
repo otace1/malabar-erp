@@ -679,7 +679,7 @@
 		
 	}elseif(isset($_POST['operation']) && $_POST['operation']=='pay_report'){ 
 
-		if (!empty($_POST['id_dos'])) {
+		if (!empty($_POST['id_dos']) && ($_POST['id_dos']>0)) {
 			echo json_encode($maClasse-> pay_report_dossier($_POST['statut'], $_POST['date_create_debut'], $_POST['date_create_fin'], $_POST['date_visa_dept_debut'], $_POST['date_visa_dept_fin'], $_POST['date_visa_fin_debut'], $_POST['date_visa_fin_fin'], $_POST['date_decaiss_debut'], $_POST['date_decaiss_fin'], $_POST['id_dep'], $_POST['id_dos']));
 		}else {
 			echo json_encode($maClasse-> pay_report($_POST['statut'], $_POST['date_create_debut'], $_POST['date_create_fin'], $_POST['date_visa_dept_debut'], $_POST['date_visa_dept_fin'], $_POST['date_visa_fin_debut'], $_POST['date_visa_fin_fin'], $_POST['date_decaiss_debut'], $_POST['date_decaiss_fin'], $_POST['id_dep']));
