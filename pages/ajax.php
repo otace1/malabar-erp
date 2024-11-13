@@ -3642,6 +3642,8 @@
 
 	    	}
 
+	    	$maClasse-> depense_dossier_chargeback_DF($_POST['id_df']);
+
 		}
 
 		$maClasse-> visa_dept_df($_POST['id_df'], $_POST['a_facturer'], $_POST['montant_fact']);

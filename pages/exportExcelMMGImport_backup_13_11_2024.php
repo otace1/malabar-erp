@@ -64,6 +64,10 @@ while ($reponseModeTransport = $requeteModeTransport-> fetch()) {
 	//Pour EXPORT créer des tableurs par licence et modes de transport
 	
 		
+		//--- Recuperation d'années -------
+		for ($annee=date('Y'); $annee >= 2022; $annee--) { 
+			$entree['annee']='%'.substr($annee, -2).'-%';
+
 		$id_march = $_GET['id_march'];
 
 
@@ -74,11 +78,11 @@ while ($reponseModeTransport = $requeteModeTransport-> fetch()) {
 														AND d.id_march = $id_march
 														AND l.num_lic = d.num_lic 
 														AND l.id_mod_lic = ?
-														AND l.num_lic = ?
+														AND d.ref_dos LIKE (?)
 														ORDER BY l.date_creat_lic DESC");
 
 		$requeteLicence-> execute(array($_GET['id_cli'], $reponseModeTransport['id_mod_trans'], 
-									$_GET['id_mod_trac'], $_GET['num_lic']));
+									$_GET['id_mod_trac'], $entree['annee']));
 		while ($reponseLicence = $requeteLicence-> fetch()) {
 			
 
@@ -365,7 +369,7 @@ while ($reponseModeTransport = $requeteModeTransport-> fetch()) {
 
 
 		}$requeteLicence-> closeCursor();
-	
+	}
 	//--- FIN Recuperation années -------
 	
 

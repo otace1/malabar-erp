@@ -1031,8 +1031,16 @@ for ($i=1; $i <= 15 ; $i++) {
                     <?php
                       if ($_GET['id_cli'] == 869 && $_GET['id_mod_trac'] == 2 && $_GET['id_march'] != 11) {
                         ?>
-                    <button class="btn btn-xs btn-success square-btn-adjust" onclick="window.location.replace('exportExcelMMGImport.php?id_cli=<?php echo $_GET['id_cli']; ?>&id_mod_trans=<?php echo $_GET['id_mod_trans']; ?>&id_mod_trac=<?php echo $_GET['id_mod_trac']; ?>&commodity=<?php echo $_GET['commodity']; ?>&statut=<?php echo $_GET['statut'];?>&id_march=<?php echo $_GET['id_march'];?>','pop1','width=80,height=80');">
+                    <!-- <button class="btn btn-xs btn-success square-btn-adjust" onclick="window.location.replace('exportExcelMMGImport.php?id_cli=<?php echo $_GET['id_cli']; ?>&id_mod_trans=<?php echo $_GET['id_mod_trans']; ?>&id_mod_trac=<?php echo $_GET['id_mod_trac']; ?>&commodity=<?php echo $_GET['commodity']; ?>&statut=<?php echo $_GET['statut'];?>&id_march=<?php echo $_GET['id_march'];?>','pop1','width=80,height=80');">
                       <i class="fas fa-file-excel"></i> Export
+                    </button> -->
+                     <button type="button" class="btn btn-xs small btn-success dropdown-toggle dropdown-icon" data-toggle="dropdown">
+                      <i class="fas fa-file-excel"></i> Export
+                      <div class="dropdown-menu small" role="menu">
+                        <?php
+                          $maClasse-> get_licence_for_excel_tracking($_GET['id_cli']);
+                        ?>
+                      </div>
                     </button>
                         <?php
                       }elseif ($_GET['id_cli'] == 869 && $_GET['id_mod_trac'] == 2) {
