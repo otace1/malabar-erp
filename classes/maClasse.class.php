@@ -60491,5 +60491,40 @@
 
 		}
 
+		public function licence_for_excel_tracking($id_cli, $id_mod_lic, $id_mod_trans, $commodity, $statut, $id_march, $mot_cle=null){
+			include('connexion.php');
+			$compteur=0;
+			$entree['id_cli'] = $id_cli;
+			$entree['id_mod_lic'] = $id_mod_lic;
+
+			$sqlMotCle = '';
+
+			if (isset($mot_cle) && ($mot_cle!='')) {
+				$sqlMotCle = ' AND num_lic LIKE "%'.$mot_cle.'%"';
+			}
+
+			$table = '';
+			
+			$requete = $connexion-> prepare("SELECT num_lic,
+													SUBSTRING(num_lic, 1, 10) AS label_num_lic
+												FROM licence
+												WHERE id_cli = ?
+													AND id_mod_lic = ?
+													$sqlMotCle
+												ORDER BY num_lic DESC");
+			$requete-> execute(array($entree['id_cli'], $entree['id_mod_lic']));
+			while($reponse = $requete-> fetch()){
+				$compteur++;
+				$table .='
+    					<tr onMouseOver="this.style.cursor=\'pointer\'" onclick="window.location.replace(\'exportExcelMMGImport.php?id_cli='.$id_cli.'&id_mod_trans='.$id_mod_trans.'&id_mod_trac='.$id_mod_lic.'&commodity='.$commodity.'&statut='.$statut.'&id_march='.$id_march.'&num_lic='.$reponse['num_lic'].'\',\'pop1\',\'width=80,height=80\');">
+							<td>'.$compteur.'</td>
+							<td>'.$reponse['num_lic'].'</td>
+						</tr>';
+			}$requete-> closeCursor();
+			
+			return $table;
+
+		}
+
 	}
 ?>
