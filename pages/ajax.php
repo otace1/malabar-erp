@@ -3755,6 +3755,12 @@
 
 		echo json_encode($response);
 
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='licence_for_excel_tracking'){ 
+		
+		$response['licence_for_excel_tracking'] = $maClasse-> licence_for_excel_tracking($_POST['id_cli'], $_POST['id_mod_lic'], $_POST['id_mod_trans'], $_POST['commodity'], $_POST['statut'], $_POST['id_march'], $_POST['mot_cle']);
+
+		echo json_encode($response);
+
 	}
 
 

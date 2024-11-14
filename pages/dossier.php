@@ -1034,13 +1034,8 @@ for ($i=1; $i <= 15 ; $i++) {
                     <!-- <button class="btn btn-xs btn-success square-btn-adjust" onclick="window.location.replace('exportExcelMMGImport.php?id_cli=<?php echo $_GET['id_cli']; ?>&id_mod_trans=<?php echo $_GET['id_mod_trans']; ?>&id_mod_trac=<?php echo $_GET['id_mod_trac']; ?>&commodity=<?php echo $_GET['commodity']; ?>&statut=<?php echo $_GET['statut'];?>&id_march=<?php echo $_GET['id_march'];?>','pop1','width=80,height=80');">
                       <i class="fas fa-file-excel"></i> Export
                     </button> -->
-                     <button type="button" class="btn btn-xs small btn-success dropdown-toggle dropdown-icon" data-toggle="dropdown">
+                     <button type="button" class="btn btn-xs small btn-success" onclick="get_licence_for_excel_tracking();">
                       <i class="fas fa-file-excel"></i> Export
-                      <div class="dropdown-menu small" role="menu">
-                        <?php
-                          $maClasse-> get_licence_for_excel_tracking($_GET['id_cli']);
-                        ?>
-                      </div>
                     </button>
                         <?php
                       }elseif ($_GET['id_cli'] == 869 && $_GET['id_mod_trac'] == 2) {
@@ -2565,7 +2560,72 @@ if (($maClasse-> verifierRegimeSuspensionSansDateExtreme($_GET['id_cli'], $_GET[
 }
 ?>
 
+<div class="modal fade" id="modal_licence_for_excel_tracking">
+  <div class="modal-dialog modal-md">
+    <div class="modal-content">
+      <div class="modal-header btn-dark">
+        <h4 class="modal-title"><img src="../images/certificate.png" width="25px"> Menu Licence </h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <input type="hidden" id="id_mod_lic_search">
+
+          <input type="text" id="mot_cle" class="form-control form-control-sm" placeholder="Ex.: DEC1294854-43564-IB" onkeyup="get_licence_for_excel_tracking(this.value);">
+          <hr>
+          <div class="col-md-12 table-responsive p-0 " style="height: 500px;">
+            <table class="table table-bordered table-striped text-nowrap table-hover table-sm small text-nowrap table-head-fixed ">
+              <thead>
+                  <tr>
+                  <tr>
+                      <th>#</th>
+                      <th>License Num.</th>
+                  </tr>
+              </thead>
+              <tbody id="licence_for_excel_tracking">
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <!-- <div class="modal-footer justify-content-between">
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Annuler</button>
+        <button type="submit" name="creerAV" class="btn btn-primary">Valider</button>
+      </div> -->
+    </div>
+    <!-- </form> -->
+    <!-- /.modal-content -->
+  </div>
+  <!-- /.modal-dialog -->
+</div>
+
 <script type="text/javascript">
+
+  function get_licence_for_excel_tracking(mot_cle=null){
+
+    $('#spinner-div').show();
+    $.ajax({
+      type: "POST",
+      url: "ajax.php",
+      data: { mot_cle: mot_cle, id_cli: "<?php echo $_GET['id_cli'];?>", id_mod_lic: "<?php echo $_GET['id_mod_trac'];?>", id_mod_trans: "<?php echo $_GET['id_mod_trans'];?>", commodity: "<?php echo $_GET['commodity'];?>", statut: "<?php echo $_GET['statut'];?>", id_march: "<?php echo $_GET['id_march'];?>", operation: 'licence_for_excel_tracking'},
+      dataType:"json",
+      success:function(data){
+        if (data.logout) {
+          alert(data.logout);
+          window.location="../deconnexion.php";
+        }else{
+          $('#licence_for_excel_tracking').html(data.licence_for_excel_tracking);
+          $('#modal_licence_for_excel_tracking').modal('show');
+        }
+      },
+      complete: function () {
+          $('#spinner-div').hide();//Request is complete so hide spinner
+      }
+    });
+
+  }
 
   function check_camion(horse, trailer_1, trailer_2, road_manif){
 
