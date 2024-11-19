@@ -121,13 +121,23 @@
                     <input step="0.01" id="usd_net" class="form-control form-control-sm text-center bg bg-dark font-weight-bold " disabled>
                   </div> -->
                   <div class="col-md-3">
-                    <label for="id_dep">Expense Type</label>
+                    <label for="id_dep">Expense Type 
+                      <?php
+                      if ($maClasse-> getUtilisateur($_SESSION['id_util'])['creation_depense']=='1') {
+                        ?>
+                        <span class="btn-xs btn-primary"><i class="fa fa-plus" onclick="$('#modal_new_depense').modal('show');"></i></span>
+                        <?php
+                      }
+                      ?>
+                    </label>
+                    <span id="select_id_dep"></span>
+                    <!-- <label for="id_dep">Expense Type</label>
                     <select name="id_dep" id="id_dep" class="form-control form-control-sm" required>
                       <option></option>
                       <?php
-                        $maClasse-> selectionnerDepense();
+                        // $maClasse-> selectionnerDepense();
                       ?>
-                    </select>
+                    </select> -->
                   </div>
                   <div class="col-md-3">
                     <label for="libelle">Motif / Reason</label>
@@ -234,7 +244,106 @@
   <!-- /.modal-dialog -->
 </div>
 
+<div class="modal fade" id="modal_new_depense">
+  <div class="modal-dialog modal-sm">
+    <form id="form_new_depense" method="POST" action="" data-parsley-validate enctype="multipart/form-data">
+      <input type="hidden" name="operation" value="new_depense">
+    <div class="modal-content">
+      <div class="modal-header ">
+        <h4 class="modal-title"><i class="fa fa-plus"></i> New Expense</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+
+          <div class="col-md-12">
+            <label for="x_card_code" class="control-label mb-1">Name</label>
+            <input type="text" name="nom_dep" class="form-control form-control-sm cc-exp" required>
+          </div>
+
+        </div>
+      </div>
+      <div class="modal-footer justify-content-between">
+        <button type="button" class="btn btn-xs btn-danger" data-dismiss="modal">Annuler</button>
+        <button type="submit" name="" class="btn btn-xs btn-primary">Valider</button>
+      </div>
+    </div>
+    </form>
+    <!-- /.modal-content -->
+  </div>
+  <!-- /.modal-dialog -->
+</div>
+
 <script type="text/javascript">
+
+  $(document).ready(function(){
+
+    selectionnerDepenseAjax();
+
+  });
+
+  $(document).ready(function(){
+
+      $('#form_new_depense').submit(function(e){
+
+        e.preventDefault();
+
+        var fd = new FormData(this);
+
+        $('#spinner-div').show();
+        $('#modal_new_depense').modal('hide');
+
+        $.ajax({
+          type: 'post',
+          url: 'ajax.php',
+          processData: false,
+          contentType: false,
+          data: fd,
+          dataType: 'json',
+          success:function(data){
+            if (data.logout) {
+              alert(data.logout);
+              window.location="../deconnexion.php";
+            }else{
+              $( '#form_new_depense' ).each(function(){
+                  this.reset();
+              });
+              selectionnerDepenseAjax();
+            }
+          },
+          complete: function () {
+              // $('#dossier_cvee').DataTable().ajax.reload();
+              $('#spinner-div').hide();//Request is complete so hide spinner
+          }
+        });
+      });
+    
+  });
+
+  function selectionnerDepenseAjax(){
+    $('#spinner-div').show();
+
+   $.ajax({
+     type: "POST",
+     url: "ajax.php",
+     data: { operation: 'selectionnerDepenseAjax'},
+     dataType:"json",
+     success:function(data){
+       if (data.logout) {
+         alert(data.logout);
+         window.location="../deconnexion.php";
+       }else{
+         $('#select_id_dep').html(data.option);
+       }
+     },
+     complete: function () {
+         $('#spinner-div').hide();//Request is complete so hide spinner
+     }
+   });
+
+  }
 
   function convert_usd() {
     
@@ -261,6 +370,28 @@
     $('#id_dos_'+ligne).val(id_dos);
     $('#label_ref_dos_'+ligne).html(ref_dos);
     $('#modal_search_dossier_df').modal('hide');
+
+
+    $.ajax({
+      type: 'post',
+      url: 'ajax.php',
+      data: {operation: 'double_check_request', id_dos: id_dos, id_dep: $('#id_dep').val()},
+      dataType: 'json',
+      success:function(data){
+        if (data.logout) {
+          alert(data.logout);
+          window.location="../deconnexion.php";
+        }else if(data.id_dos){
+          $('#remarque_'+ligne).html('<span class="text-danger font-weight-bold clignoteb">Already Encoded !! Voucher Ref.'+data.id_df+'</span>');
+        }else{
+          $('#remarque_'+ligne).html('');
+        }
+      },
+      complete: function () {
+          $('#spinner-div').hide();//Request is complete so hide spinner
+      }
+    });
+
   }
 
   function modal_search_dossier_df(ligne, mot_cle=null){
@@ -295,9 +426,11 @@
     var cell1 = row.insertCell(0);
     var cell2 = row.insertCell(1);
     var cell3 = row.insertCell(2);
+    var cell4 = row.insertCell(3);
     cell1.innerHTML = ligne+1;
     cell2.innerHTML = '<input type="hidden" id="id_dos_'+ligne+'" name="id_dos_'+ligne+'"><span id="label_ref_dos_'+ligne+'"></span><a href="#" class="text-primary" onclick="modal_search_dossier_df('+ligne+')"><i class="fa fa-search"></i></a>';
     cell3.innerHTML = '<input type="number" step="0.001" class=" text-right" style="width: 8em;" id="montant_'+ligne+'" name="montant_'+ligne+'" required>';
+    cell4.innerHTML = '<span id="remarque_'+ligne+'"></span>';
     $('#nbre').val(ligne+1);
     // cell2.innerHTML = table.rows.length;
   }

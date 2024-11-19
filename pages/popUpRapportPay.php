@@ -14,7 +14,7 @@
       <div class="container-fluid" style="">
         <div class="row">
           <div class="col-12">
-            <div class="card">
+            <div class="card table-responsive p-0">
               <div class="card-header">
                 <h5><i class="fa fa-folder-open nav-icon"></i> Reporting 
                 </h5>
@@ -42,7 +42,7 @@
                 </div>
               </div>    
               <!-- /.card-header -->
-              <div class="card-body table-responsive p-0">
+              <div class="card-body">
                 <table id="pay_report" cellspacing="0" width="100%" class="table table-bordered table-striped table-sm small text-nowrap">
                   <thead>
                     <tr>

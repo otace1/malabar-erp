@@ -3761,6 +3761,25 @@
 
 		echo json_encode($response);
 
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='double_check_request'){ 
+		
+		$response = $maClasse-> double_check_request($_POST['id_dos'], $_POST['id_dep']);
+
+		echo json_encode($response);
+
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='selectionnerDepenseAjax'){ 
+		
+		$response['option'] = $maClasse-> selectionnerDepenseAjax();
+
+		echo json_encode($response);
+
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='new_depense'){ 
+		
+		$maClasse-> new_depense($_POST['nom_dep']);
+		$response['message'] = 'Done!';
+
+		echo json_encode($response);
+
 	}
 
 
