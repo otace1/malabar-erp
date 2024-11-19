@@ -60526,5 +60526,51 @@
 
 		}
 
+		public function double_check_request($id_dos, $id_dep){
+			include('connexion.php');
+			$compteur=0;
+			$entree['id_dos'] = $id_dos;
+			$entree['id_dep'] = $id_dep;
+
+			$requete = $connexion-> prepare("SELECT *
+												FROM depense_dossier depdos
+												WHERE id_dos = ?
+													AND id_dep = ?");
+			$requete-> execute(array($entree['id_dos'], $entree['id_dep']));
+			$reponse = $requete-> fetch();
+			return $reponse;
+
+		}
+
+		public function selectionnerDepenseAjax(){
+			include('connexion.php');
+			//$entree['id_mod_lic'] = $id_mod_lic;
+
+			$option = '<select name=\'id_dep\' id=\'id_dep\' class=\'form-control form-control-sm\' required><option></option>';
+
+			$requete = $connexion-> query("SELECT *
+												FROM depense
+												ORDER BY nom_dep");
+			//$requete-> execute(array($entree['id_mod_lic']));
+
+			while($reponse = $requete-> fetch()){
+				$option .= '<option value=\''.$reponse['id_dep'].'\'>'.$reponse['nom_dep'].'</option>';
+			}$requete-> closeCursor();
+
+			$option .= '</select>';
+
+			return $option;
+
+		}
+
+		public function new_depense($nom_dep){
+			include('connexion.php');
+			$entree['nom_dep'] = $nom_dep;
+
+			$requete = $connexion-> prepare("INSERT INTO depense(nom_dep) VALUES(?)");
+			$requete-> execute(array($entree['nom_dep']));
+
+		}
+
 	}
 ?>
