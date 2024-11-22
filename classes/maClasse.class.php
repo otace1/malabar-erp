@@ -60572,5 +60572,65 @@
 
 		}
 
+		public function file_other_service(){
+			include('connexion.php');
+
+			$rows = array();
+			$compteur = 0;
+
+			$requete = $connexion-> query("SELECT dos.ref_dos AS ref_dos, 
+												dos.remarque AS remarque,
+												cl.nom_cli AS nom_cli
+											FROM dossier dos, client cl
+											WHERE dos.id_cli = cl.id_cli
+												AND dos.id_mod_lic = 3
+											ORDER BY dos.id_dos DESC");
+			// $requete-> execute(array($entree['nom_dep']));
+			while($reponse = $requete-> fetch()){
+
+				$compteur++;
+				$reponse['compteur'] = $compteur;
+				$rows[] = $reponse;
+
+			}$requete-> closeCursor();
+
+			return $rows;
+
+		}
+
+		public function build_new_file_other_service(){
+			include('connexion.php');
+			$code = '';
+
+			$i = 1;
+
+			$a = $this-> getTailleCompteur($i);
+
+			// $ref_dos = $code_cli.'-'.$code_mod_lic.date('y').'-'.$code_mod_trans.'-'.$code_march.'-'.$a;
+			$ref_dos = 'OTS'.date('y').'-'.$a;
+
+			while($this-> verifierExistanceMCAFile($ref_dos) == true){
+				$i++;
+
+				$a = $this-> getTailleCompteur($i);
+
+				$ref_dos = 'OTS'.date('y').'-'.$a;
+			}
+
+			return $ref_dos;
+		}
+		
+		public function new_file_other_service($ref_dos, $id_cli, $remarque){
+			include('connexion.php');
+			$entree['ref_dos'] = $ref_dos;
+			$entree['id_cli'] = $id_cli;
+			$entree['remarque'] = $remarque;
+
+			$requete = $connexion-> prepare("INSERT INTO dossier(ref_dos, id_cli, remarque, id_util, num_lic, id_mod_lic) 
+												VALUES(?, ?, ?, ?, 'N/A', 3)");
+			$requete-> execute(array($entree['ref_dos'], $entree['id_cli'], $entree['remarque'], $_SESSION['id_util']));
+
+		}
+
 	}
 ?>
