@@ -60197,6 +60197,144 @@
 
 		}
 
+		public function nbre_notification_demande_fond(){
+			include('connexion.php');
+
+			$sqlView = '';
+
+			if (($this-> getUtilisateur($_SESSION['id_util'])['visa_dept_df']=='0') && ($this-> getUtilisateur($_SESSION['id_util'])['visa_dir_df']=='0') && ($this-> getUtilisateur($_SESSION['id_util'])['visa_fin_df']=='0') && ($this-> getUtilisateur($_SESSION['id_util'])['decaiss_df']=='0')) {
+				$sqlView = ' AND df.id_util = '.$_SESSION['id_util'];
+			}
+
+			$requete = $connexion-> query("SELECT COUNT(
+													IF(df.date_visa_dept IS NULL,
+														df.id_df,
+														NULL
+													)
+												) AS nbre_no_visa_dept,
+												COUNT(
+													IF(df.date_visa_dept IS NOT NULL AND df.date_visa_dir IS NULL AND (df.a_facturer = '1' OR df.cash='1'),
+														df.id_df,
+														NULL
+													)
+												) AS nbre_no_visa_dir,
+												COUNT(
+													IF(df.date_visa_dept IS NOT NULL AND (df.date_visa_dir IS NOT NULL AND (df.a_facturer = '1' OR df.cash='1')) AND df.date_visa_fin IS NULL,
+														df.id_df,
+														NULL
+													)
+												) AS nbre_no_visa_fin,
+												COUNT(
+													IF(df.date_visa_dept IS NOT NULL AND (df.date_visa_dir IS NOT NULL AND (df.a_facturer = '1' OR df.cash='1')) AND df.date_visa_fin IS NOT NULL AND df.date_decaiss IS NULL,
+														df.id_df,
+														NULL
+													)
+												) AS nbre_no_decaiss
+											FROM demande_fond df, site, departement dept, client cl, utilisateur util
+											WHERE df.id_site = site.id_site
+												AND df.id_dept = dept.id_dept
+												AND df.id_cli = cl.id_cli
+												AND df.id_util = util.id_util
+												AND df.date_reject_dept IS NULL
+											$sqlView");
+
+			$reponse = $requete-> fetch();
+
+			return $reponse;
+
+		}
+
+		public function tableau_demande_fond_notification($niveau){
+			include('connexion.php');
+
+			$compteur = 0;
+
+			$table = '';
+
+			$sqlView = '';
+
+			if (($this-> getUtilisateur($_SESSION['id_util'])['visa_dept_df']=='0') && ($this-> getUtilisateur($_SESSION['id_util'])['visa_dir_df']=='0') && ($this-> getUtilisateur($_SESSION['id_util'])['visa_fin_df']=='0') && ($this-> getUtilisateur($_SESSION['id_util'])['decaiss_df']=='0')) {
+				$sqlView = ' AND df.id_util = '.$_SESSION['id_util'];
+			}
+
+			$sqlStatut = '';
+
+			if ($niveau=='1') {
+
+				$sqlStatut = ' AND df.date_visa_dept IS NULL ';
+
+			}else if ($niveau=='2') {
+
+				$sqlStatut = ' AND df.date_visa_dept IS NOT NULL AND df.date_visa_dir IS NULL AND (df.a_facturer = \'1\' OR df.cash=\'1\') ';
+
+			}else if ($niveau=='3') {
+
+				$sqlStatut = ' AND df.date_visa_dept IS NOT NULL AND (df.date_visa_dir IS NOT NULL AND (df.a_facturer = \'1\' OR df.cash=\'1\')) AND df.date_visa_fin IS NULL ';
+
+			}else if ($niveau=='4') {
+
+				$sqlStatut = ' df.date_visa_dept IS NOT NULL AND (df.date_visa_dir IS NOT NULL AND (df.a_facturer = \'1\' OR df.cash=\'1\')) AND df.date_visa_fin IS NOT NULL AND df.date_decaiss IS NULL ';
+
+			}
+
+			$requete = $connexion-> query("SELECT df.*,
+												DATE_FORMAT(df.date_create, '%d/%m/%Y') AS date_df,
+												cl.nom_cli AS nom_cli,
+												site.nom_site AS nom_site,
+												dept.nom_dept AS nom_dept,
+												util.nom_util AS nom_util,
+												IF(df.usd='1', 'USD', 'CDF') AS monnaie,
+												IF(df.cash='1', 'CASH', 'BANK') AS label_cash,
+												IF(df.id_util_reject_dept IS NOT NULL,
+													'Rejected',
+													IF(df.date_visa_dept IS NULL,
+														'Awaiting Dept. Approval',
+														IF(df.date_visa_dir IS NULL AND (df.a_facturer = '1' OR df.cash='1'),
+															'Awaiting Management Approval',
+															IF(df.date_visa_fin IS NULL,
+																'Awaiting Finance Approval',
+																IF(df.date_decaiss IS NULL,
+																	'Pending payment',
+																	'Paid'
+																)
+															)
+														)
+													)
+												) AS statut,
+												CONCAT('<span class=\"btn btn-xs btn-info\"\" onclick=\"modal_afficher_df(\'',df.id_df,'\')\">
+																<i class=\"fa fa-arrow-circle-right\"></i>
+															</span>') AS btn_action
+											FROM demande_fond df, site, departement dept, client cl, utilisateur util
+											WHERE df.id_site = site.id_site
+												AND df.id_dept = dept.id_dept
+												AND df.id_cli = cl.id_cli
+												AND df.id_util = util.id_util
+												AND df.date_reject_dept IS NULL
+											$sqlStatut
+											$sqlView");
+
+			while($reponse = $requete-> fetch()){
+				$compteur++;
+
+				$table .='
+    					<tr>
+							<td>'.$compteur.'</td>
+							<td style="text-align: center;">'.$reponse['id_df'].'</td>
+							<td style="text-align: center;">'.$reponse['date_df'].'</td>
+							<td style="text-align: center;">'.$reponse['nom_cli'].'</td>
+							<td style="text-align: center;">'.$reponse['nom_dept'].'</td>
+							<td style="text-align: center;">'.$reponse['nom_util'].'</td>
+							<td style="text-align: center;">'.$reponse['label_cash'].'</td>
+							<td style="text-align: center;">'.$reponse['monnaie'].'</td>
+							<td style="text-align: right;">'.number_format($reponse['montant'], 2, ',', ' ').'</td>
+							<td style="text-align: center;">'.$reponse['statut'].'</td>
+							<td style="text-align: center;">'.$reponse['btn_action'].'</td>
+						</tr>';
+			}$requete-> closeCursor();
+			return $table;
+
+		}
+
 		public function getDemandeFond($id_df){
 			include('connexion.php');
 			$entree['id_df'] = $id_df;
