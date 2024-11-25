@@ -60003,7 +60003,11 @@
 		public function demande_fond($statut=null){
 			include('connexion.php');
 
-			$sqlStatut = '';
+			$sqlView = '';
+
+			if (($this-> getUtilisateur($_SESSION['id_util'])['visa_dept_df']=='0') && ($this-> getUtilisateur($_SESSION['id_util'])['visa_dir_df']=='0') && ($this-> getUtilisateur($_SESSION['id_util'])['visa_fin_df']=='0') && ($this-> getUtilisateur($_SESSION['id_util'])['decaiss_df']=='0')) {
+				$sqlView = ' AND df.id_util = '.$_SESSION['id_util'];
+			}
 
 			// if ($statut == 'no_dept') {
 			// 	$sqlStatut = ' AND df.date_visa_dept IS NULL ';
@@ -60063,7 +60067,7 @@
 												AND df.id_dept = dept.id_dept
 												AND df.id_cli = cl.id_cli
 												AND df.id_util = util.id_util
-											$sqlStatut
+											$sqlView
 											ORDER BY df.id_df DESC");
 
 			while ($reponse = $requete-> fetch()) {
