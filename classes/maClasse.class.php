@@ -60607,14 +60607,14 @@
 			$a = $this-> getTailleCompteur($i);
 
 			// $ref_dos = $code_cli.'-'.$code_mod_lic.date('y').'-'.$code_mod_trans.'-'.$code_march.'-'.$a;
-			$ref_dos = 'OTS'.date('y').'-'.$a;
+			$ref_dos = 'OTS-MCA-'.date('Y').'-'.$a;
 
 			while($this-> verifierExistanceMCAFile($ref_dos) == true){
 				$i++;
 
 				$a = $this-> getTailleCompteur($i);
 
-				$ref_dos = 'OTS'.date('y').'-'.$a;
+				$ref_dos = 'OTS-MCA-'.date('Y').'-'.$a;
 			}
 
 			return $ref_dos;
