@@ -333,6 +333,35 @@
   <!-- /.modal-dialog -->
 </div>
 
+<div class="modal fade" id="modal_reject_dept_df">
+  <div class="modal-dialog modal-sm">
+    <form action="" method="POST" id="form_reject_dept_df">
+      <input type="hidden" name="id_df" id="id_df_reject_dept">
+      <input type="hidden" name="operation" value="reject_dept_df">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title"><i class="fa fa-times"></i> Refusal</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label for="motif_reject_dept">Reason for Refusal</label>
+          <textarea name="motif_reject_dept" id="motif_reject_dept" class="form-control form-control-sm "></textarea>
+        </div>
+      </div>
+      <div class="modal-footer justify-content-between">
+        <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal">Cancel</button>
+        <button type="submit" class="btn btn-sm btn-primary">Submit</button>
+      </div>
+    </div>
+    </form>
+    <!-- /.modal-content -->
+  </div>
+  <!-- /.modal-dialog -->
+</div>
+
 <script type="text/javascript">
 
   function get_dossier(id_dos, ref_dos){
