@@ -19,9 +19,9 @@
            <i class="fa fa-calculator nav-icon"></i>
             <?php
               if ($maClasse-> getUtilisateur($_SESSION['id_util'])['langue']=='ENG') {
-                echo 'Directory | Bank';
+                echo 'Directory | Cash';
               }else if ($maClasse-> getUtilisateur($_SESSION['id_util'])['langue']=='FR') {
-                echo 'Repertoire | Banque';
+                echo 'Repertoire | Cash';
               }
             ?>
 
@@ -60,9 +60,9 @@
                 <h5>
                   <?php
                     if ($maClasse-> getUtilisateur($_SESSION['id_util'])['langue']=='ENG') {
-                      echo 'Request Table | Bank';
+                      echo 'Request Table | Cash';
                     }else if ($maClasse-> getUtilisateur($_SESSION['id_util'])['langue']=='FR') {
-                      echo 'Table des Requettes | Banque';
+                      echo 'Table des Requettes | Cash';
                     }
                   ?>
                 </h5>

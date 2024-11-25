@@ -15,7 +15,13 @@
     <section class="content-header">
       <div class="container-fluid">
         <div class="header">
-          <h5><img src="../images/kpi.png" width="25px"> TRACKING KPI'S <span class="badge badge-primary text-md"><?php echo $_GET['debut'].' To '.$_GET['fin'];?></span></h5>
+          <h5>
+            <img src="../images/kpi.png" width="25px"> Key Perfomance indicator - Import 
+            <span class="float-right">
+              <input class="form-control-sm" type="date" name="debut" id="debut" onchange="get_tableau_kpis()">
+              <input class="form-control-sm" type="date" name="fin" id="fin" onchange="get_tableau_kpis()">
+            </span>
+          </h5>
         </div>
 
       </div><!-- /.container-fluid -->
@@ -26,7 +32,124 @@
     <section class="content">
       <div class="container-fluid" style="">
         <div class="row">
+          <div class="col-12 col-sm-6 col-md-3">
+            <div class="info-box">
+              <span class="info-box-icon bg-info elevation-1"><i class="fas fa-folder-open"></i></span>
 
+              <div class="info-box-content">
+                <span class="info-box-text">Total Files</span>
+                <span class="info-box-number">
+                  10
+                  <small>%</small>
+                </span>
+              </div>
+              <!-- /.info-box-content -->
+            </div>
+            <!-- /.info-box -->
+          </div>
+          <!-- /.col -->
+          <div class="col-12 col-sm-6 col-md-3">
+            <div class="info-box mb-3">
+              <span class="info-box-icon bg-olive elevation-1"><i class="fas fa-truck"></i></span>
+
+              <div class="info-box-content">
+                <span class="info-box-text">Total Trucks</span>
+                <span class="info-box-number">41,410</span>
+              </div>
+              <!-- /.info-box-content -->
+            </div>
+            <!-- /.info-box -->
+          </div>
+          <!-- /.col -->
+
+          <!-- fix for small devices only -->
+          <div class="clearfix hidden-md-up"></div>
+
+          <div class="col-12 col-sm-6 col-md-3">
+            <div class="info-box mb-3">
+              <span class="info-box-icon bg-success elevation-1"><i class="fas fa-calendar"></i></span>
+
+              <div class="info-box-content">
+                <span class="info-box-text">Period</span>
+                <span class="info-box-number">760</span>
+              </div>
+              <!-- /.info-box-content -->
+            </div>
+            <!-- /.info-box -->
+          </div>
+          <!-- /.col -->
+          <!-- /.col -->
+        </div>
+
+        <div class="row">
+          <div class="col-6">
+            <div class="card">
+              <!-- /.card-header -->
+              <!-- style="cursor:pointer" -->
+              <div class="card-body table-responsive p-0 small">
+                <table class=" table table-bordered table-hover text-nowrap table-head-fixed table-sm">
+                  <thead>
+                    <tr class="">
+                      <th style="text-align: center;" width="25%">Month</th>
+                      <th style="text-align: center;" width="25%">Total File</th>
+                      <th style="text-align: center;" width="25%">Average Days for payment</th>
+                      <th style="text-align: center;" width="25%">Target</th>
+                    </tr>
+                  </thead>
+                  <tbody id="get_tableau_kpis1">
+                   
+                  </tbody>
+                </table>
+              </div>
+              <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+          </div>
+
+          <div class="col-6">
+            <div class="card">
+              <!-- /.card-header -->
+              <!-- style="cursor:pointer" -->
+              <div class="card-body table-responsive p-0 small">
+                <table class=" table table-bordered table-hover text-nowrap table-head-fixed table-sm">
+                  <thead>
+                    <tr class="">
+                      <th style="text-align: center;" width="25%">Month</th>
+                      <th style="text-align: center;" width="25%">No. of Trucks</th>
+                      <th style="text-align: center;" width="25%">Average Border Clearance days</th>
+                      <th style="text-align: center;" width="25%">Target</th>
+                    </tr>
+                  </thead>
+                  <tbody id="get_tableau_kpis2">
+                   
+                  </tbody>
+                </table>
+              </div>
+              <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+          </div>
+
+          <div class="col-6">
+            <div class="card">
+              <!-- /.card-header -->
+              <!-- style="cursor:pointer" -->
+              <div class="card-body">
+                <div id="graphique_kpis_paiement_liquidation"></div>
+                <p class="highcharts-description">
+                    Bar chart showing horizontal columns. This chart type is often
+                    beneficial for smaller screens, as the user can scroll through the data
+                    vertically, and axis labels are easy to read.
+                </p>
+              </div>
+              <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+          </div>
+
+        </div>
+
+        <div class="row">
           <div class="col-12">
             <div class="card">
               <!-- /.card-header -->
@@ -114,16 +237,118 @@
   </div>
   <!-- /.modal-dialog -->
 </div>
+<input id="mois_kpis" type="text" >
 
   <?php 
 
   include("pied.php");
+  include("graphique.php");
   // ------------------------------------------------------------------------------------------------------
   // ------------------------------------------------------------------------------------------------------
   // ------------------------------------------------------------------------------------------------------
   ?>
 
 <script type="text/javascript">
+  $(document).ready(function(){
+    $('#debut').val('<?php echo $_GET['debut'];?>');
+    $('#fin').val('<?php echo $_GET['fin'];?>');
+    get_tableau_kpis();
+    loadGraphique();
+  });
+
+  function get_tableau_kpis(){
+
+  $('#spinner-div').show();
+
+    $.ajax({
+      type: 'post',
+      url: 'ajax.php',
+      data: {operation: 'get_tableau_kpis', debut: $('#debut').val(), fin: $('#fin').val()},
+      dataType: 'json',
+      success:function(data){
+        if (data.logout) {
+          alert(data.logout);
+          window.location="../deconnexion.php";
+        }else{
+          $('#get_tableau_kpis1').html(data.get_tableau_kpis1);
+          $('#get_tableau_kpis2').html(data.get_tableau_kpis2);
+          $('#mois_kpis').val(data.mois_kpis);
+
+    Highcharts.chart('graphique_kpis_paiement_liquidation', {
+        chart: {
+            type: 'bar'
+        },
+        title: {
+            text: 'Historic World Population by Region',
+            align: 'left'
+        },
+        subtitle: {
+            text: 'Source: <a ' +
+                'href="https://en.wikipedia.org/wiki/List_of_continents_and_continental_subregions_by_population"' +
+                'target="_blank">Wikipedia.org</a>',
+            align: 'left'
+        },
+        xAxis: {
+            categories: [data.mois],
+            // categories: ['January 2024', 'February 2024', 'March 2024', 'April 2024', 'May 2024', 'June 2024', 'July 2024', ],
+            title: {
+                text: null
+            },
+            gridLineWidth: 1,
+            lineWidth: 0
+        },
+        yAxis: {
+            min: 0,
+            title: {
+                text: 'Population (millions)',
+                align: 'high'
+            },
+            labels: {
+                overflow: 'justify'
+            },
+            gridLineWidth: 0
+        },
+        tooltip: {
+            valueSuffix: ' millions'
+        },
+        plotOptions: {
+            bar: {
+                borderRadius: '50%',
+                dataLabels: {
+                    enabled: true
+                },
+                groupPadding: 0.1
+            }
+        },
+        legend: {
+            layout: 'vertical',
+            align: 'right',
+            verticalAlign: 'top',
+            x: -40,
+            y: 80,
+            floating: true,
+            borderWidth: 1,
+            backgroundColor:
+                Highcharts.defaultOptions.legend.backgroundColor || '#FFFFFF',
+            shadow: true
+        },
+        credits: {
+            enabled: false
+        },
+        series: [{
+            name: 'Year 1990',
+            data: [631, 727, 3202, 721, 26]
+        }]
+    });
+
+        }
+      }
+    });
+
+  $('#spinner-div').hide();
+
+
+  }
 
   function filter_by_date(debut, fin){
     window.location.replace('kpi_tracking.php?debut='+debut+'&fin='+fin,'pop1','width=80,height=80');

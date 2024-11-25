@@ -521,7 +521,20 @@
             <?php
               $maClasse-> afficherMenuTracking();
             }
+            ?>
 
+
+          <li class="nav-item"  style="">
+            <a href="other_service.php" class="nav-link">
+              <i class="nav-icon fas fa-file"></i>
+              <span class="">
+              <p style="">
+                Other Services<br>
+              </p></span>
+            </a>
+          </li>
+
+            <?php
         if(!empty($maClasse-> getAffectationUtilisateurModule($_SESSION['id_util'], 16))){
           ?>
           <a href="#" class="nav-link active bg-danger">

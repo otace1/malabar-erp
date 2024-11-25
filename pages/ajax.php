@@ -3780,6 +3780,23 @@
 
 		echo json_encode($response);
 
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='build_new_file_other_service'){ 
+		
+		$response['ref_dos'] = $maClasse-> build_new_file_other_service();
+
+		echo json_encode($response);
+
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='file_other_service'){ 
+		
+		echo json_encode($maClasse-> file_other_service());
+
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='new_file_other_service'){ 
+		
+		$maClasse-> new_file_other_service($_POST['ref_dos'], $_POST['id_cli'], $_POST['remarque']);
+		$response['message'] = 'Done!';
+
+		echo json_encode($response);
+
 	}
 
 
