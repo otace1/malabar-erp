@@ -3547,15 +3547,16 @@
 	}elseif(isset($_POST['operation']) && $_POST['operation']=='creer_demande_fond'){ 
 
 		$maClasse-> creer_demande_fond($_POST['id_dept'], $_POST['id_site'], $_POST['beneficiaire'], $_POST['id_cli'], $_POST['cash'], $_POST['montant'], $_POST['usd'], $_POST['libelle'], $_POST['id_util_visa_dept'], $_POST['id_dep']);
+    	
+    	$id_df = $maClasse-> getLastDemandeFond()['id_df'];
 		
-		if (!empty($_FILES)) {
+		if (($_FILES['fichier_df']['name'])) {
 
     		$file = $_FILES['fichier_df'];
     		$filename = $file['name'];
     		$ext = pathinfo($filename, PATHINFO_EXTENSION);
 
     		$fichier_df = uniqid();
-    		$id_df = $maClasse-> getLastDemandeFond()['id_df'];
     		// $id_df = str_replace("/", "_", "$id_df");
 			
 			$dossier = '../demande_fond/'.$id_df;

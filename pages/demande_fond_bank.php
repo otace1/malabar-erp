@@ -115,7 +115,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <input type="hidden" id="id_df_print">
-        <h5 class="modal-title"><i class="fa fa-list"></i> Request Payment Detail <button class="btn btn-xs btn-primary" title="Print" onclick="window.open('generateur_demande_fond.php?id_df='+id_df_print.value+'&couleur=','pop1','width=500,height=700');"><i class="fa fa-print"></i></button></h5>
+        <h5 class="modal-title"><i class="fa fa-list"></i> Request Payment Detail <button class="btn btn-xs btn-primary" title="Print" onclick="window.open('generateur_demande_fond.php?id_df='+id_df_print.value+'&couleur=','pop1','width=500,height=700');"><i class="fa fa-print"></i> Print the Voucher</button></h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -669,7 +669,7 @@
           }
 
           if(data.decaiss_df=='1'){
-            btn_decaiss_df = '<span class=\"btn btn-xs btn-success\"\" onclick=\"modal_decaiss_df('+data.id_df+')\"><i class=\"fa fa-check\"></i></span>';
+            btn_decaiss_df = '<span class=\"btn btn-xs btn-success\"\" onclick=\"modal_decaiss_df('+data.id_df+')\"><i class=\"fa fa-check\"></i> Make the Payment</span>';
           }
 
           if (data.id_util_reject_dept!=null){
