@@ -60202,7 +60202,11 @@
 			$entree['id_df'] = $id_df;
 
 			$requete = $connexion-> prepare("SELECT df.*,
-												DATE_FORMAT(df.date_create, '%d/%m/%Y') AS date_df,
+												DATE_FORMAT(DATE_ADD(df.date_create, INTERVAL 2 HOUR), '%d/%m/%Y %H:%i:%s') AS date_df,
+												DATE_FORMAT(DATE_ADD(df.date_visa_dept, INTERVAL 2 HOUR), '%d/%m/%Y %H:%i:%s') AS date_visa_dept,
+												DATE_FORMAT(DATE_ADD(df.date_visa_dir, INTERVAL 2 HOUR), '%d/%m/%Y %H:%i:%s') AS date_visa_dir,
+												DATE_FORMAT(DATE_ADD(df.date_visa_fin, INTERVAL 2 HOUR), '%d/%m/%Y %H:%i:%s') AS date_visa_fin,
+												DATE_FORMAT(DATE_ADD(df.date_decaiss, INTERVAL 2 HOUR), '%d/%m/%Y %H:%i:%s') AS date_decaiss,
 												cl.nom_cli AS nom_cli,
 												site.nom_site AS nom_site,
 												util.nom_util AS nom_util,
