@@ -60273,7 +60273,7 @@
 
 			}else if ($niveau=='4') {
 
-				$sqlStatut = ' df.date_visa_dept IS NOT NULL AND (df.date_visa_dir IS NOT NULL AND (df.a_facturer = \'1\' OR df.cash=\'1\')) AND df.date_visa_fin IS NOT NULL AND df.date_decaiss IS NULL ';
+				$sqlStatut = ' AND df.date_visa_dept IS NOT NULL AND (df.date_visa_dir IS NOT NULL AND (df.a_facturer = \'1\' OR df.cash=\'1\')) AND df.date_visa_fin IS NOT NULL AND df.date_decaiss IS NULL ';
 
 			}
 
