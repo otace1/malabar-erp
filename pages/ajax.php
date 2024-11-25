@@ -3621,7 +3621,8 @@
 			$_POST['montant_fact'] = '0';
 		}else{
 
-			if (!empty($_FILES)) {
+			if (($_FILES['fichier_fact']['name'])) {
+			// if (!empty($_FILES)) {
 
 	    		$file = $_FILES['fichier_fact'];
 	    		$filename = $file['name'];
@@ -3795,6 +3796,18 @@
 		
 		$maClasse-> new_file_other_service($_POST['ref_dos'], $_POST['id_cli'], $_POST['remarque']);
 		$response['message'] = 'Done!';
+
+		echo json_encode($response);
+
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='nbre_notification_demande_fond'){ 
+		
+		$response = $maClasse-> nbre_notification_demande_fond();
+
+		echo json_encode($response);
+
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='tableau_demande_fond_notification'){ 
+		
+		$response['tableau_demande_fond_notification'] = $maClasse-> tableau_demande_fond_notification($_POST['niveau']);
 
 		echo json_encode($response);
 

@@ -65,7 +65,91 @@
     <section class="content">
       <div class="container-fluid" style="">
         <div class="row">
+        
+          <div class="col-md-3 col-sm-6 col-12">
+            <div class="small-box bg-secondary">
+              <div class="inner">
+                <h5>
+                  <span id="nbre_no_visa_dept"></span>
+                </h5>
 
+                <p> 
+                  Awaiting Dept. Approval
+                </p>
+              </div>
+              <div class="icon">
+                <i class="fas fa-exclamation"></i>
+              </div>
+              <a href="#" class="small-box-footer" onclick="modal_demande_fond_notification(1);">
+                Details <i class="fas fa-arrow-circle-right"></i>
+              </a>
+            </div>
+            <!-- /.info-box -->
+          </div>
+        
+          <div class="col-md-3 col-sm-6 col-12">
+            <div class="small-box bg-olive">
+              <div class="inner">
+                <h5>
+                  <span id="nbre_no_visa_dir"></span>
+                </h5>
+
+                <p> 
+                  Awaiting Management Approval
+                </p>
+              </div>
+              <div class="icon">
+                <i class="fas fa-exclamation"></i>
+              </div>
+              <a href="#" class="small-box-footer" onclick="modal_demande_fond_notification(2);">
+                Details <i class="fas fa-arrow-circle-right"></i>
+              </a>
+            </div>
+            <!-- /.info-box -->
+          </div>
+        
+          <div class="col-md-3 col-sm-6 col-12">
+            <div class="small-box bg-teal">
+              <div class="inner">
+                <h5>
+                  <span id="nbre_no_visa_fin"></span>
+                </h5>
+
+                <p> 
+                  Awaiting Finance Approval
+                </p>
+              </div>
+              <div class="icon">
+                <i class="fas fa-exclamation"></i>
+              </div>
+              <a href="#" class="small-box-footer" onclick="modal_demande_fond_notification(3);">
+                Details <i class="fas fa-arrow-circle-right"></i>
+              </a>
+            </div>
+            <!-- /.info-box -->
+          </div>
+        
+          <div class="col-md-3 col-sm-6 col-12">
+            <div class="small-box bg-warning">
+              <div class="inner">
+                <h5>
+                  <span id="nbre_no_decaiss"></span>
+                </h5>
+
+                <p> 
+                  Pending Payment
+                </p>
+              </div>
+              <div class="icon">
+                <i class="fas fa-exclamation"></i>
+              </div>
+              <a href="#" class="small-box-footer" onclick="modal_demande_fond_notification(4);">
+                Details <i class="fas fa-arrow-circle-right"></i>
+              </a>
+            </div>
+            <!-- /.info-box -->
+          </div>
+        
           <div class="col-12">
             <span id="message"></span>
           </div>
@@ -121,6 +205,55 @@
 
   include("pied.php");
   ?>
+
+<div class="modal fade" id="modal_demande_fond_notification">
+  <div class="modal-dialog modal-xl">
+   <!--  <form action="" method="POST" id="form_df">
+      <input type="hidden" name="id_dos" id="id_dos_edit">
+      <input type="hidden" name="operation" value="update_CVEE"> -->
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title"></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body row">
+        <div class="col-md-12">
+          <!-- <span id="detail_df"></span> -->
+          <input type="hidden" id="niveau_notification">
+          <table cellspacing="0" width="100%" class=" table hover table-dark display compact table-bordered table-striped table-sm small">
+            <thead>
+              <tr>
+                <th width="5%">#</th>
+                <th>No.</th>
+                <th>Date</th>
+                <th>Client</th>
+                <th>Depart.</th>
+                <th>Requestor</th>
+                <th>Category</th>
+                <th>Currency</th>
+                <th>Amount</th>
+                <th>Statut</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="tableau_demande_fond_notification">
+             
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <!-- <div class="modal-footer justify-content-between">
+        <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal">Cancel</button>
+        <button type="submit" class="btn btn-sm btn-primary">Submit</button>
+      </div> -->
+    </div>
+    <!-- </form> -->
+    <!-- /.modal-content -->
+  </div>
+  <!-- /.modal-dialog -->
+</div>
 
 <div class="modal fade" id="modal_afficher_df">
   <div class="modal-dialog modal-md">
@@ -364,6 +497,66 @@
 
 <script type="text/javascript">
 
+  $(document).ready(function(){
+
+    nbre_notification_demande_fond();
+
+  });
+
+  function nbre_notification_demande_fond(){
+    $('#spinner-div').show();
+
+   $.ajax({
+     type: "POST",
+     url: "ajax.php",
+     data: {operation: 'nbre_notification_demande_fond'},
+     dataType:"json",
+     success:function(data){
+       if (data.logout) {
+         alert(data.logout);
+         window.location="../deconnexion.php";
+       }else{
+         $('#nbre_no_visa_dept').html(data.nbre_no_visa_dept);
+         //visa_dir
+         $('#nbre_no_visa_dir').html(data.nbre_no_visa_dir);
+         //visa_fin
+         $('#nbre_no_visa_fin').html(data.nbre_no_visa_fin);
+         //decaiss
+         $('#nbre_no_decaiss').html(data.nbre_no_decaiss);
+       }
+     },
+     complete: function () {
+         $('#spinner-div').hide();//Request is complete so hide spinner
+     }
+   });
+
+  }
+
+  function modal_demande_fond_notification(niveau){
+    $('#spinner-div').show();
+    $('#niveau_notification').val(niveau);
+
+   $.ajax({
+     type: "POST",
+     url: "ajax.php",
+     data: {niveau: niveau, operation: 'tableau_demande_fond_notification'},
+     dataType:"json",
+     success:function(data){
+       if (data.logout) {
+         alert(data.logout);
+         window.location="../deconnexion.php";
+       }else{
+         $('#tableau_demande_fond_notification').html(data.tableau_demande_fond_notification);
+         $('#modal_demande_fond_notification').modal('show');
+       }
+     },
+     complete: function () {
+         $('#spinner-div').hide();//Request is complete so hide spinner
+     }
+   });
+
+  }
+
   function get_dossier(id_dos, ref_dos){
     $('#id_dos_search').val(id_dos);
     $('#label_ref_dos').val(ref_dos);
@@ -421,12 +614,14 @@
                 // $( '#form_reject_dept_df' ).each(function(){
                 //     this.reset();
                 // });
+                $('#modal_demande_fond_notification').modal('hide');
               }
             },
             complete: function () {
                 $('#modal_reject_dept_df').modal('hide');
                 modal_afficher_df(fd.get('id_df'));
                 $('#demande_fond').DataTable().ajax.reload();
+                nbre_notification_demande_fond();
                 $('#spinner-div').hide();//Request is complete so hide spinner
             }
           });
@@ -461,6 +656,7 @@
                 window.location="../deconnexion.php";
               }else{
                 $('#message').html(data.message);
+                $('#modal_demande_fond_notification').modal('hide');
                 // $( '#form_decaiss_df' ).each(function(){
                 //     this.reset();
                 // });
@@ -470,6 +666,7 @@
                 $('#modal_decaiss_df').modal('hide');
                 modal_afficher_df(fd.get('id_df'));
                 $('#demande_fond').DataTable().ajax.reload();
+                nbre_notification_demande_fond();
                 $('#spinner-div').hide();//Request is complete so hide spinner
             }
           });
@@ -519,6 +716,7 @@
             window.location="../deconnexion.php";
           }else{
             $('#message').html(data.message);
+                $('#modal_demande_fond_notification').modal('hide');
             $('#modal_afficher_df').modal('hide');
             $('#demande_fond').DataTable().ajax.reload();
           }
@@ -546,6 +744,7 @@
             window.location="../deconnexion.php";
           }else{
             $('#message').html(data.message);
+                $('#modal_demande_fond_notification').modal('hide');
             $('#modal_afficher_df').modal('hide');
             $('#demande_fond').DataTable().ajax.reload();
           }
@@ -582,6 +781,7 @@
                 window.location="../deconnexion.php";
               }else{
                 $('#message').html(data.message);
+                $('#modal_demande_fond_notification').modal('hide');
                 // $( '#form_visa_dept_df' ).each(function(){
                 //     this.reset();
                 // });
@@ -591,6 +791,7 @@
                 $('#modal_visa_dept_df').modal('hide');
                 modal_afficher_df(fd.get('id_df'));
                 $('#demande_fond').DataTable().ajax.reload();
+                nbre_notification_demande_fond();
                 $('#spinner-div').hide();//Request is complete so hide spinner
             }
           });
@@ -625,6 +826,7 @@
                 window.location="../deconnexion.php";
               }else{
                 $('#message').html(data.message);
+                $('#modal_demande_fond_notification').modal('hide');
                 // $( '#form_visa_dept_df' ).each(function(){
                 //     this.reset();
                 // });
@@ -634,6 +836,7 @@
                 $('#modal_visa_dept_df').modal('hide');
                 modal_afficher_df(fd.get('id_df'));
                 $('#demande_fond').DataTable().ajax.reload();
+                nbre_notification_demande_fond();
                 $('#spinner-div').hide();//Request is complete so hide spinner
             }
           });
@@ -648,7 +851,7 @@
     
     if($('#a_facturer').val()=='1'){
       $('#montant_fact_group').html('<label for="montant_fact">Amount to be Charged back</label><input type="number" step="0.01" name="montant_fact" id="montant_fact" class="form-control form-control-sm" required>');
-      $('#fichier_fact_group').html('<label for="fichier_fact">Support Document</label><input type="file" name="fichier_fact" id="fichier_fact" class="form-control form-control-sm" required>');
+      $('#fichier_fact_group').html('<label for="fichier_fact">Support Document</label><input type="file" name="fichier_fact" id="fichier_fact" class="form-control form-control-sm">');
     }else{
       $('#montant_fact_group').html('');
       $('#fichier_fact_group').html('');
@@ -874,6 +1077,7 @@
             },
             complete: function () {
                 $('#demande_fond').DataTable().ajax.reload();
+                nbre_notification_demande_fond();
                 $('#spinner-div').hide();//Request is complete so hide spinner
             }
           });

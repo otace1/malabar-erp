@@ -459,8 +459,9 @@
 
           console.log('somme = '+somme);
           console.log('montant = '+fd.get('montant'));
+          // Math.round(num * 100) / 100
 
-        if(somme!=fd.get('montant') && fd.get('id_dos_0')){
+        if((Math.round(somme * 100) / 100)!=(Math.round(fd.get('montant') * 100) / 100) && fd.get('id_dos_0')){
 
           console.log('somme = '+somme);
           console.log('montant = '+fd.get('montant'));
