@@ -60222,7 +60222,7 @@
 														<i class=\"fa fa-folder-open\"></i>
 													</span>') AS btn_fichier_decaiss,
 												CONCAT('<span class=\"btn btn-xs btn-info\" title=\"Support Document\" onclick=\"window.open(\'../demande_fond/',df.id_df,'/',df.fichier_df,'\',\'Support\',\'width=600,height=700\');\">
-														<i class=\"fa fa-folder-open\"></i>
+														<i class=\"fa fa-paperclip\"></i> Support Document File
 													</span>') AS support_doc
 												-- ,
 												-- CONCAT('<span class=\"btn btn-xs btn-info\"\" onclick=\"modal_afficher_df(\'',df.id_df,'\')\">
