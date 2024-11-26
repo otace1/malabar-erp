@@ -3811,6 +3811,53 @@
 
 		echo json_encode($response);
 
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='upload_dossier_df'){ 
+		
+		
+      $fichier_dossier_df = $_FILES['fichier_dossier_df']['tmp_name'];
+
+      require('../PHPExcel-1.8/Classes/PHPExcel.php');
+      require_once('../PHPExcel-1.8/Classes/PHPExcel/IOFactory.php');
+
+      $objExcel = PHPExcel_IOFactory::load($fichier_dossier_df);
+
+      $table = '';
+      $compteur = 0;
+
+      foreach ($objExcel->getWorksheetIterator() AS $worsheet) {
+        $highestRow = $worsheet-> getHighestRow();
+        for ($row=1; $row <= $highestRow ; $row++) { 
+          
+
+            $ref_dos = $worsheet-> getCellByColumnAndRow(0, $row)-> getValue();
+            // $date_dep = $worsheet-> getCellByColumnAndRow(1, $row)-> getFormattedValue();
+            $montant = $worsheet-> getCellByColumnAndRow(1, $row)-> getValue();
+
+            $id_dos = $maClasse-> getDossierRefDos($ref_dos)['id_dos'];
+
+            
+            if (isset($id_dos)) {
+
+    			$table .='<tr>
+    						<td>'.($compteur+1).'</td>
+    						<td><input type="hidden" id="id_dos_'.$compteur.'" name="id_dos_'.$compteur.'" value="'.$id_dos.'">'.$ref_dos.'<a href="#" class="text-primary" onclick="modal_search_dossier_df('.$compteur.')"><i class="fa fa-search"></i></a></td>
+    						<td><input type="number" step="0.001" class=" text-right" style="width: 8em;" id="montant_'.$compteur.'" name="montant_'.$compteur.'" value="'.$montant.'" required></td>
+    					</tr>';
+              
+              // $maClasse-> creerDepenseDossier($_POST['id_dep'], $id_dos, $date_dep, $montant, $assigned_to);
+
+    			$compteur++;
+            }
+
+        }
+        
+      }
+
+      $response['table_dossier_df'] = $table;
+      $response['nbre'] = $compteur+1;
+
+		echo json_encode($response);
+
 	}
 
 

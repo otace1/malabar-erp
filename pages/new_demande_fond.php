@@ -114,7 +114,7 @@
                   </div> -->
                   <div class="col-md-3">
                     <label for="montant">Amount</label>
-                    <input type="number" step="0.01" name="montant" id="montant" onkeyup="convert_usd();" class="form-control form-control-sm text-center " required>
+                    <input type="number" step="0.001" name="montant" id="montant" onkeyup="convert_usd();" class="form-control form-control-sm text-center " required>
                   </div>
                   <!-- <div class="col-md-3">
                     <label for="usd_net">USD Net Amount</label>
@@ -165,7 +165,7 @@
                       </tbody>
                       <tfoot>
                         <tr>
-                          <td><span class="btn btn-xs btn-info" onclick="ajouterLigne()"><i class="fa fa-plus"></i></span></td>
+                          <td colspan="2"><span class="btn btn-xs btn-info" onclick="ajouterLigne()"><i class="fa fa-plus"></i> Add File</span> <span class="btn btn-xs btn-success" onclick="$('#modal_upload_dossier_df').modal('show');"><i class="fa fa-upload"></i> Upload Excel File</span></td>
                         </tr>
                       </tfoot>
                     </table>
@@ -266,8 +266,40 @@
         </div>
       </div>
       <div class="modal-footer justify-content-between">
-        <button type="button" class="btn btn-xs btn-danger" data-dismiss="modal">Annuler</button>
-        <button type="submit" name="" class="btn btn-xs btn-primary">Valider</button>
+        <button type="button" class="btn btn-xs btn-danger" data-dismiss="modal">Cancel</button>
+        <button type="submit" name="" class="btn btn-xs btn-primary">Submit</button>
+      </div>
+    </div>
+    </form>
+    <!-- /.modal-content -->
+  </div>
+  <!-- /.modal-dialog -->
+</div>
+
+<div class="modal fade" id="modal_upload_dossier_df">
+  <div class="modal-dialog modal-sm">
+    <form id="form_upload_dossier_df" method="POST" action="" data-parsley-validate enctype="multipart/form-data">
+      <input type="hidden" name="operation" value="upload_dossier_df">
+    <div class="modal-content">
+      <div class="modal-header ">
+        <h4 class="modal-title"><i class="fa fa-upload"></i> Upload Excel File</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+
+          <div class="col-md-12">
+            <label for="x_card_code" class="control-label mb-1">File</label>
+            <input type="file" name="fichier_dossier_df" class="form-control form-control-sm cc-exp" required>
+          </div>
+
+        </div>
+      </div>
+      <div class="modal-footer justify-content-between">
+        <button type="button" class="btn btn-xs btn-danger" data-dismiss="modal">Cancel</button>
+        <button type="submit" name="" class="btn btn-xs btn-primary">Submit</button>
       </div>
     </div>
     </form>
@@ -282,6 +314,47 @@
 
     selectionnerDepenseAjax();
 
+  });
+
+  $(document).ready(function(){
+
+      $('#form_upload_dossier_df').submit(function(e){
+
+        e.preventDefault();
+
+        var fd = new FormData(this);
+
+        $('#spinner-div').show();
+        $('#modal_upload_dossier_df').modal('hide');
+
+        $.ajax({
+          type: 'post',
+          url: 'ajax.php',
+          processData: false,
+          contentType: false,
+          data: fd,
+          dataType: 'json',
+          success:function(data){
+            if (data.logout) {
+              alert(data.logout);
+              window.location="../deconnexion.php";
+            }else{
+              $( '#form_upload_dossier_df' ).each(function(){
+                  this.reset();
+              });
+
+              $('#table_marchandise_dossier').html(data.table_dossier_df);
+              $('#nbre').val(data.nbre);
+              // selectionnerDepenseAjax();
+            }
+          },
+          complete: function () {
+              // $('#dossier_cvee').DataTable().ajax.reload();
+              $('#spinner-div').hide();//Request is complete so hide spinner
+          }
+        });
+      });
+    
   });
 
   $(document).ready(function(){
@@ -457,14 +530,14 @@
 
         }
 
-          console.log('somme = '+somme);
-          console.log('montant = '+fd.get('montant'));
+          console.log('somme == '+(Math.round(somme * 100) / 100));
+          console.log('montant == '+(Math.round(fd.get('montant') * 100) / 100));
           // Math.round(num * 100) / 100
 
         if((Math.round(somme * 100) / 100)!=(Math.round(fd.get('montant') * 100) / 100) && fd.get('id_dos_0')){
 
-          console.log('somme = '+somme);
-          console.log('montant = '+fd.get('montant'));
+          console.log('somme = '+(Math.round(somme * 100) / 100));
+          console.log('montant = '+(Math.round(fd.get('montant') * 100) / 100));
 
           alert('Error! The balance isn\'t correct.');
 
