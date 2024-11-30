@@ -3612,6 +3612,7 @@
 		$response['visa_dir_df'] = $maClasse-> getUtilisateur($_SESSION['id_util'])['visa_dir_df'];
 		$response['visa_fin_df'] = $maClasse-> getUtilisateur($_SESSION['id_util'])['visa_fin_df'];
 		$response['decaiss_df'] = $maClasse-> getUtilisateur($_SESSION['id_util'])['decaiss_df'];
+		$response['nbre_dos'] = $maClasse-> get_nbre_dossier($_POST['id_df']);
 
 		echo json_encode($response);
 
