@@ -60349,6 +60349,7 @@
 												site.nom_site AS nom_site,
 												util.nom_util AS nom_util,
 												dept.nom_dept AS nom_dept,
+												dep.nom_dep AS nom_dep,
 												df.cash AS cash,
 												IF(df.cash='1', 'Cash', 'Bank') AS type_payment,
 												IF(df.usd='1', 'USD', 'CDF') AS monnaie,
@@ -60370,12 +60371,13 @@
 												-- CONCAT('<span class=\"btn btn-xs btn-info\"\" onclick=\"modal_afficher_df(\'',df.id_df,'\')\">
 												-- 				<i class=\"fa fa-arrow-circle-right\"></i>
 												-- 			</span>') AS btn_action
-											FROM demande_fond df, site, departement dept, client cl, utilisateur util
+											FROM demande_fond df, site, departement dept, client cl, utilisateur util, depense dep
 											WHERE df.id_site = site.id_site
 												AND df.id_dept = dept.id_dept
 												AND df.id_cli = cl.id_cli
 												AND df.id_util = util.id_util
-												AND df.id_df = ?");
+												AND df.id_df = ?
+												AND df.id_dep = dep.id_dep");
 			$requete-> execute(array($entree['id_df']));
 			$reponse=$requete-> fetch();
 			$reponse['nom_util_visa_dept'] = $this-> getUtilisateur($reponse['id_util_visa_dept'])['nom_util'];
@@ -60669,6 +60671,20 @@
 			}$requete-> closeCursor();
 			
 			return $table;
+
+		}
+
+		public function get_nbre_dossier($id_df){
+			include('connexion.php');
+			$compteur=0;
+			$entree['id_df'] = $id_df;
+
+			$requete = $connexion-> prepare("SELECT COUNT(*) AS nbre
+												FROM depense_dossier
+												WHERE id_df = ?");
+			$requete-> execute(array($entree['id_df']));
+			$reponse = $requete-> fetch();
+			return $reponse['nbre'];
 
 		}
 
