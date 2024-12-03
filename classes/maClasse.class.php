@@ -60041,6 +60041,7 @@
 												site.nom_site AS nom_site,
 												dept.nom_dept AS nom_dept,
 												util.nom_util AS nom_util,
+												dep.nom_dep AS nom_dep,
 												IF(df.usd='1', 'USD', 'CDF') AS monnaie,
 												IF(df.cash='1', 'CASH', 'BANK') AS label_cash,
 												IF(df.id_util_reject_dept IS NOT NULL,
@@ -60062,9 +60063,10 @@
 												CONCAT('<span class=\"btn btn-xs btn-info\"\" onclick=\"modal_afficher_df(\'',df.id_df,'\')\">
 																<i class=\"fa fa-arrow-circle-right\"></i>
 															</span>') AS btn_action
-											FROM demande_fond df, site, departement dept, client cl, utilisateur util
+											FROM demande_fond df, depense dep, site, departement dept, client cl, utilisateur util
 											WHERE df.id_site = site.id_site
 												AND df.id_dept = dept.id_dept
+												AND df.id_dep = dep.id_dep
 												AND df.id_cli = cl.id_cli
 												AND df.id_util = util.id_util
 											$sqlView
@@ -60096,6 +60098,7 @@
 												cl.nom_cli AS nom_cli,
 												site.nom_site AS nom_site,
 												dept.nom_dept AS nom_dept,
+												dep.nom_dep AS nom_dep,
 												util.nom_util AS nom_util,
 												IF(df.usd='1', 'USD', 'CDF') AS monnaie,
 												IF(df.cash='1', 'CASH', 'BANK') AS label_cash,
@@ -60118,9 +60121,10 @@
 												CONCAT('<span class=\"btn btn-xs btn-info\"\" onclick=\"modal_afficher_df(\'',df.id_df,'\')\">
 																<i class=\"fa fa-arrow-circle-right\"></i>
 															</span>') AS btn_action
-											FROM demande_fond df, site, departement dept, client cl, utilisateur util
+											FROM demande_fond df, depense dep, site, departement dept, client cl, utilisateur util
 											WHERE df.id_site = site.id_site
 												AND df.id_dept = dept.id_dept
+												AND df.id_dep = dep.id_dep
 												AND df.id_cli = cl.id_cli
 												AND df.id_util = util.id_util
 												AND df.cash = '0'
@@ -60153,6 +60157,7 @@
 												cl.nom_cli AS nom_cli,
 												site.nom_site AS nom_site,
 												dept.nom_dept AS nom_dept,
+												dep.nom_dep AS nom_dep,
 												util.nom_util AS nom_util,
 												IF(df.usd='1', 'USD', 'CDF') AS monnaie,
 												IF(df.cash='1', 'CASH', 'BANK') AS label_cash,
@@ -60175,9 +60180,10 @@
 												CONCAT('<span class=\"btn btn-xs btn-info\"\" onclick=\"modal_afficher_df(\'',df.id_df,'\')\">
 																<i class=\"fa fa-arrow-circle-right\"></i>
 															</span>') AS btn_action
-											FROM demande_fond df, site, departement dept, client cl, utilisateur util
+											FROM demande_fond df, depense dep, site, departement dept, client cl, utilisateur util
 											WHERE df.id_site = site.id_site
 												AND df.id_dept = dept.id_dept
+												AND df.id_dep = dep.id_dep
 												AND df.id_cli = cl.id_cli
 												AND df.id_util = util.id_util
 												AND df.cash = '1'
@@ -60397,9 +60403,11 @@
 			$somme=0;
 			$requete = $connexion-> prepare('SELECT dos.ref_dos AS ref_dos,
 													ddf.montant AS montant,
-													dep.nom_dep AS nom_dep
-												FROM dossier dos, demande_fond df, depense_dossier ddf, depense dep
-												WHERE dos.id_dos = ddf.id_dos
+													dep.nom_dep AS nom_dep,
+													march.nom_march AS nom_march
+												FROM dossier dos, demande_fond df, depense_dossier ddf, depense dep, marchandise march
+												WHERE march.id_march = dos.id_march
+													AND dos.id_dos = ddf.id_dos
 													AND ddf.id_dep = dep.id_dep
 													AND ddf.id_df = df.id_df
 													AND df.id_df = ?');
@@ -60411,8 +60419,9 @@
 				$tbl .= '
 						<tr>
 							<td width="5%" style="text-align: center; border: 1 solid black;">'.$compteur.'</td>
-							<td width="30%" style="text-align: center; border: 1 solid black;">'.$reponse['ref_dos'].'</td>
-							<td width="45%" style="text-align: center; border: 1 solid black;">'.$reponse['nom_dep'].'</td>
+							<td width="25%" style="text-align: center; border: 1 solid black;">'.$reponse['ref_dos'].'</td>
+							<td width="20%" style="text-align: center; border: 1 solid black;">'.$reponse['nom_march'].'</td>
+							<td width="30%" style="text-align: center; border: 1 solid black;">'.$reponse['nom_dep'].'</td>
 							<td width="20%" style="text-align: right; border: 1 solid black;">'.number_format($reponse['montant'], 2, ',', ' ').'</td>
 						</tr>
 					';
@@ -60468,6 +60477,21 @@
 													nom_recep_fond = ?
 												WHERE id_df = ?");
 			$requete-> execute(array($entree['ref_decaiss'], $entree['montant_decaiss'], $_SESSION['id_util'], $entree['nom_recep_fond'], $entree['id_df']));
+			// return $reponse;
+		}
+
+		public function decaiss_df_edit($id_df, $ref_decaiss, $montant_decaiss, $nom_recep_fond){
+			include('connexion.php');
+			$entree['id_df'] = $id_df;
+			$entree['ref_decaiss'] = $ref_decaiss;
+			$entree['montant_decaiss'] = $montant_decaiss;
+			$entree['nom_recep_fond'] = $nom_recep_fond;
+
+			$requete = $connexion-> prepare("UPDATE demande_fond
+												SET ref_decaiss = ?, montant_decaiss = ?,
+													nom_recep_fond = ?
+												WHERE id_df = ?");
+			$requete-> execute(array($entree['ref_decaiss'], $entree['montant_decaiss'], $entree['nom_recep_fond'], $entree['id_df']));
 			// return $reponse;
 		}
 
