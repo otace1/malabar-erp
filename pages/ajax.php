@@ -3859,6 +3859,39 @@
 
 		echo json_encode($response);
 
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='decaiss_df_edit'){ 
+
+		if (!empty($_FILES) && $_FILES['fichier_decaiss']['name']!='') {
+
+    		$file = $_FILES['fichier_decaiss'];
+    		$filename = $file['name'];
+    		$ext = pathinfo($filename, PATHINFO_EXTENSION);
+
+    		$fichier_decaiss = uniqid();
+    		$id_df = $_POST['id_df'];
+    		// $id_df = str_replace("/", "_", "$id_df");
+			
+			$dossier = '../demande_fond/'.$id_df;
+
+			if(!is_dir($dossier)){
+				mkdir("../demande_fond/$id_df", 0777);
+			}
+			$uploadFile = $dossier.'/'.$fichier_decaiss.'.'.$ext;
+			move_uploaded_file($file['tmp_name'], $uploadFile);
+
+    		$maClasse-> inserer_fichier_decaiss($id_df, $fichier_decaiss.'.'.$ext);
+
+    	}
+
+		$maClasse-> decaiss_df_edit($_POST['id_df'], $_POST['ref_decaiss'], $_POST['montant_decaiss'], $_POST['nom_recep_fond']);
+		$response['message'] = '
+	    				<div class="alert alert-success alert-dismissible" role="alert">
+		                  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+		                  <i class="fa fa-check"></i> The payment request <b>No.'.$_POST['id_df'].'</b> has been paid!
+		                </div>';
+
+		echo json_encode($response);
+
 	}
 
 

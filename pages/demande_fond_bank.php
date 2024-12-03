@@ -79,6 +79,7 @@
                       <th>Date</th>
                       <th>Client</th>
                       <th>Depart.</th>
+                      <th>Expense</th>
                       <th>Requestor</th>
                       <th>Category</th>
                       <th>Currency</th>
@@ -326,6 +327,47 @@
   <!-- /.modal-dialog -->
 </div>
 
+<div class="modal fade" id="modal_edit_decaiss_df">
+  <div class="modal-dialog modal-sm">
+    <form action="" method="POST" id="form_edit_decaiss_df">
+      <input type="hidden" name="id_df" id="id_df_decaiss_edit">
+      <input type="hidden" name="operation" value="decaiss_df_edit">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title"><i class="fa fa-edit"></i> Edit Payment</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label for="ref_decaiss">Voucher Ref.</label>
+          <input type="text" name="ref_decaiss" id="ref_decaiss_edit" class="form-control form-control-sm " required>
+        </div>
+        <div class="form-group">
+          <label for="montant_decaiss">Amount</label>
+          <input type="number" step="0.0001" name="montant_decaiss" id="montant_decaiss_edit" class="form-control form-control-sm " required>
+        </div>
+        <div class="form-group">
+          <label for="nom_recep_fond">Receipt By</label>
+          <input type="text" name="nom_recep_fond" id="nom_recep_fond_edit" class="form-control form-control-sm " required>
+        </div>
+        <div class="form-group">
+          <label for="fichier_decaiss">Voucher File</label>
+          <input type="file" name="fichier_decaiss" id="fichier_decaiss_edit" class="form-control form-control-sm ">
+        </div>
+      </div>
+      <div class="modal-footer justify-content-between">
+        <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal">Cancel</button>
+        <button type="submit" class="btn btn-sm btn-primary">Submit</button>
+      </div>
+    </div>
+    </form>
+    <!-- /.modal-content -->
+  </div>
+  <!-- /.modal-dialog -->
+</div>
+
 <script type="text/javascript">
 
   $(document).ready(function(){
@@ -359,6 +401,49 @@
             },
             complete: function () {
                 $('#modal_reject_dept_df').modal('hide');
+                modal_afficher_df(fd.get('id_df'));
+                $('#demande_fond').DataTable().ajax.reload();
+                $('#spinner-div').hide();//Request is complete so hide spinner
+            }
+          });
+
+        }
+
+      });
+    
+  });
+
+  $(document).ready(function(){
+
+      $('#form_edit_decaiss_df').submit(function(e){
+
+              e.preventDefault();
+
+        if(confirm('Do really you want to submit ?')) {
+
+          var fd = new FormData(this);
+          $('#spinner-div').show();
+
+          $.ajax({
+            type: 'post',
+            url: 'ajax.php',
+            processData: false,
+            contentType: false,
+            data: fd,
+            dataType: 'json',
+            success:function(data){
+              if (data.logout) {
+                alert(data.logout);
+                window.location="../deconnexion.php";
+              }else{
+                $('#message').html(data.message);
+                // $( '#form_edit_decaiss_df' ).each(function(){
+                //     this.reset();
+                // });
+              }
+            },
+            complete: function () {
+                $('#modal_edit_decaiss_df').modal('hide');
                 modal_afficher_df(fd.get('id_df'));
                 $('#demande_fond').DataTable().ajax.reload();
                 $('#spinner-div').hide();//Request is complete so hide spinner
@@ -414,6 +499,38 @@
     
   });
 
+  function modal_edit_decaiss_df(id_df){
+    $('#spinner-div').show();
+    $.ajax({
+      type: 'post',
+      url: 'ajax.php',
+      data: {operation: 'getDemandeFond', id_df: id_df},
+      dataType: 'json',
+      success:function(data){
+        if (data.logout) {
+          alert(data.logout);
+          window.location="../deconnexion.php";
+        }else{
+          charge_back();
+          $('#id_df_decaiss_edit').val(id_df);
+          // ref_decaiss
+          $('#ref_decaiss_edit').val(data.ref_decaiss);
+          // montant_decaiss
+          $('#montant_decaiss_edit').val(data.montant_decaiss);
+          // nom_recep_fond
+          $('#nom_recep_fond_edit').val(data.nom_recep_fond);
+          // date_recep_fond
+          $('#date_recep_fond_edit').val(data.date_recep_fond);
+          $('#modal_edit_decaiss_df').modal('show');
+        }
+      },
+      complete: function () {
+          $('#spinner-div').hide();//Request is complete so hide spinner
+      }
+    });
+
+  }
+  
   function modal_decaiss_df(id_df){
     $('#spinner-div').show();
     $.ajax({
@@ -657,6 +774,7 @@
           btn_visa_dir_df = '';
           btn_visa_fin_df = '';
           btn_decaiss_df = '';
+          btn_edit_decaiss_df = '';
 
           if(data.visa_dept_df=='1'){
             btn_visa_dept_df = '<span class=\"btn btn-xs btn-success\"\" onclick=\"modal_visa_dept_df('+data.id_df+')\"><i class=\"fa fa-check\"></i> Approve</span> <span class=\"btn btn-xs btn-danger\"\" onclick=\"modal_reject_dept_df('+data.id_df+')\"><i class=\"fa fa-times\"></i> Reject</span>';
@@ -670,6 +788,10 @@
 
           if(data.decaiss_df=='1'){
             btn_decaiss_df = '<span class=\"btn btn-xs btn-success\"\" onclick=\"modal_decaiss_df('+data.id_df+')\"><i class=\"fa fa-check\"></i> Make the Payment</span> <span class=\"btn btn-xs btn-danger\"\" onclick=\"modal_reject_dept_df('+data.id_df+')\"><i class=\"fa fa-times\"></i> Reject</span>';
+          }
+
+          if(data.decaiss_df=='1'){
+            btn_edit_decaiss_df = '<span class=\"btn btn-xs\" onclick=\"modal_edit_decaiss_df('+data.id_df+')\"><i class=\"fa fa-edit\"></i></span>';
           }
 
           if (data.id_util_reject_dept!=null){
@@ -689,7 +811,7 @@
           }else if ( data.date_visa_fin!=null && data.date_decaiss==null ) {
             $('#detail_df').html('<tr><td colspan="2" class="text-center"><span class="text-sm badge badge-warning">Pending Payment</span></td></tr><tr><td>Reference: </td><td><b>'+data.id_df+'</b></td></tr><tr><td>Date: </td><td><b>'+data.date_create+'</b></td></tr><tr><td>Departement: </td><td><b>'+data.nom_dept+'</b></td></tr><tr><td>Location: </td><td><b>'+data.nom_site+'</b></td></tr><tr><td>Requestor: </td><td><b>'+data.nom_util+'</b></td></tr><tr><td>Type Payment: </td><td><b>'+data.type_payment+'</b></td></tr><tr><td>Amount: </td><td><b>'+data.monnaie+' '+new Intl.NumberFormat().format(data.montant)+'</b></td></tr><tr><td>Chargeback: </td><td class="bg bg-warning"><b>'+data.monnaie+' '+new Intl.NumberFormat().format(data.montant_fact)+'</b> <b>'+data.btn_fichier_fact+'</b></td></tr><tr><td>Expense: </td><td><b>'+data.nom_dep+'</b></td></tr><tr><td>Motif: </td><td><b>'+data.libelle+'</b></td></tr><tr><td>Beneficiary: </td><td><b>'+data.beneficiaire+'</b></td></tr><tr><td>Client: </td><td><b>'+data.nom_cli+'</b></td></tr><tr><td>Nbre of Files: </td><td><b>'+data.nbre_dos+'</b></td></tr><tr><td>Support Doc.: </td><td><b>'+data.support_doc+'</b></td></tr><tr><td>Depart.Approval: </td><td><b>'+data.nom_util_visa_dept+' | '+data.date_visa_dept+'</b></td></tr><tr><td>Finance Approval: </td><td><b>'+data.nom_util_visa_fin+' | '+data.date_visa_fin+'</b></td></tr><tr><td>Action: </td><td>'+btn_decaiss_df+'</td></tr>');
           }else{
-            $('#detail_df').html('<tr><td colspan="2" class="text-center"><span class="text-sm badge badge-success">Paid</span></td></tr><tr><td>Reference: </td><td><b>'+data.id_df+'</b></td></tr><tr><td>Date: </td><td><b>'+data.date_create+'</b></td></tr><tr><td>Departement: </td><td><b>'+data.nom_dept+'</b></td></tr><tr><td>Location: </td><td><b>'+data.nom_site+'</b></td></tr><tr><td>Requestor: </td><td><b>'+data.nom_util+'</b></td></tr><tr><td>Type Payment: </td><td><b>'+data.type_payment+'</b></td></tr><tr><td>Amount: </td><td><b>'+data.monnaie+' '+new Intl.NumberFormat().format(data.montant)+'</b></td></tr><tr><td>Chargeback: </td><td class="bg bg-warning"><b>'+data.monnaie+' '+new Intl.NumberFormat().format(data.montant_fact)+'</b> <b>'+data.btn_fichier_fact+'</b></td></tr><tr><td>Expense: </td><td><b>'+data.nom_dep+'</b></td></tr><tr><td>Motif: </td><td><b>'+data.libelle+'</b></td></tr><tr><td>Beneficiary: </td><td><b>'+data.beneficiaire+'</b></td></tr><tr><td>Client: </td><td><b>'+data.nom_cli+'</b></td></tr><tr><td>Nbre of Files: </td><td><b>'+data.nbre_dos+'</b></td></tr><tr><td>Support Doc.: </td><td><b>'+data.support_doc+'</b></td></tr><tr><td>Depart.Approval: </td><td><b>'+data.nom_util_visa_dept+' | '+data.date_visa_dept+'</b></td></tr><tr><td>Finance Approval: </td><td><b>'+data.nom_util_visa_fin+' | '+data.date_visa_fin+'</b></td></tr><tr><td>Paid by: </td><td><b>'+data.nom_util_decaiss+' | '+data.date_decaiss+'</b></td></tr><tr><td>Voucher Ref.: </td><td><b>'+data.ref_decaiss+' | '+data.btn_fichier_decaiss+'</b></td></tr>');
+            $('#detail_df').html('<tr><td colspan="2" class="text-center"><span class="text-sm badge badge-success">Paid</span></td></tr><tr><td>Reference: </td><td><b>'+data.id_df+'</b></td></tr><tr><td>Date: </td><td><b>'+data.date_create+'</b></td></tr><tr><td>Departement: </td><td><b>'+data.nom_dept+'</b></td></tr><tr><td>Location: </td><td><b>'+data.nom_site+'</b></td></tr><tr><td>Requestor: </td><td><b>'+data.nom_util+'</b></td></tr><tr><td>Type Payment: </td><td><b>'+data.type_payment+'</b></td></tr><tr><td>Amount: </td><td><b>'+data.monnaie+' '+new Intl.NumberFormat().format(data.montant)+'</b></td></tr><tr><td>Chargeback: </td><td class="bg bg-warning"><b>'+data.monnaie+' '+new Intl.NumberFormat().format(data.montant_fact)+'</b> <b>'+data.btn_fichier_fact+'</b></td></tr><tr><td>Expense: </td><td><b>'+data.nom_dep+'</b></td></tr><tr><td>Motif: </td><td><b>'+data.libelle+'</b></td></tr><tr><td>Beneficiary: </td><td><b>'+data.beneficiaire+'</b></td></tr><tr><td>Client: </td><td><b>'+data.nom_cli+'</b></td></tr><tr><td>Nbre of Files: </td><td><b>'+data.nbre_dos+'</b></td></tr><tr><td>Support Doc.: </td><td><b>'+data.support_doc+'</b></td></tr><tr><td>Depart.Approval: </td><td><b>'+data.nom_util_visa_dept+' | '+data.date_visa_dept+'</b></td></tr><tr><td>Finance Approval: </td><td><b>'+data.nom_util_visa_fin+' | '+data.date_visa_fin+'</b></td></tr><tr><td>Paid by: </td><td><b>'+data.nom_util_decaiss+' | '+data.date_decaiss+'</b></td></tr><tr><td>Voucher Ref.: </td><td><b>'+data.ref_decaiss+' | '+data.btn_fichier_decaiss+'</b> '+btn_edit_decaiss_df+'</td></tr>');
           }
 
           $('#modal_afficher_df').modal('show');
@@ -748,6 +870,7 @@
       {"data":"nom_dept",
         className: 'dt-body-center'
       },
+      {"data":"nom_dep"},
       {"data":"nom_util"},
       {"data":"label_cash",
         className: 'dt-body-center'

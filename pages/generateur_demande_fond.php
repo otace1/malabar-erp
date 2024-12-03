@@ -253,8 +253,9 @@ $tbl = <<<EOD
 		</tr>
 		<tr>
 			<td width="5%" style="text-align: center; border: 1 solid black; font-weight: bold;"><span><br>#<br></span></td>
-			<td width="30%" style="text-align: center; border: 1 solid black; font-weight: bold;"><span><br>MCA File No<br></span></td>
-			<td width="45%" style="text-align: center; border: 1 solid black; font-weight: bold;"><span><br>Expense<br></span></td>
+			<td width="25%" style="text-align: center; border: 1 solid black; font-weight: bold;"><span><br>MCA File No<br></span></td>
+			<td width="20%" style="text-align: center; border: 1 solid black; font-weight: bold;"><span><br>Category<br></span></td>
+			<td width="30%" style="text-align: center; border: 1 solid black; font-weight: bold;"><span><br>Expense<br></span></td>
 			<td width="20%" style="text-align: center; border: 1 solid black; font-weight: bold;"><span><br>Amount<br></span></td>
 		</tr>
 		$dossier
