@@ -869,6 +869,7 @@
       {"data":"nom_dept",
         className: 'dt-body-center'
       },
+      {"data":"nom_dep"},
       {"data":"nom_util"},
       {"data":"label_cash",
         className: 'dt-body-center'
