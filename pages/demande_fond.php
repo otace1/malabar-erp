@@ -88,14 +88,14 @@
           </div>
         
           <div class="col-md-3 col-sm-6 col-12">
-            <div class="small-box bg-olive">
+            <div class="small-box bg-teal">
               <div class="inner">
                 <h5>
-                  <span id="nbre_no_visa_dir"></span>
+                  <span id="nbre_no_visa_fin"></span>
                 </h5>
 
                 <p> 
-                  Awaiting Management Approval
+                  Awaiting Finance Approval
                 </p>
               </div>
               <div class="icon">
@@ -109,14 +109,14 @@
           </div>
         
           <div class="col-md-3 col-sm-6 col-12">
-            <div class="small-box bg-teal">
+            <div class="small-box bg-olive">
               <div class="inner">
                 <h5>
-                  <span id="nbre_no_visa_fin"></span>
+                  <span id="nbre_no_visa_dir"></span>
                 </h5>
 
                 <p> 
-                  Awaiting Finance Approval
+                  Awaiting Management Approval
                 </p>
               </div>
               <div class="icon">
@@ -719,6 +719,7 @@
             $('#message').html(data.message);
                 $('#modal_demande_fond_notification').modal('hide');
             $('#modal_afficher_df').modal('hide');
+            nbre_notification_demande_fond();
             $('#demande_fond').DataTable().ajax.reload();
           }
         },
@@ -747,6 +748,7 @@
             $('#message').html(data.message);
                 $('#modal_demande_fond_notification').modal('hide');
             $('#modal_afficher_df').modal('hide');
+            nbre_notification_demande_fond();
             $('#demande_fond').DataTable().ajax.reload();
           }
         },
@@ -922,45 +924,7 @@
         }else{
 
           $('#id_df_print').val(id_df);
-
-          btn_visa_dept_df = '';
-          btn_visa_dir_df = '';
-          btn_visa_fin_df = '';
-          btn_decaiss_df = '';
-
-          if(data.visa_dept_df=='1'){
-            btn_visa_dept_df = '<span class=\"btn btn-xs btn-success\"\" onclick=\"modal_visa_dept_df('+data.id_df+')\"><i class=\"fa fa-check\"></i> Approve</span> <span class=\"btn btn-xs btn-danger\"\" onclick=\"modal_reject_dept_df('+data.id_df+')\"><i class=\"fa fa-times\"></i> Reject</span>';
-          }
-          if(data.visa_dir_df=='1'){
-            btn_visa_dir_df = '<span class=\"btn btn-xs btn-success\"\" onclick=\"ok_visa_dir_df('+data.id_df+')\"><i class=\"fa fa-check\"></i> Approve</span> <span class=\"btn btn-xs btn-danger\"\" onclick=\"modal_reject_dept_df('+data.id_df+')\"><i class=\"fa fa-times\"></i> Reject</span>';
-          }
-          if(data.visa_fin_df=='1'){
-            btn_visa_fin_df = '<span class=\"btn btn-xs btn-success\"\" onclick=\"ok_visa_fin_df('+data.id_df+')\"><i class=\"fa fa-check\"></i> Approve</span> <span class=\"btn btn-xs btn-danger\"\" onclick=\"modal_reject_dept_df('+data.id_df+')\"><i class=\"fa fa-times\"></i> Reject</span>';
-          }
-
-          if(data.decaiss_df=='1'){
-            btn_decaiss_df = '<span class=\"btn btn-xs btn-success\"\" onclick=\"modal_decaiss_df('+data.id_df+')\"><i class=\"fa fa-check\"></i> Make the Payment</span>';
-          }
-
-          if (data.id_util_reject_dept!=null){
-            $('#detail_df').html('<tr><td colspan="2" class="text-center"><span class="text-sm badge badge-danger">Rejected</span><br><span class="text-sm text text-danger">by '+data.nom_util_reject_dept+' | '+data.date_reject_dept+' <br> '+data.motif_reject_dept+'</span></td></tr><tr><td>Reference: </td><td><b>'+data.id_df+'</b></td></tr><tr><td>Date: </td><td><b>'+data.date_create+'</b></td></tr><tr><td>Departement: </td><td><b>'+data.nom_dept+'</b></td></tr><tr><td>Location: </td><td><b>'+data.nom_site+'</b></td></tr><tr><td>Requestor: </td><td><b>'+data.nom_util+'</b></td></tr><tr><td>Type Payment: </td><td><b>'+data.type_payment+'</b></td></tr><tr><td>Amount: </td><td><b>'+data.monnaie+' '+new Intl.NumberFormat().format(data.montant)+'</b></td></tr><tr><td>Expense: </td><td><b>'+data.nom_dep+'</b></td></tr><tr><td>Motif: </td><td><b>'+data.libelle+'</b></td></tr><tr><td>Beneficiary: </td><td><b>'+data.beneficiaire+'</b></td></tr><tr><td>Client: </td><td><b>'+data.nom_cli+'</b></td></tr><tr><td>Nbre of Files: </td><td><b>'+data.nbre_dos+'</b></td></tr><tr><td>Support Doc.: </td><td><b>'+data.support_doc+'</b></td></tr><tr><td>Depart.Approval: </td><td><b>'+data.nom_util_visa_dept+' | '+data.date_visa_dept+'</b></td></tr><tr><td>Finance Approval: </td><td><b>'+data.nom_util_visa_fin+' | '+data.date_visa_fin+'</b></td></tr><tr><td>Paid by: </td><td><b>'+data.nom_util_decaiss+' | '+data.date_decaiss+'</b></td></tr><tr><td>Voucher Ref.: </td><td><b>'+data.ref_decaiss+' | '+data.btn_fichier_decaiss+'</b></td></tr>');
-          }else if (data.date_visa_dept==null) {
-
-            $('#detail_df').html('<tr><td colspan="2" class="text-center"><span class="text-sm badge badge-warning">Awaiting Departement Approval</span></td></tr><tr><td>Reference: </td><td><b>'+data.id_df+'</b></td></tr><tr><td>Date: </td><td><b>'+data.date_create+'</b></td></tr><tr><td>Departement: </td><td><b>'+data.nom_dept+'</b></td></tr><tr><td>Location: </td><td><b>'+data.nom_site+'</b></td></tr><tr><td>Requestor: </td><td><b>'+data.nom_util+'</b></td></tr><tr><td>Type Payment: </td><td><b>'+data.type_payment+'</b></td></tr><tr><td>Amount: </td><td><b>'+data.monnaie+' '+new Intl.NumberFormat().format(data.montant)+'</b></td></tr><tr><td>Expense: </td><td><b>'+data.nom_dep+'</b></td></tr><tr><td>Motif: </td><td><b>'+data.libelle+'</b></td></tr><tr><td>Beneficiary: </td><td><b>'+data.beneficiaire+'</b></td></tr><tr><td>Client: </td><td><b>'+data.nom_cli+'</b></td></tr><tr><td>Nbre of Files: </td><td><b>'+data.nbre_dos+'</b></td></tr><tr><td>Support Doc.: </td><td><b>'+data.support_doc+'</b></td></tr><tr><td>Action: </td><td>'+btn_visa_dept_df+'</td></tr>');
-
-          }else if (data.date_visa_dept!=null && data.date_visa_dir==null && (data.a_facturer=='1' || data.cash=='1')) {
-
-            $('#detail_df').html('<tr><td colspan="2" class="text-center"><span class="text-sm badge badge-info">Awaiting Management Approval</span></td></tr><tr><td>Reference: </td><td><b>'+data.id_df+'</b></td></tr><tr><td>Date: </td><td><b>'+data.date_create+'</b></td></tr><tr><td>Departement: </td><td><b>'+data.nom_dept+'</b></td></tr><tr><td>Location: </td><td><b>'+data.nom_site+'</b></td></tr><tr><td>Requestor: </td><td><b>'+data.nom_util+'</b></td></tr><tr><td>Type Payment: </td><td><b>'+data.type_payment+'</b></td></tr><tr><td>Amount: </td><td><b>'+data.monnaie+' '+new Intl.NumberFormat().format(data.montant)+'</b></td><tr><td>Chargeback: </td><td class="bg bg-warning"><b>'+data.monnaie+' '+new Intl.NumberFormat().format(data.montant_fact)+'</b> <b>'+data.btn_fichier_fact+'</b></td></tr><tr><td>Expense: </td><td><b>'+data.nom_dep+'</b></td></tr><tr><td>Motif: </td><td><b>'+data.libelle+'</b></td></tr><tr><td>Beneficiary: </td><td><b>'+data.beneficiaire+'</b></td></tr><tr><td>Client: </td><td><b>'+data.nom_cli+'</b></td></tr><tr><td>Nbre of Files: </td><td><b>'+data.nbre_dos+'</b></td></tr><tr><td>Support Doc.: </td><td><b>'+data.support_doc+'</b></td></tr><tr><td>Depart.Approval: </td><td><b>'+data.nom_util_visa_dept+' | '+data.date_visa_dept+'</b></td></tr><tr><td>Action: </td><td>'+btn_visa_dir_df+'</td></tr>');
-
-          }else if ( data.date_visa_dept!=null && ((data.date_visa_dir!=null && data.a_facturer=='1') || data.a_facturer=='0') && data.date_visa_fin==null ) {
-
-            $('#detail_df').html('<tr><td colspan="2" class="text-center"><span class="text-sm badge badge-warning">Awaiting Finance Approval</span></td></tr><tr><td>Reference: </td><td><b>'+data.id_df+'</b></td></tr><tr><td>Date: </td><td><b>'+data.date_create+'</b></td></tr><tr><td>Departement: </td><td><b>'+data.nom_dept+'</b></td></tr><tr><td>Location: </td><td><b>'+data.nom_site+'</b></td></tr><tr><td>Requestor: </td><td><b>'+data.nom_util+'</b></td></tr><tr><td>Type Payment: </td><td><b>'+data.type_payment+'</b></td></tr><tr><td>Amount: </td><td><b>'+data.monnaie+' '+new Intl.NumberFormat().format(data.montant)+'</b></td><tr><td>Chargeback: </td><td class="bg bg-warning"><b>'+data.monnaie+' '+new Intl.NumberFormat().format(data.montant_fact)+'</b> <b>'+data.btn_fichier_fact+'</b></td></tr><tr><td>Expense: </td><td><b>'+data.nom_dep+'</b></td></tr><tr><td>Motif: </td><td><b>'+data.libelle+'</b></td></tr><tr><td>Beneficiary: </td><td><b>'+data.beneficiaire+'</b></td></tr><tr><td>Client: </td><td><b>'+data.nom_cli+'</b></td></tr><tr><td>Nbre of Files: </td><td><b>'+data.nbre_dos+'</b></td></tr><tr><td>Support Doc.: </td><td><b>'+data.support_doc+'</b></td></tr><tr><td>Depart.Approval: </td><td><b>'+data.nom_util_visa_dept+' | '+data.date_visa_dept+'</b></td></tr><tr><td>Action: </td><td>'+btn_visa_fin_df+'</td></tr>');
-
-          }else if ( data.date_visa_fin!=null && data.date_decaiss==null ) {
-            $('#detail_df').html('<tr><td colspan="2" class="text-center"><span class="text-sm badge badge-warning">Pending Payment</span></td></tr><tr><td>Reference: </td><td><b>'+data.id_df+'</b></td></tr><tr><td>Date: </td><td><b>'+data.date_create+'</b></td></tr><tr><td>Departement: </td><td><b>'+data.nom_dept+'</b></td></tr><tr><td>Location: </td><td><b>'+data.nom_site+'</b></td></tr><tr><td>Requestor: </td><td><b>'+data.nom_util+'</b></td></tr><tr><td>Type Payment: </td><td><b>'+data.type_payment+'</b></td></tr><tr><td>Amount: </td><td><b>'+data.monnaie+' '+new Intl.NumberFormat().format(data.montant)+'</b></td></tr><tr><td>Chargeback: </td><td class="bg bg-warning"><b>'+data.monnaie+' '+new Intl.NumberFormat().format(data.montant_fact)+'</b> <b>'+data.btn_fichier_fact+'</b></td></tr><tr><td>Expense: </td><td><b>'+data.nom_dep+'</b></td></tr><tr><td>Motif: </td><td><b>'+data.libelle+'</b></td></tr><tr><td>Beneficiary: </td><td><b>'+data.beneficiaire+'</b></td></tr><tr><td>Client: </td><td><b>'+data.nom_cli+'</b></td></tr><tr><td>Nbre of Files: </td><td><b>'+data.nbre_dos+'</b></td></tr><tr><td>Support Doc.: </td><td><b>'+data.support_doc+'</b></td></tr><tr><td>Depart.Approval: </td><td><b>'+data.nom_util_visa_dept+' | '+data.date_visa_dept+'</b></td></tr><tr><td>Finance Approval: </td><td><b>'+data.nom_util_visa_fin+' | '+data.date_visa_fin+'</b></td></tr><tr><td>Action: </td><td>'+btn_decaiss_df+'</td></tr>');
-          }else{
-            $('#detail_df').html('<tr><td colspan="2" class="text-center"><span class="text-sm badge badge-success">Paid</span></td></tr><tr><td>Reference: </td><td><b>'+data.id_df+'</b></td></tr><tr><td>Date: </td><td><b>'+data.date_create+'</b></td></tr><tr><td>Departement: </td><td><b>'+data.nom_dept+'</b></td></tr><tr><td>Location: </td><td><b>'+data.nom_site+'</b></td></tr><tr><td>Requestor: </td><td><b>'+data.nom_util+'</b></td></tr><tr><td>Type Payment: </td><td><b>'+data.type_payment+'</b></td></tr><tr><td>Amount: </td><td><b>'+data.monnaie+' '+new Intl.NumberFormat().format(data.montant)+'</b></td></tr><tr><td>Chargeback: </td><td class="bg bg-warning"><b>'+data.monnaie+' '+new Intl.NumberFormat().format(data.montant_fact)+'</b> <b>'+data.btn_fichier_fact+'</b></td></tr><tr><td>Expense: </td><td><b>'+data.nom_dep+'</b></td></tr><tr><td>Motif: </td><td><b>'+data.libelle+'</b></td></tr><tr><td>Beneficiary: </td><td><b>'+data.beneficiaire+'</b></td></tr><tr><td>Client: </td><td><b>'+data.nom_cli+'</b></td></tr><tr><td>Nbre of Files: </td><td><b>'+data.nbre_dos+'</b></td></tr><tr><td>Support Doc.: </td><td><b>'+data.support_doc+'</b></td></tr><tr><td>Depart.Approval: </td><td><b>'+data.nom_util_visa_dept+' | '+data.date_visa_dept+'</b></td></tr><tr><td>Finance Approval: </td><td><b>'+data.nom_util_visa_fin+' | '+data.date_visa_fin+'</b></td></tr><tr><td>Paid by: </td><td><b>'+data.nom_util_decaiss+' | '+data.date_decaiss+'</b></td></tr><tr><td>Voucher Ref.: </td><td><b>'+data.ref_decaiss+' | '+data.btn_fichier_decaiss+'</b></td></tr>');
-          }
+          $('#detail_df').html(data.detail_df);
 
           $('#modal_afficher_df').modal('show');
         }

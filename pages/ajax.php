@@ -3614,6 +3614,142 @@
 		$response['decaiss_df'] = $maClasse-> getUtilisateur($_SESSION['id_util'])['decaiss_df'];
 		$response['nbre_dos'] = $maClasse-> get_nbre_dossier($_POST['id_df']);
 
+		$response['detail_df'] = '';
+		$titre = '';
+		$btn_action = '';
+      	$btn_visa_dept_df = '';
+      	$btn_visa_dir_df = '';
+      	$btn_visa_fin_df = '';
+      	$btn_decaiss_df = '';
+
+          if($response['visa_dept_df']=='1'){
+            $btn_visa_dept_df = '<span class="btn btn-xs btn-success" onclick="modal_visa_dept_df('.$response['id_df'].')"><i class="fa fa-check"></i> Approve</span> <span class="btn btn-xs btn-danger" onclick="modal_reject_dept_df('.$response['id_df'].')"><i class="fa fa-times"></i> Reject</span>';
+          }
+          if($response['visa_dir_df']=='1'){
+            $btn_visa_dir_df = '<span class="btn btn-xs btn-success" onclick="ok_visa_dir_df('.$response['id_df'].')"><i class="fa fa-check"></i> Approve</span> <span class="btn btn-xs btn-danger" onclick="modal_reject_dept_df('.$response['id_df'].')"><i class="fa fa-times"></i> Reject</span>';
+          }
+          if($response['visa_fin_df']=='1'){
+            $btn_visa_fin_df = '<span class="btn btn-xs btn-success" onclick="ok_visa_fin_df('.$response['id_df'].')"><i class="fa fa-check"></i> Approve</span> <span class="btn btn-xs btn-danger" onclick="modal_reject_dept_df('.$response['id_df'].')"><i class="fa fa-times"></i> Reject</span>';
+          }
+
+          if($response['decaiss_df']=='1'){
+            $btn_decaiss_df = '<span class="btn btn-xs btn-success" onclick="modal_decaiss_df('.$response['id_df'].')"><i class="fa fa-check"></i> Make the Payment</span>';
+          }
+
+		if ($response['id_util_reject_dept']!=null){
+
+			$titre ='<span class="text-sm badge badge-danger">Rejected</span><br><span class="text-sm text text-danger">by '.$response['nom_util_reject_dept'].' | '.$response['date_reject_dept'].' <br> '.$response['motif_reject_dept'].'</span>';
+
+		}else if ($response['date_visa_dept']==null){
+
+			$titre ='<span class="text-sm badge badge-warning">Awaiting Departement Approval</span>';
+			$btn_action = $btn_visa_dept_df;
+
+		}else if ($response['date_visa_fin']==null){
+
+			$titre ='<span class="text-sm badge badge-warning">Awaiting Finance Approval</span>';
+			$btn_action = $btn_visa_fin_df;
+
+		}else if ($response['date_visa_dir']==null && ($response['cash']=='1'||$response['a_facturer']='1')){
+
+			$titre ='<span class="text-sm badge badge-warning">Awaiting Management Approval</span>';
+			$btn_action = $btn_visa_dir_df;
+
+		}else if ($response['date_decaiss']==null){
+
+			$titre ='<span class="text-sm badge badge-warning">Pending Payment</span>';
+			$btn_action = $btn_decaiss_df;
+
+		}else{
+
+			$titre ='<span class="text-sm badge badge-success">Paid</span>';
+			$btn_action = '';
+
+		}
+
+		$response['detail_df'] = '
+			<tr>
+				<td colspan="2" class="text-center">'.$titre.'</td>
+			</tr>
+			<tr>
+				<td>Reference: </td>
+				<td><b>'.$response['id_df'].'</b></td>
+			</tr>
+			<tr>
+				<td>Date: </td>
+				<td><b>'.$response['date_create'].'</b></td>
+			</tr>
+			<tr>
+				<td>Departement: </td>
+				<td><b>'.$response['nom_dept'].'</b></td>
+			</tr>
+			<tr>
+				<td>Location: </td>
+				<td><b>'.$response['nom_site'].'</b></td>
+			</tr>
+			<tr>
+				<td>Requestor: </td>
+				<td><b>'.$response['nom_util'].'</b></td>
+			</tr>
+			<tr>
+				<td>Type Payment: </td>
+				<td><b>'.$response['type_payment'].'</b></td></tr>
+			<tr>
+				<td>Amount: </td>
+				<td><b>'.$response['monnaie'].' '.number_format($response['montant'], 2, ',', ' ').'</b></td>
+			</tr>
+			<tr>
+				<td>Chargeback: </td>
+				<td class="bg bg-warning"><b>'.$response['monnaie'].' '.number_format($response['montant_fact'], 2, ',', ' ').'</b> <b>'.$response['btn_fichier_fact'].'</b></td></tr>
+			<tr>
+				<td>Expense: </td>
+				<td><b>'.$response['nom_dep'].'</b></td>
+			</tr>
+			<tr>
+				<td>Motif: </td>
+				<td><b>'.$response['libelle'].'</b></td>
+			</tr>
+			<tr>
+				<td>Beneficiary: </td>
+				<td><b>'.$response['beneficiaire'].'</b></td>
+			</tr>
+			<tr>
+				<td>Client: </td>
+				<td><b>'.$response['nom_cli'].'</b></td>
+			</tr>
+			<tr>
+				<td>Nbre of Files: </td>
+				<td><b>'.$response['nbre_dos'].'</b></td>
+			</tr>
+			<tr>
+				<td>Support Doc.: </td>
+				<td><b>'.$response['support_doc'].'</b></td>
+			</tr>
+			<tr>
+				<td>Depart.Approval: </td>
+				<td><b>'.$response['nom_util_visa_dept'].'  '.$response['date_visa_dept'].'</b></td>
+			</tr>
+			<tr>
+				<td>Finance Approval: </td>
+				<td><b>'.$response['nom_util_visa_fin'].'  '.$response['date_visa_fin'].'</b></td>
+			</tr>
+			<tr>
+				<td>Management Approval: </td>
+				<td><b>'.$response['nom_util_visa_dir'].'  '.$response['date_visa_dir'].'</b></td>
+			</tr>
+			<tr>
+				<td>Paid by: </td>
+				<td><b>'.$response['nom_util_decaiss'].'  '.$response['date_decaiss'].'</b></td>
+			</tr>
+			<tr>
+				<td>Voucher Ref.: </td>
+				<td><b>'.$response['ref_decaiss'].'  '.$response['btn_fichier_decaiss'].'</b></td>
+			</tr>
+			<tr>
+				<td>Action: </td>
+				<td>'.$btn_action.'</td>
+			</tr>';
+	
 		echo json_encode($response);
 
 	}elseif(isset($_POST['operation']) && $_POST['operation']=='visa_dept_df'){ 
