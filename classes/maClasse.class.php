@@ -47583,14 +47583,15 @@
 												dept.nom_dept AS nom_dept,
 												util.nom_util AS nom_util,
 												IF(df.usd='1', 'USD', 'CDF') AS monnaie,
+												
 												IF(df.id_util_reject_dept IS NOT NULL,
 													'Rejected',
 													IF(df.date_visa_dept IS NULL,
 														'Awaiting Dept. Approval',
-														IF(df.date_visa_dir IS NULL AND (df.a_facturer = '1' OR df.cash='1'),
-															'Awaiting Management Approval',
-															IF(df.date_visa_fin IS NULL,
-																'Awaiting Finance Approval',
+														IF(df.date_visa_fin IS NULL,
+															'Awaiting Finance Approval',
+															IF(df.date_visa_dir IS NULL AND (df.a_facturer = '1' OR df.cash='1'),
+																'Awaiting Management Approval',
 																IF(df.date_decaiss IS NULL,
 																	'Pending payment',
 																	'Paid'
@@ -47691,14 +47692,15 @@
 												dept.nom_dept AS nom_dept,
 												util.nom_util AS nom_util,
 												IF(df.usd='1', 'USD', 'CDF') AS monnaie,
+												
 												IF(df.id_util_reject_dept IS NOT NULL,
 													'Rejected',
 													IF(df.date_visa_dept IS NULL,
 														'Awaiting Dept. Approval',
-														IF(df.date_visa_dir IS NULL AND (df.a_facturer = '1' OR df.cash='1'),
-															'Awaiting Management Approval',
-															IF(df.date_visa_fin IS NULL,
-																'Awaiting Finance Approval',
+														IF(df.date_visa_fin IS NULL,
+															'Awaiting Finance Approval',
+															IF(df.date_visa_dir IS NULL AND (df.a_facturer = '1' OR df.cash='1'),
+																'Awaiting Management Approval',
 																IF(df.date_decaiss IS NULL,
 																	'Pending payment',
 																	'Paid'
@@ -60044,14 +60046,30 @@
 												dep.nom_dep AS nom_dep,
 												IF(df.usd='1', 'USD', 'CDF') AS monnaie,
 												IF(df.cash='1', 'CASH', 'BANK') AS label_cash,
+												-- IF(df.id_util_reject_dept IS NOT NULL,
+												-- 	'Rejected',
+												-- 	IF(df.date_visa_dept IS NULL,
+												-- 		'Awaiting Dept. Approval',
+												-- 		IF(df.date_visa_dir IS NULL AND (df.a_facturer = '1' OR df.cash='1'),
+												-- 			'Awaiting Management Approval',
+												-- 			IF(df.date_visa_fin IS NULL,
+												-- 				'Awaiting Finance Approval',
+												-- 				IF(df.date_decaiss IS NULL,
+												-- 					'Pending payment',
+												-- 					'Paid'
+												-- 				)
+												-- 			)
+												-- 		)
+												-- 	)
+												-- ) AS statut,
 												IF(df.id_util_reject_dept IS NOT NULL,
 													'Rejected',
 													IF(df.date_visa_dept IS NULL,
 														'Awaiting Dept. Approval',
-														IF(df.date_visa_dir IS NULL AND (df.a_facturer = '1' OR df.cash='1'),
-															'Awaiting Management Approval',
-															IF(df.date_visa_fin IS NULL,
-																'Awaiting Finance Approval',
+														IF(df.date_visa_fin IS NULL,
+															'Awaiting Finance Approval',
+															IF(df.date_visa_dir IS NULL AND (df.a_facturer = '1' OR df.cash='1'),
+																'Awaiting Management Approval',
 																IF(df.date_decaiss IS NULL,
 																	'Pending payment',
 																	'Paid'
@@ -60102,14 +60120,15 @@
 												util.nom_util AS nom_util,
 												IF(df.usd='1', 'USD', 'CDF') AS monnaie,
 												IF(df.cash='1', 'CASH', 'BANK') AS label_cash,
+												
 												IF(df.id_util_reject_dept IS NOT NULL,
 													'Rejected',
 													IF(df.date_visa_dept IS NULL,
 														'Awaiting Dept. Approval',
-														IF(df.date_visa_dir IS NULL AND (df.a_facturer = '1' OR df.cash='1'),
-															'Awaiting Management Approval',
-															IF(df.date_visa_fin IS NULL,
-																'Awaiting Finance Approval',
+														IF(df.date_visa_fin IS NULL,
+															'Awaiting Finance Approval',
+															IF(df.date_visa_dir IS NULL AND (df.a_facturer = '1' OR df.cash='1'),
+																'Awaiting Management Approval',
 																IF(df.date_decaiss IS NULL,
 																	'Pending payment',
 																	'Paid'
@@ -60161,14 +60180,15 @@
 												util.nom_util AS nom_util,
 												IF(df.usd='1', 'USD', 'CDF') AS monnaie,
 												IF(df.cash='1', 'CASH', 'BANK') AS label_cash,
+												
 												IF(df.id_util_reject_dept IS NOT NULL,
 													'Rejected',
 													IF(df.date_visa_dept IS NULL,
 														'Awaiting Dept. Approval',
-														IF(df.date_visa_dir IS NULL AND (df.a_facturer = '1' OR df.cash='1'),
-															'Awaiting Management Approval',
-															IF(df.date_visa_fin IS NULL,
-																'Awaiting Finance Approval',
+														IF(df.date_visa_fin IS NULL,
+															'Awaiting Finance Approval',
+															IF(df.date_visa_dir IS NULL AND (df.a_facturer = '1' OR df.cash='1'),
+																'Awaiting Management Approval',
 																IF(df.date_decaiss IS NULL,
 																	'Pending payment',
 																	'Paid'
@@ -60223,15 +60243,27 @@
 														df.id_df,
 														NULL
 													)
+												) AS nbre_no_visa_dir_back,
+												COUNT(
+													IF(df.date_visa_fin IS NOT NULL AND df.date_visa_dir IS NULL AND (df.a_facturer = '1' OR df.cash='1'),
+														df.id_df,
+														NULL
+													)
 												) AS nbre_no_visa_dir,
 												COUNT(
 													IF(df.date_visa_dept IS NOT NULL AND (df.date_visa_dir IS NOT NULL AND (df.a_facturer = '1' OR df.cash='1')) AND df.date_visa_fin IS NULL,
 														df.id_df,
 														NULL
 													)
+												) AS nbre_no_visa_fin_back,
+												COUNT(
+													IF(df.date_visa_dept IS NOT NULL AND df.date_visa_fin IS NULL,
+														df.id_df,
+														NULL
+													)
 												) AS nbre_no_visa_fin,
 												COUNT(
-													IF(df.date_visa_dept IS NOT NULL AND (df.date_visa_dir IS NOT NULL AND (df.a_facturer = '1' OR df.cash='1')) AND df.date_visa_fin IS NOT NULL AND df.date_decaiss IS NULL,
+													IF( ( (df.date_visa_dir IS NOT NULL AND (df.a_facturer = '1' OR df.cash='1')) OR (df.date_visa_fin IS NOT NULL AND df.cash='0' AND df.a_facturer = '0') ) AND df.date_decaiss IS NULL ,
 														df.id_df,
 														NULL
 													)
@@ -60271,15 +60303,15 @@
 
 			}else if ($niveau=='2') {
 
-				$sqlStatut = ' AND df.date_visa_dept IS NOT NULL AND df.date_visa_dir IS NULL AND (df.a_facturer = \'1\' OR df.cash=\'1\') ';
+				$sqlStatut = ' AND df.date_visa_dept IS NOT NULL AND df.date_visa_fin IS NULL ';
 
 			}else if ($niveau=='3') {
 
-				$sqlStatut = ' AND df.date_visa_dept IS NOT NULL AND (df.date_visa_dir IS NOT NULL AND (df.a_facturer = \'1\' OR df.cash=\'1\')) AND df.date_visa_fin IS NULL ';
+				$sqlStatut = ' AND df.date_visa_fin IS NOT NULL AND (df.date_visa_dir IS NULL AND (df.a_facturer = \'1\' OR df.cash=\'1\'))';
 
 			}else if ($niveau=='4') {
 
-				$sqlStatut = ' AND df.date_visa_dept IS NOT NULL AND (df.date_visa_dir IS NOT NULL AND (df.a_facturer = \'1\' OR df.cash=\'1\')) AND df.date_visa_fin IS NOT NULL AND df.date_decaiss IS NULL ';
+				$sqlStatut = ' AND ( (df.date_visa_dir IS NOT NULL AND (df.a_facturer = \'1\' OR df.cash=\'1\')) OR (df.date_visa_fin IS NOT NULL AND df.cash=\'0\' AND df.a_facturer = \'0\') ) AND df.date_decaiss IS NULL ';
 
 			}
 
@@ -60291,14 +60323,15 @@
 												util.nom_util AS nom_util,
 												IF(df.usd='1', 'USD', 'CDF') AS monnaie,
 												IF(df.cash='1', 'CASH', 'BANK') AS label_cash,
+												
 												IF(df.id_util_reject_dept IS NOT NULL,
 													'Rejected',
 													IF(df.date_visa_dept IS NULL,
 														'Awaiting Dept. Approval',
-														IF(df.date_visa_dir IS NULL AND (df.a_facturer = '1' OR df.cash='1'),
-															'Awaiting Management Approval',
-															IF(df.date_visa_fin IS NULL,
-																'Awaiting Finance Approval',
+														IF(df.date_visa_fin IS NULL,
+															'Awaiting Finance Approval',
+															IF(df.date_visa_dir IS NULL AND (df.a_facturer = '1' OR df.cash='1'),
+																'Awaiting Management Approval',
 																IF(df.date_decaiss IS NULL,
 																	'Pending payment',
 																	'Paid'
