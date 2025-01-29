@@ -60379,6 +60379,7 @@
 			$entree['id_df'] = $id_df;
 
 			$requete = $connexion-> prepare("SELECT df.*,
+												-- df.a_facturer AS a_facturer,
 												DATE_FORMAT(DATE_ADD(df.date_create, INTERVAL 2 HOUR), '%d/%m/%Y %H:%i:%s') AS date_df,
 												DATE_FORMAT(DATE_ADD(df.date_visa_dept, INTERVAL 2 HOUR), '%d/%m/%Y %H:%i:%s') AS date_visa_dept,
 												DATE_FORMAT(DATE_ADD(df.date_visa_dir, INTERVAL 2 HOUR), '%d/%m/%Y %H:%i:%s') AS date_visa_dir,
