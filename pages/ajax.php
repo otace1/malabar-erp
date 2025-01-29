@@ -3650,7 +3650,7 @@
 			$titre ='<span class="text-sm badge badge-warning">Awaiting Finance Approval</span>';
 			$btn_action = $btn_visa_fin_df;
 
-		}else if ($response['date_visa_dir']==null && ($response['cash']=='1'||$response['a_facturer']='1')){
+		}else if ($response['date_visa_dir']==null && ($response['cash']=='1'||$response['a_facturer']=='1')){
 
 			$titre ='<span class="text-sm badge badge-warning">Awaiting Management Approval</span>';
 			$btn_action = $btn_visa_dir_df;
