@@ -17349,7 +17349,7 @@
 			}else if ($id_deb == 11) {
 				if ($this-> getDossier($id_dos)['poids']<=30) {
 					// $reponse['montant'] = 125;
-					$reponse['montant'] = 300;
+					$reponse['montant'] = 600;
 				}else{
 					$reponse['montant'] = 0;
 				}
@@ -17358,7 +17358,7 @@
 			}else if ($id_deb == 12) {
 				if ($this-> getDossier($id_dos)['poids']>30) {
 					// $reponse['montant'] = 250;
-					$reponse['montant'] = 450;
+					$reponse['montant'] = 800;
 				}else{
 					$reponse['montant'] = 0;
 				}
