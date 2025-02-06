@@ -11954,6 +11954,195 @@
 			return $tbl;
 		}
 
+		public function getDetailNoteDebitTemplate($ref_note){
+			include('connexion.php');
+			$entree['ref_note'] = $ref_note;
+
+			$total_cost = 0;
+			$montant_ht = 0;
+			$tva = 0;
+			$montant_ttc = 0;
+
+			$unite = 0;
+			$cost = 0;
+			$compteur = 0;
+
+			$tbl = '
+					<tr>
+						<td style="text-align: left; border-left: 1px solid black; border-right: 0.5px solid black;" colspan="2" width="50%">&nbsp;&nbsp;'.$this-> getNote($entree['ref_note'])['libelle'].'</td>
+						<td style="text-align: right; border-right: 0.5px solid black;" width="10%"></td>
+						<td style="text-align: right; border-right: 0.5px solid black;" width="15%"></td>
+						<td style="text-align: right; border-right: 0.5px solid black;" width="10%"></td>
+						<td style="text-align: right; border-right: 1px solid black;" width="15%"></td>
+					</tr>
+					';
+			$requete = $connexion-> prepare("SELECT dep.nom_dep AS nom_dep,
+													SUM(det.montant) AS montant_ht,
+													AVG(det.montant) AS montant_ht2,
+													COUNT(dos.id_dos) AS nbre_dos,
+													SUM(
+														IF(det.tva='1',
+															det.montant*0.16,
+															0
+														)
+													) AS tva,
+													SUM(
+														IF(det.tva='1',
+															det.montant*1.16,
+															det.montant
+														)
+													) AS montant_ttc,
+													dos.container AS container
+												FROM dossier dos, detail_note_debit det, depense_dossier depdos, depense dep
+												WHERE dos.id_dos = depdos.id_dos
+													AND depdos.id_dep = dep.id_dep
+													AND depdos.id_dep_dos = det.id_dep_dos
+													AND det.ref_note = ?
+												GROUP BY dep.id_dep");
+			$requete-> execute(array($entree['ref_note']));
+			while($reponse = $requete-> fetch()){
+				
+				$montant_ht += $reponse['montant_ht'];
+				$tva += $reponse['tva'];
+				$montant_ttc += $reponse['montant_ttc'];
+				$compteur++;
+
+				$tbl .= '
+						<tr>
+							<td style="text-align: left; border-left: 1px solid black; border-right: 0.5px solid black; font-size: 6px;" colspan="2" width="50%">'.$reponse['nom_dep'].'</td>
+							<td style="text-align: center; border-right: 0.5px solid black; font-size: 6.5px;" width="10%">'.$reponse['nbre_dos'].'</td>
+							<td style="text-align: center; border-right: 0.5px solid black; font-size: 6.5px;" width="15%">'
+								.number_format($reponse['montant_ht2'], 2, ',', '.').
+							'&nbsp;&nbsp;</td>
+							<td style="text-align: center; border-right: 0.5px solid black; font-size: 6.5px;" width="10%">'
+								.number_format($reponse['tva'], 2, ',', '.').
+							'&nbsp;&nbsp;</td>
+							<td style="text-align: right; border-right: 1px solid black; font-size: 6.5px;" width="15%">'
+								.number_format($reponse['montant_ttc'], 2, ',', '.').
+							'&nbsp;&nbsp;</td>
+						</tr>
+					';
+
+			}$requete-> closeCursor();
+
+			if(!empty($this-> getNote($entree['ref_note'])['label_other_fee'])){
+				$montant_ht += $this-> getNote($entree['ref_note'])['other_fee'];
+				$montant_ttc += $this-> getNote($entree['ref_note'])['other_fee'];
+				$tbl .= '
+						<tr>
+							<td style="text-align: left; border-left: 1px solid black; border-right: 0.5px solid black; font-size: 6px;" colspan="2" width="50%">'.$this-> getNote($entree['ref_note'])['label_other_fee'].'</td>
+							<td style="text-align: center; border-right: 0.5px solid black; font-size: 6.5px;" width="10%">'.$this-> getNote($entree['ref_note'])['label_unite'].'</td>
+							<td style="text-align: center; border-right: 0.5px solid black; font-size: 6.5px;" width="15%">'
+								.number_format($this-> getNote($entree['ref_note'])['base'], 2, ',', '.').
+							'&nbsp;&nbsp;</td>
+							<td style="text-align: center; border-right: 0.5px solid black; font-size: 6.5px;" width="10%">'
+								.number_format(0, 2, ',', '.').
+							'&nbsp;&nbsp;</td>
+							<td style="text-align: right; border-right: 1px solid black; font-size: 6.5px;" width="15%">'
+								.number_format($this-> getNote($entree['ref_note'])['other_fee'], 2, ',', '.').
+							'&nbsp;&nbsp;</td>
+						</tr>
+					';
+			}
+
+			$tbl .='
+					<tr>
+						<td style="text-align: left; border-left: 1px solid black; border-right: 0.5px solid black; border-bottom: 0.5px solid black; font-size: 8px;" width="50%"></td>
+						<td style="text-align: center; border-right: 0.5px solid black; border-bottom: 0.5px solid black; font-size: 8px;" width="10%"></td>
+						<td style="text-align: center; border-right: 0.5px solid black; border-bottom: 0.5px solid black; font-size: 8px;" width="15%"></td>
+						<td style="text-align: center; border-right: 0.5px solid black; border-bottom: 0.5px solid black; font-size: 8px;" width="10%"></td>
+						<td style="text-align: center; border-right: 1px solid black; border-bottom: 0.5px solid black; font-size: 7px;" width="15%"></td>
+					</tr>
+					';
+			$tbl .= '
+					<tr>
+						<td style="text-align: center; border-right: 0.5px solid black; border: 0.5px solid black; font-weight: bold; background-color: rgb(192,192,192); font-size: 8px;" width="50%">TOTAL &nbsp;&nbsp;
+						</td>
+						<td style="text-align: center; border-right: 0.5px solid black; border: 0.5px solid black; font-weight: bold; font-size: 8px;" width="10%">
+						</td>
+						<td style="text-align: center; border-right: 0.5px solid black; border-bottom: 0.5px solid black; font-weight: bold;" width="15%"></td>
+						<td style="text-align: center; border-right: 0.5px solid black; border-bottom: 0.5px solid black; font-weight: bold;" width="10%">'
+							.number_format($tva, 2, ',', '.').
+						'&nbsp;&nbsp;</td>
+						<td style="text-align: right; border-right: 1px solid black; border-bottom: 0.5px solid black; font-weight: bold; " width="15%">'
+							.number_format($montant_ttc, 2, ',', '.').
+						'&nbsp;&nbsp;</td>
+					</tr>
+					<tr><td width="100%"></td></tr>
+					<tr>
+						<td width="60%"></td>
+						<td style="text-align: right; border: 0.5px solid black; font-weight: bold;" width="25%">Total excl. TVA&nbsp;&nbsp;</td>
+						<td style="text-align: right; border: 1px solid black; font-weight: bold; " width="15%">'
+							.number_format($montant_ht, 2, ',', '.').
+						'&nbsp;&nbsp;</td>
+					</tr>
+					<tr>
+						<td width="60%"></td>
+						<td style="text-align: right; border: 0.5px solid black; font-weight: bold;" width="25%">TVA 16%&nbsp;&nbsp;</td>
+						<td style="text-align: right; border: 1px solid black; font-weight: bold; " width="15%">'
+							.number_format($tva, 2, ',', '.').
+						'&nbsp;&nbsp;</td>
+					</tr>
+					<tr>
+						<td width="60%"></td>
+						<td style="text-align: right; border: 0.5px solid black; font-weight: bold;" width="25%">Grand Total&nbsp;&nbsp;</td>
+						<td style="text-align: right; border: 1px solid black; font-weight: bold; " width="15%">'
+							.number_format($montant_ttc, 2, ',', '.').
+						'&nbsp;&nbsp;</td>
+					</tr>';
+
+			return $tbl;
+		}
+
+		public function get_dossiers_note_debit($ref_note){
+			include('connexion.php');
+			$entree['ref_note'] = $ref_note;
+
+			$poids = 0;
+			$tbl = '';
+			$requete = $connexion-> prepare("SELECT dos.ref_dos AS ref_dos,
+													dos.num_lot AS num_lot,
+													dos.po_ref AS po_ref,
+													dos.horse AS horse,
+													dos.trailer_1 AS trailer_1,
+													dos.trailer_2 AS trailer_2,
+													dos.poids AS poids,
+													dos.num_lic AS num_lic
+												FROM dossier dos, detail_note_debit det, depense_dossier depdos
+												WHERE dos.id_dos = depdos.id_dos
+													AND depdos.id_dep_dos = det.id_dep_dos
+													AND det.ref_note = ?");
+			$requete-> execute(array($entree['ref_note']));
+			while($reponse = $requete-> fetch()){
+				
+				$poids += $reponse['poids'];
+				$compteur++;
+
+				$tbl .= '
+						<tr>
+							<td width="3%" style="text-align: center; border: 1 solid black;">'.$compteur.'</td>
+							<td width="15%" style="text-align: center; border: 1 solid black;">'.$reponse['ref_dos'].'</td>
+							<td width="12.5%" style="text-align: center; border: 1 solid black;">'.$reponse['num_lot'].'</td>
+							<td width="10%" style="text-align: center; border: 1 solid black;">'.$reponse['po_ref'].'</td>
+							<td width="10%" style="text-align: center; border: 1 solid black;">'.$reponse['horse'].'</td>
+							<td width="10%" style="text-align: center; border: 1 solid black;">'.$reponse['trailer_1'].'</td>
+							<td width="10%" style="text-align: center; border: 1 solid black;">'.$reponse['trailer_2'].'</td>
+							<td width="10%" style="text-align: center; border: 1 solid black;">'.number_format($reponse['poids'], 2, ',', '.').'</td>
+							<td width="17%" style="text-align: center; border: 1 solid black;">'.$reponse['num_lic'].'</td>
+						</tr>
+					';
+
+			}$requete-> closeCursor();
+
+			$tbl .= '
+					<tr>
+						<td width="70.5%" style="text-align: center; border: 1 solid black;">Total</td>
+						<td width="10%" style="text-align: center; border: 1 solid black;">'.number_format($poids, 2, ',', '.').'</td>
+					</tr>';
+
+			return $tbl;
+		}
+
 		public function getDetailNoteDebitCEECImpala($ref_note){
 			include('connexion.php');
 			$entree['ref_note'] = $ref_note;
@@ -14671,6 +14860,8 @@
 			$requete = $connexion-> prepare("SELECT dep.nom_dep AS nom_dep,
 													dos.po_ref AS po_ref,
 													dos.ref_dos AS ref_dos,
+													dos.num_lot AS num_lot,
+													dos.poids AS poids,
 													dep.nom_dep AS nom_dep,
 													depdos.id_dep_dos AS id_dep_dos,
 													ROUND(depdos.montant, 2) AS montant
@@ -14696,6 +14887,8 @@
 								<td>'.$compteur.'</td>
 								<td>'.$reponse['ref_dos'].'</td>
 								<td>'.$reponse['po_ref'].'</td>
+								<td>'.$reponse['num_lot'].'</td>
+								<td class="text-right">'.number_format($reponse['poids'], 2, ',', ' ').'</td>
 								<td>'.$reponse['nom_dep'].'</td>
 								<td class="text-center"><input type="number" step="0.001" class="text-right " name="montant_'.$compteur.'" value="'.$reponse['montant'].'"></td>
 								<td class="text-center">
@@ -17423,7 +17616,7 @@
 			}else if ($id_deb == 11) {
 				if ($this-> getDossier($id_dos)['poids']<=30) {
 					// $reponse['montant'] = 125;
-					$reponse['montant'] = 300;
+					$reponse['montant'] = 600;
 				}else{
 					$reponse['montant'] = 0;
 				}
@@ -17432,7 +17625,7 @@
 			}else if ($id_deb == 12) {
 				if ($this-> getDossier($id_dos)['poids']>30) {
 					// $reponse['montant'] = 250;
-					$reponse['montant'] = 450;
+					$reponse['montant'] = 800;
 				}else{
 					$reponse['montant'] = 0;
 				}
@@ -21389,7 +21582,7 @@
 						$reponseDebours['montant'] = 0;
 
 						if (($this-> getDossier($id_dos)['poids'])<30) { // < 30
-							$reponseDebours['montant'] = 300;
+							$reponseDebours['montant'] = 600;
 						}
 
 						$unite_input = '<span id="unite_'.$compteur.'"></span>';
@@ -21401,7 +21594,7 @@
 						$reponseDebours['montant'] = 0;
 
 						if (($this-> getDossier($id_dos)['poids'])>=30) { // >= 30
-							$reponseDebours['montant'] = 450;
+							$reponseDebours['montant'] = 800;
 						}
 
 						$unite_input = '<span id="unite_'.$compteur.'"></span>';
@@ -21716,12 +21909,12 @@
 					}
 					else if ($reponseDebours['id_deb'] == 11 && $this-> getDossier($id_dos)['poids']<30) { //CEEC 300
 						
-						$montant = 300;
+						$montant = 600;
 
 					}
 					else if ($reponseDebours['id_deb'] == 12 && $this-> getDossier($id_dos)['poids']>=30) { //CEEC 450
 						
-						$montant = 450;
+						$montant = 800;
 
 					}
 
@@ -21844,7 +22037,7 @@
 					}
 					else if ($reponseDebours['id_deb'] == 11 ) { //CEEC 300
 						
-						$montant = $this-> getNbreDossierLicence($num_lic)*300;
+						$montant = $this-> getNbreDossierLicence($num_lic)*600;
 
 					}
 					else if ($reponseDebours['id_deb'] == 12) { //CEEC 450
@@ -59717,6 +59910,20 @@
 
 		}
 
+		public function supprimerNoteDebit($ref_note){
+
+			include('connexion.php');
+			$entree['ref_note'] = $ref_note;
+
+			/*echo '<br>  id_mod_lic= '.$id_mod_lic;
+			echo '<br>  ref_note= '.$ref_note;*/
+
+			$requete = $connexion-> prepare("DELETE FROM note_debit
+												WHERE ref_note = ?");
+			$requete-> execute(array($entree['ref_note']));
+
+		}
+
 		public function supprimer_mouvement_tresorerie($id_mvt){
 
 			include('connexion.php');
@@ -59904,7 +60111,7 @@
 									                <button class=\"btn btn-xs bg-warning square-btn-adjust\" onclick=\"modal_edit_note_debit(\'',note.ref_note,'\', \'',note.date_create,'\');\" title=\"Edit\">
 									                    <i class=\"fas fa-edit\"></i> 
 									                </button>
-									                <button class=\"btn btn-xs bg-danger square-btn-adjust\" onclick=\"supprimerFacture(\'',note.ref_note,'\');\" title=\"Delete\">
+									                <button class=\"btn btn-xs bg-danger square-btn-adjust\" onclick=\"supprimerNoteDebit(\'',note.ref_note,'\');\" title=\"Delete\">
 									                    <i class=\"fas fa-times\"></i> 
 									                </button>') AS action,
 													(
