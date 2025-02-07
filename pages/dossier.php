@@ -2445,7 +2445,7 @@ if( isset($_GET['id_mod_trac']) && ($_GET['id_mod_trac']=='2' && $_GET['id_cli']
 
 </script>
 <?php
-}else if($_GET['id_mod_trac']=='2' && $_GET['id_cli']=='869' && $_GET['id_march']!='11'){
+}else if($_GET['id_mod_trac']=='2' && $_GET['id_cli']=='869' && $_GET['id_march']!='11' && $_GET['id_march']!='19'){
   include('nouveauDossierAcid.php');
 }else{
 
