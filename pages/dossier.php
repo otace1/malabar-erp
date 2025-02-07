@@ -903,7 +903,7 @@ for ($i=1; $i <= 15 ; $i++) {
                 </button>
                   <?php
                 }else if($_GET['id_mod_trac'] == '2'){
-                  if ($_GET['id_cli'] == 869 && $_GET['id_march'] != '11' && $_GET['id_march'] != '25' && $_GET['id_march'] != '26' && $_SESSION['id_role'] != '7' && $_SESSION['id_role'] != '8' && $_SESSION['id_role'] != '9' && $_SESSION['id_role'] != '10') {
+                  if ($_GET['id_cli'] == 869 && $_GET['id_march'] != '19' && $_GET['id_march'] != '11' && $_GET['id_march'] != '25' && $_GET['id_march'] != '26' && $_SESSION['id_role'] != '7' && $_SESSION['id_role'] != '8' && $_SESSION['id_role'] != '9' && $_SESSION['id_role'] != '10') {
                     ?>
                   <button class="btn btn-xs btn-info square-btn-adjust" data-toggle="modal" onclick="modal_nouveauDossierLicence();" <?php echo $maClasse-> getDataUtilisateur($_SESSION['id_util'])['tracking_enab']?>>
                       <i class="fa fa-plus"></i> Nouveau Dossier
@@ -1629,7 +1629,7 @@ if(isset($_GET['id_mod_trac']) && ($_GET['id_mod_trac']=='1')){
 
 
 <?php
-if( isset($_GET['id_mod_trac']) && ($_GET['id_mod_trac']=='2' && $_GET['id_cli']!='869') || ($_GET['id_mod_trac']=='2' && $_GET['id_march']=='11') || ($_GET['id_mod_trac']=='2' && $_GET['id_march']=='25') || ($_GET['id_mod_trac']=='2' && $_GET['id_march']=='26') ){
+if( isset($_GET['id_mod_trac']) && ($_GET['id_mod_trac']=='2' && $_GET['id_cli']!='869') || ($_GET['id_mod_trac']=='2' && $_GET['id_march']=='11') || ($_GET['id_mod_trac']=='2' && $_GET['id_march']=='19') || ($_GET['id_mod_trac']=='2' && $_GET['id_march']=='25') || ($_GET['id_mod_trac']=='2' && $_GET['id_march']=='26') ){
 
   $modele = $maClasse-> getElementModeleLicence($_GET['id_mod_trac']);
 ?>
