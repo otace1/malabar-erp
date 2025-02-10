@@ -47844,7 +47844,7 @@
 			$compteur = 0;
 			$rows = array();
 
-			$requete = $connexion-> query("SELECT df.*,
+			$requete = $connexion-> query("SELECT df.id_df AS id_df,
 												DATE_FORMAT(df.date_create, '%d/%m/%Y') AS date_df,
 												DATE_FORMAT(dos.date_liq, '%d/%m/%Y') AS date_liq,
 												dos.ref_liq AS ref_liq,
