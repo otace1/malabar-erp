@@ -2,8 +2,6 @@
   include("tetePopCDN.php");
   include("menuHaut.php");
   include("menuGauche.php");
-  //include("licenceExcel.php");
-
 ?>
   <!-- /.navbar -->
 
