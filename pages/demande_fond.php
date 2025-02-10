@@ -26,32 +26,31 @@
             ?>
 
             <div class="float-right">
-              <button class="btn btn-xs btn-primary" onclick="window.location='new_demande_fond.php';">
-                <i class="fa fa-plus"></i>
-                <?php
-                  if ($maClasse-> getUtilisateur($_SESSION['id_util'])['langue']=='ENG') {
-                    echo 'New Request';
-                  }else if ($maClasse-> getUtilisateur($_SESSION['id_util'])['langue']=='FR') {
-                    echo 'Nouvelle Demande';
-                  }
-                ?>
-              </button>
               <?php
                 if ($maClasse-> getUtilisateur($_SESSION['id_util'])['view_report_payment']=='1') {
                 ?>
-                <button class="btn btn-xs btn-info" onclick="$('#modal_search').modal('show');">
-                <i class="fa fa-search"></i>
-                <?php
-                  if ($maClasse-> getUtilisateur($_SESSION['id_util'])['langue']=='ENG') {
-                    echo 'Report';
-                  }else if ($maClasse-> getUtilisateur($_SESSION['id_util'])['langue']=='FR') {
-                    echo 'Rapport';
-                  }
-                ?>
-              </button>
+                <div class="btn-group">
+                    <button type="button" class="btn btn-xs btn-info btn-flat dropdown-toggle dropdown-icon" data-toggle="dropdown">
+                      <i class="fa fa-search"></i>
+                      Report
+                      <span class="sr-only">Toggle Dropdown</span>
+                    </button>
+                    <div class="dropdown-menu" role="menu">
+                      <a class="dropdown-item" href="#" onclick="$('#modal_search').modal('show');">
+                        <i class="fa fa-calculator"></i> Requests
+                      </a>
+                      <a class="dropdown-item" href="#" onclick="window.open('popUpRapportPayFile.php','pop1','width=1300,height=900')">
+                        <i class="fa fa-folder-open"></i> Files
+                      </a>
+                    </div>
+                  </div>
                 <?php
                 }
               ?>
+              <button class="btn btn-xs btn-primary" onclick="window.location='new_demande_fond.php';">
+                <i class="fa fa-plus"></i>
+                New Request
+              </button>
             </div>
 
           </h3>
@@ -264,7 +263,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <input type="hidden" id="id_df_print">
-        <h5 class="modal-title"><i class="fa fa-list"></i> Request Payment Detail <button class="btn btn-xs btn-primary" title="Print" onclick="window.open('generateur_demande_fond.php?id_df='+id_df_print.value+'&couleur=','pop1','width=500,height=700');"><i class="fa fa-print"></i> Print the Voucher</button></h5>
+        <h5 class="modal-title"><i class="fa fa-list"></i> Request Detail <button class="btn btn-xs btn-primary" title="Print" onclick="window.open('generateur_demande_fond.php?id_df='+id_df_print.value+'&couleur=','pop1','width=500,height=700');"><i class="fa fa-print"></i> Print</button> <span id="btn_edit_df"></span></h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -925,6 +924,7 @@
 
           $('#id_df_print').val(id_df);
           $('#detail_df').html(data.detail_df);
+          $('#btn_edit_df').html(data.btn_edit_df);
 
           $('#modal_afficher_df').modal('show');
         }

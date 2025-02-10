@@ -16,15 +16,8 @@
       <div class="container-fluid">
         <div class="header">
           <h5 class="" style="font-weight: bold;">
-           <i class="fa fa-plus nav-icon"></i>
-            <?php
-              if ($maClasse-> getUtilisateur($_SESSION['id_util'])['langue']=='ENG') {
-                echo 'New Payment Request';
-              }else if ($maClasse-> getUtilisateur($_SESSION['id_util'])['langue']=='FR') {
-                echo 'Nouvelle Demande de Fond';
-              }
-            ?>
-
+           <i class="fa fa-edit nav-icon"></i>
+           Edit Payment Request
             <div class="float-right">
               <button class="btn btn-xs btn-danger" onclick="if(confirm('Do really you want to cancel ?')) {window.location='demande_fond.php';}">
                 <i class="fa fa-arrow-left"></i>
@@ -54,8 +47,9 @@
             <span id="message"></span>
           </div>
           <div class="col-12">
-            <form id="form_creer_demande_fond" method="POST" action="" data-parsley-validate enctype="multipart/form-data">
-                <input type="hidden" name="operation" value="creer_demande_fond">
+            <form id="form_edit_demande_fond" method="POST" action="" data-parsley-validate enctype="multipart/form-data">
+                <input type="hidden" name="operation" value="edit_demande_fond">
+                <input type="hidden" name="id_df" value="<?php echo $_GET['id_df'];?>">
               <div class="card-body">
                 <div class="row callout callout-info">
                   <div class="col-sm-12"><h5 class="text-uderline">General Informations</h5></div>
@@ -121,31 +115,21 @@
                     <input step="0.01" id="usd_net" class="form-control form-control-sm text-center bg bg-dark font-weight-bold " disabled>
                   </div> -->
                   <div class="col-md-3">
-                    <label for="id_dep">Expense Type 
-                      <?php
-                      if ($maClasse-> getUtilisateur($_SESSION['id_util'])['creation_depense']=='1') {
-                        ?>
-                        <span class="btn-xs btn-primary"><i class="fa fa-plus" onclick="$('#modal_new_depense').modal('show');"></i></span>
-                        <?php
-                      }
-                      ?>
-                    </label>
-                    <span id="select_id_dep"></span>
-                    <!-- <label for="id_dep">Expense Type</label>
-                    <select name="id_dep" id="id_dep" class="form-control form-control-sm" required>
+                    <label for="id_dep">Expense Type</label>
+                    <select name="id_dep" id="id_dep" class="form-control form-control-sm" onchange="$('#id_dep_new_d').val(this.value);" required>
                       <option></option>
                       <?php
-                        // $maClasse-> selectionnerDepense();
+                        $maClasse-> selectionnerDepense();
                       ?>
-                    </select> -->
+                    </select> 
                   </div>
                   <div class="col-md-3">
                     <label for="libelle">Motif / Reason</label>
                     <textarea name="libelle" id="libelle" class="form-control form-control-sm" required></textarea>
                   </div>
                   <div class="col-md-3">
-                    <label for="fichier_df">Support Doc.</label>
-                    <input type="file" name="fichier_df" id="fichier_df" class="form-control form-control-sm">
+                    <label for="fichier_df">Support Doc. <span class="btn btn-xs text-xs text-primary" onclick="$('#modal_update_fichier_df').modal('show');"><i class="fa fa-upload"></i> Upload</span> <span class="btn btn-xs text-xs text-danger" onclick="remove_fichier_df('<?php echo $_GET['id_df'];?>');"><i class="fa fa-times"></i> Remove</span> </label>
+                    <span class="form-control form-control-sm" id="fichier_demande"></span>
                   </div>
                 </div>
 
@@ -160,12 +144,24 @@
                               <th style="">Amount</th>
                           </tr>
                       </thead>
-                      <tbody id="table_marchandise_dossier">
+                      <tbody id="table_dossier_demande">
                         
                       </tbody>
                       <tfoot>
                         <tr>
-                          <td colspan="2"><span class="btn btn-xs btn-info" onclick="ajouterLigne()"><i class="fa fa-plus"></i> Add File</span> <span class="btn btn-xs btn-success" onclick="$('#modal_upload_dossier_df').modal('show');"><i class="fa fa-upload"></i> Upload Excel File</span></td>
+                          <input type="hidden" name="id_dep" id="id_dep_new_d">
+                          <td></td>
+                          <td>
+                            <input type="hidden" id="id_dos_1" name="id_dos"><span id="label_ref_dos_1"></span><a href="#" class="text-primary" onclick="modal_search_dossier_df(1)"><i class="fa fa-search"></i></a>
+                          </td>
+                          <td>
+                            <input type="number" step="0.001" class=" text-right" style="width: 8em;" id="montant_1" name="montant" required>
+                          </td>
+                          <td>
+                            <span class="btn btn-xs btn-primary" onclick="creerDepenseDossierDF(id_dep_new_d.value, id_dos_1.value, montant_1.value, '<?php echo $_GET['id_df'];?>');">
+                              <i class="fa fa-check"></i>
+                            </span>
+                          </td>
                         </tr>
                       </tfoot>
                     </table>
@@ -187,7 +183,7 @@
                   </div>
                 </div>
 
-                <button class="btn btn-sm btn-primary" type="submit" id="submit_btn">Submit</button>
+                <button class="btn btn-sm btn-primary" type="submit">Submit</button>
               </div>
               </form>
             <!-- /.card -->
@@ -244,13 +240,14 @@
   <!-- /.modal-dialog -->
 </div>
 
-<div class="modal fade" id="modal_new_depense">
+<div class="modal fade" id="modal_update_fichier_df">
   <div class="modal-dialog modal-sm">
-    <form id="form_new_depense" method="POST" action="" data-parsley-validate enctype="multipart/form-data">
-      <input type="hidden" name="operation" value="new_depense">
+    <form id="form_update_fichier_df" method="POST" action="" data-parsley-validate enctype="multipart/form-data">
+      <input type="hidden" name="operation" value="update_fichier_df">
+      <input type="hidden" name="id_df" value="<?php echo $_GET['id_df'];?>">
     <div class="modal-content">
       <div class="modal-header ">
-        <h4 class="modal-title"><i class="fa fa-plus"></i> New Expense</h4>
+        <h4 class="modal-title"><i class="fa fa-upload"></i> Upload File</h4>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -259,8 +256,8 @@
         <div class="row">
 
           <div class="col-md-12">
-            <label for="x_card_code" class="control-label mb-1">Name</label>
-            <input type="text" name="nom_dep" class="form-control form-control-sm cc-exp" required>
+            <label for="x_card_code" class="control-label mb-1">File</label>
+            <input type="file" name="fichier_df" class="form-control form-control-sm cc-exp" required>
           </div>
 
         </div>
@@ -312,10 +309,244 @@
 
   $(document).ready(function(){
 
+      $('#form_edit_demande_fond').submit(function(e){
+
+        e.preventDefault();
+
+        somme = 0;
+
+        var fd = new FormData(this);
+
+        for (var i = 0; i < fd.get('nbre'); i++) {
+
+          if (parseFloat(fd.get('montant_'+i)) > 0 ) {
+            montant = parseFloat(fd.get('montant_'+i));
+          }else{
+            montant=0;
+          }
+          
+          somme+= montant;
+
+        }
+
+          console.log('somme == '+(Math.round(somme * 100) / 100));
+          console.log('montant == '+(Math.round(fd.get('montant') * 100) / 100));
+          // Math.round(num * 100) / 100
+
+        if((Math.round(somme * 100) / 100)!=(Math.round(fd.get('montant') * 100) / 100) && fd.get('id_dos_0')){
+
+          console.log('somme = '+(Math.round(somme * 100) / 100));
+          console.log('montant = '+(Math.round(fd.get('montant') * 100) / 100));
+
+          alert('Error! The balance isn\'t correct.');
+
+
+        }else if(confirm('Do really you want to submit ?')) {
+          
+          $('#spinner-div').show();
+
+          $.ajax({
+            type: 'post',
+            url: 'ajax.php',
+            processData: false,
+            contentType: false,
+            data: fd,
+            dataType: 'json',
+            success:function(data){
+              if (data.logout) {
+                alert(data.logout);
+                window.location="../deconnexion.php";
+              }else{
+                window.location="demande_fond.php";
+              }
+            },
+            complete: function () {
+                // $('#dossier_cvee').DataTable().ajax.reload();
+                $('#spinner-div').hide();//Request is complete so hide spinner
+            }
+          });
+
+        }
+
+      });
+    
+  });
+
+  $(document).ready(function(){
+
     selectionnerDepenseAjax();
+    getDemandeFond();
+    getFichierDemande();
+    table_dossier_demande();
 
   });
 
+  function table_dossier_demande(){
+
+    $('#spinner-div').show();
+    $.ajax({
+      type: 'post',
+      url: 'ajax.php',
+      data: {operation: 'table_dossier_demande', id_df: "<?php echo $_GET['id_df'];?>"},
+      dataType: 'json',
+      success:function(data){
+        if (data.logout) {
+          alert(data.logout);
+          window.location="../deconnexion.php";
+        }else{
+          $('#table_dossier_demande').html(data.table_dossier_demande);
+        }
+      },
+      complete: function () {
+          $('#spinner-div').hide();//Request is complete so hide spinner
+      }
+    });
+
+  }
+  
+  function creerDepenseDossierDF(id_dep, id_dos, montant, id_df){
+    if(confirm('Do really you want to add this file ?')) {
+      $('#spinner-div').show();
+      $.ajax({
+        type: 'post',
+        url: 'ajax.php',
+        data: {operation: 'creerDepenseDossierDF', id_dep: id_dep, id_dos: id_dos, montant: montant, id_df: id_df},
+        dataType: 'json',
+        success:function(data){
+          if (data.logout) {
+            alert(data.logout);
+            window.location="../deconnexion.php";
+          }else{
+            table_dossier_demande();
+            $('#label_ref_dos_1').html('');
+            $('#id_dos_1').val('');
+            $('#montant_1').val('');
+          }
+        },
+        complete: function () {
+            $('#spinner-div').hide();//Request is complete so hide spinner
+        }
+      });
+    }
+
+  }
+  
+  function delete_depense_dossier(id_dos, id_df){
+    if(confirm('Do really you want to remove this file ?')) {
+      $('#spinner-div').show();
+      $.ajax({
+        type: 'post',
+        url: 'ajax.php',
+        data: {operation: 'delete_depense_dossier', id_df: id_df, id_dos: id_dos},
+        dataType: 'json',
+        success:function(data){
+          if (data.logout) {
+            alert(data.logout);
+            window.location="../deconnexion.php";
+          }else{
+            table_dossier_demande();
+          }
+        },
+        complete: function () {
+            $('#spinner-div').hide();//Request is complete so hide spinner
+        }
+      });
+    }
+
+  }
+  
+  function remove_fichier_df(){
+    if(confirm('Do really you want to remove the support document ?')) {
+      $('#spinner-div').show();
+      $.ajax({
+        type: 'post',
+        url: 'ajax.php',
+        data: {operation: 'remove_fichier_df', id_df: "<?php echo $_GET['id_df'];?>"},
+        dataType: 'json',
+        success:function(data){
+          if (data.logout) {
+            alert(data.logout);
+            window.location="../deconnexion.php";
+          }else{
+            getFichierDemande();
+          }
+        },
+        complete: function () {
+            $('#spinner-div').hide();//Request is complete so hide spinner
+        }
+      });
+    }
+
+  }
+  
+  function getDemandeFond(){
+    $('#spinner-div').show();
+    $.ajax({
+      type: 'post',
+      url: 'ajax.php',
+      data: {operation: 'getDemandeFond', id_df: "<?php echo $_GET['id_df'];?>"},
+      dataType: 'json',
+      success:function(data){
+        if (data.logout) {
+          alert(data.logout);
+          window.location="../deconnexion.php";
+        }else{
+          // id_dept
+          $('#id_dept').val(data.id_dept);
+          $('#id_dep_new_d').val(data.id_dept);
+          // id_site
+          $('#id_site').val(data.id_site);
+          // beneficiaire
+          $('#beneficiaire').val(data.beneficiaire);
+          // id_cli
+          $('#id_cli').val(data.id_cli);
+          // cash
+          $('#cash').val(data.cash);
+          // usd
+          $('#usd').val(data.usd);
+          // montant
+          $('#montant').val(data.montant);
+          // id_dep
+          $('#id_dep').val(data.id_dep);
+          // libelle
+          $('#libelle').val(data.libelle);
+          // id_util_visa_dept
+          $('#id_util_visa_dept').val(data.id_util_visa_dept);
+        }
+      },
+      complete: function () {
+          $('#spinner-div').hide();//Request is complete so hide spinner
+      }
+    });
+
+  }
+  
+  function getFichierDemande(){
+    $('#spinner-div').show();
+    $.ajax({
+      type: 'post',
+      url: 'ajax.php',
+      data: {operation: 'getDemandeFond', id_df: "<?php echo $_GET['id_df'];?>"},
+      dataType: 'json',
+      success:function(data){
+        if (data.logout) {
+          alert(data.logout);
+          window.location="../deconnexion.php";
+        }else{
+          if(data.fichier_df!=null){
+            $('#fichier_demande').html(data.support_doc);
+          }else{
+            $('#fichier_demande').html('');
+          }
+        }
+      },
+      complete: function () {
+          $('#spinner-div').hide();//Request is complete so hide spinner
+      }
+    });
+
+  }
+  
   $(document).ready(function(){
 
       $('#form_upload_dossier_df').submit(function(e){
@@ -343,7 +574,7 @@
                   this.reset();
               });
 
-              $('#table_marchandise_dossier').html(data.table_dossier_df);
+              $('#table_dossier_demande').html(data.table_dossier_df);
               $('#nbre').val(data.nbre);
               // selectionnerDepenseAjax();
             }
@@ -359,38 +590,39 @@
 
   $(document).ready(function(){
 
-      $('#form_new_depense').submit(function(e){
+      $('#form_update_fichier_df').submit(function(e){
+        if(confirm('Do really you want to submit ?')) {
+          e.preventDefault();
 
-        e.preventDefault();
+          var fd = new FormData(this);
 
-        var fd = new FormData(this);
+          $('#spinner-div').show();
+          $('#modal_update_fichier_df').modal('hide');
 
-        $('#spinner-div').show();
-        $('#modal_new_depense').modal('hide');
-
-        $.ajax({
-          type: 'post',
-          url: 'ajax.php',
-          processData: false,
-          contentType: false,
-          data: fd,
-          dataType: 'json',
-          success:function(data){
-            if (data.logout) {
-              alert(data.logout);
-              window.location="../deconnexion.php";
-            }else{
-              $( '#form_new_depense' ).each(function(){
-                  this.reset();
-              });
-              selectionnerDepenseAjax();
+          $.ajax({
+            type: 'post',
+            url: 'ajax.php',
+            processData: false,
+            contentType: false,
+            data: fd,
+            dataType: 'json',
+            success:function(data){
+              if (data.logout) {
+                alert(data.logout);
+                window.location="../deconnexion.php";
+              }else{
+                $( '#form_update_fichier_df' ).each(function(){
+                    this.reset();
+                });
+                getFichierDemande();
+              }
+            },
+            complete: function () {
+                // $('#dossier_cvee').DataTable().ajax.reload();
+                $('#spinner-div').hide();//Request is complete so hide spinner
             }
-          },
-          complete: function () {
-              // $('#dossier_cvee').DataTable().ajax.reload();
-              $('#spinner-div').hide();//Request is complete so hide spinner
-          }
-        });
+          });
+        }
       });
     
   });
@@ -456,10 +688,8 @@
           window.location="../deconnexion.php";
         }else if(data.id_dos){
           $('#remarque_'+ligne).html('<span class="text-danger font-weight-bold clignoteb">Already Encoded !! Voucher Ref.'+data.id_df+'</span>');
-          document.getElementById("submit_btn").setAttribute("disabled","true");
         }else{
           $('#remarque_'+ligne).html('');
-          document.getElementById("submit_btn").removeAttribute("disabled");
         }
       },
       complete: function () {
@@ -495,7 +725,7 @@
   }
 
   function ajouterLigne() {
-    var table = document.getElementById("table_marchandise_dossier");
+    var table = document.getElementById("table_dossier_demande");
     var ligne = table.rows.length;
     var row = table.insertRow(ligne);
     var cell1 = row.insertCell(0);
@@ -509,76 +739,6 @@
     $('#nbre').val(ligne+1);
     // cell2.innerHTML = table.rows.length;
   }
-
-  $(document).ready(function(){
-
-      $('#form_creer_demande_fond').submit(function(e){
-
-        e.preventDefault();
-
-        somme = 0;
-
-        var fd = new FormData(this);
-
-        for (var i = 0; i < fd.get('nbre'); i++) {
-
-          if (parseFloat(fd.get('montant_'+i)) > 0 ) {
-            montant = parseFloat(fd.get('montant_'+i));
-          }else{
-            montant=0;
-          }
-          
-          somme+= montant;
-
-        }
-
-          console.log('somme == '+(Math.round(somme * 100) / 100));
-          console.log('montant == '+(Math.round(fd.get('montant') * 100) / 100));
-          // Math.round(num * 100) / 100
-
-        if((Math.round(somme * 100) / 100)!=(Math.round(fd.get('montant') * 100) / 100) && fd.get('id_dos_0')){
-
-          console.log('somme = '+(Math.round(somme * 100) / 100));
-          console.log('montant = '+(Math.round(fd.get('montant') * 100) / 100));
-
-          alert('Error! The balance isn\'t correct.');
-
-
-        }else if(confirm('Do really you want to submit ?')) {
-          
-          $('#spinner-div').show();
-
-          $.ajax({
-            type: 'post',
-            url: 'ajax.php',
-            processData: false,
-            contentType: false,
-            data: fd,
-            dataType: 'json',
-            success:function(data){
-              if (data.logout) {
-                alert(data.logout);
-                window.location="../deconnexion.php";
-              }else{
-                $( '#form_creer_demande_fond' ).each(function(){
-                    this.reset();
-                });
-                $('#table_marchandise_dossier').html('');
-                $('#message').html(data.message);
-                window.open('generateur_demande_fond.php?id_df='+data.id_df+'&couleur=','pop1','width=500,height=700');
-              }
-            },
-            complete: function () {
-                // $('#dossier_cvee').DataTable().ajax.reload();
-                $('#spinner-div').hide();//Request is complete so hide spinner
-            }
-          });
-
-        }
-
-      });
-    
-  });
 
   function modal_edit_cvee(id_dos){
 

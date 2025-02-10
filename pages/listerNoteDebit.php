@@ -798,16 +798,16 @@
 
   }
 
-  function supprimerFacture(ref_fact){
+  function supprimerNoteDebit(ref_note){
 
-    if(confirm('Do really you want to validate this invoice '+ref_fact+'?')) {
+    if(confirm('Do really you want to delete this Debit Note '+ref_note+'?')) {
 
       $('#spinner-div').show();
 
         $.ajax({
           type: "POST",
           url: "ajax.php",
-          data: { ref_fact: ref_fact, id_cli:<?php echo $_GET['id_cli'];?>, id_mod_lic:<?php echo $_GET['id_mod_lic'];?>, operation: 'supprimerFacture'},
+          data: { ref_note: ref_note, id_cli:<?php echo $_GET['id_cli'];?>, id_mod_lic:<?php echo $_GET['id_mod_lic'];?>, operation: 'supprimerNoteDebit'},
           dataType:"json",
           success:function(data){
             if (data.logout) {
@@ -817,7 +817,7 @@
               $('#invoice_waiting_to_send').DataTable().ajax.reload();
               $('#debit_note_pending_validation').DataTable().ajax.reload();
               $('#invoice_send').DataTable().ajax.reload();
-              alert('Invoice ' + ref_fact + ' has been deleted!');
+              alert('Debit Note ' + ref_note + ' has been deleted!');
             }
           },
           complete: function () {
