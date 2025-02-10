@@ -420,6 +420,13 @@
 
   		echo json_encode($reponse);
 
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='supprimerNoteDebit'){// On recupere les donnees du dossier a facturer 
+
+		$maClasse-> supprimerNoteDebit($_POST['ref_note']);
+		$reponse['message'] = 'Done!';
+
+  		echo json_encode($reponse);
+
 	}elseif(isset($_POST['operation']) && $_POST['operation']=='searchInvoice'){// On recupere les donnees du dossier a facturer 
 
   		$reponse['results_searchInvoice'] = $maClasse-> getInvoiceSearched($_POST['id_cli'], $_POST['id_mod_lic'], $_POST['ref_fact']);
@@ -684,6 +691,11 @@
 		}else {
 			echo json_encode($maClasse-> pay_report($_POST['statut'], $_POST['date_create_debut'], $_POST['date_create_fin'], $_POST['date_visa_dept_debut'], $_POST['date_visa_dept_fin'], $_POST['date_visa_fin_debut'], $_POST['date_visa_fin_fin'], $_POST['date_decaiss_debut'], $_POST['date_decaiss_fin'], $_POST['id_dep']));
 		}
+		
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='pay_report_file'){ 
+
+		echo json_encode($maClasse-> pay_report_file());
+		
 		
 	}elseif(isset($_POST['operation']) && $_POST['operation']=='rapportOperations'){ // On Recupere les data pour rapport Operations
 		$response['nbre_dossier_encours'] = $maClasse-> getNbreDossier('Dossiers En Cours');
@@ -3547,15 +3559,16 @@
 	}elseif(isset($_POST['operation']) && $_POST['operation']=='creer_demande_fond'){ 
 
 		$maClasse-> creer_demande_fond($_POST['id_dept'], $_POST['id_site'], $_POST['beneficiaire'], $_POST['id_cli'], $_POST['cash'], $_POST['montant'], $_POST['usd'], $_POST['libelle'], $_POST['id_util_visa_dept'], $_POST['id_dep']);
+    	
+    	$id_df = $maClasse-> getLastDemandeFond()['id_df'];
 		
-		if (!empty($_FILES)) {
+		if (($_FILES['fichier_df']['name'])) {
 
     		$file = $_FILES['fichier_df'];
     		$filename = $file['name'];
     		$ext = pathinfo($filename, PATHINFO_EXTENSION);
 
     		$fichier_df = uniqid();
-    		$id_df = $maClasse-> getLastDemandeFond()['id_df'];
     		// $id_df = str_replace("/", "_", "$id_df");
 			
 			$dossier = '../demande_fond/'.$id_df;
@@ -3591,6 +3604,72 @@
 
 		echo json_encode($response);
 
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='edit_demande_fond'){ 
+
+		$maClasse-> edit_demande_fond($_POST['id_dept'], $_POST['id_site'], $_POST['beneficiaire'], $_POST['id_cli'], $_POST['cash'], $_POST['montant'], $_POST['usd'], $_POST['libelle'], $_POST['id_util_visa_dept'], $_POST['id_dep'], $_POST['id_df']);
+    	
+    	$id_df = $_POST['id_df'];
+		
+    	for ($i=0; $i <= $_POST['nbre'] ; $i++) { 
+
+    		if (isset($_POST['id_dos_'.$i])) {
+
+    			$maClasse-> creerDepenseDossierDF($_POST['id_dep'], $_POST['id_dos_'.$i], date('Y-m-d'), $_POST['montant_'.$i], $id_df);
+    			
+
+    		}
+
+    	}
+
+	    $response['message'] = '
+	    				<div class="alert alert-success alert-dismissible" role="alert">
+		                  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+		                  <strong>Payment request has been update!</strong> 
+		                </div>';
+
+		$response['id_df'] = $id_df;
+
+		echo json_encode($response);
+
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='update_fichier_df'){ 
+
+    	$id_df = $_POST['id_df'];
+		
+		if (($_FILES['fichier_df']['name'])) {
+
+    		$file = $_FILES['fichier_df'];
+    		$filename = $file['name'];
+    		$ext = pathinfo($filename, PATHINFO_EXTENSION);
+
+    		$fichier_df = uniqid();
+    		// $id_df = str_replace("/", "_", "$id_df");
+			
+			$dossier = '../demande_fond/'.$id_df;
+
+			if(!is_dir($dossier)){
+				mkdir("../demande_fond/$id_df", 0777);
+			}
+			$uploadFile = $dossier.'/'.$fichier_df.'.'.$ext;
+			move_uploaded_file($file['tmp_name'], $uploadFile);
+
+    		$maClasse-> inserer_fichier_df($id_df, $fichier_df.'.'.$ext);
+
+    	}
+
+	    $response['message'] = 'Done!	';
+
+		$response['id_df'] = $id_df;
+
+		echo json_encode($response);
+
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='remove_fichier_df'){ 
+
+    	$maClasse-> remove_fichier_df($_POST['id_df']);
+
+	    $response['message'] = 'Done!	';
+
+		echo json_encode($response);
+
 	}elseif(isset($_POST['operation']) && $_POST['operation']=='demande_fond'){ 
 
 		echo json_encode($maClasse-> demande_fond($_POST['statut']));
@@ -3611,7 +3690,149 @@
 		$response['visa_dir_df'] = $maClasse-> getUtilisateur($_SESSION['id_util'])['visa_dir_df'];
 		$response['visa_fin_df'] = $maClasse-> getUtilisateur($_SESSION['id_util'])['visa_fin_df'];
 		$response['decaiss_df'] = $maClasse-> getUtilisateur($_SESSION['id_util'])['decaiss_df'];
+		$response['nbre_dos'] = $maClasse-> get_nbre_dossier($_POST['id_df']);
 
+		$response['detail_df'] = '';
+		$response['btn_edit_df'] = '';
+		$titre = '';
+		$btn_action = '';
+      	$btn_visa_dept_df = '';
+      	$btn_visa_dir_df = '';
+      	$btn_visa_fin_df = '';
+      	$btn_decaiss_df = '';
+
+      	if ($response['id_util_reject_dept']==null && $response['date_visa_dept']==null) {
+      		$response['btn_edit_df'] = '<a class="btn btn-xs btn-warning" onclick="window.location.replace(\'edit_demande_fond.php?id_df='.$response['id_df'].'\');"> <i class="fa fa-edit"></i> Edit</a>';
+      	}
+
+          if($response['visa_dept_df']=='1'){
+            $btn_visa_dept_df = '<span class="btn btn-xs btn-success" onclick="modal_visa_dept_df('.$response['id_df'].')"><i class="fa fa-check"></i> Approve</span> <span class="btn btn-xs btn-danger" onclick="modal_reject_dept_df('.$response['id_df'].')"><i class="fa fa-times"></i> Reject</span>';
+          }
+          if($response['visa_dir_df']=='1'){
+            $btn_visa_dir_df = '<span class="btn btn-xs btn-success" onclick="ok_visa_dir_df('.$response['id_df'].')"><i class="fa fa-check"></i> Approve</span> <span class="btn btn-xs btn-danger" onclick="modal_reject_dept_df('.$response['id_df'].')"><i class="fa fa-times"></i> Reject</span>';
+          }
+          if($response['visa_fin_df']=='1'){
+            $btn_visa_fin_df = '<span class="btn btn-xs btn-success" onclick="ok_visa_fin_df('.$response['id_df'].')"><i class="fa fa-check"></i> Approve</span> <span class="btn btn-xs btn-danger" onclick="modal_reject_dept_df('.$response['id_df'].')"><i class="fa fa-times"></i> Reject</span>';
+          }
+
+          if($response['decaiss_df']=='1'){
+            $btn_decaiss_df = '<span class="btn btn-xs btn-success" onclick="modal_decaiss_df('.$response['id_df'].')"><i class="fa fa-check"></i> Make the Payment</span>';
+          }
+
+		if ($response['id_util_reject_dept']!=null){
+
+			$titre ='<span class="text-sm badge badge-danger">Rejected</span><br><span class="text-sm text text-danger">by '.$response['nom_util_reject_dept'].' | '.$response['date_reject_dept'].' <br> '.$response['motif_reject_dept'].'</span>';
+
+		}else if ($response['date_visa_dept']==null){
+
+			$titre ='<span class="text-sm badge badge-warning">Awaiting Departement Approval</span>';
+			$btn_action = $btn_visa_dept_df;
+
+		}else if ($response['date_visa_fin']==null){
+
+			$titre ='<span class="text-sm badge badge-warning">Awaiting Finance Approval</span>';
+			$btn_action = $btn_visa_fin_df;
+
+		}else if ($response['date_visa_dir']==null && ($response['cash']=='1'||$response['a_facturer']=='1')){
+
+			$titre ='<span class="text-sm badge badge-warning">Awaiting Management Approval</span>';
+			$btn_action = $btn_visa_dir_df;
+
+		}else if ($response['date_decaiss']==null){
+
+			$titre ='<span class="text-sm badge badge-warning">Pending Payment</span>';
+			$btn_action = $btn_decaiss_df;
+
+		}else{
+
+			$titre ='<span class="text-sm badge badge-success">Paid</span>';
+			$btn_action = '';
+
+		}
+
+		$response['detail_df'] = '
+			<tr>
+				<td colspan="2" class="text-center">'.$titre.'</td>
+			</tr>
+			<tr>
+				<td>Reference: </td>
+				<td><b>'.$response['id_df'].'</b></td>
+			</tr>
+			<tr>
+				<td>Date: </td>
+				<td><b>'.$response['date_create'].'</b></td>
+			</tr>
+			<tr>
+				<td>Departement: </td>
+				<td><b>'.$response['nom_dept'].'</b></td>
+			</tr>
+			<tr>
+				<td>Location: </td>
+				<td><b>'.$response['nom_site'].'</b></td>
+			</tr>
+			<tr>
+				<td>Requestor: </td>
+				<td><b>'.$response['nom_util'].'</b></td>
+			</tr>
+			<tr>
+				<td>Type Payment: </td>
+				<td><b>'.$response['type_payment'].'</b></td></tr>
+			<tr>
+				<td>Amount: </td>
+				<td><b>'.$response['monnaie'].' '.number_format($response['montant'], 2, ',', ' ').'</b></td>
+			</tr>
+			<tr>
+				<td>Chargeback: </td>
+				<td class="bg bg-warning"><b>'.$response['monnaie'].' '.number_format($response['montant_fact'], 2, ',', ' ').'</b> <b>'.$response['btn_fichier_fact'].'</b></td></tr>
+			<tr>
+				<td>Expense: </td>
+				<td><b>'.$response['nom_dep'].'</b></td>
+			</tr>
+			<tr>
+				<td>Motif: </td>
+				<td><b>'.$response['libelle'].'</b></td>
+			</tr>
+			<tr>
+				<td>Beneficiary: </td>
+				<td><b>'.$response['beneficiaire'].'</b></td>
+			</tr>
+			<tr>
+				<td>Client: </td>
+				<td><b>'.$response['nom_cli'].'</b></td>
+			</tr>
+			<tr>
+				<td>Nbre of Files: </td>
+				<td><b>'.$response['nbre_dos'].'</b></td>
+			</tr>
+			<tr>
+				<td>Support Doc.: </td>
+				<td><b>'.$response['support_doc'].'</b></td>
+			</tr>
+			<tr>
+				<td>Depart.Approval: </td>
+				<td><b>'.$response['nom_util_visa_dept'].'  '.$response['date_visa_dept'].'</b></td>
+			</tr>
+			<tr>
+				<td>Finance Approval: </td>
+				<td><b>'.$response['nom_util_visa_fin'].'  '.$response['date_visa_fin'].'</b></td>
+			</tr>
+			<tr>
+				<td>Management Approval: </td>
+				<td><b>'.$response['nom_util_visa_dir'].'  '.$response['date_visa_dir'].'</b></td>
+			</tr>
+			<tr>
+				<td>Paid by: </td>
+				<td><b>'.$response['nom_util_decaiss'].'  '.$response['date_decaiss'].'</b></td>
+			</tr>
+			<tr>
+				<td>Voucher Ref.: </td>
+				<td><b>'.$response['ref_decaiss'].'  '.$response['btn_fichier_decaiss'].'</b></td>
+			</tr>
+			<tr>
+				<td>Action: </td>
+				<td>'.$btn_action.'</td>
+			</tr>';
+	
 		echo json_encode($response);
 
 	}elseif(isset($_POST['operation']) && $_POST['operation']=='visa_dept_df'){ 
@@ -3620,7 +3841,8 @@
 			$_POST['montant_fact'] = '0';
 		}else{
 
-			if (!empty($_FILES)) {
+			if (($_FILES['fichier_fact']['name'])) {
+			// if (!empty($_FILES)) {
 
 	    		$file = $_FILES['fichier_fact'];
 	    		$filename = $file['name'];
@@ -3734,6 +3956,12 @@
 
 		echo json_encode($response);
 
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='table_dossier_demande'){ 
+
+		$response['table_dossier_demande'] = $maClasse-> table_dossier_demande($_POST['id_df']);
+
+		echo json_encode($response);
+
 	}elseif(isset($_POST['operation']) && $_POST['operation']=='check_date_error'){ 
 
 		$response['date_error'] = $maClasse-> check_date_error($_POST['id_dos']);
@@ -3752,6 +3980,154 @@
 		$response['nbre_dossier_sans_fob_apurement'] = $maClasse-> nbre_dossier_sans_fob_apurement($_POST['id_cli'], $_POST['id_mod_lic']);
 		
 		$response['nbre_dossier_sans_manifeste_apurement'] = $maClasse-> nbre_dossier_sans_manifeste_apurement($_POST['id_cli'], $_POST['id_mod_lic']);
+
+		echo json_encode($response);
+
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='licence_for_excel_tracking'){ 
+		
+		$response['licence_for_excel_tracking'] = $maClasse-> licence_for_excel_tracking($_POST['id_cli'], $_POST['id_mod_lic'], $_POST['id_mod_trans'], $_POST['commodity'], $_POST['statut'], $_POST['id_march'], $_POST['mot_cle']);
+
+		echo json_encode($response);
+
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='double_check_request'){ 
+		
+		$response = $maClasse-> double_check_request($_POST['id_dos'], $_POST['id_dep']);
+
+		echo json_encode($response);
+
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='selectionnerDepenseAjax'){ 
+		
+		$response['option'] = $maClasse-> selectionnerDepenseAjax();
+
+		echo json_encode($response);
+
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='new_depense'){ 
+		
+		$maClasse-> new_depense($_POST['nom_dep']);
+		$response['message'] = 'Done!';
+
+		echo json_encode($response);
+
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='build_new_file_other_service'){ 
+		
+		$response['ref_dos'] = $maClasse-> build_new_file_other_service();
+
+		echo json_encode($response);
+
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='file_other_service'){ 
+		
+		echo json_encode($maClasse-> file_other_service());
+
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='new_file_other_service'){ 
+		
+		$maClasse-> new_file_other_service($_POST['ref_dos'], $_POST['id_cli'], $_POST['remarque']);
+		$response['message'] = 'Done!';
+
+		echo json_encode($response);
+
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='nbre_notification_demande_fond'){ 
+		
+		$response = $maClasse-> nbre_notification_demande_fond();
+
+		echo json_encode($response);
+
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='tableau_demande_fond_notification'){ 
+		
+		$response['tableau_demande_fond_notification'] = $maClasse-> tableau_demande_fond_notification($_POST['niveau']);
+
+		echo json_encode($response);
+
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='upload_dossier_df'){ 
+		
+		
+      $fichier_dossier_df = $_FILES['fichier_dossier_df']['tmp_name'];
+
+      require('../PHPExcel-1.8/Classes/PHPExcel.php');
+      require_once('../PHPExcel-1.8/Classes/PHPExcel/IOFactory.php');
+
+      $objExcel = PHPExcel_IOFactory::load($fichier_dossier_df);
+
+      $table = '';
+      $compteur = 0;
+
+      foreach ($objExcel->getWorksheetIterator() AS $worsheet) {
+        $highestRow = $worsheet-> getHighestRow();
+        for ($row=1; $row <= $highestRow ; $row++) { 
+          
+
+            $ref_dos = $worsheet-> getCellByColumnAndRow(0, $row)-> getValue();
+            // $date_dep = $worsheet-> getCellByColumnAndRow(1, $row)-> getFormattedValue();
+            $montant = $worsheet-> getCellByColumnAndRow(1, $row)-> getValue();
+
+            $id_dos = $maClasse-> getDossierRefDos($ref_dos)['id_dos'];
+
+            
+            if (isset($id_dos)) {
+
+    			$table .='<tr>
+    						<td>'.($compteur+1).'</td>
+    						<td><input type="hidden" id="id_dos_'.$compteur.'" name="id_dos_'.$compteur.'" value="'.$id_dos.'">'.$ref_dos.'<a href="#" class="text-primary" onclick="modal_search_dossier_df('.$compteur.')"><i class="fa fa-search"></i></a></td>
+    						<td><input type="number" step="0.001" class=" text-right" style="width: 8em;" id="montant_'.$compteur.'" name="montant_'.$compteur.'" value="'.$montant.'" required></td>
+    					</tr>';
+              
+              // $maClasse-> creerDepenseDossier($_POST['id_dep'], $id_dos, $date_dep, $montant, $assigned_to);
+
+    			$compteur++;
+            }
+
+        }
+        
+      }
+
+      $response['table_dossier_df'] = $table;
+      $response['nbre'] = $compteur+1;
+
+		echo json_encode($response);
+
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='decaiss_df_edit'){ 
+
+		if (!empty($_FILES) && $_FILES['fichier_decaiss']['name']!='') {
+
+    		$file = $_FILES['fichier_decaiss'];
+    		$filename = $file['name'];
+    		$ext = pathinfo($filename, PATHINFO_EXTENSION);
+
+    		$fichier_decaiss = uniqid();
+    		$id_df = $_POST['id_df'];
+    		// $id_df = str_replace("/", "_", "$id_df");
+			
+			$dossier = '../demande_fond/'.$id_df;
+
+			if(!is_dir($dossier)){
+				mkdir("../demande_fond/$id_df", 0777);
+			}
+			$uploadFile = $dossier.'/'.$fichier_decaiss.'.'.$ext;
+			move_uploaded_file($file['tmp_name'], $uploadFile);
+
+    		$maClasse-> inserer_fichier_decaiss($id_df, $fichier_decaiss.'.'.$ext);
+
+    	}
+
+		$maClasse-> decaiss_df_edit($_POST['id_df'], $_POST['ref_decaiss'], $_POST['montant_decaiss'], $_POST['nom_recep_fond']);
+		$response['message'] = '
+	    				<div class="alert alert-success alert-dismissible" role="alert">
+		                  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+		                  <i class="fa fa-check"></i> The payment request <b>No.'.$_POST['id_df'].'</b> has been paid!
+		                </div>';
+
+		echo json_encode($response);
+
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='delete_depense_dossier'){ 
+
+		$maClasse-> delete_depense_dossier($_POST['id_dos'], $_POST['id_df']);
+		$response['message'] = 'Done!';
+
+		echo json_encode($response);
+
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='creerDepenseDossierDF'){ 
+
+		$maClasse-> creerDepenseDossierDF($_POST['id_dep'], $_POST['id_dos'], date('Y-m-d'), $_POST['montant'], $_POST['id_df']);
+		$response['message'] = 'Done!';
 
 		echo json_encode($response);
 
