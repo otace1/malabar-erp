@@ -25410,6 +25410,20 @@
 
 		}
 
+		public function delete_depense_dossier($id_dos, $id_df){
+			include("connexion.php");
+			$entree['id_dos'] = $id_dos;
+			$entree['id_df'] = $id_df;
+
+			$requete = $connexion-> prepare("DELETE FROM depense_dossier
+												WHERE id_dos = ? 
+													AND id_df = ?");
+
+			$requete-> execute(array($entree['id_dos'], $entree['id_df']));
+			
+
+		}
+
 		public function edit_detail_depense($ref_note, $id_dep_dos, $montant){
 			include("connexion.php");
 			$entree['ref_note'] = $ref_note;
@@ -47824,6 +47838,68 @@
 
 		}
 
+		public function pay_report_file(){
+			include('connexion.php');
+
+			$compteur = 0;
+			$rows = array();
+
+			$requete = $connexion-> query("SELECT df.*,
+												DATE_FORMAT(df.date_create, '%d/%m/%Y') AS date_df,
+												DATE_FORMAT(dos.date_liq, '%d/%m/%Y') AS date_liq,
+												dos.ref_liq AS ref_liq,
+												dos.montant_liq AS montant_liq,
+												dos.ref_dos AS ref_dos,
+												dep.nom_dep AS nom_dep,
+												cl.nom_cli AS nom_cli,
+												site.nom_site AS nom_site,
+												dept.nom_dept AS nom_dept,
+												util.nom_util AS nom_util,
+												depdos.montant AS montant,
+												IF(df.usd='1', 'USD', 'CDF') AS monnaie,
+												
+												IF(df.id_util_reject_dept IS NOT NULL,
+													'Rejected',
+													IF(df.date_visa_dept IS NULL,
+														'Awaiting Dept. Approval',
+														IF(df.date_visa_fin IS NULL,
+															'Awaiting Finance Approval',
+															IF(df.date_visa_dir IS NULL AND (df.a_facturer = '1' OR df.cash='1'),
+																'Awaiting Management Approval',
+																IF(df.date_decaiss IS NULL,
+																	'Pending payment',
+																	'Paid'
+																)
+															)
+														)
+													)
+												) AS statut,
+												CONCAT('<a href=\"#\" class=\"text-dark\" title=\"Dossiers affectés\" onclick=\"window.open(\'generateur_demande_fond.php?id_df=',df.id_df,'\',\'pop12\',\'width=1100,height=900\');\">
+														<i class=\"fa fa-print\"></i>
+													</a>') AS btn_action
+											FROM demande_fond df, site, departement dept, client cl, utilisateur util,
+												depense_dossier depdos, dossier dos, depense dep
+											WHERE df.id_site = site.id_site
+												AND df.id_dept = dept.id_dept
+												AND df.id_cli = cl.id_cli
+												AND df.id_util = util.id_util
+												AND df.id_df = depdos.id_df
+												AND depdos.id_dos = dos.id_dos
+												AND depdos.id_dep = dep.id_dep
+										");
+			// $requete-> execute(array($entree['id_dos']));
+			while($reponse = $requete-> fetch()){
+				$compteur++;
+
+				$reponse['compteur'] = $compteur;
+				$rows[] = $reponse;
+
+			}$requete-> closeCursor();
+			
+			return $rows;
+
+		}
+
 		public function pay_report($statut, $date_create_debut, $date_create_fin, $date_visa_dept_debut, $date_visa_dept_fin, $date_visa_fin_debut, $date_visa_fin_fin, $date_decaiss_debut, $date_decaiss_fin, $id_dep){
 			include('connexion.php');
 			// $entree['id_dos'] = $id_dos;
@@ -60209,6 +60285,38 @@
 
 		}
 
+		function edit_demande_fond($id_dept, $id_site, $beneficiaire, $id_cli, $cash, $montant, $usd, $libelle, $id_util_visa_dept, $id_dep, $id_df){
+			include("connexion.php");
+
+			$entree['id_dept'] = $id_dept;
+			$entree['id_site'] = $id_site;
+			$entree['beneficiaire'] = $beneficiaire;
+			$entree['id_cli'] = $id_cli;
+			$entree['cash'] = $cash;
+			$entree['montant'] = $montant;
+			$entree['usd'] = $usd;
+			$entree['libelle'] = $libelle;
+			$entree['id_util_visa_dept'] = $id_util_visa_dept;
+			$entree['id_dep'] = $id_dep;
+			$entree['id_df'] = $id_df;
+
+			$requete = $connexion-> prepare('UPDATE demande_fond
+												SET id_dept = ?, 
+													id_site = ?, 
+													beneficiaire = ?, 
+													id_cli = ?, 
+													cash = ?, 
+													montant = ?, 
+													usd = ?, 
+													libelle = ?, 
+													id_util_visa_dept = ?, 
+													id_util = ?, 
+													id_dep = ?
+												WHERE id_df = ?');
+			$requete-> execute(array($entree['id_dept'], $entree['id_site'], $entree['beneficiaire'], $entree['id_cli'], $entree['cash'], $entree['montant'], $entree['usd'], $entree['libelle'], $entree['id_util_visa_dept'], $_SESSION['id_util'], $_POST['id_dep'], $entree['id_df']));
+
+		}
+
 		public function demande_fond($statut=null){
 			include('connexion.php');
 
@@ -60784,6 +60892,18 @@
 			// return $reponse;
 		}
 
+		public function remove_fichier_df($id_df){
+			include('connexion.php');
+			$entree['id_df'] = $id_df;
+			// $entree['fichier_df'] = $fichier_df;
+
+			$requete = $connexion-> prepare("UPDATE demande_fond
+												SET fichier_df = NULL
+												WHERE id_df = ?");
+			$requete-> execute(array($entree['id_df']));
+			// return $reponse;
+		}
+
 		public function inserer_fichier_fact($id_df, $fichier_fact){
 			include('connexion.php');
 			$entree['id_df'] = $id_df;
@@ -60878,6 +60998,39 @@
 
 		}
 
+		public function table_dossier_demande($id_df){
+			include('connexion.php');
+			$compteur=0;
+			$entree['id_df'] = $id_df;
+
+			$table = '';
+			
+			$requete = $connexion-> prepare("SELECT dos.ref_dos AS ref_dos,
+															dos.id_dos AS id_dos,
+															depdos.montant AS montant,
+															df.id_df AS id_df
+														FROM dossier dos, client cl, depense_dossier depdos, demande_fond df
+														WHERE dos.id_cli = cl.id_cli
+															AND dos.id_dos = depdos.id_dos
+															AND depdos.id_df = df.id_df
+															AND df.id_df = ?
+														ORDER BY dos.id_dos DESC");
+			$requete-> execute(array($entree['id_df']));
+			while($reponse = $requete-> fetch()){
+				$compteur++;
+				$table .='
+    					<tr>
+							<td>'.$compteur.'</td>
+							<td>'.$reponse['ref_dos'].'</td>
+							<td class="text-right">'.number_format($reponse['montant'], 2, ',', ' ').'</td>
+							<td><span class="btn btn-xs text-danger"  onclick="delete_depense_dossier(\''.$reponse['id_dos'].'\', \''.$reponse['id_df'].'\');"><i class="fa fa-times"></i></span></td>
+						</tr>';
+			}$requete-> closeCursor();
+			
+			return $table;
+
+		}
+
 		public function get_licence_for_excel_tracking($id_cli){
 			include('connexion.php');
 			$compteur=0;
@@ -60960,9 +61113,11 @@
 			$entree['id_dep'] = $id_dep;
 
 			$requete = $connexion-> prepare("SELECT *
-												FROM depense_dossier depdos
-												WHERE id_dos = ?
-													AND id_dep = ?");
+												FROM depense_dossier depdos, demande_fond df
+												WHERE depdos.id_dos = ?
+													AND depdos.id_dep = ?
+													AND depdos.id_df = df.id_df
+													AND df.date_reject_dept IS NULL");
 			$requete-> execute(array($entree['id_dos'], $entree['id_dep']));
 			$reponse = $requete-> fetch();
 			return $reponse;
