@@ -20853,6 +20853,67 @@
 
 		}
 
+		public function dossier_quittance_dashboard($debut, $fin, $id_cli, $id_mod_lic){
+			include('connexion.php');
+			$entree['id_mod_lic'] = $id_mod_lic;
+			$entree['debut'] = $debut;
+			$entree['fin'] = $fin;
+
+			if (isset($id_cli) && ($id_cli != '')) {
+				$sqlClient = ' AND dos.id_cli = '.$id_cli;
+			}else{
+				$sqlClient = '';
+			}
+
+			$compteur = 0;
+			$rows = array();
+
+			$requete = $connexion-> prepare("SELECT dos.id_dos AS id_dos,
+													dos.ref_dos AS ref_dos,
+													cl.code_cli AS code_cli,
+													cl.nom_cli AS nom_cli,
+													dos.poids AS poids,
+													dos.num_lot AS num_lot,
+													dos.num_lic AS num_lic,
+													dos.ref_fact AS ref_fact,
+													march.nom_march AS nom_march,
+													mt.nom_mod_trans AS nom_mod_trans,
+													dos.montant_liq AS montant_liq,
+													dos.ref_decl AS ref_decl,
+													DATE_FORMAT(dos.date_decl, '%d/%m/%Y') AS date_decl,
+													dos.ref_liq AS ref_liq,
+													DATE_FORMAT(dos.date_liq, '%d/%m/%Y') AS date_liq,
+													dos.ref_quit AS ref_quit,
+													DATE_FORMAT(dos.date_quit, '%d/%m/%Y') AS date_quit
+												FROM dossier dos
+													LEFT JOIN client cl
+														ON dos.id_cli = cl.id_cli
+													LEFT JOIN marchandise march
+														ON dos.id_march = march.id_march 
+													LEFT JOIN mode_transport mt
+														ON dos.id_mod_trans = mt.id_mod_trans
+													LEFT JOIN detail_facture_dossier det
+														ON det.id_dos = dos.id_dos
+													LEFT JOIN facture_dossier fd
+														ON det.ref_fact = fd.ref_fact
+												WHERE dos.id_mod_lic = ?
+													AND dos.date_quit BETWEEN ? AND ?
+													$sqlClient
+												GROUP BY dos.id_dos");
+			$requete-> execute(array($entree['id_mod_lic'], $entree['debut'], $entree['fin']));
+			while ($reponse = $requete-> fetch()) {
+				$compteur++;
+
+				$reponse['compteur'] = $compteur;
+
+				$rows[] = $reponse;
+			}$requete-> closeCursor();
+
+
+			return $rows;
+
+		}
+
 		public function code_tarifaire_ajax(){
 			include('connexion.php');
 			
