@@ -37,6 +37,7 @@
                   <a class="dropdown-item" href="#" onclick="window.open('popFilesLoading.php?debut='+$('#debut').val()+'&fin='+$('#fin').val()+'&id_cli='+$('#id_cli').val(),'pop1','width=1200,height=700');">Loading</a>
                   <a class="dropdown-item" href="#" onclick="window.open('popFilesDispatch.php?debut='+$('#debut').val()+'&fin='+$('#fin').val()+'&id_cli='+$('#id_cli').val(),'pop1','width=1200,height=700');">Dispatch</a>
                   <a class="dropdown-item" href="#" onclick="window.open('popFilesNotDispatch.php?debut='+$('#debut').val()+'&fin='+$('#fin').val()+'&id_cli='+$('#id_cli').val(),'pop1','width=1200,height=700');">Not Dispatched</a>
+                  <a class="dropdown-item" href="#" onclick="window.open('popFilesQuittance.php?debut='+$('#debut').val()+'&fin='+$('#fin').val()+'&id_cli='+$('#id_cli').val()+'&id_mod_lic=<?php echo $_GET['id_mod_lic_fact'];?>','pop1','width=1200,height=700');">Based on Quittance Date</a>
                 </div>
               </div>
               <div class="btn-group">
