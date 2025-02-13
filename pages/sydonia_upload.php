@@ -313,13 +313,13 @@
                             //echo '<br> id_dos  = '.$id_dos;
                             if (isset($id_dos)) {
                                
-                              if ($t1 > 1 && $t1 != $maClasse->getDossier($id_dos)['t1']) {
+                              if ($t1 != '' && $t1 != $maClasse->getDossier($id_dos)['t1']) {
                                 
                                 $maClasse-> MAJ_t1($id_dos, $t1);
 
                               }
 
-                              if ($t1_date > 1 && $t1_date != $maClasse->getDossier($id_dos)['t1_date']) {
+                              if ($t1_date != '' && $t1_date != $maClasse->getDossier($id_dos)['t1_date']) {
                                 
                                 $maClasse-> MAJ_t1_date($id_dos, $t1_date);
 
