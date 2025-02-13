@@ -291,6 +291,49 @@
 
                     }
 
+                    if(isset($_POST['uploadeT1'])){
+                      
+                      $fichier_pointage = $_FILES['fichier_dossier']['tmp_name'];
+
+                      require('../PHPExcel-1.8/Classes/PHPExcel.php');
+                      require_once('../PHPExcel-1.8/Classes/PHPExcel/IOFactory.php');
+
+                      $objExcel = PHPExcel_IOFactory::load($fichier_pointage);
+
+                      foreach ($objExcel->getWorksheetIterator() AS $worsheet) {
+                        $highestRow = $worsheet-> getHighestRow();
+                        for ($row=1; $row <= $highestRow ; $row++) { 
+                          
+
+                            $ref_dos = $worsheet-> getCellByColumnAndRow(0, $row)-> getValue();
+                            $t1 = $worsheet-> getCellByColumnAndRow(1, $row)-> getValue();
+                            $t1_date = $worsheet-> getCellByColumnAndRow(2, $row)-> getFormattedValue();
+
+                            $id_dos = $maClasse-> getDossierRefDos($ref_dos)['id_dos'];
+                            //echo '<br> id_dos  = '.$id_dos;
+                            if (isset($id_dos)) {
+                               
+                              if ($t1 > 1 && $t1 != $maClasse->getDossier($id_dos)['t1']) {
+                                
+                                $maClasse-> MAJ_t1($id_dos, $t1);
+
+                              }
+
+                              if ($t1_date > 1 && $t1_date != $maClasse->getDossier($id_dos)['t1_date']) {
+                                
+                                $maClasse-> MAJ_t1_date($id_dos, $t1_date);
+
+                              }
+
+
+                            }
+
+
+                        }
+                      }
+
+                    }
+
                     
                     if(isset($_POST['debugDate'])){
                       
@@ -344,7 +387,10 @@
                     <i class="fa fa-upload"></i> Upload Liquidation
                 </button> -->
                 <button class="btn bg-olive square-btn-adjust" data-toggle="modal" data-target=".uploadeQuittance">
-                    <i class="fa fa-upload"></i> Upload File
+                    <i class="fa fa-upload"></i> Upload IM4/EX1, Liquidation, Quittance File
+                </button>
+                <button class="btn bg-info square-btn-adjust" data-toggle="modal" data-target=".uploadeT1">
+                    <i class="fa fa-upload"></i> Upload T1 File
                 </button>
                 <!-- <button class="btn bg-danger square-btn-adjust" data-toggle="modal" data-target=".debugDate">
                     <i class="fa fa-upload"></i> DEBUG DATE
@@ -480,7 +526,7 @@ if(isset($_GET['id_mod_trac']) && isset($_GET['id_mod_trac'])){
       <form id="demo-form2" method="POST" action="" data-parsley-validate enctype="multipart/form-data">
       <div class="modal-content">
         <div class="modal-header">
-          <h4 class="modal-title">UPLOAD SYDONIA FILE</h4>
+          <h4 class="modal-title">UPLOAD IM4/EX1, L, Q FILE</h4>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
@@ -498,6 +544,37 @@ if(isset($_GET['id_mod_trac']) && isset($_GET['id_mod_trac'])){
         <div class="modal-footer justify-content-between">
           <button type="button" class="btn btn-danger" data-dismiss="modal">Annuler</button>
           <button type="submit" name="uploadeQuittance" class="btn btn-primary">Valider</button>
+        </div>
+      </div>
+      </form>
+      <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+  </div>
+
+  <div class="modal fade uploadeT1" id="modal-default">
+    <div class="modal-dialog">
+      <form id="demo-form2" method="POST" action="" data-parsley-validate enctype="multipart/form-data">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">UPLOAD T1 FILE</h4>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+
+            <div class="col-md-12">
+              <label for="x_card_code" class="control-label mb-1">FILE</label>
+              <input type="file" name="fichier_dossier" class="form-control cc-exp" required>
+            </div>
+
+          </div>
+        </div>
+        <div class="modal-footer justify-content-between">
+          <button type="button" class="btn btn-danger" data-dismiss="modal">Annuler</button>
+          <button type="submit" name="uploadeT1" class="btn btn-primary">Valider</button>
         </div>
       </div>
       </form>
