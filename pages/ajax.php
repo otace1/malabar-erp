@@ -267,9 +267,14 @@
 	  					// Test CEEC Impala 
 	  					$dossier = $maClasse-> getDossier($_POST['id_dos_'.$i]);
 	  					if (!empty($maClasse-> verifierFonctionnalite($dossier['id_cli'], 1, $dossier['id_mod_lic'], $dossier['id_mod_trans'], $dossier['id_march']))) {
+
+	  						if ($dossier['poids']>=30) {
+	  							$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 11, 600, '0', '1');
+	  							$maClasse-> creerDepenseDossier(8, $_POST['id_dos_'.$i], date('Y-m-d'), 200, 'ANNICK');
+	  						}else{
+	  							$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 11, 600, '0', '1');
+	  						}
 	  						
-	  						$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 11, 300, '0', '1');
-	  						$maClasse-> creerDepenseDossier(8, $_POST['id_dos_'.$i], date('Y-m-d'), 150, 'ANNICK');
 
 	  					}else{
 	  						$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 12, $_POST['ceec_60_'.$i], $_POST['ceec_60_tva_'.$i], '1');

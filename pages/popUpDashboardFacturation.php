@@ -86,6 +86,8 @@
                       <th>License Num.</th>
                       <th>Client</th>
                       <th>Encoded By</th>
+                      <th>Declaration Ref.</th>
+                      <th>Declaration Date</th>
                       <th>Liquidation Ref.</th>
                       <th>Liquidation Date</th>
                       <th>Quittance Ref.</th>
@@ -150,6 +152,8 @@
                       <th>Scelle Electr.</th>
                       <th>Scelle Electr. Amount</th>
                       <th>Frais Tresco</th>
+                      <th>Declaration Ref.</th>
+                      <th>Declaration Date</th>
                       <th>Liquidation Ref.</th>
                       <th>Liquidation Date</th>
                       <th>Quittance Ref.</th>
@@ -413,6 +417,8 @@
             render: DataTable.render.number( null, null, 2, null ),
             className: 'dt-body-right'
           },
+          {"data":"ref_decl"},
+          {"data":"date_decl"},
           {"data":"ref_liq"},
           {"data":"date_liq"},
           {"data":"ref_quit"},
@@ -486,6 +492,8 @@
           {"data":"num_lic"},
           {"data":"nom_cli"},
           {"data":"nom_util"},
+          {"data":"ref_decl"},
+          {"data":"date_decl"},
           {"data":"ref_liq"},
           {"data":"date_liq"},
           {"data":"ref_quit"},
