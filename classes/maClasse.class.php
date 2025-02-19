@@ -14646,6 +14646,41 @@
 
 		}
 
+		public function client_note_debit2($id_cli){
+			include("connexion.php");
+			$entree['id_cli'] = $id_cli;
+
+			$compteur=0;
+
+			$tableau = '';
+
+			$row = array();
+
+			$requete = $connexion-> prepare("SELECT cl.id_cli AS id_cli,
+													cl.nom_cli AS nom_cli,
+													cl.code_cli AS code_cli,
+													mnd.nom_model_nd AS nom_model_nd,
+													ml.nom_mod_lic AS nom_mod_lic,
+													dep.nom_dep AS nom_dep,
+													CONCAT('<a href=\"#\" class=\"text-danger\" onclick=\"delete_aff_modele_note_debit(',aff.id_model_nd,',', aff.id_cli,',',aff.id_mod_lic,',',aff.id_dep,')\"><i class=\"fa fa-times\"></i> Remove</a>') AS btn_action
+												FROM client cl, affectation_modele_note_debit_client aff, modele_note_debit mnd, modele_licence ml, depense dep
+												WHERE cl.id_cli = aff.id_cli
+													AND aff.id_cli = ?
+													AND aff.id_model_nd = mnd.id_model_nd
+													AND aff.id_mod_lic = ml.id_mod_lic
+													AND aff.id_dep = dep.id_dep");
+			$requete-> execute(array($entree['id_cli']));
+			while ($reponse = $requete-> fetch()) {
+
+				$compteur++;
+				$reponse['compteur'] = $compteur;
+				$row[] = $reponse;
+
+			}$requete-> closeCursor();
+			return $row;
+
+		}
+
 		public function kamoa_nd($id_mod_lic, $id_cli){
 			include("connexion.php");
 			$entree['id_mod_lic'] = $id_mod_lic;
@@ -14887,9 +14922,9 @@
 								<td>'.$compteur.'</td>
 								<td>'.$reponse['ref_dos'].'</td>
 								<td>'.$reponse['po_ref'].'</td>
+								<td>'.$reponse['nom_dep'].'</td>
 								<td>'.$reponse['num_lot'].'</td>
 								<td class="text-right">'.number_format($reponse['poids'], 2, ',', ' ').'</td>
-								<td>'.$reponse['nom_dep'].'</td>
 								<td class="text-center"><input type="number" step="0.001" class="text-right " name="montant_'.$compteur.'" value="'.$reponse['montant'].'"></td>
 								<td class="text-center">
 									<select  name="tva_'.$compteur.'"  id="tva_'.$compteur.'" class="">
@@ -20694,7 +20729,8 @@
 														DATEDIFF(CURRENT_DATE(), dos.load_date)
 													) AS delays,
 													DATE_FORMAT(fd.date_fact, '%d/%m/%Y') AS date_fact,
-													CONCAT('<button class=\"btn btn-xs btn-info\" title=\"Feuille de calcul\" onclick=\"modal_edit_ogefrem(\'',dos.id_dos,'\');\"><i class=\"fa fa-edit\"></i></button>') AS btn_action
+													CONCAT('<button class=\"btn btn-xs btn-info\" title=\"Feuille de calcul\" onclick=\"modal_edit_ogefrem(\'',dos.id_dos,'\');\"><i class=\"fa fa-edit\"></i></button>') AS btn_action,
+													dos.delay_reason AS delay_reason
 												FROM dossier dos
 													LEFT JOIN client cl
 														ON dos.id_cli = cl.id_cli
@@ -25081,6 +25117,7 @@
 													d.entrepot_frontiere AS entrepot_frontiere,
 													d.po_ref AS po_ref,
 													d.t1 AS t1,
+													d.t1_date AS t1_date,
 													d.bond_warehouse AS bond_warehouse,
 													d.warehouse_arriv AS warehouse_arriv,
 													d.warehouse_dep AS warehouse_dep,
@@ -25201,12 +25238,264 @@
 												FROM dossier d, client cl, mode_transport mt
 												WHERE d.id_mod_trans = mt.id_mod_trans
 													AND d.id_cli = cl.id_cli
-													AND (DATE(d.wiski_arriv) BETWEEN ? AND ?)
+													-- AND (DATE(d.wiski_arriv) BETWEEN ? AND ?)
+													AND (DATE(d.dispatch_deliv) BETWEEN ? AND ?)
 													$sqlClient
 													$sqlModeLic
 												ORDER BY d.id_dos");
 
 			$requete-> execute(array($entree['debut'], $entree['fin']));
+
+			while($reponse = $requete-> fetch()){
+				$compteur++;
+				$reponse['compteur'] = $compteur;
+				$rows[] = $reponse;
+
+			}$requete-> closeCursor();
+
+			return $rows;
+		}
+		
+		public function kpi_tracking_reportAll2($champ_col, $debut, $fin, $id_cli=null, $id_mod_lic=null){
+			include('connexion.php');
+
+
+			$rows = array();
+			$compteur = 0;
+			$entree['debut'] = $debut;
+			$entree['fin'] = $fin;
+			$entree['champ_col'] = $champ_col;
+
+			if (isset($id_cli) && ($id_cli!='')) {
+				$sqlClient = ' AND cl.id_cli = "'.$id_cli.'"';
+			}else{
+				$sqlClient = '';
+			}
+
+			if (isset($id_mod_lic) && ($id_mod_lic!='')) {
+				$sqlModeLic = ' AND d.id_mod_lic = "'.$id_mod_lic.'"';
+			}else{
+				$sqlModeLic = '';
+			}
+
+			if (isset($id_mod_lic) && ($id_mod_lic!='')) {
+				$sqlDate = ' AND (DATE(d.'.$champ_col.') BETWEEN "'.$debut.'" AND "'.$fin.'")';
+			}
+
+
+			$requete = $connexion-> query("SELECT cl.code_kpi_tracking AS code_kpi_tracking,
+													d.id_dos AS id_dos,
+													d.ref_dos AS ref_dos,
+													d.ref_fact AS ref_fact,
+													d.commodity AS commodity,
+													d.supplier AS supplier,
+													d.poids AS poids,
+													d.fob AS fob,
+													d.road_manif AS road_manif,
+													d.horse AS horse,
+													d.trailer_1 AS trailer_1,
+													d.trailer_2 AS trailer_2,
+													d.container AS container,
+													d.regime AS regime,
+													d.frontiere AS frontiere,
+													d.entrepot_frontiere AS entrepot_frontiere,
+													d.po_ref AS po_ref,
+													d.t1 AS t1,
+													d.t1_date AS t1_date,
+													d.bond_warehouse AS bond_warehouse,
+													d.warehouse_arriv AS warehouse_arriv,
+													d.warehouse_dep AS warehouse_dep,
+													d.num_lic AS num_lic,
+													cl.nom_cli AS nom_cli,
+													d.frontiere AS frontiere,
+													d.ref_crf AS ref_crf,
+													d.num_lic AS num_lic,
+													d.horse AS horse,
+													d.trailer_1 AS trailer_1,
+													d.trailer_2 AS trailer_2,
+													d.container AS container,
+													d.pied_container AS pied_container,
+													d.site_load AS site_load,
+													d.destination AS destination,
+													d.transporter AS transporter,
+													d.num_lot AS num_lot,
+													d.nbr_bags AS nbr_bags,
+													DATE_FORMAT(d.load_date, '%d/%m/%Y') AS load_date,
+													DATE_FORMAT(d.demande_attestation, '%d/%m/%Y') AS demande_attestation,
+													DATE_FORMAT(d.assay_date, '%d/%m/%Y') AS assay_date,
+													DATE_FORMAT(d.ceec_in, '%d/%m/%Y') AS ceec_in,
+													DATE_FORMAT(d.ceec_out, '%d/%m/%Y') AS ceec_out,
+													IF(d.ceec_in IS NULL,
+														0,
+														IF(d.ceec_out IS NOT NULL,
+															DATEDIFF(d.ceec_out, d.ceec_in),
+															DATEDIFF(CURRENT_DATE(), d.ceec_in)
+														)
+													) AS ceec_delay,
+													DATE_FORMAT(d.min_div_in, '%d/%m/%Y') AS min_div_in,
+													DATE_FORMAT(d.min_div_out, '%d/%m/%Y') AS min_div_out,
+													IF(d.min_div_in IS NULL,
+														0,
+														IF(d.min_div_out IS NOT NULL,
+															DATEDIFF(d.min_div_out, d.min_div_in),
+															DATEDIFF(CURRENT_DATE(), d.min_div_in)
+														)
+													) AS min_div_delay,
+													DATE_FORMAT(d.gov_in, '%d/%m/%Y') AS gov_in,
+													DATE_FORMAT(d.gov_out, '%d/%m/%Y') AS gov_out,
+													IF(d.gov_in IS NULL,
+														0,
+														IF(d.gov_out IS NOT NULL,
+															DATEDIFF(d.gov_out, d.gov_in),
+															DATEDIFF(CURRENT_DATE(), d.gov_in)
+														)
+													) AS gov_delay,
+													d.ref_decl AS ref_decl,
+													DATE_FORMAT(d.date_decl, '%d/%m/%Y') AS date_decl,
+													d.ref_liq AS ref_liq,
+													DATE_FORMAT(d.date_liq, '%d/%m/%Y') AS date_liq,
+													d.ref_quit AS ref_quit,
+													DATE_FORMAT(d.date_quit, '%d/%m/%Y') AS date_quit,
+													DATE_FORMAT(d.date_crf, '%d/%m/%Y') AS date_crf,
+													d.ir_crf AS ir_crf,
+													DATE_FORMAT(d.date_decl, '%d/%m/%Y') AS date_decl,
+													d.ref_decl AS ref_decl,
+													DATE_FORMAT(d.date_liq, '%d/%m/%Y') AS date_liq,
+													d.ref_liq AS ref_liq,
+													DATE_FORMAT(d.date_quit, '%d/%m/%Y') AS date_quit,
+													DATE_FORMAT(d.dispatch_date, '%d/%m/%Y') AS dispatch_date,
+													DATE_FORMAT(d.arrival_date, '%d/%m/%Y') AS arrival_date,
+													DATE_FORMAT(d.end_form, '%d/%m/%Y') AS end_form,
+													DATE_FORMAT(d.exit_drc, '%d/%m/%Y') AS exit_drc,
+													IF(d.dgda_in IS NULL,
+														0,
+														IF(d.dgda_out IS NOT NULL,
+															DATEDIFF(d.dgda_out, d.dgda_in),
+															DATEDIFF(CURRENT_DATE(), d.dgda_in)
+														)
+													) AS dgda_delay,
+													IF(d.cleared='0',
+														'Transit',
+														IF(d.cleared='1',
+															'Cleared',
+															'Cancelled'
+														)	
+													) AS clearing_status,
+													IF(d.id_march='4',
+														IF(d.docs_sncc IS NOT NULL,
+															DATEDIFF(d.docs_sncc, d.demande_attestation),
+															DATEDIFF(CURRENT_DATE, d.demande_attestation)
+														),
+														IF(d.dispatch_date IS NOT NULL,
+															DATEDIFF(d.dispatch_date, d.demande_attestation),
+															DATEDIFF(CURRENT_DATE, d.demande_attestation)
+														)
+													) AS delay_exit,
+													d.ref_quit AS ref_quit,
+													d.remarque AS remarque,
+													d.delay_reason AS delay_reason,
+													DATE_FORMAT(d.date_preal, '%d/%m/%Y') AS date_preal,
+													DATE_FORMAT(d.klsa_arriv, '%d/%m/%Y') AS klsa_arriv,
+													DATE_FORMAT(d.dispatch_klsa, '%d/%m/%Y') AS dispatch_klsa,
+													DATE_FORMAT(d.date_ad, '%d/%m/%Y') AS date_ad,
+													DATE_FORMAT(d.date_assurance, '%d/%m/%Y') AS date_assurance,
+													DATE_FORMAT(d.dispatch_deliv, '%d/%m/%Y') AS dispatch_deliv,
+													DATE_FORMAT(d.dispatch_klsa, '%d/%m/%Y') AS dispatch_klsa,
+													IF(d.klsa_arriv IS NULL,
+														0,
+														IF(d.dispatch_klsa IS NULL,
+															DATEDIFF(CURRENT_DATE(), d.klsa_arriv),
+															DATEDIFF(d.dispatch_klsa, d.klsa_arriv)
+														)
+													) AS delay_klsa,
+													CONCAT(
+														IF(d.horse IS NOT NULL AND REPLACE(d.horse, ' ', '') NOT LIKE '',
+															d.horse,
+															''),
+														IF(d.trailer_1 IS NOT NULL AND REPLACE(d.trailer_1, ' ', '') NOT LIKE '',
+															CONCAT(' / ', d.trailer_1),
+															''),
+														IF(d.trailer_2 IS NOT NULL AND REPLACE(d.trailer_2, ' ', '') NOT LIKE '',
+															CONCAT(' / ', d.trailer_2),
+															'')
+													) AS truck,
+													IF(d.klsa_arriv IS NULL,
+														'',
+														IF(d.dispatch_klsa IS NULL,
+															IF(DATEDIFF(CURRENT_DATE(), d.klsa_arriv)<3, 'On time', 'Delay'),
+															IF(DATEDIFF(d.dispatch_klsa, d.klsa_arriv)<3, 'On time', 'Delay')
+														)
+													) AS comment_delay_klsa,
+													DATE_FORMAT(d.wiski_arriv, '%d/%m/%Y') AS wiski_arriv,
+													IF(d.wiski_dep IS NULL AND d.dispatch_klsa IS NOT NULL, 
+														DATE_FORMAT(d.dispatch_klsa, '%d/%m/%Y'),
+														DATE_FORMAT(d.wiski_dep, '%d/%m/%Y')) AS wiski_dep,
+													IF(d.wiski_arriv IS NULL,
+														0,
+														IF(d.wiski_dep IS NULL AND d.dispatch_klsa IS NOT NULL,
+															DATEDIFF(d.dispatch_klsa, d.wiski_arriv),
+															IF(d.wiski_dep IS NULL,
+																DATEDIFF(CURRENT_DATE(), d.wiski_arriv),
+																DATEDIFF(d.wiski_dep, d.wiski_arriv)
+															)
+															
+														)
+													) AS delay_wiski,
+													IF(d.wiski_arriv IS NULL,
+														0,
+														IF(d.dispatch_deliv IS NULL,
+															DATEDIFF(CURRENT_DATE(), d.wiski_arriv),
+															DATEDIFF(d.dispatch_deliv, d.wiski_arriv)
+														)
+													) AS delay_kpi,
+													mt.nom_mod_trans AS nom_mod_trans,
+													IF(d.id_mod_lic='2' AND d.id_mod_trans='1',
+														IF(d.date_crf IS NULL AND d.date_ad IS NULL AND d.date_assurance IS NULL,
+													      'AWAITING CRF/AD/INSURANCE',
+													      IF(d.date_crf IS NULL AND d.date_ad IS NULL AND d.date_assurance IS NOT NULL,
+													        'AWAITING CRF/AD',
+													          IF(d.date_crf IS NULL AND d.date_ad IS NOT NULL AND d.date_assurance IS NULL,
+													            'AWAITING CRF/INSURANCE',
+													            IF(d.date_crf IS NULL AND d.date_ad IS NOT NULL AND d.date_assurance IS NOT NULL,
+													              'AWAITING CRF', 
+													              IF(d.date_crf IS NOT NULL AND d.date_ad IS NULL AND d.date_assurance IS NULL,
+													                'AWAITING AD/INSURANCE',
+													                IF(d.date_crf IS NOT NULL AND d.date_ad IS NULL AND d.date_assurance IS NOT NULL,
+													                  'AWAITING AD',
+													                    IF(d.date_crf IS NOT NULL AND d.date_ad IS NOT NULL AND d.date_assurance IS NULL,
+													                      'AWAITING INSURANCE',
+
+													                      IF(d.date_decl IS NULL AND d.ref_decl IS NULL, 'UNDER PREPARATION',
+													                        IF(d.date_liq IS NULL AND d.ref_liq IS NULL, 'AWAITING LIQUIDATION',
+													                          IF(d.date_quit IS NULL AND d.ref_quit IS NULL, 'AWAITING QUITTANCE',
+													                            IF(d.date_quit IS NOT NULL AND d.ref_quit IS NOT NULL AND d.dgda_out IS NULL, 'AWAITING BAE/BS', 
+													                              IF(d.dgda_out IS NOT NULL AND d.dispatch_deliv IS NOT NULL, 'CLEARING COMPLETED', '')
+													                              )
+													                            )
+													                          )
+													                        )
+													                      
+													                      )
+													                  )
+													                )
+													              )
+													            )
+													          )
+													      )
+														,
+														d.statut) AS statut,
+													d.cleared AS cleared
+												FROM dossier d, client cl, mode_transport mt
+												WHERE d.id_mod_trans = mt.id_mod_trans
+													AND d.id_cli = cl.id_cli
+													$sqlDate
+													-- AND (DATE(d.wiski_arriv) BETWEEN ? AND ?)
+													$sqlDate
+													$sqlClient
+													$sqlModeLic
+												ORDER BY d.id_dos");
+
+			// $requete-> execute(array($entree['champ_col'], $entree['debut'], $entree['fin']));
 
 			while($reponse = $requete-> fetch()){
 				$compteur++;
@@ -26858,7 +27147,14 @@
 					KZI STATUS
 				</th>
 				<?php
+				}
+				else if ($reponse['id_col']=='40' && $id_mod_lic=='1') {
 
+				?>
+				<th style="border: 1px solid white;"><?php echo $reponse['titre_col'];?></th>
+				<th style="border: 1px solid white;">Delay Reason</th>
+				<?php
+				
 				}else{
 
 				?>
@@ -30660,16 +30956,16 @@
 													c.calcul AS calcul,
 													c.id_col AS id_col,
 													c.attribut_col AS attribut_col 
-											FROM colonne c, client cl, affectation_colonne_client_modele_licence af, affectation_colonne_role_modele_licence rolic
-											WHERE c.id_col = af.id_col
-												AND af.id_cli = cl.id_cli
-											    AND cl.id_cli = ?
-											    AND af.id_mod_trans = ?
-											    AND af.id_mod_lic = ?
-											    AND c.id_col = rolic.id_col
-											    AND rolic.id_role = ?
-											    AND rolic.id_mod_lic = ?
-											ORDER BY rolic.rang ASC");
+													FROM colonne c, client cl, affectation_colonne_client_modele_licence af, affectation_colonne_role_modele_licence rolic
+													WHERE c.id_col = af.id_col
+														AND af.id_cli = cl.id_cli
+													    AND cl.id_cli = ?
+													    AND af.id_mod_trans = ?
+													    AND af.id_mod_lic = ?
+													    AND c.id_col = rolic.id_col
+													    AND rolic.id_role = ?
+													    AND rolic.id_mod_lic = ?
+													ORDER BY rolic.rang ASC");
 			$requete-> execute(array($entree['id_cli'], $entree['id_mod_trans'], $entree['id_mod_lic'], $_SESSION['id_role'], $entree['id_mod_lic']));
 			}
 			while ($reponse = $requete-> fetch()) {
@@ -30733,6 +31029,17 @@
 									echo ($this-> getDifferenceDate($this-> getDataRow('dispatch_date', $id_dos), $this-> getDataRow('load_date', $id_dos)) - $this-> getWeekendsAndHolidays($this-> getDataRow('load_date', $id_dos), $this-> getDataRow('dispatch_date', $id_dos)));
 								?>
 								</span>
+							</td>
+							<td style="border: 1px solid black; text-align: center;">
+								<select name="delay_reason_<?php echo $compteur;?>">
+									<option value="<?php echo $this-> getDossier($id_dos)['delay_reason']; ?>">
+										<?php echo $this-> getDossier($id_dos)['delay_reason'];?>
+									</option>
+									<option></option>
+									<option value="Client">Client</option>
+									<option value="Govt. Dept">Govt. Dept</option>
+									<option value="Malabar">Malabar</option>
+								</select>
 							</td>
 							<?php
 						
@@ -31339,6 +31646,9 @@
 							?>
 							</span>
 						</td>
+						<td style="border: 1px solid black; text-align: center;">
+							<?php echo $this-> getDataRow($reponse['delay_reason'], $id_dos)?>
+						</td>
 						<?php
 						
 							$bg = '';
@@ -31607,6 +31917,17 @@
 								echo $this-> getDifferenceDate($this-> getDataRow('dispatch_date', $id_dos), $this-> getDataRow('demande_attestation', $id_dos)) - $this-> getWeekendsAndHolidays($this-> getDataRow('demande_attestation', $id_dos), $this-> getDataRow('dispatch_date', $id_dos));
 							?>
 							</span>
+						</td>
+						<td style="border: 1px solid black; text-align: center;">
+							<select name="delay_reason_<?php echo $compteur;?>">
+								<option value="<?php echo $this-> getDataRow($reponse['delay_reason'], $id_dos)?>">
+									<?php echo $this-> getDataRow($reponse['delay_reason'], $id_dos)?>
+								</option>
+								<option></option>
+								<option value="Client">Client</option>
+								<option value="Govt. Dept">Govt. Dept</option>
+								<option value="Malabar">Malabar</option>
+							</select>
 						</td>
 						<?php
 						
@@ -32200,6 +32521,10 @@
 								echo $this-> getDifferenceDate($this-> getDataRow('dispatch_date', $id_dos), $this-> getDataRow('demande_attestation', $id_dos)) - $this-> getWeekendsAndHolidays($this-> getDataRow('demande_attestation', $id_dos), $this-> getDataRow('dispatch_date', $id_dos));
 							?>
 							</span>
+						</td>
+
+						<td style="border: 1px solid black; text-align: center;">
+							<?php echo $this-> getDataRow($reponse['delay_reason'], $id_dos)?>">
 						</td>
 						<?php
 						
@@ -37850,12 +38175,6 @@
 			$bg = '';
 			$style = '';
 
-			/*echo '<br> id_cli = '.$id_cli;
-			echo '<br> id_mod_trans = '.$id_mod_trans;
-			echo '<br> id_mod_lic = '.$id_mod_lic;
-			echo '<br> num_lic = '.$num_lic;*/
-				//echo '<br>-------'.$sqlStatus;
-
 			$sql1 = "";
 			$sqlOrder = "";
 			$sqlIdMarch = "";
@@ -38127,11 +38446,6 @@
 					</td>
 					<?php
 					$this-> afficherRowTableau($id_mod_lic, $id_cli, $id_mod_trans, $reponse['id_dos'], $compteur, $reponse['statut'], $reponse['klsa_status'], $reponse['amicongo_status'], $reponse['kzi_status']);
-						/*if ($id_mod_trans == '1') {
-							include('importRouteRow.php');
-						}else if ($id_mod_trans == '3') {
-							include('importAirRow.php');
-						}*/
 					?>
 				</tr>
 			<?php
@@ -44410,6 +44724,40 @@
 			}
 		}
 
+		public function getDataColonne($id_col){
+			include('connexion.php');
+			$entree['id_col'] = $id_col;
+
+			$requete = $connexion-> prepare("SELECT *
+												FROM colonne c
+													WHERE c.id_col = ?");
+			$requete-> execute(array($entree['id_col']));
+			$reponse=$requete-> fetch();
+			return $reponse;
+		}
+
+		public function selectionnerColonne($id_mod_lic){
+			include('connexion.php');
+			$entree['id_mod_lic'] = $id_mod_lic;
+
+			$requete = $connexion-> prepare("SELECT c.titre_col AS titre_col,
+													c.id_col AS id_col
+												FROM colonne c, affectation_colonne_client_modele_licence aff
+													WHERE c.id_col = aff.id_col
+														AND aff.id_mod_lic = ?
+														AND c.type_col = 'date'
+												GROUP BY c.champ_col
+												ORDER BY c.titre_col");
+			$requete-> execute(array($entree['id_mod_lic']));
+			while($reponse=$requete-> fetch()){
+				?>
+				<option value="<?php echo $reponse['id_col'];?>">
+					<?php echo $reponse['titre_col'];?>
+				</option>
+				<?php
+			}$requete-> closeCursor();
+		}
+
 		public function getNombreIrSansAVClient($id_cli){
 			include('connexion.php');
 			$entree['id_cli'] = $id_cli;
@@ -49242,6 +49590,42 @@
 				                    </div>
 				                </div>
 							</td>
+						</tr>';
+			}$requete-> closeCursor();
+			
+			return $table;
+
+		}
+
+		public function table_client_note_debit($mot_cle=null){
+			include('connexion.php');
+
+			$compteur=0;
+
+			$sqlMotCle = '';
+
+			if (!empty($mot_cle) && ($mot_cle!='')) {
+				$sqlMotCle = 'AND (cl.code_cli LIKE "%'.$mot_cle.'%" OR cl.nom_cli LIKE "%'.$mot_cle.'%")';
+			}
+			// echo $mot_cle;
+			$table = '';
+			
+			$requete = $connexion-> query("SELECT cl.id_cli AS id_cli,
+															cl.nom_cli AS nom_cli,
+															cl.code_cli AS code_cli
+														FROM affectation_client_modele_licence aff, client cl
+														WHERE aff.id_cli = cl.id_cli
+														$sqlMotCle
+														GROUP BY cl.id_cli
+														ORDER BY cl.code_cli");
+			// $requete-> execute(array($entree['id_mod_lic']));
+			while($reponse = $requete-> fetch()){
+				$compteur++;
+				$table .='
+    					<tr onMouseOver="this.style.cursor=\'pointer\'" onclick="window.location.replace(\'client_note_debit2.php?id_cli='.$reponse['id_cli'].'\',\'pop1\',\'width=80,height=80\');">
+							<td>'.$compteur.'</td>
+							<td>'.$reponse['code_cli'].'</td>
+							<td>'.$reponse['nom_cli'].'</td>
 						</tr>';
 			}$requete-> closeCursor();
 			
@@ -54918,6 +55302,25 @@
 
 		}
 
+		public function selectionnerModeleNoteDebit(){
+			include('connexion.php');
+			//$entree['id_mod_lic'] = $id_mod_lic;
+
+			$requete = $connexion-> query("SELECT *
+												FROM modele_note_debit
+												ORDER BY nom_model_nd");
+			//$requete-> execute(array($entree['id_mod_lic']));
+
+			while($reponse = $requete-> fetch()){
+			?>
+			<option value="<?php echo $reponse['id_model_nd'];?>">
+				<?php echo $reponse['nom_model_nd'];?>
+			</option>
+			<?php
+			}$requete-> closeCursor();
+
+		}
+
 		public function selectionnerDeboursDF(){
 			include('connexion.php');
 			//$entree['id_mod_lic'] = $id_mod_lic;
@@ -57966,8 +58369,7 @@
 			//Log
 			if ($this-> getDossier($id_dos)['t1'] != $t1) {
 				
-				$colonne = $this-> getNomColonneClient('t1', $_GET['id_cli'], $_GET['id_mod_trans'], $_GET['id_mod_trac']);
-				$this-> creerLogDossier($colonne, $t1, $id_dos, $_SESSION['id_util']);
+				$this-> creerLogDossier('t1', $t1, $id_dos, $_SESSION['id_util']);
 
 			}
 
@@ -59488,6 +59890,19 @@
 
 		} 
 
+		public function MAJ_delay_reason($id_dos, $delay_reason){
+			
+			$this-> creerLogDossier('delay_reason', $delay_reason, $id_dos, $_SESSION['id_util']);
+
+			include('connexion.php');
+			$entree['id_dos'] = $id_dos;
+			$entree['delay_reason'] = $delay_reason;
+			$requete = $connexion-> prepare("UPDATE dossier SET delay_reason = ?
+												WHERE id_dos = ?");
+			$requete-> execute(array($entree['delay_reason'], $entree['id_dos']));
+
+		} 
+
 		public function MAJ_barge($id_dos, $barge){
 			
 			//Log
@@ -60326,6 +60741,36 @@
 		}
 
 		//FIN Methode permettant de supprimer
+		function delete_aff_modele_note_debit($id_model_nd, $id_cli, $id_mod_lic, $id_dep){
+			include("connexion.php");
+
+			$entree['id_model_nd'] = $id_model_nd; 
+			$entree['id_cli'] = $id_cli; 
+			$entree['id_mod_lic'] = $id_mod_lic; 
+			$entree['id_dep'] = $id_dep;
+
+			$requete = $connexion-> prepare('DELETE FROM affectation_modele_note_debit_client
+												WHERE id_model_nd = ? 
+													AND id_cli = ?
+													AND id_mod_lic = ? 
+													AND id_dep =?');
+			$requete-> execute(array($entree['id_model_nd'], $entree['id_cli'], $entree['id_mod_lic'], $entree['id_dep']));
+
+		}
+
+		function add_aff_modele_note_debit($id_model_nd, $id_cli, $id_mod_lic, $id_dep){
+			include("connexion.php");
+
+			$entree['id_model_nd'] = $id_model_nd; 
+			$entree['id_cli'] = $id_cli; 
+			$entree['id_mod_lic'] = $id_mod_lic; 
+			$entree['id_dep'] = $id_dep;
+
+			$requete = $connexion-> prepare('INSERT INTO affectation_modele_note_debit_client(id_model_nd, id_cli, id_mod_lic, id_dep)
+												VALUES (?, ?, ?, ?)');
+			$requete-> execute(array($entree['id_model_nd'], $entree['id_cli'], $entree['id_mod_lic'], $entree['id_dep']));
+
+		}
 
 		function creer_demande_fond($id_dept, $id_site, $beneficiaire, $id_cli, $cash, $montant, $usd, $libelle, $id_util_visa_dept, $id_dep){
 			include("connexion.php");
