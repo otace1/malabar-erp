@@ -16,6 +16,12 @@ $excel = new PHPExcel();
 			$transit = 'Import';
 		}
 
+if ($_GET['id_cli'] == 869 && $_GET['id_march'] == 11) {
+	$entree['id_cli_col'] = 883;
+}else{
+	$entree['id_cli_col'] = $_GET['id_cli'];
+}
+
 
 //Background-color
 	function cellColor($cells,$color){
@@ -61,7 +67,7 @@ $requeteModeTransport-> execute(array($_GET['id_cli']));
 while ($reponseModeTransport = $requeteModeTransport-> fetch()) {
 
 	//Pour EXPORT créer des tableurs par licence et modes de transport
-	if ($_GET['id_mod_trac'] == '1') {
+	if ($_GET['id_mod_trac'] == '1' && $_GET['id_march'] != '18' && $_GET['id_cli'] != '876' && $_GET['id_cli'] != '878' && $_GET['id_cli'] != '879' && $_GET['id_cli'] != '878' && $_GET['id_cli'] != '857' && $_GET['id_cli'] != '929') {
 		
 		//--- Recuperation d'années -------
 		if(isset($_GET['annee']) && ($_GET['annee']!='')){
@@ -69,7 +75,7 @@ while ($reponseModeTransport = $requeteModeTransport-> fetch()) {
 			$valeur_annee_fin = $_GET['annee'];
 		}else{
 			$valeur_annee = date('Y');
-			$valeur_annee_fin = 2020;
+			$valeur_annee_fin = 2021;
 		}
 		for ($annee=$valeur_annee; $annee >= $valeur_annee_fin; $annee--) { 
 			$entree['annee']='%'.substr($annee, -2).'-%';
@@ -214,6 +220,19 @@ while ($reponseModeTransport = $requeteModeTransport-> fetch()) {
 				$excel->getActiveSheet()
 					->getStyle($col.$row)->applyFromArray($styleHeader);
 				$col++;
+
+				if ($reponse['id_col']=='40') {
+					
+					$excel-> getActiveSheet()
+						-> setCellValue($col.$row, 'Delay Reason');
+					cellColor($col.$row, '000000');
+					alignement($col.$row);
+					$excel->getActiveSheet()
+						->getStyle($col.$row)->applyFromArray($styleHeader);
+					$col++;
+
+				}
+
 			}$requete-> closeCursor();
 
 			
@@ -418,7 +437,7 @@ while ($reponseModeTransport = $requeteModeTransport-> fetch()) {
 	}
 
 	//GLOBAL SUMMARY POUR IMPORT ROUTE
-	if ($reponseModeTransport['id_mod_trans']=='1') {
+	if ($reponseModeTransport['id_mod_trans']=='1' && $_GET['id_mod_trac'] != '1') {
 		
 		$styleHeader = array(
 		    'font'  => array(
@@ -680,7 +699,7 @@ while ($reponseModeTransport = $requeteModeTransport-> fetch()) {
 
 
 		//SUMMARY POUR IMPORT ROUTE
-		if ($reponseModeTransport['id_mod_trans']=='1') {
+		if ($reponseModeTransport['id_mod_trans']=='1' && $_GET['id_mod_trac'] != '1') {
 			
 			$styleHeader = array(
 			    'font'  => array(
@@ -1029,7 +1048,7 @@ while ($reponseModeTransport = $requeteModeTransport-> fetch()) {
 										    AND af.id_mod_lic = ?
 										    AND af.id_mod_trans = ?
 										ORDER BY af.rang ASC");
-		$requete-> execute(array($entree['id_cli'], $entree['id_mod_lic'], $entree['id_mod_trans']));
+		$requete-> execute(array($entree['id_cli_col'], $entree['id_mod_lic'], $entree['id_mod_trans']));
 		while ($reponse = $requete-> fetch()) {
 
 			if ($reponse['id_col']=='42' && $entree['id_mod_trans']=='1') {
@@ -1118,7 +1137,7 @@ while ($reponseModeTransport = $requeteModeTransport-> fetch()) {
 												d.cleared AS cleared,
 
 												
-												IF(d.id_mod_lic='2' AND d.id_mod_trans='1',
+												IF(d.id_mod_lic='2' AND d.id_mod_trans='1' AND d.cleared<>'2',
 													IF(d.date_crf IS NULL AND d.date_ad IS NULL AND d.date_assurance IS NULL,
 												      'AWAITING CRF/AD/INSURRANCE',
 												      IF(d.date_crf IS NULL AND d.date_ad IS NULL AND d.date_assurance IS NOT NULL,
@@ -1152,7 +1171,38 @@ while ($reponseModeTransport = $requeteModeTransport-> fetch()) {
 												          )
 												      )
 													,
-													d.statut) AS statut,
+													IF(d.id_mod_lic='1', 
+														IF(d.load_date IS NOT NULL AND d.ceec_in IS NULL,
+															'LOADED',
+															IF(d.ceec_in IS NOT NULL AND d.ceec_out IS NULL, 'AT CEEC',
+																IF(d.ceec_out IS NOT NULL AND d.min_div_in IS NULL, 'CEEC OUT',
+																	IF(d.min_div_in IS NOT NULL AND d.min_div_out IS NULL, 'AT MINE DIVISION',
+																		IF(d.min_div_out IS NOT NULL AND d.ref_decl IS NULL, 'MINE DIVISION OUT',
+																			IF(d.ref_decl IS NOT NULL AND d.ref_liq IS NULL, 'DECLARATION',
+																				IF(d.ref_liq IS NOT NULL AND d.ref_quit IS NULL, 'LIQUIDATED',
+																					IF(d.ref_quit IS NOT NULL AND d.gov_in IS  NULL, 'DGDA OUT',
+																						IF(d.gov_in IS NOT NULL AND d.gov_out IS NULL, 'AT GOVERNOR\'S OFFICE',
+																							IF(d.gov_out IS NOT NULL AND d.dispatch_date IS NULL, 'GOVERNOR\'S OFFICE OUT',
+																								IF(d.dispatch_date IS NOT NULL AND d.klsa_arriv IS NULL,
+																									'DISPATCHED', 
+																										IF(d.klsa_arriv IS NOT NULL AND d.end_form IS NULL, 'AT BORDER',
+																											IF(d.end_form IS NOT NULL AND d.exit_drc IS NULL, 'UNDER FORMALITIES',
+																												IF(d.exit_drc IS NOT NULL, 'EXIT DRC', '')
+																												)
+																											)
+																									)
+																								)
+																							)
+																						)
+																					)
+																				)
+																			)
+																		)
+																	)
+																)
+															)
+														, d.statut )
+												) AS statut,
 
 												IF(d.id_mod_trans='1' AND d.id_mod_lic='2', 
 													IF(d.klsa_arriv IS NOT NULL AND d.wiski_arriv IS NULL,'ARRIVED AT K\'LSA', 
@@ -1250,7 +1300,7 @@ while ($reponseModeTransport = $requeteModeTransport-> fetch()) {
 										    AND af.id_mod_lic = ?
 										    AND af.id_mod_trans = ?
 										ORDER BY af.rang ASC");
-		$requete-> execute(array($entree['id_cli'], $entree['id_mod_lic'], $entree['id_mod_trans']));
+		$requete-> execute(array($entree['id_cli_col'], $entree['id_mod_lic'], $entree['id_mod_trans']));
 		while ($reponse = $requete-> fetch()) {
 
 			if ($reponse['id_col']=='42' && $entree['id_mod_trans']=='1' && $entree['id_mod_lic']=='2') {
