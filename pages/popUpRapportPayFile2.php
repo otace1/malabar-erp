@@ -16,7 +16,7 @@
           <div class="col-12">
             <div class="card table-responsive p-0">
               <div class="card-header">
-                <h5><i class="fa fa-folder-open nav-icon"></i> Reporting 
+                <h5><i class="fa fa-folder-open nav-icon"></i> Files Request No. <?php echo $_GET['id_df'];?>
                 </h5>
                 <div class="card-tools">
                 </div>
@@ -69,8 +69,8 @@
     $('#spinner-div').show();
       $('#pay_report').DataTable({
          lengthMenu: [
-            [10, 100, 500, -1],
-            [10, 100, 500, 'All'],
+            [15, 25, 50, 100, 500, -1],
+            [15, 25, 50, 100, 500, 'All'],
         ],
         dom: 'Bfrtip',
         buttons: [
@@ -100,7 +100,8 @@
               "id_cli": ""
           },          "data": {
               "id_cli": "",
-              "operation": "pay_report_file"
+              "id_df": "<?php echo $_GET['id_df'];?>",
+              "operation": "pay_report_file_df"
           }
         },
         "columns":[

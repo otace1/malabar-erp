@@ -702,6 +702,11 @@
 		echo json_encode($maClasse-> pay_report_file());
 		
 		
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='pay_report_file_df'){ 
+
+		echo json_encode($maClasse-> pay_report_file_df($_POST['id_df']));
+		
+		
 	}elseif(isset($_POST['operation']) && $_POST['operation']=='rapportOperations'){ // On Recupere les data pour rapport Operations
 		$response['nbre_dossier_encours'] = $maClasse-> getNbreDossier('Dossiers En Cours');
 		$response['nbre_dossier_non_declare'] = $maClasse-> getNbreDossier('Dossiers non declarés');
@@ -2549,6 +2554,10 @@
 
 		echo json_encode($maClasse-> client_note_debit($_POST['id_mod_lic']));
 
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='client_note_debit2'){
+
+		echo json_encode($maClasse-> client_note_debit2($_POST['id_cli']));
+
 	}elseif(isset($_POST['operation']) && $_POST['operation']=='kamoa_nd'){
 
 		$response['tableau_kamoa_nd'] = $maClasse-> kamoa_nd($_POST['id_mod_lic'], $_POST['id_cli']);
@@ -3277,6 +3286,12 @@
 
 		echo json_encode($response);
 
+	}else if ($_POST['operation']=="table_client_note_debit") {
+
+		$response['table_client_note_debit'] = $maClasse-> table_client_note_debit($_POST['mot_cle']);
+
+		echo json_encode($response);
+
 	}else if ($_POST['operation']=="table_menuLicence_synthese") {
 
 		$response['table_menuLicence'] = $maClasse-> table_menuLicence_synthese($_POST['id_mod_lic'], $_POST['id_type_lic'], $_POST['page'], $_POST['mot_cle']);
@@ -3325,6 +3340,10 @@
 	}elseif(isset($_POST['operation']) && $_POST['operation']=='kpi_tracking_reportAll'){ 
 
 		echo json_encode($maClasse-> kpi_tracking_reportAll($_POST['debut'], $_POST['fin'], $_POST['id_cli'], $_POST['id_mod_lic']));
+
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='kpi_tracking_reportAll2'){ 
+
+		echo json_encode($maClasse-> kpi_tracking_reportAll2($_POST['champ_col'], $_POST['debut'], $_POST['fin'], $_POST['id_cli'], $_POST['id_mod_lic']));
 
 	}elseif(isset($_POST['operation']) && $_POST['operation']=='update_OGEFREM'){ 
 
@@ -3811,7 +3830,7 @@
 			</tr>
 			<tr>
 				<td>Nbre of Files: </td>
-				<td><b>'.$response['nbre_dos'].'</b></td>
+				<td><b>'.$response['nbre_dos'].'</b> <a href="#" onclick="window.open(\'popUpRapportPayFile2.php?id_df='.$response['id_df'].'\',\'popUpRapportPayFile2\',\'width=1300,height=900\')"><i class="fa fa-eye"></i></a></td>
 			</tr>
 			<tr>
 				<td>Support Doc.: </td>
@@ -4136,6 +4155,34 @@
 	}elseif(isset($_POST['operation']) && $_POST['operation']=='creerDepenseDossierDF'){ 
 
 		$maClasse-> creerDepenseDossierDF($_POST['id_dep'], $_POST['id_dos'], date('Y-m-d'), $_POST['montant'], $_POST['id_df']);
+		$response['message'] = 'Done!';
+
+		echo json_encode($response);
+
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='add_aff_modele_note_debit'){ 
+
+		$maClasse-> add_aff_modele_note_debit($_POST['id_model_nd'], $_POST['id_cli'], $_POST['id_mod_lic'], $_POST['id_dep']);
+		$response['message'] = 'Done!';
+
+		echo json_encode($response);
+
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='delete_aff_modele_note_debit'){ 
+
+		$maClasse-> delete_aff_modele_note_debit($_POST['id_model_nd'], $_POST['id_cli'], $_POST['id_mod_lic'], $_POST['id_dep']);
+		$response['message'] = 'Done!';
+
+		echo json_encode($response);
+
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='commentaire_dossier'){ 
+
+		$response['nom_col'] = '';//$maClasse-> getDataColonne($_POST['id_col'])['nom_col'];
+		$response['lister_commentaire_dossier'] = $maClasse-> lister_commentaire_dossier($_POST['id_dos'], $_POST['id_col']);
+
+		echo json_encode($response);
+
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='add_commentaire_dossier'){ 
+
+		$maClasse-> add_commentaire_dossier($_POST['id_dos'], $_POST['id_col'], $_POST['valeur']);
 		$response['message'] = 'Done!';
 
 		echo json_encode($response);

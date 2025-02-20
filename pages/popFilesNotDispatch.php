@@ -61,6 +61,7 @@
                       <th>STATUS</th>
                       <th>REMARKS</th>
                       <th>NET DAYS EXCL WEEKENDS</th>
+                      <th>Delay Reason</th>
                     </tr>
                   </thead>
                   <tbody class="text-nowrap">
@@ -229,6 +230,9 @@
           className: 'dt-body-center'
         },
         {"data":"delays",
+          className: 'dt-body-center'
+        },
+        {"data":"delay_reason",
           className: 'dt-body-center'
         }
       // ,

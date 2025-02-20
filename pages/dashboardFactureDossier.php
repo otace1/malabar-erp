@@ -27,6 +27,9 @@
             <span class="float-right">
               <!-- <button class="btn btn-xs btn-info" ></button> -->
               <button class="btn btn-primary btn-xs" onclick="$('#modal_search').modal('show');"><i class="fa fa-search"></i> Search</button>
+
+              <button class="btn bg-olive btn-xs" onclick="$('#tracking_report').modal('show');"><i class="fa fa-search"></i> Tracking Report</button>
+              
               <div class="btn-group">
                 <button type="button" class="btn btn-xs btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                   <i class="fa fa-list"></i> View Other Report
@@ -411,6 +414,69 @@ if(isset($_GET['id_mod_lic_fact']) && isset($_GET['id_mod_lic_fact'])){
       <div class="modal-footer justify-content-between">
         <button type="button" class="btn btn-xs btn-danger" data-dismiss="modal">Cancel</button>
         <button name="" class="btn btn-xs btn-primary" onclick="afficherMonitoringFacturation(<?php echo $_GET['id_mod_lic_fact'];?>, debut.value, fin.value);">Submit</button>
+      </div>
+    </div>
+    <!-- </form> -->
+    <!-- /.modal-content -->
+  </div>
+  <!-- /.modal-dialog -->
+</div>
+
+<div class="modal fade" id="tracking_report">
+  <div class="modal-dialog modal-lg">
+    <!-- <form id="demo-form2" method="POST" action="" data-parsley-validate enctype="multipart/form-data"> -->
+    <div class="modal-content">
+      <div class="modal-header ">
+        <h4 class="modal-title"><i class="fa fa-tachometer-alt"></i> 
+
+          Tracking Report
+
+        </h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+
+          <div class="col-md-4">
+            <label for="x_card_code" class="control-label mb-1">CLIENT</label>
+            <select name="id_cli" id="id_cli_1" onchange="" class="form-control cc-exp form-control-sm">
+              <option value=''>ALL</option>
+                <?php
+                  $maClasse->selectionnerClientModeleLicence($_GET['id_mod_lic_fact']);
+                ?>
+            </select>
+          </div>
+
+          <div class="col-md-12"></div>
+
+          <div class="col-md-4">
+            <label for="x_card_code" class="control-label mb-1">Filed</label>
+            <select name="id_col" id="id_col_1" onchange="" class="form-control cc-exp form-control-sm">
+              <option></option>
+              <option value="137">Date Creation</option>
+                <?php
+                  $maClasse->selectionnerColonne($_GET['id_mod_lic_fact']);
+                ?>
+            </select>
+          </div>
+
+          <div class="col-md-4">
+            <label for="x_card_code" class="control-label mb-1">BEGIN</label>
+            <input id="debut_1" name="debut" type="date" class="form-control cc-exp form-control-sm" required>
+          </div>
+
+          <div class="col-md-4">
+            <label for="x_card_code" class="control-label mb-1">END</label>
+            <input name="fin" id="fin_1" type="date" class="form-control cc-exp form-control-sm" required>
+          </div>
+
+        </div>
+      </div>
+      <div class="modal-footer justify-content-between">
+        <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal">Cancel</button>
+        <button type="submit" onclick="window.open('popUpRapportDossier.php?id_cli='+id_cli_1.value+'&id_col='+id_col_1.value+'&id_mod_lic=<?php echo $_GET['id_mod_lic_fact']?>&id_mod_trans=&debut='+debut_1.value+'&fin='+fin_1.value+'','pop1','width=1500,height=900');" class="btn btn-primary btn-sm">Submit</button>
       </div>
     </div>
     <!-- </form> -->

@@ -648,6 +648,10 @@ for ($i=1; $i <= 15 ; $i++) {
         $maClasse-> MAJ_transporter($_POST['id_dos_'.$i], $_POST['transporter_'.$i]);
       }
 
+      if (isset($_POST['delay_reason_'.$i]) && ($_POST['delay_reason_'.$i] != '')) {
+        $maClasse-> MAJ_delay_reason($_POST['id_dos_'.$i], $_POST['delay_reason_'.$i]);
+      }
+
 
       if (isset($_POST['impala_sncc_'.$i]) && ($_POST['impala_sncc_'.$i] != '')) {
         $maClasse-> MAJ_impala_sncc($_POST['id_dos_'.$i], $_POST['impala_sncc_'.$i]);
@@ -2608,7 +2612,127 @@ if (($maClasse-> verifierRegimeSuspensionSansDateExtreme($_GET['id_cli'], $_GET[
   <!-- /.modal-dialog -->
 </div>
 
+<div class="modal fade" id="modal_commentaire_dossier">
+  <div class="modal-dialog modal-md">
+    <div class="modal-content">
+      <div class="modal-header btn-dark">
+        <h4 class="modal-title"><i class="far fa-comment"></i> Comments <span id="nom_col"></span></h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-md-12 table-responsive p-0 ">
+            <form method="POST" action="" id="form_add_commentaire_dossier">
+              <input type="hidden" name="id_dos" id="id_dos_commentaire">
+              <input type="hidden" name="id_col" id="id_col_commentaire">
+              <input type="hidden" name="operation" value="add_commentaire_dossier">
+              <div class="form-group">
+                <textarea name="valeur" class="form-control form-control-sm"></textarea>
+              </div>
+              <div class="form-group">
+                <button type="submit" class="btn btn-primary btn-sm">Submit</button>
+              </div>
+            </form>
+          </div>
+          <div class="col-md-12 table-responsive p-0 " style="height: 500px;">
+            <table class="table table-bordered table-striped text-nowrap table-hover table-sm small text-nowrap table-head-fixed ">
+              <thead>
+                  <tr>
+                      <th width="15%">Date</th>
+                      <th>Comment</th>
+                  </tr>
+              </thead>
+              <tbody id="lister_commentaire_dossier">
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <!-- <div class="modal-footer justify-content-between">
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Annuler</button>
+        <button type="submit" name="creerAV" class="btn btn-primary">Valider</button>
+      </div> -->
+    </div>
+    <!-- </form> -->
+    <!-- /.modal-content -->
+  </div>
+  <!-- /.modal-dialog -->
+</div>
+
 <script type="text/javascript">
+
+  $(document).ready(function(){
+
+    $('#form_add_commentaire_dossier').submit(function(e){
+
+      e.preventDefault();
+
+      if(confirm('Do really you want to submit ?')){
+
+
+        var fd = new FormData(this);
+
+        $('#spinner-div').show();
+        // $('#modal_add_commentaire_dossier').modal('hide');
+
+        $.ajax({
+          type: 'post',
+          url: 'ajax.php',
+          processData: false,
+          contentType: false,
+          data: fd,
+          dataType: 'json',
+          success:function(data){
+            if (data.logout) {
+              alert(data.logout);
+              window.location="../deconnexion.php";
+            }else{
+              $( '#form_add_commentaire_dossier' ).each(function(){
+                  this.reset();
+              });
+              modal_commentaire_dossier($('#id_dos_commentaire').val(), $('#id_col_commentaire').val());
+            }
+          },
+          complete: function () {
+              // $('#dossier_cvee').DataTable().ajax.reload();
+              $('#spinner-div').hide();//Request is complete so hide spinner
+          }
+        });
+
+      }
+
+    });
+
+  });
+
+  function modal_commentaire_dossier(id_dos, id_col){
+
+    $('#spinner-div').show();
+    $.ajax({
+      type: "POST",
+      url: "ajax.php",
+      data: { id_dos: id_dos, id_col: id_col, operation: 'commentaire_dossier'},
+      dataType:"json",
+      success:function(data){
+        if (data.logout) {
+          alert(data.logout);
+          window.location="../deconnexion.php";
+        }else{
+          $('#id_dos_commentaire').val(id_dos);
+          $('#id_col_commentaire').val(id_col);
+          $('#nom_col').html(data.nom_col);
+          $('#lister_commentaire_dossier').html(data.lister_commentaire_dossier);
+          $('#modal_commentaire_dossier').modal('show');
+        }
+      },
+      complete: function () {
+          $('#spinner-div').hide();//Request is complete so hide spinner
+      }
+    });
+
+  }
 
   function get_licence_for_excel_tracking(mot_cle=null){
 

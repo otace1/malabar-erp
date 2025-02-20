@@ -105,6 +105,10 @@
                 <i class="fa fa-tachometer-alt"></i> KPI
             </button>
 
+            <button class="btn btn-info square-btn-adjust" data-toggle="modal" data-target=".tracking_report">
+                <i class="fa fa-search"></i> Tracking Report
+            </button>
+
             <button class="btn btn-primary square-btn-adjust" data-toggle="modal" data-target=".rechercheDossier">
                 <i class="fa fa-search"></i> Search File
             </button>
@@ -368,6 +372,70 @@ if(isset($_GET['id_mod_trac']) && isset($_GET['id_mod_trac'])){
       <div class="modal-footer justify-content-between">
         <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal">Cancel</button>
         <button type="submit" onclick="window.open('popUpKPIDossier.php?id_cli='+id_cli.value+'&id_mod_lic=<?php echo $_GET['id_mod_trac']?>&id_mod_trans=<?php echo $_GET['id_mod_trans']?>&debut='+debut.value+'&fin='+fin.value+'','pop1','width=1500,height=900');" class="btn btn-primary btn-sm">Submit</button>
+      </div>
+    </div>
+    <!-- </form> -->
+    <!-- /.modal-content -->
+  </div>
+  <!-- /.modal-dialog -->
+</div>
+
+
+<div class="modal fade tracking_report" id="modal-default">
+  <div class="modal-dialog modal-lg">
+    <!-- <form id="demo-form2" method="POST" action="" data-parsley-validate enctype="multipart/form-data"> -->
+    <div class="modal-content">
+      <div class="modal-header ">
+        <h4 class="modal-title"><i class="fa fa-tachometer-alt"></i> 
+
+          Tracking Report
+
+        </h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+
+          <div class="col-md-4">
+            <label for="x_card_code" class="control-label mb-1">CLIENT</label>
+            <select name="id_cli" id="id_cli_1" onchange="" class="form-control cc-exp form-control-sm">
+              <option value=''>ALL</option>
+                <?php
+                  $maClasse->selectionnerClientModeleLicence($_GET['id_mod_trac']);
+                ?>
+            </select>
+          </div>
+
+          <div class="col-md-12"></div>
+
+          <div class="col-md-4">
+            <label for="x_card_code" class="control-label mb-1">Filed</label>
+            <select name="id_col" id="id_col_1" onchange="" class="form-control cc-exp form-control-sm">
+              <option></option>
+              <option value="137">Date Creation</option>
+                <?php
+                  $maClasse->selectionnerColonne($_GET['id_mod_trac']);
+                ?>
+            </select>
+          </div>
+
+          <div class="col-md-4">
+            <label for="x_card_code" class="control-label mb-1">BEGIN</label>
+            <input id="debut_1" name="debut" type="date" class="form-control cc-exp form-control-sm" required>
+          </div>
+
+          <div class="col-md-4">
+            <label for="x_card_code" class="control-label mb-1">END</label>
+            <input name="fin" id="fin_1" type="date" class="form-control cc-exp form-control-sm" required>
+          </div>
+
+        </div>
+      </div>
+      <div class="modal-footer justify-content-between">
+        <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal">Cancel</button>
+        <button type="submit" onclick="window.open('popUpRapportDossier.php?id_cli='+id_cli_1.value+'&id_col='+id_col_1.value+'&id_mod_lic=<?php echo $_GET['id_mod_trac']?>&id_mod_trans=<?php echo $_GET['id_mod_trans']?>&debut='+debut_1.value+'&fin='+fin_1.value+'','pop1','width=1500,height=900');" class="btn btn-primary btn-sm">Submit</button>
       </div>
     </div>
     <!-- </form> -->
