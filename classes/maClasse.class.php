@@ -20593,6 +20593,7 @@
 													IF(dos.cleared='1', 'TRANSIT', 'CLEARED') AS cleared,
 													dos.statut AS statut,
 													dos.remarque AS remarque,
+													dos.delay_reason AS delay_reason,
 													CONCAT(
 														IF(dos.horse IS NOT NULL AND REPLACE(dos.horse, ' ', '') NOT LIKE '',
 															dos.horse,
@@ -20836,6 +20837,7 @@
 													IF(dos.cleared='1', 'TRANSIT', 'CLEARED') AS cleared,
 													dos.statut AS statut,
 													dos.remarque AS remarque,
+													dos.delay_reason AS delay_reason,
 													CONCAT(
 														IF(dos.horse IS NOT NULL AND REPLACE(dos.horse, ' ', '') NOT LIKE '',
 															dos.horse,
@@ -31552,7 +31554,7 @@
 
 				?>
 				<td class=" <?php echo $bg;?>" style="border: 1px solid black;">
-					<input  <?php echo $this-> getDataUtilisateur($_SESSION['id_util'])['tracking_enab'];?>  type="<?php echo $reponse['type_col'];?>" <?php echo $reponse['attribut_col'];?> style="text-transform:uppercase; <?php echo $textColor;?>" name="<?php echo $reponse['champ_col'];?>_<?php echo $compteur;?>" value="<?php echo $this-> getDataRow($reponse['champ_col'], $id_dos);?>" onchange="check_date_error('<?php echo $id_dos;?>');">
+					<input  <?php echo $this-> getDataUtilisateur($_SESSION['id_util'])['tracking_enab'];?>  type="<?php echo $reponse['type_col'];?>" <?php echo $reponse['attribut_col'];?> style="text-transform:uppercase; <?php echo $textColor;?>" name="<?php echo $reponse['champ_col'];?>_<?php echo $compteur;?>" value="<?php echo $this-> getDataRow($reponse['champ_col'], $id_dos);?>" onchange="check_date_error('<?php echo $id_dos;?>');"> <a href="#" onclick="modal_commentaire_dossier('<?php echo $id_dos;?>', '<?php echo $reponse['id_col'];?>')"><i class="far fa-comment-alt"></i></a>
 				</td>
 				<?php
 
@@ -44222,6 +44224,30 @@
 			
 		}
 
+		public function lister_commentaire_dossier($id_dos, $id_col){
+			include('connexion.php');
+			$entree['id_dos'] = $id_dos;
+			$entree['id_col'] = $id_col;
+			$compteur=0;
+			$table = '';
+			$requete = $connexion-> prepare("SELECT *
+												FROM commentaire_dossier
+												WHERE id_dos = ?
+													AND id_col = ?");
+			$requete-> execute(array($entree['id_dos'], $entree['id_col']));
+			while($reponse=$requete-> fetch()){
+				$compteur++;
+				$table .='<tr>
+								<td>'.$reponse['date_create'].'</td>
+								<td>'.$reponse['valeur'].'</td>
+							</tr>';
+			}$requete-> closeCursor();
+
+		
+			return $table;
+			
+		}
+
 		public function getMarchandiseDossierEdit($id_dos, $ligne){
 			include('connexion.php');
 			$entree['id_dos'] = $id_dos;
@@ -48299,6 +48325,71 @@
 												AND depdos.id_dep = dep.id_dep
 										");
 			// $requete-> execute(array($entree['id_dos']));
+			while($reponse = $requete-> fetch()){
+				$compteur++;
+
+				$reponse['compteur'] = $compteur;
+				$rows[] = $reponse;
+
+			}$requete-> closeCursor();
+			
+			return $rows;
+
+		}
+
+		public function pay_report_file_df($id_df){
+			include('connexion.php');
+
+			$entree['id_df'] = $id_df;
+
+			$compteur = 0;
+			$rows = array();
+
+			$requete = $connexion-> prepare("SELECT df.id_df AS id_df,
+												DATE_FORMAT(df.date_create, '%d/%m/%Y') AS date_df,
+												DATE_FORMAT(dos.date_liq, '%d/%m/%Y') AS date_liq,
+												dos.ref_liq AS ref_liq,
+												dos.montant_liq AS montant_liq,
+												dos.ref_dos AS ref_dos,
+												dep.nom_dep AS nom_dep,
+												cl.nom_cli AS nom_cli,
+												site.nom_site AS nom_site,
+												dept.nom_dept AS nom_dept,
+												util.nom_util AS nom_util,
+												depdos.montant AS montant,
+												IF(df.usd='1', 'USD', 'CDF') AS monnaie,
+												
+												IF(df.id_util_reject_dept IS NOT NULL,
+													'Rejected',
+													IF(df.date_visa_dept IS NULL,
+														'Awaiting Dept. Approval',
+														IF(df.date_visa_fin IS NULL,
+															'Awaiting Finance Approval',
+															IF(df.date_visa_dir IS NULL AND (df.a_facturer = '1' OR df.cash='1'),
+																'Awaiting Management Approval',
+																IF(df.date_decaiss IS NULL,
+																	'Pending payment',
+																	'Paid'
+																)
+															)
+														)
+													)
+												) AS statut,
+												CONCAT('<a href=\"#\" class=\"text-dark\" title=\"Dossiers affectés\" onclick=\"window.open(\'generateur_demande_fond.php?id_df=',df.id_df,'\',\'pop12\',\'width=1100,height=900\');\">
+														<i class=\"fa fa-print\"></i>
+													</a>') AS btn_action
+											FROM demande_fond df, site, departement dept, client cl, utilisateur util,
+												depense_dossier depdos, dossier dos, depense dep
+											WHERE df.id_site = site.id_site
+												AND df.id_dept = dept.id_dept
+												AND df.id_cli = cl.id_cli
+												AND df.id_util = util.id_util
+												AND df.id_df = ?
+												AND df.id_df = depdos.id_df
+												AND depdos.id_dos = dos.id_dos
+												AND depdos.id_dep = dep.id_dep
+										");
+			$requete-> execute(array($entree['id_df']));
 			while($reponse = $requete-> fetch()){
 				$compteur++;
 
@@ -60755,6 +60846,20 @@
 													AND id_mod_lic = ? 
 													AND id_dep =?');
 			$requete-> execute(array($entree['id_model_nd'], $entree['id_cli'], $entree['id_mod_lic'], $entree['id_dep']));
+
+		}
+
+		function add_commentaire_dossier($id_dos, $id_col, $valeur){
+			include("connexion.php");
+
+			$entree['id_dos'] = $id_dos; 
+			$entree['id_col'] = $id_col; 
+			$entree['valeur'] = $valeur; 
+			// $entree['id_dep'] = $id_dep;
+
+			$requete = $connexion-> prepare('INSERT INTO commentaire_dossier(id_dos, id_col, valeur, id_util)
+												VALUES (?, ?, ?, ?)');
+			$requete-> execute(array($entree['id_dos'], $entree['id_col'], $entree['valeur'], $_SESSION['id_util']));
 
 		}
 
