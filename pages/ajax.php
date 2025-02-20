@@ -4175,7 +4175,8 @@
 
 	}elseif(isset($_POST['operation']) && $_POST['operation']=='commentaire_dossier'){ 
 
-		$response['nom_col'] = '';//$maClasse-> getDataColonne($_POST['id_col'])['nom_col'];
+		$response['titre_col'] = $maClasse-> getDataColonne($_POST['id_col'])['titre_col'];
+		$response['ref_dos'] = $maClasse-> getDossier($_POST['id_dos'])['ref_dos'];
 		$response['lister_commentaire_dossier'] = $maClasse-> lister_commentaire_dossier($_POST['id_dos'], $_POST['id_col']);
 
 		echo json_encode($response);

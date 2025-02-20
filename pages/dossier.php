@@ -2616,13 +2616,17 @@ if (($maClasse-> verifierRegimeSuspensionSansDateExtreme($_GET['id_cli'], $_GET[
   <div class="modal-dialog modal-md">
     <div class="modal-content">
       <div class="modal-header btn-dark">
-        <h4 class="modal-title"><i class="far fa-comment"></i> Comments <span id="nom_col"></span></h4>
+        <h4 class="modal-title"><i class="far fa-comment"></i> Comments</h4>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body">
         <div class="row">
+          <div class="col-md-12 table-responsive p-0 ">
+            MCA File Ref.: <b><span id="titre_ref_dos"></span></b><br>
+            File Title: <b><span id="titre_col"></span></b>
+          </div>
           <div class="col-md-12 table-responsive p-0 ">
             <form method="POST" action="" id="form_add_commentaire_dossier">
               <input type="hidden" name="id_dos" id="id_dos_commentaire">
@@ -2642,6 +2646,7 @@ if (($maClasse-> verifierRegimeSuspensionSansDateExtreme($_GET['id_cli'], $_GET[
                   <tr>
                       <th width="15%">Date</th>
                       <th>Comment</th>
+                      <th>By</th>
                   </tr>
               </thead>
               <tbody id="lister_commentaire_dossier">
@@ -2722,7 +2727,8 @@ if (($maClasse-> verifierRegimeSuspensionSansDateExtreme($_GET['id_cli'], $_GET[
         }else{
           $('#id_dos_commentaire').val(id_dos);
           $('#id_col_commentaire').val(id_col);
-          $('#nom_col').html(data.nom_col);
+          $('#titre_col').html(data.titre_col);
+          $('#titre_ref_dos').html(data.ref_dos);
           $('#lister_commentaire_dossier').html(data.lister_commentaire_dossier);
           $('#modal_commentaire_dossier').modal('show');
         }
