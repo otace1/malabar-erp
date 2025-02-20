@@ -44230,16 +44230,20 @@
 			$entree['id_col'] = $id_col;
 			$compteur=0;
 			$table = '';
-			$requete = $connexion-> prepare("SELECT *
-												FROM commentaire_dossier
-												WHERE id_dos = ?
-													AND id_col = ?");
+			$requete = $connexion-> prepare("SELECT DATE_FORMAT(cd.date_create, '%d/%m/%Y %h:%i') AS date_cd,
+													cd.valeur AS valeur,
+													u.nom_util AS nom_util
+												FROM commentaire_dossier cd, utilisateur u
+												WHERE cd.id_dos = ?
+													AND cd.id_col = ?
+													AND cd.id_util = u.id_util");
 			$requete-> execute(array($entree['id_dos'], $entree['id_col']));
 			while($reponse=$requete-> fetch()){
 				$compteur++;
 				$table .='<tr>
-								<td>'.$reponse['date_create'].'</td>
+								<td>'.$reponse['date_cd'].'</td>
 								<td>'.$reponse['valeur'].'</td>
+								<td>'.$reponse['nom_util'].'</td>
 							</tr>';
 			}$requete-> closeCursor();
 
