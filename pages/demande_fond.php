@@ -178,6 +178,7 @@
                       <th>Client</th>
                       <th>Depart.</th>
                       <th>Expense</th>
+                      <th>Nbr.Files</th>
                       <th>Requestor</th>
                       <th>Category</th>
                       <th>Currency</th>
@@ -983,6 +984,9 @@
         className: 'dt-body-center'
       },
       {"data":"nom_dep"},
+      {"data":"nbre_dos",
+        className: 'dt-body-center'
+      },
       {"data":"nom_util"},
       {"data":"label_cash",
         className: 'dt-body-center'
