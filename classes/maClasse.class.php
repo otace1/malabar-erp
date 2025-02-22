@@ -48360,6 +48360,8 @@
 
 			$requete = $connexion-> prepare("SELECT df.id_df AS id_df,
 												DATE_FORMAT(df.date_create, '%d/%m/%Y') AS date_df,
+												DATE_FORMAT(dos.date_decl, '%d/%m/%Y') AS date_decl,
+												dos.ref_decl AS ref_decl,
 												DATE_FORMAT(dos.date_liq, '%d/%m/%Y') AS date_liq,
 												dos.ref_liq AS ref_liq,
 												dos.montant_liq AS montant_liq,
@@ -48371,6 +48373,14 @@
 												util.nom_util AS nom_util,
 												depdos.montant AS montant,
 												IF(df.usd='1', 'USD', 'CDF') AS monnaie,
+												IF(dos.roe_decl>0,
+													dos.roe_decl,
+													0
+												) AS roe_decl,
+												IF(dos.roe_decl>0,
+													(dos.montant_liq/dos.roe_decl),
+													0
+												) AS montant_liq_usd,
 												
 												IF(df.id_util_reject_dept IS NOT NULL,
 													'Rejected',
@@ -60952,29 +60962,6 @@
 				$sqlView = ' WHERE df.id_util = '.$_SESSION['id_util'];
 			}
 
-			// if ($statut == 'no_dept') {
-			// 	$sqlStatut = ' AND df.date_visa_dept IS NULL ';
-			// }else if ($statut == 'no_dir') {
-			// 	$sqlStatut = ' AND df.date_visa_dept IS NOT NULL 
-			// 					AND df.date_visa_dir IS NULL 
-			// 					AND df.a_facturer = \'1\' ';
-			// }else if ($statut == 'no_fin') {
-			// 	$sqlStatut = ' AND df.date_visa_dept IS NOT NULL 
-			// 					AND df.date_visa_fin IS NULL 
-			// 					AND (
-			// 							df.a_facturer = \'0\'
-			// 							OR
-			// 							(df.date_visa_dir IS NOT NULL AND df.a_facturer = \'1\')
-			// 						)';
-			// }else if ($statut == 'ok') {
-			// 	$sqlStatut = ' AND df.date_visa_fin IS NOT NULL';
-			// }else if ($statut == 'no_decaiss') {
-			// 	$sqlStatut = ' AND df.date_visa_fin IS NOT NULL 
-			// 					AND df.date_decaiss IS NULL';
-			// }else if ($statut == 'decaiss') {
-			// 	$sqlStatut = ' AND df.date_decaiss IS NOT NULL';
-			// }
-
 			$compteur = 0;
 			$rows = array();
 
@@ -60987,22 +60974,6 @@
 												dep.nom_dep AS nom_dep,
 												IF(df.usd='1', 'USD', 'CDF') AS monnaie,
 												IF(df.cash='1', 'CASH', 'BANK') AS label_cash,
-												-- IF(df.id_util_reject_dept IS NOT NULL,
-												-- 	'Rejected',
-												-- 	IF(df.date_visa_dept IS NULL,
-												-- 		'Awaiting Dept. Approval',
-												-- 		IF(df.date_visa_dir IS NULL AND (df.a_facturer = '1' OR df.cash='1'),
-												-- 			'Awaiting Management Approval',
-												-- 			IF(df.date_visa_fin IS NULL,
-												-- 				'Awaiting Finance Approval',
-												-- 				IF(df.date_decaiss IS NULL,
-												-- 					'Pending payment',
-												-- 					'Paid'
-												-- 				)
-												-- 			)
-												-- 		)
-												-- 	)
-												-- ) AS statut,
 												IF(df.id_util_reject_dept IS NOT NULL,
 													'Rejected',
 													IF(df.date_visa_dept IS NULL,
@@ -61019,7 +60990,8 @@
 														)
 													)
 												) AS statut,
-												COUNT(depdos.id_dos) AS nbre_dos,
+												CONCAT('<a href=\"#\" title=\"Support Document\" onclick=\"window.open(\'popUpRapportPayFile2.php?id_df=',df.id_df,'\',\'popUpRapportPayFile2\',\'width=1300,height=900\');\">',COUNT(depdos.id_dos),'</a>') AS nbre_dos,
+												-- COUNT(depdos.id_dos) AS nbre_dos,
 												CONCAT('<span class=\"btn btn-xs btn-info\"\" onclick=\"modal_afficher_df(\'',df.id_df,'\')\">
 																<i class=\"fa fa-arrow-circle-right\"></i>
 															</span>') AS btn_action
