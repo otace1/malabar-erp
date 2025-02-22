@@ -503,11 +503,24 @@
     var cell3 = row.insertCell(2);
     var cell4 = row.insertCell(3);
     cell1.innerHTML = ligne+1;
-    cell2.innerHTML = '<input type="hidden" id="id_dos_'+ligne+'" name="id_dos_'+ligne+'"><span id="label_ref_dos_'+ligne+'"></span><a href="#" class="text-primary" onclick="modal_search_dossier_df('+ligne+')"><i class="fa fa-search"></i></a>';
-    cell3.innerHTML = '<input type="number" step="0.001" class=" text-right" style="width: 8em;" id="montant_'+ligne+'" name="montant_'+ligne+'" required>';
+    cell2.innerHTML = '<input type="hidden" id="id_dos_'+ligne+'" name="id_dos_'+ligne+'"><span id="label_ref_dos_'+ligne+'"></span> <a href="#" class="text-primary" onclick="modal_search_dossier_df('+ligne+')"><i class="fa fa-search"></i></a> <a href="#" class="text-danger" onclick="remove_dossier_df('+ligne+')"><i class="fa fa-times"></i></a>';
+    cell3.innerHTML = '<input type="number" step="0.001" class=" text-right" style="width: 8em;" id="montant_'+ligne+'" name="montant_'+ligne+'">';
     cell4.innerHTML = '<span id="remarque_'+ligne+'"></span>';
     $('#nbre').val(ligne+1);
     // cell2.innerHTML = table.rows.length;
+  }
+
+  function remove_dossier_df(ligne) {
+    
+    if(confirm('Do really you want to remove this file ?')) {
+
+      $('#id_dos_'+ligne).val('');
+      $('#montant_'+ligne).val('');
+      $('#label_ref_dos_'+ligne).html('');
+      $('#remarque_'+ligne).html('');
+
+    }
+
   }
 
   $(document).ready(function(){
