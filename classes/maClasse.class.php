@@ -48287,6 +48287,8 @@
 
 			$requete = $connexion-> query("SELECT df.id_df AS id_df,
 												DATE_FORMAT(df.date_create, '%d/%m/%Y') AS date_df,
+												DATE_FORMAT(dos.date_decl, '%d/%m/%Y') AS date_decl,
+												dos.ref_decl AS ref_decl,
 												DATE_FORMAT(dos.date_liq, '%d/%m/%Y') AS date_liq,
 												dos.ref_liq AS ref_liq,
 												dos.montant_liq AS montant_liq,
@@ -48298,7 +48300,14 @@
 												util.nom_util AS nom_util,
 												depdos.montant AS montant,
 												IF(df.usd='1', 'USD', 'CDF') AS monnaie,
-												
+												IF(dos.roe_decl>0,
+													dos.roe_decl,
+													0
+												) AS roe_decl,
+												IF(dos.roe_decl>0,
+													(dos.montant_liq/dos.roe_decl),
+													0
+												) AS montant_liq_usd,
 												IF(df.id_util_reject_dept IS NOT NULL,
 													'Rejected',
 													IF(df.date_visa_dept IS NULL,
@@ -60940,7 +60949,7 @@
 			$sqlView = '';
 
 			if (($this-> getUtilisateur($_SESSION['id_util'])['visa_dept_df']=='0') && ($this-> getUtilisateur($_SESSION['id_util'])['visa_dir_df']=='0') && ($this-> getUtilisateur($_SESSION['id_util'])['visa_fin_df']=='0') && ($this-> getUtilisateur($_SESSION['id_util'])['decaiss_df']=='0')) {
-				$sqlView = ' AND df.id_util = '.$_SESSION['id_util'];
+				$sqlView = ' WHERE df.id_util = '.$_SESSION['id_util'];
 			}
 
 			// if ($statut == 'no_dept') {
@@ -61010,16 +61019,25 @@
 														)
 													)
 												) AS statut,
+												COUNT(depdos.id_dos) AS nbre_dos,
 												CONCAT('<span class=\"btn btn-xs btn-info\"\" onclick=\"modal_afficher_df(\'',df.id_df,'\')\">
 																<i class=\"fa fa-arrow-circle-right\"></i>
 															</span>') AS btn_action
-											FROM demande_fond df, depense dep, site, departement dept, client cl, utilisateur util
-											WHERE df.id_site = site.id_site
-												AND df.id_dept = dept.id_dept
-												AND df.id_dep = dep.id_dep
-												AND df.id_cli = cl.id_cli
-												AND df.id_util = util.id_util
+											FROM demande_fond df
+												LEFT JOIN depense dep
+													ON df.id_dep = dep.id_dep 
+												LEFT JOIN site
+													ON df.id_site = site.id_site 
+												LEFT JOIN departement dept
+													ON df.id_dept = dept.id_dept
+												LEFT JOIN client cl
+													ON df.id_cli = cl.id_cli 
+												LEFT JOIN utilisateur util
+													ON df.id_util = util.id_util
+												LEFT JOIN depense_dossier depdos
+													ON df.id_df = depdos.id_df
 											$sqlView
+											GROUP BY df.id_df
 											ORDER BY df.id_df DESC");
 
 			while ($reponse = $requete-> fetch()) {
