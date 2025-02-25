@@ -85,7 +85,7 @@
                   </div>
                   <div class="col-md-3">
                     <label for="id_cli">Client</label>
-                    <select name="id_cli" id="id_cli" class="form-control form-control-sm" required>
+                    <select name="id_cli" id="id_cli" class="form-control form-control-sm" onchange="check_select_client();" required>
                       <option></option>
                       <?php
                         $maClasse-> selectionnerClient();
@@ -165,7 +165,11 @@
                       </tbody>
                       <tfoot>
                         <tr>
-                          <td colspan="2"><span class="btn btn-xs btn-info" onclick="ajouterLigne()"><i class="fa fa-plus"></i> Add File</span> <span class="btn btn-xs btn-success" onclick="$('#modal_upload_dossier_df').modal('show');"><i class="fa fa-upload"></i> Upload Excel File</span></td>
+                          <td colspan="2">
+                            <div id="btn_add_file">
+                              <span class="btn btn-xs btn-info" onclick="ajouterLigne()"><i class="fa fa-plus"></i> Add File</span> <span class="btn btn-xs btn-success" onclick="$('#modal_upload_dossier_df').modal('show');"><i class="fa fa-upload"></i> Upload Excel File</span>
+                            </div>
+                          </td>
                         </tr>
                       </tfoot>
                     </table>
@@ -313,8 +317,19 @@
   $(document).ready(function(){
 
     selectionnerDepenseAjax();
+    check_select_client();
 
   });
+
+  function check_select_client(){
+    if($('#id_cli').val()==''){
+      document.getElementById("submit_btn").setAttribute("disabled","true");
+      document.getElementById("btn_add_file").style.display = 'none';
+    }else{
+      document.getElementById("submit_btn").removeAttribute("disabled");
+      document.getElementById("btn_add_file").style.display = 'block';
+    }
+  }
 
   $(document).ready(function(){
 
@@ -323,6 +338,8 @@
         e.preventDefault();
 
         var fd = new FormData(this);
+
+        fd.append("id_dep", $('#id_dep').val());
 
         $('#spinner-div').show();
         $('#modal_upload_dossier_df').modal('hide');

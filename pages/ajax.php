@@ -4092,15 +4092,21 @@
             
             if (isset($id_dos)) {
 
-    			$table .='<tr>
+            	if(!empty($maClasse-> double_check_request($id_dos, $_POST['id_dep']))){
+
+            	}else{
+            		$table .='<tr>
     						<td>'.($compteur+1).'</td>
-    						<td><input type="hidden" id="id_dos_'.$compteur.'" name="id_dos_'.$compteur.'" value="'.$id_dos.'">'.$ref_dos.'<a href="#" class="text-primary" onclick="modal_search_dossier_df('.$compteur.')"><i class="fa fa-search"></i></a></td>
+    						<td><input type="hidden" id="id_dos_'.$compteur.'" name="id_dos_'.$compteur.'" value="'.$id_dos.'"><span id="label_ref_dos_'.$compteur.'">'.$ref_dos.'</span> <a href="#" class="text-primary" onclick="modal_search_dossier_df('.$compteur.')"><i class="fa fa-search"></i></a> <a href="#" class="text-danger" onclick="remove_dossier_df('.$compteur.')"><i class="fa fa-times"></i></a></td>
     						<td><input type="number" step="0.001" class=" text-right" style="width: 8em;" id="montant_'.$compteur.'" name="montant_'.$compteur.'" value="'.$montant.'" required></td>
     					</tr>';
+    				$compteur++;
+
+            	}
+
               
               // $maClasse-> creerDepenseDossier($_POST['id_dep'], $id_dos, $date_dep, $montant, $assigned_to);
 
-    			$compteur++;
             }
 
         }
