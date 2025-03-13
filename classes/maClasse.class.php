@@ -6176,6 +6176,7 @@
 					                    </button>
 					                    <div class="dropdown-menu" role="menu">
 					                      '.$this-> get_aff_nd_client($id_mod_lic, $reponse['id_cli']).'
+					                      	<a class="dropdown-item text-sm" href="new_free_NoteDebit.php?id_cli='.$reponse['id_cli'].'&id_mod_lic='.$id_mod_lic.'"><i class="fa fa-plus"></i> Free Template</a>
 					                      	<a class="dropdown-item text-sm" href="listerNoteDebit.php?id_cli='.$reponse['id_cli'].'&id_mod_lic='.$id_mod_lic.'"><i class="fa fa-list"></i> View Note(s)</a>
 		                      				<div class="dropdown-divider"></div>
 					                    </div>
@@ -52943,7 +52944,8 @@
 													ON dos.id_cli = cl.id_cli
 												LEFT JOIN presentation_risque_douane prd
 													ON dos.id = prd.id
-														AND prd.date_pres IS NULL");
+														AND prd.date_pres IS NULL
+											ORDER BY dos.id DESC");
 			// $requete-> execute(array($entree['id_mod_lic'], $entree['id_cli']));
 			while ($reponse = $requete-> fetch()) {
 				$compteur++;
@@ -60990,7 +60992,8 @@
 														)
 													)
 												) AS statut,
-												CONCAT('<a href=\"#\" title=\"Support Document\" onclick=\"window.open(\'popUpRapportPayFile2.php?id_df=',df.id_df,'\',\'popUpRapportPayFile2\',\'width=1300,height=900\');\">',COUNT(depdos.id_dos),'</a>') AS nbre_dos,
+												-- CONCAT('<a href=\"#\" title=\"Support Document\" onclick=\"window.open(\'popUpRapportPayFile2.php?id_df=',df.id_df,'\',\'popUpRapportPayFile2\',\'width=1300,height=900\');\">',COUNT(depdos.id_dos),'</a>') AS nbre_dos,
+												CONCAT('<a href=\"#\" title=\"Support Document\" onclick=\"window.open(\'popUpRapportPayFile2.php?id_df=',df.id_df,'\',\'popUpRapportPayFile2\',\'width=1300,height=900\');\">',df.nbre_file,'</a>') AS nbre_dos,
 												-- COUNT(depdos.id_dos) AS nbre_dos,
 												CONCAT('<span class=\"btn btn-xs btn-info\"\" onclick=\"modal_afficher_df(\'',df.id_df,'\')\">
 																<i class=\"fa fa-arrow-circle-right\"></i>
@@ -61006,8 +61009,77 @@
 													ON df.id_cli = cl.id_cli 
 												LEFT JOIN utilisateur util
 													ON df.id_util = util.id_util
-												LEFT JOIN depense_dossier depdos
-													ON df.id_df = depdos.id_df
+												-- LEFT JOIN depense_dossier depdos
+												-- 	ON df.id_df = depdos.id_df
+											$sqlView
+											GROUP BY df.id_df
+											ORDER BY df.id_df DESC");
+
+			while ($reponse = $requete-> fetch()) {
+				$compteur++;
+
+				$reponse['compteur'] = $compteur;
+
+				$rows[] = $reponse;
+			}$requete-> closeCursor();
+
+
+			return $rows;
+
+		}
+
+		public function demande_fond_2($statut=null){
+			include('connexion.php');
+
+			$sqlView = '';
+
+			if (($this-> getUtilisateur($_SESSION['id_util'])['visa_dept_df']=='0') && ($this-> getUtilisateur($_SESSION['id_util'])['visa_dir_df']=='0') && ($this-> getUtilisateur($_SESSION['id_util'])['visa_fin_df']=='0') && ($this-> getUtilisateur($_SESSION['id_util'])['decaiss_df']=='0')) {
+				$sqlView = ' WHERE df.id_util = '.$_SESSION['id_util'];
+			}
+
+			$compteur = 0;
+			$rows = array();
+
+			$requete = $connexion-> query("SELECT df.*,
+												DATE_FORMAT(df.date_create, '%d/%m/%Y') AS date_df,
+												cl.nom_cli AS nom_cli,
+												site.nom_site AS nom_site,
+												dept.nom_dept AS nom_dept,
+												util.nom_util AS nom_util,
+												dep.nom_dep AS nom_dep,
+												IF(df.usd='1', 'USD', 'CDF') AS monnaie,
+												IF(df.cash='1', 'CASH', 'BANK') AS label_cash,
+												IF(df.id_util_reject_dept IS NOT NULL,
+													'Rejected',
+													IF(df.date_visa_dept IS NULL,
+														'Awaiting Dept. Approval',
+														IF(df.date_visa_fin IS NULL,
+															'Awaiting Finance Approval',
+															IF(df.date_visa_dir IS NULL AND (df.a_facturer = '1' OR df.cash='1'),
+																'Awaiting Management Approval',
+																IF(df.date_decaiss IS NULL,
+																	'Pending payment',
+																	'Paid'
+																)
+															)
+														)
+													)
+												) AS statut,
+												-- COUNT(depdos.id_dos) AS nbre_dos,
+												CONCAT('<span class=\"btn btn-xs btn-info\"\" onclick=\"modal_afficher_df(\'',df.id_df,'\')\">
+																<i class=\"fa fa-arrow-circle-right\"></i>
+															</span>') AS btn_action
+											FROM demande_fond df
+												LEFT JOIN depense dep
+													ON df.id_dep = dep.id_dep 
+												LEFT JOIN site
+													ON df.id_site = site.id_site 
+												LEFT JOIN departement dept
+													ON df.id_dept = dept.id_dept
+												LEFT JOIN client cl
+													ON df.id_cli = cl.id_cli 
+												LEFT JOIN utilisateur util
+													ON df.id_util = util.id_util
 											$sqlView
 											GROUP BY df.id_df
 											ORDER BY df.id_df DESC");
@@ -61666,7 +61738,7 @@
 
 		public function licence_for_excel_tracking($id_cli, $id_mod_lic, $id_mod_trans, $commodity, $statut, $id_march, $mot_cle=null){
 			include('connexion.php');
-			$compteur=0;
+			$compteur=1;
 			$entree['id_cli'] = $id_cli;
 			$entree['id_mod_lic'] = $id_mod_lic;
 
@@ -61676,7 +61748,11 @@
 				$sqlMotCle = ' AND num_lic LIKE "%'.$mot_cle.'%"';
 			}
 
-			$table = '';
+			$table = '<tr onMouseOver="this.style.cursor=\'pointer\'" onclick="window.location.replace(\'exportExcelMMGImport2.php?id_cli='.$id_cli.'&id_mod_trans='.$id_mod_trans.'&id_mod_trac='.$id_mod_lic.'&commodity='.$commodity.'&statut='.$statut.'&id_march='.$id_march.'\',\'pop1\',\'width=80,height=80\');">
+							<td>'.$compteur.'</td>
+							<td>All Files</td>
+						</tr>
+						<tr><td><hr></td></tr>';
 			
 			$requete = $connexion-> prepare("SELECT num_lic,
 													SUBSTRING(num_lic, 1, 10) AS label_num_lic
