@@ -3702,6 +3702,10 @@
 
 		echo json_encode($maClasse-> demande_fond($_POST['statut']));
 
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='demande_fond_2'){ 
+
+		echo json_encode($maClasse-> demande_fond_2($_POST['statut']));
+
 	}elseif(isset($_POST['operation']) && $_POST['operation']=='demande_fond_bank'){ 
 
 		echo json_encode($maClasse-> demande_fond_bank($_POST['statut']));
@@ -3729,7 +3733,7 @@
       	$btn_visa_fin_df = '';
       	$btn_decaiss_df = '';
 
-      	if ($response['id_util_reject_dept']==null && $response['date_visa_dept']==null) {
+      	if ($response['date_visa_dept']==null) {
       		$response['btn_edit_df'] = '<a class="btn btn-xs btn-warning" onclick="window.location.replace(\'edit_demande_fond.php?id_df='.$response['id_df'].'\');"> <i class="fa fa-edit"></i> Edit</a>';
       	}
 
@@ -3911,7 +3915,7 @@
 		$response['message'] = '
 	    				<div class="alert alert-danger alert-dismissible" role="alert">
 		                  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-		                  <i class="fa fa-times"></i> The payment request <b>No.'.$_POST['id_df'].'</b> has been refused by the departement!
+		                  <i class="fa fa-times"></i> The payment request <b>No.'.$_POST['id_df'].'</b> has been rejected!
 		                </div>';
 
 		echo json_encode($response);
@@ -3974,7 +3978,7 @@
 
 	}elseif(isset($_POST['operation']) && $_POST['operation']=='modal_search_dossier_df'){ 
 
-		$response['table_dossier_df'] = $maClasse-> modal_search_dossier_df($_POST['id_cli'], $_POST['ligne'], $_POST['mot_cle']);
+		$response['table_dossier_df'] = $maClasse-> modal_search_dossier_df($_POST['id_cli'], $_POST['id_dep'], $_POST['ligne'], $_POST['mot_cle']);
 
 		echo json_encode($response);
 
@@ -4191,6 +4195,12 @@
 
 		$maClasse-> add_commentaire_dossier($_POST['id_dos'], $_POST['id_col'], $_POST['valeur']);
 		$response['message'] = 'Done!';
+
+		echo json_encode($response);
+
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='get_montant_total_depense_dossier_DF'){ 
+
+		$response['montant'] = $maClasse-> get_montant_total_depense_dossier_DF($_POST['id_df']);
 
 		echo json_encode($response);
 

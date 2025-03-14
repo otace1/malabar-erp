@@ -149,13 +149,14 @@
                       </tbody>
                       <tfoot>
                         <tr>
-                          <input type="hidden" name="id_dep" id="id_dep_new_d">
+                          <input type="hidden" id="montant_dossier_df">
+                          <input type="hidden" id="id_dep_new_d">
                           <td></td>
                           <td>
                             <input type="hidden" id="id_dos_1" name="id_dos"><span id="label_ref_dos_1"></span><a href="#" class="text-primary" onclick="modal_search_dossier_df(1)"><i class="fa fa-search"></i></a>
                           </td>
                           <td>
-                            <input type="number" step="0.001" class=" text-right" style="width: 8em;" id="montant_1" name="montant" required>
+                            <input type="number" step="0.001" class=" text-right" style="width: 8em;" id="montant_1">
                           </td>
                           <td>
                             <span class="btn btn-xs btn-primary" onclick="creerDepenseDossierDF(id_dep_new_d.value, id_dos_1.value, montant_1.value, '<?php echo $_GET['id_df'];?>');">
@@ -316,32 +317,7 @@
         somme = 0;
 
         var fd = new FormData(this);
-
-        for (var i = 0; i < fd.get('nbre'); i++) {
-
-          if (parseFloat(fd.get('montant_'+i)) > 0 ) {
-            montant = parseFloat(fd.get('montant_'+i));
-          }else{
-            montant=0;
-          }
-          
-          somme+= montant;
-
-        }
-
-          console.log('somme == '+(Math.round(somme * 100) / 100));
-          console.log('montant == '+(Math.round(fd.get('montant') * 100) / 100));
-          // Math.round(num * 100) / 100
-
-        if((Math.round(somme * 100) / 100)!=(Math.round(fd.get('montant') * 100) / 100) && fd.get('id_dos_0')){
-
-          console.log('somme = '+(Math.round(somme * 100) / 100));
-          console.log('montant = '+(Math.round(fd.get('montant') * 100) / 100));
-
-          alert('Error! The balance isn\'t correct.');
-
-
-        }else if(confirm('Do really you want to submit ?')) {
+        if(confirm('Do really you want to submit ?')) {
           
           $('#spinner-div').show();
 
@@ -405,30 +381,67 @@
   }
   
   function creerDepenseDossierDF(id_dep, id_dos, montant, id_df){
-    if(confirm('Do really you want to add this file ?')) {
-      $('#spinner-div').show();
-      $.ajax({
-        type: 'post',
-        url: 'ajax.php',
-        data: {operation: 'creerDepenseDossierDF', id_dep: id_dep, id_dos: id_dos, montant: montant, id_df: id_df},
-        dataType: 'json',
-        success:function(data){
-          if (data.logout) {
-            alert(data.logout);
-            window.location="../deconnexion.php";
-          }else{
-            table_dossier_demande();
-            $('#label_ref_dos_1').html('');
-            $('#id_dos_1').val('');
-            $('#montant_1').val('');
-          }
-        },
-        complete: function () {
-            $('#spinner-div').hide();//Request is complete so hide spinner
-        }
-      });
-    }
 
+    // get_montant_total_depense_dossier_DF(id_df);
+
+    // console.log('montant_dossier_df = '+$('#montant_dossier_df').val());
+
+    // console.log('Montant dossier = '+(Math.round($('#montant_dossier_df').val() * 100) / 100));
+    // console.log('Montant demande  = '+(Math.round($('#montant').val() * 100) / 100));
+
+
+    // if ((Math.round($('#montant_dossier_df').val() * 100) / 100)==(Math.round($('#montant').val() * 100) / 100)) {
+
+      if(confirm('Do really you want to add this file ?')) {
+        $('#spinner-div').show();
+        $.ajax({
+          type: 'post',
+          url: 'ajax.php',
+          data: {operation: 'creerDepenseDossierDF', id_dep: id_dep, id_dos: id_dos, montant: montant, id_df: id_df},
+          dataType: 'json',
+          success:function(data){
+            if (data.logout) {
+              alert(data.logout);
+              window.location="../deconnexion.php";
+            }else{
+              table_dossier_demande();
+              $('#label_ref_dos_1').html('');
+              $('#id_dos_1').val('');
+              $('#montant_1').val('');
+            }
+          },
+          complete: function () {
+              $('#spinner-div').hide();//Request is complete so hide spinner
+          }
+        });
+      }
+
+    // }else{
+
+    //   alert('Error! The balance isn\'t correct.');
+
+    // }
+  }
+   
+  function get_montant_total_depense_dossier_DF(id_df){
+    $('#spinner-div').show();
+    $.ajax({
+      type: 'post',
+      url: 'ajax.php',
+      data: {operation: 'get_montant_total_depense_dossier_DF', id_df: id_df},
+      dataType: 'json',
+      success:function(data){
+        if (data.logout) {
+          alert(data.logout);
+          window.location="../deconnexion.php";
+        }else{
+          $('#montant_dossier_df').val(data.montant);
+        }
+      },
+      complete: function () {
+          $('#spinner-div').hide();//Request is complete so hide spinner
+      }
+    });
   }
   
   function delete_depense_dossier(id_dos, id_df){
@@ -493,7 +506,7 @@
         }else{
           // id_dept
           $('#id_dept').val(data.id_dept);
-          $('#id_dep_new_d').val(data.id_dept);
+          $('#id_dep_new_d').val(data.id_dep);
           // id_site
           $('#id_site').val(data.id_site);
           // beneficiaire
@@ -706,7 +719,7 @@
    $.ajax({
      type: "POST",
      url: "ajax.php",
-     data: { id_cli: $('#id_cli').val(), ligne: ligne, mot_cle: mot_cle, operation: 'modal_search_dossier_df'},
+     data: { id_cli: $('#id_cli').val(), id_dep: $('#id_dep').val(), ligne: ligne, mot_cle: mot_cle, operation: 'modal_search_dossier_df'},
      dataType:"json",
      success:function(data){
        if (data.logout) {

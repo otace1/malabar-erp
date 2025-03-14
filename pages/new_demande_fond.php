@@ -493,7 +493,7 @@
    $.ajax({
      type: "POST",
      url: "ajax.php",
-     data: { id_cli: $('#id_cli').val(), ligne: ligne, mot_cle: mot_cle, operation: 'modal_search_dossier_df'},
+     data: { id_cli: $('#id_cli').val(), id_dep: $('#id_dep').val(), ligne: ligne, mot_cle: mot_cle, operation: 'modal_search_dossier_df'},
      dataType:"json",
      success:function(data){
        if (data.logout) {
