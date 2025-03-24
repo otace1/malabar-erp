@@ -201,28 +201,28 @@ $text_bank = $maClasse-> getDataDossiersMultipleInvoice($_GET['ref_fact'])['text
 
 $banque = '<tr>
 			<td width="10%" style="border-top: 1px solid black; border-left: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;INTITULE</td>
-			<td width="35%" style="border-top: 1px solid black; border-right: 1px solid black;  font-size: 7px;">&nbsp;MALABAR CLEARING AGENCY SARL</td>
+			<td width="35%" style="border-top: 1px solid black; border-right: 1px solid black;  font-size: 7px;">&nbsp;MALABAR RDC SARL</td>
 			<td width="10%"></td>
 		</tr>
 		<tr>
 			<td width="10%" style="border-left: 1px solid black;  font-size: 7px;">&nbsp;N.COMPTE</td>
-			<td width="35%" style="border-right: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;00130-00001020614-41</td>
+			<td width="35%" style="border-right: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;00011-00130-00001020614-41</td>
 			<td width="10%"></td>
 		</tr>
 		<tr>
 			<td width="10%" style="border-left: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;SWIFT</td>
-			<td width="35%" style="border-right: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;PRCBCDKI</td>
+			<td width="35%" style="border-right: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;BCDCCDKI</td>
 			<td width="10%"></td>
 		</tr>
 		<tr>
 			<td width="10%" style="border-bottom: 1px solid black; border-left: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;BANQUE</td>
-			<td width="35%" style="border-bottom: 1px solid black; border-right: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;EQUITY BANK CONGO SA		
+			<td width="35%" style="border-bottom: 1px solid black; border-right: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;EQUITY BCDC		
 			<br>&nbsp;LUBUMBASHI		
 			<br>&nbsp;R.D. CONGO</td>
 			<td width="10%"></td>
 		</tr>';
 
-if ($facture['id_cli']==864 || $facture['id_cli']==878 || $facture['id_cli']==876 || $facture['id_cli']==905 || $facture['id_cli']==904) {
+/*if ($facture['id_cli']==864 || $facture['id_cli']==878 || $facture['id_cli']==876 || $facture['id_cli']==905 || $facture['id_cli']==904) {
 	$banque = '<tr>
 					<td width="10%" style="border-top: 1px solid black; border-left: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;INTITULE</td>
 					<td width="35%" style="border-top: 1px solid black; border-right: 1px solid black;  font-size: 7px;">&nbsp;MALABAR RDC SARL</td>
@@ -381,7 +381,7 @@ if ($facture['id_cli']==864 || $facture['id_cli']==878 || $facture['id_cli']==87
 					&nbsp;LUBUMBASHI, R.D.CONGO</td>
 					<td width="10%"></td>
 				</tr>';
-}
+}*/
 
 $tbl = <<<EOD
     <html>

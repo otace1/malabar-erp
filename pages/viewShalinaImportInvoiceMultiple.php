@@ -338,34 +338,24 @@ $tbl = <<<EOD
 		<tr>
 			<td width="10%" style="border-top: 1px solid black; border-left: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;INTITULE</td>
 			<td width="35%" style="border-top: 1px solid black; border-right: 1px solid black;  font-size: 7px;">&nbsp;MALABAR RDC SARL</td>
+			<td width="10%"></td>
 		</tr>
-				<tr>
-					<td width="10%" style="border-left: 1px solid black;  font-size: 7px;">&nbsp;N.COMPTE</td>
-					<td width="35%" style="border-right: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;00011-00130-00001020614-41</td>
-					<td width="10%"></td>
-				</tr>
-				<tr>
-					<td width="10%" style="border-left: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;SWIFT</td>
-					<td width="35%" style="border-right: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;RAWBCDKIXXX</td>
-					<td width="10%"></td>
-				</tr>
-				<tr>
-					<td width="10%" style=" border-left: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;BANQUE</td>
-					<td width="35%" style=" border-right: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;RAWBANK S.A</td>
-					<td width="10%"></td>
-				</tr>
 		<tr>
 			<td width="10%" style="border-left: 1px solid black;  font-size: 7px;">&nbsp;N.COMPTE</td>
-			<td width="35%" style="border-right: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;$num_cmpt</td>
+			<td width="35%" style="border-right: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;00011-00130-00001020614-41</td>
+			<td width="10%"></td>
 		</tr>
 		<tr>
 			<td width="10%" style="border-left: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;SWIFT</td>
-			<td width="35%" style="border-right: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;$swift_banq</td>
+			<td width="35%" style="border-right: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;BCDCCDKI</td>
+			<td width="10%"></td>
 		</tr>
 		<tr>
 			<td width="10%" style="border-bottom: 1px solid black; border-left: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;BANQUE</td>
-			<td width="35%" style="border-bottom: 1px solid black; border-right: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;$nom_banq		
-			<br>&nbsp;$adr_banq</td>
+			<td width="35%" style="border-bottom: 1px solid black; border-right: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;EQUITY BCDC		
+			<br>&nbsp;LUBUMBASHI		
+			<br>&nbsp;R.D. CONGO</td>
+			<td width="10%"></td>
 		</tr>
 		<tr>
 			<td width="100%"></td>
