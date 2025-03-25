@@ -326,7 +326,8 @@ $banque = '<tr>
 					<br>&nbsp;LUBUMBASHI		
 					, R.D. CONGO</td>
 				</tr>';
-}else if ($facture['id_cli']==857) {
+}else */
+if ($facture['id_cli']==857) {
 	$banque = '<tr>
 					<td width="10%" style="border-top: 1px solid black; border-left: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;INTITULE</td>
 					<td width="35%" style="border-top: 1px solid black; border-right: 1px solid black;  font-size: 7px;">&nbsp;MALABAR RDC SARL</td>
@@ -356,7 +357,7 @@ $banque = '<tr>
 					<td width="35%" style="border-bottom: 1px solid black; border-right: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;EQUITY BANK CONGO SA LUBUMBASHI , R.D. CONGO</td>
 				</tr>';
 }
-*/
+
 $tbl = <<<EOD
     <html>
     <head>
