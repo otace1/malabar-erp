@@ -3586,49 +3586,109 @@
 
 	}elseif(isset($_POST['operation']) && $_POST['operation']=='creer_demande_fond'){ 
 
-		$maClasse-> creer_demande_fond($_POST['id_dept'], $_POST['id_site'], $_POST['beneficiaire'], $_POST['id_cli'], $_POST['cash'], $_POST['montant'], $_POST['usd'], $_POST['libelle'], $_POST['id_util_visa_dept'], $_POST['id_dep']);
-    	
-    	$id_df = $maClasse-> getLastDemandeFond()['id_df'];
-		
-		if (($_FILES['fichier_df']['name'])) {
+		//Check Dossier doublon dans la meme demande de fond
+		$erreur_1 = '';
+		$erreur_2 = '';
+		$dossier_tmp_1 = '';
+		$dossier_tmp_2 = '';
 
-    		$file = $_FILES['fichier_df'];
-    		$filename = $file['name'];
-    		$ext = pathinfo($filename, PATHINFO_EXTENSION);
+    	for ($a=0; $a < $_POST['nbre'] ; $a++) { 
 
-    		$fichier_df = uniqid();
-    		// $id_df = str_replace("/", "_", "$id_df");
-			
-			$dossier = '../demande_fond/'.$id_df;
+    		$dossier_tmp_1 = $_POST['id_dos_'.$a];
 
-			if(!is_dir($dossier)){
-				mkdir("../demande_fond/$id_df", 0777);
-			}
-			$uploadFile = $dossier.'/'.$fichier_df.'.'.$ext;
-			move_uploaded_file($file['tmp_name'], $uploadFile);
-
-    		$maClasse-> inserer_fichier_df($id_df, $fichier_df.'.'.$ext);
-
-    	}
-
-    	for ($i=0; $i <= $_POST['nbre'] ; $i++) { 
-
-    		if (isset($_POST['id_dos_'.$i])) {
-
-    			$maClasse-> creerDepenseDossierDF($_POST['id_dep'], $_POST['id_dos_'.$i], date('Y-m-d'), $_POST['montant_'.$i], $id_df);
+    		for ($j=0; $j < $_POST['nbre'] ; $j++) { 
     			
+    			if ($a!=$j) {
+    				
+    				$dossier_tmp_2 = $_POST['id_dos_'.$j];
+    				if ($dossier_tmp_1 == $dossier_tmp_2) {
+    				
+	    				$erreur_1 .= $maClasse-> getDossier($dossier_tmp_1)['ref_dos'].'<br>';
+
+	    			}
+
+    			}
 
     		}
 
     	}
 
-	    $response['message'] = '
-	    				<div class="alert alert-success alert-dismissible" role="alert">
+    	for ($a=0; $a < $_POST['nbre'] ; $a++) { 
+
+
+    		if (!empty($maClasse-> double_check_request($_POST['id_dos_'.$a], $_POST['id_dep']))) {
+    				
+				$erreur_2 .= $maClasse-> getDossier($_POST['id_dos_'.$a])['ref_dos'].'<br>';
+
+			}
+
+    	}
+
+    	if ($erreur_1!='') {
+
+    		$response['erreur_1'] = '
+	    				<div class="alert alert-danger alert-dismissible" role="alert">
 		                  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-		                  <strong>Payment request has been created!</strong> 
+		                  <strong>Duplicate Entry Error: </strong><br> '.$erreur_1.'
 		                </div>';
 
-		$response['id_df'] = $id_df;
+    	}else if ($erreur_2!='') {
+
+    		$response['erreur_2'] = '
+	    				<div class="alert alert-danger alert-dismissible" role="alert">
+		                  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+		                  <strong>Duplicate expense error on file: </strong><br> '.$erreur_2.'
+		                </div>';
+
+    	}else{
+
+
+			$maClasse-> creer_demande_fond($_POST['id_dept'], $_POST['id_site'], $_POST['beneficiaire'], $_POST['id_cli'], $_POST['cash'], $_POST['montant'], $_POST['usd'], $_POST['libelle'], $_POST['id_util_visa_dept'], $_POST['id_dep']);
+	    	
+	    	$id_df = $maClasse-> getLastDemandeFond()['id_df'];
+			
+			if (($_FILES['fichier_df']['name'])) {
+
+	    		$file = $_FILES['fichier_df'];
+	    		$filename = $file['name'];
+	    		$ext = pathinfo($filename, PATHINFO_EXTENSION);
+
+	    		$fichier_df = uniqid();
+	    		// $id_df = str_replace("/", "_", "$id_df");
+				
+				$dossier = '../demande_fond/'.$id_df;
+
+				if(!is_dir($dossier)){
+					mkdir("../demande_fond/$id_df", 0777);
+				}
+				$uploadFile = $dossier.'/'.$fichier_df.'.'.$ext;
+				move_uploaded_file($file['tmp_name'], $uploadFile);
+
+	    		$maClasse-> inserer_fichier_df($id_df, $fichier_df.'.'.$ext);
+
+	    	}
+
+	    	for ($i=0; $i <= $_POST['nbre'] ; $i++) { 
+
+	    		if (isset($_POST['id_dos_'.$i])) {
+
+	    			$maClasse-> creerDepenseDossierDF($_POST['id_dep'], $_POST['id_dos_'.$i], date('Y-m-d'), $_POST['montant_'.$i], $id_df);
+	    			
+
+	    		}
+
+	    	}
+
+		    $response['message'] = '
+		    				<div class="alert alert-success alert-dismissible" role="alert">
+			                  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			                  <strong>Payment request has been created!</strong> 
+			                </div>';
+
+			$response['id_df'] = $id_df;
+
+
+    	}
 
 		echo json_encode($response);
 
@@ -4164,8 +4224,26 @@
 
 	}elseif(isset($_POST['operation']) && $_POST['operation']=='creerDepenseDossierDF'){ 
 
-		$maClasse-> creerDepenseDossierDF($_POST['id_dep'], $_POST['id_dos'], date('Y-m-d'), $_POST['montant'], $_POST['id_df']);
-		$response['message'] = 'Done!';
+		$erreur_2 = '';
+
+		if (!empty($maClasse-> double_check_request($_POST['id_dos'], $_POST['id_dep']))) {
+    				
+			$erreur_2 .= $maClasse-> getDossier($_POST['id_dos'])['ref_dos'].'<br>';
+
+		}
+
+		if ($erreur_2!='') {
+
+    		$response['erreur_2'] = '
+	    				<div class="alert alert-danger alert-dismissible" role="alert">
+		                  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+		                  <strong>Duplicate expense error on file: </strong><br> '.$erreur_2.'
+		                </div>';
+
+    	}else{
+    		$maClasse-> creerDepenseDossierDF($_POST['id_dep'], $_POST['id_dos'], date('Y-m-d'), $_POST['montant'], $_POST['id_df']);
+			$response['message'] = 'Done!';
+    	}
 
 		echo json_encode($response);
 

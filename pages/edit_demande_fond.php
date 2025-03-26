@@ -403,6 +403,14 @@
             if (data.logout) {
               alert(data.logout);
               window.location="../deconnexion.php";
+            }else if (data.erreur_2) {
+
+              $('#message').html(data.erreur_2);
+              table_dossier_demande();
+              $('#label_ref_dos_1').html('');
+              $('#id_dos_1').val('');
+              $('#montant_1').val('');
+              
             }else{
               table_dossier_demande();
               $('#label_ref_dos_1').html('');

@@ -589,6 +589,10 @@
               if (data.logout) {
                 alert(data.logout);
                 window.location="../deconnexion.php";
+              }else if (data.erreur_1) {
+                $('#message').html(data.erreur_1);
+              }else if (data.erreur_2) {
+                $('#message').html(data.erreur_2);
               }else{
                 $( '#form_creer_demande_fond' ).each(function(){
                     this.reset();
