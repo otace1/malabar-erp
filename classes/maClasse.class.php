@@ -17004,7 +17004,15 @@
 														AND id_deb = ?");
 			$requete-> execute(array($entree['ref_fact'], $entree['id_dos'], $entree['id_deb']));
 			$reponse=$requete-> fetch();
-			return $reponse['montant'];
+
+			if($reponse){
+				return $reponse['montant'];
+			}else{
+				$reponse['montant'] = NULL;
+				return $reponse['montant'];
+
+			}
+
 		}
 
 		public function getMontantFactureDossierDebours2($ref_fact, $id_deb){
@@ -22018,6 +22026,117 @@
 
 					}
 
+					$debours .= '<tr>
+									<td width="10%">
+										<input type="hidden" id="id_deb_'.$compteur.'" name="id_deb_'.$compteur.'" value="'.$reponseDebours['id_deb'].'">
+										'.$reponseDebours['abr_deb'].'
+									</td>
+									<td width="50%">
+										'.$reponseDebours['nom_deb'].'
+									</td>
+									<td><input type="number" step="0.001" value="'.$unite.'" name="unite_'.$compteur.'" id="unite_'.$compteur.'" class="text-center"></td>
+									<td><input type="number" step="0.001" value="'.$montant.'" name="montant_'.$compteur.'" id="montant_'.$compteur.'" class="text-center"></td>
+									<td><select name="usd_'.$compteur.'" id="usd_'.$compteur.'" class="text-center">'.$select_monnaie.'</select></td>
+									<td><select name="tva_'.$compteur.'" id="tva_'.$compteur.'" class="text-center">'.$select_tva.'</select></td>
+								</tr>';
+
+					?>
+					
+					<?php
+				}$requeteDebours-> closeCursor();
+				$debours .= '</div>';
+
+			}$requeteTypeDebours-> closeCursor();
+			$debours .= '<input type="hidden" name="compteur" value="'.$compteur.'">';
+
+			return $debours;
+		}
+
+		public function getDeboursPourFactureClientExport_edit($ref_fact, $id_cli, $id_mod_lic, $id_march, $id_mod_trans, $id_dos){
+			include('connexion.php');
+			$entree['id_cli'] = $id_cli;
+			$entree['id_mod_lic'] = $id_mod_lic;
+			$entree['id_march'] = $id_march;
+			$entree['id_mod_trans'] = $id_mod_trans;
+			$compteur = 0;
+			$active = '';
+			$sqlTypeDebours = '';
+			$detail_input = '';
+			$usd_input = '';
+			$tva_input = '';
+			$montant_input = '';
+			$montant_tva_input = '';
+			$unite_input = '';
+
+			$debours = '';
+			$poids = $this-> getDossier($id_dos)['poids'];
+
+			$requeteTypeDebours = $connexion-> query("SELECT UPPER(nom_t_deb) AS nom_t_deb, id_t_deb
+														FROM type_debours
+														$sqlTypeDebours");
+			while($reponseTypeDebours = $requeteTypeDebours-> fetch()){
+				$debours .= '
+							<tr id="">
+								<th colspan="7" class="bg bg-secondary">
+									<u>'.$reponseTypeDebours['nom_t_deb'].'</u>
+								</th>
+							</tr>
+							<div>';
+				?>
+				<?php 
+				$requeteDebours = $connexion-> prepare("SELECT deb.abr_deb AS abr_deb, 
+														-- UPPER(REPLACE(deb.nom_deb, '\'', '')) AS nom_deb, 
+														IF(af.montant_min > 0,
+															CONCAT(UPPER(REPLACE(deb.nom_deb, '\'', '')), ' (',af.montant_min,'$ min)'),
+															UPPER(REPLACE(deb.nom_deb, '\'', ''))
+														) AS nom_deb, 
+														deb.id_deb AS id_deb,
+														af.tva AS tva, af.usd AS usd, af.montant AS montant,
+														af.detail AS detail,
+														af.unite AS unite,
+														af.montant_min AS montant_min
+													FROM debours deb, affectation_debours_client_modele_licence af
+													WHERE deb.id_t_deb = ?
+														AND deb.id_deb = af.id_deb
+														AND af.id_mod_lic = ?
+														AND af.id_cli = ?
+														AND af.id_march = ?
+														AND af.id_mod_trans = ?
+													ORDER BY deb.id_deb ASC");
+				$requeteDebours-> execute(array($reponseTypeDebours['id_t_deb'], $entree['id_mod_lic'], $entree['id_cli'], $entree['id_march'], $entree['id_mod_trans']));
+				while($reponseDebours = $requeteDebours-> fetch()){
+					$compteur++;
+					$unite = '1';
+					$montant = $reponseDebours['montant'];
+					$select_monnaie = '';
+					$select_tva = '';
+
+					if (!empty($this-> getMontantFactureDossierDebours($ref_fact, $id_dos, $reponseDebours['id_deb']))) {
+						$montant = round($this-> getMontantFactureDossierDebours($ref_fact, $id_dos, $reponseDebours['id_deb']), 6);
+					}
+
+					//Unite
+					if (empty($reponseDebours['unite']) || $reponseDebours['unite']=='') {
+						$unite = $poids;
+					}else {
+						$unite = 1;
+					}
+
+					//Monnaie
+					if ($reponseDebours['usd']=='1') {
+						$select_monnaie = '<option value="1">USD</option><option value="0">CDF</option>';
+					}else{
+						$select_monnaie = '<option value="0">CDF</option><option value="1">USD</option>';
+					}
+
+					//TVA
+					if ($reponseDebours['tva']=='1') {
+						$select_tva = '<option value="1">YES</option><option value="0">NO</option>';
+					}else{
+						$select_tva = '<option value="0">NO</option><option value="1">YES</option>';
+					}
+
+					
 					$debours .= '<tr>
 									<td width="10%">
 										<input type="hidden" id="id_deb_'.$compteur.'" name="id_deb_'.$compteur.'" value="'.$reponseDebours['id_deb'].'">
