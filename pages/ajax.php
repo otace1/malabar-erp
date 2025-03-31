@@ -15,6 +15,13 @@
 
   		echo json_encode($reponse);
 
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='getTableauExportInvoiceSingle_edit'){// On recupere les donnees du dossier a facturer 
+
+  		$reponse = $maClasse-> getDataDossier($_POST['id_dos']);
+  		$reponse['debours'] = $maClasse-> getDeboursPourFactureClientExport_edit($_POST['ref_fact'], $reponse['id_cli'], $reponse['id_mod_lic'], $reponse['id_march'], $reponse['id_mod_trans'], $_POST['id_dos']);
+
+  		echo json_encode($reponse);
+
 	}elseif(isset($_POST['operation']) && $_POST['operation']=='getTableauImportInvoiceSingle'){// On recupere les donnees du dossier a facturer 
 
   		$reponse = $maClasse-> getDataDossier($_POST['id_dos']);
@@ -203,6 +210,32 @@
   			try {
   			$maClasse-> creerFactureDossier($_POST['ref_fact'], $_POST['id_mod_fact'], $_POST['id_cli'], $_SESSION['id_util'], $_POST['id_mod_lic'], 'partielle', NULL);
   			$maClasse-> MAJ_roe_decl($_POST['id_dos'], $_POST['roe_decl']);
+
+  			for ($i=1; $i <= 24 ; $i++) { 
+  				if (isset($_POST['montant_'.$i]) && $_POST['montant_'.$i] > 1) {
+  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos'], $_POST['id_deb_'.$i], $_POST['montant_'.$i], $_POST['tva_'.$i], $_POST['usd_'.$i]);
+  				}
+  				
+  			}
+
+  			$response = array('message' => 'Invoice Created');
+  			// $response['ref_fact'] = $maClasse-> buildRefFactureGlobale($_POST['id_cli']);
+  			// $response['ref_dos'] =$maClasse-> selectionnerDossierClientModeleLicenceMarchandise2($_POST['id_cli'], $_POST['id_mod_lic'], $_POST['id_march']);
+
+  			} catch (Exception $e) {
+
+	            $response = array('error' => $e->getMessage());
+
+	        }
+
+  		}
+	    echo json_encode($response);
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='editerFactureExportSingle'){// On enregistre la facture Export Single
+
+  		if(isset($_POST['ref_fact'])){
+  			try {
+  			$maClasse-> MAJ_roe_decl($_POST['id_dos'], $_POST['roe_decl']);
+  			$maClasse-> supprimerDetailFactureDossier($_POST['ref_fact']);
 
   			for ($i=1; $i <= 24 ; $i++) { 
   				if (isset($_POST['montant_'.$i]) && $_POST['montant_'.$i] > 1) {
