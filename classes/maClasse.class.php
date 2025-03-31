@@ -22107,12 +22107,14 @@
 				while($reponseDebours = $requeteDebours-> fetch()){
 					$compteur++;
 					$unite = '1';
-					$montant = $reponseDebours['montant'];
+					// $montant = $reponseDebours['montant'];
 					$select_monnaie = '';
 					$select_tva = '';
 
 					if (!empty($this-> getMontantFactureDossierDebours($ref_fact, $id_dos, $reponseDebours['id_deb']))) {
 						$montant = round($this-> getMontantFactureDossierDebours($ref_fact, $id_dos, $reponseDebours['id_deb']), 6);
+					}else{
+						$montant = null;
 					}
 
 					//Unite
