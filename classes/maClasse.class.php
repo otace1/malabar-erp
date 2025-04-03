@@ -22024,6 +22024,18 @@
 						
 						$montant = 800;
 
+					}else if ($reponseDebours['id_deb'] == 196 && $this-> getDossier($id_dos)['pied_container']=='10') { // Container 10'
+						
+						$montant = 25;
+
+					}else if ($reponseDebours['id_deb'] == 197 && $this-> getDossier($id_dos)['pied_container']=='20') { // Container 20'
+						
+						$montant = 50;
+
+					}else if ($reponseDebours['id_deb'] == 198 && $this-> getDossier($id_dos)['pied_container']=='40') { // Container 40'
+						
+						$montant = 100;
+
 					}
 
 					$debours .= '<tr>
@@ -24969,9 +24981,9 @@
 			while($reponse = $requete-> fetch()){
 				$compteur++;
 				$reponse['compteur'] = $compteur;
-				$reponse['pending'] = $this-> get_monitoring_depenses_pending($reponse['id_dep'], $id_mod_lic);
-				$reponse['invoiced'] = $this-> get_monitoring_depenses_invoiced($reponse['id_dep'], $id_mod_lic);
-				$reponse['debite_note'] = $this-> get_nbre_debit_note($reponse['id_dep'], $id_mod_lic);
+				$reponse['pending'] = '';//$this-> get_monitoring_depenses_pending($reponse['id_dep'], $id_mod_lic);
+				$reponse['invoiced'] = '';//$this-> get_monitoring_depenses_invoiced($reponse['id_dep'], $id_mod_lic);
+				$reponse['debite_note'] = '';//$this-> get_nbre_debit_note($reponse['id_dep'], $id_mod_lic);
 
 				$rows[] = $reponse;
 
