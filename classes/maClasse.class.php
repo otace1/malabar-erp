@@ -21995,9 +21995,14 @@
 						$montant = $this-> getDossier($id_dos)['poids']*50;
 
 					}
-					else if ($reponseDebours['id_deb'] == 5) { //FERE 3$/T
+					else if ($reponseDebours['id_deb'] == 5 && (empty($this-> getDossier($id_dos)['pied_container']) || ($this-> getDossier($id_dos)['pied_container']=='N/A') || ($this-> getDossier($id_dos)['pied_container']=='NA'))) { //FERE 3$/T
 						
 						$montant = $this-> getDossier($id_dos)['poids']*3;
+
+					}
+					else if ($reponseDebours['id_deb'] == 5 && !empty($this-> getDossier($id_dos)['pied_container'])) { //FERE 3$/T
+						
+						$montant = 0;
 
 					}
 					else if ($reponseDebours['id_deb'] == 6 && $reponseDebours['montant']>5) { //LMC
