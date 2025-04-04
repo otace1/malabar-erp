@@ -154,7 +154,7 @@ $('#pay_report_file_pending_invoice').DataTable({
           },          "data": {
               "id_cli": "",
               "operation": "pay_report_file_pending_invoice",
-              "id_mod_lic": "<?php echo $_GET['id_mod_lic_fact'];?>"
+              "id_mod_lic": "<?php echo $_GET['id_mod_lic'];?>"
           }
         },
         "columns":[
@@ -262,7 +262,6 @@ $('#pay_report_file_pending_invoice').DataTable({
               }
             },
             complete: function () {
-                // afficherMonitoringNoteDebit(<?php echo $_GET['id_mod_lic_fact'];?>);
                 $('#monitoring_depenses').DataTable().ajax.reload();
                 $('#spinner-div').hide();//Request is complete so hide spinner
             }
