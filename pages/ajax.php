@@ -735,6 +735,11 @@
 		echo json_encode($maClasse-> pay_report_file());
 		
 		
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='pay_report_file_pending_invoice'){ 
+
+		echo json_encode($maClasse-> pay_report_file_pending_invoice($_POST['id_mod_lic']));
+		
+		
 	}elseif(isset($_POST['operation']) && $_POST['operation']=='pay_report_file_df'){ 
 
 		echo json_encode($maClasse-> pay_report_file_df($_POST['id_df']));
