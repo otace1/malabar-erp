@@ -3415,10 +3415,17 @@
 			          </p>
 			        </a>
 		            <ul class="nav nav-treeview">
-						<li class="nav-item">
+						<!-- <li class="nav-item">
 			                <a href="dashboardNoteDebit.php?id_mod_lic_fact=<?php echo $reponse['id_mod_lic'];?>&id_cli=" class="nav-link">
 			                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-tachometer-alt nav-icon"></i>
 			                  <p>Dashboard
+			                  </p>
+			                </a>
+			            </li> -->
+			            <li class="nav-item">
+			                <a href="dashboardNoteDebit_2.php?id_mod_lic=<?php echo $reponse['id_mod_lic'];?>&id_cli=" class="nav-link">
+			                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-list nav-icon"></i>
+			                  <p>Reports
 			                  </p>
 			                </a>
 			            </li>
@@ -48477,6 +48484,101 @@
 												AND depdos.id_dep = dep.id_dep
 										");
 			// $requete-> execute(array($entree['id_dos']));
+			while($reponse = $requete-> fetch()){
+				$compteur++;
+
+				$reponse['compteur'] = $compteur;
+				$rows[] = $reponse;
+
+			}$requete-> closeCursor();
+			
+			return $rows;
+
+		}
+
+		public function pay_report_file_pending_invoice($id_mod_lic){
+			include('connexion.php');
+
+			$entree['id_mod_lic'] = $id_mod_lic;
+
+			$compteur = 0;
+			$rows = array();
+
+			$requete = $connexion-> prepare("SELECT df.id_df AS id_df,
+												DATE_FORMAT(df.date_create, '%d/%m/%Y') AS date_df,
+												DATE_FORMAT(dos.date_decl, '%d/%m/%Y') AS date_decl,
+												dos.ref_decl AS ref_decl,
+												DATE_FORMAT(dos.date_liq, '%d/%m/%Y') AS date_liq,
+												dos.ref_liq AS ref_liq,
+												dos.montant_liq AS montant_liq,
+												dos.ref_dos AS ref_dos,
+												dep.nom_dep AS nom_dep,
+												cl.nom_cli AS nom_cli,
+												site.nom_site AS nom_site,
+												dept.nom_dept AS nom_dept,
+												util.nom_util AS nom_util,
+												depdos.montant AS montant,
+												DATE_FORMAT(depdos.date_dep, '%d/%m/%Y') AS date_dep,
+												depdos.assigned_to AS assigned_to,
+												IF(df.id_df IS NULL,
+													'USD',
+													IF(df.usd='1', 'USD', 'CDF')
+												) AS monnaie,
+												IF(dos.roe_decl>0,
+													dos.roe_decl,
+													0
+												) AS roe_decl,
+												IF(dos.roe_decl>0,
+													(dos.montant_liq/dos.roe_decl),
+													0
+												) AS montant_liq_usd,
+												IF(df.id_df IS NULL,
+													'Expense Uploaded',
+													IF(df.id_util_reject_dept IS NOT NULL,
+														'Rejected',
+														IF(df.date_visa_dept IS NULL,
+															'Awaiting Dept. Approval',
+															IF(df.date_visa_fin IS NULL,
+																'Awaiting Finance Approval',
+																IF(df.date_visa_dir IS NULL AND (df.a_facturer = '1' OR df.cash='1'),
+																	'Awaiting Management Approval',
+																	IF(df.date_decaiss IS NULL,
+																		'Pending payment',
+																		'Paid'
+																	)
+																)
+															)
+														)
+													)
+												) AS statut,
+												CONCAT('<a href=\"#\" class=\"text-dark\" title=\"Dossiers affectés\" onclick=\"window.open(\'generateur_demande_fond.php?id_df=',df.id_df,'\',\'pop12\',\'width=1100,height=900\');\">
+														<i class=\"fa fa-print\"></i>
+													</a>') AS btn_action
+											FROM depense_dossier depdos
+												LEFT JOIN demande_fond df 
+													ON df.id_df = depdos.id_df
+												LEFT JOIN dossier dos
+													ON depdos.id_dos = dos.id_dos
+												LEFT JOIN detail_note_debit det_nd
+													ON det_nd.id_dep_dos = depdos.id_dep_dos
+												LEFT JOIN depense dep
+													ON depdos.id_dep = dep.id_dep
+												LEFT JOIN site
+													ON df.id_site = site.id_site
+												LEFT JOIN departement dept
+													ON df.id_dept = dept.id_dept
+												LEFT JOIN client cl
+													ON df.id_cli = cl.id_cli
+												LEFT JOIN utilisateur util
+													ON df.id_util = util.id_util
+											WHERE (
+													(df.a_facturer = '1' AND df.id_util_reject_dept IS NULL AND df.id_util_decaiss IS NOT NULL)
+													OR df.id_df IS NULL
+												)
+												AND det_nd.id_dep_dos IS NULL
+												AND dos.id_mod_lic = ?
+										");
+			$requete-> execute(array($entree['id_mod_lic']));
 			while($reponse = $requete-> fetch()){
 				$compteur++;
 
