@@ -137,7 +137,12 @@ $service_fee = $maClasse-> getDetailFactureExportMultiple($_GET['ref_fact'], '4'
 
 if ($maClasse-> getDataDossiersMultipleInvoice($_GET['ref_fact'])['id_cli']=='972') {
 	
-	$totalAll = $maClasse-> getTotalFactureImportSingle2023($_GET['ref_fact'], '');
+	$totalAll = '
+				<tr>
+					<td rowspan="9" style="text-align: center; font-weight: bold; font-size: 5px;" width="65.5%"></td>
+					<td></td>
+					<td></td>
+				</tr>'.$maClasse-> getTotalFactureImportSingle2023($_GET['ref_fact'], '');
 
 }else{
 
