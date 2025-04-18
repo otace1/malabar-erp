@@ -134,7 +134,17 @@ $operational_cost = $maClasse-> getDetailFactureExportMultiple($_GET['ref_fact']
 
 $service_fee = $maClasse-> getDetailFactureExportMultiple($_GET['ref_fact'], '4');
 
-$totalAll = $maClasse-> getTotalFactureExportSingle($_GET['ref_fact']);
+
+if ($maClasse-> getDataDossiersMultipleInvoice($_GET['ref_fact'])['id_cli']=='972') {
+	
+	$totalAll = $maClasse-> getTotalFactureImportSingle2023($_GET['ref_fact'], '');
+
+}else{
+
+	$totalAll = $maClasse-> getTotalFactureExportSingle($_GET['ref_fact']);
+
+}
+
 
 $total = $maClasse-> getTotalForFacturePartielle($_GET['ref_fact']);
 $arsp = $maClasse-> getARSPForFacturePartielle($_GET['ref_fact']);
@@ -198,6 +208,7 @@ $swift_banq = $maClasse-> getDataCompteBancaire($num_cmpt)['swift_banq'];
 $nom_banq = $maClasse-> getDataBancaire($maClasse-> getDataDossiersMultipleInvoice($_GET['ref_fact'])['id_bank_liq'])['nom_banq'];
 
 $text_bank = $maClasse-> getDataDossiersMultipleInvoice($_GET['ref_fact'])['text_banq'];
+
 
 $banque = '<tr>
 			<td width="10%" style="border-top: 1px solid black; border-left: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;INTITULE</td>
