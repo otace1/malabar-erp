@@ -90,6 +90,50 @@
   </div>
   <?php include("pied.php");?>
 
+<div class="modal fade" id="modal_depense">
+  <div class="modal-dialog modal-md">
+    <div class="modal-content">
+      <div class="modal-header btn-dark">
+        <h4 class="modal-title"><i class="fa fa-list"></i> Expenses List </h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <!-- <input type="hidden" id="id_mod_lic_search">
+
+          <input type="text" id="mot_cle" class="form-control form-control-sm" placeholder="Ex.: Mining DRC LTD" onkeyup="table_menuLicence_synthese($('#id_mod_lic_search').val(), $('#id_type_lic_search').val(), $('#page_search').val(), this.value);"> -->
+          <hr>
+          <div class="col-md-12 table-responsive p-0 " style="height: 500px;">
+            <table class="table table-bordered table-striped text-nowrap table-hover table-sm small text-nowrap table-head-fixed ">
+              <thead>
+                  <tr>
+                  <tr>
+                      <th>#</th>
+                      <th>Expense</th>
+                  </tr>
+              </thead>
+              <tbody>
+                <?php
+                  echo $maClasse-> getListeUploadDepense();
+                ?>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <!-- <div class="modal-footer justify-content-between">
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Annuler</button>
+        <button type="submit" name="creerAV" class="btn btn-primary">Valider</button>
+      </div> -->
+    </div>
+    <!-- </form> -->
+    <!-- /.modal-content -->
+  </div>
+  <!-- /.modal-dialog -->
+</div>
+
 <div class="modal fade" id="modal_upload_depense">
   <div class="modal-dialog modal-sm">
     <form id="form_upload_depense" method="POST" action="" data-parsley-validate enctype="multipart/form-data">
