@@ -17582,7 +17582,7 @@
 				$reponse['montant'] = $this-> getDossier($id_dos)['poids']*8;
 				$reponse['tva'] = '0';
 				return $reponse;
-			}else if ($id_deb == 8) {
+			}else if ($id_deb == 8 && ($id_march == 13|| $id_march== 31)) {
 				$reponse['montant'] = $this-> getDossier($id_dos)['poids']*100;
 				$reponse['tva'] = '0';
 				return $reponse;
