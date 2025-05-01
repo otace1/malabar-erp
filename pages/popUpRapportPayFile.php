@@ -34,13 +34,13 @@
                       <th>Currency</th>
                       <th>Amount</th>
                       <th>Statut</th>
-                      <th>Decl.Ref.</th>
+                      <!-- <th>Decl.Ref.</th>
                       <th>Decl.Date</th>
                       <th>Liq.Ref.</th>
                       <th>Liq.Date</th>
                       <th>Liq.Amount CDF</th>
                       <th>Rate</th>
-                      <th>Liq.Amount USD</th>
+                      <th>Liq.Amount USD</th> -->
                       <th>Action</th>
                     </tr>
                   </thead>
@@ -133,33 +133,33 @@
       {"data":"statut",
         className: 'dt-body-center'
       },
-      {"data":"ref_decl",
-        className: 'dt-body-center'
-      },
-      {"data":"date_decl",
-        className: 'dt-body-center'
-      },
-      {"data":"ref_liq",
-        className: 'dt-body-center'
-      },
-      {"data":"date_liq",
-        className: 'dt-body-center'
-      },
-      {"data":"montant_liq",
-        className: 'dt-body-center',
-        render: DataTable.render.number( null, null, 2, null ),
-        className: 'dt-body-right'
-      },
-      {"data":"roe_decl",
-        className: 'dt-body-center',
-        render: DataTable.render.number( null, null, 2, null ),
-        className: 'dt-body-right'
-      },
-      {"data":"montant_liq_usd",
-        className: 'dt-body-center',
-        render: DataTable.render.number( null, null, 2, null ),
-        className: 'dt-body-right'
-      },
+      // {"data":"ref_decl",
+      //   className: 'dt-body-center'
+      // },
+      // {"data":"date_decl",
+      //   className: 'dt-body-center'
+      // },
+      // {"data":"ref_liq",
+      //   className: 'dt-body-center'
+      // },
+      // {"data":"date_liq",
+      //   className: 'dt-body-center'
+      // },
+      // {"data":"montant_liq",
+      //   className: 'dt-body-center',
+      //   render: DataTable.render.number( null, null, 2, null ),
+      //   className: 'dt-body-right'
+      // },
+      // {"data":"roe_decl",
+      //   className: 'dt-body-center',
+      //   render: DataTable.render.number( null, null, 2, null ),
+      //   className: 'dt-body-right'
+      // },
+      // {"data":"montant_liq_usd",
+      //   className: 'dt-body-center',
+      //   render: DataTable.render.number( null, null, 2, null ),
+      //   className: 'dt-body-right'
+      // },
       {"data":"btn_action",
         className: 'dt-body-center'
       }
