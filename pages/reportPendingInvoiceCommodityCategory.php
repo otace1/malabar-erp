@@ -25,8 +25,8 @@
             <div class="card">
               <div class="card-header"></div>    
               <!-- /.card-header -->
-              <div class="card-body table-responsive p-0">
-                <table id="reportPendingInvoiceCommodityCategory" cellspacing="0" width="100%" class="table text-center display compact table-bordered table-striped table-sm text-nowrap">
+              <div class="card-body">
+                <table id="reportPendingInvoiceCommodityCategory" cellspacing="0" width="100%" class="table table-responsive text-center display compact table-bordered table-striped table-sm text-nowrap">
                   <thead>
                     <tr>
                       <th style="">#</th>
@@ -43,6 +43,8 @@
                       <th style="">Liq. Date</th>
                       <th style="">Quit. Ref.</th>
                       <th style="">Quit. Date</th>
+                      <th style="">BS Date</th>
+                      <th style="">Dispatch/Delivery Date</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -238,7 +240,7 @@
   "ordering": true,
   "info": true,
   "autoWidth": true,
-  "responsive": true,
+  // "responsive": true,
     "ajax":{
       "type": "GET",
       "url":"ajax.php",
@@ -266,7 +268,9 @@
       {"data":"ref_liq"},
       {"data":"date_liq"},
       {"data":"ref_quit"},
-      {"data":"date_quit"}
+      {"data":"date_quit"},
+      {"data":"dispatch_date"},
+      {"data":"dispatch_deliv"}
     ] 
   });
 </script>

@@ -197,6 +197,8 @@
                       <th style="">Q.Date</th>
                       <th style="">Delay</th>
                       <th style="">Q.Encoding Date</th>
+                      <th style="">BS Date</th>
+                      <th style="">Dispatch/Delivery Date</th>
                       <?php
                       }else if ($_GET['statut']=='Excel Invoice') {
                       ?>
@@ -680,7 +682,9 @@
           {"data":"ref_quit"},
           {"data":"date_quit"},
           {"data":"delay"},
-          {"data":"date_log"}
+          {"data":"date_log"},
+          {"data":"dispatch_date"},
+          {"data":"dispatch_deliv"}
         ] 
             <?php
           }else if ($_GET['statut']=='Excel Invoice'){

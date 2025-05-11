@@ -159,6 +159,7 @@ $exit_drc = $maClasse-> getDataDossiersMultipleInvoice($_GET['ref_fact'])['exit_
 $bur_douane = $maClasse-> getDataDossiersMultipleInvoice($_GET['ref_fact'])['bur_douane'];
 $commodity = $maClasse-> getDataDossiersMultipleInvoice($_GET['ref_fact'])['commodity'];
 $ref_dos = $maClasse-> getDataDossiersMultipleInvoice($_GET['ref_fact'])['ref_dos'];
+$dispatch_deliv = $maClasse-> getDataDossiersMultipleInvoice($_GET['ref_fact'])['dispatch_deliv'];
 $supplier = $maClasse-> getDataDossiersMultipleInvoice($_GET['ref_fact'])['supplier'];
 $ref_decl = $maClasse-> getDataDossiersMultipleInvoice($_GET['ref_fact'])['ref_decl'];
 $date_decl = $maClasse-> getDataDossiersMultipleInvoice($_GET['ref_fact'])['date_decl'];
@@ -465,8 +466,10 @@ $tbl = <<<EOD
 			<td width="23%" style="text-align: left; border: 0.3px solid black; font-size: 7px;">&nbsp;Poids (Kg): </td>
 			<td width="22%" style="text-align: center; border: 0.3px solid black; font-size: 7px;">$poids</td>
 			<td width="15%" style="text-align: left; "></td>
-			<td width="15%" style="text-align: left; border: 0.3px solid black; font-size: 7px; font-weight: bold;">&nbsp;Notre Nº Ref #: </td>
-			<td width="25%" style="text-align: center; border: 0.3px solid black; font-size: 7px; font-weight: bold;">$ref_dos</td>
+			<td width="8%" style="text-align: left; border: 0.3px solid black; font-size: 7px; font-weight: bold;">&nbsp;File Ref.: </td>
+			<td width="12%" style="text-align: center; border: 0.3px solid black; font-size: 7px; font-weight: bold;">$ref_dos</td>
+			<td width="13%" style="text-align: left; border: 0.3px solid black; font-size: 7px; ">&nbsp;Dispatch/Deliv. Date: </td>
+			<td width="7%" style="text-align: center; border: 0.3px solid black; font-size: 7px; font-weight: bold;">$dispatch_deliv</td>
 		</tr>
 		<tr>
 			<td width="23%" style="text-align: left; border: 0.3px solid black; font-size: 7px;">&nbsp;FOB/$id_mon_fob: </td>
