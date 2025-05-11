@@ -3842,7 +3842,9 @@
 									)
 								)
 							AS statut,
-							dossier.mca_b_ref AS mca_b_ref
+							dossier.mca_b_ref AS mca_b_ref,
+							dossier.dispatch_date AS dispatch_date,
+							dossier.dispatch_deliv AS dispatch_deliv
 						FROM dossier
 							LEFT JOIN detail_facture_dossier
 								ON detail_facture_dossier.id_dos = dossier.id_dos
@@ -3900,7 +3902,9 @@
 									)
 								)
 							AS statut,
-							dossier.mca_b_ref AS mca_b_ref
+							dossier.mca_b_ref AS mca_b_ref,
+							dossier.dispatch_date AS dispatch_date,
+							dossier.dispatch_deliv AS dispatch_deliv
 						FROM dossier, detail_facture_dossier, facture_dossier, marchandise
 						WHERE dossier.id_mod_lic = ?
 							AND dossier.ref_dos NOT LIKE 'EXPDEC%'
@@ -3954,7 +3958,9 @@
 							DATE_FORMAT(dossier.date_liq, '%d/%m/%Y') AS date_liq,
 							dossier.ref_quit AS ref_quit,
 							DATE_FORMAT(dossier.date_quit, '%d/%m/%Y') AS date_quit,
-							dossier.mca_b_ref AS mca_b_ref
+							dossier.mca_b_ref AS mca_b_ref,
+							dossier.dispatch_date AS dispatch_date,
+							dossier.dispatch_deliv AS dispatch_deliv
 						FROM dossier
 							LEFT JOIN detail_facture_dossier
 								ON detail_facture_dossier.id_dos = dossier.id_dos
@@ -4014,15 +4020,44 @@
 							dossier.ref_quit AS ref_quit,
 							DATE_FORMAT(dossier.date_quit, '%d/%m/%Y') AS date_quit,
 							'<span class=\'badge badge-info font-weight-bold\'>Waiting to be invoiced</span>' AS statut,
-							dossier.mca_b_ref AS mca_b_ref
+							dossier.mca_b_ref AS mca_b_ref,
+							dossier.dispatch_date AS dispatch_date,
+							dossier.dispatch_deliv AS dispatch_deliv
 						FROM dossier, marchandise
 						WHERE dossier.id_mod_lic = ?
-							AND dossier.date_decl IS NOT NULL
-							AND dossier.ref_decl IS NOT NULL
-							AND dossier.date_liq IS NOT NULL
-							AND dossier.ref_liq IS NOT NULL
-							AND dossier.date_quit IS NOT NULL
-							AND dossier.ref_quit IS NOT NULL
+							-- AND dossier.date_decl IS NOT NULL
+							-- AND dossier.ref_decl IS NOT NULL
+							-- AND dossier.date_liq IS NOT NULL
+							-- AND dossier.ref_liq IS NOT NULL
+							-- AND dossier.date_quit IS NOT NULL
+							-- AND dossier.ref_quit IS NOT NULL
+
+							AND 
+							(
+								-- Pocess 1
+								(
+									get_inv_process_pour_dossier(dossier.id_dos)=1
+									AND dossier.date_decl IS NOT NULL
+									AND dossier.ref_decl IS NOT NULL
+									AND dossier.date_liq IS NOT NULL
+									AND dossier.ref_liq IS NOT NULL
+									AND dossier.date_quit IS NOT NULL
+									AND dossier.ref_quit IS NOT NULL
+								)
+								OR
+								-- Pocess 2
+								(
+									get_inv_process_pour_dossier(dossier.id_dos)=2
+									AND dossier.dispatch_date IS NOT NULL
+								)
+								OR
+								-- Pocess 3
+								(
+									get_inv_process_pour_dossier(dossier.id_dos)=3
+									AND dossier.dispatch_deliv IS NOT NULL
+								)
+									
+							)
 							$sqlClient
 							AND dossier.id_cli <> 1
 							AND dossier.not_fact = '0'
@@ -4087,17 +4122,46 @@
 							dossier.ref_quit AS ref_quit,
 							DATE_FORMAT(dossier.date_quit, '%d/%m/%Y') AS date_quit,
 							'<span class=\'badge badge-info font-weight-bold\'>Waiting to be invoiced</span>' AS statut,
-							dossier.mca_b_ref AS mca_b_ref
+							dossier.mca_b_ref AS mca_b_ref,
+							dossier.dispatch_date AS dispatch_date,
+							dossier.dispatch_deliv AS dispatch_deliv
 						FROM dossier, marchandise
 						WHERE dossier.id_mod_lic = ?
 							AND dossier.id_march = marchandise.id_march
 							AND dossier.id_march = ?
-							AND dossier.date_decl IS NOT NULL
-							AND dossier.ref_decl IS NOT NULL
-							AND dossier.date_liq IS NOT NULL
-							AND dossier.ref_liq IS NOT NULL
-							AND dossier.date_quit IS NOT NULL
-							AND dossier.ref_quit IS NOT NULL
+							-- AND dossier.date_decl IS NOT NULL
+							-- AND dossier.ref_decl IS NOT NULL
+							-- AND dossier.date_liq IS NOT NULL
+							-- AND dossier.ref_liq IS NOT NULL
+							-- AND dossier.date_quit IS NOT NULL
+							-- AND dossier.ref_quit IS NOT NULL
+
+							AND 
+							(
+								-- Pocess 1
+								(
+									get_inv_process_pour_dossier(dossier.id_dos)=1
+									AND dossier.date_decl IS NOT NULL
+									AND dossier.ref_decl IS NOT NULL
+									AND dossier.date_liq IS NOT NULL
+									AND dossier.ref_liq IS NOT NULL
+									AND dossier.date_quit IS NOT NULL
+									AND dossier.ref_quit IS NOT NULL
+								)
+								OR
+								-- Pocess 2
+								(
+									get_inv_process_pour_dossier(dossier.id_dos)=2
+									AND dossier.dispatch_date IS NOT NULL
+								)
+								OR
+								-- Pocess 3
+								(
+									get_inv_process_pour_dossier(dossier.id_dos)=3
+									AND dossier.dispatch_deliv IS NOT NULL
+								)
+									
+							)
 							AND dossier.id_cli <> 1
 							AND dossier.not_fact = '0'
 							AND dossier.id_dos NOT IN (
@@ -5969,12 +6033,38 @@
     															AND dossier.id_march = marchandise.id_march
     															AND dossier.id_mod_lic = modele_facture.id_mod_lic
     															AND dossier.id_mod_trans = mode_transport.id_mod_trans
-																AND dossier.ref_quit IS NOT NULL
-																AND dossier.ref_quit <> ''
-																AND dossier.ref_decl IS NOT NULL
-																AND dossier.ref_decl <> ''
-																AND dossier.ref_liq IS NOT NULL
-																AND dossier.ref_liq <> ''
+																-- AND dossier.ref_quit IS NOT NULL
+																-- AND dossier.ref_quit <> ''
+																-- AND dossier.ref_decl IS NOT NULL
+																-- AND dossier.ref_decl <> ''
+																-- AND dossier.ref_liq IS NOT NULL
+																-- AND dossier.ref_liq <> ''
+																AND 
+																(
+																	-- Pocess 1
+																	(
+																		get_inv_process_pour_dossier(dossier.id_dos)=1
+																		AND dossier.date_decl IS NOT NULL
+																		AND dossier.ref_decl IS NOT NULL
+																		AND dossier.date_liq IS NOT NULL
+																		AND dossier.ref_liq IS NOT NULL
+																		AND dossier.date_quit IS NOT NULL
+																		AND dossier.ref_quit IS NOT NULL
+																	)
+																	OR
+																	-- Pocess 2
+																	(
+																		get_inv_process_pour_dossier(dossier.id_dos)=2
+																		AND dossier.dispatch_date IS NOT NULL
+																	)
+																	OR
+																	-- Pocess 3
+																	(
+																		get_inv_process_pour_dossier(dossier.id_dos)=3
+																		AND dossier.dispatch_deliv IS NOT NULL
+																	)
+																		
+																)
 																AND dossier.not_fact = '0'
 																AND dossier.id_dos NOT IN (
 																	SELECT det.id_dos 
@@ -18096,6 +18186,8 @@
 													DATE_FORMAT(dos.date_quit, '%d/%m/%Y') AS date_quit,
 													DATE_FORMAT(dos.load_date, '%d/%m/%Y') AS load_date,
 													DATE_FORMAT(dos.exit_drc, '%d/%m/%Y') AS exit_drc,
+													DATE_FORMAT(dos.dispatch_date, '%d/%m/%Y') AS dispatch_date,
+													DATE_FORMAT(dos.dispatch_deliv, '%d/%m/%Y') AS dispatch_deliv,
 													dos.date_quit AS date_quit2,
 													-- IF(dos.date_quit<='2023-08-19',
 													IF(DATEDIFF(dos.date_quit,'2023-08-21')<=0,
@@ -18330,13 +18422,39 @@
 												FROM dossier
 												WHERE id_mod_lic = ?
 													AND id_cli = ?
-													AND ref_decl IS NOT NULL
-													AND date_decl IS NOT NULL
-													AND ref_liq IS NOT NULL
-													AND date_liq IS NOT NULL
-													AND ref_quit IS NOT NULL
-													AND date_quit IS NOT NULL
+													-- AND ref_decl IS NOT NULL
+													-- AND date_decl IS NOT NULL
+													-- AND ref_liq IS NOT NULL
+													-- AND date_liq IS NOT NULL
+													-- AND ref_quit IS NOT NULL
+													-- AND date_quit IS NOT NULL
 													AND not_fact = '0'
+													AND 
+													(
+														-- Pocess 1
+														(
+															get_inv_process_pour_dossier(id_dos)=1
+															AND date_decl IS NOT NULL
+															AND ref_decl IS NOT NULL
+															AND date_liq IS NOT NULL
+															AND ref_liq IS NOT NULL
+															AND date_quit IS NOT NULL
+															AND ref_quit IS NOT NULL
+														)
+														OR
+														-- Pocess 2
+														(
+															get_inv_process_pour_dossier(id_dos)=2
+															AND dispatch_date IS NOT NULL
+														)
+														OR
+														-- Pocess 3
+														(
+															get_inv_process_pour_dossier(id_dos)=3
+															AND dispatch_deliv IS NOT NULL
+														)
+															
+													)
 													AND id_dos NOT IN (SELECT id_dos FROM detail_facture_dossier)");
 			$requete-> execute(array($entree['id_mod_lic'], $entree['id_cli']));
 			$reponse=$requete-> fetch();
@@ -23776,12 +23894,38 @@
 												WHERE dossier.id_mod_lic = ?
 													AND dossier.id_cli = ?
 													AND dossier.support_doc = ?
-													AND dossier.ref_decl IS NOT NULL
-													AND dossier.date_decl IS NOT NULL
-													AND dossier.ref_liq IS NOT NULL
-													AND dossier.date_liq IS NOT NULL
-													AND dossier.ref_quit IS NOT NULL
-													AND dossier.date_quit IS NOT NULL
+													-- AND dossier.ref_decl IS NOT NULL
+													-- AND dossier.date_decl IS NOT NULL
+													-- AND dossier.ref_liq IS NOT NULL
+													-- AND dossier.date_liq IS NOT NULL
+													-- AND dossier.ref_quit IS NOT NULL
+													-- AND dossier.date_quit IS NOT NULL
+													AND 
+													(
+														-- Pocess 1
+														(
+															get_inv_process_pour_dossier(dossier.id_dos)=1
+															AND dossier.date_decl IS NOT NULL
+															AND dossier.ref_decl IS NOT NULL
+															AND dossier.date_liq IS NOT NULL
+															AND dossier.ref_liq IS NOT NULL
+															AND dossier.date_quit IS NOT NULL
+															AND dossier.ref_quit IS NOT NULL
+														)
+														OR
+														-- Pocess 2
+														(
+															get_inv_process_pour_dossier(dossier.id_dos)=2
+															AND dossier.dispatch_date IS NOT NULL
+														)
+														OR
+														-- Pocess 3
+														(
+															get_inv_process_pour_dossier(dossier.id_dos)=3
+															AND dossier.dispatch_deliv IS NOT NULL
+														)
+															
+													)
 													AND dossier.id_dos NOT IN (SELECT id_dos FROM detail_facture_dossier)
 													AND dossier.not_fact = '0'");
 			$requete-> execute(array($entree['id_mod_lic'], $entree['id_cli'], $entree['support_doc']));
@@ -24347,12 +24491,39 @@
 			$requete = $connexion-> prepare("SELECT COUNT(dos.id_dos) AS nbre_awaiting_invoice
 												FROM dossier dos
 												WHERE dos.id_mod_lic = ?
-													AND dos.date_decl IS NOT NULL
-													AND dos.ref_decl IS NOT NULL
-													AND dos.date_liq IS NOT NULL
-													AND dos.ref_liq IS NOT NULL
-													AND dos.date_quit IS NOT NULL
-													AND dos.ref_quit IS NOT NULL
+													-- AND dos.date_decl IS NOT NULL
+													-- AND dos.ref_decl IS NOT NULL
+													-- AND dos.date_liq IS NOT NULL
+													-- AND dos.ref_liq IS NOT NULL
+													-- AND dos.date_quit IS NOT NULL
+													-- AND dos.ref_quit IS NOT NULL
+
+													AND 
+													(
+														-- Pocess 1
+														(
+															get_inv_process_pour_dossier(dos.id_dos)=1
+															AND dos.date_decl IS NOT NULL
+															AND dos.ref_decl IS NOT NULL
+															AND dos.date_liq IS NOT NULL
+															AND dos.ref_liq IS NOT NULL
+															AND dos.date_quit IS NOT NULL
+															AND dos.ref_quit IS NOT NULL
+														)
+														OR
+														-- Pocess 2
+														(
+															get_inv_process_pour_dossier(dos.id_dos)=2
+															AND dos.dispatch_date IS NOT NULL
+														)
+														OR
+														-- Pocess 3
+														(
+															get_inv_process_pour_dossier(dos.id_dos)=3
+															AND dos.dispatch_deliv IS NOT NULL
+														)
+															
+													)
 													AND dos.id_cli <> 1
 													AND dos.not_fact = '0'
 													AND dos.id_dos NOT IN (
@@ -24562,12 +24733,39 @@
 												AND id_march = ?
 												AND id_mod_trans = ?
 												AND num_lic = ?
-												AND ref_quit IS NOT NULL
-												AND ref_quit <> ''
-												AND ref_decl IS NOT NULL
-												AND ref_decl <> ''
-												AND ref_liq IS NOT NULL
-												AND ref_liq <> ''
+												-- AND ref_quit IS NOT NULL
+												-- AND ref_quit <> ''
+												-- AND ref_decl IS NOT NULL
+												-- AND ref_decl <> ''
+												-- AND ref_liq IS NOT NULL
+												-- AND ref_liq <> ''
+
+												AND 
+												(
+													-- Pocess 1
+													(
+														get_inv_process_pour_dossier(id_dos)=1
+														AND date_decl IS NOT NULL
+														AND ref_decl IS NOT NULL
+														AND date_liq IS NOT NULL
+														AND ref_liq IS NOT NULL
+														AND date_quit IS NOT NULL
+														AND ref_quit IS NOT NULL
+													)
+													OR
+													-- Pocess 2
+													(
+														get_inv_process_pour_dossier(id_dos)=2
+														AND dispatch_date IS NOT NULL
+													)
+													OR
+													-- Pocess 3
+													(
+														get_inv_process_pour_dossier(id_dos)=3
+														AND dispatch_deliv IS NOT NULL
+													)
+														
+												)
 												AND id_dos NOT IN (
 														SELECT id_dos FROM detail_facture_dossier
 													)
@@ -47574,12 +47772,39 @@
 											WHERE dos.id_march = march.id_march
 												AND dos.id_mod_lic = ?
 												AND dos.not_fact = '0'
-												AND dos.date_decl IS NOT NULL
-												AND dos.ref_decl IS NOT NULL
-												AND dos.date_liq IS NOT NULL
-												AND dos.ref_liq IS NOT NULL
-												AND dos.date_quit IS NOT NULL
-												AND dos.ref_quit IS NOT NULL
+												-- AND dos.date_decl IS NOT NULL
+												-- AND dos.ref_decl IS NOT NULL
+												-- AND dos.date_liq IS NOT NULL
+												-- AND dos.ref_liq IS NOT NULL
+												-- AND dos.date_quit IS NOT NULL
+												-- AND dos.ref_quit IS NOT NULL
+
+												AND 
+												(
+													-- Pocess 1
+													(
+														get_inv_process_pour_dossier(dos.id_dos)=1
+														AND dos.date_decl IS NOT NULL
+														AND dos.ref_decl IS NOT NULL
+														AND dos.date_liq IS NOT NULL
+														AND dos.ref_liq IS NOT NULL
+														AND dos.date_quit IS NOT NULL
+														AND dos.ref_quit IS NOT NULL
+													)
+													OR
+													-- Pocess 2
+													(
+														get_inv_process_pour_dossier(dos.id_dos)=2
+														AND dos.dispatch_date IS NOT NULL
+													)
+													OR
+													-- Pocess 3
+													(
+														get_inv_process_pour_dossier(dos.id_dos)=3
+														AND dos.dispatch_deliv IS NOT NULL
+													)
+														
+												)
 												AND dos.id_dos NOT IN (SELECT id_dos FROM detail_facture_dossier)
 											GROUP BY march.id_march
 											ORDER BY march.nom_march");
@@ -48188,6 +48413,8 @@
 													dos.horse AS horse,
 													dos.trailer_1 AS trailer_1,
 													dos.trailer_2 AS trailer_2,
+													dos.dispatch_date AS dispatch_date,
+													dos.dispatch_deliv AS dispatch_deliv,
 													IF(dos.num_lot IS NOT NULL,
 														dos.num_lot,
 														dos.ref_fact
@@ -48214,12 +48441,38 @@
 												LEFT JOIN client cl
 													ON dos.id_cli = cl.id_cli
 												WHERE dos.not_fact = '0'
-													AND dos.date_decl IS NOT NULL
-													AND dos.ref_decl IS NOT NULL
-													AND dos.date_liq IS NOT NULL
-													AND dos.ref_liq IS NOT NULL
-													AND dos.date_quit IS NOT NULL
-													AND dos.ref_quit IS NOT NULL
+													-- AND dos.date_decl IS NOT NULL
+													-- AND dos.ref_decl IS NOT NULL
+													-- AND dos.date_liq IS NOT NULL
+													-- AND dos.ref_liq IS NOT NULL
+													-- AND dos.date_quit IS NOT NULL
+													-- AND dos.ref_quit IS NOT NULL
+													AND 
+													(
+														-- Pocess 1
+														(
+															get_inv_process_pour_dossier(dos.id_dos)=1
+															AND dos.date_decl IS NOT NULL
+															AND dos.ref_decl IS NOT NULL
+															AND dos.date_liq IS NOT NULL
+															AND dos.ref_liq IS NOT NULL
+															AND dos.date_quit IS NOT NULL
+															AND dos.ref_quit IS NOT NULL
+														)
+														OR
+														-- Pocess 2
+														(
+															get_inv_process_pour_dossier(dos.id_dos)=2
+															AND dos.dispatch_date IS NOT NULL
+														)
+														OR
+														-- Pocess 3
+														(
+															get_inv_process_pour_dossier(dos.id_dos)=3
+															AND dos.dispatch_deliv IS NOT NULL
+														)
+															
+													)
 													AND dos.id_dos NOT IN (
 														SELECT DISTINCT(dos.id_dos) 
 															FROM facture_dossier fd, detail_facture_dossier det, dossier dos
@@ -50294,12 +50547,32 @@
 			$requete = $connexion-> query("SELECT COUNT(id_dos) AS nbre
 											FROM dossier
 											WHERE not_fact = '0'
-												AND date_decl IS NOT NULL
-												AND ref_decl IS NOT NULL
-												AND date_liq IS NOT NULL
-												AND ref_liq IS NOT NULL
-												AND date_quit IS NOT NULL
-												AND ref_quit IS NOT NULL
+												AND 
+												(
+													-- Pocess 1
+													(
+														get_inv_process_pour_dossier(id_dos)=1
+														AND date_decl IS NOT NULL
+														AND ref_decl IS NOT NULL
+														AND date_liq IS NOT NULL
+														AND ref_liq IS NOT NULL
+														AND date_quit IS NOT NULL
+														AND ref_quit IS NOT NULL
+													)
+													OR
+													-- Pocess 2
+													(
+														get_inv_process_pour_dossier(id_dos)=2
+														AND dispatch_date IS NOT NULL
+													)
+													OR
+													-- Pocess 3
+													(
+														get_inv_process_pour_dossier(id_dos)=3
+														AND dispatch_deliv IS NOT NULL
+													)
+														
+												)
 												AND id_dos NOT IN (
 													SELECT DISTINCT(dos.id_dos) 
 														FROM facture_dossier fd, detail_facture_dossier det, dossier dos
@@ -54584,12 +54857,38 @@
 												$sqlIdMarch
 												AND id_mod_trans = ?
 												AND num_lic = ?
-												AND ref_quit IS NOT NULL
-												AND ref_quit <> ''
-												AND ref_decl IS NOT NULL
-												AND ref_decl <> ''
-												AND ref_liq IS NOT NULL
-												AND ref_liq <> ''
+												-- AND ref_quit IS NOT NULL
+												-- AND ref_quit <> ''
+												-- AND ref_decl IS NOT NULL
+												-- AND ref_decl <> ''
+												-- AND ref_liq IS NOT NULL
+												-- AND ref_liq <> ''
+												AND 
+												(
+													-- Pocess 1
+													(
+														get_inv_process_pour_dossier(id_dos)=1
+														AND date_decl IS NOT NULL
+														AND ref_decl IS NOT NULL
+														AND date_liq IS NOT NULL
+														AND ref_liq IS NOT NULL
+														AND date_quit IS NOT NULL
+														AND ref_quit IS NOT NULL
+													)
+													OR
+													-- Pocess 2
+													(
+														get_inv_process_pour_dossier(id_dos)=2
+														AND dispatch_date IS NOT NULL
+													)
+													OR
+													-- Pocess 3
+													(
+														get_inv_process_pour_dossier(id_dos)=3
+														AND dispatch_deliv IS NOT NULL
+													)
+														
+												)
 												AND id_dos NOT IN (
 														SELECT id_dos FROM detail_facture_dossier
 													)
