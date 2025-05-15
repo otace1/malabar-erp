@@ -722,6 +722,25 @@
 		}
 		echo json_encode($maClasse-> getListeFactures($_POST['statut'], $id_mod_lic, $id_util, $debut, $fin, $_POST['id_cli']));
 		
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='popUpFacture2'){ // On Recupere les data pour rapport facturation Popup
+		$id_mod_lic = NULL;
+		if (isset($_POST['id_mod_lic'])&&($_POST['id_mod_lic']!='')) {
+			$id_mod_lic = $_POST['id_mod_lic'];
+		}
+		$id_util = NULL;
+		if (isset($_POST['id_util'])&&($_POST['id_util']!='')) {
+			$id_util = $_POST['id_util'];
+		}
+		$debut = NULL;
+		if (isset($_POST['debut'])&&($_POST['debut']!='')) {
+			$debut = $_POST['debut'];
+		}
+		$fin = NULL;
+		if (isset($_POST['fin'])&&($_POST['fin']!='')) {
+			$fin = $_POST['fin'];
+		}
+		echo json_encode($maClasse-> popUpFacture2($_POST['statut'], $id_mod_lic, $id_util, $debut, $fin, $_POST['id_cli']));
+		
 	}elseif(isset($_POST['operation']) && $_POST['operation']=='pay_report'){ 
 
 		if (!empty($_POST['id_dos']) && ($_POST['id_dos']>0)) {
@@ -3190,6 +3209,8 @@
 
   		$reponse['nbre_awaiting_elq'] = $maClasse-> nbre_awaiting_elq($_POST['id_mod_lic'], $_POST['id_cli']);
   		$reponse['nbre_awaiting_invoice'] = $maClasse-> nbre_awaiting_invoice($_POST['id_mod_lic'], $_POST['id_cli']);
+  		$reponse['nbre_liq_not_invoice'] = $maClasse-> nbre_liq_not_invoice($_POST['id_mod_lic'], $_POST['id_cli']);
+  		$reponse['nbre_dispatched_not_invoice'] = $maClasse-> nbre_dispatched_not_invoice($_POST['id_mod_lic'], $_POST['id_cli']);
   		$reponse['nbre_invoiced'] = $maClasse-> nbre_invoiced($_POST['id_mod_lic'], $_POST['id_cli']);
   		$reponse['nbre_disabled'] = $maClasse-> nbre_disabled($_POST['id_mod_lic'], $_POST['id_cli']);
   		$reponse['nbre_dossier_facture_excel'] = $maClasse-> getNbreDossierFactureExcel($_POST['id_mod_lic'], $_POST['id_cli']);

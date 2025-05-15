@@ -199,6 +199,9 @@
                       <th style="">Q.Encoding Date</th>
                       <th style="">BS Date</th>
                       <th style="">Dispatch/Delivery Date</th>
+                      <th style="">Clearing Status</th>
+                      <th style="">General Status</th>
+                      <th style="">Site</th>
                       <?php
                       }else if ($_GET['statut']=='Excel Invoice') {
                       ?>
@@ -684,7 +687,10 @@
           {"data":"delay"},
           {"data":"date_log"},
           {"data":"dispatch_date"},
-          {"data":"dispatch_deliv"}
+          {"data":"dispatch_deliv"},
+          {"data":"cleared_status"},
+          {"data":"statut"},
+          {"data":"nom_site"}
         ] 
             <?php
           }else if ($_GET['statut']=='Excel Invoice'){

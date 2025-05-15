@@ -57,11 +57,6 @@
               </div>
             </span>
           </h5>
-          <div class="pull-right">
-            <!-- <button class="btn btn-xs btn-dark square-btn-adjust" data-toggle="modal" data-target=".rechercheClient">
-                <i class="fa fa-filter"></i> Filtrage
-            </button> -->
-          </div>
         </div>
 
       </div><!-- /.container-fluid -->
@@ -245,7 +240,7 @@
 
                       <div class="card-body table-responsive p-0">
                         <span id="label_monitoring"></span>
-                        <table class=" table table-head-fixed table-bordered table-hover text-nowrap table-sm">
+                        <table class=" table table-head-fixed table-bordered table-hover table-sm">
                           <thead>
                             <tr class="">
                               <th>Status</th>
@@ -268,6 +263,14 @@
                             <tr  onMouseOver="this.style.cursor='pointer'" onclick="window.open('statutDossierFacturation2.php?id_mod_lic=<?php echo $_GET['id_mod_lic_fact'];?>&id_cli='+id_cli.value+'&statut=Disabled','Disabled','width=1000,height=800');">
                               <td>Disabled</td>
                               <td style="text-align: right;"><span class="badge badge-danger text-sm" id="nbre_disabled"></span></td>
+                            </tr>
+                            <tr  onMouseOver="this.style.cursor='pointer'" onclick="window.open('statutDossierFacturation3.php?id_mod_lic=<?php echo $_GET['id_mod_lic_fact'];?>&id_cli='+id_cli.value+'&statut=Liquidation paid not invoiced','Liquidation paid not invoiced','width=1000,height=800');">
+                              <td>Liquidation paid not invoiced</td>
+                              <td style="text-align: right;"><span class="badge badge-secondary text-sm" id="nbre_liq_not_invoice"></span></td>
+                            </tr>
+                            <tr  onMouseOver="this.style.cursor='pointer'" onclick="window.open('statutDossierFacturation3.php?id_mod_lic=<?php echo $_GET['id_mod_lic_fact'];?>&id_cli='+id_cli.value+'&statut=Dispatched not invoiced','Dispatched not invoiced','width=1000,height=800');">
+                              <td>Dispatched not invoiced</td>
+                              <td style="text-align: right;"><span class="badge badge-secondary text-sm" id="nbre_dispatched_not_invoice"></span></td>
                             </tr>
                           </tbody>
                         </table>
@@ -487,8 +490,10 @@ if(isset($_GET['id_mod_lic_fact']) && isset($_GET['id_mod_lic_fact'])){
 
 <script type="text/javascript">
   $(document).ready(function(){
+    $('#spinner-div').show();
     afficherMonitoringFile();
     getReportPendingInvoiceCommodityCategory();
+    $('#spinner-div').hide();
   });
 
   function getReportPendingInvoiceCommodityCategory(){
@@ -527,6 +532,8 @@ if(isset($_GET['id_mod_lic_fact']) && isset($_GET['id_mod_lic_fact'])){
         }else{
           $('#nbre_awaiting_elq').html(new Intl.NumberFormat('en-US').format(data.nbre_awaiting_elq));
           $('#nbre_awaiting_invoice').html(new Intl.NumberFormat('en-US').format(data.nbre_awaiting_invoice));
+          $('#nbre_liq_not_invoice').html(new Intl.NumberFormat('en-US').format(data.nbre_liq_not_invoice));
+          $('#nbre_dispatched_not_invoice').html(new Intl.NumberFormat('en-US').format(data.nbre_dispatched_not_invoice));
           $('#nbre_dossier_facture_excel').html(new Intl.NumberFormat('en-US').format(data.nbre_dossier_facture_excel));
           $('#nbre_invoiced').html(new Intl.NumberFormat('en-US').format(data.nbre_invoiced));
           $('#nbre_disabled').html(new Intl.NumberFormat('en-US').format(data.nbre_disabled));
