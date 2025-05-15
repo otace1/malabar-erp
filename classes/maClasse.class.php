@@ -24541,6 +24541,83 @@
 
 		}
 
+		public function nbre_liq_not_invoice($id_mod_lic, $id_cli){
+			include("connexion.php");
+
+			$compteur=0;
+			$entree['id_mod_lic'] = $id_mod_lic;
+
+			if (isset($id_cli) && ($id_cli!='')) {
+				$sqlClient = ' AND dos.id_cli = "'.$id_cli.'"';
+			}else{
+				$sqlClient = '';
+			}
+
+			$tbl = "";
+
+			$requete = $connexion-> prepare("SELECT COUNT(dos.id_dos) AS nbre_awaiting_invoice
+												FROM dossier dos
+												WHERE dos.id_mod_lic = ?
+													AND dos.date_decl IS NOT NULL
+													AND dos.ref_decl IS NOT NULL
+													AND dos.date_liq IS NOT NULL
+													AND dos.ref_liq IS NOT NULL
+													AND dos.date_quit IS NOT NULL
+													AND dos.ref_quit IS NOT NULL
+													AND dos.id_cli <> 1
+													AND dos.not_fact = '0'
+													AND dos.id_dos NOT IN (
+														SELECT DISTINCT(dos.id_dos) 
+															FROM facture_dossier fd, detail_facture_dossier det, dossier dos
+															WHERE fd.ref_fact = det.ref_fact
+																AND fd.note_debit = '0'
+																AND det.id_dos = dos.id_dos
+													)
+													$sqlClient");
+			$requete-> execute(array($entree['id_mod_lic']));
+			$reponse = $requete-> fetch();
+
+			return $reponse['nbre_awaiting_invoice'];
+
+		}
+
+		public function nbre_dispatched_not_invoice($id_mod_lic, $id_cli){
+			include("connexion.php");
+
+			$compteur=0;
+			$entree['id_mod_lic'] = $id_mod_lic;
+
+			if (isset($id_cli) && ($id_cli!='')) {
+				$sqlClient = ' AND dos.id_cli = "'.$id_cli.'"';
+			}else{
+				$sqlClient = '';
+			}
+
+			$tbl = "";
+
+			$requete = $connexion-> prepare("SELECT COUNT(dos.id_dos) AS nbre_awaiting_invoice
+												FROM dossier dos
+												WHERE dos.id_mod_lic = ?
+													AND (
+															dos.dispatch_date IS NOT NULL
+															OR dos.dispatch_deliv IS NOT NULL)
+													AND dos.id_cli <> 1
+													AND dos.not_fact = '0'
+													AND dos.id_dos NOT IN (
+														SELECT DISTINCT(dos.id_dos) 
+															FROM facture_dossier fd, detail_facture_dossier det, dossier dos
+															WHERE fd.ref_fact = det.ref_fact
+																AND fd.note_debit = '0'
+																AND det.id_dos = dos.id_dos
+													)
+													$sqlClient");
+			$requete-> execute(array($entree['id_mod_lic']));
+			$reponse = $requete-> fetch();
+
+			return $reponse['nbre_awaiting_invoice'];
+
+		}
+
 		public function nbre_invoiced($id_mod_lic, $id_cli){
 			include("connexion.php");
 
@@ -48434,7 +48511,81 @@
 													DATE_FORMAT(dos.date_liq, '%d/%m/%Y') AS date_liq,
 													dos.ref_quit AS ref_quit,
 													DATE_FORMAT(dos.date_quit, '%d/%m/%Y') AS date_quit,
-													DATEDIFF(CURRENT_DATE(), dos.date_quit) AS delay
+													DATEDIFF(CURRENT_DATE(), dos.date_quit) AS delay,
+													IF(dos.id_mod_lic='2' AND dos.id_mod_trans='1',
+														IF(dos.date_crf IS NULL AND dos.date_ad IS NULL AND dos.date_assurance IS NULL,
+													      'AWAITING CRF/AD/INSURANCE',
+													      IF(dos.date_crf IS NULL AND dos.date_ad IS NULL AND dos.date_assurance IS NOT NULL,
+													        'AWAITING CRF/AD',
+													          IF(dos.date_crf IS NULL AND dos.date_ad IS NOT NULL AND dos.date_assurance IS NULL,
+													            'AWAITING CRF/INSURANCE',
+													            IF(dos.date_crf IS NULL AND dos.date_ad IS NOT NULL AND dos.date_assurance IS NOT NULL,
+													              'AWAITING CRF', 
+													              IF(dos.date_crf IS NOT NULL AND dos.date_ad IS NULL AND dos.date_assurance IS NULL,
+													                'AWAITING AD/INSURANCE',
+													                IF(dos.date_crf IS NOT NULL AND dos.date_ad IS NULL AND dos.date_assurance IS NOT NULL,
+													                  'AWAITING AD',
+													                    IF(dos.date_crf IS NOT NULL AND dos.date_ad IS NOT NULL AND dos.date_assurance IS NULL,
+													                      'AWAITING INSURANCE',
+
+													                      IF(dos.date_decl IS NULL AND dos.ref_decl IS NULL, 'UNDER PREPARATION',
+													                        IF(dos.date_liq IS NULL AND dos.ref_liq IS NULL, 'AWAITING LIQUIDATION',
+													                          IF(dos.date_quit IS NULL AND dos.ref_quit IS NULL, 'AWAITING QUITTANCE',
+													                            IF(dos.date_quit IS NOT NULL AND dos.ref_quit IS NOT NULL AND dos.dgda_out IS NULL, 'AWAITING BAE/BS', 
+													                              IF(dos.dgda_out IS NOT NULL AND dos.dispatch_deliv IS NOT NULL, 'CLEARING COMPLETED', '')
+													                              )
+													                            )
+													                          )
+													                        )
+													                      
+													                      )
+													                  )
+													                )
+													              )
+													            )
+													          )
+													      )
+														,
+														IF(dos.id_mod_lic='1', 
+															IF(dos.load_date IS NOT NULL AND dos.ceec_in IS NULL,
+																'LOADED',
+																IF(dos.ceec_in IS NOT NULL AND dos.ceec_out IS NULL, 'AT CEEC',
+																	IF(dos.ceec_out IS NOT NULL AND dos.min_div_in IS NULL, 'CEEC OUT',
+																		IF(dos.min_div_in IS NOT NULL AND dos.min_div_out IS NULL, 'AT MINE DIVISION',
+																			IF(dos.min_div_out IS NOT NULL AND dos.ref_decl IS NULL, 'MINE DIVISION OUT',
+																				IF(dos.ref_decl IS NOT NULL AND dos.ref_liq IS NULL, 'DECLARATION',
+																					IF(dos.ref_liq IS NOT NULL AND dos.ref_quit IS NULL, 'LIQUIDATED',
+																						IF(dos.ref_quit IS NOT NULL AND dos.gov_in IS  NULL, 'DGDA OUT',
+																							IF(dos.gov_in IS NOT NULL AND dos.gov_out IS NULL, 'AT GOVERNOR\'S OFFICE',
+																								IF(dos.gov_out IS NOT NULL AND dos.dispatch_date IS NULL, 'GOVERNOR\'S OFFICE OUT',
+																									IF(dos.dispatch_date IS NOT NULL AND dos.klsa_arriv IS NULL,
+																										'DISPATCHED', 
+																											IF(dos.klsa_arriv IS NOT NULL AND dos.end_form IS NULL, 'AT BORDER',
+																												IF(dos.end_form IS NOT NULL AND dos.exit_drc IS NULL, 'UNDER FORMALITIES',
+																													IF(dos.exit_drc IS NOT NULL, 'EXIT DRC', '')
+																													)
+																												)
+																										)
+																									)
+																								)
+																							)
+																						)
+																					)
+																				)
+																			)
+																		)
+																	)
+																)
+															, dos.statut )
+													) AS statut,
+								                IF(dos.cleared='0',
+								                	'Transit',
+								                	IF(dos.cleared='1',
+								                		'Cleared',
+								                		'Cancelled'
+								                	)
+								                ) AS cleared_status,
+								                get_site_dossier(dos.id_dos) AS nom_site
 												FROM dossier dos
 												LEFT JOIN marchandise march
 													ON dos.id_march = march.id_march
@@ -48567,6 +48718,203 @@
 				
 			}
 
+		}
+
+		public function popUpFacture2($statut, $id_mod_lic, $id_util=NULL, $debut=NULL, $fin=NULL, $id_cli=NULL){
+			include('connexion.php');
+			// $entree['id_mod_lic'] = $id_mod_lic;
+
+			$compteur = 0;
+			$rows = array();
+
+			$sqlTransit = "";
+			if (isset($id_mod_lic) && ($id_mod_lic != '')) {
+				$sqlTransit = ' AND dos.id_mod_lic = "'.$id_mod_lic.'" ';
+			}
+
+			$sqlClient = "";
+			if (isset($id_cli) && ($id_cli != '')) {
+				$sqlClient = ' AND dos.id_cli = "'.$id_cli.'" ';
+			}
+
+			$sqlStatut = "";
+			if (isset($statut) && ($statut == 'Liquidation paid not invoiced')) {
+				$sqlStatut = ' AND dos.ref_decl IS NOT NULL AND dos.date_decl IS NOT NULL AND dos.ref_liq IS NOT NULL AND dos.date_liq IS NOT NULL AND dos.ref_quit IS NOT NULL AND dos.date_quit IS NOT NULL ';
+			}
+
+			if (isset($statut) && ($statut == 'Dispatched not invoiced')) {
+				$sqlStatut = ' AND (
+									dos.dispatch_date IS NOT NULL
+									OR dos.dispatch_deliv IS NOT NULL
+								)';
+			}
+
+			$requete = $connexion-> query("SELECT dos.ref_dos AS ref_dos,
+												cl.nom_cli AS nom_cli, 
+												dos.mca_b_ref AS mca_b_ref,
+												dos.id_dos AS id_dos,
+												dos.po_ref AS po_ref,
+												dos.horse AS horse,
+												dos.trailer_1 AS trailer_1,
+												dos.trailer_2 AS trailer_2,
+												dos.dispatch_date AS dispatch_date,
+												dos.dispatch_deliv AS dispatch_deliv,
+												IF(dos.num_lot IS NOT NULL,
+													dos.num_lot,
+													dos.ref_fact
+												) AS num_lot,
+												IF(march.nom_march IS NOT NULL,
+													march.nom_march,
+													dos.commodity
+												) AS commodity,
+												dos.ref_decl AS ref_decl,
+												IF(dos.support_doc='1',
+													'Available',
+													'Unavailable'
+												) AS support_doc,
+												DATE_FORMAT(dos.date_decl, '%d/%m/%Y') AS date_decl,
+												dos.ref_liq AS ref_liq,
+												dos.montant_liq AS montant_liq,
+												DATE_FORMAT(dos.date_liq, '%d/%m/%Y') AS date_liq,
+												dos.ref_quit AS ref_quit,
+												DATE_FORMAT(dos.date_quit, '%d/%m/%Y') AS date_quit,
+												DATEDIFF(CURRENT_DATE(), dos.date_quit) AS delay,
+												IF(dos.id_mod_lic='2' AND dos.id_mod_trans='1',
+													IF(dos.date_crf IS NULL AND dos.date_ad IS NULL AND dos.date_assurance IS NULL,
+												      'AWAITING CRF/AD/INSURANCE',
+												      IF(dos.date_crf IS NULL AND dos.date_ad IS NULL AND dos.date_assurance IS NOT NULL,
+												        'AWAITING CRF/AD',
+												          IF(dos.date_crf IS NULL AND dos.date_ad IS NOT NULL AND dos.date_assurance IS NULL,
+												            'AWAITING CRF/INSURANCE',
+												            IF(dos.date_crf IS NULL AND dos.date_ad IS NOT NULL AND dos.date_assurance IS NOT NULL,
+												              'AWAITING CRF', 
+												              IF(dos.date_crf IS NOT NULL AND dos.date_ad IS NULL AND dos.date_assurance IS NULL,
+												                'AWAITING AD/INSURANCE',
+												                IF(dos.date_crf IS NOT NULL AND dos.date_ad IS NULL AND dos.date_assurance IS NOT NULL,
+												                  'AWAITING AD',
+												                    IF(dos.date_crf IS NOT NULL AND dos.date_ad IS NOT NULL AND dos.date_assurance IS NULL,
+												                      'AWAITING INSURANCE',
+
+												                      IF(dos.date_decl IS NULL AND dos.ref_decl IS NULL, 'UNDER PREPARATION',
+												                        IF(dos.date_liq IS NULL AND dos.ref_liq IS NULL, 'AWAITING LIQUIDATION',
+												                          IF(dos.date_quit IS NULL AND dos.ref_quit IS NULL, 'AWAITING QUITTANCE',
+												                            IF(dos.date_quit IS NOT NULL AND dos.ref_quit IS NOT NULL AND dos.dgda_out IS NULL, 'AWAITING BAE/BS', 
+												                              IF(dos.dgda_out IS NOT NULL AND dos.dispatch_deliv IS NOT NULL, 'CLEARING COMPLETED', '')
+												                              )
+												                            )
+												                          )
+												                        )
+												                      
+												                      )
+												                  )
+												                )
+												              )
+												            )
+												          )
+												      )
+													,
+													IF(dos.id_mod_lic='1', 
+														IF(dos.load_date IS NOT NULL AND dos.ceec_in IS NULL,
+															'LOADED',
+															IF(dos.ceec_in IS NOT NULL AND dos.ceec_out IS NULL, 'AT CEEC',
+																IF(dos.ceec_out IS NOT NULL AND dos.min_div_in IS NULL, 'CEEC OUT',
+																	IF(dos.min_div_in IS NOT NULL AND dos.min_div_out IS NULL, 'AT MINE DIVISION',
+																		IF(dos.min_div_out IS NOT NULL AND dos.ref_decl IS NULL, 'MINE DIVISION OUT',
+																			IF(dos.ref_decl IS NOT NULL AND dos.ref_liq IS NULL, 'DECLARATION',
+																				IF(dos.ref_liq IS NOT NULL AND dos.ref_quit IS NULL, 'LIQUIDATED',
+																					IF(dos.ref_quit IS NOT NULL AND dos.gov_in IS  NULL, 'DGDA OUT',
+																						IF(dos.gov_in IS NOT NULL AND dos.gov_out IS NULL, 'AT GOVERNOR\'S OFFICE',
+																							IF(dos.gov_out IS NOT NULL AND dos.dispatch_date IS NULL, 'GOVERNOR\'S OFFICE OUT',
+																								IF(dos.dispatch_date IS NOT NULL AND dos.klsa_arriv IS NULL,
+																									'DISPATCHED', 
+																										IF(dos.klsa_arriv IS NOT NULL AND dos.end_form IS NULL, 'AT BORDER',
+																											IF(dos.end_form IS NOT NULL AND dos.exit_drc IS NULL, 'UNDER FORMALITIES',
+																												IF(dos.exit_drc IS NOT NULL, 'EXIT DRC', '')
+																												)
+																											)
+																									)
+																								)
+																							)
+																						)
+																					)
+																				)
+																			)
+																		)
+																	)
+																)
+															)
+														, dos.statut )
+												) AS statut,
+							                IF(dos.cleared='0',
+							                	'Transit',
+							                	IF(dos.cleared='1',
+							                		'Cleared',
+							                		'Cancelled'
+							                	)
+							                ) AS cleared_status,
+							                get_site_dossier(dos.id_dos) AS nom_site
+											FROM dossier dos
+											LEFT JOIN marchandise march
+												ON dos.id_march = march.id_march
+											LEFT JOIN client cl
+												ON dos.id_cli = cl.id_cli
+											WHERE dos.not_fact = '0'
+												-- AND dos.date_decl IS NOT NULL
+												-- AND dos.ref_decl IS NOT NULL
+												-- AND dos.date_liq IS NOT NULL
+												-- AND dos.ref_liq IS NOT NULL
+												-- AND dos.date_quit IS NOT NULL
+												-- AND dos.ref_quit IS NOT NULL
+												-- AND 
+												-- (
+												-- 	-- Pocess 1
+												-- 	(
+												-- 		get_inv_process_pour_dossier(dos.id_dos)=1
+												-- 		AND dos.date_decl IS NOT NULL
+												-- 		AND dos.ref_decl IS NOT NULL
+												-- 		AND dos.date_liq IS NOT NULL
+												-- 		AND dos.ref_liq IS NOT NULL
+												-- 		AND dos.date_quit IS NOT NULL
+												-- 		AND dos.ref_quit IS NOT NULL
+												-- 	)
+												-- 	OR
+												-- 	-- Pocess 2
+												-- 	(
+												-- 		get_inv_process_pour_dossier(dos.id_dos)=2
+												-- 		AND dos.dispatch_date IS NOT NULL
+												-- 	)
+												-- 	OR
+												-- 	-- Pocess 3
+												-- 	(
+												-- 		get_inv_process_pour_dossier(dos.id_dos)=3
+												-- 		AND dos.dispatch_deliv IS NOT NULL
+												-- 	)
+														
+												-- )
+												AND dos.id_dos NOT IN (
+													SELECT DISTINCT(dos.id_dos) 
+														FROM facture_dossier fd, detail_facture_dossier det, dossier dos
+														WHERE fd.ref_fact = det.ref_fact
+															AND fd.note_debit = '0'
+															AND det.id_dos = dos.id_dos
+												)
+												$sqlTransit
+												$sqlClient
+												$sqlStatut
+											ORDER BY dos.id_dos
+										");
+			// $requete-> execute(array($entree['id_mod_lic']));
+			while($reponse = $requete-> fetch()){
+				$compteur++;
+
+				$reponse['compteur'] = $compteur;
+				$reponse['date_log'] = $this-> getLastEncodingDateDataInLog($reponse['id_dos'], 'Quit')['date_log'];
+				$reponse['truck'] = $reponse['horse'].' / '.$reponse['trailer_1'].' / '.$reponse['trailer_2'];
+				$rows[] = $reponse;
+			}$requete-> closeCursor();
+			
+			return $rows;
+			
 		}
 
 		public function pay_report_dossier($statut, $date_create_debut, $date_create_fin, $date_visa_dept_debut, $date_visa_dept_fin, $date_visa_fin_debut, $date_visa_fin_fin, $date_decaiss_debut, $date_decaiss_fin, $id_dep, $id_dos){
