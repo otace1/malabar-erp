@@ -4048,7 +4048,11 @@
 								-- Pocess 2
 								(
 									get_inv_process_pour_dossier(dossier.id_dos)=2
-									AND dossier.dispatch_date IS NOT NULL
+									AND (
+											dossier.dispatch_date IS NOT NULL 
+											OR (dossier.dgda_out IS NOT NULL AND dossier.id_mod_trans=4)
+										)
+									-- dossier.dispatch_date IS NOT NULL
 								)
 								OR
 								-- Pocess 3
@@ -4152,7 +4156,11 @@
 								-- Pocess 2
 								(
 									get_inv_process_pour_dossier(dossier.id_dos)=2
-									AND dossier.dispatch_date IS NOT NULL
+									AND (
+											dossier.dispatch_date IS NOT NULL 
+											OR (dossier.dgda_out IS NOT NULL AND dossier.id_mod_trans=4)
+										)
+									-- dossier.dispatch_date IS NOT NULL
 								)
 								OR
 								-- Pocess 3
@@ -6055,7 +6063,11 @@
 																	-- Pocess 2
 																	(
 																		get_inv_process_pour_dossier(dossier.id_dos)=2
-																		AND dossier.dispatch_date IS NOT NULL
+																		AND (
+																			dossier.dispatch_date IS NOT NULL 
+																			OR (dossier.dgda_out IS NOT NULL AND dossier.id_mod_trans=4)
+																		)
+																		-- dossier.dispatch_date IS NOT NULL
 																	)
 																	OR
 																	-- Pocess 3
@@ -18445,7 +18457,10 @@
 														-- Pocess 2
 														(
 															get_inv_process_pour_dossier(id_dos)=2
-															AND dispatch_date IS NOT NULL
+															AND (
+																	dispatch_date IS NOT NULL 
+																	OR (dgda_out IS NOT NULL AND id_mod_trans=4)
+																)
 														)
 														OR
 														-- Pocess 3
@@ -23916,7 +23931,11 @@
 														-- Pocess 2
 														(
 															get_inv_process_pour_dossier(dossier.id_dos)=2
-															AND dossier.dispatch_date IS NOT NULL
+															AND (
+																	dossier.dispatch_date IS NOT NULL 
+																	OR (dossier.dgda_out IS NOT NULL AND dossier.id_mod_trans=4)
+																)
+															-- dossier.dispatch_date IS NOT NULL
 														)
 														OR
 														-- Pocess 3
@@ -24514,7 +24533,11 @@
 														-- Pocess 2
 														(
 															get_inv_process_pour_dossier(dos.id_dos)=2
-															AND dos.dispatch_date IS NOT NULL
+															AND (
+																	dos.dispatch_date IS NOT NULL 
+																	OR (dos.dgda_out IS NOT NULL AND dos.id_mod_trans=4)
+																)
+															-- dos.dispatch_date IS NOT NULL
 														)
 														OR
 														-- Pocess 3
@@ -24833,7 +24856,11 @@
 													-- Pocess 2
 													(
 														get_inv_process_pour_dossier(id_dos)=2
-														AND dispatch_date IS NOT NULL
+														AND (
+																	dispatch_date IS NOT NULL 
+																	OR (dgda_out IS NOT NULL AND id_mod_trans=4)
+																)
+														-- dispatch_date IS NOT NULL
 													)
 													OR
 													-- Pocess 3
@@ -47872,7 +47899,11 @@
 													-- Pocess 2
 													(
 														get_inv_process_pour_dossier(dos.id_dos)=2
-														AND dos.dispatch_date IS NOT NULL
+														AND (
+																	dos.dispatch_date IS NOT NULL 
+																	OR (dos.dgda_out IS NOT NULL AND dos.id_mod_trans=4)
+																)
+														-- dos.dispatch_date IS NOT NULL
 													)
 													OR
 													-- Pocess 3
@@ -48614,7 +48645,11 @@
 														-- Pocess 2
 														(
 															get_inv_process_pour_dossier(dos.id_dos)=2
-															AND dos.dispatch_date IS NOT NULL
+															AND (
+																	dos.dispatch_date IS NOT NULL 
+																	OR (dos.dgda_out IS NOT NULL AND dos.id_mod_trans=4)
+																)
+															-- dos.dispatch_date IS NOT NULL
 														)
 														OR
 														-- Pocess 3
@@ -50911,7 +50946,11 @@
 													-- Pocess 2
 													(
 														get_inv_process_pour_dossier(id_dos)=2
-														AND dispatch_date IS NOT NULL
+														AND (
+																	dispatch_date IS NOT NULL 
+																	OR (dgda_out IS NOT NULL AND id_mod_trans=4)
+																)
+														-- dispatch_date IS NOT NULL
 													)
 													OR
 													-- Pocess 3
@@ -55227,7 +55266,11 @@
 													-- Pocess 2
 													(
 														get_inv_process_pour_dossier(id_dos)=2
-														AND dispatch_date IS NOT NULL
+														AND (
+																	dispatch_date IS NOT NULL 
+																	OR (dgda_out IS NOT NULL AND id_mod_trans=4)
+																)
+														-- dispatch_date IS NOT NULL
 													)
 													OR
 													-- Pocess 3
