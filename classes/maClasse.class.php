@@ -4022,7 +4022,14 @@
 							'<span class=\'badge badge-info font-weight-bold\'>Waiting to be invoiced</span>' AS statut,
 							dossier.mca_b_ref AS mca_b_ref,
 							dossier.dispatch_date AS dispatch_date,
-							dossier.dispatch_deliv AS dispatch_deliv
+							dossier.dispatch_deliv AS dispatch_deliv,
+							IF(dossier.dispatch_date IS NOT NULL,
+								DATE_FORMAT(dossier.dispatch_date, '%d/%m/%Y'),
+								IF(dossier.id_mod_lic=1,
+									DATE_FORMAT(dossier.dgda_out, '%d/%m/%Y'),
+									NULL
+								)
+							) AS dispatch_date
 						FROM dossier, marchandise
 						WHERE dossier.id_mod_lic = ?
 							-- AND dossier.date_decl IS NOT NULL
@@ -4128,7 +4135,14 @@
 							'<span class=\'badge badge-info font-weight-bold\'>Waiting to be invoiced</span>' AS statut,
 							dossier.mca_b_ref AS mca_b_ref,
 							dossier.dispatch_date AS dispatch_date,
-							dossier.dispatch_deliv AS dispatch_deliv
+							dossier.dispatch_deliv AS dispatch_deliv,
+							IF(dossier.dispatch_date IS NOT NULL,
+								DATE_FORMAT(dossier.dispatch_date, '%d/%m/%Y'),
+								IF(dossier.id_mod_lic=1,
+									DATE_FORMAT(dossier.dgda_out, '%d/%m/%Y'),
+									NULL
+								)
+							) AS dispatch_date
 						FROM dossier, marchandise
 						WHERE dossier.id_mod_lic = ?
 							AND dossier.id_march = marchandise.id_march
@@ -48887,7 +48901,14 @@
 							                		'Cancelled'
 							                	)
 							                ) AS cleared_status,
-							                get_site_dossier(dos.id_dos) AS nom_site
+							                get_site_dossier(dos.id_dos) AS nom_site,
+											IF(dos.dispatch_date IS NOT NULL,
+												DATE_FORMAT(dos.dispatch_date, '%d/%m/%Y'),
+												IF(dos.id_mod_lic=1,
+													DATE_FORMAT(dos.dgda_out, '%d/%m/%Y'),
+													NULL
+												)
+											) AS dispatch_date
 											FROM dossier dos
 											LEFT JOIN marchandise march
 												ON dos.id_march = march.id_march
