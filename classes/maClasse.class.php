@@ -48630,7 +48630,14 @@
 								                		'Cancelled'
 								                	)
 								                ) AS cleared_status,
-								                get_site_dossier(dos.id_dos) AS nom_site
+								                get_site_dossier(dos.id_dos) AS nom_site,
+												IF(dos.dispatch_date IS NOT NULL,
+													DATE_FORMAT(dos.dispatch_date, '%d/%m/%Y'),
+													IF(dos.id_mod_lic=1,
+														DATE_FORMAT(dos.dgda_out, '%d/%m/%Y'),
+														NULL
+													)
+												) AS dispatch_date
 												FROM dossier dos
 												LEFT JOIN marchandise march
 													ON dos.id_march = march.id_march
