@@ -5,7 +5,7 @@
   return $date;
 };
 
-function afficherRowTableauExcel($id_mod_lic, $id_cli, $id_mod_trans, $id_dos, $compteur, $col, $excel, $row, $styleHeader, $statut=NULL, $klsa_status=NULL, $amicongo_status=NULL, $kzi_status=NULL){
+function afficherRowTableauExcel($id_mod_lic, $id_cli, $id_mod_trans, $id_dos, $compteur, $col, $excel, $row, $styleHeader, $statut=NULL, $klsa_status=NULL, $amicongo_status=NULL, $kzi_status=NULL, $label_ir_crf=NULL){
 	include('../classes/connexion.php');
 
 	$maClasse = new MaClasse();
@@ -153,12 +153,11 @@ function afficherRowTableauExcel($id_mod_lic, $id_cli, $id_mod_trans, $id_dos, $
 					-> setCellValue($col.$row, $maClasse-> getDifferenceDate(date('Y-m-d'), $maClasse-> getDataRow('load_date', $id_dos)) - $maClasse-> getWeekendsAndHolidays($maClasse-> getDataRow('load_date', $id_dos), date('Y-m-d')));
 			}
 				
-			// $excel-> getActiveSheet()
-			// 	-> setCellValue($col.$row, '=IF('.$col_fin.$row.'<>"", NETWORKDAYS('.$col_fin.$row.','.$col_debut.$row.'), NETWORKDAYS(NOW(),'.$col_debut.$row.'))');
+				$col++;
+				alignement($col.$row);
+				$excel-> getActiveSheet()
+					-> setCellValue($col.$row, $maClasse-> getDossier($id_dos)['delay_reason']);
 
-			// $excel-> getActiveSheet()
-			// 	-> setCellValue($col.$row, '=NETWORKDAYS(NOW(),'.$maClasse-> getDataRow('load_date', $id_dos).')');
-				
 					$bg = '';
 
 			}
@@ -174,17 +173,17 @@ function afficherRowTableauExcel($id_mod_lic, $id_cli, $id_mod_trans, $id_dos, $
 			if ( ($getDataRow == '0') ) {
 
 			$excel-> getActiveSheet()
-				-> setCellValue($col.$row, 'TRANSIT');
+				-> setCellValue($col.$row, 'TRANSIT'.$label_ir_crf);
 
 			}else if ( ($getDataRow == '1') ) {
 
 			$excel-> getActiveSheet()
-				-> setCellValue($col.$row, 'CLEARED');
+				-> setCellValue($col.$row, 'CLEARED'.$label_ir_crf);
 
 			}else if ( ($getDataRow == '2') ) {
 
 			$excel-> getActiveSheet()
-				-> setCellValue($col.$row, 'CANCELLED');
+				-> setCellValue($col.$row, 'CANCELLED'.$label_ir_crf);
 
 			}
 

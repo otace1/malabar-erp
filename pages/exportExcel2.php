@@ -1135,8 +1135,10 @@ while ($reponseModeTransport = $requeteModeTransport-> fetch()) {
 												d.custom_deliv AS custom_deliv_1,
 												d.arrival_date AS arrival_date_1,
 												d.cleared AS cleared,
-
-												
+												IF(d.ir_crf IS NULL OR REPLACE(d.ir_crf, ' ', '') = '', 
+													'',
+													CONCAT(' WITH ', d.ir_crf)
+												) AS label_ir_crf,
 												IF(d.id_mod_lic='2' AND d.id_mod_trans='1' AND d.cleared<>'2',
 													IF(d.date_crf IS NULL AND d.date_ad IS NULL AND d.date_assurance IS NULL,
 												      'AWAITING CRF/AD/INSURRANCE',
@@ -1280,7 +1282,7 @@ while ($reponseModeTransport = $requeteModeTransport-> fetch()) {
 			alignement('A'.$row);
 			alignement('B'.$row);
 
-			afficherRowTableauExcel($id_mod_lic, $id_cli, $id_mod_trans, $reponse['id_dos'], $compteur, $col, $excel, $row, $styleHeader, $reponse['statut'], $reponse['klsa_status'], $reponse['amicongo_status'], $reponse['kzi_status']);
+			afficherRowTableauExcel($id_mod_lic, $id_cli, $id_mod_trans, $reponse['id_dos'], $compteur, $col, $excel, $row, $styleHeader, $reponse['statut'], $reponse['klsa_status'], $reponse['amicongo_status'], $reponse['kzi_status'], $reponse['label_ir_crf']);
 
 			$row++;
 
