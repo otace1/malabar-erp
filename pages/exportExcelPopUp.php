@@ -823,6 +823,10 @@ $statut = str_replace('_', '/', $statut);
 												      )
 													,
 													d.statut) AS statut,
+													IF(d.ir_crf IS NULL OR REPLACE(d.ir_crf, ' ', '') = '', 
+														'',
+														CONCAT(' WITH ', d.ir_crf)
+													) AS label_ir_crf,
 												IF(d.id_mod_trans='1' AND d.id_mod_lic='2', 
 													IF(d.klsa_arriv IS NOT NULL AND d.wiski_arriv IS NULL,'ARRIVED AT K\'LSA', 
 														IF(d.wiski_arriv IS NOT NULL AND d.dispatch_klsa IS NULL, 'AT WISKI',
@@ -901,7 +905,7 @@ $statut = str_replace('_', '/', $statut);
 			alignement('B'.$row);
 			alignement('C'.$row);
 
-			afficherRowTableauExcel($id_mod_lic, $id_cli, $id_mod_trans, $reponse['id_dos'], $compteur, $col, $excel, $row, $styleHeader, $reponse['statut'], $reponse['klsa_status'], $reponse['amicongo_status'], $reponse['kzi_status']);
+			afficherRowTableauExcel($id_mod_lic, $id_cli, $id_mod_trans, $reponse['id_dos'], $compteur, $col, $excel, $row, $styleHeader, $reponse['statut'], $reponse['klsa_status'], $reponse['amicongo_status'], $reponse['kzi_status'], $reponse['label_ir_crf']);
 
 			$row++;
 
