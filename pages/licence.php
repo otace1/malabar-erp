@@ -389,7 +389,7 @@
                     <button type="button" class="btn btn-xs btn-success dropdown-toggle dropdown-icon" data-toggle="dropdown">
                       <i class="fas fa-file-excel"></i> Export
                       <div class="dropdown-menu" role="menu">
-                        <a class="dropdown-item"onclick="window.location.replace('exportLicence2.php?id_cli=<?php echo $_GET['id_cli']; ?>&id_mod_lic=<?php echo $_GET['id_mod_lic']; ?>&id_type_lic=<?php echo $_GET['id_type_lic']; ?>','pop1','width=80,height=80');">
+                        <!-- <a class="dropdown-item"onclick="window.location.replace('exportLicence2.php?id_cli=<?php echo $_GET['id_cli']; ?>&id_mod_lic=<?php echo $_GET['id_mod_lic']; ?>&id_type_lic=<?php echo $_GET['id_type_lic']; ?>','pop1','width=80,height=80');">
                           Export All Licenses
                         </a>
                         <a class="dropdown-item"onclick="window.location.replace('exportSyntheseLicence.php?id_cli=<?php echo $_GET['id_cli']; ?>&id_mod_lic=<?php echo $_GET['id_mod_lic']; ?>&id_type_lic=<?php echo $_GET['id_type_lic']; ?>','pop1','width=80,height=80');">
@@ -397,7 +397,7 @@
                         </a>
                         <a class="dropdown-item"onclick="window.location.replace('exportSyntheseLicenceClient.php?id_cli=<?php echo $_GET['id_cli']; ?>&id_mod_lic=<?php echo $_GET['id_mod_lic']; ?>','pop1','width=80,height=80');">
                           Export Syntheses/CLient
-                        </a>
+                        </a> -->
                         <a class="dropdown-item"onclick="window.location.replace('exportLicence2.php?id_cli=<?php echo $_GET['id_cli']; ?>&id_mod_lic=<?php echo $_GET['id_mod_lic']; ?>&id_type_lic=<?php echo $_GET['id_type_lic']; ?>&annee=2025','pop1','width=80,height=80');">
                           Export 2025 Licenses
                         </a>
