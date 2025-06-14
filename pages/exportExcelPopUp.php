@@ -236,6 +236,10 @@ while ($reponseModeTransport = $requeteModeTransport-> fetch()) {
 													d.custom_deliv AS custom_deliv_1,
 													d.arrival_date AS arrival_date_1,
 													d.cleared AS cleared,
+													IF(d.ir_crf IS NULL OR REPLACE(d.ir_crf, ' ', '') = '', 
+														'',
+														CONCAT(' WITH ', d.ir_crf)
+													) AS label_ir_crf,
 													DATEDIFF(d.dgda_out, d.dgda_in) AS dgda_delay,
 													DATEDIFF(d.custom_deliv, d.arrival_date) AS arrival_deliver_delay
 												FROM dossier d, client cl, site s, mode_transport mt
@@ -292,7 +296,7 @@ while ($reponseModeTransport = $requeteModeTransport-> fetch()) {
 				alignement('B'.$row);
 				alignement('C'.$row);
 
-				afficherRowTableauExcel($id_mod_lic, $id_cli, $id_mod_trans, $reponse['id_dos'], $compteur, $col, $excel, $row, $styleHeader);
+				afficherRowTableauExcel($id_mod_lic, $id_cli, $id_mod_trans, $reponse['id_dos'], $compteur, $col, $excel, $row, $styleHeader, $reponse['label_ir_crf']);
 
 				$row++;
 
