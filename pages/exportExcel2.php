@@ -986,9 +986,11 @@ while ($reponseModeTransport = $requeteModeTransport-> fetch()) {
 
 		//Figer colonne
 			if($_GET['id_cli']=='857'){
-				$excel->getActiveSheet()->freezePane('D2');
+				// $excel->getActiveSheet()->freezePane('D2');
+				$excel->getActiveSheet()->freezePane('A2');
 			}else{
-				$excel->getActiveSheet()->freezePane('F2');
+				// $excel->getActiveSheet()->freezePane('F2');
+				$excel->getActiveSheet()->freezePane('A2');
 			}
 			
 
