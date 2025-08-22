@@ -62178,10 +62178,18 @@
 
 		}
 
-		public function nbre_notification_demande_fond(){
+		public function nbre_notification_demande_fond(?string $cash = null){
 			include('connexion.php');
 
 			$sqlView = '';
+
+			$sql_cash = '';
+
+			if(isset($cash) && ($cash!='')){
+
+				$sql_cash = ' AND df.cash = "'.$cash.'"';
+
+			}
 
 			if (($this-> getUtilisateur($_SESSION['id_util'])['visa_dept_df']=='0') && ($this-> getUtilisateur($_SESSION['id_util'])['visa_dir_df']=='0') && ($this-> getUtilisateur($_SESSION['id_util'])['visa_fin_df']=='0') && ($this-> getUtilisateur($_SESSION['id_util'])['decaiss_df']=='0')) {
 				$sqlView = ' AND df.id_util = '.$_SESSION['id_util'];
@@ -62229,6 +62237,7 @@
 												AND df.id_cli = cl.id_cli
 												AND df.id_util = util.id_util
 												AND df.date_reject_dept IS NULL
+												$sql_cash
 											$sqlView");
 
 			$reponse = $requete-> fetch();
@@ -62237,12 +62246,21 @@
 
 		}
 
-		public function tableau_demande_fond_notification($niveau){
+		public function tableau_demande_fond_notification($niveau, ?string $cash = null){
 			include('connexion.php');
 
 			$compteur = 0;
 
 			$table = '';
+
+			$sql_cash = '';
+
+			if(isset($cash) && ($cash!='')){
+
+				$sql_cash = ' AND df.cash = "'.$cash.'"';
+
+			}
+
 
 			$sqlView = '';
 
@@ -62305,7 +62323,8 @@
 												AND df.id_util = util.id_util
 												AND df.date_reject_dept IS NULL
 											$sqlStatut
-											$sqlView");
+											$sqlView
+											$sql_cash");
 
 			while($reponse = $requete-> fetch()){
 				$compteur++;
