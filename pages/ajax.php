@@ -4178,13 +4178,13 @@
 
 	}elseif(isset($_POST['operation']) && $_POST['operation']=='nbre_notification_demande_fond'){ 
 		
-		$response = $maClasse-> nbre_notification_demande_fond();
+		$response = $maClasse-> nbre_notification_demande_fond($_POST['cash']);
 
 		echo json_encode($response);
 
 	}elseif(isset($_POST['operation']) && $_POST['operation']=='tableau_demande_fond_notification'){ 
 		
-		$response['tableau_demande_fond_notification'] = $maClasse-> tableau_demande_fond_notification($_POST['niveau']);
+		$response['tableau_demande_fond_notification'] = $maClasse-> tableau_demande_fond_notification($_POST['niveau'], $_POST['cash']);
 
 		echo json_encode($response);
 

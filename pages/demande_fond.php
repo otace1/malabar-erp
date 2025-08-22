@@ -510,7 +510,7 @@
    $.ajax({
      type: "POST",
      url: "ajax.php",
-     data: {operation: 'nbre_notification_demande_fond'},
+     data: {operation: 'nbre_notification_demande_fond', cash:null},
      dataType:"json",
      success:function(data){
        if (data.logout) {
@@ -540,7 +540,7 @@
    $.ajax({
      type: "POST",
      url: "ajax.php",
-     data: {niveau: niveau, operation: 'tableau_demande_fond_notification'},
+     data: {niveau: niveau, cash: null, operation: 'tableau_demande_fond_notification'},
      dataType:"json",
      success:function(data){
        if (data.logout) {
@@ -658,9 +658,9 @@
               }else{
                 $('#message').html(data.message);
                 $('#modal_demande_fond_notification').modal('hide');
-                // $( '#form_decaiss_df' ).each(function(){
-                //     this.reset();
-                // });
+                $( '#form_decaiss_df' ).each(function(){
+                    this.reset();
+                });
               }
             },
             complete: function () {
