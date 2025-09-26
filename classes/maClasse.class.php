@@ -25095,6 +25095,10 @@
 					<input type="number" step="0.001" min="0" style="text-align: center; width: 8em;" name="seguce_<?php echo $compteur;?>"  id="seguce_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport(176, $id_mod_lic, $id_cli, $id_march, $id_mod_trans)['montant'];?>" class="bg bg-dark">
 					<input type="hidden" style="text-align: center; width: 8em;" name="seguce_tva_<?php echo $compteur;?>" id="tva_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport(176, $id_mod_lic, $id_cli, $id_march, $id_mod_trans)['tva'];?>" class="bg bg-dark">
 				</td>
+				<td style="text-align: center;">
+					<input type="number" step="0.001" min="0" style="text-align: center; width: 8em;" name="cgw_<?php echo $compteur;?>"  id="cgw_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport(213, $id_mod_lic, $id_cli, $id_march, $id_mod_trans)['montant'];?>" class="bg bg-dark">
+					<input type="hidden" style="text-align: center; width: 8em;" name="cgw_tva_<?php echo $compteur;?>" id="tva_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport(213, $id_mod_lic, $id_cli, $id_march, $id_mod_trans)['tva'];?>" class="bg bg-dark">
+				</td>
 			</tr>
 			<?php
 			}$requete-> closeCursor();
@@ -26646,6 +26650,10 @@
 				<td style="text-align: center;">
 					<input type="number" step="0.001" min="0" style="text-align: center; width: 8em;" name="seguce_<?php echo $compteur;?>"  id="seguce_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDataDetailFacture($ref_fact, $reponse['id_dos'], 176)['montant'];?>" class="bg bg-dark">
 					<input type="hidden" style="text-align: center; width: 8em;" name="seguce_tva_<?php echo $compteur;?>" id="tva_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDataDetailFacture($ref_fact, $reponse['id_dos'], 176)['tva'];?>" class="bg bg-dark">
+				</td>
+				<td style="text-align: center;">
+					<input type="number" step="0.001" min="0" style="text-align: center; width: 8em;" name="cgw_<?php echo $compteur;?>"  id="cgw_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDataDetailFacture($ref_fact, $reponse['id_dos'], 176)['montant'];?>" class="bg bg-dark">
+					<input type="hidden" style="text-align: center; width: 8em;" name="cgw_tva_<?php echo $compteur;?>" id="tva_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDataDetailFacture($ref_fact, $reponse['id_dos'], 213)['tva'];?>" class="bg bg-dark">
 				</td>
 			</tr>
 			<?php
