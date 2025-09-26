@@ -157,6 +157,7 @@
                   <th>OTHER SERVICES COST($)</th>
                   <th>CONTRACTOR AGENCY FEE($)</th>
                   <th>SEGUCE CHARGE($)</th>
+                  <th>ASSAY CGW($)</th>
               </tr>
           </thead>
           <tbody>

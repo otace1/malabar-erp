@@ -346,6 +346,7 @@
 	  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 58, $_POST['other_service_'.$i], $_POST['other_service_tva_'.$i], '1');
 	  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 21, $_POST['frais_agence_'.$i], $_POST['frais_agence_tva_'.$i], '1');
 	  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 176, $_POST['seguce_'.$i], $_POST['seguce_tva_'.$i], '1');
+	  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 213, $_POST['cgw_'.$i], $_POST['cgw_tva_'.$i], '1');
 
 	  					//1.5% Finance Cost
 	  					if(!empty(($maClasse-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport(54, $_POST['id_mod_lic'], $_POST['id_cli'], $_POST['id_march'], $_POST['id_mod_trans']))) && ($maClasse-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport(54, $_POST['id_mod_lic'], $_POST['id_cli'], $_POST['id_march'], $_POST['id_mod_trans'])['id_deb']!=0)){
@@ -645,6 +646,7 @@
 	  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 58, $_POST['other_service_'.$i], $_POST['other_service_tva_'.$i], '1');
 	  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 21, $_POST['frais_agence_'.$i], $_POST['frais_agence_tva_'.$i], '1');
 	  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 176, $_POST['seguce_'.$i], $_POST['seguce_tva_'.$i], '1');
+	  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 213, $_POST['cgw_'.$i], $_POST['cgw_tva_'.$i], '1');
 
 	  					//1.5% Finance Cost
 	  					if(!empty(($maClasse-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport(54, $_POST['id_mod_lic'], $_POST['id_cli'], $_POST['id_march'], $_POST['id_mod_trans']))) && ($maClasse-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport(54, $_POST['id_mod_lic'], $_POST['id_cli'], $_POST['id_march'], $_POST['id_mod_trans'])['id_deb']!=0)){
