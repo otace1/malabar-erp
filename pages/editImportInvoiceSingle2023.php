@@ -93,26 +93,6 @@
 
       </div>
 
-      <div class="col-md-2">
-        
-          <div class="form-group">
-            <label for="inputEmail3" class="col-form-label">ARSP:</label>
-            <select class="form-control form-control-sm" name="statut_arsp" id="statut_arsp" onchange="maj_statut_arsp('<?php echo $_GET['ref_fact'];?>', this.value);" required>
-              <option value="1">Enabled</option>
-              <option value="0">Disabled</option>
-            </select>
-          </div>
-
-      </div>
-
-      <div class="col-md-2">
-          <div class="form-group">
-            <label for="inputEmail3" class="col-form-label">Invoice Template:</label>
-            <span id="template_invoice"></span>
-          </div>
-
-      </div>
-
       <div class="col-md-12"></div>
       
       <div class="col-md-5">
@@ -157,12 +137,24 @@
                 </select></th>
               <th><input style="text-align: center; width: 9em;" id="assurance_usd" name="assurance_usd" onblur="maj_assurance_usd(id_dos.value, this.value);calculCIF();" class="" type="number" step="0.000001" min="0" required></th>
             </tr>
-            
+            <tr>
+              <th>Bank</th>
+              <th>
+                <select style="width: 9em;" id="id_bank_liq" name="id_bank_liq" onchange="maj_id_bank_liq(id_dos.value, this.value);calculCIF();"required>
+                  <option></option>
+                  <?php
+                    $maClasse-> selectionnerBanqueLiquidation();
+                  ?>
+                </select>
+              </th>
+              <th>Bank Rate</th>
+              <th><input style="text-align: center; width: 9em;" id="roe_decl" name="roe_decl" onblur="maj_roe_decl(id_dos.value, this.value);calculCIF();" type="number" step="0.000001" min="1" required></th>
+            </tr>
             <tr>
               <th>Rate (CDF/<span id="label_mon_fob"></span>) INV.</th>
               <th><input style="text-align: center; width: 9em;" id="roe_inv" name="roe_inv" onblur="maj_roe_inv(id_dos.value, this.value);calculCIF();" type="number" step="0.000001" min="1" required></th>
               <th>Rate(CDF/USD) BCC</th>
-              <th><input style="text-align: center; width: 9em;" id="roe_decl" name="roe_decl" onblur="maj_roe_decl(id_dos.value, this.value);calculCIF();" type="number" step="0.000001" min="1" required></th>
+              <th><input style="text-align: center; width: 9em;" id="roe_liq" name="roe_liq" onblur="maj_roe_liq(id_dos.value, this.value);calculCIF();" type="number" step="0.000001" min="1" required></th>
             </tr>
             <tr>
               <th>CIF (USD)</th>
@@ -350,32 +342,6 @@
 
 <script type="text/javascript">
 
-  function getDeboursPourFactureClientModeleLicenceAjaxChange(id_cli, id_mod_lic, id_march, id_mod_trans, id_dos){
-    $('#spinner-div').show();
-    $.ajax({
-      type: "POST",
-      url: "ajax.php",
-      data: { id_cli: id_cli, id_mod_lic: id_mod_lic, id_march:id_march, id_mod_trans:id_mod_trans, id_dos:id_dos, ref_fact:'<?php echo $_GET['ref_fact'];?>', operation: 'getDeboursPourFactureClientModeleLicenceAjaxChangeEdit'},
-      dataType:"json",
-      success:function(data){
-        if (data.logout) {
-          alert(data.logout);
-          window.location="../deconnexion.php";
-        }else{
-          // alert('Hello');
-          
-          $('#debours').html(data.debours);
-          // $('#template_invoice').html(data.template_invoice);
-          // calculTresco();
-        }
-      },
-      complete: function () {
-          $('#spinner-div').hide();//Request is complete so hide spinner
-      }
-    });
-
-  }
-
   function getDeboursFacture(){
     $('#spinner-div').show();
     $.ajax({
@@ -538,7 +504,6 @@
         }else{
           $('#id_mon').html(data.id_mon);
           $('#tax_duty_part').val(data.tax_duty_part);
-          $('#statut_arsp').val(data.statut_arsp);
           $('#mon_fob').val(data.id_mon_fob);
           $('#mon_fret').val(data.id_mon_fret);
           $('#mon_assurance').val(data.id_mon_assurance);
@@ -555,7 +520,7 @@
           // $('#truck').val(data.truck);
           // alert('Hello');
           $('#id_bank_liq').val(data.id_bank_liq);
-          // $('#roe_decl').val(data.roe_decl);
+          $('#roe_liq').val(data.roe_liq);
           $('#commodity').val(data.commodity);
           $('#horse').val(data.horse);
           $('#trailer_1').val(data.trailer_1);
@@ -580,8 +545,6 @@
           calculCIF();
           //Items ------------
           $('#debours').html(data.debours);
-          $('#template_invoice').html(data.template_invoice);
-          $('#id_march_template').val(<?php echo $maClasse-> getDataFactureGlobale($_GET['ref_fact'])['id_march'];?>);
         }
       },
       complete: function () {
@@ -720,12 +683,12 @@
 
   }
 
-  function maj_statut_arsp(ref_fact, statut_arsp){
+  function maj_roe_decl(id_dos, roe_decl){
     $('#spinner-div').show();
     $.ajax({
       type: 'post',
       url: 'ajax.php',
-      data: {ref_fact: ref_fact, statut_arsp: statut_arsp, operation: 'maj_statut_arsp'},
+      data: {id_dos: id_dos, roe_decl: roe_decl, operation: 'maj_roe_decl'},
       dataType: 'json',
       success:function(data){
         if (data.logout) {
@@ -740,17 +703,39 @@
 
   }
 
-  function maj_roe_decl(id_dos, roe_decl){
+  function maj_roe_liq(id_dos, roe_liq){
     $('#spinner-div').show();
     $.ajax({
       type: 'post',
       url: 'ajax.php',
-      data: {id_dos: id_dos, roe_decl: roe_decl, operation: 'maj_roe_decl'},
+      data: {id_dos: id_dos, roe_liq: roe_liq, operation: 'maj_roe_liq'},
       dataType: 'json',
       success:function(data){
         if (data.logout) {
           alert(data.logout);
           window.location="../deconnexion.php";
+        }
+      },
+      complete: function () {
+          $('#spinner-div').hide();//Request is complete so hide spinner
+      }
+    });
+
+  }
+
+  function maj_id_bank_liq(id_dos, id_bank_liq){
+    $('#spinner-div').show();
+    $.ajax({
+      type: 'post',
+      url: 'ajax.php',
+      data: {id_dos: id_dos, id_bank_liq: id_bank_liq, operation: 'maj_id_bank_liq'},
+      dataType: 'json',
+      success:function(data){
+        if (data.logout) {
+          alert(data.logout);
+          window.location="../deconnexion.php";
+        }else{
+          $('#roe_decl').val(data.roe_decl);
         }
       },
       complete: function () {
@@ -1170,6 +1155,12 @@
       roe_decl=0;
     }
 
+    if (parseFloat($('#roe_liq').val()) > 0 ) {
+      roe_liq = parseFloat($('#roe_liq').val());
+    }else{
+      roe_liq=0;
+    }
+
     if (parseFloat($('#unite_rls').val()) > 0 ) {
       unite_rls = parseFloat($('#unite_rls').val());
     }else{
@@ -1251,7 +1242,7 @@
     // cog = (cif_cdf*0.00457);
     
     // alert(tva_ddi);
-    rls = 85*unite_rls*roe_decl;
+    rls = 85*unite_rls*roe_liq;
     if ($('#tva_rls').val() == '1' ) {
       tva_rls = rls*0.16;
     }else{
@@ -1414,6 +1405,12 @@
       roe_decl=0;
     }
 
+    if (parseFloat($('#roe_liq').val()) > 0 ) {
+      roe_liq = parseFloat($('#roe_liq').val());
+    }else{
+      roe_liq=0;
+    }
+
     if (parseFloat($('#unite_rls').val()) > 0 ) {
       unite_rls = parseFloat($('#unite_rls').val());
     }else{
@@ -1488,7 +1485,7 @@
     // cog = (cif_cdf*0.00457);
     
     // alert(tva_ddi);
-    rls = 85*unite_rls*roe_decl;
+    rls = 85*unite_rls*roe_liq;
     if ($('#tva_rls').val() == '1' ) {
       tva_rls = rls*0.16;
     }else{
