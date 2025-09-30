@@ -222,6 +222,64 @@
             </section>
           </div>
 
+          <div class="col-md-6 col-sm-6 col-12">
+             <section class="content">
+              <div class="container-fluid" style="">
+                <div class="row">
+                  <div class="col-12">
+                    <div class="card">
+                      <div class="card-header">
+                        <h5 class="card-title" style="font-weight: bold;">
+                          Rate of exchange management
+                        </h5>
+                        <div class="float-right">
+                          <button class="btn btn-success btn-xs"onclick="window.location.replace('exportTaux.php','pop1','width=80,height=80');"><i class="fa fa-file-excel"></i> Export to Excel File</button>
+                          <button class="btn btn-primary btn-xs" onclick="modal_creation_taux_banque();"><i class="fa fa-plus"></i> New Rate</button>
+                        </div>
+                      </div>    
+                      <!-- /.card-header -->
+
+                      <div class="card-body table-responsive p-0">
+                        <span id="label_monitoring"></span>
+                        <table class=" table table-head-fixed table-bordered table-hover text-nowrap table-sm">
+                          <thead>
+                            <tr class="">
+                              <th style="" rowspan="2">#</th>
+                              <th style="" rowspan="2">Date</th>
+                              <th style="" rowspan="2">BCC</th>
+                              <th style=" text-align: center;" colspan="2">RAWBANK</th>
+                              <th style=" text-align: center;" colspan="2">EQUITY BCDC</th>
+                              <th style=" text-align: center;" colspan="2">ECOBANK</th>
+                              <th style=" text-align: center;" colspan="2">ACCESS BANK</th>
+                            </tr>
+                            <tr class="">
+                              <th style=" text-align: center;">Amt</th>
+                              <th style=" text-align: center;">Diff</th>
+                              <th style=" text-align: center;">Amt</th>
+                              <th style=" text-align: center;">Diff</th>
+                              <th style=" text-align: center;">Amt</th>
+                              <th style=" text-align: center;">Diff</th>
+                              <th style=" text-align: center;">Amt</th>
+                              <th style=" text-align: center;">Diff</th>
+                            </tr>
+                          </thead>
+                          <tbody id="afficherMonitoringTaux">
+                            <?php
+                            // $maClasse-> afficherDossierEnAttenteFacture($_GET['id_cli'], $_GET['id_mod_lic_fact']);
+                            ?>
+                          </tbody>
+                        </table>
+                      </div>
+                      <!-- /.card-body -->
+                    </div>
+                    <!-- /.card -->
+                  </div>
+
+                </div>
+              </div><!-- /.container-fluid -->
+            </section>
+          </div>
+
           <div class="col-md-3 col-sm-6 col-12">
              <section class="content">
               <div class="container-fluid" style="">
@@ -488,6 +546,54 @@ if(isset($_GET['id_mod_lic_fact']) && isset($_GET['id_mod_lic_fact'])){
   <!-- /.modal-dialog -->
 </div>
 
+<div class="modal fade" id="modal_creation_taux_banque">
+  <div class="modal-dialog modal-sm">
+    <form id="form_creation_taux_banque" method="POST" action="" data-parsley-validate enctype="multipart/form-data">
+      <input type="hidden" name="operation" value="creation_taux_banque">
+    <div class="modal-content">
+      <div class="modal-header ">
+        <h4 class="modal-title"><i class="fa fa-plus"></i> New Rate</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label for="x_card_code" class="control-label mb-1">Date</label>
+          <input name="date_taux" type="date" class="form-control form-control-sm cc-exp" required>
+        </div>
+        <div class="form-group">
+          <label for="x_card_code" class="control-label mb-1">BCC</label>
+          <input name="bcc" type="number" min="0" step="0.000001" class="form-control form-control-sm cc-exp" required>
+        </div>
+        <div class="form-group">
+          <label for="x_card_code" class="control-label mb-1">RAWBANK</label>
+          <input name="rawbank" type="number" min="0" step="0.000001" class="form-control form-control-sm cc-exp">
+        </div>
+        <div class="form-group">
+          <label for="x_card_code" class="control-label mb-1">EQUITY BCDC</label>
+          <input name="equity" type="number" min="0" step="0.000001" class="form-control form-control-sm cc-exp">
+        </div>
+        <div class="form-group">
+          <label for="x_card_code" class="control-label mb-1">ECOBANK</label>
+          <input name="ecobank" type="number" min="0" step="0.000001" class="form-control form-control-sm cc-exp">
+        </div>
+        <div class="form-group">
+          <label for="x_card_code" class="control-label mb-1">ACCESS BANK</label>
+          <input name="access" type="number" min="0" step="0.000001" class="form-control form-control-sm cc-exp">
+        </div>
+      </div>
+      <div class="modal-footer justify-content-between">
+        <button type="button" class="btn btn-danger btn-xs" data-dismiss="modal">Cancel</button>
+        <button type="submit" class="btn btn-primary btn-xs">Submit</button>
+      </div>
+    </div>
+    </form>
+    <!-- /.modal-content -->
+  </div>
+  <!-- /.modal-dialog -->
+</div>
+
 <script type="text/javascript">
   $(document).ready(function(){
     $('#spinner-div').show();
@@ -559,7 +665,7 @@ if(isset($_GET['id_mod_lic_fact']) && isset($_GET['id_mod_lic_fact'])){
             alert(data.logout);
             window.location="../deconnexion.php";
           }else{
-            // afficherMonitoringTaux();
+            afficherMonitoringTaux();
           }
         },
         complete: function () {
@@ -627,7 +733,7 @@ if(isset($_GET['id_mod_lic_fact']) && isset($_GET['id_mod_lic_fact'])){
             alert(data.logout);
             window.location="../deconnexion.php";
           }else{
-            // afficherMonitoringTaux();
+            afficherMonitoringTaux();
           }
         },
         complete: function () {
@@ -667,7 +773,7 @@ if(isset($_GET['id_mod_lic_fact']) && isset($_GET['id_mod_lic_fact'])){
                 $( '#form_creation_taux_banque' ).each(function(){
                     this.reset();
                 });
-                // afficherMonitoringTaux();
+                afficherMonitoringTaux();
               }
             },
             complete: function () {
@@ -705,7 +811,7 @@ if(isset($_GET['id_mod_lic_fact']) && isset($_GET['id_mod_lic_fact'])){
           $('#btn_info_factures').html(data.btn_info_factures);
           $('#btn_info_dossiers_factures').html(data.btn_info_dossiers_factures);
           afficherMonitoringFacturation(<?php echo $_GET['id_mod_lic_fact'];?>);
-          // afficherMonitoringTaux();
+          afficherMonitoringTaux();
         }
       },
       complete: function () {
@@ -737,6 +843,28 @@ if(isset($_GET['id_mod_lic_fact']) && isset($_GET['id_mod_lic_fact'])){
           $('#btn_info_dossiers_factures').html(data.btn_info_dossiers_factures);
           $('#afficherMonitoringFacturation').html(data.afficherMonitoringFacturation);
           afficherMonitoringFile();
+        }
+      },
+      complete: function () {
+          $('#spinner-div').hide();//Request is complete so hide spinner
+      }
+    });
+
+  }
+
+  function afficherMonitoringTaux(){
+    $('#spinner-div').show();
+    $.ajax({
+      type: 'post',
+      url: 'ajax.php',
+      data: {operation: 'afficherMonitoringTaux'},
+      dataType: 'json',
+      success:function(data){
+        if (data.logout) {
+          alert(data.logout);
+          window.location="../deconnexion.php";
+        }else{
+          $('#afficherMonitoringTaux').html(data.afficherMonitoringTaux);
         }
       },
       complete: function () {

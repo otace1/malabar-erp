@@ -483,7 +483,7 @@ $tbl = <<<EOD
 			<td width="22%" style="text-align: center; border: 0.3px solid black; font-size: 7px;">$fret_usd</td>
 			<td width="15%" style="text-align: left; "></td>
 			<td width="13%" style="text-align: left; border: 0.3px solid black; font-size: 7px;">&nbsp;Rate(CDF/USD) BCC: </td>
-			<td width="8.5%" style="text-align: center; border: 0.3px solid black; font-size: 7px;">$roe_decl</td>
+			<td width="8.5%" style="text-align: center; border: 0.3px solid black; font-size: 7px;">$roe_liq</td>
 			<td width="12%" style="text-align: left; border: 0.3px solid black; font-size: 7px;">&nbsp;Rate(CDF/$id_mon_fob) Inv.</td>
 			<td width="6.5%" style="text-align: center; border: 0.3px solid black; font-size: 7px;">$roe_inv</td>
 		</tr>
@@ -491,8 +491,10 @@ $tbl = <<<EOD
 			<td width="23%" style="text-align: left; border: 0.3px solid black; font-size: 7px;">&nbsp;Autres Charges/$id_mon_autre_frais: </td>
 			<td width="22%" style="text-align: center; border: 0.3px solid black; font-size: 7px;">$autre_frais_usd</td>
 			<td width="15%" style="text-align: left; "></td>
-			<td width="15%" style="text-align: left; border: 0.3px solid black; font-size: 7px;">&nbsp;FOB (USD): </td>
-			<td width="25%" style="text-align: center; border: 0.3px solid black; font-size: 7px; font-weight: bold;">$fob_en_usd</td>
+			<td width="8%" style="text-align: left; border: 0.3px solid black; font-size: 7px;">&nbsp;Bank: </td>
+			<td width="16%" style="text-align: center; border: 0.3px solid black; font-size: 7px; font-weight: bold;">$nom_banq</td>
+			<td width="8%" style="text-align: left; border: 0.3px solid black; font-size: 7px;">&nbsp;Bank Rate: </td>
+			<td width="8%" style="text-align: center; border: 0.3px solid black; font-size: 7px; font-weight: bold;">$roe_decl</td>
 		</tr>
 		<tr>
 			<td width="23%" style="text-align: left; border: 0.3px solid black; font-size: 7px;">&nbsp;Assurance/$id_mon_assurance: </td>
