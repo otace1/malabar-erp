@@ -22,7 +22,7 @@
       <div class="container-fluid">
         <div class="header">
           <h5>
-            <i class="fa fa-edit nav-icon"></i> EDITING INVOICE
+            <i class="fa fa-calculator nav-icon"></i> NEW INVOICE
           </h5>
         </div>
 
@@ -37,7 +37,6 @@
           <div class="col-12">
             <div class="card">
               <div class="card-header">
-                <button class="btn btn-xs btn-danger" onclick='window.location="listerFactureDossier.php?id_cli=<?php echo $maClasse-> getFactureGlobale($_GET['ref_fact'])['id_cli'];?>&id_mod_lic_fact=<?php echo $maClasse-> getFactureGlobale($_GET['ref_fact'])['id_mod_lic'];?>"'><< Go back</button>
               </div>
               <!-- /.card-header -->
 
@@ -45,40 +44,45 @@
                 
 <!-- <form id="enregistrerFactureExportMultiple_form" method="POST" action="" data-parsley-validate enctype="multipart/form-data"> -->
 <form method="POST" id="enregistrerFactureExportMultiple_form" action="" data-parsley-validate enctype="multipart/form-data">
-  <input type="hidden" name="operation" id="operation" value="editFactureExportMultiple">
+  <input type="hidden" name="operation" id="operation" value="enregistrerFactureExportMultiple">
 
   <div class="card-body">
 
     <div class="row">
       
-      <input type="hidden" name="id_cli" value="<?php echo $maClasse-> getFactureGlobale($_GET['ref_fact'])['id_cli'];?>">
-      <input type="hidden" name="id_mod_lic" value="<?php echo $maClasse-> getFactureGlobale($_GET['ref_fact'])['id_mod_lic'];?>">
-      <input type="hidden" name="id_mod_fact" value="<?php echo $maClasse-> getFactureGlobale($_GET['ref_fact'])['id_mod_fact'];?>">
-      <input type="hidden" name="id_march" value="<?php echo $maClasse-> getMarchandiseFacture($_GET['ref_fact'])['id_march'];?>">
-      <input type="hidden" name="id_mod_trans" value="<?php echo $maClasse-> getDataDossiersMultipleInvoice($_GET['ref_fact'])['id_mod_trans'];?>">
-
+      <input type="hidden" name="id_cli" value="<?php echo $_GET['id_cli'];?>">
+      <input type="hidden" name="id_mod_lic" value="<?php echo $_GET['id_mod_lic_fact'];?>">
+      <input type="hidden" name="id_march" value="<?php echo $_GET['id_march'];?>">
+      <input type="hidden" name="id_mod_fact" value="<?php echo $_GET['id_mod_fact'];?>">
+      <input type="hidden" name="id_mod_trans" value="<?php echo $_GET['id_mod_trans'];?>">
       <div class="col-md-2">
         <div class="form-group">
           <label for="inputEmail3" class="col-form-label">Invoice Ref.: </label>
-          <input class="form-control form-control-sm bg bg-dark" type="text" name="ref_fact" id="ref_fact" value="<?php echo $_GET['ref_fact'];?>">
+          <input class="form-control form-control-sm bg bg-dark" type="text" name="ref_fact" id="ref_fact" value="<?php echo $maClasse-> buildRefFactureGlobale($_GET['id_cli']);?>" required>
         </div>
       </div>
       <div class="col-md-2">
         <div class="form-group">
           <label for="inputEmail3" class="col-form-label">Client: </label>
-          <input class="form-control form-control-sm bg bg-dark" disabled value="<?php echo $maClasse-> getClientFacture($_GET['ref_fact'])['nom_cli'];?>">
+          <input class="form-control form-control-sm bg bg-dark" disabled value="<?php echo $maClasse-> getClient($_GET['id_cli'])['nom_cli'];?>">
         </div>
       </div>
       <div class="col-md-2">
         <div class="form-group">
           <label for="inputEmail3" class="col-form-label">Commodity: </label>
-          <input class="form-control form-control-sm bg bg-dark" disabled value="<?php echo $maClasse-> getMarchandiseFacture($_GET['ref_fact'])['nom_march'];?>">
+          <input class="form-control form-control-sm bg bg-dark" disabled value="<?php echo $maClasse-> getMarchandise($_GET['id_march']);?>">
         </div>
       </div>
       <div class="col-md-2">
         <div class="form-group">
           <label for="inputEmail3" class="col-form-label">Transport Mode: </label>
-          <input class="form-control form-control-sm bg bg-dark" disabled value="<?php echo $maClasse-> getDataDossiersMultipleInvoice($_GET['ref_fact'])['nom_mod_trans'];?>">
+          <input class="form-control form-control-sm bg bg-dark" disabled value="<?php echo $maClasse-> getModeTransport($_GET['id_mod_trans'])['nom_mod_trans'];?>">
+        </div>
+      </div>
+      <div class="col-md-2">
+        <div class="form-group">
+          <label for="inputEmail3" class="col-form-label">License: </label>
+          <input class="form-control form-control-sm bg bg-dark" disabled value="<?php echo $_GET['num_lic'];?>">
         </div>
       </div>
 
@@ -87,29 +91,28 @@
           <div class="form-group">
             <label for="inputEmail3" class="col-form-label">ARSP:</label>
             <select class="form-control form-control-sm" name="statut_arsp" id="statut_arsp" onchange="maj_statut_arsp('<?php echo $_GET['ref_fact'];?>', this.value);" required>
-              <option value="0">Disabled</option>
               <option value="1">Enabled</option>
+              <option value="0">Disabled</option>
             </select>
           </div>
 
       </div>
+
       <div class="col-12"></div>
 
       <div class="col-md-12 table-responsive" style="height: 500px;">
         <label for="x_card_code" class="control-label mb-1"><u>Files</u></label>
-        <table class="table table-bordered  table-sm small text-nowrap table-head-fixed table-dark table-hover-color">
+        <table class="table table-bordered small table-sm text-nowrap table-head-fixed table-dark table-hover-color">
           <thead>
               <tr>
                   <th>#</th>
                   <th>File Ref.</th>
-                  <th>Lot. No.</th>
+                  <th>Lot Num.</th>
                   <th>Declaration</th>
                   <th>Liquidation</th>
-                  <th>Quittance</th>
+                  <th style="text-align: center;">Truck(Wagon)</th>
                   <th>Qty(Mt)</th>
                   <th>Action</th>
-                  <th>Bank</th>
-                  <th>Bank Rate</th>
                   <th>BCC Rate</th>
                   <th>DDE(CDF)</th>
                   <th>RIE(CDF)</th>
@@ -155,12 +158,11 @@
                   <th>CONTRACTOR AGENCY FEE($)</th>
                   <th>SEGUCE CHARGE($)</th>
                   <th>ASSAY CGW($)</th>
-                  <th>LOADING ASSIST.($)</th>
               </tr>
           </thead>
           <tbody>
             <?php
-              $maClasse-> getDossiersExportEditFactures($_GET['ref_fact']);
+              $maClasse-> getDossiersExportAFactures($_GET['id_cli'], $_GET['id_mod_lic_fact'], $_GET['id_march'], $_GET['id_mod_trans'], $_GET['num_lic']);
             ?>
           </tbody>
         </table>
@@ -197,74 +199,6 @@
   <?php include("pied.php");?>
 
 <script type="text/javascript">
-
-  function getBank(id_bank_liq, compteur) {
-    $('#id_bank_liq_'+compteur).val(id_bank_liq);
-  }
-
-  function maj_id_bank_liq(id_dos, id_bank_liq, compteur){
-    $('#spinner-div').show();
-    $.ajax({
-      type: 'post',
-      url: 'ajax.php',
-      data: {id_dos: id_dos, id_bank_liq: id_bank_liq, operation: 'maj_id_bank_liq'},
-      dataType: 'json',
-      success:function(data){
-        if (data.logout) {
-          alert(data.logout);
-          window.location="../deconnexion.php";
-        }else{
-          $('#roe_decl_'+compteur).val(data.roe_decl);
-        }
-      },
-      complete: function () {
-          $('#spinner-div').hide();//Request is complete so hide spinner
-      }
-    });
-
-  }
-
-  function maj_roe_liq(id_dos, roe_liq, compteur){
-    $('#spinner-div').show();
-    $.ajax({
-      type: 'post',
-      url: 'ajax.php',
-      data: {id_dos: id_dos, roe_liq: roe_liq, operation: 'maj_roe_liq'},
-      dataType: 'json',
-      success:function(data){
-        if (data.logout) {
-          alert(data.logout);
-          window.location="../deconnexion.php";
-        }else{
-          $('#roe_liq_'+compteur).val(roe_liq);
-        }
-      },
-      complete: function () {
-          $('#spinner-div').hide();//Request is complete so hide spinner
-      }
-    });
-
-  }
-
-  function maj_statut_arsp(ref_fact, statut_arsp){
-    $('#spinner-div').show();
-    $.ajax({
-      type: 'post',
-      url: 'ajax.php',
-      data: {ref_fact: ref_fact, statut_arsp: statut_arsp, operation: 'maj_statut_arsp'},
-      dataType: 'json',
-      success:function(data){
-        if (data.logout) {
-          alert(data.logout);
-          window.location="../deconnexion.php";
-        }
-      },
-      complete: function () {
-          $('#spinner-div').hide();//Request is complete so hide spinner
-      }
-    });
-
-  }
 
   function round(num, decimalPlaces = 0) {
     return new Decimal(num).toDecimalPlaces(decimalPlaces).toNumber();
@@ -369,7 +303,7 @@
                   $('#spinner-div').hide();//Request is complete so hide spinner
                   alert(data.message);
                   window.open('viewExportInvoiceMultiple2022.php?ref_fact='+fd.get('ref_fact'),'pop1','width=1000,height=800');
-                  window.location="listerFactureDossier.php?id_cli=<?php echo $maClasse-> getFactureGlobale($_GET['ref_fact'])['id_cli'];?>&id_mod_lic_fact=<?php echo $maClasse-> getFactureGlobale($_GET['ref_fact'])['id_mod_lic'];?>";
+                  window.location="listerFactureDossier.php?id_cli=<?php echo $_GET['id_cli'];?>&id_mod_lic_fact=<?php echo $_GET['id_mod_lic_fact']?>";
                 }
               },
               complete: function () {

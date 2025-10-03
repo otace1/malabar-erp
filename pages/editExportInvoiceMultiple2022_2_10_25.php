@@ -108,9 +108,7 @@
                   <th>Quittance</th>
                   <th>Qty(Mt)</th>
                   <th>Action</th>
-                  <th>Bank</th>
-                  <th>Bank Rate</th>
-                  <th>BCC Rate</th>
+                  <th>Exchange Rate</th>
                   <th>DDE(CDF)</th>
                   <th>RIE(CDF)</th>
                   <th>RLS(CDF)</th>
@@ -155,7 +153,6 @@
                   <th>CONTRACTOR AGENCY FEE($)</th>
                   <th>SEGUCE CHARGE($)</th>
                   <th>ASSAY CGW($)</th>
-                  <th>LOADING ASSIST.($)</th>
               </tr>
           </thead>
           <tbody>
@@ -197,54 +194,6 @@
   <?php include("pied.php");?>
 
 <script type="text/javascript">
-
-  function getBank(id_bank_liq, compteur) {
-    $('#id_bank_liq_'+compteur).val(id_bank_liq);
-  }
-
-  function maj_id_bank_liq(id_dos, id_bank_liq, compteur){
-    $('#spinner-div').show();
-    $.ajax({
-      type: 'post',
-      url: 'ajax.php',
-      data: {id_dos: id_dos, id_bank_liq: id_bank_liq, operation: 'maj_id_bank_liq'},
-      dataType: 'json',
-      success:function(data){
-        if (data.logout) {
-          alert(data.logout);
-          window.location="../deconnexion.php";
-        }else{
-          $('#roe_decl_'+compteur).val(data.roe_decl);
-        }
-      },
-      complete: function () {
-          $('#spinner-div').hide();//Request is complete so hide spinner
-      }
-    });
-
-  }
-
-  function maj_roe_liq(id_dos, roe_liq, compteur){
-    $('#spinner-div').show();
-    $.ajax({
-      type: 'post',
-      url: 'ajax.php',
-      data: {id_dos: id_dos, roe_liq: roe_liq, operation: 'maj_roe_liq'},
-      dataType: 'json',
-      success:function(data){
-        if (data.logout) {
-          alert(data.logout);
-          window.location="../deconnexion.php";
-        }else{
-          $('#roe_liq_'+compteur).val(roe_liq);
-        }
-      },
-      complete: function () {
-          $('#spinner-div').hide();//Request is complete so hide spinner
-      }
-    });
-
-  }
 
   function maj_statut_arsp(ref_fact, statut_arsp){
     $('#spinner-div').show();

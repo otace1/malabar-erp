@@ -93,6 +93,18 @@
 
       </div>
 
+      <div class="col-md-2">
+        
+          <div class="form-group">
+            <label for="inputEmail3" class="col-form-label">ARSP:</label>
+            <select class="form-control form-control-sm" name="statut_arsp" id="statut_arsp" onchange="maj_statut_arsp('<?php echo $_GET['ref_fact'];?>', this.value);" required>
+              <option value="1">Enabled</option>
+              <option value="0">Disabled</option>
+            </select>
+          </div>
+
+      </div>
+
       <div class="col-md-12"></div>
       
       <div class="col-md-5">
