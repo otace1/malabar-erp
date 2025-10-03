@@ -5,6 +5,23 @@ and ref_crf is null
 
 DELIMITER $$
 
+CREATE FUNCTION get_site_dossier(id_dos_P INT)
+
+RETURNS VARCHAR(50)
+DETERMINISTIC
+BEGIN
+    DECLARE nom_site_R VARCHAR(50);
+    SELECT site.nom_site INTO nom_site_R
+	FROM affectation_client_modele_licence aff, dossier dos, site
+	WHERE dos.id_dos = id_dos_P
+		AND dos.id_cli = aff.id_cli
+		AND dos.id_mod_lic = aff.id_mod_lic
+		AND aff.id_site = site.id_site;
+
+	RETURN (nom_site_R);
+END$$
+DELIMITER ;
+
 CREATE FUNCTION get_inv_process_pour_dossier(id_dos_P INT)
 
 RETURNS DECIMAL(30,4)
@@ -1296,6 +1313,8 @@ select deb.nom_deb, REPLACE(round(SUM( IF(det.usd="1", IF(det.tva="1", det.monta
 
 -- ---------- Rapport Factures --------
 SELECT fact.ref_fact AS ref_fact,
+	YEAR(fact.date_fact) AS annee,
+	Date(fact.date_fact) AS date_fact,
 	d.nom_deb AS nom_deb,
 	-- det.tva AS tva,
 	ROUND(SUM( 
@@ -1319,8 +1338,8 @@ SELECT fact.ref_fact AS ref_fact,
 	ml.nom_mod_lic,
 	cl.nom_cli
 FROM facture_dossier fact, detail_facture_dossier det, debours d, dossier dos, modele_licence ml, client cl
-WHERE year(fact.date_fact) = 2024
-	AND fact.id_cli in (869, 898, 855, 857, 858, 916) 
+WHERE year(fact.date_fact) in (2025)
+	AND fact.id_cli in (858) 
 	AND fact.id_mod_lic = ml.id_mod_lic
 	AND fact.id_cli = cl.id_cli
 	AND det.ref_fact = fact.ref_fact
@@ -1328,6 +1347,43 @@ WHERE year(fact.date_fact) = 2024
 	AND det.id_dos = dos.id_dos
 GROUP BY d.id_deb, fact.ref_fact
 ORDER BY d.id_t_deb, d.nom_deb
+
+
+SELECT year(fact.date_fact), fact.ref_fact AS ref_fact,
+	d.nom_deb AS nom_deb,
+	-- det.tva AS tva,
+	ROUND(SUM( 
+		IF(det.usd="1", 
+			det.montant,
+			(det.montant/dos.roe_decl)
+		) 
+	), 2) AS ht_usd,
+	ROUND(SUM(
+		IF(det.usd="1", 
+			IF(det.tva="1",
+				det.montant*0.16,
+				0
+			), 
+			IF(det.tva="1",
+				(det.montant/dos.roe_decl)*0.16,
+				0
+			)
+		)
+	), 2) AS tva_usd,
+	ml.nom_mod_lic,
+	cl.nom_cli
+FROM facture_dossier fact, detail_facture_dossier det, debours d, dossier dos, modele_licence ml, client cl
+WHERE year(fact.date_fact) in (2024, 2025)
+	AND fact.id_cli = 858
+	AND fact.id_mod_lic = ml.id_mod_lic
+	AND fact.id_cli = cl.id_cli
+	AND det.ref_fact = fact.ref_fact
+	AND det.id_deb = d.id_deb
+	AND det.id_dos = dos.id_dos
+GROUP BY d.id_deb, fact.ref_fact
+ORDER BY d.id_t_deb, d.nom_deb
+
+
 -- ---------- FIN Rapport Factures --------
 
 
@@ -1345,3 +1401,294 @@ where det.ref_fact = fd.ref_fact
     and dos.id_march = 1
 )
 and id_deb = 8
+
+-- Rapport Charge Back
+select dos.ref_dos, df.id_df, df.date_create, dep.nom_dep, depdos.montant, IF(df.usd='1', 'USD', 'CDF'),  IF(df.cash='1', 'Cash', 'Bank'), df.beneficiaire, df.libelle, df.date_visa_dept, df.date_visa_fin, df.date_visa_dir, df.date_decaiss, df.ref_decaiss, df.nom_recep_fond
+from dossier dos, depense_dossier depdos, depense dep, demande_fond df
+where dos.id_dos = depdos.id_dos
+	and depdos.id_dep = dep.id_dep
+    and depdos.id_df = df.id_df
+    and df.a_facturer = '1'
+    and df.date_reject_dept is null
+
+
+
+
+
+
+INSERT INTO `detail_facture_dossier` (`ref_fact`, `id_dos`, `id_deb`, `detail`, `montant`, `montant_tva`, `tva`, `usd`, `unite`, `pourcentage_qte`) 
+VALUES 
+	-- DDI
+	('2025-MMG-DIV-338', '1231323681', '32', NULL, '7066203', '0.00', '0', '0', NULL, NULL),
+	-- FPI 
+	('2025-MMG-DIV-338', '1231323681', '95', NULL, '2730380', '0.00', '0', '0', NULL, NULL),
+	-- RII 
+	('2025-MMG-DIV-338', '1231323681', '38', NULL, '3179791', '0.00', '0', '0', NULL, NULL),
+	-- COG 
+	('2025-MMG-DIV-338', '1231323681', '35', NULL, '645851', '0.00', '0', '0', NULL, NULL),
+	-- RLS 
+	('2025-MMG-DIV-338', '1231323681', '3', NULL, '728586', '0.00', '0', '0', NULL, NULL),
+	-- QPT 
+	('2025-MMG-DIV-338', '1231323681', '33', NULL, '2314336', '0.00', '0', '0', NULL, NULL),
+	-- RCO 
+	('2025-MMG-DIV-338', '1231323681', '36', NULL, '35331', '0.00', '0', '0', NULL, NULL),
+	-- CSO 
+	('2025-MMG-DIV-338', '1231323681', '37', NULL, '25438', '0.00', '0', '0', NULL, NULL),
+	-- RET 
+	('2025-MMG-DIV-338', '1231323681', '39', NULL, '94177', '0.00', '0', '0', NULL, NULL),
+	-- RAN 
+	('2025-MMG-DIV-338', '1231323681', '40', NULL, '5935', '0.00', '0', '0', NULL, NULL),
+	-- ANA 
+	('2025-MMG-DIV-338', '1231323681', '41', NULL, '142454', '0.00', '0', '0', NULL, NULL),
+	-- LAB 
+	('2025-MMG-DIV-338', '1231323681', '42', NULL, '422152', '0.00', '0', '0', NULL, NULL),
+	-- ROC 
+	('2025-MMG-DIV-338', '1231323681', '43', NULL, '1286', '0.00', '0', '0', NULL, NULL),
+
+
+
+	-- BIVAC 
+	('2025-MMG-DIV-338', '1231323681', '46', NULL, '45', '0.00', '0', '1', NULL, NULL),
+	-- NAC 
+	('2025-MMG-DIV-338', '1231323681', '47', NULL, '15', '0.00', '0', '1', NULL, NULL),
+	-- Frais Seguce 
+	('2025-MMG-DIV-338', '1231323681', '44', NULL, '120', '0.00', '0', '1', NULL, NULL),
+	-- Scelle Electronique 
+	('2025-MMG-DIV-338', '1231323681', '45', NULL, '35', '0.00', '0', '1', NULL, NULL),
+	-- OPS Cost 
+	('2025-MMG-DIV-338', '1231323681', '100', NULL, '375', '0.00', '0', '1', NULL, NULL),
+	-- Frais Agence 
+	('2025-MMG-DIV-338', '1231323681', '21', NULL, '170', '0.00', '1', '1', NULL, NULL);
+
+
+	-- -----------------------
+
+DELIMITER //
+CREATE PROCEDURE inserer_n_dossier(IN nombre_P INT, IN mask_ref_dos VARCHAR(20), dernier_num_P INT)
+BEGIN
+    DECLARE i INT DEFAULT 1;
+    DECLARE ref_dos_init INT DEFAULT dernier_num_P;
+    WHILE i <= nombre_P DO
+    	SET ref_dos_init = ref_dos_init + 1;
+        INSERT INTO dossier (ref_dos, id_cli, num_lic, id_march, id_mod_lic, id_mod_trans, destination, id_util)
+        VALUES (
+            CONCAT(mask_ref_dos, ref_dos_init),
+            850,
+            'DEC1575043-1F62-EB',
+            1,
+            1,
+            1,
+            'CHINA',
+            214
+        );
+        SET i = i + 1;
+    END WHILE;
+END //
+DELIMITER ;
+
+-- CALL inserer_n_dossier(300, 'EBR-RCU25-', 501)
+-- CALL inserer_n_dossier(18, 'EBR-RCU25-', 801)
+
+
+
+
+
+update facture_dossier
+set date_fact = '2025-07-31'
+where ref_fact in (
+select fd.ref_fact
+from facture_dossier fd, detail_facture_dossier det, dossier dos
+where fd.ref_fact = det.ref_fact
+	and det.id_dos = dos.id_dos
+	and dos.ref_dos in 
+
+('DLM-RF25-039',
+'KAM-RF25-1172',
+'KAM-RF25-1189',
+'KAM-RF25-1125',
+'KAM-RF25-1296',
+'KAM-RF25-1097',
+'KAM-RF25-1295',
+'KIC-RF25-221',
+'KIC-RF25-228',
+'KIC-RF25-229',
+'KIC-RF25-216',
+'KIC-RF25-226',
+'MMG-RF25-329',
+'MMG-RF25-327',
+'SDV-RF25-143')
+
+group by fd.ref_fact
+
+
+
+)
+
+
+SELECT * 
+from facture_dossier
+where date_quit > '2025-07-31'
+	and ref_fact in (
+select fd.ref_fact
+from facture_dossier fd, detail_facture_dossier det, dossier dos
+where fd.ref_fact = det.ref_fact
+	and det.id_dos = dos.id_dos
+	and dos.date_quit <= '2025-07-31'
+group by fd.ref_fact
+
+
+
+)
+
+
+
+
+INSERT INTO `detail_facture_dossier` (`ref_fact`, `id_dos`, `id_deb`, `detail`, `montant`, `montant_tva`, `tva`, `usd`, `unite`, `pourcentage_qte`) VALUES ('2025-MMG-DIV-470', '1231329148', '46', NULL, '540', '0', '0', '1', NULL, NULL);
+
+
+
+-- SEGUCE
+INSERT INTO `detail_facture_dossier` (`ref_fact`, `id_dos`, `id_deb`, `detail`, `montant`, `montant_tva`, `tva`, `usd`, `unite`, `pourcentage_qte`) 
+SELECT '2025-MMG-DIV-470', id_dos, 44, NULL, 120, 0, '0', '1', NULL, NULL
+from dossier 
+where ref_dos in ('MMG-RF25-249');
+-- Electronic Seal
+INSERT INTO `detail_facture_dossier` (`ref_fact`, `id_dos`, `id_deb`, `detail`, `montant`, `montant_tva`, `tva`, `usd`, `unite`, `pourcentage_qte`) 
+SELECT '2025-MMG-DIV-470', id_dos, 234, NULL, 35, 0, '0', '1', NULL, NULL
+from dossier 
+where ref_dos in ('MMG-RF25-249');
+-- Electronic Seal
+INSERT INTO `detail_facture_dossier` (`ref_fact`, `id_dos`, `id_deb`, `detail`, `montant`, `montant_tva`, `tva`, `usd`, `unite`, `pourcentage_qte`) 
+SELECT '2025-MMG-DIV-470', id_dos, 100, NULL, 375, 0, '0', '1', NULL, NULL
+from dossier 
+where ref_dos in ('MMG-RF25-249');
+-- Agency Fee
+INSERT INTO `detail_facture_dossier` (`ref_fact`, `id_dos`, `id_deb`, `detail`, `montant`, `montant_tva`, `tva`, `usd`, `unite`, `pourcentage_qte`) 
+SELECT '2025-MMG-DIV-470', id_dos, 21, NULL, 170, 0, '0', '1', NULL, NULL
+from dossier 
+where ref_dos in ('MMG-RF25-249');
+
+
+
+-- Rapport licence Export
+SELECT l.num_lic, l.date_val, exp.date_exp, REPLACE(l.poids, '.', ','), REPLACE(l.fob, '.', ','), cl.nom_cli, d.ref_dos, d.num_lot, REPLACE(d.poids, '.', ','), REPLACE(d.fob, '.', ','), mt.nom_mod_trans, d.road_manif, d.horse, d.trailer_1, d.trailer_2, d.ref_decl, d.date_decl, d.ref_liq, d.date_liq, d.ref_quit, d.date_quit
+from licence l
+left join expiration_licence exp
+	on l.num_lic = exp.num_lic
+    	and exp.id_etat = '1'
+left join dossier d
+	on d.num_lic = l.num_lic
+left join mode_transport mt
+	on d.id_mod_trans = mt.id_mod_trans
+left join client cl
+	on cl.id_cli = l.id_cli
+where YEAR(l.date_val) = 2025
+	and month(l.date_val) in ('7', '8')
+	and l.id_mod_lic = 1
+
+
+
+
+DELIMITER $$
+
+CREATE FUNCTION get_sum_detail_facture_dossier_type_debours(id_dos_P INT, id_t_deb_P INT)
+
+RETURNS DECIMAL(30, 4)
+DETERMINISTIC
+BEGIN
+    DECLARE montant_R DECIMAL(30, 4);
+    SELECT SUM(
+				IF(det.usd='1', 
+					IF(det.tva='1',
+						det.montant*1.16,
+						det.montant
+					), 
+					IF(det.tva='1',
+						IF(det.montant_tva>0,
+							((det.montant_tva+det.montant)/dos.roe_decl),
+							(det.montant/dos.roe_decl)*1.16
+						),
+						(det.montant/dos.roe_decl)
+					)
+				)
+			) INTO montant_R
+	FROM detail_facture_dossier det, dossier dos, debours deb
+	WHERE dos.id_dos = id_dos_P
+		AND dos.id_dos = det.id_dos
+		AND deb.id_deb = det.id_deb
+		AND deb.id_t_deb = id_t_deb_P;
+
+	RETURN (montant_R);
+END$$
+DELIMITER ;
+
+-- Finance Cost
+select det.ref_fact AS ref_fact, det.id_dos AS id_dos, ROUND(SUM(
+				IF(det.usd='1', 
+					IF(det.tva='1',
+						det.montant*1.16,
+						det.montant
+					), 
+					IF(det.tva='1',
+						IF(det.montant_tva>0,
+							((det.montant_tva+det.montant)/dos.roe_decl),
+							(det.montant/dos.roe_decl)*1.16
+						),
+						(det.montant/dos.roe_decl)
+					)
+				)
+			), 4) AS montant,
+            ROUND((SUM(
+				IF(det.usd='1', 
+					IF(det.tva='1',
+						det.montant*1.16,
+						det.montant
+					), 
+					IF(det.tva='1',
+						IF(det.montant_tva>0,
+							((det.montant_tva+det.montant)/dos.roe_decl),
+							(det.montant/dos.roe_decl)*1.16
+						),
+						(det.montant/dos.roe_decl)
+					)
+				)
+			)*0.015), 4) AS finance_charge,
+            ROUND(((SUM(
+				IF(det.usd='1', 
+					IF(det.tva='1',
+						det.montant*1.16,
+						det.montant
+					), 
+					IF(det.tva='1',
+						IF(det.montant_tva>0,
+							((det.montant_tva+det.montant)/dos.roe_decl),
+							(det.montant/dos.roe_decl)*1.16
+						),
+						(det.montant/dos.roe_decl)
+					)
+				)
+			)*0.015)-(120*0.015*COUNT(dos.id_dos))), 4) AS finance_cost
+from detail_facture_dossier det, dossier dos, debours deb
+WHERE det.ref_fact in ('2025-STL-EXP-ZN-059', '2025-STL-EXP-ZN-060', '2025-STL-EXP-ZN-061')
+	and det.id_dos = dos.id_dos
+	and det.id_deb = deb.id_deb
+    and deb.id_t_deb = 1
+    and deb.id_deb <> 54
+group by det.ref_fact
+
+
+
+
+update detail_facture_dossier
+set montant = montant - (120*0.015*N)
+where ref_fact = '2025-STL-EXP-ZN-061'
+and id_deb = 213
+
+-- Loading Ass GCM
+insert into detail_facture_dossier(id_dos, id_deb, montant, usd, ref_fact)
+
+select dos.id_dos, 247, (dos.poids*1000)/dos.roe_decl, '1', det.ref_fact
+from detail_facture_dossier det, dossier dos
+where det.id_dos = dos.id_dos
+and det.ref_fact like '2025-GDI-CU-%'
+group by dos.id_dos
