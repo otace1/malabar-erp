@@ -11,6 +11,8 @@
     <?php
   }
 
+  $dossier = $maClasse-> getDossier($maClasse-> getDossierFacturePartielle($_GET['ref_fact']));
+  $facture_dossier = $maClasse-> getFactureGlobale($_GET['ref_fact']);
 
 ?>
   <!-- /.navbar -->
@@ -42,44 +44,27 @@
 
               <div class="card-body table-responsive p-0">
                 
-<!-- <form id="enregistrerFactureExportSingle_form" method="POST" action="" data-parsley-validate enctype="multipart/form-data"> -->
-<form method="POST" id="enregistrerFactureExportSingle_form" action="" data-parsley-validate enctype="multipart/form-data">
-  <input type="hidden" name="operation" id="operation" value="enregistrerFactureExportSingle">
+<!-- <form id="editerFactureExportSingle_form" method="POST" action="" data-parsley-validate enctype="multipart/form-data"> -->
+<form method="POST" id="editerFactureExportSingle_form" action="" data-parsley-validate enctype="multipart/form-data">
+  <input type="hidden" name="operation" id="operation" value="editerFactureExportSingle">
 
   <div class="card-body">
 
     <div class="row">
       
-      <input type="hidden" name="id_cli" value="<?php echo $_GET['id_cli'];?>">
-      <input type="hidden" name="id_mod_lic" value="<?php echo $_GET['id_mod_lic_fact'];?>">
-      <input type="hidden" name="id_march" value="<?php echo $_GET['id_march'];?>">
-      <input type="hidden" name="id_mod_fact" value="<?php echo $_GET['id_mod_fact'];?>">
-      <input type="hidden" name="id_mod_trans" value="<?php echo $_GET['id_mod_trans'];?>">
+      <input type="hidden" name="ref_fact" value="<?php echo $_GET['ref_fact'];?>">
+      <input type="hidden" name="id_dos" value="<?php echo $dossier['id_dos'];?>">
       <div class="col-md-4">
         <label for="ref_fact" class="col-sm-4 col-form-label">Invoice Ref.: </label>
-        <input class="form-control form-control-sm bg bg-dark" type="text" name="ref_fact" id="ref_fact" value="<?php echo $maClasse-> buildRefFactureGlobale($_GET['id_cli']);?>">
+        <input class="form-control form-control-sm bg bg-dark" type="text" name="ref_fact" id="ref_fact" value="<?php echo $_GET['ref_fact'];?>">
       </div>
 
       <div class="col-md-4">
         <label for="inputEmail3" class="col-sm-3 col-form-label">Files Ref.:</label>
-        <select class="form-control form-control-sm" name="id_dos" id="id_dos" onchange="getTableauExportInvoiceSingle(id_mod_fact.value, this.value, id_mod_lic.value, id_march.value, id_mod_trans.value)" required>
-          <option></option>
-          <?php
-            $maClasse-> selectionnerDossierClientModeleLicenceMarchandise($_GET['id_cli'], $_GET['id_mod_lic_fact'], $_GET['id_march'], $_GET['id_mod_trans'], $_GET['num_lic']);
-          ?>
-        </select>
+        <input id="label_ref_dos" value="<?php echo $dossier['ref_dos'];?>" class="form-control form-control-sm" disabled>
       </div>
 
       <div class="col-12"><hr></div>
-      <div class="col-md-2">
-        <label for="id_bank_liq">Bank</label>
-        <select id="id_bank_liq" name="id_bank_liq" onchange="maj_id_bank_liq(id_dos.value, this.value);" class="form-control form-control-sm" required>
-          <option></option>
-          <?php
-            $maClasse-> selectionnerBanqueLiquidation();
-          ?>
-        </select>
-      </div>
       <div class="col-md-2">
         <label for="roe_decl">Rate</label>
         <input id="roe_decl" name="roe_decl" type="number" step="0.0001" min="1" class="form-control form-control-sm" required>
@@ -92,7 +77,7 @@
         <label for="poids">Qty(Mt)</label>
         <input id="poids" name="poids" type="number" class="form-control form-control-sm" disabled>
       </div>
-      <div class="col-md-2">
+      <div class="col-md-4">
         <label for="truck">Truck/Wagon</label>
         <input id="truck" name="truck" type="text" class="form-control form-control-sm" disabled>
       </div>
@@ -128,7 +113,7 @@
 <!-- -------VALIDATION FORMULAIRE------- -->
 
   <div class="modal-footer justify-content-between">
-    <!-- <span  data-toggle="modal" data-target=".validerCotation"class="btn btn-xs btn-primary" onclick="enregistrerFactureExportSingle(roe_decl.value, id_dos.value, ref_fact.value, id_deb_1.value, montant_1.value, usd_1.value, tva_1.value);">Submit</span> -->
+    <!-- <span  data-toggle="modal" data-target=".validerCotation"class="btn btn-xs btn-primary" onclick="editerFactureExportSingle(roe_decl.value, id_dos.value, ref_fact.value, id_deb_1.value, montant_1.value, usd_1.value, tva_1.value);">Submit</span> -->
     <button type="submit" class="btn btn-xs btn-primary">Submit</button>
   </div>
 
@@ -152,95 +137,48 @@
 
 <script type="text/javascript">
 
-  function getBank(id_bank_liq, compteur) {
-    $('#id_bank_liq_'+compteur).val(id_bank_liq);
-  }
-
-  function maj_id_bank_liq(id_dos, id_bank_liq){
-    $('#spinner-div').show();
-    $.ajax({
-      type: 'post',
-      url: 'ajax.php',
-      data: {id_dos: id_dos, id_bank_liq: id_bank_liq, operation: 'maj_id_bank_liq'},
-      dataType: 'json',
-      success:function(data){
-        if (data.logout) {
-          alert(data.logout);
-          window.location="../deconnexion.php";
-        }else{
-          $('#roe_decl').val(data.roe_decl);
-        }
-      },
-      complete: function () {
-          $('#spinner-div').hide();//Request is complete so hide spinner
-      }
-    });
-
-  }
-
-  function maj_roe_liq(id_dos, roe_liq){
-    $('#spinner-div').show();
-    $.ajax({
-      type: 'post',
-      url: 'ajax.php',
-      data: {id_dos: id_dos, roe_liq: roe_liq, operation: 'maj_roe_liq'},
-      dataType: 'json',
-      success:function(data){
-        if (data.logout) {
-          alert(data.logout);
-          window.location="../deconnexion.php";
-        }else{
-          $('#roe_liq').val(roe_liq);
-        }
-      },
-      complete: function () {
-          $('#spinner-div').hide();//Request is complete so hide spinner
-      }
-    });
-
-  }
-
   function round(num, decimalPlaces = 0) {
     return new Decimal(num).toDecimalPlaces(decimalPlaces).toNumber();
   }
 
-  function getTableauExportInvoiceSingle(id_mod_fact, id_dos, id_mod_lic, id_march, id_mod_trans){
-    if ($('#id_dos').val()===null || $('#id_dos').val()==='' ) {
+  
+  $(document).ready(function(){
 
-      alert('Error !! Please select the file.');
+    getTableauExportInvoiceSingle();
 
-    }else{
-      $('#spinner-div').show();
-      $.ajax({
-        type: "POST",
-        url: "ajax.php",
-        data: { id_mod_fact: id_mod_fact, id_dos: id_dos, id_mod_lic: id_mod_lic, id_march:id_march, id_mod_trans:id_mod_trans, operation: 'getTableauExportInvoiceSingle'},
-        dataType:"json",
-        success:function(data){
-          if (data.logout) {
-            alert(data.logout);
-            window.location="../deconnexion.php";
-          }else{
-            // alert('Hello');
-            $('#roe_decl').val(data.roe_decl);
-            $('#id_bank_liq').val(data.id_bank_liq);
-            $('#num_lot').val(data.num_lot);
-            $('#container').val(data.container);
-            $('#truck').val(data.truck);
-            $('#poids').val(Math.round((data.poids*1000))/1000);
-            $('#debours').html(data.debours);
+  });  
 
-          }
-        },
-        complete: function () {
-            $('#spinner-div').hide();//Request is complete so hide spinner
+  function getTableauExportInvoiceSingle(){
+  
+    $('#spinner-div').show();
+    $.ajax({
+      type: "POST",
+      url: "ajax.php",
+      data: { ref_fact: "<?php echo $facture_dossier['ref_fact'];?>", id_mod_fact: "<?php echo $facture_dossier['id_mod_fact'];?>", id_dos: "<?php echo $dossier['id_dos'];?>", id_mod_lic: "<?php echo $dossier['id_mod_lic'];?>", id_march:"<?php echo $dossier['id_march'];?>", id_mod_trans:"<?php echo $dossier['id_mod_trans'];?>", operation: 'getTableauExportInvoiceSingle_edit'},
+      dataType:"json",
+      success:function(data){
+        if (data.logout) {
+          alert(data.logout);
+          window.location="../deconnexion.php";
+        }else{
+          // alert('Hello');
+          $('#roe_decl').val(data.roe_decl);
+          $('#num_lot').val(data.num_lot);
+          $('#container').val(data.container);
+          $('#truck').val(data.truck);
+          $('#poids').val(Math.round((data.poids*1000))/1000);
+          $('#debours').html(data.debours);
+
         }
-      });
-    }
+      },
+      complete: function () {
+          $('#spinner-div').hide();//Request is complete so hide spinner
+      }
+    });
 
   }
 
-  function enregistrerFactureExportSingle(roe_decl, id_dos, ref_fact, id_deb_1, montant_1, usd_1, tva_1){
+  function editerFactureExportSingle(roe_decl, id_dos, ref_fact, id_deb_1, montant_1, usd_1, tva_1){
 
     // var ref_po = $('#ref_po').val();
 
@@ -258,7 +196,7 @@
         $.ajax({
           type: "POST",
           url: "ajax.php",
-          data: { roe_decl: roe_decl, id_deb_1: id_deb_1, montant_1: montant_1, usd_1: usd_1, tva_1: tva_1, operation: 'enregistrerFactureExportSingle'},
+          data: { roe_decl: roe_decl, id_deb_1: id_deb_1, montant_1: montant_1, usd_1: usd_1, tva_1: tva_1, operation: 'editerFactureExportSingle'},
           dataType:"json",
           success:function(data){
             if (data.logout) {
@@ -288,7 +226,7 @@
 
   $(document).ready(function(){
 
-      $('#enregistrerFactureExportSingle_form').submit(function(e){
+      $('#editerFactureExportSingle_form').submit(function(e){
 
               e.preventDefault();
 
@@ -316,7 +254,7 @@
                   alert(data.logout);
                   window.location="../deconnexion.php";
                 }else if(data.message){
-                  $( '#enregistrerFactureExportSingle_form' ).each(function(){
+                  $( '#editerFactureExportSingle_form' ).each(function(){
                       this.reset();
                   });
                   $('#ref_fact').val(data.ref_fact);
@@ -325,7 +263,7 @@
                   alert(data.message);
                   // window.open('viewExportInvoiceSingle2022.php?ref_fact='+fd.get('ref_fact'),'pop1','width=1000,height=800');
                   window.open('viewExportInvoiceMultiple2022.php?ref_fact='+fd.get('ref_fact'),'pop1','width=1000,height=800');
-                  window.location="listerFactureDossier.php?id_cli=<?php echo $_GET['id_cli'];?>&id_mod_lic_fact=<?php echo $_GET['id_mod_lic_fact']?>";
+                  window.location="listerFactureDossier.php?id_cli=<?php echo $facture_dossier['id_cli'];?>&id_mod_lic_fact=<?php echo $facture_dossier['id_mod_lic'];?>";
                 }
               },
               complete: function () {

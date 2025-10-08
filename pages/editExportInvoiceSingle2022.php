@@ -66,6 +66,15 @@
 
       <div class="col-12"><hr></div>
       <div class="col-md-2">
+        <label for="id_bank_liq">Bank</label>
+        <select id="id_bank_liq" name="id_bank_liq" onchange="maj_id_bank_liq(<?php echo $dossier['id_dos'];?>, this.value);" class="form-control form-control-sm" required>
+          <option></option>
+          <?php
+            $maClasse-> selectionnerBanqueLiquidation();
+          ?>
+        </select>
+      </div>
+      <div class="col-md-2">
         <label for="roe_decl">Rate</label>
         <input id="roe_decl" name="roe_decl" type="number" step="0.0001" min="1" class="form-control form-control-sm" required>
       </div>
@@ -77,7 +86,7 @@
         <label for="poids">Qty(Mt)</label>
         <input id="poids" name="poids" type="number" class="form-control form-control-sm" disabled>
       </div>
-      <div class="col-md-4">
+      <div class="col-md-2">
         <label for="truck">Truck/Wagon</label>
         <input id="truck" name="truck" type="text" class="form-control form-control-sm" disabled>
       </div>
@@ -137,6 +146,50 @@
 
 <script type="text/javascript">
 
+  function maj_id_bank_liq(id_dos, id_bank_liq){
+    $('#spinner-div').show();
+    $.ajax({
+      type: 'post',
+      url: 'ajax.php',
+      data: {id_dos: id_dos, id_bank_liq: id_bank_liq, operation: 'maj_id_bank_liq'},
+      dataType: 'json',
+      success:function(data){
+        if (data.logout) {
+          alert(data.logout);
+          window.location="../deconnexion.php";
+        }else{
+          $('#roe_decl').val(data.roe_decl);
+        }
+      },
+      complete: function () {
+          $('#spinner-div').hide();//Request is complete so hide spinner
+      }
+    });
+
+  }
+
+  function maj_roe_liq(id_dos, roe_liq){
+    $('#spinner-div').show();
+    $.ajax({
+      type: 'post',
+      url: 'ajax.php',
+      data: {id_dos: id_dos, roe_liq: roe_liq, operation: 'maj_roe_liq'},
+      dataType: 'json',
+      success:function(data){
+        if (data.logout) {
+          alert(data.logout);
+          window.location="../deconnexion.php";
+        }else{
+          $('#roe_liq').val(roe_liq);
+        }
+      },
+      complete: function () {
+          $('#spinner-div').hide();//Request is complete so hide spinner
+      }
+    });
+
+  }
+
   function round(num, decimalPlaces = 0) {
     return new Decimal(num).toDecimalPlaces(decimalPlaces).toNumber();
   }
@@ -163,6 +216,7 @@
         }else{
           // alert('Hello');
           $('#roe_decl').val(data.roe_decl);
+            $('#id_bank_liq').val(data.id_bank_liq);
           $('#num_lot').val(data.num_lot);
           $('#container').val(data.container);
           $('#truck').val(data.truck);
