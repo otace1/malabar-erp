@@ -24965,7 +24965,8 @@
 													CONCAT(ref_decl, ' ', DATE_FORMAT(date_decl, '%d/%m/%Y')) AS declaration,
 													CONCAT(ref_liq, ' ', DATE_FORMAT(date_liq, '%d/%m/%Y')) AS liquidation,
 													CONCAT(ref_quit, ' ', DATE_FORMAT(date_quit, '%d/%m/%Y')) AS quittance,
-													horse, trailer_1, trailer_2
+													horse, trailer_1, trailer_2,
+													id_cli, id_mod_lic
 											FROM dossier
 											WHERE id_cli = ?
 												AND id_mod_lic = ?
@@ -25046,6 +25047,15 @@
 				<td style="text-align: center;">
 					<input type="checkbox" id="check_<?php echo $compteur;?>" name="check_<?php echo $compteur;?>" class="bg bg-dark">
 				</td>
+				<?php
+				if($this-> get_aff_client_modele_licence($reponse['id_cli'], $reponse['id_mod_lic'])['bank_rate']=='0'){
+					?>
+				<td>
+					<input type="number" min="0" step="0.000001" style="text-align: center; width: 8em;" onblur="calculDDE(<?php echo $compteur;?>);" id="roe_decl_<?php echo $compteur;?>" name="roe_decl_<?php echo $compteur;?>" value="<?php echo $reponse['roe_decl'];?>" class="bg bg-dark">
+				</td>
+					<?php
+				}else{
+					?>
 				<script type="text/javascript">
 					$(document).ready(function(){
 						getBank(<?php echo $reponse['id_bank_liq'];?>, <?php echo $compteur;?>);
@@ -25063,6 +25073,9 @@
 				<td>
 					<input type="number" min="0" step="0.000001" style="text-align: center; width: 8em;" onblur="maj_roe_liq(<?php echo $reponse['id_dos'];?>, this.value, <?php echo $compteur;?>);calculDDE(<?php echo $compteur;?>);" id="roe_liq_<?php echo $compteur;?>" name="roe_liq_<?php echo $compteur;?>" value="<?php echo $reponse['roe_liq'];?>" class="bg bg-dark">
 				</td>
+					<?php
+				}
+				?>
 				<td>
 					<input type="number" min="0" style="text-align: center; width: 8em;" onblur="calculDDE(<?php echo $compteur;?>);" id="dde_<?php echo $compteur;?>" name="dde_<?php echo $compteur;?>" class="bg bg-dark">
 					<input type="hidden" style="text-align: center; width: 8em;" name="dde_tva_<?php echo $compteur;?>" id="tva_<?php echo $compteur;?>" value="0" class="bg bg-dark">
@@ -26851,6 +26864,8 @@
 			$requete = $connexion-> prepare("SELECT dos.ref_dos AS ref_dos, 
 													dos.id_dos AS id_dos, 
 													dos.num_lot AS num_lot, 
+													dos.id_cli AS id_cli, 
+													dos.id_mod_lic AS id_mod_lic, 
 													dos.horse AS horse, 
 													dos.trailer_1 AS trailer_1, 
 													dos.trailer_2 AS trailer_2, 
@@ -26906,6 +26921,15 @@
 				<td style="text-align: center;">
 					<input type="checkbox" id="check_<?php echo $compteur;?>" name="check_<?php echo $compteur;?>" checked class="bg bg-dark">
 				</td>
+				<?php
+				if($this-> get_aff_client_modele_licence($reponse['id_cli'], $reponse['id_mod_lic'])['bank_rate']=='0'){
+					?>
+				<td>
+					<input type="number" min="0" step="0.000001" style="text-align: center; width: 8em;" onblur="calculDDE(<?php echo $compteur;?>);" id="roe_decl_<?php echo $compteur;?>" name="roe_decl_<?php echo $compteur;?>" value="<?php echo $reponse['roe_decl'];?>" class="bg bg-dark">
+				</td>
+					<?php
+				}else{
+					?>
 				<script type="text/javascript">
 					$(document).ready(function(){
 						getBank(<?php echo $reponse['id_bank_liq'];?>, <?php echo $compteur;?>);
@@ -26923,6 +26947,9 @@
 				<td>
 					<input type="number" min="0" step="0.000001" style="text-align: center; width: 8em;" onblur="maj_roe_liq(<?php echo $reponse['id_dos'];?>, this.value, <?php echo $compteur;?>);calculDDE(<?php echo $compteur;?>);" id="roe_liq_<?php echo $compteur;?>" name="roe_liq_<?php echo $compteur;?>" value="<?php echo $reponse['roe_liq'];?>" class="bg bg-dark">
 				</td>
+					<?php
+				}
+				?>
 				<td>
 					<input type="number" min="0" style="text-align: center; width: 8em;" onblur="calculDDE(<?php echo $compteur;?>);" id="dde_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDataDetailFacture($ref_fact, $reponse['id_dos'], 2)['montant'];?>" name="dde_<?php echo $compteur;?>" class="bg bg-dark">
 					<input type="hidden" style="text-align: center; width: 8em;" name="dde_tva_<?php echo $compteur;?>" id="tva_<?php echo $compteur;?>" value="0" class="bg bg-dark">
@@ -58067,10 +58094,13 @@
 												WHERE id_taux_bcc = ?');
 			while ($reponse = $requete-> fetch()) {
 				
-				$requete2 = $connexion-> prepare('UPDATE dossier 
-													SET roe_decl = ?
-													WHERE id_bank_liq = ? 
-														AND date_quit = ?');
+				$requete2 = $connexion-> prepare('UPDATE dossier dos, affectation_client_modele_licence aff
+													SET dos.roe_decl = ?
+													WHERE dos.id_bank_liq = ? 
+														AND dos.date_quit = ?
+														AND dos.id_cli = aff.id_cli
+														AND dos.id_mod_lic = aff.id_mod_lic
+														AND aff.bank_rate = "1"');
 				$requete2-> execute(array($reponse['montant'], $reponse['id_banq'], $reponse['date_taux']));
 
 			}$requete-> closeCursor();
@@ -63598,6 +63628,22 @@
 			$reponse = $requete-> fetch();
 
 			return $reponse['montant'];
+
+		}
+
+		public function get_aff_client_modele_licence($id_cli, $id_mod_lic){
+			include('connexion.php');
+
+			$entree['id_cli'] = $id_cli;
+			$entree['id_mod_lic'] = $id_mod_lic;
+
+			$requete = $connexion-> prepare("SELECT *
+											FROM affectation_client_modele_licence aff
+											WHERE aff.id_cli = ?
+												AND aff.id_mod_lic = ?");
+			$requete-> execute(array($entree['id_cli'], $entree['id_mod_lic']));
+			$reponse = $requete-> fetch();
+			return $reponse;
 
 		}
 
