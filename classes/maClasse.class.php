@@ -24438,7 +24438,7 @@
 			$access_preced = 0;
 
 			$requete = $connexion-> query("SELECT * FROM (
-												SELECT * FROM taux_bcc ORDER BY date_taux DESC LIMIT 0, 20
+												SELECT * FROM taux_bcc ORDER BY date_taux DESC LIMIT 0, 10
 											) Var1
 											ORDER BY date_taux ASC");
 			// $requete-> execute(array($entree['id_mod_lic'], $entree['id_cli']));
@@ -63646,6 +63646,87 @@
 			return $reponse;
 
 		}
+
+		public function monitoring_roe_decl(){
+			include('connexion.php');
+
+			$rows = array();
+			$compteur = 0;
+
+			$requete = $connexion-> query("SELECT DATE_FORMAT(dos.date_decl, '%d/%m/%Y') AS date_decl, 
+												dos.roe_decl AS roe_decl,
+												CONCAT('<a class=\"dropdown-item\" href=\"#\" onclick=\"window.open(\'popUpRoe_decl.php?date_decl=',dos.date_decl,'&roe_decl=',dos.roe_decl,'&bank_rate=0\',\'popUpRoe_decl\', \'width=1000,height=800\');\">',COUNT(dos.id_dos),'</a>') AS nbre_dos
+											FROM dossier dos, affectation_client_modele_licence aff
+											WHERE dos.id_mod_lic = aff.id_mod_lic
+												AND dos.id_cli = aff.id_cli
+												AND aff.bank_rate = '0'
+												AND (dos.date_decl IS NOT NULL AND dos.roe_decl IS NOT NULL)
+												AND DATE(dos.date_decl) > '2025-09-01'
+											GROUP BY dos.date_decl , dos.roe_decl
+											ORDER BY dos.date_decl DESC");
+			// $requete-> execute(array($entree['nom_dep']));
+			while($reponse = $requete-> fetch()){
+
+				$compteur++;
+				$reponse['compteur'] = $compteur;
+				$rows[] = $reponse;
+
+			}$requete-> closeCursor();
+
+			return $rows;
+
+		}
+
+		public function report_roe_decl($date_decl, $roe_decl){
+			include('connexion.php');
+
+			$entree['date_decl'] = $date_decl;
+			$entree['roe_decl'] = $roe_decl;
+
+			$rows = array();
+			$compteur = 0;
+
+			$requete = $connexion-> prepare("SELECT DATE_FORMAT(dos.date_decl, '%d/%m/%Y') AS date_decl, 
+												dos.ref_decl AS ref_decl,
+												dos.roe_decl AS roe_decl,
+												dos.ref_dos AS ref_dos,
+												ml.nom_mod_lic AS nom_mod_lic
+											FROM dossier dos, affectation_client_modele_licence aff, modele_licence ml
+											WHERE dos.id_mod_lic = aff.id_mod_lic
+												AND dos.id_cli = aff.id_cli
+												AND aff.bank_rate = '0'
+												AND aff.id_mod_lic = ml.id_mod_lic
+												AND (dos.date_decl IS NOT NULL AND dos.roe_decl IS NOT NULL)
+												AND dos.date_decl = ?
+												AND dos.roe_decl = ?");
+			$requete-> execute(array($entree['date_decl'], $entree['roe_decl']));
+			while($reponse = $requete-> fetch()){
+
+				$compteur++;
+				$reponse['compteur'] = $compteur;
+				$rows[] = $reponse;
+
+			}$requete-> closeCursor();
+
+			return $rows;
+
+		}
+
+		public function new_roe_decl($roe_decl, $date_decl){
+
+			include('connexion.php');
+			$entree['date_decl'] = $date_decl;
+			$entree['roe_decl'] = $roe_decl;
+			
+			$requete = $connexion-> prepare('UPDATE dossier dos, affectation_client_modele_licence aff
+												SET dos.roe_decl = ?
+												WHERE dos.date_decl = ?
+													AND dos.id_cli = aff.id_cli
+													AND dos.id_mod_lic = aff.id_mod_lic
+													AND aff.bank_rate = "0"');
+			$requete-> execute(array($entree['roe_decl'], $entree['date_decl']));
+
+		} 
 
 	}
 ?>
