@@ -241,6 +241,16 @@ $id_mon_autre_frais = $maClasse-> getMonnaie($maClasse-> getDataDossiersMultiple
 
 $nom_banq = $maClasse-> getDataBancaire($maClasse-> getDataDossiersMultipleInvoice($_GET['ref_fact'])['id_bank_liq'])['nom_banq'];
 
+if($maClasse-> get_aff_client_modele_licence($maClasse-> getFactureGlobale($_GET['ref_fact'])['id_cli'], $maClasse-> getFactureGlobale($_GET['ref_fact'])['id_mod_lic'])['bank_rate']=='0'){
+
+	$roe_liq = $roe_decl;
+
+}else{
+
+	$roe_liq =  number_format($maClasse-> getDataDossiersMultipleInvoice($_GET['ref_fact'])['roe_liq'], 4, ',', '.');
+	
+}
+
 $banque = '<tr>
 			<td width="10%" style="border-top: 1px solid black; border-left: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;INTITULE</td>
 			<td width="35%" style="border-top: 1px solid black; border-right: 1px solid black;  font-size: 7px;">&nbsp;MALABAR CLEARING AGENCY SARL</td>

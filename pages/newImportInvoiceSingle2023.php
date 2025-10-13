@@ -174,6 +174,18 @@
               <th>Assurance <span id="mon_assurance"></span></th>
               <th><input style="text-align: center; width: 9em;" id="assurance_usd" name="assurance_usd" onblur="maj_assurance_usd(id_dos.value, this.value);calculCIF();" class="" type="number" step="0.000001" min="0" required></th>
             </tr>
+            <?php
+              if($maClasse-> get_aff_client_modele_licence($_GET['id_cli'], $_GET['id_mod_lic_fact'])['bank_rate']=='0'){
+              ?>
+            <tr>
+              <th>Rate (CDF/<span id="label_mon_fob"></span>) INV.</th>
+              <th><input style="text-align: center; width: 9em;" id="roe_inv" name="roe_inv" onblur="maj_roe_inv(id_dos.value, this.value);" type="number" step="0.000001" min="1" required></th>
+              <th>Rate(CDF/USD) BCC</th>
+              <th><input style="text-align: center; width: 9em;" id="roe_decl" name="roe_decl" onblur="maj_roe_decl(id_dos.value, this.value);" type="number" step="0.000001" min="1" required></th>
+            </tr>
+              <?php
+              }else{
+              ?>
             <tr>
               <th>Bank</th>
               <th>
@@ -193,6 +205,9 @@
               <th>Rate(CDF/USD) BCC</th>
               <th><input style="text-align: center; width: 9em;" id="roe_liq" name="roe_liq" onblur="maj_roe_liq(id_dos.value, this.value);" type="number" step="0.000001" min="1" required></th>
             </tr>
+              <?php
+              }
+            ?>
             <tr>
               <th>CIF (<span id="label_mon_cif"></span>)</th>
               <th><input style="text-align: center; width: 9em; font-weight: bold;" id="cif_usd" class="bg bg-primary" disabled></th>

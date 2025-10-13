@@ -1,4 +1,5 @@
 <?php
+
 //============================================================+
 // File name   : generateurFacture.php
 // Begin       : 18/04/2018
@@ -18,6 +19,8 @@ header('Content-type: text/html; charset=UTF-8');
 
 include_once('../classes/maClasse.class.php');
 $maClasse = new MaClasse();
+
+
 
 require_once('../tcpdf/tcpdf.php');
 
@@ -204,7 +207,16 @@ $id_mon_fret = $maClasse-> getMonnaie($maClasse-> getDataDossiersMultipleInvoice
 $id_mon_assurance = $maClasse-> getMonnaie($maClasse-> getDataDossiersMultipleInvoice($_GET['ref_fact'])['id_mon_assurance'])['sig_mon'];
 $id_mon_autre_frais = $maClasse-> getMonnaie($maClasse-> getDataDossiersMultipleInvoice($_GET['ref_fact'])['id_mon_autre_frais'])['sig_mon'];
 
-$roe_liq =  number_format($maClasse-> getDataDossiersMultipleInvoice($_GET['ref_fact'])['roe_liq'], 4, ',', '.');
+if($maClasse-> get_aff_client_modele_licence($maClasse-> getFactureGlobale($_GET['ref_fact'])['id_cli'], $maClasse-> getFactureGlobale($_GET['ref_fact'])['id_mod_lic'])['bank_rate']=='0'){
+
+	$roe_liq = $roe_decl;
+
+}else{
+
+	$roe_liq =  number_format($maClasse-> getDataDossiersMultipleInvoice($_GET['ref_fact'])['roe_liq'], 4, ',', '.');
+	
+}
+
 $nom_banq = $maClasse-> getDataBancaire($maClasse-> getDataDossiersMultipleInvoice($_GET['ref_fact'])['id_bank_liq'])['nom_banq'];
 
 $banque = '<tr>

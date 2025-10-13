@@ -113,9 +113,19 @@
                   <th style="text-align: center;">Truck(Wagon)</th>
                   <th>Qty(Mt)</th>
                   <th>Action</th>
+                  <?php
+                  if($maClasse-> get_aff_client_modele_licence($_GET['id_cli'], $_GET['id_mod_lic_fact'])['bank_rate']=='0'){
+                    ?>
+                  <th>Rate</th>
+                    <?php
+                  }else{
+                    ?>
                   <th>Bank</th>
                   <th>Bank Rate</th>
                   <th>BCC Rate</th>
+                    <?php
+                  }
+                  ?>
                   <th>DDE(CDF)</th>
                   <th>RIE(CDF)</th>
                   <th>RLS(CDF)</th>
