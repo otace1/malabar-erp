@@ -1,5 +1,5 @@
 <?php
-  include("tete.php");
+  include("tetePopCDN.php");
   include("menuHaut.php");
   include("menuGauche.php");
 
@@ -230,7 +230,7 @@
                     <div class="card">
                       <div class="card-header">
                         <h5 class="card-title" style="font-weight: bold;">
-                          Rate of exchange management
+                          Bank Rate of exchange management
                         </h5>
                         <div class="float-right">
                           <button class="btn btn-success btn-xs"onclick="window.location.replace('exportTaux.php','pop1','width=80,height=80');"><i class="fa fa-file-excel"></i> Export to Excel File</button>
@@ -267,6 +267,34 @@
                             <?php
                             // $maClasse-> afficherDossierEnAttenteFacture($_GET['id_cli'], $_GET['id_mod_lic_fact']);
                             ?>
+                          </tbody>
+                        </table>
+                      </div>
+                      <!-- /.card-body -->
+                    </div>
+                    <!-- /.card -->
+                  </div>
+                  <div class="col-12">
+                    <div class="card">
+                      <div class="card-header">
+                        <h5 class="card-title" style="font-weight: bold;">
+                         Declaration Rate of exchange management
+                        </h5>
+                      </div>    
+                      <!-- /.card-header -->
+
+                      <div class="card-body table-responsive p-0">
+                        <table id="monitoring_roe_decl" class="table table-bordered table-hover">
+                          <thead>
+                            <tr class="">
+                              <th width="5%">#</th>
+                              <th>Date</th>
+                              <th>Amount</th>
+                              <th>Nbr.Files</th>
+                            </tr>
+                          </thead>
+                          <tbody class="">
+                           
                           </tbody>
                         </table>
                       </div>
@@ -594,14 +622,149 @@ if(isset($_GET['id_mod_lic_fact']) && isset($_GET['id_mod_lic_fact'])){
   <!-- /.modal-dialog -->
 </div>
 
+<div class="modal fade" id="modal_new_roe_decl">
+  <div class="modal-dialog modal-sm">
+    <form id="form_new_roe_decl" method="POST" action="" data-parsley-validate enctype="multipart/form-data">
+      <input type="hidden" name="operation" value="new_roe_decl">
+    <div class="modal-content">
+      <div class="modal-header ">
+        <h4 class="modal-title"><i class="fa fa-plus"></i> New Rate</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label for="x_card_code" class="control-label mb-1">Date</label>
+          <input name="date_decl" type="date" class="form-control form-control-sm cc-exp" required>
+        </div>
+        <div class="form-group">
+          <label for="x_card_code" class="control-label mb-1">Amount</label>
+          <input name="roe_decl" type="number" min="0" step="0.000001" class="form-control form-control-sm cc-exp" required>
+        </div>
+      </div>
+      <div class="modal-footer justify-content-between">
+        <button type="button" class="btn btn-danger btn-xs" data-dismiss="modal">Cancel</button>
+        <button type="submit" class="btn btn-primary btn-xs">Submit</button>
+      </div>
+    </div>
+    </form>
+    <!-- /.modal-content -->
+  </div>
+  <!-- /.modal-dialog -->
+</div>
+
 <script type="text/javascript">
+
+  $(document).ready(function(){
+
+    $('#form_new_roe_decl').submit(function(e){
+
+            e.preventDefault();
+
+      if(confirm('Do really you want to submit ?')) {
+
+          $('#modal_new_roe_decl').modal('hide');
+          // alert('Hello');
+
+          var fd = new FormData(this);
+          $('#spinner-div').show();
+
+          $.ajax({
+            type: 'post',
+            url: 'ajax.php',
+            processData: false,
+            contentType: false,
+            data: fd,
+            dataType: 'json',
+            success:function(data){
+              if (data.logout) {
+                alert(data.logout);
+                window.location="../deconnexion.php";
+              }else{
+                $( '#form_new_roe_decl' ).each(function(){
+                    this.reset();
+                });
+                $('#monitoring_roe_decl').DataTable().ajax.reload();
+              }
+            },
+            complete: function () {
+                $('#spinner-div').hide();//Request is complete so hide spinner
+            }
+          });
+
+
+      }
+
+    });
+  
+  });
+
+
   $(document).ready(function(){
     $('#spinner-div').show();
     afficherMonitoringFile();
     getReportPendingInvoiceCommodityCategory();
     $('#spinner-div').hide();
   });
-
+$('#monitoring_roe_decl').DataTable({
+       lengthMenu: [
+          [10, 20, 50, -1],
+          [10, 20, 50, 500, 'All'],
+      ],
+      dom: 'Bfrtip',
+      buttons: [,
+        'pageLength',
+        {
+          extend: 'excel',
+          text: '<i class="fa fa-file-excel"></i>',
+          title: 'Declaration Rate Monitoring',
+          className: 'btn btn-success'
+        },
+        {
+          text: '<i class="fa fa-plus"></i> New',
+          className: 'btn btn-info',
+          action: function ( e, dt, node, config ) {
+              $('#modal_new_roe_decl').modal('show');
+          }
+        }
+      ],
+    "paging": true,
+    "lengthChange": true,
+    "searching": true,
+    "ordering": true,
+    "info": true,
+    "autoWidth": true,
+    // "responsive": true,
+      "ajax":{
+        "type": "GET",
+        "url":"ajax.php",
+        "method":"post",
+        "dataSrc":{
+            "id_cli": ""
+        },
+        "data": {
+            "operation": "monitoring_roe_decl"
+        }
+      },
+      "columns":[
+        {"data":"compteur"},
+        {"data":"date_decl",
+          className: 'dt-body-center'
+        },
+        {"data":"roe_decl",
+          render: DataTable.render.number( null, null, 4, null ),
+          className: 'dt-body-center'
+        },
+        {"data":"nbre_dos",
+          className: 'dt-body-center'
+        }
+      // ,
+      //   {"data":"lmc_id",
+      //     className: 'dt-body-center'
+      //   }
+      ] 
+    });
   function getReportPendingInvoiceCommodityCategory(){
     $('#spinner-div').show();
     $.ajax({

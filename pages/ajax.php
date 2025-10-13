@@ -4348,6 +4348,21 @@
 
 		echo json_encode($response);
 
+	}else if(isset($_POST['operation']) && $_POST['operation']=='monitoring_roe_decl'){// Afiicher Taux
+
+  		echo json_encode($maClasse-> monitoring_roe_decl());
+
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='new_roe_decl'){// new_roe_decl
+
+  		// $reponse = $maClasse-> getDataDossier($_POST['id_dos']);
+  		$maClasse-> new_roe_decl($_POST['roe_decl'], $_POST['date_decl']);
+  		$reponse['msg'] = 'Done!';
+  		echo json_encode($reponse);
+
+	}else if(isset($_POST['operation']) && $_POST['operation']=='report_roe_decl'){
+
+  		echo json_encode($maClasse-> report_roe_decl($_POST['date_decl'], $_POST['roe_decl']));
+
 	}
 
 
