@@ -554,6 +554,13 @@
           // $('#truck').val(data.truck);
           $('#id_bank_liq').val(data.id_bank_liq);
           $('#roe_liq').val(data.roe_liq);
+          <?php
+          if($maClasse-> get_aff_client_modele_licence($_GET['id_cli'], $_GET['id_mod_lic_fact'])['bank_rate']=='0'){
+          ?>
+          $('#roe_decl').val(data.roe_decl);
+          <?php
+          }
+          ?>
           // $('#roe_decl').val(data.roe_decl);
           $('#horse').val(data.horse);
           $('#trailer_1').val(data.trailer_1);
@@ -1348,12 +1355,28 @@
     // cog = (cif_cdf*0.00457);
     
     // alert(tva_ddi);
-    rls = 85*unite_rls*roe_liq;
-    if ($('#tva_rls').val() == '1' ) {
-      tva_rls = rls*0.16;
+    <?php
+    if($maClasse-> get_aff_client_modele_licence($_GET['id_cli'], $_GET['id_mod_lic_fact'])['bank_rate']=='0'){
+      ?>
+      rls = 85*unite_rls*roe_decl;
+      if ($('#tva_rls').val() == '1' ) {
+        tva_rls = rls*0.16;
+      }else{
+        tva_rls=0;
+      }
+      <?php
     }else{
-      tva_rls=0;
+      ?>
+      rls = 85*unite_rls*roe_liq;
+      if ($('#tva_rls').val() == '1' ) {
+        tva_rls = rls*0.16;
+      }else{
+        tva_rls=0;
+      }
+      <?php
     }
+    ?>
+    
 
     autres_taxes = montant_liq-(ddi+tva_ddi+fpi+tva_fpi+rri+tva_rri+cog+tva_cog+dci+tva_dci+rls+tva_rls+tva+ddi_2+tva_ddi_2+ddi_3+tva_ddi_3+ddi_4+tva_ddi_4);
 
