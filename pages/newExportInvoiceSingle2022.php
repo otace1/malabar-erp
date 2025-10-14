@@ -71,6 +71,16 @@
       </div>
 
       <div class="col-12"><hr></div>
+      <?php
+        if($maClasse-> get_aff_client_modele_licence($_GET['id_cli'], $_GET['id_mod_lic_fact'])['bank_rate']=='0'){
+          ?>
+      <div class="col-md-2">
+        <label for="roe_decl">Rate</label>
+        <input id="roe_decl" name="roe_decl" type="number" step="0.0001" min="1" class="form-control form-control-sm" required>
+      </div>
+      <?php
+      }else{
+          ?>
       <div class="col-md-2">
         <label for="id_bank_liq">Bank</label>
         <select id="id_bank_liq" name="id_bank_liq" onchange="maj_id_bank_liq(id_dos.value, this.value);" class="form-control form-control-sm" required>
@@ -84,6 +94,9 @@
         <label for="roe_decl">Rate</label>
         <input id="roe_decl" name="roe_decl" type="number" step="0.0001" min="1" class="form-control form-control-sm" required>
       </div>
+      <?php
+      }
+      ?>
       <div class="col-md-2">
         <label for="num_lot">Lot Num.</label>
         <input id="num_lot" name="num_lot" type="text" class="form-control form-control-sm" disabled>

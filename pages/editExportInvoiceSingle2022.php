@@ -64,10 +64,20 @@
         <input id="label_ref_dos" value="<?php echo $dossier['ref_dos'];?>" class="form-control form-control-sm" disabled>
       </div>
 
-      <div class="col-12"><hr></div>
+      <div class="col-12"><hr></div> 
+      <?php
+        if($maClasse-> get_aff_client_modele_licence($maClasse-> getFactureGlobale($_GET['ref_fact'])['id_cli'], $maClasse-> getFactureGlobale($_GET['ref_fact'])['id_mod_lic'])['bank_rate']=='0'){
+          ?>
+      <div class="col-md-2">
+        <label for="roe_decl">Rate</label>
+        <input id="roe_decl" name="roe_decl" type="number" step="0.0001" min="1" class="form-control form-control-sm" required>
+      </div>
+      <?php
+      }else{
+          ?>
       <div class="col-md-2">
         <label for="id_bank_liq">Bank</label>
-        <select id="id_bank_liq" name="id_bank_liq" onchange="maj_id_bank_liq(<?php echo $dossier['id_dos'];?>, this.value);" class="form-control form-control-sm" required>
+        <select id="id_bank_liq" name="id_bank_liq" onchange="maj_id_bank_liq(id_dos.value, this.value);" class="form-control form-control-sm" required>
           <option></option>
           <?php
             $maClasse-> selectionnerBanqueLiquidation();
@@ -78,6 +88,9 @@
         <label for="roe_decl">Rate</label>
         <input id="roe_decl" name="roe_decl" type="number" step="0.0001" min="1" class="form-control form-control-sm" required>
       </div>
+      <?php
+      }
+      ?>
       <div class="col-md-2">
         <label for="num_lot">Lot Num.</label>
         <input id="num_lot" name="num_lot" type="text" class="form-control form-control-sm" disabled>
