@@ -8935,6 +8935,7 @@
 													)*250) AS ceec_60,
 													d.nom_deb AS nom_deb, d.id_deb AS id_deb,
 													det.tva AS tva,
+													det.usd AS usd,
 													d.abr_deb AS abr_deb,
 													SUM(det.montant) AS ht,
 													SUM( 
@@ -9015,6 +9016,9 @@
 				if ($reponse['id_deb']=='5' || $reponse['id_deb']=='6' || $reponse['id_deb']=='7' || $reponse['id_deb']=='8') {
 					$cost = $reponse['ht_usd']/$unite_2;
 					$cost_2 = number_format($cost, 0, ',', '.');
+				}elseif ($reponse['usd']=='0'){
+					$cost = $reponse['ht_usd']/$unite_2;
+					$cost_2 = number_format($reponse['ht_usd']/$unite_2, 4, ',', '.');
 				}else{
 					$cost = $reponse['ht_usd']/$unite_2;
 					$cost_2 = number_format($cost, 2, ',', '.');
@@ -63661,7 +63665,7 @@
 												AND dos.id_cli = aff.id_cli
 												AND aff.bank_rate = '0'
 												AND (dos.date_decl IS NOT NULL AND dos.roe_decl IS NOT NULL)
-												AND DATE(dos.date_decl) > '2025-09-01'
+												AND DATE(dos.date_decl) > '2025-08-01'
 											GROUP BY dos.date_decl , dos.roe_decl
 											ORDER BY dos.date_decl DESC");
 			// $requete-> execute(array($entree['nom_dep']));
