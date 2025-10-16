@@ -60615,6 +60615,25 @@
 
 		}
 		
+		public function MAJ_m3($id_dos, $m3){
+			
+			//Log
+			if ($this-> getDossier($id_dos)['m3'] != $m3) {
+				
+				$colonne = $this-> getNomColonneClient('m3', $_GET['id_cli'], $_GET['id_mod_trans'], $_GET['id_mod_trac']);
+				$this-> creerLogDossier($colonne, $m3, $id_dos, $_SESSION['id_util']);
+
+			}
+
+			include('connexion.php');
+			$entree['id_dos'] = $id_dos;
+			$entree['m3'] = $m3;
+			$requete = $connexion-> prepare("UPDATE dossier SET m3 = ?
+												WHERE id_dos = ?");
+			$requete-> execute(array($entree['m3'], $entree['id_dos']));
+
+		}
+		
 		public function MAJ_road_manif($id_dos, $road_manif){
 			
 			//Log
