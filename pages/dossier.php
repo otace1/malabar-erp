@@ -285,6 +285,10 @@ for ($i=1; $i <= 15 ; $i++) {
         $maClasse-> MAJ_road_manif($_POST['id_dos_'.$i], $_POST['road_manif_'.$i]);
       }
       
+      if (isset($_POST['m3_'.$i]) && ($_POST['m3_'.$i] != '')) {
+        $maClasse-> MAJ_m3($_POST['id_dos_'.$i], $_POST['m3_'.$i]);
+      }
+      
       if (isset($_POST['arr_bond_'.$i]) && ($_POST['arr_bond_'.$i] != '')) {
         $maClasse-> MAJ_arr_bond($_POST['id_dos_'.$i], $_POST['arr_bond_'.$i]);
       }
