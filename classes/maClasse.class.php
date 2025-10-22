@@ -8980,7 +8980,8 @@
 													) AS detail,
 													det.unite AS unite,
 													COUNT(DISTINCT(dos.ref_decl)) AS qte,
-													dos.poids AS poids
+													dos.poids AS poids,
+													dos.id_cli AS id_cli
 												FROM debours d, detail_facture_dossier det, dossier dos
 												WHERE det.ref_fact = ?
 													AND det.id_deb = d.id_deb
@@ -9018,7 +9019,11 @@
 					$cost_2 = number_format($cost, 0, ',', '.');
 				}elseif ($reponse['usd']=='0'){
 					$cost = $reponse['ht_usd']/$unite_2;
-					$cost_2 = number_format($reponse['ht_usd']/$unite_2, 4, ',', '.');
+					if ($reponse['id_cli']==905) {
+						$cost_2 = number_format($reponse['ht_usd']/$unite_2, 2, ',', '.');
+					}else{
+						$cost_2 = number_format($reponse['ht_usd']/$unite_2, 4, ',', '.');
+					}
 				}else{
 					$cost = $reponse['ht_usd']/$unite_2;
 					$cost_2 = number_format($cost, 2, ',', '.');
