@@ -126,13 +126,15 @@
                     <?php
                   }
                   ?>
+                  <th>Total Duty(CDF)</th>
                   <th>DDE(CDF)</th>
-                  <th>RIE(CDF)</th>
-                  <th>RLS(CDF)</th>
+                  <th>RIE(USD)</th>
+                  <th style="background-color: #95afc0;">RLS Qty</th>
+                  <th style="background-color: #95afc0;">RLS Amount(USD)</th>
+                  <th style="background-color: #f0932b;">LSE Qty</th>
+                  <th style="background-color: #f0932b;">LSE Amount(USD)</th>
                   <th>CSO(CDF)</th>
                   <th>FSR(CDF)</th>
-                  <th>LSE(CDF)</th>
-                  <th>Total Duty(CDF)</th>
                   <th>GOVERNORS TAX($)</th>
                   <th>CONCENTRATE TAX($)</th>
                   <th>FERE($)</th>
@@ -261,8 +263,74 @@
 
   }
 
+  function maj_montant_liq(id_dos, montant_liq, compteur){
+    $('#spinner-div').show();
+    $.ajax({
+      type: 'post',
+      url: 'ajax.php',
+      data: {id_dos: id_dos, montant_liq: montant_liq, operation: 'maj_montant_liq'},
+      dataType: 'json',
+      success:function(data){
+        if (data.logout) {
+          alert(data.logout);
+          window.location="../deconnexion.php";
+        }else{
+          $('#montant_liq_'+compteur).val(montant_liq);
+        }
+      },
+      complete: function () {
+          $('#spinner-div').hide();//Request is complete so hide spinner
+      }
+    });
+
+  }
+
   function round(num, decimalPlaces = 0) {
     return new Decimal(num).toDecimalPlaces(decimalPlaces).toNumber();
+  }
+
+  // $(document).ready(function(){
+  //   calcul_rls(compteur);
+  // });
+
+  function calcul_rls(compteur){
+
+    if (parseFloat($('#rls_qty_'+compteur).val()) > 0 ) {
+      rls_qty = parseFloat($('#rls_qty_'+compteur).val());
+    }else{
+      rls_qty=0;
+    }
+
+    rls = rls_qty*140;
+
+    if (Math.round(rls*1000)/1000 > 0) {
+      $('#rls').val(rls.toFixed(2));
+    }else{
+      $('#rls').val('');
+    }
+
+    $('#rls_'+compteur).val(rls);
+
+  }
+
+  function calcul_lse(compteur){
+
+    if (parseFloat($('#lse_qty_'+compteur).val()) > 0 ) {
+      lse_qty = parseFloat($('#lse_qty_'+compteur).val());
+    }else{
+      lse_qty=0;
+    }
+
+    lse = lse_qty*30;
+
+    if (Math.round(lse*1000)/1000 > 0) {
+      $('#lse').val(lse.toFixed(2));
+    }else{
+      $('#lse').val('');
+    }
+
+    $('#lse_'+compteur).val(lse);
+
   }
 
   function calculDDE(compteur){
@@ -320,6 +388,62 @@
 
   }
 
+  function calculFSR(compteur){
+
+    if (parseFloat($('#roe_decl_'+compteur).val()) > 0 ) {
+      roe_decl = parseFloat($('#roe_decl_'+compteur).val());
+    }else{
+      roe_decl=0;
+    }
+
+    if (parseFloat($('#montant_liq_'+compteur).val()) > 0 ) {
+      montant_liq = parseFloat($('#montant_liq_'+compteur).val());
+    }else{
+      montant_liq=0;
+    }
+
+    if (parseFloat($('#dde_'+compteur).val()) > 0 ) {
+      dde = parseFloat($('#dde_'+compteur).val());
+    }else{
+      dde=0;
+    }
+
+    if (parseFloat($('#rie_'+compteur).val()) > 0 ) {
+      rie = parseFloat($('#rie_'+compteur).val());
+    }else{
+      rie=0;
+    }
+
+    if (parseFloat($('#rls_'+compteur).val()) > 0 ) {
+      rls = parseFloat($('#rls_'+compteur).val());
+    }else{
+      rls=0;
+    }
+
+    if (parseFloat($('#cso_'+compteur).val()) > 0 ) {
+      cso = parseFloat($('#cso_'+compteur).val());
+    }else{
+      cso=0;
+    }
+
+    if (parseFloat($('#fsr_'+compteur).val()) > 0 ) {
+      fsr = parseFloat($('#fsr_'+compteur).val());
+    }else{
+      fsr=0;
+    }
+
+    if (parseFloat($('#lse_'+compteur).val()) > 0 ) {
+      lse = parseFloat($('#lse_'+compteur).val());
+    }else{
+      lse=0;
+    }
+
+    fsr = montant_liq - cso - dde - ( (rie + rls + lse) * roe_decl);
+
+    $('#fsr_'+compteur).val(fsr);
+
+  }
+
   let USDollar = new Intl.NumberFormat('en-US', {
       style: 'currency',
       currency: 'USD',
@@ -329,7 +453,6 @@
   function getTotal(){
 
   }
-
 
   $(document).ready(function(){
 
