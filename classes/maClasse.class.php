@@ -9014,7 +9014,7 @@
 					$unite_2 = $reponse['nbre_dos'];
 				}
 
-				if ($reponse['id_deb']=='5' || $reponse['id_deb']=='6' || $reponse['id_deb']=='7' || $reponse['id_deb']=='8') {
+				if ($reponse['id_deb']=='5' || $reponse['id_deb']=='5' || $reponse['id_deb']=='6' || $reponse['id_deb']=='7' || $reponse['id_deb']=='8') {
 					$cost = $reponse['ht_usd']/$unite_2;
 					$cost_2 = number_format($cost, 0, ',', '.');
 				}elseif ($reponse['usd']=='0'){
@@ -24970,7 +24970,7 @@
 			$requete = $connexion-> prepare("SELECT ref_dos, id_dos, num_lot, 
 													horse, trailer_1, trailer_2, 
 													poids, roe_decl, id_bank_liq,
-													roe_liq,
+													roe_liq, montant_liq,
 													CONCAT(ref_decl, ' ', DATE_FORMAT(date_decl, '%d/%m/%Y')) AS declaration,
 													CONCAT(ref_liq, ' ', DATE_FORMAT(date_liq, '%d/%m/%Y')) AS liquidation,
 													CONCAT(ref_quit, ' ', DATE_FORMAT(date_quit, '%d/%m/%Y')) AS quittance,
@@ -25060,24 +25060,24 @@
 				if($this-> get_aff_client_modele_licence($reponse['id_cli'], $reponse['id_mod_lic'])['bank_rate']=='0'){
 					?>
 				<td>
-					<input type="number" min="0" step="0.000001" style="text-align: center; width: 8em;" onblur="calculDDE(<?php echo $compteur;?>);" id="roe_decl_<?php echo $compteur;?>" name="roe_decl_<?php echo $compteur;?>" value="<?php echo $reponse['roe_decl'];?>" class="bg bg-dark">
+					<input type="number" min="0" step="0.000001" style="text-align: center; width: 8em;" onblur="calculDDE(<?php echo $compteur;?>);" id="roe_decl_<?php echo $compteur;?>" onkeyup="calculFSR(<?php echo $compteur;?>);" name="roe_decl_<?php echo $compteur;?>" value="<?php echo $reponse['roe_decl'];?>" class="bg bg-dark">
 				</td>
 					<?php
 				}else{
 					?>
 				<script type="text/javascript">
 					$(document).ready(function(){
-						getBank(<?php echo $reponse['id_bank_liq'];?>, <?php echo $compteur;?>);
+						getBank("<?php echo $reponse['id_bank_liq'];?>", <?php echo $compteur;?>);
 					});
 				</script>
 				<td>
-					<select onchange="maj_id_bank_liq(<?php echo $reponse['id_dos'];?>, this.value, <?php echo $compteur;?>);" id="id_bank_liq_<?php echo $compteur;?>" name="id_bank_liq_<?php echo $compteur;?>" class="bg bg-dark">
+					<select onchange="maj_id_bank_liq(<?php echo $reponse['id_dos'];?>, this.value, <?php echo $compteur;?>);calculFSR(<?php echo $compteur;?>);" id="id_bank_liq_<?php echo $compteur;?>" name="id_bank_liq_<?php echo $compteur;?>" class="bg bg-dark">
 						<option></option>
 						<?php echo $this-> selectionnerBanqueLiquidation();?>
 					</select>
 				</td>
 				<td>
-					<input type="number" min="0" step="0.000001" style="text-align: center; width: 8em;" onblur="calculDDE(<?php echo $compteur;?>);" id="roe_decl_<?php echo $compteur;?>" name="roe_decl_<?php echo $compteur;?>" value="<?php echo $reponse['roe_decl'];?>" class="bg bg-dark">
+					<input type="number" min="0" step="0.000001" style="text-align: center; width: 8em;" onblur="calculDDE(<?php echo $compteur;?>);" onkeyup="calculFSR(<?php echo $compteur;?>);" id="roe_decl_<?php echo $compteur;?>" name="roe_decl_<?php echo $compteur;?>" value="<?php echo $reponse['roe_decl'];?>" class="bg bg-dark">
 				</td>
 				<td>
 					<input type="number" min="0" step="0.000001" style="text-align: center; width: 8em;" onblur="maj_roe_liq(<?php echo $reponse['id_dos'];?>, this.value, <?php echo $compteur;?>);calculDDE(<?php echo $compteur;?>);" id="roe_liq_<?php echo $compteur;?>" name="roe_liq_<?php echo $compteur;?>" value="<?php echo $reponse['roe_liq'];?>" class="bg bg-dark">
@@ -25086,32 +25086,47 @@
 				}
 				?>
 				<td>
-					<input type="number" min="0" style="text-align: center; width: 8em;" onblur="calculDDE(<?php echo $compteur;?>);" id="dde_<?php echo $compteur;?>" name="dde_<?php echo $compteur;?>" class="bg bg-dark">
+					<input type="number" min="0" style="text-align: center; width: 8em;" onblur="calculDDE(<?php echo $compteur;?>);maj_montant_liq(<?php echo $reponse['id_dos'];?>, this.value, <?php echo $compteur;?>);" id="montant_liq_<?php echo $compteur;?>" name="montant_liq_<?php echo $compteur;?>" onkeyup="calculFSR(<?php echo $compteur;?>);" value="<?php echo $reponse['montant_liq'];?>" class="bg bg-dark">
+				</td>
+				<td>
+					<input type="number" min="0" style="text-align: center; width: 8em;" onblur="calculDDE(<?php echo $compteur;?>);" id="dde_<?php echo $compteur;?>" name="dde_<?php echo $compteur;?>" class="bg bg-dark" onkeyup="calculFSR(<?php echo $compteur;?>);">
 					<input type="hidden" style="text-align: center; width: 8em;" name="dde_tva_<?php echo $compteur;?>" id="tva_<?php echo $compteur;?>" value="0" class="bg bg-dark">
 				</td>
 				<td style="text-align: center;">
-					<input type="number" step="0.001" min="0" style="text-align: center; width: 8em;" onblur="calculDDE(<?php echo $compteur;?>);" id="rie_<?php echo $compteur;?>" name="rie_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport(1, $id_mod_lic, $id_cli, $id_march, $id_mod_trans)['montant'];?>" class="bg bg-dark">
+					<input type="number" step="0.001" min="0" style="text-align: center; width: 8em;" onblur="calculDDE(<?php echo $compteur;?>);" id="rie_<?php echo $compteur;?>" name="rie_<?php echo $compteur;?>" value="50" class="bg bg-dark" onkeyup="calculFSR(<?php echo $compteur;?>);">
 					<input type="hidden" style="text-align: center; width: 8em;" name="rie_tva_<?php echo $compteur;?>" id="tva_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport(1, $id_mod_lic, $id_cli, $id_march, $id_mod_trans)['tva'];?>" class="bg bg-dark">
 				</td>
-				<td style="text-align: center;">
-					<input type="number" step="0.001" min="0" style="text-align: center; width: 8em;" onblur="calculDDE(<?php echo $compteur;?>);" id="rls_<?php echo $compteur;?>" name="rls_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport(3, $id_mod_lic, $id_cli, $id_march, $id_mod_trans)['montant'];?>" class="bg bg-dark">
+				<td style="text-align: center; background-color: #95afc0;">
+					<input type="number" step="0.001" min="0" style="text-align: center; width: 8em;" onblur="calculDDE(<?php echo $compteur;?>);" onkeyup="calcul_rls(<?php echo $compteur;?>); calculFSR(<?php echo $compteur;?>);" id="rls_qty_<?php echo $compteur;?>" name="rls_qty_<?php echo $compteur;?>" value="2" class="bg bg-dark">
+				</td>
+				<td style="text-align: center; background-color: #95afc0;">
+					<input type="number" step="0.001" min="0" style="text-align: center; width: 8em;" onblur="calculDDE(<?php echo $compteur;?>);" id="rls_<?php echo $compteur;?>" name="rls_<?php echo $compteur;?>" value="" class="bg bg-dark" onkeyup="calculFSR(<?php echo $compteur;?>);">
 					<input type="hidden" style="text-align: center; width: 8em;" name="rls_tva_<?php echo $compteur;?>" id="tva_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport(3, $id_mod_lic, $id_cli, $id_march, $id_mod_trans)['tva'];?>" class="bg bg-dark">
 				</td>
+				<td style="text-align: center;background-color: #f0932b;">
+					<input type="number" step="0.001" min="0" style="text-align: center; width: 8em;" onblur="calculDDE(<?php echo $compteur;?>);" onkeyup="calcul_lse(<?php echo $compteur;?>);calculFSR(<?php echo $compteur;?>);" id="lse_qty_<?php echo $compteur;?>" name="lse_qty_<?php echo $compteur;?>" value="1" class="bg bg-dark">
+				</td>
+				<td style="text-align: center;background-color: #f0932b;">
+					<input type="number" step="0.001" min="0" style="text-align: center; width: 8em;" onblur="calculDDE(<?php echo $compteur;?>);" id="lse_<?php echo $compteur;?>" name="lse_<?php echo $compteur;?>" value="" class="bg bg-dark" onkeyup="calculFSR(<?php echo $compteur;?>);">
+					<input type="hidden" style="text-align: center; width: 8em;" name="lse_tva_<?php echo $compteur;?>" id="tva_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport(3, $id_mod_lic, $id_cli, $id_march, $id_mod_trans)['tva'];?>" class="bg bg-dark">
+				</td>
 				<td style="text-align: center;">
-					<input type="number" step="0.001" min="0" style="text-align: center; width: 8em;" onblur="calculDDE(<?php echo $compteur;?>);" id="cso_<?php echo $compteur;?>" name="cso_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport(37, $id_mod_lic, $id_cli, $id_march, $id_mod_trans)['montant'];?>" class="bg bg-dark">
+					<input type="number" step="0.001" min="0" style="text-align: center; width: 8em;" onblur="calculDDE(<?php echo $compteur;?>);" id="cso_<?php echo $compteur;?>" name="cso_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport(37, $id_mod_lic, $id_cli, $id_march, $id_mod_trans)['montant'];?>" class="bg bg-dark" onkeyup="calculFSR(<?php echo $compteur;?>);">
 					<input type="hidden" style="text-align: center; width: 8em;" name="cso_tva_<?php echo $compteur;?>" id="tva_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport(37, $id_mod_lic, $id_cli, $id_march, $id_mod_trans)['tva'];?>" class="bg bg-dark">
 				</td>
 				<td style="text-align: center;">
-					<input type="number" step="0.001" min="0" style="text-align: center; width: 8em;" onblur="calculDDE(<?php echo $compteur;?>);" id="fsr_<?php echo $compteur;?>" name="fsr_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport(4, $id_mod_lic, $id_cli, $id_march, $id_mod_trans)['montant'];?>" class="bg bg-dark">
+					<input type="number" step="0.001" min="0" style="text-align: center; width: 8em;" onblur="calculDDE(<?php echo $compteur;?>);" id="fsr_<?php echo $compteur;?>" name="fsr_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport(4, $id_mod_lic, $id_cli, $id_march, $id_mod_trans)['montant'];?>" class="bg bg-dark" onkeyup="calculFSR(<?php echo $compteur;?>);">
 					<input type="hidden" style="text-align: center; width: 8em;" name="fsr_tva_<?php echo $compteur;?>" id="tva_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport(4, $id_mod_lic, $id_cli, $id_march, $id_mod_trans)['tva'];?>" class="bg bg-dark">
 				</td>
-				<td style="text-align: center;">
-					<input type="number" step="0.001" min="0" style="text-align: center; width: 8em;" onblur="calculDDE(<?php echo $compteur;?>);" id="lse_<?php echo $compteur;?>" name="lse_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport(212, $id_mod_lic, $id_cli, $id_march, $id_mod_trans)['montant'];?>" class="bg bg-dark">
-					<input type="hidden" style="text-align: center; width: 8em;" name="lse_tva_<?php echo $compteur;?>" id="tva_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport(212, $id_mod_lic, $id_cli, $id_march, $id_mod_trans)['tva'];?>" class="bg bg-dark">
-				</td>
-				<td style="text-align: center; font-weight: bold; font-size: 20px;">
-					<span id="total_duty_<?php echo $compteur;?>"></span>
-				</td>
+
+				<script type="text/javascript">
+					$(document).ready(function(){
+						calcul_rls(<?php echo $compteur;?>);
+						calcul_lse(<?php echo $compteur;?>);
+						calculFSR(<?php echo $compteur;?>);
+					});
+				</script>
+
 				<td style="text-align: center;">
 					<input type="number" step="0.001" min="0" style="text-align: center; width: 8em;" id="gov_tax_<?php echo $compteur;?>" name="gov_tax_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport(7, $id_mod_lic, $id_cli, $id_march, $id_mod_trans, $reponse['id_dos'])['montant'];?>" class="bg bg-dark">
 					<input type="hidden" style="text-align: center; width: 8em;" name="gov_tax_tva_<?php echo $compteur;?>" id="tva_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport(7, $id_mod_lic, $id_cli, $id_march, $id_mod_trans, $reponse['id_dos'])['tva'];?>" class="bg bg-dark">
@@ -26880,6 +26895,7 @@
 													dos.trailer_2 AS trailer_2, 
 													dos.poids AS poids, 
 													dos.id_bank_liq AS id_bank_liq, 
+													dos.montant_liq AS montant_liq, 
 													ROUND(dos.roe_decl, 4) AS roe_decl,
 													ROUND(dos.roe_liq, 4) AS roe_liq,
 													CONCAT(dos.ref_decl, ' ', DATE_FORMAT(dos.date_decl, '%d/%m/%Y')) AS declaration,
@@ -26941,7 +26957,7 @@
 					?>
 				<script type="text/javascript">
 					$(document).ready(function(){
-						getBank(<?php echo $reponse['id_bank_liq'];?>, <?php echo $compteur;?>);
+						getBank("<?php echo $reponse['id_bank_liq'];?>", <?php echo $compteur;?>);
 					});
 				</script>
 				<td>
@@ -26960,32 +26976,46 @@
 				}
 				?>
 				<td>
-					<input type="number" min="0" style="text-align: center; width: 8em;" onblur="calculDDE(<?php echo $compteur;?>);" id="dde_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDataDetailFacture($ref_fact, $reponse['id_dos'], 2)['montant'];?>" name="dde_<?php echo $compteur;?>" class="bg bg-dark">
+					<input type="number" min="0" style="text-align: center; width: 8em;" onblur="calculDDE(<?php echo $compteur;?>);maj_montant_liq(<?php echo $reponse['id_dos'];?>, this.value, <?php echo $compteur;?>);" id="montant_liq_<?php echo $compteur;?>" name="montant_liq_<?php echo $compteur;?>" onkeyup="calculFSR(<?php echo $compteur;?>);" value="<?php echo $reponse['montant_liq'];?>" class="bg bg-dark">
+				</td>
+				<td>
+					<input type="number" min="0" style="text-align: center; width: 8em;" onblur="calculDDE(<?php echo $compteur;?>);" id="dde_<?php echo $compteur;?>" name="dde_<?php echo $compteur;?>" class="bg bg-dark" onkeyup="calculFSR(<?php echo $compteur;?>);" value="<?php echo $this-> getMontantDataDetailFacture($ref_fact, $reponse['id_dos'], 2)['montant'];?>">
 					<input type="hidden" style="text-align: center; width: 8em;" name="dde_tva_<?php echo $compteur;?>" id="tva_<?php echo $compteur;?>" value="0" class="bg bg-dark">
 				</td>
 				<td style="text-align: center;">
-					<input type="number" step="0.001" min="0" style="text-align: center; width: 8em;" onblur="calculDDE(<?php echo $compteur;?>);" id="rie_<?php echo $compteur;?>" name="rie_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDataDetailFacture($ref_fact, $reponse['id_dos'], 1)['montant'];?>" class="bg bg-dark">
+					<input type="number" step="0.001" min="0" style="text-align: center; width: 8em;" onblur="calculDDE(<?php echo $compteur;?>);" id="rie_<?php echo $compteur;?>" name="rie_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDataDetailFacture($ref_fact, $reponse['id_dos'], 1)['montant'];?>" class="bg bg-dark" onkeyup="calculFSR(<?php echo $compteur;?>);">
 					<input type="hidden" style="text-align: center; width: 8em;" name="rie_tva_<?php echo $compteur;?>" id="tva_<?php echo $compteur;?>" value="0" class="bg bg-dark">
 				</td>
-				<td style="text-align: center;">
-					<input type="number" step="0.001" min="0" style="text-align: center; width: 8em;" onblur="calculDDE(<?php echo $compteur;?>);" id="rls_<?php echo $compteur;?>" name="rls_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDataDetailFacture($ref_fact, $reponse['id_dos'], 3)['montant'];?>" class="bg bg-dark">
+				<td style="text-align: center; background-color: #95afc0;">
+					<input type="number" step="0.001" min="0" style="text-align: center; width: 8em;" onblur="calculDDE(<?php echo $compteur;?>);" onkeyup="calcul_rls(<?php echo $compteur;?>); calculFSR(<?php echo $compteur;?>);" id="rls_qty_<?php echo $compteur;?>" name="rls_qty_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDataDetailFacture($ref_fact, $reponse['id_dos'], 3)['montant']/140;?>" class="bg bg-dark">
+				</td>
+				<td style="text-align: center; background-color: #95afc0;">
+					<input type="number" step="0.001" min="0" style="text-align: center; width: 8em;" onblur="calculDDE(<?php echo $compteur;?>);" id="rls_<?php echo $compteur;?>" name="rls_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDataDetailFacture($ref_fact, $reponse['id_dos'], 3)['montant'];?>" class="bg bg-dark" onkeyup="calculFSR(<?php echo $compteur;?>);">
 					<input type="hidden" style="text-align: center; width: 8em;" name="rls_tva_<?php echo $compteur;?>" id="tva_<?php echo $compteur;?>" value="0" class="bg bg-dark">
 				</td>
+				<td style="text-align: center;background-color: #f0932b;">
+					<input type="number" step="0.001" min="0" style="text-align: center; width: 8em;" onblur="calculDDE(<?php echo $compteur;?>);" onkeyup="calcul_lse(<?php echo $compteur;?>);calculFSR(<?php echo $compteur;?>);" id="lse_qty_<?php echo $compteur;?>" name="lse_qty_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDataDetailFacture($ref_fact, $reponse['id_dos'], 212)['montant']/30;?>" class="bg bg-dark">
+				</td>
+				<td style="text-align: center;background-color: #f0932b;">
+					<input type="number" step="0.001" min="0" style="text-align: center; width: 8em;" onblur="calculDDE(<?php echo $compteur;?>);" id="lse_<?php echo $compteur;?>" name="lse_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDataDetailFacture($ref_fact, $reponse['id_dos'], 212)['montant'];?>" class="bg bg-dark" onkeyup="calculFSR(<?php echo $compteur;?>);">
+					<input type="hidden" style="text-align: center; width: 8em;" name="lse_tva_<?php echo $compteur;?>" id="tva_<?php echo $compteur;?>" value="0" class="bg bg-dark">
+				</td>
 				<td style="text-align: center;">
-					<input type="number" step="0.001" min="0" style="text-align: center; width: 8em;" onblur="calculDDE(<?php echo $compteur;?>);" id="cso_<?php echo $compteur;?>" name="cso_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDataDetailFacture($ref_fact, $reponse['id_dos'], 37)['montant'];?>" class="bg bg-dark">
+					<input type="number" step="0.001" min="0" style="text-align: center; width: 8em;" onblur="calculDDE(<?php echo $compteur;?>);" id="cso_<?php echo $compteur;?>" name="cso_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDataDetailFacture($ref_fact, $reponse['id_dos'], 37)['montant'];?>" class="bg bg-dark" onkeyup="calculFSR(<?php echo $compteur;?>);">
 					<input type="hidden" style="text-align: center; width: 8em;" name="cso_tva_<?php echo $compteur;?>" id="tva_<?php echo $compteur;?>" value="0" class="bg bg-dark">
 				</td>
 				<td style="text-align: center;">
-					<input type="number" step="0.001" min="0" style="text-align: center; width: 8em;" onblur="calculDDE(<?php echo $compteur;?>);" id="fsr_<?php echo $compteur;?>" name="fsr_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDataDetailFacture($ref_fact, $reponse['id_dos'], 4)['montant'];?>" class="bg bg-dark">
+					<input type="number" step="0.001" min="0" style="text-align: center; width: 8em;" onblur="calculDDE(<?php echo $compteur;?>);" id="fsr_<?php echo $compteur;?>" name="fsr_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDataDetailFacture($ref_fact, $reponse['id_dos'], 4)['montant'];?>" class="bg bg-dark" onkeyup="calculFSR(<?php echo $compteur;?>);">
 					<input type="hidden" style="text-align: center; width: 8em;" name="fsr_tva_<?php echo $compteur;?>" id="tva_<?php echo $compteur;?>" value="0" class="bg bg-dark">
 				</td>
-				<td style="text-align: center;">
-					<input type="number" step="0.001" min="0" style="text-align: center; width: 8em;" onblur="calculDDE(<?php echo $compteur;?>);" id="lse_<?php echo $compteur;?>" name="lse_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDataDetailFacture($ref_fact, $reponse['id_dos'], 212)['montant'];?>" class="bg bg-dark">
-					<input type="hidden" style="text-align: center; width: 8em;" name="lse_tva_<?php echo $compteur;?>" id="tva_<?php echo $compteur;?>" value="0" class="bg bg-dark">
-				</td>
-				<td style="text-align: center; font-weight: bold; font-size: 20px;">
-					<span id="total_duty_<?php echo $compteur;?>"><span class="badge badge-danger"><?php echo number_format($total_duty, 0, ',', '.');?></span></span>
-				</td>
+
+				<script type="text/javascript">
+					$(document).ready(function(){
+						calcul_rls(<?php echo $compteur;?>);
+						calcul_lse(<?php echo $compteur;?>);
+						calculFSR(<?php echo $compteur;?>);
+					});
+				</script>
 				<td style="text-align: center;">
 					<input type="number" step="0.001" min="0" style="text-align: center; width: 8em;" id="gov_tax_<?php echo $compteur;?>" name="gov_tax_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDataDetailFacture($ref_fact, $reponse['id_dos'], 7)['montant'];?>" class="bg bg-dark">
 					<input type="hidden" style="text-align: center; width: 8em;" name="gov_tax_tva_<?php echo $compteur;?>" id="tva_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDataDetailFacture($ref_fact, $reponse['id_dos'], 7)['tva'];?>" class="bg bg-dark">
