@@ -8408,7 +8408,7 @@
 													-- 	"CLEARED",
 													-- 	"TRANSIT") AS cleared
 													"CLEARED" AS cleared,
-													IF(DATE(dos.date_creat_dos)>"2025-10-01",
+													IF(DATE(dos.date_creat_dos)>"2025-09-01",
 														dos.montant_liq
 														,
 														SUM(
@@ -8424,31 +8424,32 @@
 															)
 														)
 													)AS liquidation_cdf,
-													SUM(
-														IF(det.usd="0" AND d.id_t_deb="1", 
-															IF(det.tva="1",
-																IF(det.montant_tva>0,
-																	(det.montant_tva+det.montant)/dos.roe_decl,
-																	(det.montant*0.16)/dos.roe_decl
-																),
-																det.montant/dos.roe_decl
-															), 
-															0
-														)
-													) AS liquidation_usd,
-													IF(DATE(dos.date_creat_dos)>"2025-10-01",
-														dos.montant_liq/dos.roe_decl,
+													IF(DATE(dos.date_creat_dos)>"2025-09-01",
+														dos.montant_liq/dos.roe_decl
+														,
 														SUM(
 															IF(det.usd="0" AND d.id_t_deb="1", 
 																IF(det.tva="1",
 																	IF(det.montant_tva>0,
-																		((det.montant_tva+det.montant)/dos.roe_decl)/dos.poids,
+																		(det.montant_tva+det.montant)/dos.roe_decl,
 																		(det.montant*0.16)/dos.roe_decl
 																	),
-																	(det.montant/dos.roe_decl)/dos.poids
+																	det.montant/dos.roe_decl
 																), 
 																0
 															)
+														)
+													) AS liquidation_usd,
+													SUM(
+														IF(det.usd="0" AND d.id_t_deb="1", 
+															IF(det.tva="1",
+																IF(det.montant_tva>0,
+																	((det.montant_tva+det.montant)/dos.roe_decl)/dos.poids,
+																	(det.montant*0.16)/dos.roe_decl
+																),
+																(det.montant/dos.roe_decl)/dos.poids
+															), 
+															0
 														)
 													) AS liquidation_usd_per_ton
 												FROM debours d, detail_facture_dossier det, dossier dos
