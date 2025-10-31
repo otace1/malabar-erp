@@ -50,6 +50,34 @@
 
   		echo json_encode($reponse);
 
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='getTableauImportInvoiceSingleFuel'){// On recupere les donnees du dossier a facturer 
+
+  		$reponse = $maClasse-> getDataDossier($_POST['id_dos']);
+  		$reponse['id_mon'] = '<select disabled class="bg bg-dark" name="id_mon" required>
+  								<option>'.$maClasse-> getDataLicence($reponse['num_lic'])['sig_mon'].'</option>
+  								'.$maClasse-> selectionnerMonnaie2().'
+  							</select>';
+  		$reponse['mon_fob'] = '<select class="bg bg-dark" name="mon_fob" id="mon_fob" onchange="maj_id_mon_fob(id_dos.value, this.value);" required>
+  								'.$maClasse-> selectionnerMonnaie2().'
+  							</select>';
+  		$reponse['mon_fret'] = '<select class="bg bg-dark" name="mon_fret" id="mon_fret" onchange="maj_id_mon_fret(id_dos.value, this.value);" required>
+  								'.$maClasse-> selectionnerMonnaie2().'
+  							</select>';
+  		$reponse['mon_assurance'] = '<select class="bg bg-dark" name="mon_assurance" id="mon_assurance" onchange="maj_id_mon_assurance(id_dos.value, this.value);" required>
+  								'.$maClasse-> selectionnerMonnaie2().'
+  							</select>';
+  		$reponse['mon_autre_frais'] = '<select class="bg bg-dark" name="mon_autre_frais" id="mon_autre_frais" onchange="maj_id_mon_autre_frais(id_dos.value, this.value);" required>
+  								'.$maClasse-> selectionnerMonnaie2().'
+  							</select>';
+  		// $reponse['mon_fob'] = $maClasse-> selectionnerMonnaie3('id_mon_fob');
+  		// $reponse['mon_fret'] = $maClasse-> selectionnerMonnaie3('id_mon_fret');
+  		// $reponse['mon_assurance'] = $maClasse-> selectionnerMonnaie3('id_mon_assurance');
+  		// $reponse['mon_autre_frais'] = $maClasse-> selectionnerMonnaie3('id_mon_autre_frais');
+  		$reponse['debours'] = $maClasse-> getDeboursPourFactureClientModeleLicenceAjaxFuel($reponse['id_cli'], $reponse['id_mod_lic'], $reponse['id_march'], $reponse['id_mod_trans'], $_POST['id_dos'], $_POST['consommable']);
+  		$reponse['template_invoice'] = $maClasse-> selectionnerMarchandiseTemplateFacture($reponse['id_cli'], $reponse['id_mod_trans'], $reponse['id_mod_lic']);
+
+  		echo json_encode($reponse);
+
 	}elseif(isset($_POST['operation']) && $_POST['operation']=='getTableauImportInvoiceSingleEdit'){// On recupere les donnees du dossier a facturer 
 
   		$reponse = $maClasse-> getDataDossier($_POST['id_dos']);
