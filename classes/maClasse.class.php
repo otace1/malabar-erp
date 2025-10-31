@@ -49042,39 +49042,48 @@
 													DATE_FORMAT(fd.date_fact, '%d/%m/%Y') AS date_fact,
 													cl.nom_cli AS nom_cli,
 													SUM(
-														IF(det.usd='0' AND deb.id_t_deb='1', 
-															IF(det.tva='1',
-																IF(det.montant_tva>0,
-																	(det.montant_tva+det.montant),
-																	(det.montant*0.16)
-																),
-																det.montant
-															), 
-															0
+														IF(DATE(dos.date_creat_dos)>='2025-09-01',
+															dos.montant_liq,
+															IF(det.usd='0' AND deb.id_t_deb='1', 
+																IF(det.tva='1',
+																	IF(det.montant_tva>0,
+																		(det.montant_tva+det.montant),
+																		(det.montant*0.16)
+																	),
+																	det.montant
+																), 
+																0
+															)
 														)
 													) AS liquidation_cdf,
 													SUM(
-														IF(det.usd='0' AND deb.id_t_deb='1', 
-															IF(det.tva='1',
-																IF(det.montant_tva>0,
-																	(det.montant_tva+det.montant)/dos.roe_decl,
-																	(det.montant*0.16)/dos.roe_decl
-																),
-																det.montant/dos.roe_decl
-															), 
-															0
+														IF(DATE(dos.date_creat_dos)>='2025-09-01',
+															dos.montant_liq/dos.roe_decl,
+															IF(det.usd='0' AND deb.id_t_deb='1', 
+																IF(det.tva='1',
+																	IF(det.montant_tva>0,
+																		(det.montant_tva+det.montant)/dos.roe_decl,
+																		(det.montant*0.16)/dos.roe_decl
+																	),
+																	det.montant/dos.roe_decl
+																), 
+																0
+															)
 														)
 													) AS liquidation_usd,
 													SUM(
-														IF(det.usd='0' AND deb.id_t_deb='1', 
-															IF(det.tva='1',
-																IF(det.montant_tva>0,
-																	((det.montant_tva+det.montant)/dos.roe_decl)/dos.poids,
-																	(det.montant*0.16)/dos.roe_decl
-																),
-																(det.montant/dos.roe_decl)/dos.poids
-															), 
-															0
+														IF(DATE(dos.date_creat_dos)>='2025-09-01',
+															(dos.montant_liq/dos.roe_decl)/dos.poids,
+															IF(det.usd='0' AND deb.id_t_deb='1', 
+																IF(det.tva='1',
+																	IF(det.montant_tva>0,
+																		((det.montant_tva+det.montant)/dos.roe_decl)/dos.poids,
+																		(det.montant*0.16)/dos.roe_decl
+																	),
+																	(det.montant/dos.roe_decl)/dos.poids
+																), 
+																0
+															)
 														)
 													) AS liquidation_usd_per_ton,
 													SUM(
