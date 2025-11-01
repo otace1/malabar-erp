@@ -49703,51 +49703,9 @@
 													DATE_FORMAT(dos.date_quit, '%d/%m/%Y') AS date_quit,
 													DATE_FORMAT(fd.date_fact, '%d/%m/%Y') AS date_fact,
 													cl.nom_cli AS nom_cli,
-													SUM(
-														IF(DATE(dos.date_creat_dos)>='2025-09-01',
-															dos.montant_liq,
-															IF(det.usd='0' AND deb.id_t_deb='1', 
-																IF(det.tva='1',
-																	IF(det.montant_tva>0,
-																		(det.montant_tva+det.montant),
-																		(det.montant*0.16)
-																	),
-																	det.montant
-																), 
-																0
-															)
-														)
-													) AS liquidation_cdf,
-													SUM(
-														IF(DATE(dos.date_creat_dos)>='2025-09-01',
-															dos.montant_liq/dos.roe_decl,
-															IF(det.usd='0' AND deb.id_t_deb='1', 
-																IF(det.tva='1',
-																	IF(det.montant_tva>0,
-																		(det.montant_tva+det.montant)/dos.roe_decl,
-																		(det.montant*0.16)/dos.roe_decl
-																	),
-																	det.montant/dos.roe_decl
-																), 
-																0
-															)
-														)
-													) AS liquidation_usd,
-													SUM(
-														IF(DATE(dos.date_creat_dos)>='2025-09-01',
-															(dos.montant_liq/dos.roe_decl)/dos.poids,
-															IF(det.usd='0' AND deb.id_t_deb='1', 
-																IF(det.tva='1',
-																	IF(det.montant_tva>0,
-																		((det.montant_tva+det.montant)/dos.roe_decl)/dos.poids,
-																		(det.montant*0.16)/dos.roe_decl
-																	),
-																	(det.montant/dos.roe_decl)/dos.poids
-																), 
-																0
-															)
-														)
-													) AS liquidation_usd_per_ton,
+													get_montant_liq(dos.id_dos) AS liquidation_cdf,
+													(get_montant_liq(dos.id_dos)/dos.roe_decl) AS liquidation_usd,
+													((get_montant_liq(dos.id_dos)/dos.roe_decl)/dos.poids) AS liquidation_usd_per_ton,
 													SUM(
 														IF(deb.id_t_deb='2' AND det.usd='1',
 															det.montant,
