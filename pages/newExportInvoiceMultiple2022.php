@@ -125,16 +125,31 @@
                   <th>BCC Rate</th>
                     <?php
                   }
-                  ?>
-                  <th>Total Duty(CDF)</th>
+
+                  if($maClasse-> get_aff_client_modele_licence($_GET['id_cli'], $_GET['id_mod_lic_fact'])['bl_export_usd']== '1'){
+                    ?>
+                    <th>Total Duty(CDF)</th>
+                    <th>DDE(CDF)</th>
+                    <th>RIE(USD)</th>
+                    <th style="background-color: #95afc0;">RLS Qty</th>
+                    <th style="background-color: #95afc0;">RLS Amount(USD)</th>
+                    <th style="background-color: #f0932b;">LSE Qty</th>
+                    <th style="background-color: #f0932b;">LSE Amount(USD)</th>
+                    <th>CSO(CDF)</th>
+                    <th>FSR(CDF)</th>
+                    <?php
+                  }else{
+                    ?>
                   <th>DDE(CDF)</th>
-                  <th>RIE(USD)</th>
-                  <th style="background-color: #95afc0;">RLS Qty</th>
-                  <th style="background-color: #95afc0;">RLS Amount(USD)</th>
-                  <th style="background-color: #f0932b;">LSE Qty</th>
-                  <th style="background-color: #f0932b;">LSE Amount(USD)</th>
+                  <th>RIE(CDF)</th>
+                  <th>RLS(CDF)</th>
                   <th>CSO(CDF)</th>
                   <th>FSR(CDF)</th>
+                  <th>LSE(CDF)</th>
+                  <th>Total Duty(CDF)</th>
+                    <?php
+                  }
+                  ?>
                   <th>GOVERNORS TAX($)</th>
                   <th>CONCENTRATE TAX($)</th>
                   <th>FERE($)</th>
