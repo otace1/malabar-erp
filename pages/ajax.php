@@ -4421,17 +4421,28 @@
 
   					for ($i=1; $i <= $_POST['compteur'] ; $i++) { 
 
-		  				if (isset($_POST['montant_'.$i]) && $_POST['montant_'.$i] > 1) {
+		  				if (isset($_POST['montant_a_'.$i]) && $_POST['montant_a_'.$i] > 1) {
 
-		  					if (!isset($_POST['pourcentage_qte_ddi_'.$i]) || empty($_POST['pourcentage_qte_ddi_'.$i]) || ($_POST['pourcentage_qte_ddi_'.$i]=='') || ($_POST['pourcentage_qte_ddi_'.$i]<0)) {
-		  						$_POST['pourcentage_qte_ddi_'.$i] = NULL;
+		  					// echo '<br>id_dos_ '.$nbre_dossier.' = '.$_POST['id_dos_'.$nbre_dossier];
+		  					// echo '<br>id_deb_ '.$nbre_dossier.' = '.$_POST['id_deb_'.$nbre_dossier];
+		  					// echo '<br>montant_ '.$nbre_dossier.' = '.$_POST['montant_'.$nbre_dossier];
+		  					// echo '<br>tva_ '.$nbre_dossier.' = '.$_POST['tva_'.$nbre_dossier];
+		  					// echo '<br>usd_ '.$nbre_dossier.' = '.$_POST['usd_'.$nbre_dossier];
+		  					// echo '<br>montant_tva_ '.$nbre_dossier.' = '.$_POST['montant_tva_'.$nbre_dossier];
+		  					// echo '<br>--------<br><br>pourcentage_qte_ddi_ '.$nbre_dossier.' = '.$_POST['pourcentage_qte_ddi_'.$nbre_dossier];
+
+		  					if (!isset($_POST['pourcentage_qte_ddi_a_'.$i]) || empty($_POST['pourcentage_qte_ddi_a_'.$i]) || ($_POST['pourcentage_qte_ddi_a_'.$i]=='') || ($_POST['pourcentage_qte_ddi_a_'.$i]<0)) {
+		  						$_POST['pourcentage_qte_ddi_a_'.$i] = NULL;
 		  					}
 
-		  					if (!isset($_POST['montant_tva_'.$i]) || empty($_POST['montant_tva_'.$i]) || ($_POST['montant_tva_'.$i]=='') || ($_POST['montant_tva_'.$i]<0)) {
-		  						$_POST['montant_tva_'.$i] = 0;
+		  					if (!isset($_POST['montant_tva_a_'.$i]) || empty($_POST['montant_tva_a_'.$i]) || ($_POST['montant_tva_a_'.$i]=='') || ($_POST['montant_tva_a_'.$i]<0)) {
+		  						$_POST['montant_tva_a_'.$i] = 0;
+		  						$_POST['tva_a_'.$i] = '0';
+		  					}else{
+		  						$_POST['tva_a_'.$i] = '1';
 		  					}
 
-		  					$maClasse-> creerDetailFactureDossier2($_POST['ref_fact'], $_POST['id_dos_'.$nbre_dossier], $_POST['id_deb_'.$i], $_POST['montant_'.$i], $_POST['tva_'.$i], $_POST['usd_'.$i], NULL, NULL, $_POST['pourcentage_qte_ddi_'.$i], $_POST['montant_tva_'.$i]);
+		  					$maClasse-> creerDetailFactureDossier2($_POST['ref_fact'], $_POST['id_dos_'.$nbre_dossier], $_POST['id_deb_a_'.$i], $_POST['montant_a_'.$i], $_POST['tva_a_'.$i], $_POST['usd_a_'.$i], NULL, NULL, $_POST['pourcentage_qte_ddi_a_'.$i], $_POST['montant_tva_a_'.$i]);
 		  					// $maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos'], $_POST['id_deb_'.$i], $_POST['montant_'.$i], $_POST['tva_'.$i], $_POST['usd_'.$i], NULL, NULL);
 		  				}
 

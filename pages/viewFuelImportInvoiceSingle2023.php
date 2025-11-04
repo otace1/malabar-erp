@@ -127,7 +127,7 @@ $marchandise = $maClasse-> getMarchandiseFacture($_GET['ref_fact'])['nom_march']
 $fournisseur = $maClasse-> getFournisseurFacture($_GET['ref_fact'])['supplier'];
 $info_fact = $maClasse-> getFactureGlobale($_GET['ref_fact'])['information'];
 
-$taxe = $maClasse-> getDetailFactureImportSingle2023($_GET['ref_fact'], '1');
+$taxe = $maClasse-> getDetailFactureImportSingle2025Fuel($_GET['ref_fact'], '1');
 
 $autres_charges = $maClasse-> getDetailFactureImportSingle2025Fuel($_GET['ref_fact'], '2');
 
