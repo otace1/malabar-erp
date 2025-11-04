@@ -15,6 +15,13 @@
 
   		echo json_encode($reponse);
 
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='getTableauExportInvoiceSingle_edit'){// On recupere les donnees du dossier a facturer 
+
+  		$reponse = $maClasse-> getDataDossier($_POST['id_dos']);
+  		$reponse['debours'] = $maClasse-> getDeboursPourFactureClientExport_edit($_POST['ref_fact'], $reponse['id_cli'], $reponse['id_mod_lic'], $reponse['id_march'], $reponse['id_mod_trans'], $_POST['id_dos']);
+
+  		echo json_encode($reponse);
+
 	}elseif(isset($_POST['operation']) && $_POST['operation']=='getTableauImportInvoiceSingle'){// On recupere les donnees du dossier a facturer 
 
   		$reponse = $maClasse-> getDataDossier($_POST['id_dos']);
@@ -223,6 +230,32 @@
 
   		}
 	    echo json_encode($response);
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='editerFactureExportSingle'){// On enregistre la facture Export Single
+
+  		if(isset($_POST['ref_fact'])){
+  			try {
+  			$maClasse-> MAJ_roe_decl($_POST['id_dos'], $_POST['roe_decl']);
+  			$maClasse-> supprimerDetailFactureDossier($_POST['ref_fact']);
+
+  			for ($i=1; $i <= 24 ; $i++) { 
+  				if (isset($_POST['montant_'.$i]) && $_POST['montant_'.$i] > 1) {
+  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos'], $_POST['id_deb_'.$i], $_POST['montant_'.$i], $_POST['tva_'.$i], $_POST['usd_'.$i]);
+  				}
+  				
+  			}
+
+  			$response = array('message' => 'Invoice Created');
+  			// $response['ref_fact'] = $maClasse-> buildRefFactureGlobale($_POST['id_cli']);
+  			// $response['ref_dos'] =$maClasse-> selectionnerDossierClientModeleLicenceMarchandise2($_POST['id_cli'], $_POST['id_mod_lic'], $_POST['id_march']);
+
+  			} catch (Exception $e) {
+
+	            $response = array('error' => $e->getMessage());
+
+	        }
+
+  		}
+	    echo json_encode($response);
 	}elseif(isset($_POST['operation']) && $_POST['operation']=='enregistrerFactureExportMultiple'){// On enregistre la facture Export Multiple
 
 		if (isset($_POST['nbre'])) {
@@ -248,12 +281,25 @@
 		  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 2, $_POST['dde_'.$i], '0', '0');
 
   						}
+
+  						if($maClasse-> get_aff_client_modele_licence($_POST['id_cli'], $_POST['id_mod_lic'])['bl_export_usd']== '1'){
+
+  							$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 1, $_POST['rie_'.$i], $_POST['rie_tva_'.$i], '1');
+		  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 3, $_POST['rls_'.$i], $_POST['rls_tva_'.$i], '1');
+		  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 37, $_POST['cso_'.$i], $_POST['cso_tva_'.$i], '0');
+		  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 4, $_POST['fsr_'.$i], $_POST['fsr_tva_'.$i], '0');
+		  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 212, $_POST['lse_'.$i], $_POST['lse_tva_'.$i], '1');
+
+  						}else{
+
+  							$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 1, $_POST['rie_'.$i], $_POST['rie_tva_'.$i], '0');
+		  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 3, $_POST['rls_'.$i], $_POST['rls_tva_'.$i], '0');
+		  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 37, $_POST['cso_'.$i], $_POST['cso_tva_'.$i], '0');
+		  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 4, $_POST['fsr_'.$i], $_POST['fsr_tva_'.$i], '0');
+		  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 212, $_POST['lse_'.$i], $_POST['lse_tva_'.$i], '0');
+
+  						}
 	  					
-	  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 1, $_POST['rie_'.$i], $_POST['rie_tva_'.$i], '0');
-	  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 3, $_POST['rls_'.$i], $_POST['rls_tva_'.$i], '0');
-	  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 37, $_POST['cso_'.$i], $_POST['cso_tva_'.$i], '0');
-	  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 4, $_POST['fsr_'.$i], $_POST['fsr_tva_'.$i], '0');
-	  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 212, $_POST['lse_'.$i], $_POST['lse_tva_'.$i], '0');
 	  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 7, $_POST['gov_tax_'.$i], $_POST['gov_tax_tva_'.$i], '1');
 	  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 8, $_POST['concentrate_tax_'.$i], $_POST['concentrate_tax_tva_'.$i], '1');
 	  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 5, $_POST['fere_'.$i], $_POST['fere_tva_'.$i], '1');
@@ -267,9 +313,14 @@
 	  					// Test CEEC Impala 
 	  					$dossier = $maClasse-> getDossier($_POST['id_dos_'.$i]);
 	  					if (!empty($maClasse-> verifierFonctionnalite($dossier['id_cli'], 1, $dossier['id_mod_lic'], $dossier['id_mod_trans'], $dossier['id_march']))) {
+
+	  						if ($dossier['poids']>=30) {
+	  							$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 11, 600, '0', '1');
+	  							$maClasse-> creerDepenseDossier(8, $_POST['id_dos_'.$i], date('Y-m-d'), 200, 'ANNICK');
+	  						}else{
+	  							$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 11, 600, '0', '1');
+	  						}
 	  						
-	  						$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 11, 300, '0', '1');
-	  						$maClasse-> creerDepenseDossier(8, $_POST['id_dos_'.$i], date('Y-m-d'), 150, 'ANNICK');
 
 	  					}else{
 	  						$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 12, $_POST['ceec_60_'.$i], $_POST['ceec_60_tva_'.$i], '1');
@@ -308,6 +359,8 @@
 	  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 58, $_POST['other_service_'.$i], $_POST['other_service_tva_'.$i], '1');
 	  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 21, $_POST['frais_agence_'.$i], $_POST['frais_agence_tva_'.$i], '1');
 	  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 176, $_POST['seguce_'.$i], $_POST['seguce_tva_'.$i], '1');
+	  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 213, $_POST['cgw_'.$i], $_POST['cgw_tva_'.$i], '1');
+	  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 247, $_POST['load_ass_'.$i], $_POST['load_ass_tva_'.$i], '1');
 
 	  					//1.5% Finance Cost
 	  					if(!empty(($maClasse-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport(54, $_POST['id_mod_lic'], $_POST['id_cli'], $_POST['id_march'], $_POST['id_mod_trans']))) && ($maClasse-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport(54, $_POST['id_mod_lic'], $_POST['id_cli'], $_POST['id_march'], $_POST['id_mod_trans'])['id_deb']!=0)){
@@ -538,6 +591,9 @@
 
 	  				$maClasse-> creerFactureDossier($_POST['ref_fact'], $_POST['id_mod_fact'], $_POST['id_cli'], $_SESSION['id_util'], $_POST['id_mod_lic'], 'globale', NULL);
 
+  					$maClasse-> maj_statut_arsp($_POST['ref_fact'], $_POST['statut_arsp']);
+  				
+
 	  			for ($i=1; $i <= $_POST['nbre'] ; $i++) { 
 
   					if((isset($_POST['dde'.$i]) && ($_POST['dde'.$i]>1) && isset($_POST['roe_decl_'.$i]) && ($_POST['roe_decl_'.$i]>1)) || isset($_POST['check_'.$i]) ){
@@ -556,11 +612,24 @@
 
   						}
 	  					
-	  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 1, $_POST['rie_'.$i], $_POST['rie_tva_'.$i], '0');
-	  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 3, $_POST['rls_'.$i], $_POST['rls_tva_'.$i], '0');
-	  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 37, $_POST['cso_'.$i], $_POST['cso_tva_'.$i], '0');
-	  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 4, $_POST['fsr_'.$i], $_POST['fsr_tva_'.$i], '0');
-	  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 212, $_POST['lse_'.$i], $_POST['lse_tva_'.$i], '0');
+  						if($maClasse-> get_aff_client_modele_licence($_POST['id_cli'], $_POST['id_mod_lic'])['bl_export_usd']== '1'){
+
+  							$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 1, $_POST['rie_'.$i], $_POST['rie_tva_'.$i], '1');
+		  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 3, $_POST['rls_'.$i], $_POST['rls_tva_'.$i], '1');
+		  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 37, $_POST['cso_'.$i], $_POST['cso_tva_'.$i], '0');
+		  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 4, $_POST['fsr_'.$i], $_POST['fsr_tva_'.$i], '0');
+		  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 212, $_POST['lse_'.$i], $_POST['lse_tva_'.$i], '1');
+
+  						}else{
+
+  							$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 1, $_POST['rie_'.$i], $_POST['rie_tva_'.$i], '0');
+		  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 3, $_POST['rls_'.$i], $_POST['rls_tva_'.$i], '0');
+		  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 37, $_POST['cso_'.$i], $_POST['cso_tva_'.$i], '0');
+		  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 4, $_POST['fsr_'.$i], $_POST['fsr_tva_'.$i], '0');
+		  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 212, $_POST['lse_'.$i], $_POST['lse_tva_'.$i], '0');
+
+  						}
+	  					
 	  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 7, $_POST['gov_tax_'.$i], $_POST['gov_tax_tva_'.$i], '1');
 	  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 8, $_POST['concentrate_tax_'.$i], $_POST['concentrate_tax_tva_'.$i], '1');
 	  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 5, $_POST['fere_'.$i], $_POST['fere_tva_'.$i], '1');
@@ -607,6 +676,8 @@
 	  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 58, $_POST['other_service_'.$i], $_POST['other_service_tva_'.$i], '1');
 	  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 21, $_POST['frais_agence_'.$i], $_POST['frais_agence_tva_'.$i], '1');
 	  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 176, $_POST['seguce_'.$i], $_POST['seguce_tva_'.$i], '1');
+	  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 213, $_POST['cgw_'.$i], $_POST['cgw_tva_'.$i], '1');
+	  					$maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos_'.$i], 247, $_POST['load_ass_'.$i], $_POST['load_ass_tva_'.$i], '1');
 
 	  					//1.5% Finance Cost
 	  					if(!empty(($maClasse-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport(54, $_POST['id_mod_lic'], $_POST['id_cli'], $_POST['id_march'], $_POST['id_mod_trans']))) && ($maClasse-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport(54, $_POST['id_mod_lic'], $_POST['id_cli'], $_POST['id_march'], $_POST['id_mod_trans'])['id_deb']!=0)){
@@ -684,6 +755,25 @@
 		}
 		echo json_encode($maClasse-> getListeFactures($_POST['statut'], $id_mod_lic, $id_util, $debut, $fin, $_POST['id_cli']));
 		
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='popUpFacture2'){ // On Recupere les data pour rapport facturation Popup
+		$id_mod_lic = NULL;
+		if (isset($_POST['id_mod_lic'])&&($_POST['id_mod_lic']!='')) {
+			$id_mod_lic = $_POST['id_mod_lic'];
+		}
+		$id_util = NULL;
+		if (isset($_POST['id_util'])&&($_POST['id_util']!='')) {
+			$id_util = $_POST['id_util'];
+		}
+		$debut = NULL;
+		if (isset($_POST['debut'])&&($_POST['debut']!='')) {
+			$debut = $_POST['debut'];
+		}
+		$fin = NULL;
+		if (isset($_POST['fin'])&&($_POST['fin']!='')) {
+			$fin = $_POST['fin'];
+		}
+		echo json_encode($maClasse-> popUpFacture2($_POST['statut'], $id_mod_lic, $id_util, $debut, $fin, $_POST['id_cli']));
+		
 	}elseif(isset($_POST['operation']) && $_POST['operation']=='pay_report'){ 
 
 		if (!empty($_POST['id_dos']) && ($_POST['id_dos']>0)) {
@@ -695,6 +785,16 @@
 	}elseif(isset($_POST['operation']) && $_POST['operation']=='pay_report_file'){ 
 
 		echo json_encode($maClasse-> pay_report_file());
+		
+		
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='pay_report_file_pending_invoice'){ 
+
+		echo json_encode($maClasse-> pay_report_file_pending_invoice($_POST['id_mod_lic']));
+		
+		
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='pay_report_file_df'){ 
+
+		echo json_encode($maClasse-> pay_report_file_df($_POST['id_df']));
 		
 		
 	}elseif(isset($_POST['operation']) && $_POST['operation']=='rapportOperations'){ // On Recupere les data pour rapport Operations
@@ -2544,6 +2644,10 @@
 
 		echo json_encode($maClasse-> client_note_debit($_POST['id_mod_lic']));
 
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='client_note_debit2'){
+
+		echo json_encode($maClasse-> client_note_debit2($_POST['id_cli']));
+
 	}elseif(isset($_POST['operation']) && $_POST['operation']=='kamoa_nd'){
 
 		$response['tableau_kamoa_nd'] = $maClasse-> kamoa_nd($_POST['id_mod_lic'], $_POST['id_cli']);
@@ -3138,6 +3242,8 @@
 
   		$reponse['nbre_awaiting_elq'] = $maClasse-> nbre_awaiting_elq($_POST['id_mod_lic'], $_POST['id_cli']);
   		$reponse['nbre_awaiting_invoice'] = $maClasse-> nbre_awaiting_invoice($_POST['id_mod_lic'], $_POST['id_cli']);
+  		$reponse['nbre_liq_not_invoice'] = $maClasse-> nbre_liq_not_invoice($_POST['id_mod_lic'], $_POST['id_cli']);
+  		$reponse['nbre_dispatched_not_invoice'] = $maClasse-> nbre_dispatched_not_invoice($_POST['id_mod_lic'], $_POST['id_cli']);
   		$reponse['nbre_invoiced'] = $maClasse-> nbre_invoiced($_POST['id_mod_lic'], $_POST['id_cli']);
   		$reponse['nbre_disabled'] = $maClasse-> nbre_disabled($_POST['id_mod_lic'], $_POST['id_cli']);
   		$reponse['nbre_dossier_facture_excel'] = $maClasse-> getNbreDossierFactureExcel($_POST['id_mod_lic'], $_POST['id_cli']);
@@ -3272,6 +3378,12 @@
 
 		echo json_encode($response);
 
+	}else if ($_POST['operation']=="table_client_note_debit") {
+
+		$response['table_client_note_debit'] = $maClasse-> table_client_note_debit($_POST['mot_cle']);
+
+		echo json_encode($response);
+
 	}else if ($_POST['operation']=="table_menuLicence_synthese") {
 
 		$response['table_menuLicence'] = $maClasse-> table_menuLicence_synthese($_POST['id_mod_lic'], $_POST['id_type_lic'], $_POST['page'], $_POST['mot_cle']);
@@ -3320,6 +3432,10 @@
 	}elseif(isset($_POST['operation']) && $_POST['operation']=='kpi_tracking_reportAll'){ 
 
 		echo json_encode($maClasse-> kpi_tracking_reportAll($_POST['debut'], $_POST['fin'], $_POST['id_cli'], $_POST['id_mod_lic']));
+
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='kpi_tracking_reportAll2'){ 
+
+		echo json_encode($maClasse-> kpi_tracking_reportAll2($_POST['champ_col'], $_POST['debut'], $_POST['fin'], $_POST['id_cli'], $_POST['id_mod_lic']));
 
 	}elseif(isset($_POST['operation']) && $_POST['operation']=='update_OGEFREM'){ 
 
@@ -3556,51 +3672,115 @@
 
 		echo json_encode($maClasse-> dossier_no_dispatch_dashboard($_POST['debut'], $_POST['fin'], $_POST['id_cli']));
 
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='dossier_quittance_dashboard'){ 
+
+		echo json_encode($maClasse-> dossier_quittance_dashboard($_POST['debut'], $_POST['fin'], $_POST['id_cli'], $_POST['id_mod_lic']));
+
 	}elseif(isset($_POST['operation']) && $_POST['operation']=='creer_demande_fond'){ 
 
-		$maClasse-> creer_demande_fond($_POST['id_dept'], $_POST['id_site'], $_POST['beneficiaire'], $_POST['id_cli'], $_POST['cash'], $_POST['montant'], $_POST['usd'], $_POST['libelle'], $_POST['id_util_visa_dept'], $_POST['id_dep']);
-    	
-    	$id_df = $maClasse-> getLastDemandeFond()['id_df'];
-		
-		if (($_FILES['fichier_df']['name'])) {
+		//Check Dossier doublon dans la meme demande de fond
+		$erreur_1 = '';
+		$erreur_2 = '';
+		$dossier_tmp_1 = '';
+		$dossier_tmp_2 = '';
 
-    		$file = $_FILES['fichier_df'];
-    		$filename = $file['name'];
-    		$ext = pathinfo($filename, PATHINFO_EXTENSION);
+    	for ($a=0; $a < $_POST['nbre'] ; $a++) { 
 
-    		$fichier_df = uniqid();
-    		// $id_df = str_replace("/", "_", "$id_df");
-			
-			$dossier = '../demande_fond/'.$id_df;
+    		$dossier_tmp_1 = $_POST['id_dos_'.$a];
 
-			if(!is_dir($dossier)){
-				mkdir("../demande_fond/$id_df", 0777);
-			}
-			$uploadFile = $dossier.'/'.$fichier_df.'.'.$ext;
-			move_uploaded_file($file['tmp_name'], $uploadFile);
-
-    		$maClasse-> inserer_fichier_df($id_df, $fichier_df.'.'.$ext);
-
-    	}
-
-    	for ($i=0; $i <= $_POST['nbre'] ; $i++) { 
-
-    		if (isset($_POST['id_dos_'.$i])) {
-
-    			$maClasse-> creerDepenseDossierDF($_POST['id_dep'], $_POST['id_dos_'.$i], date('Y-m-d'), $_POST['montant_'.$i], $id_df);
+    		for ($j=0; $j < $_POST['nbre'] ; $j++) { 
     			
+    			if ($a!=$j) {
+    				
+    				$dossier_tmp_2 = $_POST['id_dos_'.$j];
+    				if ($dossier_tmp_1 == $dossier_tmp_2) {
+    				
+	    				$erreur_1 .= $maClasse-> getDossier($dossier_tmp_1)['ref_dos'].'<br>';
+
+	    			}
+
+    			}
 
     		}
 
     	}
 
-	    $response['message'] = '
-	    				<div class="alert alert-success alert-dismissible" role="alert">
+    	for ($a=0; $a < $_POST['nbre'] ; $a++) { 
+
+
+    		if (!empty($maClasse-> double_check_request($_POST['id_dos_'.$a], $_POST['id_dep']))) {
+    				
+				$erreur_2 .= $maClasse-> getDossier($_POST['id_dos_'.$a])['ref_dos'].'<br>';
+
+			}
+
+    	}
+
+    	if ($erreur_1!='') {
+
+    		$response['erreur_1'] = '
+	    				<div class="alert alert-danger alert-dismissible" role="alert">
 		                  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-		                  <strong>Payment request has been created!</strong> 
+		                  <strong>Duplicate Entry Error: </strong><br> '.$erreur_1.'
 		                </div>';
 
-		$response['id_df'] = $id_df;
+    	}else if ($erreur_2!='') {
+
+    		$response['erreur_2'] = '
+	    				<div class="alert alert-danger alert-dismissible" role="alert">
+		                  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+		                  <strong>Duplicate expense error on file: </strong><br> '.$erreur_2.'
+		                </div>';
+
+    	}else{
+
+
+			$maClasse-> creer_demande_fond($_POST['id_dept'], $_POST['id_site'], $_POST['beneficiaire'], $_POST['id_cli'], $_POST['cash'], $_POST['montant'], $_POST['usd'], $_POST['libelle'], $_POST['id_util_visa_dept'], $_POST['id_dep']);
+	    	
+	    	$id_df = $maClasse-> getLastDemandeFond()['id_df'];
+			
+			if (($_FILES['fichier_df']['name'])) {
+
+	    		$file = $_FILES['fichier_df'];
+	    		$filename = $file['name'];
+	    		$ext = pathinfo($filename, PATHINFO_EXTENSION);
+
+	    		$fichier_df = uniqid();
+	    		// $id_df = str_replace("/", "_", "$id_df");
+				
+				$dossier = '../demande_fond/'.$id_df;
+
+				if(!is_dir($dossier)){
+					mkdir("../demande_fond/$id_df", 0777);
+				}
+				$uploadFile = $dossier.'/'.$fichier_df.'.'.$ext;
+				move_uploaded_file($file['tmp_name'], $uploadFile);
+
+	    		$maClasse-> inserer_fichier_df($id_df, $fichier_df.'.'.$ext);
+
+	    	}
+
+	    	for ($i=0; $i <= $_POST['nbre'] ; $i++) { 
+
+	    		if (isset($_POST['id_dos_'.$i])) {
+
+	    			$maClasse-> creerDepenseDossierDF($_POST['id_dep'], $_POST['id_dos_'.$i], date('Y-m-d'), $_POST['montant_'.$i], $id_df);
+	    			
+
+	    		}
+
+	    	}
+
+		    $response['message'] = '
+		    				<div class="alert alert-success alert-dismissible" role="alert">
+			                  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			                  <strong>Payment request has been created!</strong> 
+			                </div>';
+
+			$response['id_df'] = $id_df;
+
+
+    	}
 
 		echo json_encode($response);
 
@@ -3674,6 +3854,10 @@
 
 		echo json_encode($maClasse-> demande_fond($_POST['statut']));
 
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='demande_fond_2'){ 
+
+		echo json_encode($maClasse-> demande_fond_2($_POST['statut']));
+
 	}elseif(isset($_POST['operation']) && $_POST['operation']=='demande_fond_bank'){ 
 
 		echo json_encode($maClasse-> demande_fond_bank($_POST['statut']));
@@ -3701,7 +3885,7 @@
       	$btn_visa_fin_df = '';
       	$btn_decaiss_df = '';
 
-      	if ($response['id_util_reject_dept']==null && $response['date_visa_dept']==null) {
+      	if ($response['date_visa_dept']==null) {
       		$response['btn_edit_df'] = '<a class="btn btn-xs btn-warning" onclick="window.location.replace(\'edit_demande_fond.php?id_df='.$response['id_df'].'\');"> <i class="fa fa-edit"></i> Edit</a>';
       	}
 
@@ -3802,7 +3986,7 @@
 			</tr>
 			<tr>
 				<td>Nbre of Files: </td>
-				<td><b>'.$response['nbre_dos'].'</b></td>
+				<td><b>'.$response['nbre_dos'].'</b> <a href="#" onclick="window.open(\'popUpRapportPayFile2.php?id_df='.$response['id_df'].'\',\'popUpRapportPayFile2\',\'width=1300,height=900\')"><i class="fa fa-eye"></i></a></td>
 			</tr>
 			<tr>
 				<td>Support Doc.: </td>
@@ -3883,7 +4067,7 @@
 		$response['message'] = '
 	    				<div class="alert alert-danger alert-dismissible" role="alert">
 		                  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-		                  <i class="fa fa-times"></i> The payment request <b>No.'.$_POST['id_df'].'</b> has been refused by the departement!
+		                  <i class="fa fa-times"></i> The payment request <b>No.'.$_POST['id_df'].'</b> has been rejected!
 		                </div>';
 
 		echo json_encode($response);
@@ -3946,7 +4130,7 @@
 
 	}elseif(isset($_POST['operation']) && $_POST['operation']=='modal_search_dossier_df'){ 
 
-		$response['table_dossier_df'] = $maClasse-> modal_search_dossier_df($_POST['id_cli'], $_POST['ligne'], $_POST['mot_cle']);
+		$response['table_dossier_df'] = $maClasse-> modal_search_dossier_df($_POST['id_cli'], $_POST['id_dep'], $_POST['ligne'], $_POST['mot_cle']);
 
 		echo json_encode($response);
 
@@ -4027,13 +4211,13 @@
 
 	}elseif(isset($_POST['operation']) && $_POST['operation']=='nbre_notification_demande_fond'){ 
 		
-		$response = $maClasse-> nbre_notification_demande_fond();
+		$response = $maClasse-> nbre_notification_demande_fond($_POST['cash']);
 
 		echo json_encode($response);
 
 	}elseif(isset($_POST['operation']) && $_POST['operation']=='tableau_demande_fond_notification'){ 
 		
-		$response['tableau_demande_fond_notification'] = $maClasse-> tableau_demande_fond_notification($_POST['niveau']);
+		$response['tableau_demande_fond_notification'] = $maClasse-> tableau_demande_fond_notification($_POST['niveau'], $_POST['cash']);
 
 		echo json_encode($response);
 
@@ -4064,15 +4248,21 @@
             
             if (isset($id_dos)) {
 
-    			$table .='<tr>
+            	if(!empty($maClasse-> double_check_request($id_dos, $_POST['id_dep']))){
+
+            	}else{
+            		$table .='<tr>
     						<td>'.($compteur+1).'</td>
-    						<td><input type="hidden" id="id_dos_'.$compteur.'" name="id_dos_'.$compteur.'" value="'.$id_dos.'">'.$ref_dos.'<a href="#" class="text-primary" onclick="modal_search_dossier_df('.$compteur.')"><i class="fa fa-search"></i></a></td>
+    						<td><input type="hidden" id="id_dos_'.$compteur.'" name="id_dos_'.$compteur.'" value="'.$id_dos.'"><span id="label_ref_dos_'.$compteur.'">'.$ref_dos.'</span> <a href="#" class="text-primary" onclick="modal_search_dossier_df('.$compteur.')"><i class="fa fa-search"></i></a> <a href="#" class="text-danger" onclick="remove_dossier_df('.$compteur.')"><i class="fa fa-times"></i></a></td>
     						<td><input type="number" step="0.001" class=" text-right" style="width: 8em;" id="montant_'.$compteur.'" name="montant_'.$compteur.'" value="'.$montant.'" required></td>
     					</tr>';
+    				$compteur++;
+
+            	}
+
               
               // $maClasse-> creerDepenseDossier($_POST['id_dep'], $id_dos, $date_dep, $montant, $assigned_to);
 
-    			$compteur++;
             }
 
         }
@@ -4126,11 +4316,156 @@
 
 	}elseif(isset($_POST['operation']) && $_POST['operation']=='creerDepenseDossierDF'){ 
 
-		$maClasse-> creerDepenseDossierDF($_POST['id_dep'], $_POST['id_dos'], date('Y-m-d'), $_POST['montant'], $_POST['id_df']);
+		$erreur_2 = '';
+
+		if (!empty($maClasse-> double_check_request($_POST['id_dos'], $_POST['id_dep']))) {
+    				
+			$erreur_2 .= $maClasse-> getDossier($_POST['id_dos'])['ref_dos'].'<br>';
+
+		}
+
+		if ($erreur_2!='') {
+
+    		$response['erreur_2'] = '
+	    				<div class="alert alert-danger alert-dismissible" role="alert">
+		                  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+		                  <strong>Duplicate expense error on file: </strong><br> '.$erreur_2.'
+		                </div>';
+
+    	}else{
+    		$maClasse-> creerDepenseDossierDF($_POST['id_dep'], $_POST['id_dos'], date('Y-m-d'), $_POST['montant'], $_POST['id_df']);
+			$response['message'] = 'Done!';
+    	}
+
+		echo json_encode($response);
+
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='add_aff_modele_note_debit'){ 
+
+		$maClasse-> add_aff_modele_note_debit($_POST['id_model_nd'], $_POST['id_cli'], $_POST['id_mod_lic'], $_POST['id_dep']);
 		$response['message'] = 'Done!';
 
 		echo json_encode($response);
 
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='delete_aff_modele_note_debit'){ 
+
+		$maClasse-> delete_aff_modele_note_debit($_POST['id_model_nd'], $_POST['id_cli'], $_POST['id_mod_lic'], $_POST['id_dep']);
+		$response['message'] = 'Done!';
+
+		echo json_encode($response);
+
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='commentaire_dossier'){ 
+
+		$response['titre_col'] = $maClasse-> getDataColonne($_POST['id_col'])['titre_col'];
+		$response['ref_dos'] = $maClasse-> getDossier($_POST['id_dos'])['ref_dos'];
+		$response['lister_commentaire_dossier'] = $maClasse-> lister_commentaire_dossier($_POST['id_dos'], $_POST['id_col']);
+
+		echo json_encode($response);
+
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='add_commentaire_dossier'){ 
+
+		$maClasse-> add_commentaire_dossier($_POST['id_dos'], $_POST['id_col'], $_POST['valeur']);
+		$response['message'] = 'Done!';
+
+		echo json_encode($response);
+
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='get_montant_total_depense_dossier_DF'){ 
+
+		$response['montant'] = $maClasse-> get_montant_total_depense_dossier_DF($_POST['id_df']);
+
+		echo json_encode($response);
+
+	}else if(isset($_POST['operation']) && $_POST['operation']=='monitoring_roe_decl'){// Afiicher Taux
+
+  		echo json_encode($maClasse-> monitoring_roe_decl());
+
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='new_roe_decl'){// new_roe_decl
+
+  		// $reponse = $maClasse-> getDataDossier($_POST['id_dos']);
+  		$maClasse-> new_roe_decl($_POST['roe_decl'], $_POST['date_decl']);
+  		$reponse['msg'] = 'Done!';
+  		echo json_encode($reponse);
+
+	}else if(isset($_POST['operation']) && $_POST['operation']=='report_roe_decl'){
+
+  		echo json_encode($maClasse-> report_roe_decl($_POST['date_decl'], $_POST['roe_decl']));
+
+	}else if(isset($_POST['operation']) && $_POST['operation']=='get_tableau_dossier_a_facturer_liquidation'){
+
+		$response['tableau_dossier_a_facturer_liquidation'] = $maClasse-> tableau_dossier_a_facturer_liquidation($_POST['id_cli'], $_POST['id_mod_lic'], $_POST['id_march'], $_POST['ref_liq'])['table'];
+		$response['m3'] = $maClasse-> tableau_dossier_a_facturer_liquidation($_POST['id_cli'], $_POST['id_mod_lic'], $_POST['id_march'], $_POST['ref_liq'])['m3'];
+
+  		$response['debours'] = $maClasse-> getDeboursPourFactureClientModeleLicenceAjaxFuel($_POST['id_cli'], $_POST['id_mod_lic'], $_POST['id_march'], $_POST['id_mod_trans'], $response['m3']);
+
+
+  		echo json_encode($response);
+
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='getTableauImportInvoiceSingleFuel'){// On recupere les donnees du dossier a facturer 
+
+  		$reponse['debours'] = $maClasse-> getDeboursPourFactureClientModeleLicenceAjaxFuel($_POST['id_cli'], $_POST['id_mod_lic'], $_POST['id_march'], $_POST['id_mod_trans'], $_POST['m3']);
+
+  		echo json_encode($reponse);
+
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='enregistrerFactureImportFuel'){// On enregistre la facture Export Single
+
+  		if(isset($_POST['ref_fact'])){
+  			try {
+  			$maClasse-> creerFactureDossier($_POST['ref_fact'], $_POST['id_mod_fact'], $_POST['id_cli'], $_SESSION['id_util'], $_POST['id_mod_lic'], 'globale', NULL);
+  			// $maClasse-> MAJ_tax_duty_part_facture_dossier($_POST['ref_fact'], $_POST['tax_duty_part']);
+  			// $maClasse-> maj_statut_arsp($_POST['ref_fact'], $_POST['statut_arsp']);
+
+  			for ($nbre_dossier=1; $nbre_dossier <= $_POST['nbre_dossier']; $nbre_dossier++) { 
+
+  				
+
+  				if($nbre_dossier==1){
+
+  					for ($i=1; $i <= $_POST['compteur'] ; $i++) { 
+
+		  				if (isset($_POST['montant_'.$i]) && $_POST['montant_'.$i] > 1) {
+
+		  					if (!isset($_POST['pourcentage_qte_ddi_'.$i]) || empty($_POST['pourcentage_qte_ddi_'.$i]) || ($_POST['pourcentage_qte_ddi_'.$i]=='') || ($_POST['pourcentage_qte_ddi_'.$i]<0)) {
+		  						$_POST['pourcentage_qte_ddi_'.$i] = NULL;
+		  					}
+
+		  					if (!isset($_POST['montant_tva_'.$i]) || empty($_POST['montant_tva_'.$i]) || ($_POST['montant_tva_'.$i]=='') || ($_POST['montant_tva_'.$i]<0)) {
+		  						$_POST['montant_tva_'.$i] = 0;
+		  					}
+
+		  					$maClasse-> creerDetailFactureDossier2($_POST['ref_fact'], $_POST['id_dos_'.$nbre_dossier], $_POST['id_deb_'.$i], $_POST['montant_'.$i], $_POST['tva_'.$i], $_POST['usd_'.$i], NULL, NULL, $_POST['pourcentage_qte_ddi_'.$i], $_POST['montant_tva_'.$i]);
+		  					// $maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos'], $_POST['id_deb_'.$i], $_POST['montant_'.$i], $_POST['tva_'.$i], $_POST['usd_'.$i], NULL, NULL);
+		  				}
+
+		  			}
+
+  				}
+
+
+  				//ADM & OPS Fees
+  				$_POST['tva_'.$nbre_dossier] = '0';
+  				$_POST['usd_'.$nbre_dossier] = '1';
+  				$maClasse-> creerDetailFactureDossier2($_POST['ref_fact'], $_POST['id_dos_'.$nbre_dossier], 250, $_POST['ops_admin_fee_'.$nbre_dossier], $_POST['tva_'.$nbre_dossier], $_POST['usd_'.$nbre_dossier], NULL, NULL, $_POST['pourcentage_qte_ddi_'.$nbre_dossier], $_POST['montant_tva_'.$nbre_dossier]);
+
+  				//AgencyFees
+  				$_POST['tva_'.$nbre_dossier] = '1';
+  				$_POST['usd_'.$nbre_dossier] = '1';
+  				$maClasse-> creerDetailFactureDossier2($_POST['ref_fact'], $_POST['id_dos_'.$nbre_dossier], 21, $_POST['agency_fee_'.$nbre_dossier], $_POST['tva_'.$nbre_dossier], $_POST['usd_'.$nbre_dossier], NULL, NULL, $_POST['pourcentage_qte_ddi_'.$nbre_dossier], $_POST['montant_tva_'.$nbre_dossier]);
+
+  				$maClasse-> MAJ_roe_decl($_POST['id_dos_'.$nbre_dossier], $_POST['roe_decl']);
+
+  			}
+
+  			$response = array('message' => 'Invoice Created');
+  			/*$response['ref_fact'] = $maClasse-> buildRefFactureGlobale($_POST['id_cli']);
+  			$response['ref_dos'] =$maClasse-> selectionnerDossierClientModeleLicenceMarchandise2($_POST['id_cli'], $_POST['id_mod_lic'], $_POST['id_march']);*/
+
+  			} catch (Exception $e) {
+
+	            $response = array('error' => $e->getMessage());
+
+	        }
+
+  		}
+	    echo json_encode($response);exit;
 	}
 
 
