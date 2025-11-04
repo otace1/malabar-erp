@@ -2036,16 +2036,17 @@
 			$entree['pourcentage_qte'] = $pourcentage_qte;
 			$entree['montant_tva'] = $montant_tva;
 
-			// echo '<br><br>id_dos = '.$id_dos;
-			// echo '<br>ref_fact = '.$ref_fact;
-			// echo '<br>id_deb = '.$id_deb;
-			// echo '<br>montant = '.$montant;
-			// echo '<br>tva = '.$tva;
-			// echo '<br>usd = '.$usd;
-			// echo '<br>detail = '.$detail;
-			// echo '<br>unite = '.$unite;
-			// echo '<br>pourcentage_qte = '.$pourcentage_qte;
-			// echo '<br>------------------<br>';
+			/*echo '<br><br>id_dos = '.$id_dos;
+			echo '<br>ref_fact = '.$ref_fact;
+			echo '<br>id_deb = '.$id_deb;
+			echo '<br>montant = '.$montant;
+			echo '<br>tva = '.$tva;
+			echo '<br>usd = '.$usd;
+			echo '<br>detail = '.$detail;
+			echo '<br>unite = '.$unite;
+			echo '<br>pourcentage_qte = '.$pourcentage_qte;
+			echo '<br>montant_tva = '.$montant_tva;
+			echo '<br>------------------<br>';*/
 
 			if ($montant>0) {
 				$requete = $connexion-> prepare("INSERT INTO detail_facture_dossier(ref_fact, id_dos,
@@ -8506,6 +8507,141 @@
 			return $tbl;
 		}
 
+		public function getListeDossierFactureFuel($ref_fact){
+			include('connexion.php');
+			$entree['ref_fact'] = $ref_fact;
+
+			$tbl = '';
+			$compteur=0;
+			$liquidation_usd=0;
+			$liquidation_cdf=0;
+			$total_m3 = 0;
+			$requete = $connexion-> prepare('SELECT dos.ref_dos AS ref_dos,
+													dos.destination AS destination,
+													dos.transporter AS transporter,
+													dos.horse AS horse,
+													dos.trailer_1 AS trailer_1,
+													dos.trailer_2 AS trailer_2,
+													dos.num_lot AS num_lot,
+													(dos.m3/1000) AS m3,
+													dos.ref_liq AS ref_liq,
+													dos.ref_quit AS ref_quit,
+													dos.roe_decl AS roe_decl,
+													dos.roe_liq AS roe_liq,
+													dos.id_bank_liq AS id_bank_liq,
+													dos.montant_liq AS montant_liq,
+													DATE_FORMAT(dos.date_decl, "%d/%m/%Y") AS date_decl,
+													dos.ref_decl AS ref_decl,
+													dos.ref_liq AS ref_liq,
+													dos.ref_quit AS ref_quit,
+													dos.date_decl AS date_decl2,
+													DATE_FORMAT(dos.load_date, "%d/%m/%Y") AS load_date,
+													DATE_FORMAT(dos.date_liq, "%d/%m/%Y") AS date_liq,
+													DATE_FORMAT(dos.date_quit, "%d/%m/%Y") AS date_quit,
+													-- IF(dos.cleared="1",
+													-- 	"CLEARED",
+													-- 	"TRANSIT") AS cleared
+													"CLEARED" AS cleared,
+													IF(DATE(dos.date_creat_dos)>"2025-09-01",
+														dos.montant_liq
+														,
+														SUM(
+															IF(det.usd="0" AND d.id_t_deb="1", 
+																IF(det.tva="1",
+																	IF(det.montant_tva>0,
+																		(det.montant_tva+det.montant),
+																		(det.montant*0.16)
+																	),
+																	det.montant
+																), 
+																0
+															)
+														)
+													)AS liquidation_cdf,
+													IF(DATE(dos.date_creat_dos)>"2025-09-01",
+														dos.montant_liq/dos.roe_decl
+														,
+														SUM(
+															IF(det.usd="0" AND d.id_t_deb="1", 
+																IF(det.tva="1",
+																	IF(det.montant_tva>0,
+																		(det.montant_tva+det.montant)/dos.roe_decl,
+																		(det.montant*0.16)/dos.roe_decl
+																	),
+																	det.montant/dos.roe_decl
+																), 
+																0
+															)
+														)
+													) AS liquidation_usd,
+													SUM(
+														IF(det.usd="0" AND d.id_t_deb="1", 
+															IF(det.tva="1",
+																IF(det.montant_tva>0,
+																	((det.montant_tva+det.montant)/dos.roe_decl)/dos.poids,
+																	(det.montant*0.16)/dos.roe_decl
+																),
+																(det.montant/dos.roe_decl)/dos.poids
+															), 
+															0
+														)
+													) AS liquidation_usd_per_ton,
+													UPPER(CONCAT(
+														IF(dos.horse IS NOT NULL,
+															dos.horse,
+															""),
+														IF(dos.trailer_1 IS NOT NULL,
+															CONCAT(" / ",dos.trailer_1),
+															""),
+														IF(dos.trailer_1 IS NOT NULL,
+															CONCAT(" / ",dos.trailer_2),
+															"")
+														)) AS truck
+												FROM debours d, detail_facture_dossier det, dossier dos
+												WHERE det.ref_fact = ?
+													AND det.id_deb = d.id_deb
+													AND det.id_dos = dos.id_dos
+												GROUP BY dos.id_dos');
+			$requete-> execute(array($entree['ref_fact']));
+			while($reponse = $requete-> fetch()){
+				$compteur++;
+
+				$total_m3+=$reponse['m3'];
+				$liquidation_usd+=$reponse['liquidation_usd'];
+				$liquidation_cdf+=$reponse['liquidation_cdf'];
+
+				if ($reponse['roe_liq']<0 || empty($reponse['roe_liq'])) {
+					$reponse['roe_liq'] = $this-> getDataDeclaration($reponse['date_decl2'])['roe_liq'];
+				}
+
+				$tbl .= '
+						<tr>
+							<td width="3%" style="text-align: center; border: 1 solid black; font-size: 7px;">'.$compteur.'</td>
+							<td width="9%" style="text-align: center; border: 1 solid black; font-size: 7px;">'.$reponse['ref_dos'].'</td>
+							<td width="12%" style="text-align: center; border: 1 solid black; font-size: 7px;">'.$reponse['truck'].'</td>
+							<td width="6%" style="text-align: center; border: 1 solid black; font-size: 7px;">'.number_format($reponse['m3'], 3, ',', '.').'</td>
+							<td width="6%" style="text-align: center; border: 1 solid black; font-size: 7px;">'.$reponse['ref_decl'].'</td>
+							<td width="6%" style="text-align: center; border: 1 solid black; font-size: 7px;">'.$reponse['date_decl'].'</td>
+							<td width="6%" style="text-align: center; border: 1 solid black; font-size: 7px;">'.$reponse['ref_liq'].'</td>
+							<td width="6%" style="text-align: center; border: 1 solid black; font-size: 7px;">'.$reponse['date_liq'].'</td>
+							<td width="6%" style="text-align: center; border: 1 solid black; font-size: 7px;">'.$reponse['ref_quit'].'</td>
+							<td width="6%" style="text-align: center; border: 1 solid black; font-size: 7px;">'.$reponse['date_quit'].'</td>
+						</tr>
+					';
+
+			}$requete-> closeCursor();
+
+			
+			$tbl .= '
+					<tr>
+						<td width="24%" style="text-align: center; border: 1 solid black; font-size: 7px;">Total</td>
+						<td width="6%" style="text-align: center; border: 1 solid black; font-size: 7px;">'.number_format($total_m3, 3, ',', '.').'</td>
+					</tr>
+				';
+
+			return $tbl;
+		}
+
 		public function getDossierFactureExportSingle4_03_10_25($ref_fact){
 			include('connexion.php');
 			$entree['ref_fact'] = $ref_fact;
@@ -12047,7 +12183,7 @@
 													det.pourcentage_qte AS pourcentage_qte,
 													fact.font_size AS font_size, 
 													dos.id_cli AS id_cli,
-													dos.m3 AS m3,
+													SUM(dos.m3/1000) AS m3,
 													IF(DATE(fact.date_fact)>="2024-03-25", "1", "0") AS tmp_date
 												FROM debours d, detail_facture_dossier det, dossier dos, facture_dossier fact
 												WHERE det.ref_fact = ?
@@ -12070,7 +12206,7 @@
 					$ttc = $reponse['ht_usd'] + round(($reponse['ht_usd'] * 0.16), 2);
 				}
 
-				if (isset($reponse['pourcentage_qte'])) {
+				if (isset($reponse['pourcentage_qte']) && $reponse['pourcentage_qte']>0) {
 					$cost_2 = number_format($reponse['pourcentage_qte'], 2, ',', '.').'%';
 					$unite = 'CIF';
 					$cif_split = number_format(($reponse['ht_cdf']*100)/$reponse['pourcentage_qte'], 0, ',', '.');
@@ -12078,7 +12214,7 @@
 					
 					$unite = 'CIF';
 
-					if (isset($reponse['pourcentage_qte'])) {
+					if (isset($reponse['pourcentage_qte']) && $reponse['pourcentage_qte']>0) {
 						$cost_2 = number_format($reponse['pourcentage_qte'], 2, ',', '.').'%';
 					}else{
 						$cost_2 = number_format(($reponse['ht_cdf']/$this-> getDataDossiersMultipleInvoice($ref_fact)['cif_cdf'])*100, 2, ',', '.').'%';
@@ -18895,6 +19031,27 @@
 												GROUP BY fd.ref_fact");
 			$requete-> execute(array($entree['ref_fact']));
 			$reponse = $requete-> fetch();
+			IF($reponse['cif_cdf']<=0){
+				$reponse['cif_cdf'] = 1;
+				$reponse['cif_usd'] = 1;
+			}
+			return $reponse;
+		}
+
+		public function getDataDossiersMultipleInvoiceFuel($ref_fact){
+			include('connexion.php');
+			$entree['ref_fact'] = $ref_fact;
+
+			$requete = $connexion-> prepare("SELECT SUM(dos.m3/1000) AS m3
+												FROM facture_dossier fd, detail_facture_dossier df, dossier dos, client cl, mode_transport mt
+												WHERE fd.ref_fact = ?
+													AND fd.ref_fact = df.ref_fact
+													AND df.id_deb = 21
+													AND df.id_dos = dos.id_dos
+													AND dos.id_cli = cl.id_cli
+													AND dos.id_mod_trans = mt.id_mod_trans");
+			$requete-> execute(array($entree['ref_fact']));
+			$reponse = $requete-> fetch();
 			return $reponse;
 		}
 
@@ -22677,13 +22834,13 @@
 			return $debours;
 		}
 
-		public function getDeboursPourFactureClientModeleLicenceAjaxFuel($id_cli, $id_mod_lic, $id_march, $id_mod_trans, $id_dos=NULL){
+		public function getDeboursPourFactureClientModeleLicenceAjaxFuel($id_cli, $id_mod_lic, $id_march, $id_mod_trans, $m3){
 			include('connexion.php');
 			$entree['id_cli'] = $id_cli;
 			$entree['id_mod_lic'] = $id_mod_lic;
 			$entree['id_march'] = $id_march;
 			$entree['id_mod_trans'] = $id_mod_trans;
-			$entree['id_dos'] = $id_dos;
+			// $entree['id_dos'] = $id_dos;
 			$compteur = 0;
 			$active = '';
 			$sqlTypeDebours = '';
@@ -22698,7 +22855,7 @@
 
 			$requeteTypeDebours = $connexion-> query("SELECT UPPER(nom_t_deb) AS nom_t_deb, id_t_deb
 														FROM type_debours
-														$sqlTypeDebours");
+														WHERE id_t_deb = 1");
 			while($reponseTypeDebours = $requeteTypeDebours-> fetch()){
 				$debours .= '
 							<tr id="">
@@ -22748,8 +22905,8 @@
 						
 					}else if ($reponseDebours['id_t_deb']<>'1') {
 
-						$unite_input = '<input type="number" step="0.001" style="text-align: center; width: 8em;" class="" name="" value="'.$this-> getDossier($id_dos)['m3'].'" onblur="calculDroit();">';
-						$montant_input = '<input type="number" step="0.001" style="text-align: center;" name="montant_'.$compteur.'" value="'.($reponseDebours['montant']*$this-> getDossier($id_dos)['m3']).'" onblur="calculDroit();"><input type="hidden" id="montant_min" name="montant_min" value="'.$reponseDebours['montant_min'].'">';
+						$unite_input = '<input type="number" step="0.001" style="text-align: center; width: 8em;" class="" name="" value="'.$m3.'" onblur="calculDroit();">';
+						$montant_input = '<input type="number" step="0.001" style="text-align: center;" name="montant_'.$compteur.'" value="'.($reponseDebours['montant']*$m3).'" onblur="calculDroit();"><input type="hidden" id="montant_min" name="montant_min" value="'.$reponseDebours['montant_min'].'">';
 						
 					}else{
 
@@ -56801,6 +56958,191 @@
 			while($reponse = $requete-> fetch()){
 				echo '<option value="'.$reponse['id_dos'].'">'.$reponse['ref_dos'].'</option>';
 			}$requete-> closeCursor();
+		}
+
+		public function selectionnerLiquidationClientModeleLicenceMarchandise($id_cli, $id_mod_lic, $id_march, $id_mod_trans, $num_lic){
+			include('connexion.php');
+
+			$entree['id_cli'] = $id_cli;
+			$entree['id_mod_lic'] = $id_mod_lic;
+			$entree['id_march'] = $id_march;
+			$entree['id_mod_trans'] = $id_mod_trans;
+			$entree['num_lic'] = $num_lic;
+
+			if($id_mod_lic==1){
+				$sqlIdMarch = ' AND id_march = '.$id_march;
+			}else{
+				$sqlIdMarch = '';
+			}
+
+			$requete = $connexion-> prepare("SELECT ref_liq
+											FROM dossier
+											WHERE id_cli = ?
+												AND id_mod_lic = ?
+												$sqlIdMarch
+												AND id_mod_trans = ?
+												AND num_lic = ?
+												-- AND ref_quit IS NOT NULL
+												-- AND ref_quit <> ''
+												-- AND ref_decl IS NOT NULL
+												-- AND ref_decl <> ''
+												-- AND ref_liq IS NOT NULL
+												-- AND ref_liq <> ''
+												AND 
+												(
+													-- Pocess 1
+													(
+														get_inv_process_pour_dossier(id_dos)=1
+														AND date_decl IS NOT NULL
+														AND ref_decl IS NOT NULL
+														AND date_liq IS NOT NULL
+														AND ref_liq IS NOT NULL
+														AND date_quit IS NOT NULL
+														AND ref_quit IS NOT NULL
+													)
+													OR
+													-- Pocess 2
+													(
+														get_inv_process_pour_dossier(id_dos)=2
+														AND (
+																	dispatch_date IS NOT NULL 
+																	OR (dgda_out IS NOT NULL AND id_mod_trans=4)
+																)
+														-- dispatch_date IS NOT NULL
+													)
+													OR
+													-- Pocess 3
+													(
+														get_inv_process_pour_dossier(id_dos)=3
+														AND dispatch_deliv IS NOT NULL
+													)
+														
+												)
+												AND id_dos NOT IN (
+														SELECT id_dos FROM detail_facture_dossier
+													)
+												AND not_fact = '0'
+											GROUP BY ref_liq
+											ORDER BY ref_liq  ASC");
+
+			$requete-> execute(array($entree['id_cli'], $entree['id_mod_lic'], $entree['id_mod_trans'], $entree['num_lic']));
+
+			while($reponse = $requete-> fetch()){
+				echo '<option value="'.$reponse['ref_liq'].'">'.$reponse['ref_liq'].'</option>';
+			}$requete-> closeCursor();
+		}
+
+		public function tableau_dossier_a_facturer_liquidation($id_cli, $id_mod_lic, $id_march, $ref_liq){
+			include('connexion.php');
+
+			$entree['id_cli'] = $id_cli;
+			$entree['id_mod_lic'] = $id_mod_lic;
+			$entree['id_march'] = $id_march;
+			$entree['ref_liq'] = $ref_liq;
+
+			$i = 0;
+
+			$table = '';
+			$m3 = 0;
+			$ops_admin_fee = 0;
+			$agency_fee = 0;
+			$rows = array();
+
+			$requete = $connexion-> prepare("SELECT ref_dos,
+													CONCAT(
+														IF(horse IS NOT NULL AND REPLACE(horse, ' ', '') NOT LIKE '',
+															horse,
+															''),
+														IF(trailer_1 IS NOT NULL AND REPLACE(trailer_1, ' ', '') NOT LIKE '',
+															CONCAT(' / ', trailer_1),
+															''),
+														IF(trailer_2 IS NOT NULL AND REPLACE(trailer_2, ' ', '') NOT LIKE '',
+															CONCAT(' / ', trailer_2),
+															'')
+													) AS truck,
+													CONCAT(ref_decl, ' ', DATE_FORMAT(date_decl, '%d/%m/%Y')) AS declaration,
+													(m3/1000) AS m3,
+													id_dos
+											FROM dossier
+											WHERE id_cli = ?
+												AND id_mod_lic = ?
+												AND id_march = ?
+												AND ref_liq = ?
+												AND 
+												(
+													-- Pocess 1
+													(
+														get_inv_process_pour_dossier(id_dos)=1
+														AND date_decl IS NOT NULL
+														AND ref_decl IS NOT NULL
+														AND date_liq IS NOT NULL
+														AND ref_liq IS NOT NULL
+														AND date_quit IS NOT NULL
+														AND ref_quit IS NOT NULL
+													)
+													OR
+													-- Pocess 2
+													(
+														get_inv_process_pour_dossier(id_dos)=2
+														AND (
+																	dispatch_date IS NOT NULL 
+																	OR (dgda_out IS NOT NULL AND id_mod_trans=4)
+																)
+														-- dispatch_date IS NOT NULL
+													)
+													OR
+													-- Pocess 3
+													(
+														get_inv_process_pour_dossier(id_dos)=3
+														AND dispatch_deliv IS NOT NULL
+													)
+														
+												)
+												AND id_dos NOT IN (
+														SELECT id_dos FROM detail_facture_dossier
+													)
+												AND not_fact = '0'");
+
+			$requete-> execute(array($entree['id_cli'], $entree['id_mod_lic'], $entree['id_march'], $entree['ref_liq']));
+
+			while($reponse = $requete-> fetch()){
+
+				$i++;
+
+				$m3 += $reponse['m3'];
+				$ops_admin_fee += $reponse['m3']*4;
+				$agency_fee += $reponse['m3']*2;
+
+				$table .= '<tr>
+								<input type="hidden" name="id_dos_'.$i.'" value="'.$reponse['id_dos'].'">
+								<input type="hidden" name="pourcentage_qte_ddi_'.$i.'" value="">
+								<input type="hidden" name="montant_tva_'.$i.'" value="0">
+								<input type="hidden" name="ops_admin_fee_'.$i.'" value="'.($reponse['m3']*4).'">
+								<input type="hidden" name="agency_fee_'.$i.'" value="'.($reponse['m3']*2).'">
+								<td>'.$i.'</td>
+								<td>'.$reponse['ref_dos'].'</td>
+								<td>'.$reponse['truck'].'</td>
+								<td>'.$reponse['declaration'].'</td>
+								<td class="text-right">'.number_format($reponse['m3'], 2, ',', ' ').'</td>
+								<td class="text-right">'.number_format(($reponse['m3']*4), 2, ',', ' ').'</td>
+								<td class="text-right">'.number_format(($reponse['m3']*2), 2, ',', ' ').'</td>
+							</tr>';
+
+			}$requete-> closeCursor();
+
+			$table .= '<tr>
+							<input type="hidden" name="nbre_dossier"  value="'.$i.'">
+							<td colspan="4" class="text-right">Total</td>
+							<td class="text-right">'.number_format($m3, 2, ',', ' ').'</td>
+							<td class="text-right">'.number_format($ops_admin_fee, 2, ',', ' ').'</td>
+							<td class="text-right">'.number_format($agency_fee, 2, ',', ' ').'</td>
+						</tr>';
+
+			$rows['m3'] = round($m3, 3);
+			$rows['table'] = $table;
+
+			return $rows;
+
 		}
 
 		public function selectionnerDossierClientModeleLicenceMarchandise3($id_cli, $id_mod_lic, $id_march, $id_mod_trans, $num_lic){
