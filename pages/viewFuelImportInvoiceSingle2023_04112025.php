@@ -219,8 +219,6 @@ if($maClasse-> get_aff_client_modele_licence($maClasse-> getFactureGlobale($_GET
 
 $nom_banq = $maClasse-> getDataBancaire($maClasse-> getDataDossiersMultipleInvoice($_GET['ref_fact'])['id_bank_liq'])['nom_banq'];
 
-$dossiers4 = $maClasse-> getListeDossierFactureFuel($_GET['ref_fact']);
-
 $banque = '<tr>
 			<td width="10%" style="border-top: 1px solid black; border-left: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;INTITULE</td>
 			<td width="35%" style="border-top: 1px solid black; border-right: 1px solid black;  font-size: 7px;">&nbsp;MALABAR RDC SARL</td>
@@ -244,6 +242,104 @@ $banque = '<tr>
 			<td width="10%"></td>
 		</tr>';
 
+// $banque = '<tr>
+// 			<td width="10%" style="border-top: 1px solid black; border-left: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;INTITULE</td>
+// 			<td width="35%" style="border-top: 1px solid black; border-right: 1px solid black;  font-size: 7px;">&nbsp;MALABAR RDC SARL</td>
+// 			<td width="10%"></td>
+// 		</tr>
+// 		<tr>
+// 			<td width="10%" style="border-left: 1px solid black;  font-size: 7px;">&nbsp;N.COMPTE</td>
+// 			<td width="35%" style="border-right: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;00011-00130-00001020614-41</td>
+// 			<td width="10%"></td>
+// 		</tr>
+// 		<tr>
+// 			<td width="10%" style="border-left: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;SWIFT</td>
+// 			<td width="35%" style="border-right: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;BCDCCDKI</td>
+// 			<td width="10%"></td>
+// 		</tr>
+// 		<tr>
+// 			<td width="10%" style="border-bottom: 1px solid black; border-left: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;BANQUE</td>
+// 			<td width="35%" style="border-bottom: 1px solid black; border-right: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;EQUITY BCDC		
+// 			<br>&nbsp;LUBUMBASHI		
+// 			<br>&nbsp;R.D. CONGO</td>
+// 			<td width="10%"></td>
+// 		</tr>
+// 		<tr>
+// 			<td width="10%" style="border-left: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;SWIFT</td>
+// 			<td width="35%" style="border-right: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;PRCBCDKI</td>
+// 			<td width="10%"></td>
+// 			<td width="10%" style="border-left: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;SWIFT</td>
+// 			<td width="35%" style="border-right: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;RAWBCDKIXXX</td>
+// 		</tr>
+// 		<tr>
+// 			<td width="10%" style="border-bottom: 1px solid black; border-left: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;BANQUE</td>
+// 			<td width="35%" style="border-bottom: 1px solid black; border-right: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;EQUITY BANK CONGO SA		
+// 			<br>&nbsp;LUBUMBASHI		
+// 			, R.D. CONGO</td>
+// 			<td width="10%"></td>
+// 			<td width="10%" style="border-bottom: 1px solid black; border-left: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;BANQUE</td>
+// 			<td width="35%" style="border-bottom: 1px solid black; border-right: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;RAWBANK
+// 			<br>&nbsp;LUBUMBASHI		
+// 			, R.D. CONGO</td>
+// 		</tr>';
+
+/*if ($facture['id_cli']==878 || $facture['id_cli']==876) {
+	$banque = '<tr>
+					<td width="10%" style="border-top: 1px solid black; border-left: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;INTITULE</td>
+					<td width="35%" style="border-top: 1px solid black; border-right: 1px solid black;  font-size: 7px;">&nbsp;MALABAR RDC SARL</td>
+					<td width="10%"></td>
+				</tr>
+				<tr>
+					<td width="10%" style="border-left: 1px solid black;  font-size: 7px;">&nbsp;N.COMPTE</td>
+					<td width="35%" style="border-right: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;00011-00130-00001020614-41</td>
+					<td width="10%"></td>
+				</tr>
+				<tr>
+					<td width="10%" style="border-left: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;SWIFT</td>
+					<td width="35%" style="border-right: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;BCDCCDKI</td>
+					<td width="10%"></td>
+				</tr>
+				<tr>
+					<td width="10%" style="border-bottom: 1px solid black; border-left: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;BANQUE</td>
+					<td width="35%" style="border-bottom: 1px solid black; border-right: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;BCDC		
+					<br>&nbsp;LUBUMBASHI		
+					, R.D. CONGO</td>
+					<td width="10%"></td>
+				</tr>';
+}else if ($facture['id_cli']==864 || $facture['id_cli']==899 || $facture['id_cli']==916 || $facture['id_cli']==906 || $facture['id_cli']==901 || $facture['id_cli']==932 || $facture['id_cli']==856 || $facture['id_cli']==923 || $facture['id_cli']==905 || $facture['id_cli']==912 || $facture['id_cli']==927 || $facture['id_cli']==869 || $facture['id_cli']==919 || $facture['id_cli']==922 || $facture['id_cli']==934 || $facture['id_cli']==879 || $facture['id_cli']==859 || $facture['id_cli']==938 || $facture['id_cli']==903 || $facture['id_cli']==918 || $facture['id_cli']==925 || $facture['id_cli']==914) {
+	$banque = '<tr>
+					<td width="10%" style="border-top: 1px solid black; border-left: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;INTITULE</td>
+					<td width="35%" style="border-top: 1px solid black; border-right: 1px solid black;  font-size: 7px;">&nbsp;MALABAR RDC SARL</td>
+					<td width="10%"></td>
+					<td width="10%" style="border-top: 1px solid black; border-left: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;INTITULE</td>
+					<td width="35%" style="border-top: 1px solid black; border-right: 1px solid black;  font-size: 7px;">&nbsp;MALABAR CLEARING AGENCY SARL</td>
+				</tr>
+				<tr>
+					<td width="10%" style="border-left: 1px solid black;  font-size: 7px;">&nbsp;N.COMPTE</td>
+					<td width="35%" style="border-right: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;00011-00130-00001020614-41</td>
+					<td width="10%"></td>
+					<td width="10%" style="border-left: 1px solid black;  font-size: 7px;">&nbsp;N.COMPTE</td>
+					<td width="35%" style="border-right: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;05100-05130-01003333601-20</td>
+				</tr>
+				<tr>
+					<td width="10%" style="border-left: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;SWIFT</td>
+					<td width="35%" style="border-right: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;BCDCCDKI</td>
+					<td width="10%"></td>
+					<td width="10%" style="border-left: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;SWIFT</td>
+					<td width="35%" style="border-right: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;RAWBCDKIXXX</td>
+				</tr>
+				<tr>
+					<td width="10%" style="border-bottom: 1px solid black; border-left: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;BANQUE</td>
+					<td width="35%" style="border-bottom: 1px solid black; border-right: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;BCDC		
+					<br>&nbsp;LUBUMBASHI		
+					, R.D. CONGO</td>
+					<td width="10%"></td>
+					<td width="10%" style="border-bottom: 1px solid black; border-left: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;BANQUE</td>
+					<td width="35%" style="border-bottom: 1px solid black; border-right: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;RAWBANK
+					<br>&nbsp;LUBUMBASHI		
+					, R.D. CONGO</td>
+				</tr>';
+}else */
 if ($facture['id_cli']==905) {
 	$banque = '<tr>
 			<td width="10%" style="border-top: 1px solid black; border-left: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;INTITULE</td>
@@ -378,7 +474,7 @@ $tbl = <<<EOD
 		<tr>
 			<td width="15%" style="text-align: center;"></td>
 			<td width="15%" style="text-align: left; border: 0.3px solid black; font-size: 7px;">&nbsp;Truck/Trailer/Container</td>
-			<td width="25%" style="text-align: center; border: 0.3px solid black; font-size: 7px;">-</td>
+			<td width="25%" style="text-align: center; border: 0.3px solid black; font-size: 7px;">$truck</td>
 		</tr>
 
 		<tr>
@@ -413,16 +509,60 @@ $tbl = <<<EOD
 			<td width="25%" style="text-align: center; border: 0.3px solid black; font-size: 7px;">$num_lic</td>
 		</tr>
 		<tr>
-			<td width="60%"></td>
+			<td width="23%" style="text-align: left; border: 0.3px solid black; font-size: 7px;">&nbsp;M3: </td>
+			<td width="22%" style="text-align: center; border: 0.3px solid black; font-size: 7px;">$m3</td>
+			<td width="15%" style="text-align: left; "></td>
 			<td width="8%" style="text-align: left; border: 0.3px solid black; font-size: 7px; font-weight: bold;">&nbsp;File Ref.: </td>
 			<td width="32%" style="text-align: center; border: 0.3px solid black; font-size: 7px; font-weight: bold;">$liste_dossiers</td>
 		</tr>
 		<tr>
-			<td width="60%"></td>
-			<td width="8%" style="text-align: left; border: 0.3px solid black; font-size: 7px;">&nbsp;M3: </td>
-			<td width="16%" style="text-align: center; border: 0.3px solid black; font-size: 7px; font-weight: bold;">$m3</td>
-			<td width="8%" style="text-align: left; border: 0.3px solid black; font-size: 7px;">&nbsp;Rate: </td>
+			<td width="23%" style="text-align: left; border: 0.3px solid black; font-size: 7px;">&nbsp;FOB/$id_mon_fob: </td>
+			<td width="22%" style="text-align: center; border: 0.3px solid black; font-size: 7px;">$fob_usd</td>
+			<td width="15%" style="text-align: left; "></td>
+			<td width="15%" style="text-align: left; border: 0.3px solid black; font-size: 7px;">&nbsp;Exoneration/Code: </td>
+			<td width="25%" style="text-align: center; border: 0.3px solid black; font-size: 7px;">$num_exo</td>
+		</tr>
+		<tr>
+			<td width="23%" style="text-align: left; border: 0.3px solid black; font-size: 7px;">&nbsp;Fret/$id_mon_fret: </td>
+			<td width="22%" style="text-align: center; border: 0.3px solid black; font-size: 7px;">$fret_usd</td>
+			<td width="15%" style="text-align: left; "></td>
+			<td width="13%" style="text-align: left; border: 0.3px solid black; font-size: 7px;">&nbsp;Rate(CDF/USD) BCC: </td>
+			<td width="8.5%" style="text-align: center; border: 0.3px solid black; font-size: 7px;">$roe_liq</td>
+			<td width="12%" style="text-align: left; border: 0.3px solid black; font-size: 7px;">&nbsp;Rate(CDF/$id_mon_fob) Inv.</td>
+			<td width="6.5%" style="text-align: center; border: 0.3px solid black; font-size: 7px;">$roe_inv</td>
+		</tr>
+		<tr>
+			<td width="23%" style="text-align: left; border: 0.3px solid black; font-size: 7px;">&nbsp;Autres Charges/$id_mon_autre_frais: </td>
+			<td width="22%" style="text-align: center; border: 0.3px solid black; font-size: 7px;">$autre_frais_usd</td>
+			<td width="15%" style="text-align: left; "></td>
+			<td width="8%" style="text-align: left; border: 0.3px solid black; font-size: 7px;">&nbsp;Bank: </td>
+			<td width="16%" style="text-align: center; border: 0.3px solid black; font-size: 7px; font-weight: bold;">$nom_banq</td>
+			<td width="8%" style="text-align: left; border: 0.3px solid black; font-size: 7px;">&nbsp;Bank Rate: </td>
 			<td width="8%" style="text-align: center; border: 0.3px solid black; font-size: 7px; font-weight: bold;">$roe_decl</td>
+		</tr>
+		<tr>
+			<td width="23%" style="text-align: left; border: 0.3px solid black; font-size: 7px;">&nbsp;Assurance/$id_mon_assurance: </td>
+			<td width="22%" style="text-align: center; border: 0.3px solid black; font-size: 7px;">$assurance_usd</td>
+			<td width="15%" style="text-align: left; "></td>
+			<td width="15%" style="text-align: left; border: 0.3px solid black; font-size: 7px;">&nbsp;Declaration: </td>
+			<td width="12.5%" style="text-align: center; border: 0.3px solid black; font-size: 7px; font-weight: bold;">$ref_decl</td>
+			<td width="12.5%" style="text-align: center; border: 0.3px solid black; font-size: 7px; font-weight: bold;">$date_decl</td>
+		</tr>
+		<tr>
+			<td width="23%" style="text-align: left; border: 0.3px solid black; font-size: 7px; font-weight: bold;">&nbsp;CIF/$id_mon_fob: </td>
+			<td width="22%" style="text-align: center; border: 0.3px solid black; font-size: 7.5px; font-weight: bold;">$cif_usd</td>
+			<td width="15%" style="text-align: left; "></td>
+			<td width="15%" style="text-align: left; border: 0.3px solid black; font-size: 7px;">&nbsp;Liquidation: </td>
+			<td width="12.5%" style="text-align: center; border: 0.3px solid black; font-size: 7px; font-weight: bold;">$ref_liq</td>
+			<td width="12.5%" style="text-align: center; border: 0.3px solid black; font-size: 7px; font-weight: bold;">$date_liq</td>
+		</tr>
+		<tr>
+			<td width="23%" style="text-align: left; border: 0.3px solid black; font-size: 7px; font-weight: bold;">&nbsp;CIF/CDF: </td>
+			<td width="22%" style="text-align: center; border: 0.3px solid black; font-size: 7.5px; font-weight: bold;">$cif_cdf</td>
+			<td width="15%" style="text-align: left; "></td>
+			<td width="15%" style="text-align: left; border: 0.3px solid black; font-size: 7px;">&nbsp;Quiittance: </td>
+			<td width="12.5%" style="text-align: center; border: 0.3px solid black; font-size: 7px; font-weight: bold;">$ref_quit</td>
+			<td width="12.5%" style="text-align: center; border: 0.3px solid black; font-size: 7px; font-weight: bold;">$date_quit</td>
 		</tr>
 
 		<tr>
@@ -520,70 +660,6 @@ $tbl = <<<EOD
 		</tr>
 		<tr>
 			<td width="100%" style="border: 1px solid black; text-align: center; font-size: 7px;">Thank you for you business!</td>
-		</tr>
-	</table>
-	</bodystyle="font-weight: bold;">
-	</html>
-        
-EOD;
-$pdf->writeHTML($tbl, true, false, false, false, '');
-
-// add a page
-$pdf->AddPage('L', 'A4');
-if ( ($maClasse-> getFactureGlobale($_GET['ref_fact'])['validation']) == '0' ) {
-	$pdf->Image('../images/no_valid.jpg', 150, 2, 30, '', '', '', '', false, 300);
-}else{
-	$pdf->Image('../images/signature_facture/'.$maClasse-> getDataUtilisateur($maClasse-> getFactureGlobale($_GET['ref_fact'])['id_util_validation'])['signature_facture'], 200, 152, $maClasse-> getDataUtilisateur($maClasse-> getFactureGlobale($_GET['ref_fact'])['id_util_validation'])['size_signature_facture_2'], '', '', '', '', false, 300);
-	
-}
-
-$tbl = <<<EOD
-    <html>
-    <head>
-        <meta http-equiv = " content-type " content = " text/html; charset=utf-8" />
-    </head>
-    <body style="font-weight: bold;" style="">
-	<table>
-		<br>
-		<br>
-		<br>
-		<tr>
-			<td width="5%" style=""></td>
-			<td width="80%" style="">$logo</td>
-			<td width="5%" style=""></td>
-		</tr>
-		<br>
-		<tr>
-			<td width="5%" style=""></td>
-			<td width="83%" style="">DETAILS - EXPORT CLEARING $marchandise LOADS</td>
-		</tr>
-		<tr>
-			<td width="3%" style="text-align: center; border: 1 solid black; font-weight: bold; font-size: 7px;"><span><br>#<br></span></td>
-			<td width="9%" style="text-align: center; border: 1 solid black; font-weight: bold; font-size: 7px;"><span><br>MCA File No<br></span></td>
-			<td width="12%" style="text-align: center; border: 1 solid black; font-weight: bold; font-size: 7px;"><span><br>Truck</span></td>
-			<td width="6%" style="text-align: center; border: 1 solid black; font-weight: bold; font-size: 7px;"><span><br>Qty(M3)<br></span></td>
-			<td width="6%" style="text-align: center; border: 1 solid black; font-weight: bold; font-size: 7px;"><span><br>Declaration Ref.</span></td>
-			<td width="6%" style="text-align: center; border: 1 solid black; font-weight: bold; font-size: 7px;"><span><br>Declaration Date</span></td>
-			<td width="6%" style="text-align: center; border: 1 solid black; font-weight: bold; font-size: 7px;"><span><br>Liquidation Ref.</span></td>
-			<td width="6%" style="text-align: center; border: 1 solid black; font-weight: bold; font-size: 7px;"><span><br>Liquidation Date</span></td>
-			<td width="6%" style="text-align: center; border: 1 solid black; font-weight: bold; font-size: 7px;"><span><br>Quittance Ref.</span></td>
-			<td width="6%" style="text-align: center; border: 1 solid black; font-weight: bold; font-size: 7px;"><span><br>Quittance Date</span></td>
-		</tr>
-		$dossiers4
-		<br>
-		<br>
-		<br>
-		<tr>
-			<td width="5%" style=""></td>
-			<td width="90%" style="text-align: right;">Details INV No. $ref_fact du $date_fact</td>
-			<td width="5%" style=""></td>
-		</tr>
-		<br>
-		<br>
-		<tr>
-			<td width="5%" style=""></td>
-			<td width="90%" style="text-align: center;"></td>
-			<td width="5%" style=""></td>
 		</tr>
 	</table>
 	</bodystyle="font-weight: bold;">

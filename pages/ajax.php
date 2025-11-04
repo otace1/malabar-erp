@@ -50,34 +50,6 @@
 
   		echo json_encode($reponse);
 
-	}elseif(isset($_POST['operation']) && $_POST['operation']=='getTableauImportInvoiceSingleFuel'){// On recupere les donnees du dossier a facturer 
-
-  		$reponse = $maClasse-> getDataDossier($_POST['id_dos']);
-  		$reponse['id_mon'] = '<select disabled class="bg bg-dark" name="id_mon" required>
-  								<option>'.$maClasse-> getDataLicence($reponse['num_lic'])['sig_mon'].'</option>
-  								'.$maClasse-> selectionnerMonnaie2().'
-  							</select>';
-  		$reponse['mon_fob'] = '<select class="bg bg-dark" name="mon_fob" id="mon_fob" onchange="maj_id_mon_fob(id_dos.value, this.value);" required>
-  								'.$maClasse-> selectionnerMonnaie2().'
-  							</select>';
-  		$reponse['mon_fret'] = '<select class="bg bg-dark" name="mon_fret" id="mon_fret" onchange="maj_id_mon_fret(id_dos.value, this.value);" required>
-  								'.$maClasse-> selectionnerMonnaie2().'
-  							</select>';
-  		$reponse['mon_assurance'] = '<select class="bg bg-dark" name="mon_assurance" id="mon_assurance" onchange="maj_id_mon_assurance(id_dos.value, this.value);" required>
-  								'.$maClasse-> selectionnerMonnaie2().'
-  							</select>';
-  		$reponse['mon_autre_frais'] = '<select class="bg bg-dark" name="mon_autre_frais" id="mon_autre_frais" onchange="maj_id_mon_autre_frais(id_dos.value, this.value);" required>
-  								'.$maClasse-> selectionnerMonnaie2().'
-  							</select>';
-  		// $reponse['mon_fob'] = $maClasse-> selectionnerMonnaie3('id_mon_fob');
-  		// $reponse['mon_fret'] = $maClasse-> selectionnerMonnaie3('id_mon_fret');
-  		// $reponse['mon_assurance'] = $maClasse-> selectionnerMonnaie3('id_mon_assurance');
-  		// $reponse['mon_autre_frais'] = $maClasse-> selectionnerMonnaie3('id_mon_autre_frais');
-  		$reponse['debours'] = $maClasse-> getDeboursPourFactureClientModeleLicenceAjaxFuel($reponse['id_cli'], $reponse['id_mod_lic'], $reponse['id_march'], $reponse['id_mod_trans'], $_POST['id_dos'], $_POST['consommable']);
-  		$reponse['template_invoice'] = $maClasse-> selectionnerMarchandiseTemplateFacture($reponse['id_cli'], $reponse['id_mod_trans'], $reponse['id_mod_lic']);
-
-  		echo json_encode($reponse);
-
 	}elseif(isset($_POST['operation']) && $_POST['operation']=='getTableauImportInvoiceSingleEdit'){// On recupere les donnees du dossier a facturer 
 
   		$reponse = $maClasse-> getDataDossier($_POST['id_dos']);
@@ -4417,6 +4389,83 @@
 
   		echo json_encode($maClasse-> report_roe_decl($_POST['date_decl'], $_POST['roe_decl']));
 
+	}else if(isset($_POST['operation']) && $_POST['operation']=='get_tableau_dossier_a_facturer_liquidation'){
+
+		$response['tableau_dossier_a_facturer_liquidation'] = $maClasse-> tableau_dossier_a_facturer_liquidation($_POST['id_cli'], $_POST['id_mod_lic'], $_POST['id_march'], $_POST['ref_liq'])['table'];
+		$response['m3'] = $maClasse-> tableau_dossier_a_facturer_liquidation($_POST['id_cli'], $_POST['id_mod_lic'], $_POST['id_march'], $_POST['ref_liq'])['m3'];
+
+  		$response['debours'] = $maClasse-> getDeboursPourFactureClientModeleLicenceAjaxFuel($_POST['id_cli'], $_POST['id_mod_lic'], $_POST['id_march'], $_POST['id_mod_trans'], $response['m3']);
+
+
+  		echo json_encode($response);
+
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='getTableauImportInvoiceSingleFuel'){// On recupere les donnees du dossier a facturer 
+
+  		$reponse['debours'] = $maClasse-> getDeboursPourFactureClientModeleLicenceAjaxFuel($_POST['id_cli'], $_POST['id_mod_lic'], $_POST['id_march'], $_POST['id_mod_trans'], $_POST['m3']);
+
+  		echo json_encode($reponse);
+
+	}elseif(isset($_POST['operation']) && $_POST['operation']=='enregistrerFactureImportFuel'){// On enregistre la facture Export Single
+
+  		if(isset($_POST['ref_fact'])){
+  			try {
+  			$maClasse-> creerFactureDossier($_POST['ref_fact'], $_POST['id_mod_fact'], $_POST['id_cli'], $_SESSION['id_util'], $_POST['id_mod_lic'], 'globale', NULL);
+  			// $maClasse-> MAJ_tax_duty_part_facture_dossier($_POST['ref_fact'], $_POST['tax_duty_part']);
+  			// $maClasse-> maj_statut_arsp($_POST['ref_fact'], $_POST['statut_arsp']);
+
+  			for ($nbre_dossier=1; $nbre_dossier <= $_POST['nbre_dossier']; $nbre_dossier++) { 
+
+  				
+
+  				if($nbre_dossier==1){
+
+  					for ($i=1; $i <= $_POST['compteur'] ; $i++) { 
+
+		  				if (isset($_POST['montant_'.$i]) && $_POST['montant_'.$i] > 1) {
+
+		  					if (!isset($_POST['pourcentage_qte_ddi_'.$i]) || empty($_POST['pourcentage_qte_ddi_'.$i]) || ($_POST['pourcentage_qte_ddi_'.$i]=='') || ($_POST['pourcentage_qte_ddi_'.$i]<0)) {
+		  						$_POST['pourcentage_qte_ddi_'.$i] = NULL;
+		  					}
+
+		  					if (!isset($_POST['montant_tva_'.$i]) || empty($_POST['montant_tva_'.$i]) || ($_POST['montant_tva_'.$i]=='') || ($_POST['montant_tva_'.$i]<0)) {
+		  						$_POST['montant_tva_'.$i] = 0;
+		  					}
+
+		  					$maClasse-> creerDetailFactureDossier2($_POST['ref_fact'], $_POST['id_dos_'.$nbre_dossier], $_POST['id_deb_'.$i], $_POST['montant_'.$i], $_POST['tva_'.$i], $_POST['usd_'.$i], NULL, NULL, $_POST['pourcentage_qte_ddi_'.$i], $_POST['montant_tva_'.$i]);
+		  					// $maClasse-> creerDetailFactureDossier($_POST['ref_fact'], $_POST['id_dos'], $_POST['id_deb_'.$i], $_POST['montant_'.$i], $_POST['tva_'.$i], $_POST['usd_'.$i], NULL, NULL);
+		  				}
+
+		  			}
+
+  				}
+
+
+  				//ADM & OPS Fees
+  				$_POST['tva_'.$nbre_dossier] = '0';
+  				$_POST['usd_'.$nbre_dossier] = '1';
+  				$maClasse-> creerDetailFactureDossier2($_POST['ref_fact'], $_POST['id_dos_'.$nbre_dossier], 250, $_POST['ops_admin_fee_'.$nbre_dossier], $_POST['tva_'.$nbre_dossier], $_POST['usd_'.$nbre_dossier], NULL, NULL, $_POST['pourcentage_qte_ddi_'.$nbre_dossier], $_POST['montant_tva_'.$nbre_dossier]);
+
+  				//AgencyFees
+  				$_POST['tva_'.$nbre_dossier] = '1';
+  				$_POST['usd_'.$nbre_dossier] = '1';
+  				$maClasse-> creerDetailFactureDossier2($_POST['ref_fact'], $_POST['id_dos_'.$nbre_dossier], 21, $_POST['agency_fee_'.$nbre_dossier], $_POST['tva_'.$nbre_dossier], $_POST['usd_'.$nbre_dossier], NULL, NULL, $_POST['pourcentage_qte_ddi_'.$nbre_dossier], $_POST['montant_tva_'.$nbre_dossier]);
+
+  				$maClasse-> MAJ_roe_decl($_POST['id_dos_'.$nbre_dossier], $_POST['roe_decl']);
+
+  			}
+
+  			$response = array('message' => 'Invoice Created');
+  			/*$response['ref_fact'] = $maClasse-> buildRefFactureGlobale($_POST['id_cli']);
+  			$response['ref_dos'] =$maClasse-> selectionnerDossierClientModeleLicenceMarchandise2($_POST['id_cli'], $_POST['id_mod_lic'], $_POST['id_march']);*/
+
+  			} catch (Exception $e) {
+
+	            $response = array('error' => $e->getMessage());
+
+	        }
+
+  		}
+	    echo json_encode($response);exit;
 	}
 
 

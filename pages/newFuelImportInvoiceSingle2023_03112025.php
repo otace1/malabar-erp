@@ -43,9 +43,9 @@
 
               <div class="card-body table-responsive p-0">
                 
-<!-- <form id="enregistrerFactureImportFuel_form" method="POST" action="" data-parsley-validate enctype="multipart/form-data"> -->
-<form method="POST" id="enregistrerFactureImportFuel_form" action="" data-parsley-validate enctype="multipart/form-data">
-  <input type="hidden" name="operation" id="operation" value="enregistrerFactureImportFuel">
+<!-- <form id="enregistrerFactureImportSingle_form" method="POST" action="" data-parsley-validate enctype="multipart/form-data"> -->
+<form method="POST" id="enregistrerFactureImportSingle_form" action="" data-parsley-validate enctype="multipart/form-data">
+  <input type="hidden" name="operation" id="operation" value="enregistrerFactureImportSingle">
 
   <div class="card-body">
 
@@ -66,14 +66,14 @@
 
       </div>
 
-      <div class="col-md-2">
+      <div class="col-md-3">
         
           <div class="form-group">
-            <label for="inputEmail3" class="col-form-label">Liquidation Ref.:</label>
-            <select class="form-control form-control-sm" name="id_dos" id="id_dos" onchange="get_tableau_dossier_a_facturer_liquidation(this.value);" required>
+            <label for="inputEmail3" class="col-form-label">Files Ref.:</label>
+            <select class="form-control form-control-sm" name="id_dos" id="id_dos" onchange="getTableauImportInvoiceSingle(id_mod_fact.value, this.value, id_mod_lic.value, id_march.value, id_mod_trans.value, consommable.value)" required>
               <option></option>
               <?php
-                $maClasse-> selectionnerLiquidationClientModeleLicenceMarchandise($_GET['id_cli'], $_GET['id_mod_lic_fact'], $_GET['id_march'], $_GET['id_mod_trans'], $_GET['num_lic']);
+                $maClasse-> selectionnerDossierClientModeleLicenceMarchandise($_GET['id_cli'], $_GET['id_mod_lic_fact'], $_GET['id_march'], $_GET['id_mod_trans'], $_GET['num_lic']);
               ?>
             </select>
           </div>
@@ -83,9 +83,11 @@
       <div class="col-md-2">
         
           <div class="form-group">
-            <label for="inputEmail3" class="col-form-label">M3: </label>
-            <input type="hidden" id="m3" name="m3">
-            <input class="form-control form-control-sm text-center" type="text" id="label_m3" disabled>
+            <label for="inputEmail3" class="col-form-label">Tax and Duty Part:</label>
+            <select class="form-control form-control-sm" name="tax_duty_part" id="tax_duty_part" required>
+              <option value="Include">Include</option>
+              <option value="Exclude">Exclude</option>
+            </select>
           </div>
 
       </div>
@@ -93,8 +95,19 @@
       <div class="col-md-2">
         
           <div class="form-group">
-            <label for="roe_decl" class="col-form-label">Rate: </label>
-            <input class="form-control form-control-sm text-center" type="number" step="0.0001" id="roe_decl" name="roe_decl">
+            <label for="inputEmail3" class="col-form-label">ARSP:</label>
+            <select class="form-control form-control-sm" name="statut_arsp" id="statut_arsp" onchange="maj_statut_arsp('<?php echo $_GET['ref_fact'];?>', this.value);" required>
+              <option value="0">Disabled</option>
+              <option value="1">Enabled</option>
+            </select>
+          </div>
+
+      </div>
+
+      <div class="col-md-2">
+          <div class="form-group">
+            <label for="inputEmail3" class="col-form-label">Invoice Template:</label>
+            <span id="template_invoice"></span>
           </div>
 
       </div>
@@ -126,8 +139,133 @@
 
       <div class="col-md-12"></div>
 
-      <div class="col-md-12">
-        <label for="x_card_code" class="control-label mb-1"><u>Bulletin Liquidation</u></label>
+      <div class="col-md-5">
+        <label for="x_card_code" class="control-label mb-1"><u>File Data</u></label>
+        <span id="fob_en_usd_label"></span>
+        <table class="table table-bordered table-responsive table-striped text-nowrap table-hover table-sm small table-head-fixed table-dark">
+          <tbody>
+            <tr>
+              <th>FOB</th>
+              <th><input style="text-align: center; width: 9em;" id="fob" name="fob" onblur="majjjj(id_dos.value, this.value);calculCIF();" type="number" step="0.000001" min="1" disabled class="bg bg-dark"></th>
+              <th>Fret</th>
+              <th><input style="text-align: center; width: 9em;" id="fret" name="fret" onblur="majjjj(id_dos.value, this.value);calculCIF();" type="number" step="0.000001" min="1" disabled class="bg bg-dark"></th>
+            </tr>
+            <tr>
+              <th>Assurance</th>
+              <th><input style="text-align: center; width: 9em;" id="assurance" name="assurance" onblur="majjjj(id_dos.value, this.value);calculCIF();" type="number" step="0.000001" min="1"  disabled class="bg bg-dark"></th>
+              <th>Autres Charges</th>
+              <th><input style="text-align: center; width: 9em;" id="autre_frais" name="autre_frais" onblur="majjjj(id_dos.value, this.value);calculCIF();" type="number" step="0.000001" min="1"  disabled class="bg bg-dark"></th>
+            </tr>
+            <tr>
+              <th>CIF</th>
+              <th><input style="text-align: center; width: 9em;" id="cif" name="cif" onblur="majjjj(id_dos.value, this.value);calculCIF();" type="number" step="0.000001" min="1"  disabled class="bg bg-dark"></th>
+              <th>Currency</th>
+              <th><span id="id_mon"></span></th>
+            </tr>
+            <tr>
+              <th>FOB <span id="mon_fob"></span></th>
+              <th><input style="text-align: center; width: 9em;" id="fob_usd" name="fob_usd" onblur="maj_fob_usd(id_dos.value, this.value);" type="number" step="0.000001" min="0" class="" required></th>
+              <th>Fret <span id="mon_fret"></span></th>
+              <th><input style="text-align: center; width: 9em;" id="fret_usd" name="fret_usd" onblur="maj_fret_usd(id_dos.value, this.value);calculCIF();" class="" type="number" step="0.000001" min="0" required></th>
+            </tr>
+            <tr>
+              <th>Autres Charges <span id="mon_autre_frais"></span></th>
+              <th><input style="text-align: center; width: 9em;" id="autre_frais_usd" name="autre_frais_usd" onblur="maj_autre_frais_usd(id_dos.value, this.value);calculCIF();" class="" type="number" step="0.000001" min="0" required></th>
+              <th>Assurance <span id="mon_assurance"></span></th>
+              <th><input style="text-align: center; width: 9em;" id="assurance_usd" name="assurance_usd" onblur="maj_assurance_usd(id_dos.value, this.value);calculCIF();" class="" type="number" step="0.000001" min="0" required></th>
+            </tr>
+            <?php
+              if($maClasse-> get_aff_client_modele_licence($_GET['id_cli'], $_GET['id_mod_lic_fact'])['bank_rate']=='0'){
+              ?>
+            <tr>
+              <th>Rate (CDF/<span id="label_mon_fob"></span>) INV.</th>
+              <th><input style="text-align: center; width: 9em;" id="roe_inv" name="roe_inv" onblur="maj_roe_inv(id_dos.value, this.value);" type="number" step="0.000001" min="1" required></th>
+              <th>Rate(CDF/USD) BCC</th>
+              <th><input style="text-align: center; width: 9em;" id="roe_decl" name="roe_decl" onblur="maj_roe_decl(id_dos.value, this.value);" type="number" step="0.000001" min="1" required></th>
+            </tr>
+              <?php
+              }else{
+              ?>
+            <tr>
+              <th>Bank</th>
+              <th>
+                <select style="width: 9em;" id="id_bank_liq" name="id_bank_liq" onchange="maj_id_bank_liq(id_dos.value, this.value);calculCIF();"required>
+                  <option></option>
+                  <?php
+                    $maClasse-> selectionnerBanqueLiquidation();
+                  ?>
+                </select>
+              </th>
+              <th>Bank Rate</th>
+              <th><input style="text-align: center; width: 9em;" id="roe_decl" name="roe_decl" onblur="maj_roe_decl(id_dos.value, this.value);calculCIF();" type="number" step="0.000001" min="1" required></th>
+            </tr>
+            <tr>
+              <th>Rate (CDF/<span id="label_mon_fob"></span>) INV.</th>
+              <th><input style="text-align: center; width: 9em;" id="roe_inv" name="roe_inv" onblur="maj_roe_inv(id_dos.value, this.value);" type="number" step="0.000001" min="1" required></th>
+              <th>Rate(CDF/USD) BCC</th>
+              <th><input style="text-align: center; width: 9em;" id="roe_liq" name="roe_liq" onblur="maj_roe_liq(id_dos.value, this.value);" type="number" step="0.000001" min="1" required></th>
+            </tr>
+              <?php
+              }
+            ?>
+            <tr>
+              <th>CIF (<span id="label_mon_cif"></span>)</th>
+              <th><input style="text-align: center; width: 9em; font-weight: bold;" id="cif_usd" class="bg bg-primary" disabled></th>
+              <th>CIF (CDF)</th>
+              <th><input style="text-align: center; width: 9em; font-weight: bold;" id="cif_cdf" onblur="maj_montant_liq(id_dos.value, this.value);" class="bg bg-primary" disabled></th>
+            </tr>
+            <tr>
+              <th>Total of Duty (CDF)</th>
+              <th><input style="text-align: center; width: 9em;" id="montant_liq" onblur="maj_montant_liq(id_dos.value, this.value);calculCIF();" type="number" step="0.000001" min="0" class="" required></th>
+            </tr>
+            <tr>
+              <th>Poids (kg)</th>
+              <th><input style="text-align: center; width: 9em;" id="poids" name="poids" onblur="maj_poids(id_dos.value, this.value);" onblur="calculTresco();" required></th>
+              <th>Tariff Code Client:</th>
+              <th><input style="text-align: center; width: 9em;" id="code_tarif" name="code_tarif" onblur="maj_code_tarif(id_dos.value, this.value);" type="text" class="" required></th>
+            </tr>
+            <tr>
+              <th>Truck (Wagon / AWB)</th>
+              <th><input style="text-align: center; width: 8em;" id="horse" onblur="maj_horse(id_dos.value, this.value);" class=""></th>
+              <th><input style="text-align: center; width: 8em;" id="trailer_1" onblur="maj_trailer_1(id_dos.value, this.value);" class=""></th>
+              <th><input style="text-align: center; width: 8em;" id="trailer_2" onblur="maj_trailer_2(id_dos.value, this.value);" class=""></th>
+            </tr>
+            <tr>
+              <th>Facture/PFI No.:</th>
+              <th><input style="text-align: center; width: 9em;" id="ref_fact_dos" disabled class="bg bg-dark"></th>
+              <th>BIVAC inspection:</th>
+              <th><input style="text-align: center; width: 9em;" id="cod" disabled class="bg bg-dark"></th>
+            </tr>
+            <tr>
+              <th>Produit</th>
+              <th><input style="text-align: center; width: 9em;" id="commodity" disabled class="bg bg-dark"></th>
+              <th>Exoneration/Code:</th>
+              <th><input style="text-align: center; width: 9em;" id="num_exo" onblur="maj_num_exo(id_dos.value, this.value);" class=""></th>
+            </tr>
+            <tr>
+              <th>Declaration No.</th>
+              <th><input style="text-align: center; width: 9em;" id="ref_decl" disabled class="bg bg-dark"></th>
+              <th>Declaration Date</th>
+              <th><input style="text-align: center; width: 9em;" id="date_decl" disabled class="bg bg-dark"></th>
+            </tr>
+            <tr>
+              <th>Liquidation No.</th>
+              <th><input style="text-align: center; width: 9em;" id="ref_liq" disabled class="bg bg-dark"></th>
+              <th>Liquidation Date</th>
+              <th><input style="text-align: center; width: 9em;" id="date_liq" disabled class="bg bg-dark"></th>
+            </tr>
+            <tr>
+              <th>Quittance No.</th>
+              <th><input style="text-align: center; width: 9em;" id="ref_quit" disabled class="bg bg-dark"></th>
+              <th>Quittance Date</th>
+              <th><input style="text-align: center; width: 9em;" id="date_quit" disabled class="bg bg-dark"></th>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="col-md-7">
+        <label for="x_card_code" class="control-label mb-1"><u>Items</u></label>
         <table class="table table-bordered table-responsive table-striped text-nowrap table-hover table-sm small text-nowrap table-head-fixed table-dark">
           <thead>
               <tr>
@@ -142,29 +280,10 @@
             <?php
               // $maClasse-> getDeboursPourFactureClientModeleLicence($_GET['id_cli'], $_GET['id_mod_lic_fact'], $_GET['id_march'], $_GET['id_mod_trans']);
             ?>
+            </div>
           </tbody>
         </table>
       </div>
-
-      <div class="col-md-12">
-        <label for="x_card_code" class="control-label mb-1"><u>File Fees</u></label>
-        <span id="fob_en_usd_label"></span>
-        <table class="table table-bordered table-responsive table-striped text-nowrap table-hover table-sm table-head-fixed table-dark">
-          <thead>
-            <tr>
-              <td>#</td>
-              <td>File Ref.</td>
-              <td>truck</td>
-              <td>Declaration</td>
-              <td>M3</td>
-              <td>OPS & Admin Fees(4$)</td>
-              <td>Agency Fees(2$)</td>
-            </tr>
-          </thead>
-          <tbody id="tableau_dossier_a_facturer_liquidation"></tbody>
-        </table>
-      </div>
-
 
     </div>
 
@@ -174,7 +293,7 @@
 <!-- -------VALIDATION FORMULAIRE------- -->
 
   <div class="modal-footer justify-content-between">
-    <!-- <span  data-toggle="modal" data-target=".validerCotation"class="btn btn-xs btn-primary" onclick="enregistrerFactureImportFuel(roe_decl.value, id_dos.value, ref_fact.value, id_deb_1.value, montant_1.value, usd_1.value, tva_1.value);">Submit</span> -->
+    <!-- <span  data-toggle="modal" data-target=".validerCotation"class="btn btn-xs btn-primary" onclick="enregistrerFactureImportSingle(roe_decl.value, id_dos.value, ref_fact.value, id_deb_1.value, montant_1.value, usd_1.value, tva_1.value);">Submit</span> -->
     <button type="submit" class="btn btn-xs btn-primary">Submit</button>
   </div>
 
@@ -264,30 +383,25 @@
 
 <script type="text/javascript">
 
-  function get_tableau_dossier_a_facturer_liquidation(ref_liq){
-    $('#spinner-div').show();
-    $.ajax({
-      type: 'post',
-      url: 'ajax.php',
-      data: {ref_liq: ref_liq, id_cli: "<?php echo $_GET['id_cli']?>", id_march: "<?php echo $_GET['id_march']?>", id_mod_lic: "<?php echo $_GET['id_mod_lic_fact']?>", id_mod_trans: "<?php echo $_GET['id_mod_trans']?>", operation: 'get_tableau_dossier_a_facturer_liquidation'},
-      dataType: 'json',
-      success:function(data){
-        if (data.logout) {
-          alert(data.logout);
-          window.location="../deconnexion.php";
-        }else{
-          $('#tableau_dossier_a_facturer_liquidation').html(data.tableau_dossier_a_facturer_liquidation);
-          $('#m3').val(data.m3);
-          $('#label_m3').val(data.m3);
-          $('#debours').html(data.debours);
-        }
-      },
-      complete: function () {
-          $('#spinner-div').hide();//Request is complete so hide spinner
-      }
-    });
+  // function modal_edit_suivi_licence(num_lic, select_fact_suiv_lic){
+  //   $('#spinner-div').show();
+  //   $.ajax({
+  //     type: 'post',
+  //     url: 'ajax.php',
+  //     data: {num_lic: num_lic, fob_usd: fob_usd, operation: 'maj_fob_usd'},
+  //     dataType: 'json',
+  //     success:function(data){
+  //       if (data.logout) {
+  //         alert(data.logout);
+  //         window.location="../deconnexion.php";
+  //       }
+  //     },
+  //     complete: function () {
+  //         $('#spinner-div').hide();//Request is complete so hide spinner
+  //     }
+  //   });
 
-  }
+  // }
 
   $(document).ready(function(){
 
@@ -536,7 +650,7 @@
 
   $(document).ready(function(){
 
-      $('#enregistrerFactureImportFuel_form').submit(function(e){
+      $('#enregistrerFactureImportSingle_form').submit(function(e){
 
               e.preventDefault();
 
@@ -564,7 +678,7 @@
                   alert(data.logout);
                   window.location="../deconnexion.php";
                 }else if(data.message){
-                  $( '#enregistrerFactureImportFuel_form' ).each(function(){
+                  $( '#enregistrerFactureImportSingle_form' ).each(function(){
                       this.reset();
                   });
                   $('#ref_fact').val(data.ref_fact);
@@ -572,7 +686,7 @@
                   $('#spinner-div').hide();//Request is complete so hide spinner
                   alert(data.message);
                   window.open('viewFuelImportInvoiceSingle2023.php?ref_fact='+fd.get('ref_fact'),'pop1','width=1000,height=800');
-                  window.location="listerFactureDossier.php?id_cli=<?php echo $_GET['id_cli'];?>&id_mod_lic_fact=<?php echo $_GET['id_mod_lic_fact']?>";
+                  // window.location="listerFactureDossier.php?id_cli=<?php echo $_GET['id_cli'];?>&id_mod_lic_fact=<?php echo $_GET['id_mod_lic_fact']?>";
                 }
               },
               complete: function () {
