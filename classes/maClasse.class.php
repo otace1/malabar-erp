@@ -22898,26 +22898,38 @@
 
 					if ($reponseDebours['id_deb']=='32') { // DDI
 
-						$unite_input = '<input type="number" step="0.001" style="text-align: center; width: 5em;" class="" name="pourcentage_qte_ddi_'.$compteur.'" id="pourcentage_qte_ddi" value="" onblur="calculDroit();">';
-						$montant_input = '<input type="number" step="0.001" style="text-align: center;" name="montant_'.$compteur.'" id="ddi" value="'.$reponseDebours['montant'].'" onblur="calculDroit();">';
-						$montant_tva_input = '<input type="number" step="0.001" style="text-align: center;" name="montant_tva_'.$compteur.'" id="montant_tva_ddi" onblur="calculDroit2();">';
+						$unite_input = '<input type="number" step="0.001" style="text-align: center; width: 5em;" class="" name="pourcentage_qte_ddi_a_'.$compteur.'" id="pourcentage_qte_ddi" value="" onblur="calculDroit2();">';
+						$montant_input = '<input type="number" step="0.001" style="text-align: center;" name="montant_a_'.$compteur.'" id="ddi" value="'.$reponseDebours['montant'].'" onkeyup="calculDroit2();">';
+						$montant_tva_input = '<input type="number" step="0.001" style="text-align: center;" name="montant_tva_a_'.$compteur.'" id="montant_tva_ddi" onkeyup="calculDroit2();"><input type="hidden" name="tva_a_'.$compteur.'">';
 						$mask_tva = 'ddi';
+						
+					}else if ($reponseDebours['id_deb']=='97') {
+
+						$unite_input = '<input type="hidden" id="unite_a_'.$compteur.'" id="name_a_'.$compteur.'">';
+						$montant_input = '<input type="number" step="0.001" style="text-align: center;" name="montant_a_'.$compteur.'"  id="autres_taxes" value="'.$reponseDebours['montant'].'" onkeyup="calculDroit2();"><input type="hidden" name="tva_a_'.$compteur.'">';
+						$montant_tva_input = '';
+						
+					}else if ($reponseDebours['id_t_deb']=='1') {
+
+						$unite_input = '<input type="hidden" id="unite_a_'.$compteur.'" id="name_a_'.$compteur.'">';
+						$montant_input = '<input type="number" step="0.001" style="text-align: center;" name="montant_a_'.$compteur.'"  id="debours_'.$compteur.'" value="'.$reponseDebours['montant'].'" onkeyup="calculDroit2();"><input type="hidden" name="tva_a_'.$compteur.'">';
+						$montant_tva_input = '';
 						
 					}else if ($reponseDebours['id_t_deb']<>'1') {
 
-						$unite_input = '<input type="number" step="0.001" style="text-align: center; width: 8em;" class="" name="" value="'.$m3.'" onblur="calculDroit();">';
-						$montant_input = '<input type="number" step="0.001" style="text-align: center;" name="montant_'.$compteur.'" value="'.($reponseDebours['montant']*$m3).'" onblur="calculDroit();"><input type="hidden" id="montant_min" name="montant_min" value="'.$reponseDebours['montant_min'].'">';
+						$unite_input = '<input type="number" step="0.001" style="text-align: center; width: 8em;" class="" name="" value="'.$m3.'" onblur="calculDroit();"><input type="hidden" id="unite_a_'.$compteur.'" id="name_a_'.$compteur.'">';
+						$montant_input = '<input type="number" step="0.001" style="text-align: center;" name="montant_a_'.$compteur.'" value="'.($reponseDebours['montant']*$m3).'" onblur="calculDroit();"><input type="hidden" id="montant_min" name="montant_min" value="'.$reponseDebours['montant_min'].'">';
 						
 					}else{
 
-						$unite_input = '<span id="unite_'.$compteur.'"></span>';
-						$montant_input = '<input type="number" step="0.001" style="text-align: center;" class="bg-dark" name="montant_'.$compteur.'" id="montant_'.$reponseDebours['id_deb'].'" value="'.$reponseDebours['montant'].'" onblur="getTotal()">';
+						$unite_input = '<input type="hidden" id="unite_a_'.$compteur.'" id="name_a_'.$compteur.'">';
+						$montant_input = '<input type="number" step="0.001" style="text-align: center;" class="bg-dark" name="montant_a_'.$compteur.'" id="montant_'.$reponseDebours['id_deb'].'" value="'.$reponseDebours['montant'].'" onblur="calculDroit2()">';
 						$montant_tva_input = '';
 						
 					}
 
 					if ($reponseDebours['detail']=='1') {
-						$detail_input = ' : <input type="text" style="width: 20em;" name="detail_'.$compteur.'">';
+						$detail_input = ' : <input type="text" style="width: 20em;" name="detail_a_'.$compteur.'">';
 					}else{
 						$detail_input = '';
 					}
@@ -22936,7 +22948,7 @@
 				
 					$debours .= '<tr>
 									<td width="10%">
-										<input type="hidden" id="id_deb_'.$compteur.'" name="id_deb_'.$compteur.'" value="'.$reponseDebours['id_deb'].'">
+										<input type="hidden" id="id_deb_a_'.$compteur.'" name="id_deb_a_'.$compteur.'" value="'.$reponseDebours['id_deb'].'">
 										'.$reponseDebours['abr_deb'].'
 									</td>
 									<td width="50%" class="'.$bg_depense.'">
@@ -22950,7 +22962,7 @@
 
 									</td>
 									<td style="text-align: center;">
-										<select name="usd_'.$compteur.'" id="usd_'.$compteur.'" onchange="getTotal()">
+										<select name="usd_a_'.$compteur.'" id="usd_a_'.$compteur.'" onchange="getTotal()">
 											'.$usd_input.'
 										</select>
 									</td>
@@ -22973,7 +22985,7 @@
 				$debours .= '</div>';
 
 			}$requeteTypeDebours-> closeCursor();
-			$debours .= '<input type="hidden" name="compteur" value="'.$compteur.'">';
+			$debours .= '<input type="hidden" name="compteur" id="compteur" value="'.$compteur.'">';
 
 			return $debours;
 		}
