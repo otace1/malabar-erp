@@ -12004,14 +12004,14 @@
 						<td style="text-align: right; border-right: 1px solid black;" width="11.5%"></td>
 					</tr>
 					';
-			$requete = $connexion-> prepare('SELECT SUM(dos.poids) AS nbre_poids,
+			$requete = $connexion-> prepare('SELECT IF(SUM(dos.poids)>1, COUNT(dos.poids), 1) AS nbre_poids,
 													(SUM(dos.poids)*50) AS gov_tax_50,
 													(SUM(dos.poids)*3) AS fere_3,
 													(SUM(dos.poids)*5) AS lmc_5,
 													(COUNT(dos.id_dos)*250) AS occ_250,
 													(COUNT(dos.id_dos)*80) AS cgea_80,
 													(COUNT(dos.id_dos)*40) AS dgda_seal_40,
-													COUNT(dos.id_dos) AS nbre_dos,
+													IF(COUNT(dos.id_dos)>1, COUNT(dos.id_dos), 1) AS nbre_dos,
 													SUM(
 														IF(dos.poids<30,
 															1,
@@ -12184,7 +12184,8 @@
 													fact.font_size AS font_size, 
 													dos.id_cli AS id_cli,
 													SUM(dos.m3/1000) AS m3,
-													IF(DATE(fact.date_fact)>="2024-03-25", "1", "0") AS tmp_date
+													IF(DATE(fact.date_fact)>="2024-03-25", "1", "0") AS tmp_date,
+													fact.id_mod_fact AS id_mod_fact
 												FROM debours d, detail_facture_dossier det, dossier dos, facture_dossier fact
 												WHERE det.ref_fact = ?
 													AND det.id_deb = d.id_deb
@@ -12294,7 +12295,7 @@
 					
 					$unite_2 = $reponse['nbre_poids'];
 
-				}else if($reponse['id_cli']==857||$reponse['id_cli']==952){
+				}else if(($reponse['id_cli']==857||$reponse['id_cli']==952) && $reponse['id_mod_fact']<>15){
 					$data_dossier = $this-> getDossier($reponse['id_dos']);
 					
 					$cost_2 = '1';
@@ -12405,27 +12406,51 @@
 					';
 				}else{
 					$sub_total += $reponse['ht_usd'];
-					$tbl .= '
-						<tr>
-							<td style="text-align: left; border-left: 1px solid black; border-right: 0.5px solid black; font-size: '.$reponse['font_size'].'px;" colspan="2" width="49%">&nbsp;&nbsp;'
-								.$reponse['nom_deb'].
-							'</td>
-							<td style="text-align: center; border-right: 0.5px solid black; font-size: 6px;" width="9%">Per M3
-							</td>
-							<td style="text-align: center; border-right: 0.5px solid black; font-size: '.$reponse['font_size'].'px;" width="8%">'
-								.number_format($reponse['m3'], 2, ',', '.').
-							'&nbsp;&nbsp;</td>
-							<td style="text-align: center; border-right: 0.5px solid black; font-size: '.$reponse['font_size'].'px;" width="11%">'
-								.number_format($this-> getDataAffectationDeboursClientModeleLicence($reponse['id_deb'], $data_dossier['id_cli'], $data_dossier['id_mod_lic'], $data_dossier['id_march'], $data_dossier['id_mod_trans'])['montant'], 2, ',', '.').
-							'&nbsp;&nbsp;</td>
-							<td style="text-align: center; border-right: 0.5px solid black; font-size: '.$reponse['font_size'].'px;" width="11.5%">'
-								.number_format($reponse['tva_usd'], 2, ',', '.').
-							'&nbsp;&nbsp;</td>
-							<td style="text-align: right; border-right: 1px solid black; font-size: '.$reponse['font_size'].'px;" width="11.5%">'
-								.number_format($reponse['ttc_usd'], 2, ',', '.').
-							'&nbsp;&nbsp;</td>
-						</tr>
-					';
+					if ($reponse['id_deb']==44) {
+						$tbl .= '
+							<tr>
+								<td style="text-align: left; border-left: 1px solid black; border-right: 0.5px solid black; font-size: '.$reponse['font_size'].'px;" colspan="2" width="49%">&nbsp;&nbsp;'
+									.$reponse['nom_deb'].
+								'</td>
+								<td style="text-align: center; border-right: 0.5px solid black; font-size: 6px;" width="9%">Per Truck
+								</td>
+								<td style="text-align: center; border-right: 0.5px solid black; font-size: '.$reponse['font_size'].'px;" width="8%">'
+									.number_format($reponse['nbre_dos'], 2, ',', '.').
+								'&nbsp;&nbsp;</td>
+								<td style="text-align: center; border-right: 0.5px solid black; font-size: '.$reponse['font_size'].'px;" width="11%">'
+									.number_format($this-> getDataAffectationDeboursClientModeleLicence($reponse['id_deb'], $data_dossier['id_cli'], $data_dossier['id_mod_lic'], $data_dossier['id_march'], $data_dossier['id_mod_trans'])['montant'], 2, ',', '.').
+								'&nbsp;&nbsp;</td>
+								<td style="text-align: center; border-right: 0.5px solid black; font-size: '.$reponse['font_size'].'px;" width="11.5%">'
+									.number_format($reponse['tva_usd'], 2, ',', '.').
+								'&nbsp;&nbsp;</td>
+								<td style="text-align: right; border-right: 1px solid black; font-size: '.$reponse['font_size'].'px;" width="11.5%">'
+									.number_format($reponse['ttc_usd'], 2, ',', '.').
+								'&nbsp;&nbsp;</td>
+							</tr>
+						';
+					}else{
+						$tbl .= '
+							<tr>
+								<td style="text-align: left; border-left: 1px solid black; border-right: 0.5px solid black; font-size: '.$reponse['font_size'].'px;" colspan="2" width="49%">&nbsp;&nbsp;'
+									.$reponse['nom_deb'].
+								'</td>
+								<td style="text-align: center; border-right: 0.5px solid black; font-size: 6px;" width="9%">Per M3
+								</td>
+								<td style="text-align: center; border-right: 0.5px solid black; font-size: '.$reponse['font_size'].'px;" width="8%">'
+									.number_format($reponse['m3'], 2, ',', '.').
+								'&nbsp;&nbsp;</td>
+								<td style="text-align: center; border-right: 0.5px solid black; font-size: '.$reponse['font_size'].'px;" width="11%">'
+									.number_format($this-> getDataAffectationDeboursClientModeleLicence($reponse['id_deb'], $data_dossier['id_cli'], $data_dossier['id_mod_lic'], $data_dossier['id_march'], $data_dossier['id_mod_trans'])['montant'], 2, ',', '.').
+								'&nbsp;&nbsp;</td>
+								<td style="text-align: center; border-right: 0.5px solid black; font-size: '.$reponse['font_size'].'px;" width="11.5%">'
+									.number_format($reponse['tva_usd'], 2, ',', '.').
+								'&nbsp;&nbsp;</td>
+								<td style="text-align: right; border-right: 1px solid black; font-size: '.$reponse['font_size'].'px;" width="11.5%">'
+									.number_format($reponse['ttc_usd'], 2, ',', '.').
+								'&nbsp;&nbsp;</td>
+							</tr>
+						';
+					}
 				}
 
 			}$requete-> closeCursor();
@@ -57058,6 +57083,7 @@
 			$m3 = 0;
 			$ops_admin_fee = 0;
 			$agency_fee = 0;
+			$seguce_fee = 0;
 			$rows = array();
 
 			$requete = $connexion-> prepare("SELECT ref_dos,
@@ -57124,6 +57150,7 @@
 				$m3 += $reponse['m3'];
 				$ops_admin_fee += $reponse['m3']*4;
 				$agency_fee += $reponse['m3']*2;
+				$seguce_fee += 120;
 
 				$table .= '<tr>
 								<input type="hidden" name="id_dos_'.$i.'" value="'.$reponse['id_dos'].'">
@@ -57131,6 +57158,7 @@
 								<input type="hidden" name="montant_tva_'.$i.'" value="0">
 								<input type="hidden" name="ops_admin_fee_'.$i.'" value="'.($reponse['m3']*4).'">
 								<input type="hidden" name="agency_fee_'.$i.'" value="'.($reponse['m3']*2).'">
+								<input type="hidden" name="seguce_fee_'.$i.'" value="120">
 								<td>'.$i.'</td>
 								<td>'.$reponse['ref_dos'].'</td>
 								<td>'.$reponse['truck'].'</td>
@@ -57138,6 +57166,7 @@
 								<td class="text-right">'.number_format($reponse['m3'], 2, ',', ' ').'</td>
 								<td class="text-right">'.number_format(($reponse['m3']*4), 2, ',', ' ').'</td>
 								<td class="text-right">'.number_format(($reponse['m3']*2), 2, ',', ' ').'</td>
+								<td class="text-right">'.number_format(120, 2, ',', ' ').'</td>
 							</tr>';
 
 			}$requete-> closeCursor();
@@ -57148,6 +57177,7 @@
 							<td class="text-right">'.number_format($m3, 2, ',', ' ').'</td>
 							<td class="text-right">'.number_format($ops_admin_fee, 2, ',', ' ').'</td>
 							<td class="text-right">'.number_format($agency_fee, 2, ',', ' ').'</td>
+							<td class="text-right">'.number_format($seguce_fee, 2, ',', ' ').'</td>
 						</tr>';
 
 			$rows['m3'] = round($m3, 3);
