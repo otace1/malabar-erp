@@ -168,6 +168,7 @@
               <td>M3</td>
               <td>OPS & Admin Fees(4$)</td>
               <td>Agency Fees(2$)</td>
+              <td>Seguce Fees(120$)</td>
             </tr>
           </thead>
           <tbody id="tableau_dossier_a_facturer_liquidation"></tbody>

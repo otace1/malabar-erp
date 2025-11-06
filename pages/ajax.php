@@ -4451,6 +4451,11 @@
   				}
 
 
+  				//Seguce Fees
+  				$_POST['tva_'.$nbre_dossier] = '0';
+  				$_POST['usd_'.$nbre_dossier] = '1';
+  				$maClasse-> creerDetailFactureDossier2($_POST['ref_fact'], $_POST['id_dos_'.$nbre_dossier], 44, $_POST['seguce_fee_'.$nbre_dossier], $_POST['tva_'.$nbre_dossier], $_POST['usd_'.$nbre_dossier], NULL, NULL, $_POST['pourcentage_qte_ddi_'.$nbre_dossier], $_POST['montant_tva_'.$nbre_dossier]);
+
   				//ADM & OPS Fees
   				$_POST['tva_'.$nbre_dossier] = '0';
   				$_POST['usd_'.$nbre_dossier] = '1';
