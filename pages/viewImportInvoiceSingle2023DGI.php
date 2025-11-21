@@ -39,19 +39,92 @@ $pdf->SetSubject('act');
 $pdf->SetKeywords('act');
 
 
-//Qrcode de la facture
-//On verifie si le QrCode existe deja
-// $ref_fact = str_replace(' ', '', str_replace('/', '_', $_GET['ref_fact']));
-// if(file_exists('../qrcode/'. $ref_fact.'.png')){
-//     //$qrcode = '../qrcode/'.$ref_mvt.'.png';
-//     $qrcode = '<img src="../qrcode/'.$ref_fact.'.png" width="30px">';
-// }else{
-//     echo '<script>window.location="../qrcode/generateur.php?ref_fact='.$ref_fact.'&type=facturePartielle";</script>';
-//     //header('Location: ../qrcode/generateurBonCaisse.php?id_cais='.$_GET['id_cais'].'&ref_mvt='.$ref_mvt.'&lang='.$_GET['lang']);
-//     $qrcode = '<img src="../qrcode/'.$ref_fact.'.png" width="20px">';
-// }
-$qrcode = '';
-//FIN Qrcode de la facture
+//Qrcode DGI de la facture
+$facture_dgi_info = $maClasse->getFactureGlobale($_GET['ref_fact']);
+
+// Vérifier si la facture est normalisée DGI
+if (!empty($facture_dgi_info['code_UID']) && !empty($facture_dgi_info['code_DEF_DGI'])) {
+	// Utiliser la chaîne QR code complète si disponible, sinon la construire
+	if (!empty($facture_dgi_info['qrcode_string_DGI'])) {
+		$qr_data_string = $facture_dgi_info['qrcode_string_DGI'];
+	} else {
+		// Format: RDCF01;NIM;CODE_DEF;NIF;DATETIME
+		$dateTime = !empty($facture_dgi_info['date_DGI'])
+			? date('YmdHis', strtotime($facture_dgi_info['date_DGI']))
+			: date('YmdHis');
+
+		$qr_data_string = 'RDCF01;'
+			. ($facture_dgi_info['nim_DGI'] ?? 'CD01002974-1') . ';'
+			. $facture_dgi_info['code_DEF_DGI'] . ';'
+			. ($facture_dgi_info['nif_DGI'] ?? 'A1809181A') . ';'
+			. $dateTime;
+	}
+
+	// Préparer les informations d'affichage
+	$nim_display = $facture_dgi_info['nim_DGI'] ?? 'CD01002974-1';
+	$compteur_display = $facture_dgi_info['compteur_DGI'] ?? '';
+	$date_heure_display = !empty($facture_dgi_info['date_DGI'])
+		? date('d/m/Y H:i:s', strtotime($facture_dgi_info['date_DGI']))
+		: '';
+
+	// Section DGI à afficher en bas de la facture
+	$section_dgi_bas = '<tr>
+			<td width="100%"></td>
+		</tr>
+		<tr>
+			<td width="100%" style="text-align: center; font-size: 6px; font-weight: bold;">--- ÉLÉMENTS DE SÉCURITÉ DE LA FACTURE NORMALISÉE ---</td>
+		</tr>
+		<tr>
+			<td width="100%" style="border: 1px solid black; padding: 5px;">
+				<table width="100%" cellpadding="2" cellspacing="0">
+					<tr>
+						<td width="25%" style="border-right: 1px solid black; text-align: center; vertical-align: middle;">
+							<img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=' . urlencode($qr_data_string) . '" style="width: 80px; height: 80px;" />
+						</td>
+						<td width="75%" style="padding-left: 10px; vertical-align: top;">
+							<table width="100%" cellpadding="1" cellspacing="0">
+								<tr>
+									<td style="font-size: 7px; line-height: 1.4;">
+										<strong>Code UID:</strong>
+										' . htmlspecialchars($facture_dgi_info['code_UID']) . '
+									</td>
+									<td style="font-size: 7px; line-height: 1.4;">
+										<strong>Code DEF/DGI:</strong>
+										' . htmlspecialchars($facture_dgi_info['code_DEF_DGI']) . '
+									</td>
+								</tr>
+								<tr>
+									<td style="font-size: 7px; line-height: 1.4;">
+										<strong>DEF NID:</strong>
+										' . htmlspecialchars($nim_display) . '
+									</td>
+									<td style="font-size: 7px; line-height: 1.4;">
+										<strong>DEF Compteurs:</strong>
+										' . htmlspecialchars($compteur_display) . '
+									</td>
+								</tr>
+								<tr>
+									<td colspan="2" style="font-size: 7px; line-height: 1.4;">
+										<strong>DEF Heure:</strong>
+										' . htmlspecialchars($date_heure_display) . '
+									</td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+				</table>
+			</td>
+		</tr>';
+
+	// Variables vides pour les comptes bancaires (QR code retiré)
+	$qrcode_dgi_cell = '';
+	$qrcode_dgi_cell_double = '';
+} else {
+	$qrcode_dgi_cell = '';
+	$qrcode_dgi_cell_double = '';
+	$section_dgi_bas = ''; // Pas de section DGI si la facture n'est pas normalisée
+}
+//FIN Qrcode DGI de la facture
 
 // set some language-dependent strings (optional)
 if (@file_exists(dirname(__FILE__) . '/lang/eng.php')) {
@@ -66,8 +139,12 @@ if (@file_exists(dirname(__FILE__) . '/lang/eng.php')) {
 $pdf->SetFont('helvetica', 'N', 8);
 // $pdf->SetFont('courier', 'N', 8);
 $pdf->setPrintHeader(false);
+$pdf->setPrintFooter(false);
 // add a page
 $pdf->AddPage('P', 'A4');
+
+// Désactiver les sauts de page automatiques pour garder tout sur une seule page
+$pdf->SetAutoPageBreak(false, 0);
 
 $pdf->Image('../images/malabar2.png', 5, 4, 110, '', '', '', '', false, 300);
 $sceau = '';
@@ -219,6 +296,7 @@ if (isset($_GET['ref_fact'])) {
 			<td width="10%" style="border-top: 1px solid black; border-left: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;INTITULE</td>
 			<td width="35%" style="border-top: 1px solid black; border-right: 1px solid black;  font-size: 7px;">&nbsp;MALABAR RDC SARL</td>
 			<td width="10%"></td>
+			' . $qrcode_dgi_cell . '
 		</tr>
 		<tr>
 			<td width="10%" style="border-left: 1px solid black;  font-size: 7px;">&nbsp;N.COMPTE</td>
@@ -242,22 +320,19 @@ if (isset($_GET['ref_fact'])) {
 		$banque = '<tr>
 			<td width="10%" style="border-top: 1px solid black; border-left: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;INTITULE</td>
 			<td width="35%" style="border-top: 1px solid black; border-right: 1px solid black;  font-size: 7px;">&nbsp;MALABAR CLEARING AGENCY SARL</td>
-			<td width="10%"></td>
+			' . $qrcode_dgi_cell_double . '
 			<td width="10%" style="border-top: 1px solid black; border-left: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;INTITULE</td>
 			<td width="35%" style="border-top: 1px solid black; border-right: 1px solid black;  font-size: 7px;">&nbsp;MALABAR RDC SARL</td>
-			<td width="10%"></td>
 		</tr>
 		<tr>
 			<td width="10%" style="border-left: 1px solid black;  font-size: 7px;">&nbsp;N.COMPTE</td>
 			<td width="35%" style="border-right: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;05100-05130-01003333601-20</td>
-			<td width="10%"></td>
 			<td width="10%" style="border-left: 1px solid black;  font-size: 7px;">&nbsp;N.COMPTE</td>
 			<td width="35%" style="border-right: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;00011-00130-00001020614-41</td>
 		</tr>
 		<tr>
 			<td width="10%" style="border-left: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;SWIFT</td>
 			<td width="35%" style="border-right: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;RAWBCDKIXXX</td>
-			<td width="10%"></td>
 			<td width="10%" style="border-left: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;SWIFT</td>
 			<td width="35%" style="border-right: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;BCDCCDKI</td>
 		</tr>
@@ -266,7 +341,6 @@ if (isset($_GET['ref_fact'])) {
 			<td width="35%" style="border-bottom: 1px solid black; border-right: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;RAWBANK
 			<br>&nbsp;LUBUMBASHI
 			<br>&nbsp;R.D. CONGO</td>
-			<td width="10%"></td>
 			<td width="10%" style="border-bottom: 1px solid black; border-left: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;BANQUE</td>
 			<td width="35%" style="border-bottom: 1px solid black; border-right: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;EQUITY BCDC
 			<br>&nbsp;LUBUMBASHI
@@ -277,6 +351,7 @@ if (isset($_GET['ref_fact'])) {
 			<td width="10%" style="border-top: 1px solid black; border-left: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;INTITULE</td>
 			<td width="35%" style="border-top: 1px solid black; border-right: 1px solid black;  font-size: 7px;">&nbsp;MALABAR CLEARING AGENCY SARL</td>
 			<td width="10%"></td>
+			' . $qrcode_dgi_cell . '
 		</tr>
 		<tr>
 			<td width="10%" style="border-left: 1px solid black;  font-size: 7px;">&nbsp;N.COMPTE</td>
@@ -299,28 +374,25 @@ if (isset($_GET['ref_fact'])) {
 		$banque = '<tr>
 					<td width="10%" style="border-top: 1px solid black; border-left: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;INTITULE</td>
 					<td width="35%" style="border-top: 1px solid black; border-right: 1px solid black;  font-size: 7px;">&nbsp;MALABAR RDC SARL</td>
-					<td width="10%"></td>
+					' . $qrcode_dgi_cell_double . '
 					<td width="10%" style="border-top: 1px solid black; border-left: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;INTITULE</td>
 					<td width="35%" style="border-top: 1px solid black; border-right: 1px solid black;  font-size: 7px;">&nbsp;MALABAR RDC SARL V/C KAMOA COPPER SA-DGDA</td>
 				</tr>
 				<tr>
 					<td width="10%" style="border-left: 1px solid black;  font-size: 7px;">&nbsp;N.COMPTE</td>
 					<td width="35%" style="border-right: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;00011-00130-00001020614-41/USD</td>
-					<td width="10%"></td>
 					<td width="10%" style="border-left: 1px solid black;  font-size: 7px;">&nbsp;N.COMPTE</td>
 					<td width="35%" style="border-right: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;00011-15055-52000867229-60/USD</td>
 				</tr>
 				<tr>
 					<td width="10%" style="border-left: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;SWIFT</td>
 					<td width="35%" style="border-right: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;BCDCCDKI</td>
-					<td width="10%"></td>
 					<td width="10%" style="border-left: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;SWIFT</td>
 					<td width="35%" style="border-right: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;BCDCCDKIxxx</td>
 				</tr>
 				<tr>
 					<td width="10%" style="border-bottom: 1px solid black; border-left: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;BANQUE</td>
 					<td width="35%" style="border-bottom: 1px solid black; border-right: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;EQUITY BANK CONGO SA LUBUMBASHI , R.D. CONGO</td>
-					<td width="10%"></td>
 					<td width="10%" style="border-bottom: 1px solid black; border-left: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;BANQUE</td>
 					<td width="35%" style="border-bottom: 1px solid black; border-right: 1px solid black; text-align: left;  font-size: 7px;">&nbsp;EQUITY BANK CONGO SA LUBUMBASHI , R.D. CONGO</td>
 				</tr>';
@@ -559,8 +631,9 @@ if (isset($_GET['ref_fact'])) {
 			<td width="100%"></td>
 		</tr>
 		<tr>
-			<td width="100%" style="border: 1px solid black; text-align: center; font-size: 7px;">Thank you for you business!</td>
+			<td width="100%" style=" text-align: center; font-size: 7px;">Thank you for you business!</td>
 		</tr>
+		$section_dgi_bas
 	</table>
 	</bodystyle="font-weight: bold;">
 	</html>
@@ -573,7 +646,6 @@ EOD;
 
 	$pdf->Output($_GET['ref_fact'] . '.pdf', 'I');
 }
-
 
 
 
