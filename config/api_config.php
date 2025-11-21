@@ -1,0 +1,24 @@
+<?php
+
+/**
+ * Configuration API e-MCF - DGI RDC
+ */
+
+// Configuration API
+define('API_BASE_URL', 'https://developper.dgirdc.cd/edef/api');
+
+// Token JWT (à mettre à jour régulièrement avant expiration)
+define('API_TOKEN', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6IkExMzA5MzM0THxDRDAxMDAzMDc1LTEiLCJyb2xlIjoiVGF4cGF5ZXIiLCJuYmYiOjE3NjM1NTcyMzUsImV4cCI6MTc2NzEzNTYwMCwiaWF0IjoxNzYzNTU3MjM1LCJpc3MiOiJkZXZlbG9wcGVyLmRnaXJkYy5jZCIsImF1ZCI6ImRldmVsb3BwZXIuZGdpcmRjLmNkIn0.C_PL62gzprSVvovnuDyeDLtaksCGZKQ97xAnyWpJH9M');
+
+// Informations de l'entreprise
+define('ENTREPRISE_NIF', 'A1309334L');
+define('ENTREPRISE_EMCF_ID', 'CD01003075-1');
+
+// Identifiants pour renouveler le token
+define('API_USERNAME', 'A1309334L');
+define('API_PASSWORD', 'S4gD3f__');
+
+// Token expire le: 20/11/2025
+define('TOKEN_EXPIRATION', '2025-11-20 00:00:00');
+// b2bf3c76-e3d5-4693-b28d-4bae7a4bbcd1
+// TEST-FACT-URES-BDFH-KBXK-KTC2
