@@ -2,12 +2,12 @@
 	class maClasse{
 
 		//Methodes permettant de créer
-		public function creerLicenceIB($id_banq, $num_lic, $id_cli, $id_post,
-										$id_mon, $fob, $assurance, $fret,
-										$autre_frais, $fsi, $aur,
-										$id_mod_trans, $ref_fact, $date_fact, $fournisseur,
-										$date_val, $date_exp, $id_march, $id_mod_lic,
-										$id_util, $fichier_lic, $tmp, $fichier_fact, $tmp_fact,
+		public function creerLicenceIB($id_banq, $num_lic, $id_cli, $id_post, 
+										$id_mon, $fob, $assurance, $fret, 
+										$autre_frais, $fsi, $aur, 
+										$id_mod_trans, $ref_fact, $date_fact, $fournisseur, 
+										$date_val, $date_exp, $id_march, $id_mod_lic, 
+										$id_util, $fichier_lic, $tmp, $fichier_fact, $tmp_fact, 
 										$id_type_lic, $id_mod_paie, $id_sous_type_paie,
 										$provenance, $commodity){
 			include('connexion.php');
@@ -55,33 +55,33 @@
 			echo "<br> id_sous_type_paie = $id_sous_type_paie";echo "<br> provenance = $provenance";echo "<br> commodity = $commodity";
 			echo "<br>--------------------------------";*/
 
-			$requete = $connexion-> prepare('INSERT INTO licence(id_banq, num_lic, id_cli,
-																id_post, id_mon, fob,
-																assurance, fret, autre_frais,
-																fsi, aur,
-																id_mod_trans, ref_fact, date_fact,
-																fournisseur, date_val, id_march,
+			$requete = $connexion-> prepare('INSERT INTO licence(id_banq, num_lic, id_cli, 
+																id_post, id_mon, fob, 
+																assurance, fret, autre_frais, 
+																fsi, aur, 
+																id_mod_trans, ref_fact, date_fact, 
+																fournisseur, date_val, id_march, 
 																id_mod_lic, id_util, fichier_lic, fichier_fact,
-																id_type_lic, id_mod_paie, id_sous_type_paie, provenance, commodity)
-												VALUES(?, ?, ?,
-													?, ?, ?,
-													?, ?, ?,
-													?, ?, ?,
-													?, ?, ?,
-													?, ?, ?,
-													?, ?, ?,
+																id_type_lic, id_mod_paie, id_sous_type_paie, provenance, commodity) 
+												VALUES(?, ?, ?, 
+													?, ?, ?, 
+													?, ?, ?, 
+													?, ?, ?, 
+													?, ?, ?, 
+													?, ?, ?, 
+													?, ?, ?, 
 													?, ?, ?,
 													?, ?)');
-			$requete-> execute(array($entree['id_banq'], $entree['num_lic'], $entree['id_cli'],
-									$entree['id_post'], $entree['id_mon'], $entree['fob'],
-									$entree['assurance'], $entree['fret'], $entree['autre_frais'],
-									$entree['fsi'], $entree['aur'],
-									$entree['id_mod_trans'], $entree['ref_fact'], $entree['date_fact'],
-									$entree['fournisseur'], $entree['date_val'], $entree['id_march'],
-									$entree['id_mod_lic'], $entree['id_util'], $entree['fichier_lic'],
-									$entree['fichier_fact'], $entree['id_type_lic'], $entree['id_mod_paie'],
+			$requete-> execute(array($entree['id_banq'], $entree['num_lic'], $entree['id_cli'], 
+									$entree['id_post'], $entree['id_mon'], $entree['fob'], 
+									$entree['assurance'], $entree['fret'], $entree['autre_frais'], 
+									$entree['fsi'], $entree['aur'], 
+									$entree['id_mod_trans'], $entree['ref_fact'], $entree['date_fact'], 
+									$entree['fournisseur'], $entree['date_val'], $entree['id_march'], 
+									$entree['id_mod_lic'], $entree['id_util'], $entree['fichier_lic'], 
+									$entree['fichier_fact'], $entree['id_type_lic'], $entree['id_mod_paie'], 
 									$entree['id_sous_type_paie'], $entree['provenance'], $entree['commodity']));
-
+			
 			$this-> creerDateExpirationLicence($num_lic, $date_exp);
 
 			$dossier = '../dossiers/'.$num_lic;
@@ -94,10 +94,10 @@
 			move_uploaded_file($tmp_fact, '../dossiers/'.$num_lic.'/' . basename($fichier_fact));
 			//move_uploaded_file($tmp, '../dossiers/');
 		}
-
-		public function creerDossierLogistique($ref_dos, $ref_mca, $road_manif, $ref_fact,
-										$ref_batch, $poids, $ref_po, $montant_po, $origine,
-										$destination, $transit, $id_cli,
+		
+		public function creerDossierLogistique($ref_dos, $ref_mca, $road_manif, $ref_fact, 
+										$ref_batch, $poids, $ref_po, $montant_po, $origine, 
+										$destination, $transit, $id_cli, 
 										$id_mod_trans, $id_trans, $id_util){
 			include('connexion.php');
 			$entree['ref_dos'] = $ref_dos;
@@ -115,20 +115,20 @@
 			$entree['id_mod_trans'] = $id_mod_trans;
 			$entree['id_trans'] = $id_trans;
 			$entree['id_util'] = $id_util;
-
-			$requete = $connexion-> prepare('INSERT INTO dossier_logistique(ref_dos, ref_mca, road_manif, ref_fact, ref_batch, poids, ref_po, montant_po, origine, destination, transit, id_cli, id_mod_trans, id_trans, id_util, statut)
-												VALUES(?, ?, ?,
-													?, ?, ?,
-													?, ?, ?,
-													?, ?, ?,
+			
+			$requete = $connexion-> prepare('INSERT INTO dossier_logistique(ref_dos, ref_mca, road_manif, ref_fact, ref_batch, poids, ref_po, montant_po, origine, destination, transit, id_cli, id_mod_trans, id_trans, id_util, statut) 
+												VALUES(?, ?, ?, 
+													?, ?, ?, 
+													?, ?, ?, 
+													?, ?, ?, 
 													?, ?, ?, \'IN TRANSIT\')');
 			$requete-> execute(array($entree['ref_dos'], $entree['ref_mca'], $entree['road_manif'], $entree['ref_fact'], $entree['ref_batch'], $entree['poids'], $entree['ref_po'], $entree['montant_po'], $entree['origine'], $entree['destination'], $entree['transit'], $entree['id_cli'], $entree['id_mod_trans'], $entree['id_trans'], $entree['id_util']));
-
+			
 		}
 
-		public function creerDossierLogistique2($ref_dos, $point_load, $horse, $trailer_1,
-										$nom_chauf, $lic_num, $tel_chauf, $remarque, $frontiere,
-										$destination, $transit, $id_cli,
+		public function creerDossierLogistique2($ref_dos, $point_load, $horse, $trailer_1, 
+										$nom_chauf, $lic_num, $tel_chauf, $remarque, $frontiere, 
+										$destination, $transit, $id_cli, 
 										$id_mod_trans, $id_trans, $id_util){
 			include('connexion.php');
 			$entree['ref_dos'] = $ref_dos;
@@ -146,23 +146,23 @@
 			$entree['id_mod_trans'] = $id_mod_trans;
 			$entree['id_trans'] = $id_trans;
 			$entree['id_util'] = $id_util;
-
-			$requete = $connexion-> prepare('INSERT INTO dossier_logistique(ref_dos, point_load, horse, trailer_1, nom_chauf, lic_num, tel_chauf, remarque, frontiere, destination, transit, id_cli, id_mod_trans, id_trans, id_util, statut)
-												VALUES(?, ?, ?,
-													?, ?, ?,
-													?, ?, ?,
-													?, ?, ?,
+			
+			$requete = $connexion-> prepare('INSERT INTO dossier_logistique(ref_dos, point_load, horse, trailer_1, nom_chauf, lic_num, tel_chauf, remarque, frontiere, destination, transit, id_cli, id_mod_trans, id_trans, id_util, statut) 
+												VALUES(?, ?, ?, 
+													?, ?, ?, 
+													?, ?, ?, 
+													?, ?, ?, 
 													?, ?, ?, \'IN TRANSIT\')');
 			$requete-> execute(array($entree['ref_dos'], $entree['point_load'], $entree['horse'], $entree['trailer_1'], $entree['nom_chauf'], $entree['lic_num'], $entree['tel_chauf'], $entree['remarque'], $entree['frontiere'], $entree['destination'], $entree['transit'], $entree['id_cli'], $entree['id_mod_trans'], $entree['id_trans'], $entree['id_util']));
-
+			
 		}
 
-		public function creerLicenceIB2($id_banq, $num_lic, $id_cli, $id_post,
-										$id_mon, $fob, $assurance, $fret,
-										$autre_frais, $fsi, $aur,
-										$id_mod_trans, $ref_fact, $date_fact, $fournisseur,
-										$date_val, $date_exp, $id_march, $id_mod_lic,
-										$id_util, $fichier_lic, $tmp, $fichier_fact, $tmp_fact,
+		public function creerLicenceIB2($id_banq, $num_lic, $id_cli, $id_post, 
+										$id_mon, $fob, $assurance, $fret, 
+										$autre_frais, $fsi, $aur, 
+										$id_mod_trans, $ref_fact, $date_fact, $fournisseur, 
+										$date_val, $date_exp, $id_march, $id_mod_lic, 
+										$id_util, $fichier_lic, $tmp, $fichier_fact, $tmp_fact, 
 										$id_type_lic, $id_mod_paie, $id_sous_type_paie,
 										$provenance, $commodity, $tonnage, $poids, $unit_mes, $cod, $consommable){
 			include('connexion.php');
@@ -227,39 +227,39 @@
 			echo "<br> id_sous_type_paie = $id_sous_type_paie";echo "<br> provenance = $provenance";echo "<br> commodity = $commodity";
 			echo "<br>--------------------------------";*/
 
-			$requete = $connexion-> prepare('INSERT INTO licence(id_banq, num_lic, id_cli,
-																id_post, id_mon, fob,
-																assurance, fret, autre_frais,
-																fsi, aur,
-																id_mod_trans, ref_fact, date_fact,
-																fournisseur, date_val, id_march,
+			$requete = $connexion-> prepare('INSERT INTO licence(id_banq, num_lic, id_cli, 
+																id_post, id_mon, fob, 
+																assurance, fret, autre_frais, 
+																fsi, aur, 
+																id_mod_trans, ref_fact, date_fact, 
+																fournisseur, date_val, id_march, 
 																id_mod_lic, id_util, fichier_lic, fichier_fact,
-																id_type_lic, id_mod_paie, id_sous_type_paie, provenance, commodity, tonnage, poids, unit_mes, cod, consommable)
-												VALUES(?, ?, ?,
-													?, ?, ?,
-													?, ?, ?,
-													?, ?, ?,
-													?, ?, ?,
-													?, ?, ?,
-													?, ?, ?,
+																id_type_lic, id_mod_paie, id_sous_type_paie, provenance, commodity, tonnage, poids, unit_mes, cod, consommable) 
+												VALUES(?, ?, ?, 
+													?, ?, ?, 
+													?, ?, ?, 
+													?, ?, ?, 
+													?, ?, ?, 
+													?, ?, ?, 
+													?, ?, ?, 
 													?, ?, ?,
 													?, ?, ?,
 													?, ?, ?, ?)');
-			$requete-> execute(array($entree['id_banq'], $entree['num_lic'], $entree['id_cli'],
-									$entree['id_post'], $entree['id_mon'], $entree['fob'],
-									$entree['assurance'], $entree['fret'], $entree['autre_frais'],
-									$entree['fsi'], $entree['aur'],
-									$entree['id_mod_trans'], $entree['ref_fact'], $entree['date_fact'],
-									$entree['fournisseur'], $entree['date_val'], $entree['id_march'],
-									$entree['id_mod_lic'], $entree['id_util'], $entree['fichier_lic'],
-									$entree['fichier_fact'], $entree['id_type_lic'], $entree['id_mod_paie'],
-									$entree['id_sous_type_paie'], $entree['provenance'], $entree['commodity'],
-									$entree['tonnage'], $entree['poids'], $entree['unit_mes'], $entree['cod'],
+			$requete-> execute(array($entree['id_banq'], $entree['num_lic'], $entree['id_cli'], 
+									$entree['id_post'], $entree['id_mon'], $entree['fob'], 
+									$entree['assurance'], $entree['fret'], $entree['autre_frais'], 
+									$entree['fsi'], $entree['aur'], 
+									$entree['id_mod_trans'], $entree['ref_fact'], $entree['date_fact'], 
+									$entree['fournisseur'], $entree['date_val'], $entree['id_march'], 
+									$entree['id_mod_lic'], $entree['id_util'], $entree['fichier_lic'], 
+									$entree['fichier_fact'], $entree['id_type_lic'], $entree['id_mod_paie'], 
+									$entree['id_sous_type_paie'], $entree['provenance'], $entree['commodity'], 
+									$entree['tonnage'], $entree['poids'], $entree['unit_mes'], $entree['cod'], 
 									$entree['consommable']));
 			if ($date_exp != null) {
 				$this-> creerDateExpirationLicence($num_lic, $date_exp);
 			}
-
+			
 			if ($tmp != null) {
 				$dossier = '../dossiers/'.$num_lic;
 
@@ -273,8 +273,8 @@
 				//move_uploaded_file($tmp, '../dossiers/');
 		}
 
-		public function creerEBTracking($num_lic, $date_val, $poids, $unit_mes, $id_cli,
-										$id_march, $date_exp, $id_util, $destination,
+		public function creerEBTracking($num_lic, $date_val, $poids, $unit_mes, $id_cli, 
+										$id_march, $date_exp, $id_util, $destination, 
 										$acheteur, $id_mod_trans, $id_banq, $ref_fact=NULL, $fichier_lic=NULL, $tmp=NULL){
 			include('connexion.php');
 
@@ -303,21 +303,21 @@
 			echo "<br> acheteur = $acheteur";
 			echo "<br> id_mod_trans = $id_mod_trans";*/
 
-			$requete = $connexion-> prepare("INSERT INTO licence(num_lic, date_val, tonnage,
-																poids, unit_mes, id_cli, id_march,
+			$requete = $connexion-> prepare("INSERT INTO licence(num_lic, date_val, tonnage, 
+																poids, unit_mes, id_cli, id_march, 
 																id_mod_lic, id_util,
-																id_type_lic, id_mon,
-																destination, acheteur, id_mod_trans, ref_fact, fichier_lic, id_banq)
+																id_type_lic, id_mon, 
+																destination, acheteur, id_mod_trans, ref_fact, fichier_lic, id_banq) 
 													VALUES(?, ?, '1', ?, ?, ?, ?, '1', ?, '1', '1', ?, ?, ?, ?, ?, ?)");
-			$requete-> execute(array($entree['num_lic'], $entree['date_val'], $entree['poids'],
-								$entree['unit_mes'], $entree['id_cli'], $entree['id_march'], $entree['id_util'],
-								$entree['destination'], $entree['acheteur'], $entree['id_mod_trans'],
+			$requete-> execute(array($entree['num_lic'], $entree['date_val'], $entree['poids'], 
+								$entree['unit_mes'], $entree['id_cli'], $entree['id_march'], $entree['id_util'], 
+								$entree['destination'], $entree['acheteur'], $entree['id_mod_trans'], 
 								$entree['ref_fact'], $entree['fichier_lic'], $entree['id_banq']));
 
 			if ($date_exp != null) {
 				$this-> creerDateExpirationLicence($num_lic, $date_exp);
 			}
-
+			
 			if ($tmp != null) {
 				$dossier = '../dossiers/'.$num_lic;
 
@@ -330,8 +330,8 @@
 			}
 		}
 
-		public function new_synthese_licence_EB($num_lic, $date_val, $poids, $unit_mes, $id_cli,
-										$id_march, $date_exp, $id_util, $destination,
+		public function new_synthese_licence_EB($num_lic, $date_val, $poids, $unit_mes, $id_cli, 
+										$id_march, $date_exp, $id_util, $destination, 
 										$acheteur, $id_mod_trans, $id_banq, $fob, $lot_pret, $fichier_lic=NULL, $tmp=NULL, $id_type_lic){
 			include('connexion.php');
 
@@ -363,22 +363,22 @@
 			echo "<br> acheteur = $acheteur";
 			echo "<br> id_mod_trans = $id_mod_trans";*/
 
-			$requete = $connexion-> prepare("INSERT INTO licence(num_lic, date_val, tonnage,
-																poids, unit_mes, id_cli, id_march,
+			$requete = $connexion-> prepare("INSERT INTO licence(num_lic, date_val, tonnage, 
+																poids, unit_mes, id_cli, id_march, 
 																id_mod_lic, id_util,
-																id_type_lic, id_mon,
-																destination, acheteur, id_mod_trans, ref_fact, fichier_lic, id_banq, fob, lot_pret)
+																id_type_lic, id_mon, 
+																destination, acheteur, id_mod_trans, ref_fact, fichier_lic, id_banq, fob, lot_pret) 
 													VALUES(?, ?, '1', ?, ?, ?, ?, '1', ?, ?, '1', ?, ?, ?, ?, ?, ?, ?, ?)");
-			$requete-> execute(array($entree['num_lic'], $entree['date_val'], $entree['poids'],
-								$entree['unit_mes'], $entree['id_cli'], $entree['id_march'], $entree['id_util'], $entree['id_type_lic'],
-								$entree['destination'], $entree['acheteur'], $entree['id_mod_trans'],
-								$entree['ref_fact'], $entree['fichier_lic'], $entree['id_banq'],
+			$requete-> execute(array($entree['num_lic'], $entree['date_val'], $entree['poids'], 
+								$entree['unit_mes'], $entree['id_cli'], $entree['id_march'], $entree['id_util'], $entree['id_type_lic'], 
+								$entree['destination'], $entree['acheteur'], $entree['id_mod_trans'], 
+								$entree['ref_fact'], $entree['fichier_lic'], $entree['id_banq'], 
 								$entree['fob'], $entree['lot_pret']));
 
 			if ($date_exp != null) {
 				$this-> creerDateExpirationLicence($num_lic, $date_exp);
 			}
-
+			
 			if ($tmp != null) {
 				$dossier = '../dossiers/'.$num_lic;
 
@@ -391,8 +391,8 @@
 			}
 		}
 
-		public function edit_synthese_licence_EB($num_lic, $date_val, $poids, $unit_mes, $id_cli,
-										$id_march, $date_exp, $id_util, $destination,
+		public function edit_synthese_licence_EB($num_lic, $date_val, $poids, $unit_mes, $id_cli, 
+										$id_march, $date_exp, $id_util, $destination, 
 										$acheteur, $id_mod_trans, $id_banq, $fob, $lot_pret, $num_lic_old){
 			include('connexion.php');
 
@@ -428,10 +428,10 @@
 												fob = ?,
 												lot_pret = ?
 												WHERE num_lic = ?");
-			$requete-> execute(array($entree['num_lic'], $entree['date_val'], $entree['poids'],
-								$entree['unit_mes'], $entree['id_cli'], $entree['id_march'],
-								$entree['destination'], $entree['acheteur'], $entree['id_mod_trans'],
-								$entree['ref_fact'], $entree['id_banq'],
+			$requete-> execute(array($entree['num_lic'], $entree['date_val'], $entree['poids'], 
+								$entree['unit_mes'], $entree['id_cli'], $entree['id_march'], 
+								$entree['destination'], $entree['acheteur'], $entree['id_mod_trans'], 
+								$entree['ref_fact'], $entree['id_banq'], 
 								$entree['fob'], $entree['lot_pret'], $entree['num_lic_old']));
 
 			$requete = $connexion-> prepare("UPDATE expiration_licence
@@ -440,8 +440,8 @@
 			$requete-> execute(array($entree['date_exp'], $entree['num_lic']));
 		}
 
-		public function creerEBTrackingAjax($num_lic, $date_val, $poids, $unit_mes, $id_cli,
-										$id_march, $date_exp, $id_util, $destination,
+		public function creerEBTrackingAjax($num_lic, $date_val, $poids, $unit_mes, $id_cli, 
+										$id_march, $date_exp, $id_util, $destination, 
 										$acheteur, $id_mod_trans, $id_banq, $fob, $id_type_lic, $ref_fact=NULL, $fichier_lic=NULL, $tmp=NULL, $id_mon){
 			include('connexion.php');
 
@@ -480,23 +480,23 @@
 			// echo "<br> id_type_lic = $id_type_lic";
 			// echo "<br> id_mon = $id_mon";
 
-			$requete = $connexion-> prepare("INSERT INTO licence(num_lic, date_val, tonnage,
-																poids, unit_mes, id_cli, id_march,
+			$requete = $connexion-> prepare("INSERT INTO licence(num_lic, date_val, tonnage, 
+																poids, unit_mes, id_cli, id_march, 
 																id_mod_lic, id_util,
-																destination, acheteur, id_mod_trans,
+																destination, acheteur, id_mod_trans, 
 																ref_fact, fichier_lic, id_banq,
-																fob, id_type_lic, id_mon)
+																fob, id_type_lic, id_mon) 
 													VALUES(?, ?, '1', ?, ?, ?, ?, '1', ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-			$requete-> execute(array($entree['num_lic'], $entree['date_val'], $entree['poids'],
-								$entree['unit_mes'], $entree['id_cli'], $entree['id_march'], $entree['id_util'],
-								$entree['destination'], $entree['acheteur'], $entree['id_mod_trans'],
-								$entree['ref_fact'], $entree['fichier_lic'], $entree['id_banq'],
+			$requete-> execute(array($entree['num_lic'], $entree['date_val'], $entree['poids'], 
+								$entree['unit_mes'], $entree['id_cli'], $entree['id_march'], $entree['id_util'], 
+								$entree['destination'], $entree['acheteur'], $entree['id_mod_trans'], 
+								$entree['ref_fact'], $entree['fichier_lic'], $entree['id_banq'], 
 								$entree['fob'], $entree['id_type_lic'], $entree['id_mon']));
 
 			if ($date_exp != null) {
 				$this-> creerDateExpirationLicence($num_lic, $date_exp);
 			}
-
+			
 			if ($tmp != null) {
 				$dossier = '../dossiers/'.$num_lic;
 
@@ -509,9 +509,9 @@
 			}
 		}
 
-		public function creerLicenceIBUpload($client, $fournisseur, $commodity, $po, $facture,
-										$num_licence, $monnaie, $fob, $fret,
-										$assurance, $autre_frais, $fsi, $aur,
+		public function creerLicenceIBUpload($client, $fournisseur, $commodity, $po, $facture, 
+										$num_licence, $monnaie, $fob, $fret, 
+										$assurance, $autre_frais, $fsi, $aur, 
 										$validation, $id_util, $id_mod_lic, $extreme){
 			include('connexion.php');
 			$entree['client'] = $client;$entree['fournisseur'] = $fournisseur;
@@ -522,30 +522,30 @@
 			$entree['validation'] = $validation;$entree['id_util'] = $id_util;$entree['id_mod_lic'] = $id_mod_lic;
 			$entree['extreme'] = $extreme;$entree['commodity'] = $commodity;$entree['fsi'] = $fsi;
 
-			$requete = $connexion-> prepare('INSERT INTO licence_upload(client, fournisseur, po,
-																facture, num_licence, monnaie,
-																fob, fret, assurance,
-																autre_frais, fsi, aur,
+			$requete = $connexion-> prepare('INSERT INTO licence_upload(client, fournisseur, po, 
+																facture, num_licence, monnaie, 
+																fob, fret, assurance, 
+																autre_frais, fsi, aur, 
 																validation, id_util, id_mod_lic,
-																extreme, commodity)
-												VALUES(?, ?, ?,
-													?, ?, ?,
-													?, ?, ?,
-													?, ?, ?,
+																extreme, commodity) 
+												VALUES(?, ?, ?, 
+													?, ?, ?, 
+													?, ?, ?, 
+													?, ?, ?, 
 													?, ?, ?, ?, ?)');
-			$requete-> execute(array($entree['client'], $entree['fournisseur'], $entree['po'],
-									$entree['facture'], $entree['num_licence'], $entree['monnaie'],
-									$entree['fob'], $entree['fret'], $entree['assurance'],
-									$entree['autre_frais'], $entree['fsi'], $entree['aur'],
-									$entree['validation'], $entree['id_util'], $entree['id_mod_lic'],
+			$requete-> execute(array($entree['client'], $entree['fournisseur'], $entree['po'], 
+									$entree['facture'], $entree['num_licence'], $entree['monnaie'], 
+									$entree['fob'], $entree['fret'], $entree['assurance'], 
+									$entree['autre_frais'], $entree['fsi'], $entree['aur'], 
+									$entree['validation'], $entree['id_util'], $entree['id_mod_lic'], 
 									$entree['extreme'], $entree['commodity']));
-
+			
 			//$this-> creerDateExpirationLicence($num_lic, $date_exp);
 		}
 
-		/*public function creerDossierIBUpload($client, $ref_dos, $num_lic, $cod, $fxi, $montant_av,
-										$date_fact, $ref_fact, $fob, $fret,
-										$assurance, $autre_frais, $ref_decl, $montant_decl,
+		/*public function creerDossierIBUpload($client, $ref_dos, $num_lic, $cod, $fxi, $montant_av, 
+										$date_fact, $ref_fact, $fob, $fret, 
+										$assurance, $autre_frais, $ref_decl, $montant_decl, 
 										$ref_liq, $id_util, $ref_quit, $date_quit, $id_mod_lic){
 			include('connexion.php');
 			$entree['client'] = $client;$entree['ref_dos'] = $ref_dos;$entree['num_lic'] = $num_lic;
@@ -557,30 +557,30 @@
 			$entree['date_quit'] = $date_quit;$entree['cod'] = $cod;$entree['ref_decl'] = $ref_decl;
 			$entree['id_mod_lic'] = $id_mod_lic;
 
-			$requete = $connexion-> prepare('INSERT INTO dossier_upload(client, ref_dos, num_lic, fxi,
-																montant_av, date_fact, ref_fact,
-																fob, fret, assurance,
-																autre_frais, ref_decl, montant_decl,
+			$requete = $connexion-> prepare('INSERT INTO dossier_upload(client, ref_dos, num_lic, fxi, 
+																montant_av, date_fact, ref_fact, 
+																fob, fret, assurance, 
+																autre_frais, ref_decl, montant_decl, 
 																ref_liq, id_util, ref_quit,
-																date_quit, cod, id_mod_lic)
-												VALUES(?, ?, ?,
-													?, ?, ?,
-													?, ?, ?,
-													?, ?, ?,
+																date_quit, cod, id_mod_lic) 
+												VALUES(?, ?, ?, 
+													?, ?, ?, 
+													?, ?, ?, 
+													?, ?, ?, 
 													?, ?, ?, ?, ?, ?, ?)');
-			$requete-> execute(array($entree['client'], $entree['ref_dos'], $entree['num_lic'], $entree['fxi'],
-									$entree['montant_av'], $entree['date_fact'], $entree['ref_fact'],
-									$entree['fob'], $entree['fret'], $entree['assurance'],
-									$entree['autre_frais'], $entree['ref_decl'], $entree['montant_decl'],
-									$entree['ref_liq'], $entree['id_util'], $entree['ref_quit'],
+			$requete-> execute(array($entree['client'], $entree['ref_dos'], $entree['num_lic'], $entree['fxi'], 
+									$entree['montant_av'], $entree['date_fact'], $entree['ref_fact'], 
+									$entree['fob'], $entree['fret'], $entree['assurance'], 
+									$entree['autre_frais'], $entree['ref_decl'], $entree['montant_decl'], 
+									$entree['ref_liq'], $entree['id_util'], $entree['ref_quit'], 
 									$entree['date_quit'], $entree['cod'], $entree['id_mod_lic']));
-
+			
 			//$this-> creerDateExpirationLicence($num_lic, $date_exp);
 		}*/
 
-		public function creerDossierIBUpload($client, $ref_dos, $num_lic, $cod, $fxi, $montant_av,
-										$date_fact, $ref_fact, $fob, $fret,
-										$assurance, $autre_frais, $ref_decl, $montant_decl,
+		public function creerDossierIBUpload($client, $ref_dos, $num_lic, $cod, $fxi, $montant_av, 
+										$date_fact, $ref_fact, $fob, $fret, 
+										$assurance, $autre_frais, $ref_decl, $montant_decl, 
 										$ref_liq, $id_util, $ref_quit, $date_quit, $id_mod_lic){
 			include('connexion.php');
 			$entree['client'] = $client;$entree['ref_dos'] = $ref_dos;$entree['num_lic'] = $num_lic;
@@ -592,30 +592,30 @@
 			$entree['date_quit'] = $date_quit;$entree['cod'] = $cod;$entree['ref_decl'] = $ref_decl;
 			$entree['id_mod_lic'] = $id_mod_lic;
 
-			$requete = $connexion-> prepare('INSERT INTO dossier_upload(client, ref_dos, num_lic, fxi,
-																montant_av, date_fact, ref_fact,
-																fob, fret, assurance,
-																autre_frais, ref_decl, montant_decl,
+			$requete = $connexion-> prepare('INSERT INTO dossier_upload(client, ref_dos, num_lic, fxi, 
+																montant_av, date_fact, ref_fact, 
+																fob, fret, assurance, 
+																autre_frais, ref_decl, montant_decl, 
 																ref_liq, id_util, ref_quit,
-																date_quit, cod, id_mod_lic)
-												VALUES(?, ?, ?,
-													?, ?, ?,
-													?, ?, ?,
-													?, ?, ?,
+																date_quit, cod, id_mod_lic) 
+												VALUES(?, ?, ?, 
+													?, ?, ?, 
+													?, ?, ?, 
+													?, ?, ?, 
 													?, ?, ?, ?, ?, ?, ?)');
-			$requete-> execute(array($entree['client'], $entree['ref_dos'], $entree['num_lic'], $entree['fxi'],
-									$entree['montant_av'], $entree['date_fact'], $entree['ref_fact'],
-									$entree['fob'], $entree['fret'], $entree['assurance'],
-									$entree['autre_frais'], $entree['ref_decl'], $entree['montant_decl'],
-									$entree['ref_liq'], $entree['id_util'], $entree['ref_quit'],
+			$requete-> execute(array($entree['client'], $entree['ref_dos'], $entree['num_lic'], $entree['fxi'], 
+									$entree['montant_av'], $entree['date_fact'], $entree['ref_fact'], 
+									$entree['fob'], $entree['fret'], $entree['assurance'], 
+									$entree['autre_frais'], $entree['ref_decl'], $entree['montant_decl'], 
+									$entree['ref_liq'], $entree['id_util'], $entree['ref_quit'], 
 									$entree['date_quit'], $entree['cod'], $entree['id_mod_lic']));
-
+			
 			//$this-> creerDateExpirationLicence($num_lic, $date_exp);
 		}
 
-		public function creerDossierIBUploadTrackingKlsa($client, $ref_dos, $num_lic, $t1, $poids, $ref_fact,
-										$horse, $trailer_1, $trailer_2, $transporteur,
-										$destination, $arrival_date, $crossing_date, $wiski_arriv,
+		public function creerDossierIBUploadTrackingKlsa($client, $ref_dos, $num_lic, $t1, $poids, $ref_fact, 
+										$horse, $trailer_1, $trailer_2, $transporteur, 
+										$destination, $arrival_date, $crossing_date, $wiski_arriv, 
 										$wiski_dep, $remarque, $id_util, $id_mod_lic, $id_mod_trans){
 			include('connexion.php');
 			$entree['client'] = $client;$entree['ref_dos'] = $ref_dos;$entree['num_lic'] = $num_lic;
@@ -633,26 +633,26 @@
 			echo $wiski_arriv.' = wiski_arriv<br>';echo $wiski_dep.' = wiski_dep<br>';echo $remarque.' = remarque<br>';
 			echo $id_util.' = id_util<br>';echo $t1.' = t1<br>';echo $id_mod_lic.' = id_mod_lic<br>';
 			echo $id_mod_trans.' = id_mod_trans<br><br>------------';*/
-			$requete = $connexion-> prepare('INSERT INTO dossier_upload_tracking(client, ref_dos, num_lic, poids,
-																ref_fact, horse, trailer_1,
-																trailer_2, transporteur, destination,
-																arrival_date, crossing_date, wiski_arriv,
+			$requete = $connexion-> prepare('INSERT INTO dossier_upload_tracking(client, ref_dos, num_lic, poids, 
+																ref_fact, horse, trailer_1, 
+																trailer_2, transporteur, destination, 
+																arrival_date, crossing_date, wiski_arriv, 
 																wiski_dep, remarque,
-																id_util, t1, id_mod_lic, id_mod_trans)
-												VALUES(?, ?, ?,
-													?, ?, ?,
-													?, ?, ?,
-													?, ?, ?,
+																id_util, t1, id_mod_lic, id_mod_trans) 
+												VALUES(?, ?, ?, 
+													?, ?, ?, 
+													?, ?, ?, 
+													?, ?, ?, 
 													?, ?, ?, ?, ?, ?, ?)');
-			$requete-> execute(array($entree['client'], $entree['ref_dos'], $entree['num_lic'], $entree['poids'],
-									$entree['ref_fact'], $entree['horse'], $entree['trailer_1'],
-									$entree['trailer_2'], $entree['transporteur'], $entree['destination'],
-									$entree['arrival_date'], $entree['crossing_date'], $entree['wiski_arriv'],
-									$entree['wiski_dep'], $entree['remarque'],
+			$requete-> execute(array($entree['client'], $entree['ref_dos'], $entree['num_lic'], $entree['poids'], 
+									$entree['ref_fact'], $entree['horse'], $entree['trailer_1'], 
+									$entree['trailer_2'], $entree['transporteur'], $entree['destination'], 
+									$entree['arrival_date'], $entree['crossing_date'], $entree['wiski_arriv'], 
+									$entree['wiski_dep'], $entree['remarque'], 
 									$entree['id_util'], $entree['t1'], $entree['id_mod_lic'], $entree['id_mod_trans']));
-
+			
 			//$this-> creerDateExpirationLicence($num_lic, $date_exp);
-		}
+		} 
 
 		public function creerDossierIBUploadExport($ref_dos, $num_lic, $date_exp, $tonnage, $ship_num, $barge, $horse, $trailer_1, $trailer_2, $num_lot, $nbr_bags, $poids, $kapulo_load, $dispatch_pweto, $arrival_pweto, $barge_load, $barge_dispatch_date, $doc_receiv, $nbre_seal, $dgda_seal, $remarque, $transporter, $load_date, $pv_mine, $demande_attestation, $assay_date, $ceec_in, $ceec_out, $min_div_in, $min_div_out, $date_decl, $dgda_in, $date_liq, $date_quit, $dgda_out, $gov_in, $gov_out, $dispatch_date, $klsa_arriv, $end_form, $exit_drc, $cleared, $statut, $site_load, $destination, $ref_decl, $ref_liq, $ref_quit, $impala_sncc, $docs_sncc, $sncc_sakania, $sakania_date, $id_cli, $id_util, $id_mod_trans){
 			include('connexion.php');
@@ -684,36 +684,36 @@
 			$entree['sncc_sakania'] = $sncc_sakania;$entree['sakania_date'] = $sakania_date;
 			$entree['id_cli'] = $id_cli; $entree['id_util'] = $id_util; $entree['id_mod_trans'] = $id_mod_trans;
 
-			$requete = $connexion-> prepare('INSERT INTO dossier_upload_export(ref_dos, num_lic, date_exp, tonnage, ship_num, barge, horse, trailer_1, trailer_2, num_lot, nbr_bags, poids, kapulo_load, dispatch_pweto, arrival_pweto, barge_load, barge_dispatch_date, doc_receiv, nbre_seal, dgda_seal, remarque, transporter, load_date, pv_mine, demande_attestation, assay_date, ceec_in, ceec_out, min_div_in, min_div_out, date_decl, dgda_in, date_liq, date_quit, dgda_out, gov_in, gov_out, dispatch_date, klsa_arriv, end_form, exit_drc, cleared, statut, site_load, destination, ref_decl, ref_liq, ref_quit, impala_sncc, docs_sncc, sncc_sakania, sakania_date, id_cli, id_util, id_mod_trans)
-												VALUES(?, ?, ?,
-													?, ?, ?,
-													?, ?, ?,
-													?, ?, ?,
-													?, ?, ?,
-													?, ?, ?,
-													?, ?, ?,
-													?, ?, ?,
-													?, ?, ?,
-													?, ?, ?,
-													?, ?, ?,
-													?, ?, ?,
-													?, ?, ?,
-													?, ?, ?,
-													?, ?, ?,
-													?, ?, ?,
-													?, ?, ?,
+			$requete = $connexion-> prepare('INSERT INTO dossier_upload_export(ref_dos, num_lic, date_exp, tonnage, ship_num, barge, horse, trailer_1, trailer_2, num_lot, nbr_bags, poids, kapulo_load, dispatch_pweto, arrival_pweto, barge_load, barge_dispatch_date, doc_receiv, nbre_seal, dgda_seal, remarque, transporter, load_date, pv_mine, demande_attestation, assay_date, ceec_in, ceec_out, min_div_in, min_div_out, date_decl, dgda_in, date_liq, date_quit, dgda_out, gov_in, gov_out, dispatch_date, klsa_arriv, end_form, exit_drc, cleared, statut, site_load, destination, ref_decl, ref_liq, ref_quit, impala_sncc, docs_sncc, sncc_sakania, sakania_date, id_cli, id_util, id_mod_trans) 
+												VALUES(?, ?, ?, 
+													?, ?, ?,  
+													?, ?, ?,  
+													?, ?, ?,  
+													?, ?, ?,  
+													?, ?, ?,  
+													?, ?, ?,  
+													?, ?, ?,  
+													?, ?, ?,  
+													?, ?, ?,  
+													?, ?, ?,  
+													?, ?, ?,  
+													?, ?, ?,  
+													?, ?, ?,  
+													?, ?, ?,  
+													?, ?, ?,  
+													?, ?, ?, 
 													?, ?, ?, ?)');
 			$requete-> execute(array($entree['ref_dos'], $entree['num_lic'], $entree['date_exp'], $entree['tonnage'], $entree['ship_num'], $entree['barge'], $entree['horse'], $entree['trailer_1'], $entree['trailer_2'], $entree['num_lot'], $entree['nbr_bags'], $entree['poids'], $entree['kapulo_load'], $entree['dispatch_pweto'], $entree['arrival_pweto'], $entree['barge_load'], $entree['barge_dispatch_date'], $entree['doc_receiv'], $entree['nbre_seal'], $entree['dgda_seal'], $entree['remarque'], $entree['transporter'], $entree['load_date'], $entree['pv_mine'], $entree['demande_attestation'], $entree['assay_date'], $entree['ceec_in'], $entree['ceec_out'], $entree['min_div_in'], $entree['min_div_out'], $entree['date_decl'], $entree['dgda_in'], $entree['date_liq'], $entree['date_quit'], $entree['dgda_out'], $entree['gov_in'], $entree['gov_out'], $entree['dispatch_date'], $entree['klsa_arriv'], $entree['end_form'], $entree['exit_drc'], $entree['cleared'], $entree['statut'], $entree['site_load'], $entree['destination'], $entree['ref_decl'], $entree['ref_liq'], $entree['ref_quit'], $entree['impala_sncc'], $entree['docs_sncc'], $entree['sncc_sakania'], $entree['sakania_date'], $entree['id_cli'], $entree['id_util'], $entree['id_mod_trans']));
-
+			
 			//$this-> creerDateExpirationLicence($num_lic, $date_exp);
 		}
 
-		public function creerDossierIBUpload2($client, $ref_dos, $mca_b_ref, $road_manif, $date_preal, $t1,
-										$poids, $ref_fact, $fob, $fret,
-										$assurance, $autre_frais, $fournisseur, $po,
+		public function creerDossierIBUpload2($client, $ref_dos, $mca_b_ref, $road_manif, $date_preal, $t1, 
+										$poids, $ref_fact, $fob, $fret, 
+										$assurance, $autre_frais, $fournisseur, $po, 
 										$commodity, $horse, $trailer_1, $trailer_2, $num_lic, $num_exo,
 										$arrival_date, $crossing_date, $wiski_arriv, $wiski_dep, $amicongo_arriv,
-										$insp_report, $ir, $ref_crf, $date_crf, $ref_decl, $dgda_in, $ref_liq,
+										$insp_report, $ir, $ref_crf, $date_crf, $ref_decl, $dgda_in, $ref_liq, 
 										$date_liq, $ref_quit, $date_quit, $dgda_out, $custom_deliv, $dispatch_deliv,
 										$remarque, $statut, $id_mod_trac, $id_util, $bl, $supplier, $credit_enlev_by, $bond_warehouse){
 			include('connexion.php');
@@ -735,51 +735,51 @@
 			$entree['bl'] = $bl; $entree['supplier'] = $supplier; $entree['credit_enlev_by'] = $credit_enlev_by;
 			$entree['bond_warehouse'] = $bond_warehouse;
 			/*echo $client.' - '.$ref_dos.' - '.$mca_b_ref.' - '.$road_manif.' - '.$date_preal.' - '.$t1.' - '.$poids.' - '.$fob.' - '.$fret.' - '.$assurance.' - '.$autre_frais.' - '.$ref_fact.' - '.$fournisseur.' - '.$po.' - '.$commodity.' - '.$horse.' - '.$trailer_1.' - '.$trailer_2.' - '.$num_lic.' - '.$num_exo.' - '.$crossing_date.' - '.$arrival_date.' - '.$wiski_arriv.' - '.$wiski_dep.' - '.$amicongo_arriv.' - '.$insp_report.' - '.$ir.' - '.$ref_crf.' - '.$date_crf.' - '.$ref_decl.' - '.$dgda_in.' - '.$ref_liq.' - '.$date_liq.' - '.$ref_quit.' - '.$date_quit.' - '.$dgda_out.' - '.$custom_deliv.' - '.$dispatch_deliv.' - '.$statut.' - '.$remarque.'<br><br><br>';*/
-			$requete = $connexion-> prepare('INSERT INTO dossier_upload_tracking(client, ref_dos, mca_b_ref, date_preal,
-																t1, poids, ref_fact,
-																fob, fret, assurance,
-																autre_frais, fournisseur, po,
+			$requete = $connexion-> prepare('INSERT INTO dossier_upload_tracking(client, ref_dos, mca_b_ref, date_preal, 
+																t1, poids, ref_fact, 
+																fob, fret, assurance, 
+																autre_frais, fournisseur, po, 
 																commodity, horse, trailer_1,
-																trailer_2, road_manif, num_lic,
+																trailer_2, road_manif, num_lic, 
 																num_exo, arrival_date, crossing_date, wiski_arriv, wiski_dep, amicongo_arriv, insp_report, ir, ref_crf, date_crf, ref_decl, dgda_in, ref_liq, date_liq, ref_quit, date_quit, dgda_out, custom_deliv, dispatch_deliv, remarque, statut,
-																id_mod_lic, id_util, bl, supplier, credit_enlev_by, bond_warehouse)
-												VALUES(?, ?, ?,
-													?, ?, ?,
-													?, ?, ?,
-													?, ?, ?,
-													?, ?, ?,
-													?, ?, ?, ?,
-													?, ?, ?, ?,
-													?, ?, ?, ?,
-													?, ?, ?, ?,
-													?, ?, ?, ?,
+																id_mod_lic, id_util, bl, supplier, credit_enlev_by, bond_warehouse) 
+												VALUES(?, ?, ?, 
+													?, ?, ?, 
+													?, ?, ?, 
+													?, ?, ?, 
+													?, ?, ?, 
+													?, ?, ?, ?, 
+													?, ?, ?, ?, 
+													?, ?, ?, ?, 
+													?, ?, ?, ?, 
+													?, ?, ?, ?, 
 													?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
-			$requete-> execute(array($entree['client'], $entree['ref_dos'], $entree['mca_b_ref'], $entree['date_preal'],
-									$entree['t1'], $entree['poids'], $entree['ref_fact'],
-									$entree['fob'], $entree['fret'], $entree['assurance'],
-									$entree['autre_frais'], $entree['fournisseur'], $entree['po'],
-									$entree['commodity'], $entree['horse'], $entree['trailer_1'],
-									$entree['trailer_2'], $entree['road_manif'], $entree['num_lic'],
-									$entree['num_exo'], $entree['arrival_date'], $entree['crossing_date'],
-									$entree['wiski_arriv'], $entree['wiski_dep'], $entree['amicongo_arriv'],
-									$entree['insp_report'], $entree['ir'], $entree['ref_crf'],
-									$entree['date_crf'], $entree['ref_decl'], $entree['dgda_in'],
-									$entree['ref_liq'], $entree['date_liq'], $entree['dgda_out'],
-									$entree['ref_quit'], $entree['date_quit'], $entree['custom_deliv'],
-									$entree['dispatch_deliv'], $entree['remarque'], $entree['statut'],
-									$entree['id_mod_trac'], $entree['id_util'], $entree['bl'],
+			$requete-> execute(array($entree['client'], $entree['ref_dos'], $entree['mca_b_ref'], $entree['date_preal'], 
+									$entree['t1'], $entree['poids'], $entree['ref_fact'], 
+									$entree['fob'], $entree['fret'], $entree['assurance'], 
+									$entree['autre_frais'], $entree['fournisseur'], $entree['po'], 
+									$entree['commodity'], $entree['horse'], $entree['trailer_1'], 
+									$entree['trailer_2'], $entree['road_manif'], $entree['num_lic'], 
+									$entree['num_exo'], $entree['arrival_date'], $entree['crossing_date'], 
+									$entree['wiski_arriv'], $entree['wiski_dep'], $entree['amicongo_arriv'], 
+									$entree['insp_report'], $entree['ir'], $entree['ref_crf'], 
+									$entree['date_crf'], $entree['ref_decl'], $entree['dgda_in'], 
+									$entree['ref_liq'], $entree['date_liq'], $entree['dgda_out'], 
+									$entree['ref_quit'], $entree['date_quit'], $entree['custom_deliv'], 
+									$entree['dispatch_deliv'], $entree['remarque'], $entree['statut'], 
+									$entree['id_mod_trac'], $entree['id_util'], $entree['bl'], 
 									$entree['supplier'], $entree['credit_enlev_by'], $entree['bond_warehouse']));
-
+			
 			//$this-> creerDateExpirationLicence($num_lic, $date_exp);
 		}
 
-		public function creerDossierMMG($client, $ref_dos, $t1, $poids,
-										$ref_fact, $horse, $trailer_1, $trailer_2,
-										$num_lic, $num_exo, $klsa_arriv, $crossing_date,
-										$wiski_arriv, $wiski_dep, $insp_report, $ir,
-										$ref_crf, $date_crf, $ref_decl, $dgda_in,
-										$ref_liq, $date_liq, $ref_quit, $date_quit,
-										$dgda_out, $regul_ir, $cleared, $statut, $remarque,
+		public function creerDossierMMG($client, $ref_dos, $t1, $poids, 
+										$ref_fact, $horse, $trailer_1, $trailer_2, 
+										$num_lic, $num_exo, $klsa_arriv, $crossing_date, 
+										$wiski_arriv, $wiski_dep, $insp_report, $ir, 
+										$ref_crf, $date_crf, $ref_decl, $dgda_in, 
+										$ref_liq, $date_liq, $ref_quit, $date_quit, 
+										$dgda_out, $regul_ir, $cleared, $statut, $remarque, 
 										$id_mod_lic, $id_util){
 			include('connexion.php');
 
@@ -829,27 +829,27 @@
 			echo '<br>statut = '.$statut;
 			echo '<br>remarque = '.$remarque;*/
 
-			$requete = $connexion-> prepare('INSERT INTO dossier_upload_tracking(client, ref_dos, t1, poids, ref_fact, horse, trailer_1, trailer_2, num_lic, num_exo, klsa_arriv, crossing_date, wiski_arriv, wiski_dep, insp_report, ir, ref_crf, date_crf, ref_decl, dgda_in, ref_liq, date_liq, ref_quit, date_quit, dgda_out, regul_ir, cleared, statut, remarque, id_mod_lic, id_util)
-												VALUES(?, ?, ?, ?,
-													?, ?, ?, ?,
-													?, ?, ?, ?,
-													?, ?, ?, ?,
-													?, ?, ?, ?,
-													?, ?, ?, ?,
-													?, ?, ?, ?,
+			$requete = $connexion-> prepare('INSERT INTO dossier_upload_tracking(client, ref_dos, t1, poids, ref_fact, horse, trailer_1, trailer_2, num_lic, num_exo, klsa_arriv, crossing_date, wiski_arriv, wiski_dep, insp_report, ir, ref_crf, date_crf, ref_decl, dgda_in, ref_liq, date_liq, ref_quit, date_quit, dgda_out, regul_ir, cleared, statut, remarque, id_mod_lic, id_util) 
+												VALUES(?, ?, ?, ?, 
+													?, ?, ?, ?, 
+													?, ?, ?, ?, 
+													?, ?, ?, ?, 
+													?, ?, ?, ?, 
+													?, ?, ?, ?, 
+													?, ?, ?, ?, 
 													?, ?, ?)');
 			$requete-> execute(array($entree['client'], $entree['ref_dos'], $entree['t1'], $entree['poids'], $entree['ref_fact'], $entree['horse'], $entree['trailer_1'], $entree['trailer_2'], $entree['num_lic'], $entree['num_exo'], $entree['klsa_arriv'], $entree['crossing_date'], $entree['wiski_arriv'], $entree['wiski_dep'], $entree['insp_report'], $entree['ir'], $entree['ref_crf'], $entree['date_crf'], $entree['ref_decl'], $entree['dgda_in'], $entree['ref_liq'], $entree['date_liq'], $entree['ref_quit'], $entree['date_quit'], $entree['dgda_out'], $entree['regul_ir'], $entree['cleared'], $entree['statut'], $entree['remarque'], $entree['id_mod_lic'], $entree['id_util']));
-
+			
 			//$this-> creerDateExpirationLicence($num_lic, $date_exp);
 		}
 
-		public function creerDossierTrackingMMG($client, $ref_dos, $t1, $poids,
-										$ref_fact, $horse, $trailer_1, $trailer_2,
-										$num_lic, $num_exo, $klsa_arriv, $crossing_date,
-										$wiski_arriv, $wiski_dep, $insp_receiv, $ir,
-										$ref_crf, $date_crf, $ref_decl, $dgda_in,
-										$ref_liq, $date_liq, $ref_quit, $date_quit,
-										$dgda_out, $regul_ir, $cleared, $statut, $remarque,
+		public function creerDossierTrackingMMG($client, $ref_dos, $t1, $poids, 
+										$ref_fact, $horse, $trailer_1, $trailer_2, 
+										$num_lic, $num_exo, $klsa_arriv, $crossing_date, 
+										$wiski_arriv, $wiski_dep, $insp_receiv, $ir, 
+										$ref_crf, $date_crf, $ref_decl, $dgda_in, 
+										$ref_liq, $date_liq, $ref_quit, $date_quit, 
+										$dgda_out, $regul_ir, $cleared, $statut, $remarque, 
 										$id_mod_lic, $id_util){
 			include('connexion.php');
 
@@ -933,23 +933,23 @@
 			echo '<br>statut = '.$statut;
 			echo '<br>remarque = '.$remarque;*/
 
-			$requete = $connexion-> prepare('INSERT INTO dossier(id_cli, ref_dos, t1, poids, ref_fact, horse, trailer_1, trailer_2, num_lic, num_exo, klsa_arriv, crossing_date, wiski_arriv, wiski_dep, insp_receiv, ir, ref_crf, date_crf, ref_decl, dgda_in, ref_liq, date_liq, ref_quit, date_quit, dgda_out, regul_ir, cleared, statut, remarque, id_mod_lic, id_util)
-												VALUES(?, ?, ?, ?,
-													?, ?, ?, ?,
-													?, ?, ?, ?,
-													?, ?, ?, ?,
-													?, ?, ?, ?,
-													?, ?, ?, ?,
-													?, ?, ?, ?,
+			$requete = $connexion-> prepare('INSERT INTO dossier(id_cli, ref_dos, t1, poids, ref_fact, horse, trailer_1, trailer_2, num_lic, num_exo, klsa_arriv, crossing_date, wiski_arriv, wiski_dep, insp_receiv, ir, ref_crf, date_crf, ref_decl, dgda_in, ref_liq, date_liq, ref_quit, date_quit, dgda_out, regul_ir, cleared, statut, remarque, id_mod_lic, id_util) 
+												VALUES(?, ?, ?, ?, 
+													?, ?, ?, ?, 
+													?, ?, ?, ?, 
+													?, ?, ?, ?, 
+													?, ?, ?, ?, 
+													?, ?, ?, ?, 
+													?, ?, ?, ?, 
 													?, ?, ?)');
 			$requete-> execute(array($entree['client'], $entree['ref_dos'], $entree['t1'], $entree['poids'], $entree['ref_fact'], $entree['horse'], $entree['trailer_1'], $entree['trailer_2'], $entree['num_lic'], $entree['num_exo'], $entree['klsa_arriv'], $entree['crossing_date'], $entree['wiski_arriv'], $entree['wiski_dep'], $entree['insp_receiv'], $entree['ir'], $entree['ref_crf'], $entree['date_crf'], $entree['ref_decl'], $entree['dgda_in'], $entree['ref_liq'], $entree['date_liq'], $entree['ref_quit'], $entree['date_quit'], $entree['dgda_out'], $entree['regul_ir'], $entree['cleared'], $entree['statut'], $entree['remarque'], $entree['id_mod_lic'], $entree['id_util']));
-
+			
 			//$this-> creerDateExpirationLicence($num_lic, $date_exp);
 		}
 
-		public function creerDossierTrackingIBUpload($client, $ref_dos, $mca_b_ref, $road_manif, $date_preal, $t1,
-										$poids, $fob, $fret, $assurance,
-										$autre_frais, $ref_fact, $fournisseur, $po,
+		public function creerDossierTrackingIBUpload($client, $ref_dos, $mca_b_ref, $road_manif, $date_preal, $t1, 
+										$poids, $fob, $fret, $assurance, 
+										$autre_frais, $ref_fact, $fournisseur, $po, 
 										$commodity, $horse, $trailer_1, $trailer_2, $id_mod_lic){
 			include('connexion.php');
 			$entree['client'] = $client;$entree['ref_dos'] = $ref_dos;$entree['mca_b_ref'] = $mca_b_ref;
@@ -961,24 +961,24 @@
 			$entree['trailer_2'] = $trailer_2;$entree['road_manif'] = $road_manif;$entree['fournisseur'] = $fournisseur;
 			$entree['id_mod_lic'] = $id_mod_lic;
 
-			$requete = $connexion-> prepare('INSERT INTO dossier_upload(client, ref_dos, mca_b_ref, date_preal,
-																t1, poids, fob,
-																fret, assurance, autre_frais,
-																ref_fact, fournisseur, po,
+			$requete = $connexion-> prepare('INSERT INTO dossier_upload(client, ref_dos, mca_b_ref, date_preal, 
+																t1, poids, fob, 
+																fret, assurance, autre_frais, 
+																ref_fact, fournisseur, po, 
 																commodity, horse, trailer_1,
-																trailer_2, road_manif, id_mod_lic)
-												VALUES(?, ?, ?,
-													?, ?, ?,
-													?, ?, ?,
-													?, ?, ?,
+																trailer_2, road_manif, id_mod_lic) 
+												VALUES(?, ?, ?, 
+													?, ?, ?, 
+													?, ?, ?, 
+													?, ?, ?, 
 													?, ?, ?, ?, ?, ?, ?)');
-			$requete-> execute(array($entree['client'], $entree['ref_dos'], $entree['mca_b_ref'], $entree['date_preal'],
-									$entree['t1'], $entree['poids'], $entree['fob'],
-									$entree['fret'], $entree['assurance'], $entree['autre_frais'],
-									$entree['ref_fact'], $entree['fournisseur'], $entree['po'],
-									$entree['commodity'], $entree['horse'], $entree['trailer_1'],
+			$requete-> execute(array($entree['client'], $entree['ref_dos'], $entree['mca_b_ref'], $entree['date_preal'], 
+									$entree['t1'], $entree['poids'], $entree['fob'], 
+									$entree['fret'], $entree['assurance'], $entree['autre_frais'], 
+									$entree['ref_fact'], $entree['fournisseur'], $entree['po'], 
+									$entree['commodity'], $entree['horse'], $entree['trailer_1'], 
 									$entree['trailer_2'], $entree['road_manif'], $entree['id_mod_lic']));
-
+			
 			//$this-> creerDateExpirationLicence($num_lic, $date_exp);
 		}
 
@@ -988,7 +988,7 @@
 			$entree['id_util'] = $id_util;
 			$entree['id_mod_lic'] = $id_mod_lic;
 
-			$requete = $connexion-> prepare("SELECT *
+			$requete = $connexion-> prepare("SELECT * 
 												FROM licence_upload
 												WHERE id_util = ?
 													AND id_mod_lic = ?
@@ -997,14 +997,14 @@
 			while ($reponse = $requete-> fetch()) {
 				if ( $this-> getLicence($reponse['num_licence']) == null ){
 
-                	$this-> creerLicenceIB(7, $reponse['num_licence'], $reponse['client'],
-                                          25, $reponse['monnaie'], $reponse['fob'],
-                                          $reponse['assurance'], $reponse['fret'], $reponse['autre_frais'],
-                                          $reponse['fsi'], $reponse['aur'],
-                                          25, $reponse['facture'], NULL,
-                                          $reponse['fournisseur'], $reponse['validation'], $reponse['extreme'],
-                                          NULL, $id_mod_lic, $id_util,
-                                          NULL, NULL, NULL, NULL,
+                	$this-> creerLicenceIB(7, $reponse['num_licence'], $reponse['client'], 
+                                          25, $reponse['monnaie'], $reponse['fob'], 
+                                          $reponse['assurance'], $reponse['fret'], $reponse['autre_frais'], 
+                                          $reponse['fsi'], $reponse['aur'], 
+                                          25, $reponse['facture'], NULL, 
+                                          $reponse['fournisseur'], $reponse['validation'], $reponse['extreme'], 
+                                          NULL, $id_mod_lic, $id_util, 
+                                          NULL, NULL, NULL, NULL, 
                                           1, NULL, NULL,
                                           NULL, $reponse['commodity']);
 
@@ -1017,14 +1017,14 @@
 													AND id_mod_lic = ?");
 			$requete-> execute(array($entree['id_util'], $entree['id_mod_lic']));
 		}
-
+		
 		public function creerDossierIBFromUploade($id_util, $id_mod_lic){
 			include('connexion.php');
 
 			$entree['id_util'] = $id_util;
 			$entree['id_mod_lic'] = $id_mod_lic;
 
-			$requete = $connexion-> prepare("SELECT *
+			$requete = $connexion-> prepare("SELECT * 
 												FROM dossier_upload
 												WHERE id_util = ?
 													AND id_mod_lic = ?
@@ -1033,14 +1033,14 @@
 			while ($reponse = $requete-> fetch()) {
 				//echo '<br>'.$reponse['ref_dos'];
 
-				$this-> creerDossierIB2($reponse['ref_dos'], $reponse['client'], $reponse['ref_fact'],
-                                          $reponse['fob'], $reponse['fret'], $reponse['assurance'],
-                                          $reponse['autre_frais'], $reponse['num_lic'], $_GET['id_mod_trac'],
+				$this-> creerDossierIB2($reponse['ref_dos'], $reponse['client'], $reponse['ref_fact'], 
+                                          $reponse['fob'], $reponse['fret'], $reponse['assurance'], 
+                                          $reponse['autre_frais'], $reponse['num_lic'], $_GET['id_mod_trac'], 
                                           NULL, 1,
-                                          NULL, $reponse['cod'], $reponse['fxi'],
-                                          $reponse['montant_av'], $reponse['date_fact'],
-                                          $reponse['ref_decl'], $reponse['montant_decl'],
-                                          $reponse['ref_liq'], $_SESSION['id_util'],
+                                          NULL, $reponse['cod'], $reponse['fxi'], 
+                                          $reponse['montant_av'], $reponse['date_fact'], 
+                                          $reponse['ref_decl'], $reponse['montant_decl'], 
+                                          $reponse['ref_liq'], $_SESSION['id_util'], 
                                           $reponse['ref_quit'], $reponse['date_quit']);
 
 			}$requete-> closeCursor();
@@ -1051,14 +1051,14 @@
 													AND id_mod_lic = ?");
 			$requete-> execute(array($entree['id_util'], $entree['id_mod_lic']));
 		}
-
+		
 		public function creerDossierIBFromUploadeTrackingKlsa($id_util, $id_mod_lic){
 			include('connexion.php');
 
 			$entree['id_util'] = $id_util;
 			$entree['id_mod_lic'] = $id_mod_lic;
 
-			$requete = $connexion-> prepare("SELECT *
+			$requete = $connexion-> prepare("SELECT * 
 												FROM dossier_upload_tracking
 												WHERE id_util = ?
 													AND id_mod_lic = ?
@@ -1066,13 +1066,13 @@
 			$requete-> execute(array($entree['id_util'], $entree['id_mod_lic']));
 			while ($reponse = $requete-> fetch()) {
 				//echo '<br>'.$reponse['ref_dos'];
-				$this-> creerDossierIBTrackingKlsa($reponse['ref_dos'], $reponse['client'], $reponse['t1'],
-                                          $reponse['poids'], $reponse['ref_fact'], $reponse['horse'],
-                                          $reponse['trailer_1'], $reponse['trailer_2'], $reponse['transporteur'],
-                                          $reponse['destination'], $reponse['id_mod_trans'],
-                                          $reponse['arrival_date'], $reponse['crossing_date'],
-                                          $reponse['wiski_arriv'], $reponse['wiski_dep'],
-                                          $reponse['remarque'], $_SESSION['id_util'],
+				$this-> creerDossierIBTrackingKlsa($reponse['ref_dos'], $reponse['client'], $reponse['t1'], 
+                                          $reponse['poids'], $reponse['ref_fact'], $reponse['horse'], 
+                                          $reponse['trailer_1'], $reponse['trailer_2'], $reponse['transporteur'], 
+                                          $reponse['destination'], $reponse['id_mod_trans'], 
+                                          $reponse['arrival_date'], $reponse['crossing_date'], 
+                                          $reponse['wiski_arriv'], $reponse['wiski_dep'], 
+                                          $reponse['remarque'], $_SESSION['id_util'], 
                                           $_GET['id_mod_trac'], $reponse['num_lic']);
 
 			}$requete-> closeCursor();
@@ -1083,13 +1083,13 @@
 													AND id_mod_lic = ?");
 			$requete-> execute(array($entree['id_util'], $entree['id_mod_lic']));
 		}
-
+		
 		public function creerDossierEBFromUploade($id_util){
 			include('connexion.php');
 
 			$entree['id_util'] = $id_util;
 
-			$requete = $connexion-> prepare("SELECT *
+			$requete = $connexion-> prepare("SELECT * 
 												FROM dossier_upload_export
 												WHERE id_util = ?
 													AND etat = '0'");
@@ -1105,14 +1105,14 @@
 												WHERE id_util = ?");
 			$requete-> execute(array($entree['id_util']));
 		}
-
+		
 		public function creerDossierIBFromUploade2($id_util, $id_mod_lic){
 			include('connexion.php');
 
 			$entree['id_util'] = $id_util;
 			$entree['id_mod_lic'] = $id_mod_lic;
 
-			$requete = $connexion-> prepare("SELECT *
+			$requete = $connexion-> prepare("SELECT * 
 												FROM dossier_upload_tracking
 												WHERE id_util = ?
 													AND id_mod_lic = ?
@@ -1123,16 +1123,16 @@
 
 				if ($this-> verifierDossier($reponse['ref_dos']) == false) {
 					//Créer des nouveaux dossiers
-					$this-> creerDossierIB3($reponse['client'], $reponse['ref_dos'], $reponse['mca_b_ref'], $reponse['road_manif'],
-                                                $reponse['date_preal'], $reponse['t1'], $reponse['poids'], $reponse['ref_fact'], $reponse['supplier'], $reponse['fob'], $reponse['fret'],
-                                                $reponse['assurance'], $reponse['autre_frais'], $reponse['po'],
-                                                $reponse['commodity'], $reponse['horse'], $reponse['trailer_1'], $reponse['trailer_2'], $reponse['num_lic'],
-                                                $reponse['num_exo'], $reponse['arrival_date'], $reponse['crossing_date'], $reponse['wiski_arriv'],
-                                                $reponse['wiski_dep'], $reponse['amicongo_arriv'], $reponse['insp_report'], $reponse['ir'],
-                                                $reponse['ref_crf'], $reponse['date_crf'], $reponse['ref_decl'], $reponse['dgda_in'], $reponse['ref_liq'],
-                                                $reponse['date_liq'], $reponse['ref_quit'], $reponse['date_quit'], $reponse['dgda_out'],
-                                                $reponse['custom_deliv'], $reponse['dispatch_deliv'], $reponse['remarque'], $reponse['statut'], $reponse['bl'],
-                                                $_GET['id_mod_trac'], $_SESSION['id_util'], 1,
+					$this-> creerDossierIB3($reponse['client'], $reponse['ref_dos'], $reponse['mca_b_ref'], $reponse['road_manif'], 
+                                                $reponse['date_preal'], $reponse['t1'], $reponse['poids'], $reponse['ref_fact'], $reponse['supplier'], $reponse['fob'], $reponse['fret'], 
+                                                $reponse['assurance'], $reponse['autre_frais'], $reponse['po'], 
+                                                $reponse['commodity'], $reponse['horse'], $reponse['trailer_1'], $reponse['trailer_2'], $reponse['num_lic'], 
+                                                $reponse['num_exo'], $reponse['arrival_date'], $reponse['crossing_date'], $reponse['wiski_arriv'], 
+                                                $reponse['wiski_dep'], $reponse['amicongo_arriv'], $reponse['insp_report'], $reponse['ir'], 
+                                                $reponse['ref_crf'], $reponse['date_crf'], $reponse['ref_decl'], $reponse['dgda_in'], $reponse['ref_liq'], 
+                                                $reponse['date_liq'], $reponse['ref_quit'], $reponse['date_quit'], $reponse['dgda_out'], 
+                                                $reponse['custom_deliv'], $reponse['dispatch_deliv'], $reponse['remarque'], $reponse['statut'], $reponse['bl'], 
+                                                $_GET['id_mod_trac'], $_SESSION['id_util'], 1, 
                                                 $reponse['credit_enlev_by'], $reponse['bond_warehouse']);
 				}else{
 
@@ -1141,155 +1141,155 @@
 					$id_dos = $this-> getIdDossierClientLicence($reponse['ref_dos'], $reponse['client'], $reponse['num_lic']);
 
 					if (isset($reponse['mca_b_ref']) && ($reponse['mca_b_ref'] != '')) {
-						$this-> MAJ_mca_b_ref($id_dos, $reponse['mca_b_ref']);
+						$this-> MAJ_mca_b_ref($id_dos, $reponse['mca_b_ref']);				
 					}
 
 					if (isset($reponse['road_manif']) && ($reponse['road_manif'] != '')) {
-						$this-> MAJ_road_manif($id_dos, $reponse['road_manif']);
+						$this-> MAJ_road_manif($id_dos, $reponse['road_manif']);				
 					}
 
 					if (isset($reponse['date_preal']) && ($reponse['date_preal'] != '')) {
-						$this-> MAJ_date_preal($id_dos, $reponse['date_preal']);
+						$this-> MAJ_date_preal($id_dos, $reponse['date_preal']);				
 					}
 
 					if (isset($reponse['t1']) && ($reponse['t1'] != '')) {
-						$this-> MAJ_t1($id_dos, $reponse['t1']);
+						$this-> MAJ_t1($id_dos, $reponse['t1']);				
 					}
 
 					if (isset($reponse['poids']) && ($reponse['poids'] != '')) {
-						$this-> MAJ_poids($id_dos, $reponse['poids']);
+						$this-> MAJ_poids($id_dos, $reponse['poids']);				
 					}
 
 					if (isset($reponse['fob']) && ($reponse['fob'] != '')) {
-						$this-> MAJ_fob($id_dos, $reponse['fob']);
+						$this-> MAJ_fob($id_dos, $reponse['fob']);				
 					}
 
 					if (isset($reponse['fret']) && ($reponse['fret'] != '')) {
-						$this-> MAJ_fret($id_dos, $reponse['fret']);
+						$this-> MAJ_fret($id_dos, $reponse['fret']);				
 					}
 
 					if (isset($reponse['assurance']) && ($reponse['assurance'] != '')) {
-						$this-> MAJ_assurance($id_dos, $reponse['assurance']);
+						$this-> MAJ_assurance($id_dos, $reponse['assurance']);				
 					}
 
 					if (isset($reponse['autre_frais']) && ($reponse['autre_frais'] != '')) {
-						$this-> MAJ_autre_frais($id_dos, $reponse['autre_frais']);
+						$this-> MAJ_autre_frais($id_dos, $reponse['autre_frais']);				
 					}
 
 					if (isset($reponse['ref_fact']) && ($reponse['ref_fact'] != '')) {
-						$this-> MAJ_ref_fact($id_dos, $reponse['ref_fact']);
+						$this-> MAJ_ref_fact($id_dos, $reponse['ref_fact']);				
 					}
 
 					if (isset($reponse['fournisseur']) && ($reponse['fournisseur'] != '')) {
-						$this-> MAJ_fournisseur($id_dos, $reponse['fournisseur']);
+						$this-> MAJ_fournisseur($id_dos, $reponse['fournisseur']);				
 					}
 
 					if (isset($reponse['po']) && ($reponse['po'] != '')) {
-						$this-> MAJ_po_ref($id_dos, $reponse['po']);
+						$this-> MAJ_po_ref($id_dos, $reponse['po']);				
 					}
 
 					if (isset($reponse['commodity']) && ($reponse['commodity'] != '')) {
-						$this-> MAJ_commodity($id_dos, $reponse['commodity']);
+						$this-> MAJ_commodity($id_dos, $reponse['commodity']);				
 					}
 
 					if (isset($reponse['horse']) && ($reponse['horse'] != '')) {
-						$this-> MAJ_horse($id_dos, $reponse['horse']);
+						$this-> MAJ_horse($id_dos, $reponse['horse']);				
 					}
 
 					if (isset($reponse['trailer_1']) && ($reponse['trailer_1'] != '')) {
-						$this-> MAJ_trailer_1($id_dos, $reponse['trailer_1']);
+						$this-> MAJ_trailer_1($id_dos, $reponse['trailer_1']);				
 					}
 
 					if (isset($reponse['trailer_2']) && ($reponse['trailer_2'] != '')) {
-						$this-> MAJ_trailer_2($id_dos, $reponse['trailer_2']);
+						$this-> MAJ_trailer_2($id_dos, $reponse['trailer_2']);				
 					}
 
 					if (isset($reponse['num_lic']) && ($reponse['num_lic'] != '')) {
-						$this-> MAJ_num_lic($id_dos, $reponse['num_lic']);
+						$this-> MAJ_num_lic($id_dos, $reponse['num_lic']);				
 					}
 
 					if (isset($reponse['num_exo']) && ($reponse['num_exo'] != '')) {
-						$this-> MAJ_num_exo($id_dos, $reponse['num_exo']);
+						$this-> MAJ_num_exo($id_dos, $reponse['num_exo']);				
 					}
 
 					if (isset($reponse['arrival_date']) && ($reponse['arrival_date'] != '')) {
-						$this-> MAJ_arrival_date($id_dos, $reponse['arrival_date']);
+						$this-> MAJ_arrival_date($id_dos, $reponse['arrival_date']);				
 					}
 
 					if (isset($reponse['crossing_date']) && ($reponse['crossing_date'] != '')) {
-						$this-> MAJ_crossing_date($id_dos, $reponse['crossing_date']);
+						$this-> MAJ_crossing_date($id_dos, $reponse['crossing_date']);				
 					}
 
 					if (isset($reponse['wiski_arriv']) && ($reponse['wiski_arriv'] != '')) {
-						$this-> MAJ_wiski_arriv($id_dos, $reponse['wiski_arriv']);
+						$this-> MAJ_wiski_arriv($id_dos, $reponse['wiski_arriv']);				
 					}
 
 					if (isset($reponse['wiski_dep']) && ($reponse['wiski_dep'] != '')) {
-						$this-> MAJ_wiski_dep($id_dos, $reponse['wiski_dep']);
+						$this-> MAJ_wiski_dep($id_dos, $reponse['wiski_dep']);				
 					}
 
 					if (isset($reponse['amicongo_arriv']) && ($reponse['amicongo_arriv'] != '')) {
-						$this-> MAJ_amicongo_arriv($id_dos, $reponse['amicongo_arriv']);
+						$this-> MAJ_amicongo_arriv($id_dos, $reponse['amicongo_arriv']);				
 					}
 
 					if (isset($reponse['insp_report']) && ($reponse['insp_report'] != '')) {
-						$this-> MAJ_insp_report($id_dos, $reponse['insp_report']);
+						$this-> MAJ_insp_report($id_dos, $reponse['insp_report']);				
 					}
 
 					if (isset($reponse['ir']) && ($reponse['ir'] != '')) {
-						$this-> MAJ_ir($id_dos, $reponse['ir']);
+						$this-> MAJ_ir($id_dos, $reponse['ir']);				
 					}
 
 					if (isset($reponse['ref_crf']) && ($reponse['ref_crf'] != '')) {
-						$this-> MAJ_ref_crf($id_dos, $reponse['ref_crf']);
+						$this-> MAJ_ref_crf($id_dos, $reponse['ref_crf']);				
 					}
 
 					if (isset($reponse['date_crf']) && ($reponse['date_crf'] != '')) {
-						$this-> MAJ_date_crf($id_dos, $reponse['date_crf']);
+						$this-> MAJ_date_crf($id_dos, $reponse['date_crf']);				
 					}
 
 					if (isset($reponse['ref_decl']) && ($reponse['ref_decl'] != '')) {
-						$this-> MAJ_ref_decl($id_dos, $reponse['ref_decl']);
+						$this-> MAJ_ref_decl($id_dos, $reponse['ref_decl']);				
 					}
 
 					if (isset($reponse['dgda_in']) && ($reponse['dgda_in'] != '')) {
-						$this-> MAJ_dgda_in($id_dos, $reponse['dgda_in']);
+						$this-> MAJ_dgda_in($id_dos, $reponse['dgda_in']);				
 					}
 
 					if (isset($reponse['ref_liq']) && ($reponse['ref_liq'] != '')) {
-						$this-> MAJ_ref_liq($id_dos, $reponse['ref_liq']);
+						$this-> MAJ_ref_liq($id_dos, $reponse['ref_liq']);				
 					}
 
 					if (isset($reponse['date_liq']) && ($reponse['date_liq'] != '')) {
-						$this-> MAJ_date_liq($id_dos, $reponse['date_liq']);
+						$this-> MAJ_date_liq($id_dos, $reponse['date_liq']);				
 					}
 
 					if (isset($reponse['ref_quit']) && ($reponse['ref_quit'] != '')) {
-						$this-> MAJ_ref_quit($id_dos, $reponse['ref_quit']);
+						$this-> MAJ_ref_quit($id_dos, $reponse['ref_quit']);				
 					}
 
 					if (isset($reponse['date_quit']) && ($reponse['date_quit'] != '')) {
-						$this-> MAJ_date_quit($id_dos, $reponse['date_quit']);
+						$this-> MAJ_date_quit($id_dos, $reponse['date_quit']);				
 					}
 
 					if (isset($reponse['dgda_out']) && ($reponse['dgda_out'] != '')) {
-						$this-> MAJ_dgda_out($id_dos, $reponse['dgda_out']);
+						$this-> MAJ_dgda_out($id_dos, $reponse['dgda_out']);				
 					}
 
 					if (isset($reponse['custom_deliv']) && ($reponse['custom_deliv'] != '')) {
-						$this-> MAJ_custom_deliv($id_dos, $reponse['custom_deliv']);
+						$this-> MAJ_custom_deliv($id_dos, $reponse['custom_deliv']);				
 					}
 
 					if (isset($reponse['dispatch_deliv']) && ($reponse['dispatch_deliv'] != '')) {
-						$this-> MAJ_dispatch_deliv($id_dos, $reponse['dispatch_deliv']);
+						$this-> MAJ_dispatch_deliv($id_dos, $reponse['dispatch_deliv']);				
 					}
 
 					if (isset($reponse['remarque']) && ($reponse['remarque'] != '')) {
-						$this-> MAJ_remarque($id_dos, $reponse['remarque']);
+						$this-> MAJ_remarque($id_dos, $reponse['remarque']);				
 					}
 
 					if (isset($reponse['statut']) && ($reponse['statut'] != '')) {
-						$this-> MAJ_statut($id_dos, $reponse['statut']);
+						$this-> MAJ_statut($id_dos, $reponse['statut']);				
 					}
 
 				}
@@ -1302,14 +1302,14 @@
 													AND id_mod_lic = ?");
 			$requete-> execute(array($entree['id_util'], $entree['id_mod_lic']));
 		}
-
+		
 		public function creerDossierIBFromUploadeMMG($id_util, $id_mod_lic){
 			include('connexion.php');
 
 			$entree['id_util'] = $id_util;
 			$entree['id_mod_lic'] = $id_mod_lic;
 
-			$requete = $connexion-> prepare("SELECT *
+			$requete = $connexion-> prepare("SELECT * 
 												FROM dossier_upload_tracking
 												WHERE id_util = ?
 													AND id_mod_lic = ?
@@ -1320,12 +1320,12 @@
 
 				if ($this-> verifierDossier($reponse['ref_dos']) == false) {
 					//Créer des nouveaux dossiers
-					$this-> creerDossierTrackingMMG($reponse['client'], $reponse['ref_dos'], $reponse['t1'], $reponse['poids'],
-                                      $reponse['ref_fact'], $reponse['horse'], $reponse['trailer_1'], $reponse['trailer_2'],
-                                      $reponse['num_lic'], $reponse['num_exo'], $reponse['klsa_arriv'], $reponse['crossing_date'],
-                                      $reponse['wiski_arriv'], $reponse['wiski_dep'], $reponse['insp_report'], $reponse['ir'],
-                                      $reponse['ref_crf'], $reponse['date_crf'], $reponse['ref_decl'], $reponse['dgda_in'],
-                                      $reponse['ref_liq'], $reponse['date_liq'], $reponse['ref_quit'], $reponse['date_quit'],
+					$this-> creerDossierTrackingMMG($reponse['client'], $reponse['ref_dos'], $reponse['t1'], $reponse['poids'], 
+                                      $reponse['ref_fact'], $reponse['horse'], $reponse['trailer_1'], $reponse['trailer_2'], 
+                                      $reponse['num_lic'], $reponse['num_exo'], $reponse['klsa_arriv'], $reponse['crossing_date'], 
+                                      $reponse['wiski_arriv'], $reponse['wiski_dep'], $reponse['insp_report'], $reponse['ir'], 
+                                      $reponse['ref_crf'], $reponse['date_crf'], $reponse['ref_decl'], $reponse['dgda_in'], 
+                                      $reponse['ref_liq'], $reponse['date_liq'], $reponse['ref_quit'], $reponse['date_quit'], 
                                       $reponse['dgda_out'], $reponse['regul_ir'], $reponse['cleared'], $reponse['statut'], $reponse['remarque'], 2, 1);
 				}else{
 
@@ -1334,81 +1334,81 @@
 					$id_dos = $this-> getIdDossierClientLicence($reponse['ref_dos'], $reponse['client'], $reponse['num_lic']);
 
 					if (isset($reponse['t1']) && ($reponse['t1'] != '')) {
-						$this-> MAJ_t1($id_dos, $reponse['t1']);
+						$this-> MAJ_t1($id_dos, $reponse['t1']);				
 					}
 					if (isset($reponse['poids']) && ($reponse['poids'] != '')) {
-						$this-> MAJ_poids($id_dos, $reponse['poids']);
+						$this-> MAJ_poids($id_dos, $reponse['poids']);				
 					}
 					if (isset($reponse['horse']) && ($reponse['horse'] != '')) {
-						$this-> MAJ_horse($id_dos, $reponse['horse']);
+						$this-> MAJ_horse($id_dos, $reponse['horse']);				
 					}
 					if (isset($reponse['trailer_1']) && ($reponse['trailer_1'] != '')) {
-						$this-> MAJ_trailer_1($id_dos, $reponse['trailer_1']);
+						$this-> MAJ_trailer_1($id_dos, $reponse['trailer_1']);				
 					}
 					if (isset($reponse['trailer_2']) && ($reponse['trailer_2'] != '')) {
-						$this-> MAJ_trailer_2($id_dos, $reponse['trailer_2']);
+						$this-> MAJ_trailer_2($id_dos, $reponse['trailer_2']);				
 					}
 					if (isset($reponse['num_lic']) && ($reponse['num_lic'] != '')) {
-						$this-> MAJ_num_lic($id_dos, $reponse['num_lic']);
+						$this-> MAJ_num_lic($id_dos, $reponse['num_lic']);				
 					}
 					if (isset($reponse['num_exo']) && ($reponse['num_exo'] != '')) {
-						$this-> MAJ_num_exo($id_dos, $reponse['num_exo']);
+						$this-> MAJ_num_exo($id_dos, $reponse['num_exo']);				
 					}
 					if (isset($reponse['klsa_arriv']) && ($reponse['klsa_arriv'] != '')) {
-						$this-> MAJ_klsa_arriv($id_dos, $reponse['klsa_arriv']);
+						$this-> MAJ_klsa_arriv($id_dos, $reponse['klsa_arriv']);				
 					}
 					if (isset($reponse['crossing_date']) && ($reponse['crossing_date'] != '')) {
-						$this-> MAJ_crossing_date($id_dos, $reponse['crossing_date']);
+						$this-> MAJ_crossing_date($id_dos, $reponse['crossing_date']);				
 					}
 
 					if (isset($reponse['wiski_arriv']) && ($reponse['wiski_arriv'] != '')) {
-						$this-> MAJ_wiski_arriv($id_dos, $reponse['wiski_arriv']);
+						$this-> MAJ_wiski_arriv($id_dos, $reponse['wiski_arriv']);				
 					}
 					if (isset($reponse['wiski_dep']) && ($reponse['wiski_dep'] != '')) {
-						$this-> MAJ_wiski_dep($id_dos, $reponse['wiski_dep']);
+						$this-> MAJ_wiski_dep($id_dos, $reponse['wiski_dep']);				
 					}
 					if (isset($reponse['insp_report']) && ($reponse['insp_report'] != '')) {
-						$this-> MAJ_insp_report($id_dos, $reponse['insp_report']);
+						$this-> MAJ_insp_report($id_dos, $reponse['insp_report']);				
 					}
 					if (isset($reponse['ir']) && ($reponse['ir'] != '')) {
-						$this-> MAJ_ir($id_dos, $reponse['ir']);
+						$this-> MAJ_ir($id_dos, $reponse['ir']);				
 					}
 					if (isset($reponse['ref_crf']) && ($reponse['ref_crf'] != '')) {
-						$this-> MAJ_ref_crf($id_dos, $reponse['ref_crf']);
+						$this-> MAJ_ref_crf($id_dos, $reponse['ref_crf']);				
 					}
 					if (isset($reponse['date_crf']) && ($reponse['date_crf'] != '')) {
-						$this-> MAJ_date_crf($id_dos, $reponse['date_crf']);
+						$this-> MAJ_date_crf($id_dos, $reponse['date_crf']);				
 					}
 					if (isset($reponse['ref_decl']) && ($reponse['ref_decl'] != '')) {
-						$this-> MAJ_ref_decl($id_dos, $reponse['ref_decl']);
+						$this-> MAJ_ref_decl($id_dos, $reponse['ref_decl']);				
 					}
 					if (isset($reponse['dgda_in']) && ($reponse['dgda_in'] != '')) {
-						$this-> MAJ_dgda_in($id_dos, $reponse['dgda_in']);
+						$this-> MAJ_dgda_in($id_dos, $reponse['dgda_in']);				
 					}
 					if (isset($reponse['ref_liq']) && ($reponse['ref_liq'] != '')) {
-						$this-> MAJ_ref_liq($id_dos, $reponse['ref_liq']);
+						$this-> MAJ_ref_liq($id_dos, $reponse['ref_liq']);				
 					}
 					if (isset($reponse['ref_quit']) && ($reponse['ref_quit'] != '')) {
-						$this-> MAJ_ref_quit($id_dos, $reponse['ref_quit']);
+						$this-> MAJ_ref_quit($id_dos, $reponse['ref_quit']);				
 					}
 					if (isset($reponse['date_quit']) && ($reponse['date_quit'] != '')) {
-						$this-> MAJ_date_quit($id_dos, $reponse['date_quit']);
+						$this-> MAJ_date_quit($id_dos, $reponse['date_quit']);				
 					}
 					if (isset($reponse['dgda_out']) && ($reponse['dgda_out'] != '')) {
-						$this-> MAJ_dgda_out($id_dos, $reponse['dgda_out']);
+						$this-> MAJ_dgda_out($id_dos, $reponse['dgda_out']);				
 					}
 
 					if (isset($reponse['regul_ir']) && ($reponse['regul_ir'] != '')) {
-						$this-> MAJ_regul_ir($id_dos, $reponse['regul_ir']);
+						$this-> MAJ_regul_ir($id_dos, $reponse['regul_ir']);				
 					}
 					if (isset($reponse['cleared']) && ($reponse['cleared'] != '')) {
-						$this-> MAJ_cleared($id_dos, $reponse['cleared']);
+						$this-> MAJ_cleared($id_dos, $reponse['cleared']);				
 					}
 					if (isset($reponse['statut']) && ($reponse['statut'] != '')) {
-						$this-> MAJ_statut($id_dos, $reponse['statut']);
+						$this-> MAJ_statut($id_dos, $reponse['statut']);				
 					}
 					if (isset($reponse['remarque']) && ($reponse['remarque'] != '')) {
-						$this-> MAJ_remarque($id_dos, $reponse['remarque']);
+						$this-> MAJ_remarque($id_dos, $reponse['remarque']);				
 					}
 
 				}
@@ -1421,7 +1421,7 @@
 													AND id_mod_lic = ?");
 			$requete-> execute(array($entree['id_util'], $entree['id_mod_lic']));
 		}
-
+		
 		public function creerDateExpirationLicence($num_lic, $date_exp){
 			include('connexion.php');
 
@@ -1432,7 +1432,7 @@
 												VALUES(?, ?, 1)');
 			$requete-> execute(array($entree['num_lic'], $entree['date_exp']));
 		}
-
+		
 		public function creerClasseCompte($nom_class, $id_cat_cmpte){
 			include('connexion.php');
 
@@ -1443,7 +1443,7 @@
 												VALUES(?, ?)');
 			$requete-> execute(array($entree['nom_class'], $entree['id_cat_cmpte']));
 		}
-
+		
 		public function creerJournal($nom_jour){
 			include('connexion.php');
 
@@ -1454,7 +1454,7 @@
 												VALUES(?)');
 			$requete-> execute(array($entree['nom_jour']));
 		}
-
+		
 		public function creerCompte($nom_compte, $code_compte, $id_class){
 			include('connexion.php');
 
@@ -1466,7 +1466,7 @@
 												VALUES(?, ?, ?)');
 			$requete-> execute(array($entree['nom_compte'], $entree['code_compte'], $entree['id_class']));
 		}
-
+		
 		public function editClasseCompte($id_class, $nom_class, $id_cat_cmpte){
 			include('connexion.php');
 
@@ -1479,7 +1479,7 @@
 												WHERE id_class = ?');
 			$requete-> execute(array($entree['nom_class'], $entree['id_cat_cmpte'], $entree['id_class']));
 		}
-
+		
 		public function edit_note_debit($ref_note_old, $date_create, $ref_note_new){
 			include('connexion.php');
 
@@ -1492,7 +1492,7 @@
 												WHERE ref_note = ?');
 			$requete-> execute(array($entree['date_create'], $entree['ref_note_new'], $entree['ref_note_old']));
 		}
-
+		
 		public function editJournal($id_jour, $nom_jour){
 			include('connexion.php');
 
@@ -1504,7 +1504,7 @@
 												WHERE id_jour = ?');
 			$requete-> execute(array($entree['nom_jour'], $entree['id_jour']));
 		}
-
+		
 		public function creerAffectationModeleFacture($id_mod_fact, $id_cli, $id_march, $id_mod_trans){
 			include('connexion.php');
 
@@ -1517,7 +1517,7 @@
 												VALUES(?, ?, ?, ?)');
 			$requete-> execute(array($entree['id_mod_fact'], $entree['id_cli'], $entree['id_march'], $entree['id_mod_trans']));
 		}
-
+		
 		public function creerDetailEcriture($id_e, $id_compte, $debit, $credit){
 			include('connexion.php');
 
@@ -1532,7 +1532,7 @@
 												VALUES(?, ?, ?, ?)');
 			$requete-> execute(array($entree['id_e'], $entree['id_compte'], $entree['debit'], $entree['credit']));
 		}
-
+		
 		public function creerEcritureAppro($date_e, $libelle_e, $id_jour, $id_taux, $id_util, $id_mon){
 			include('connexion.php');
 
@@ -1547,7 +1547,7 @@
 												VALUES(?, ?, ?, ?, ?, ?)');
 			$requete-> execute(array($entree['date_e'], $entree['libelle_e'], $entree['id_jour'], $entree['id_taux'], $entree['id_util'], $entree['id_mon']));
 		}
-
+		
 		public function creerEcriture($date_e, $libelle_e, $id_jour, $id_taux, $id_util, $id_t_e, $reference, $id_mon=1){
 			include('connexion.php');
 
@@ -1564,7 +1564,7 @@
 												VALUES(?, ?, ?, ?, ?, ?, ?, ?)');
 			$requete-> execute(array($entree['date_e'], $entree['libelle_e'], $entree['id_jour'], $entree['id_taux'], $entree['id_util'], $entree['id_t_e'], $entree['reference'], $entree['id_mon']));
 		}
-
+		
 		public function supprimerAffectationModeleFacture($id_mod_fact, $id_cli, $id_march, $id_mod_trans){
 			include('connexion.php');
 
@@ -1578,7 +1578,7 @@
 			$requete-> execute(array($entree['id_mod_fact'], $entree['id_cli'], $entree['id_march'], $entree['id_mod_trans']));
 		}
 
-
+		
 		public function creerAffectationDebours($id_deb, $id_cli, $id_march, $id_mod_trans, $id_mod_lic, $montant, $usd, $tva){
 			include('connexion.php');
 
@@ -1613,7 +1613,7 @@
 												WHERE id_deb = ? and id_cli = ? and id_march = ? and id_mod_trans = ? and id_mod_lic = ?');
 			$requete-> execute(array($entree['id_deb'], $entree['id_cli'], $entree['id_march'], $entree['id_mod_trans'], $entree['id_mod_lic']));
 		}
-
+		
 		public function creerLogDossier($colonne, $valeur, $id_dos, $id_util){
 			include('connexion.php');
 
@@ -1621,7 +1621,7 @@
 			$entree['valeur'] = $valeur;
 			$entree['id_dos'] = $id_dos;
 			$entree['id_util'] = $id_util;
-
+			
 			$requete = $connexion-> prepare('INSERT INTO log_dossier(colonne, valeur, id_dos, id_util)
 												VALUES(?, ?, ?, ?)');
 			$requete-> execute(array($entree['colonne'], $entree['valeur'], $entree['id_dos'], $entree['id_util']));
@@ -1634,7 +1634,7 @@
 			$entree['fob'] = $fob;
 			$entree['poids'] = $poids;
 			$entree['id_util'] = $id_util;
-
+			
 			$requete = $connexion-> prepare('UPDATE partielle_av
 												SET fob = ?, poids = ?, id_util = ?
 												WHERE id_part = ?');
@@ -1653,7 +1653,7 @@
 			$entree['code_cli'] = $code_cli;
 			$entree['num_imp_exp'] = $num_imp_exp;
 			$entree['adr_cli'] = $adr_cli;
-
+			
 			$requete = $connexion-> prepare('UPDATE client
 												SET nom_complet = ?, rccm_cli = ?, nif_cli = ?, id_nat = ?, nom_cli = ?, code_cli = ?, num_imp_exp = ?, adr_cli = ?
 												WHERE id_cli = ?');
@@ -1682,9 +1682,9 @@
 				$requete-> execute(array($entree['num_part'], $entree['fob'], $entree['poids'], $entree['cod'], $_SESSION['id_util']));
 				echo '<script>alert("Partielle '.$entree['num_part'].' cree avec succes!");</script>';
 			}
-
+			
 		}
-
+		
 		public function creerLogUtilisateur($id_util, $ip, $hostname, $latitude, $longitude, $country_name, $region_name, $city){
 			include('connexion.php');
 
@@ -1696,20 +1696,20 @@
 			$entree['country_name'] = $country_name;
 			$entree['region_name'] = $region_name;
 			$entree['city'] = $city;
-
+			
 			// echo '<br>id_util = '.$id_util;
 			// echo '<br>ip = '.$ip;
 			// echo '<br>hostname = '.$hostname;
 			// echo '<br>latitude = '.$latitude;
 			// echo '<br>longitude = '.$longitude;
 
-			$requete = $connexion-> prepare('INSERT INTO log_utilisateur(id_util, ip,
-															hostname, latitude, longitude,
+			$requete = $connexion-> prepare('INSERT INTO log_utilisateur(id_util, ip, 
+															hostname, latitude, longitude, 
 															country_name, region_name, city)
 												VALUES(?, ?, ?, ?, ?, ?, ?, ?)');
 			$requete-> execute(array($entree['id_util'], $entree['ip'], $entree['hostname'], $entree['latitude'], $entree['longitude'], $entree['country_name'], $entree['region_name'], $entree['city']));
 		}
-
+		
 		public function creerClient($nom_cli){
 			include('connexion.php');
 
@@ -1744,7 +1744,7 @@
 												VALUES(?, ?)');
 			$requete-> execute(array($entree['sig_mon'], $entree['sig_mon']));
 		}
-
+		
 		public function creerDocumentAppurement($fichier_doc, $num_lic, $id_util, $tmp, $banque, $ref_apure, $date_apure){
 			include('connexion.php');
 
@@ -1761,7 +1761,7 @@
 
 			$requete = $connexion-> prepare('INSERT INTO document_appurement(fichier_doc, num_lic, id_util, banque, ref_apure, date_apure)
 												VALUES(?, ?, ?, ?, ?, ?)');
-			$requete-> execute(array($entree['fichier_doc'], $entree['num_lic'], $entree['id_util'],
+			$requete-> execute(array($entree['fichier_doc'], $entree['num_lic'], $entree['id_util'], 
 								$entree['banque'], $entree['ref_apure'], $entree['date_apure']));
 
 			$dossier = '../dossiers/'.$num_lic;
@@ -1790,16 +1790,16 @@
 
 			$requete = $connexion-> prepare('INSERT INTO transmission_apurement(fichier_trans_ap, ref_trans_ap, id_util, banque, date_trans_ap, type_trans_ap)
 												VALUES(?, ?, ?, ?, ?, ?)');
-			$requete-> execute(array($entree['fichier_trans_ap'], $entree['ref_trans_ap'], $entree['id_util'],
+			$requete-> execute(array($entree['fichier_trans_ap'], $entree['ref_trans_ap'], $entree['id_util'], 
 								$entree['banque'], $entree['date_trans_ap'], $entree['type_trans_ap']));
 
 
 		}
 
-		public function creerFacture($ref_fact, $date_fact, $date_fact_rec,
-										$fournisseur, $date_val, $fichier_fact,
-										$tmp_fact, $id_mod_lic, $id_cli, $commodity,
-										$montant_fact, $id_mon, $fret_fact,
+		public function creerFacture($ref_fact, $date_fact, $date_fact_rec, 
+										$fournisseur, $date_val, $fichier_fact, 
+										$tmp_fact, $id_mod_lic, $id_cli, $commodity, 
+										$montant_fact, $id_mon, $fret_fact, 
 										$assurance_fact, $autre_frais_fact, $fsi=NULL, $aur=NULL){
 			include('connexion.php');
 
@@ -1830,18 +1830,18 @@
 			echo '<br>id_cli = '.$id_cli;
 			echo '<br>id_march = '.$id_march;*/
 
-			$requete = $connexion-> prepare('INSERT INTO facture_licence(ref_fact, date_fact, date_fact_rec,
-																		fournisseur, date_val, fichier_fact,
-																		id_mod_lic, id_cli, commodity,
-																		montant_fact, id_mon, fret_fact,
-																		assurance_fact, autre_frais_fact,
+			$requete = $connexion-> prepare('INSERT INTO facture_licence(ref_fact, date_fact, date_fact_rec, 
+																		fournisseur, date_val, fichier_fact, 
+																		id_mod_lic, id_cli, commodity, 
+																		montant_fact, id_mon, fret_fact, 
+																		assurance_fact, autre_frais_fact, 
 																		fsi, aur)
 												VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
-			$requete-> execute(array($entree['ref_fact'], $entree['date_fact'], $entree['date_fact_rec'],
-									$entree['fournisseur'], $entree['date_val'], $entree['fichier_fact'],
-									$entree['id_mod_lic'], $entree['id_cli'], $entree['commodity'],
-									$entree['montant_fact'], $entree['id_mon'], $entree['fret_fact'],
-									$entree['assurance_fact'], $entree['autre_frais_fact'],
+			$requete-> execute(array($entree['ref_fact'], $entree['date_fact'], $entree['date_fact_rec'], 
+									$entree['fournisseur'], $entree['date_val'], $entree['fichier_fact'], 
+									$entree['id_mod_lic'], $entree['id_cli'], $entree['commodity'], 
+									$entree['montant_fact'], $entree['id_mon'], $entree['fret_fact'], 
+									$entree['assurance_fact'], $entree['autre_frais_fact'], 
 									$entree['fsi'], $entree['aur']));
 
 			$facture = '../factures/'.$ref_fact;
@@ -1852,7 +1852,7 @@
 
 			move_uploaded_file($tmp_fact, '../factures/'.$ref_fact.'/' . basename($fichier_fact));
 		}
-
+		
 		public function creerTransmisFactureDossier($fichier_trans_fact, $ref_trans_fact, $id_util, $tmp, $date_trans_fact){
 			include('connexion.php');
 
@@ -1883,8 +1883,8 @@
 
 		}
 
-		public function creerAV($cod, $date_av, $montant_av,
-								$fxi, $num_lic, $fichier_av,
+		public function creerAV($cod, $date_av, $montant_av, 
+								$fxi, $num_lic, $fichier_av, 
 								$tmp_av, $id_util, $id_mon){
 			include('connexion.php');
 
@@ -1907,12 +1907,12 @@
 			echo '<br>id_mon = '.$id_mon;
 			echo '<br>id_march = '.$id_march;*/
 
-			$requete = $connexion-> prepare('INSERT INTO av(cod, date_av, montant_av,
-															fxi, num_lic, fichier_av,
+			$requete = $connexion-> prepare('INSERT INTO av(cod, date_av, montant_av, 
+															fxi, num_lic, fichier_av, 
 															id_util, id_mon)
 												VALUES(?, ?, ?, ?, ?, ?, ?, ?)');
-			$requete-> execute(array($entree['cod'], $entree['date_av'], $entree['montant_av'],
-									$entree['fxi'], $entree['num_lic'], $entree['fichier_av'],
+			$requete-> execute(array($entree['cod'], $entree['date_av'], $entree['montant_av'], 
+									$entree['fxi'], $entree['num_lic'], $entree['fichier_av'], 
 									$entree['id_util'], $entree['id_mon']));
 
 			/*$av = '../av/'.$fichier_av;
@@ -1923,7 +1923,7 @@
 
 			move_uploaded_file($tmp_av, '../av/' . basename($fichier_av));
 		}
-
+		
 		public function creerAppurementLicence($id_dos, $id_doc, $id_util){
 			include('connexion.php');
 
@@ -1941,7 +1941,7 @@
 			$requete-> execute(array($entree['id_dos'], $entree['id_doc'], $entree['id_util']));
 
 		}
-
+		
 		public function creerDetailFactureDossier($ref_fact, $id_dos, $id_deb, $montant, $tva, $usd='1', $detail=NULL, $unite=NULL){
 			include('connexion.php');
 
@@ -1962,16 +1962,16 @@
 
 			if ($montant>0) {
 				$requete = $connexion-> prepare("INSERT INTO detail_facture_dossier(ref_fact, id_dos,
-																	id_deb, montant, tva, usd, detail,
+																	id_deb, montant, tva, usd, detail, 
 																	unite)
 												VALUES(?, ?, ?, ?, ?, ?, ?, ?)");
 				$requete-> execute(array($entree['ref_fact'], $entree['id_dos'],
-									$entree['id_deb'], $entree['montant'],
-									$entree['tva'], $entree['usd'], $entree['detail'],
+									$entree['id_deb'], $entree['montant'], 
+									$entree['tva'], $entree['usd'], $entree['detail'], 
 									$entree['unite']));
 			}
 
-
+			
 		}
 
 		public function creerDetailNoteDebit($ref_note, $id_dep_dos, $montant, $tva, $usd='1'){
@@ -1991,10 +1991,10 @@
 
 				$requete = $connexion-> prepare("INSERT INTO detail_note_debit(ref_note, id_dep_dos, montant, tva, usd)
 												VALUES(?, ?, ?, ?, ?)");
-				$requete-> execute(array($entree['ref_note'], $entree['id_dep_dos'], $entree['montant'],
+				$requete-> execute(array($entree['ref_note'], $entree['id_dep_dos'], $entree['montant'], 
 									$entree['tva'], $entree['usd']));
 
-
+			
 		}
 
 		public function updateNoteDebit($ref_note, $label_other_fee, $unite, $parametre, $base){
@@ -2016,10 +2016,10 @@
 			$requete = $connexion-> prepare("UPDATE note_debit
 												SET label_other_fee = ?, unite = ?, parametre = ?, base = ?
 												WHERE ref_note = ?");
-			$requete-> execute(array($entree['label_other_fee'], $entree['unite'],
+			$requete-> execute(array($entree['label_other_fee'], $entree['unite'], 
 								$entree['parametre'], $entree['base'], $entree['ref_note']));
 
-
+			
 		}
 
 		public function creerDetailFactureDossier2($ref_fact, $id_dos, $id_deb, $montant, $tva, $usd='1', $detail=NULL, $unite=NULL, $pourcentage_qte, $montant_tva){
@@ -2050,16 +2050,16 @@
 
 			if ($montant>0) {
 				$requete = $connexion-> prepare("INSERT INTO detail_facture_dossier(ref_fact, id_dos,
-																	id_deb, montant, tva, usd, detail,
+																	id_deb, montant, tva, usd, detail, 
 																	unite, pourcentage_qte, montant_tva)
 												VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 				$requete-> execute(array($entree['ref_fact'], $entree['id_dos'],
-									$entree['id_deb'], $entree['montant'],
-									$entree['tva'], $entree['usd'], $entree['detail'],
+									$entree['id_deb'], $entree['montant'], 
+									$entree['tva'], $entree['usd'], $entree['detail'], 
 									$entree['unite'], $entree['pourcentage_qte'], $entree['montant_tva']));
 			}
 
-
+			
 		}
 
 		public function creerDetailFactureDossier3($ref_fact, $id_dos, $id_deb, $montant, $tva, $usd='1', $detail=NULL, $unite=NULL, $pourcentage_qte){
@@ -2089,16 +2089,16 @@
 
 			if ($montant>0) {
 				$requete = $connexion-> prepare("INSERT INTO detail_facture_dossier(ref_fact, id_dos,
-																	id_deb, montant, tva, usd, detail,
+																	id_deb, montant, tva, usd, detail, 
 																	unite, pourcentage_qte)
 												VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)");
 				$requete-> execute(array($entree['ref_fact'], $entree['id_dos'],
-									$entree['id_deb'], $entree['montant'],
-									$entree['tva'], $entree['usd'], $entree['detail'],
+									$entree['id_deb'], $entree['montant'], 
+									$entree['tva'], $entree['usd'], $entree['detail'], 
 									$entree['unite'], $entree['pourcentage_qte']));
 			}
 
-
+			
 		}
 
 		public function creerDetailApurement($id_trans_ap, $id_dos){
@@ -2117,7 +2117,7 @@
 			$requete-> execute(array($entree['id_trans_ap'], $entree['id_dos']));
 
 		}
-
+		
 		public function creerAppurementLicence2($id_dos, $id_doc, $id_util, $type_paie, $ref_apure, $date_apure, $banque){
 			include('connexion.php');
 
@@ -2137,18 +2137,18 @@
 			echo '<br>date_apure = '.$date_apure;
 			echo '<br>banque = '.$banque;
 			echo '---------<br>';
-			$requete = $connexion-> prepare('INSERT INTO appurement_licence(id_dos, id_doc, id_util,
+			$requete = $connexion-> prepare('INSERT INTO appurement_licence(id_dos, id_doc, id_util, 
 																type_paie, ref_apure, date_apure, banque)
 												VALUES(?, ?, ?, ?, ?, ?, ?)');
-			$requete-> execute(array($entree['id_dos'], $entree['id_doc'], $entree['id_util'], $entree['type_paie'],
+			$requete-> execute(array($entree['id_dos'], $entree['id_doc'], $entree['id_util'], $entree['type_paie'], 
 									$entree['ref_apure'], $entree['date_apure'], $entree['banque']));
 
 		}
-
-		public function creerDossierEB($ref_dos, $id_cli, $num_lic, $id_march, $id_mod_lic,
-										$id_mod_trans, $id_util, $num_lot, $horse, $trailer_1,
-										$trailer_2, $site_load, $destination, $transporter,
-										$nbr_bags, $poids, $load_date, $dgda_seal, $container,
+		
+		public function creerDossierEB($ref_dos, $id_cli, $num_lic, $id_march, $id_mod_lic, 
+										$id_mod_trans, $id_util, $num_lot, $horse, $trailer_1, 
+										$trailer_2, $site_load, $destination, $transporter, 
+										$nbr_bags, $poids, $load_date, $dgda_seal, $container, 
 										$pied_container){
 			include('connexion.php');
 
@@ -2205,27 +2205,27 @@
 			}
 
 			if (($this-> getDossierRefDos($ref_dos)==NULL)) {
-				$requete = $connexion-> prepare('INSERT INTO dossier(ref_dos, id_cli, num_lic, id_march,
-																		id_mod_lic, id_mod_trans, id_util,
-																		num_lot, horse, trailer_1, trailer_2,
-																		site_load, destination, transporter,
+				$requete = $connexion-> prepare('INSERT INTO dossier(ref_dos, id_cli, num_lic, id_march, 
+																		id_mod_lic, id_mod_trans, id_util, 
+																		num_lot, horse, trailer_1, trailer_2, 
+																		site_load, destination, transporter, 
 																		nbr_bags, poids, load_date, dgda_seal,
 																		container, pied_container)
 													VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
-				$requete-> execute(array($entree['ref_dos'], $entree['id_cli'], $entree['num_lic'],
-										$entree['id_march'], $entree['id_mod_lic'], $entree['id_mod_trans'],
-										$entree['id_util'], $entree['num_lot'], $entree['horse'],
-										$entree['trailer_1'], $entree['trailer_2'], $entree['site_load'],
-										$entree['destination'], $entree['transporter'], $entree['nbr_bags'],
-										$entree['poids'], $entree['load_date'], $entree['dgda_seal'], $entree['container'],
+				$requete-> execute(array($entree['ref_dos'], $entree['id_cli'], $entree['num_lic'], 
+										$entree['id_march'], $entree['id_mod_lic'], $entree['id_mod_trans'], 
+										$entree['id_util'], $entree['num_lot'], $entree['horse'], 
+										$entree['trailer_1'], $entree['trailer_2'], $entree['site_load'], 
+										$entree['destination'], $entree['transporter'], $entree['nbr_bags'], 
+										$entree['poids'], $entree['load_date'], $entree['dgda_seal'], $entree['container'], 
 										$entree['pied_container']));
 			}
 
 		}
-
-		public function creerDossierEBAMC($ref_dos, $id_cli, $num_lic, $id_march, $id_mod_lic,
-										$id_mod_trans, $id_util, $num_lot, $horse, $trailer_1,
-										$trailer_2, $site_load, $destination, $barge,
+		
+		public function creerDossierEBAMC($ref_dos, $id_cli, $num_lic, $id_march, $id_mod_lic, 
+										$id_mod_trans, $id_util, $num_lot, $horse, $trailer_1, 
+										$trailer_2, $site_load, $destination, $barge, 
 										$nbr_bags, $poids, $kapulo_load, $ship_num){
 			include('connexion.php');
 
@@ -2281,28 +2281,28 @@
 
 			if (($this-> getDossierRefDos($ref_dos)==NULL)) {
 
-				$requete = $connexion-> prepare('INSERT INTO dossier(ref_dos, id_cli, num_lic, id_march,
-																		id_mod_lic, id_mod_trans, id_util,
-																		num_lot, horse, trailer_1, trailer_2,
-																		site_load, destination, barge,
+				$requete = $connexion-> prepare('INSERT INTO dossier(ref_dos, id_cli, num_lic, id_march, 
+																		id_mod_lic, id_mod_trans, id_util, 
+																		num_lot, horse, trailer_1, trailer_2, 
+																		site_load, destination, barge, 
 																		nbr_bags, poids, kapulo_load, ship_num)
 													VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
-				$requete-> execute(array($entree['ref_dos'], $entree['id_cli'], $entree['num_lic'],
-										$entree['id_march'], $entree['id_mod_lic'], $entree['id_mod_trans'],
-										$entree['id_util'], $entree['num_lot'], $entree['horse'],
-										$entree['trailer_1'], $entree['trailer_2'], $entree['site_load'],
-										$entree['destination'], $entree['barge'], $entree['nbr_bags'],
+				$requete-> execute(array($entree['ref_dos'], $entree['id_cli'], $entree['num_lic'], 
+										$entree['id_march'], $entree['id_mod_lic'], $entree['id_mod_trans'], 
+										$entree['id_util'], $entree['num_lot'], $entree['horse'], 
+										$entree['trailer_1'], $entree['trailer_2'], $entree['site_load'], 
+										$entree['destination'], $entree['barge'], $entree['nbr_bags'], 
 										$entree['poids'], $entree['kapulo_load'], $entree['ship_num']));
 			}
 
 		}
-
-		public function creerDossierIB($ref_dos, $mca_b_ref, $id_cli, $ref_fact, $fob,
-										$fret, $assurance, $autre_frais, $num_lic,
+		
+		public function creerDossierIB($ref_dos, $mca_b_ref, $id_cli, $ref_fact, $fob, 
+										$fret, $assurance, $autre_frais, $num_lic, 
 										$id_mod_lic, $id_march, $id_mod_trans,
-										$ref_av, $cod, $id_util, $road_manif, $date_preal,
-										$t1, $poids,$po_ref,
-										$commodity, $horse, $trailer_1, $trailer_2, $ref_crf,
+										$ref_av, $cod, $id_util, $road_manif, $date_preal, 
+										$t1, $poids,$po_ref, 
+										$commodity, $horse, $trailer_1, $trailer_2, $ref_crf, 
 										$date_crf, $bond_warehouse='KOLWEZI', $supplier, $temporelle='0', $frontiere='KASUMBALESA', $regime='EX1'){
 			include('connexion.php');
 
@@ -2314,10 +2314,10 @@
 				//}
 			}
 
-			$entree['ref_dos'] = $ref_dos; $entree['id_cli'] = $id_cli; $entree['ref_fact'] = $ref_fact;
-			$entree['fob'] = $fob; $entree['fret'] = $fret; $entree['assurance'] = $assurance;
+			$entree['ref_dos'] = $ref_dos; $entree['id_cli'] = $id_cli; $entree['ref_fact'] = $ref_fact; 
+			$entree['fob'] = $fob; $entree['fret'] = $fret; $entree['assurance'] = $assurance; 
 			$entree['autre_frais'] = $autre_frais; $entree['num_lic'] = $num_lic;
-			$entree['id_mod_lic'] = $id_mod_lic; $entree['id_march'] = $id_march;
+			$entree['id_mod_lic'] = $id_mod_lic; $entree['id_march'] = $id_march; 
 			$entree['id_mod_trans'] = $id_mod_trans;$entree['ref_av'] = $ref_av;
 			$entree['cod'] = $cod;
 			$entree['id_util'] = $id_util;
@@ -2402,37 +2402,37 @@
 			// echo '<br>--------------------------------------regime = '.$entree['regime'];
 
 			if (($this-> getDossierRefDos($ref_dos)==NULL)) {
-
-				$requete = $connexion-> prepare('INSERT INTO dossier(ref_dos, id_cli, ref_fact, fob,
-																	fret, assurance, autre_frais, num_lic,
-																	id_mod_lic, id_march, id_mod_trans,
-																	ref_av,cod, id_util, road_manif,
-																	date_preal, t1, poids,
-																	po_ref, commodity, horse,
-																	trailer_1, trailer_2,
-																	ref_crf, date_crf, bond_warehouse,
-																	supplier, statut, temporelle,
+			
+				$requete = $connexion-> prepare('INSERT INTO dossier(ref_dos, id_cli, ref_fact, fob, 
+																	fret, assurance, autre_frais, num_lic, 
+																	id_mod_lic, id_march, id_mod_trans, 
+																	ref_av,cod, id_util, road_manif, 
+																	date_preal, t1, poids, 
+																	po_ref, commodity, horse, 
+																	trailer_1, trailer_2, 
+																	ref_crf, date_crf, bond_warehouse, 
+																	supplier, statut, temporelle, 
 																	frontiere, regime)
-													VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,
+													VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 
 															?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, "EXPECTED TO ARRIVE", ?, ?, ?)');
-				$requete-> execute(array($entree['ref_dos'], $entree['id_cli'], $entree['ref_fact'],
-										$entree['fob'], $entree['fret'], $entree['assurance'],
-										$entree['autre_frais'], $entree['num_lic'], $entree['id_mod_lic'],
-										$entree['id_march'], $entree['id_mod_trans'],
-										$entree['ref_av'], $entree['cod'], $entree['id_util'],
-										$entree['road_manif'], $entree['date_preal'], $entree['t1'],
-										$entree['poids'], $entree['po_ref'], $entree['commodity'],
-										$entree['horse'], $entree['trailer_1'], $entree['trailer_2'],
-										$entree['ref_crf'], $entree['date_crf'], $entree['bond_warehouse'],
-										$entree['supplier'], $entree['temporelle'], $entree['frontiere'],
+				$requete-> execute(array($entree['ref_dos'], $entree['id_cli'], $entree['ref_fact'], 
+										$entree['fob'], $entree['fret'], $entree['assurance'], 
+										$entree['autre_frais'], $entree['num_lic'], $entree['id_mod_lic'], 
+										$entree['id_march'], $entree['id_mod_trans'], 
+										$entree['ref_av'], $entree['cod'], $entree['id_util'], 
+										$entree['road_manif'], $entree['date_preal'], $entree['t1'], 
+										$entree['poids'], $entree['po_ref'], $entree['commodity'], 
+										$entree['horse'], $entree['trailer_1'], $entree['trailer_2'], 
+										$entree['ref_crf'], $entree['date_crf'], $entree['bond_warehouse'], 
+										$entree['supplier'], $entree['temporelle'], $entree['frontiere'], 
 										$entree['regime']));
 
 				$id_dos = $this-> getDossierRefDos($ref_dos)['id_dos'];
 
 				$this-> MAJ_mca_b_ref($id_dos, $mca_b_ref);
 
-			    for ($i=1; $i <= $_POST['nbre_document']; $i++) {
-
+			    for ($i=1; $i <= $_POST['nbre_document']; $i++) { 
+			      
 			      if(isset($_FILES['fichier_'.$i]['name']) && $_FILES['fichier_'.$i]['name'] != ''){
 			        $fichier=$_FILES['fichier_'.$i]['name'];
 			        $tmp=$_FILES['fichier_'.$i]['tmp_name'];
@@ -2447,7 +2447,7 @@
 
 
 		}
-
+		
 		//Methodes permettant d'archiver
 		public function archiver($id_dos, $id_doc, $fichier, $tmp, $ref_dos){
 			include('connexion.php');
@@ -2457,11 +2457,11 @@
 
 			$requete = $connexion-> prepare('INSERT INTO dossier_document VALUES(?, ?, ?)');
 			$requete-> execute(array($entree['id_dos'], $entree['id_doc'], $entree['fichier']));
-
+	
 			if(stristr($ref_dos, '/') == true) {
 				$ref_dos = str_replace("/", "_", "$ref_dos");
 			}
-
+			
 			$dossier = '../documents/'.$ref_dos;
 
 			if(!is_dir($dossier)){
@@ -2474,10 +2474,10 @@
 		}
 		//FIN Methodes permettant d'archiver
 
-		public function creerDossierIBAcid($ref_dos, $mca_b_ref, $id_cli, $ref_fact, $t1, $poids,
-											$num_lic, $id_mod_lic, $id_march, $id_mod_trans,
-											$id_util, $horse, $trailer_1, $trailer_2, $klsa_arriv,
-											$crossing_date, $wiski_arriv, $wiski_dep, $ref_crf,
+		public function creerDossierIBAcid($ref_dos, $mca_b_ref, $id_cli, $ref_fact, $t1, $poids, 
+											$num_lic, $id_mod_lic, $id_march, $id_mod_trans, 
+											$id_util, $horse, $trailer_1, $trailer_2, $klsa_arriv, 
+											$crossing_date, $wiski_arriv, $wiski_dep, $ref_crf, 
 											$date_crf, $fob){
 			include('connexion.php');
 
@@ -2492,13 +2492,13 @@
 			echo '<br> wiski_dep = '.$wiski_dep;*/
 			//echo '<br> id_mod_lic = '.$id_mod_lic;
 
-			$entree['ref_dos'] = $ref_dos; $entree['mca_b_ref'] = $mca_b_ref; $entree['id_cli'] = $id_cli; $entree['ref_fact'] = $ref_fact;
-			$entree['t1'] = $t1; $entree['poids'] = $poids; $entree['num_lic'] = $num_lic;
-			$entree['id_mod_lic'] = $id_mod_lic; $entree['id_march'] = $id_march; $entree['id_mod_trans'] = $id_mod_trans;
-			$entree['id_util'] = $id_util; $entree['horse'] = $horse; $entree['trailer_1'] = $trailer_1;
-			$entree['trailer_2'] = $trailer_2; $entree['klsa_arriv'] = $klsa_arriv; $entree['crossing_date'] = $crossing_date;
-			$entree['wiski_arriv'] = $wiski_arriv; $entree['wiski_dep'] = $wiski_dep;
-			$entree['ref_crf'] = $ref_crf; $entree['date_crf'] = $date_crf; ; $entree['fob'] = $fob;
+			$entree['ref_dos'] = $ref_dos; $entree['mca_b_ref'] = $mca_b_ref; $entree['id_cli'] = $id_cli; $entree['ref_fact'] = $ref_fact; 
+			$entree['t1'] = $t1; $entree['poids'] = $poids; $entree['num_lic'] = $num_lic; 
+			$entree['id_mod_lic'] = $id_mod_lic; $entree['id_march'] = $id_march; $entree['id_mod_trans'] = $id_mod_trans; 
+			$entree['id_util'] = $id_util; $entree['horse'] = $horse; $entree['trailer_1'] = $trailer_1; 
+			$entree['trailer_2'] = $trailer_2; $entree['klsa_arriv'] = $klsa_arriv; $entree['crossing_date'] = $crossing_date; 
+			$entree['wiski_arriv'] = $wiski_arriv; $entree['wiski_dep'] = $wiski_dep; 
+			$entree['ref_crf'] = $ref_crf; $entree['date_crf'] = $date_crf; ; $entree['fob'] = $fob; 
 
 			if($entree['klsa_arriv'] == '' || (!isset($entree['klsa_arriv'])) ){
 				$entree['klsa_arriv'] = NULL;
@@ -2524,32 +2524,32 @@
 				$entree['date_crf'] = NULL;
 			}
 
-			$requete = $connexion-> prepare('INSERT INTO dossier(ref_dos, mca_b_ref, id_cli, ref_fact, t1, poids,
-														num_lic, id_mod_lic, id_march, id_mod_trans,
-														id_util, horse, trailer_1, trailer_2, klsa_arriv,
+			$requete = $connexion-> prepare('INSERT INTO dossier(ref_dos, mca_b_ref, id_cli, ref_fact, t1, poids, 
+														num_lic, id_mod_lic, id_march, id_mod_trans, 
+														id_util, horse, trailer_1, trailer_2, klsa_arriv, 
 														crossing_date, wiski_arriv, wiski_dep, ref_crf, date_crf, fob)
-												VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,
+												VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 
 														?, ?, ?, ?, ?, ?, ?, ?, ?)');
-			$requete-> execute(array($entree['ref_dos'], $entree['mca_b_ref'], $entree['id_cli'], $entree['ref_fact'],
-									$entree['t1'], $entree['poids'], $entree['num_lic'],
-									$entree['id_mod_lic'], $entree['id_march'], $entree['id_mod_trans'],
-									$entree['id_util'], $entree['horse'], $entree['trailer_1'],
-									$entree['trailer_2'], $entree['klsa_arriv'], $entree['crossing_date'],
-									$entree['wiski_arriv'], $entree['wiski_dep'],
+			$requete-> execute(array($entree['ref_dos'], $entree['mca_b_ref'], $entree['id_cli'], $entree['ref_fact'], 
+									$entree['t1'], $entree['poids'], $entree['num_lic'], 
+									$entree['id_mod_lic'], $entree['id_march'], $entree['id_mod_trans'], 
+									$entree['id_util'], $entree['horse'], $entree['trailer_1'], 
+									$entree['trailer_2'], $entree['klsa_arriv'], $entree['crossing_date'], 
+									$entree['wiski_arriv'], $entree['wiski_dep'], 
 									$entree['ref_crf'], $entree['date_crf'], $entree['fob']));
 		}
-
-		public function creerDossierIB2($ref_dos, $id_cli, $ref_fact, $fob,
-										$fret, $assurance, $autre_frais, $num_lic,
+			
+		public function creerDossierIB2($ref_dos, $id_cli, $ref_fact, $fob, 
+										$fret, $assurance, $autre_frais, $num_lic, 
 										$id_mod_lic, $id_march, $id_mod_trans,
 										$ref_av, $cod, $fxi, $montant_av, $date_fact, $ref_decl,
 										$montant_decl, $ref_liq, $id_util, $ref_quit, $date_quit){
 			include('connexion.php');
 
-			$entree['ref_dos'] = $ref_dos; $entree['id_cli'] = $id_cli; $entree['ref_fact'] = $ref_fact;
-			$entree['fob'] = $fob; $entree['fret'] = $fret; $entree['assurance'] = $assurance;
+			$entree['ref_dos'] = $ref_dos; $entree['id_cli'] = $id_cli; $entree['ref_fact'] = $ref_fact; 
+			$entree['fob'] = $fob; $entree['fret'] = $fret; $entree['assurance'] = $assurance; 
 			$entree['autre_frais'] = $autre_frais; $entree['num_lic'] = $num_lic;
-			$entree['id_mod_lic'] = $id_mod_lic; $entree['id_march'] = $id_march;
+			$entree['id_mod_lic'] = $id_mod_lic; $entree['id_march'] = $id_march; 
 			$entree['id_mod_trans'] = $id_mod_trans;$entree['ref_av'] = $ref_av;
 			$entree['cod'] = $cod;$entree['fxi'] = $fxi;
 			$entree['montant_av'] = $montant_av;$entree['date_fact'] = $date_fact;
@@ -2565,38 +2565,38 @@
 				$entree['date_quit'] = NULL;
 			}
 
-			$requete = $connexion-> prepare('INSERT INTO dossier(ref_dos, id_cli, ref_fact, fob,
-																fret, assurance, autre_frais, num_lic,
-																id_mod_lic, id_march, id_mod_trans, ref_av,cod,
+			$requete = $connexion-> prepare('INSERT INTO dossier(ref_dos, id_cli, ref_fact, fob, 
+																fret, assurance, autre_frais, num_lic, 
+																id_mod_lic, id_march, id_mod_trans, ref_av,cod, 
 																fxi, montant_av, date_fact, ref_decl, montant_decl, ref_liq, id_util, ref_quit, date_quit)
-												VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,
+												VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 
 														?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
-			$requete-> execute(array($entree['ref_dos'], $entree['id_cli'], $entree['ref_fact'],
-									$entree['fob'], $entree['fret'], $entree['assurance'],
-									$entree['autre_frais'], $entree['num_lic'], $entree['id_mod_lic'],
-									$entree['id_march'], $entree['id_mod_trans'],
-									$entree['ref_av'], $entree['cod'], $entree['fxi'],
-									$entree['montant_av'], $entree['date_fact'], $entree['ref_decl'],
-									$entree['montant_decl'], $entree['ref_liq'], $entree['id_util'],
+			$requete-> execute(array($entree['ref_dos'], $entree['id_cli'], $entree['ref_fact'], 
+									$entree['fob'], $entree['fret'], $entree['assurance'], 
+									$entree['autre_frais'], $entree['num_lic'], $entree['id_mod_lic'], 
+									$entree['id_march'], $entree['id_mod_trans'], 
+									$entree['ref_av'], $entree['cod'], $entree['fxi'], 
+									$entree['montant_av'], $entree['date_fact'], $entree['ref_decl'], 
+									$entree['montant_decl'], $entree['ref_liq'], $entree['id_util'], 
 									$entree['ref_quit'], $entree['date_quit']));
 		}
 
-		public function creerDossierIBTrackingKlsa($ref_dos, $id_cli, $t1, $poids,
-										$ref_fact, $horse, $trailer_1, $trailer_2,
+		public function creerDossierIBTrackingKlsa($ref_dos, $id_cli, $t1, $poids, 
+										$ref_fact, $horse, $trailer_1, $trailer_2, 
 										$transporteur, $destination, $id_mod_trans,
-										$arrival_date, $crossing_date, $wiski_arriv,
-										$wiski_dep, $remarque, $id_util, $id_mod_lic,
+										$arrival_date, $crossing_date, $wiski_arriv, 
+										$wiski_dep, $remarque, $id_util, $id_mod_lic, 
 										$num_lic){
 			include('connexion.php');
 
-			$entree['ref_dos'] = $ref_dos; $entree['id_cli'] = $id_cli; $entree['t1'] = $t1;
-			$entree['poids'] = $poids; $entree['ref_fact'] = $ref_fact; $entree['horse'] = $horse;
+			$entree['ref_dos'] = $ref_dos; $entree['id_cli'] = $id_cli; $entree['t1'] = $t1; 
+			$entree['poids'] = $poids; $entree['ref_fact'] = $ref_fact; $entree['horse'] = $horse; 
 			$entree['trailer_1'] = $trailer_1; $entree['trailer_2'] = $trailer_2;
-			$entree['transporteur'] = $transporteur; $entree['destination'] = $destination;
+			$entree['transporteur'] = $transporteur; $entree['destination'] = $destination; 
 			$entree['id_mod_trans'] = $id_mod_trans;$entree['arrival_date'] = $arrival_date;
 			$entree['crossing_date'] = $crossing_date;$entree['wiski_arriv'] = $wiski_arriv;
 			$entree['wiski_dep'] = $wiski_dep;$entree['remarque'] = $remarque;
-			$entree['id_util'] = $id_util; $entree['id_mod_lic'] = $id_mod_lic;
+			$entree['id_util'] = $id_util; $entree['id_mod_lic'] = $id_mod_lic; 
 			$entree['num_lic'] = $num_lic;
 
 			if($entree['arrival_date'] == '' || (strlen($entree['arrival_date']) != 10) ){
@@ -2615,19 +2615,19 @@
 				$entree['wiski_dep'] = NULL;
 			}
 
-			$requete = $connexion-> prepare('INSERT INTO dossier(ref_dos, id_cli, t1, poids,
-																ref_fact, horse, trailer_1, trailer_2,
-																transporteur, destination, id_mod_trans, arrival_date,crossing_date,
-																wiski_arriv, wiski_dep, remarque, id_util,
+			$requete = $connexion-> prepare('INSERT INTO dossier(ref_dos, id_cli, t1, poids, 
+																ref_fact, horse, trailer_1, trailer_2, 
+																transporteur, destination, id_mod_trans, arrival_date,crossing_date, 
+																wiski_arriv, wiski_dep, remarque, id_util, 
 																id_mod_lic, num_lic)
-												VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,
+												VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 
 														?, ?, ?, ?, ?, ?, ?, ?)');
-			$requete-> execute(array($entree['ref_dos'], $entree['id_cli'], $entree['t1'],
-									$entree['poids'], $entree['ref_fact'], $entree['horse'],
-									$entree['trailer_1'], $entree['trailer_2'], $entree['transporteur'],
-									$entree['destination'], $entree['id_mod_trans'],
-									$entree['arrival_date'], $entree['crossing_date'], $entree['wiski_arriv'],
-									$entree['wiski_dep'], $entree['remarque'], $entree['id_util'],
+			$requete-> execute(array($entree['ref_dos'], $entree['id_cli'], $entree['t1'], 
+									$entree['poids'], $entree['ref_fact'], $entree['horse'], 
+									$entree['trailer_1'], $entree['trailer_2'], $entree['transporteur'], 
+									$entree['destination'], $entree['id_mod_trans'], 
+									$entree['arrival_date'], $entree['crossing_date'], $entree['wiski_arriv'], 
+									$entree['wiski_dep'], $entree['remarque'], $entree['id_util'], 
 									$entree['id_mod_lic'], $entree['num_lic']));
 		}
 
@@ -2645,7 +2645,7 @@
 			}else{
 				$cleared = '0';
 			}
-
+			
 			$entree['ref_dos'] = $ref_dos;$entree['num_lic'] = $num_lic;
 			$entree['ship_num'] = $ship_num;$entree['barge'] = $barge;
 			$entree['horse'] = $horse;$entree['trailer_1'] = $trailer_1;
@@ -2671,7 +2671,7 @@
 			$entree['ref_liq'] = $ref_liq;$entree['impala_sncc'] = $impala_sncc;
 			$entree['ref_quit'] = $ref_quit;$entree['docs_sncc'] = $docs_sncc;
 			$entree['sncc_sakania'] = $sncc_sakania;$entree['sakania_date'] = $sakania_date;
-			$entree['id_cli'] = $id_cli; $entree['id_util'] = $id_util;
+			$entree['id_cli'] = $id_cli; $entree['id_util'] = $id_util; 
 			$entree['id_mod_trans'] = $id_mod_trans; //$entree['id_mod_lic'] = $id_mod_lic;
 
 
@@ -2791,35 +2791,35 @@
 				$entree['doc_receiv'] = NULL;
 			}
 
-			$requete = $connexion-> prepare('INSERT INTO dossier(ref_dos, num_lic, ship_num, barge, horse, trailer_1, trailer_2, num_lot, nbr_bags, poids, kapulo_load, dispatch_pweto, arrival_pweto, barge_load, barge_dispatch_date, doc_receiv, nbre_seal, dgda_seal, remarque, transporter, load_date, pv_mine, demande_attestation, assay_date, ceec_in, ceec_out, min_div_in, min_div_out, date_decl, dgda_in, date_liq, date_quit, dgda_out, gov_in, gov_out, dispatch_date, klsa_arriv, end_form, exit_drc, cleared, statut, site_load, destination, ref_decl, ref_liq, ref_quit, impala_sncc, docs_sncc, sncc_sakania, sakania_date, id_cli, id_util, id_mod_trans, id_mod_lic)
-												VALUES(?, ?, ?,
-													?, ?, ?,
-													?, ?, ?,
-													?, ?, ?,
-													?, ?, ?,
-													?, ?, ?,
-													?, ?, ?,
-													?, ?, ?,
-													?, ?, ?,
-													?, ?, ?,
-													?, ?, ?,
-													?, ?, ?,
-													?, ?, ?,
-													?, ?, ?,
-													?, ?, ?,
-													?, ?, ?,
-													?, ?, ?,
+			$requete = $connexion-> prepare('INSERT INTO dossier(ref_dos, num_lic, ship_num, barge, horse, trailer_1, trailer_2, num_lot, nbr_bags, poids, kapulo_load, dispatch_pweto, arrival_pweto, barge_load, barge_dispatch_date, doc_receiv, nbre_seal, dgda_seal, remarque, transporter, load_date, pv_mine, demande_attestation, assay_date, ceec_in, ceec_out, min_div_in, min_div_out, date_decl, dgda_in, date_liq, date_quit, dgda_out, gov_in, gov_out, dispatch_date, klsa_arriv, end_form, exit_drc, cleared, statut, site_load, destination, ref_decl, ref_liq, ref_quit, impala_sncc, docs_sncc, sncc_sakania, sakania_date, id_cli, id_util, id_mod_trans, id_mod_lic) 
+												VALUES(?, ?, ?, 
+													?, ?, ?,  
+													?, ?, ?,  
+													?, ?, ?,  
+													?, ?, ?,  
+													?, ?, ?,  
+													?, ?, ?,  
+													?, ?, ?,  
+													?, ?, ?,  
+													?, ?, ?,  
+													?, ?, ?,  
+													?, ?, ?,  
+													?, ?, ?,  
+													?, ?, ?,  
+													?, ?, ?,  
+													?, ?, ?,  
+													?, ?, ?, 
 													?, ?, 1)');
 			$requete-> execute(array($entree['ref_dos'], $entree['num_lic'], $entree['ship_num'], $entree['barge'], $entree['horse'], $entree['trailer_1'], $entree['trailer_2'], $entree['num_lot'], $entree['nbr_bags'], $entree['poids'], $entree['kapulo_load'], $entree['dispatch_pweto'], $entree['arrival_pweto'], $entree['barge_load'], $entree['barge_dispatch_date'], $entree['doc_receiv'], $entree['nbre_seal'], $entree['dgda_seal'], $entree['remarque'], $entree['transporter'], $entree['load_date'], $entree['pv_mine'], $entree['demande_attestation'], $entree['assay_date'], $entree['ceec_in'], $entree['ceec_out'], $entree['min_div_in'], $entree['min_div_out'], $entree['date_decl'], $entree['dgda_in'], $entree['date_liq'], $entree['date_quit'], $entree['dgda_out'], $entree['gov_in'], $entree['gov_out'], $entree['dispatch_date'], $entree['klsa_arriv'], $entree['end_form'], $entree['exit_drc'], $entree['cleared'], $entree['statut'], $entree['site_load'], $entree['destination'], $entree['ref_decl'], $entree['ref_liq'], $entree['ref_quit'], $entree['impala_sncc'], $entree['docs_sncc'], $entree['sncc_sakania'], $entree['sakania_date'], $entree['id_cli'], $entree['id_util'], $entree['id_mod_trans']));
-
+			
 		}
 
-		public function creerDossierIB3($client, $ref_dos, $mca_b_ref, $road_manif, $date_preal, $t1,
-										$poids, $ref_fact, $supplier, $fob, $fret,
-										$assurance, $autre_frais, $po_ref,
+		public function creerDossierIB3($client, $ref_dos, $mca_b_ref, $road_manif, $date_preal, $t1, 
+										$poids, $ref_fact, $supplier, $fob, $fret, 
+										$assurance, $autre_frais, $po_ref, 
 										$commodity, $horse, $trailer_1, $trailer_2, $num_lic, $num_exo,
 										$arrival_date, $crossing_date, $wiski_arriv, $wiski_dep, $amicongo_arriv,
-										$insp_report, $ir, $ref_crf, $date_crf, $ref_decl, $dgda_in, $ref_liq,
+										$insp_report, $ir, $ref_crf, $date_crf, $ref_decl, $dgda_in, $ref_liq, 
 										$date_liq, $ref_quit, $date_quit, $dgda_out, $custom_deliv, $dispatch_deliv,
 										$remarque, $statut, $bl, $id_mod_trac, $id_util, $id_mod_trans, $credit_enlev_by, $bond_warehouse){
 			include('connexion.php');
@@ -2929,45 +2929,45 @@
 				$entree['bl'] = NULL;
 			}
 
-			$requete = $connexion-> prepare('INSERT INTO dossier(id_cli, ref_dos, mca_b_ref, date_preal,
+			$requete = $connexion-> prepare('INSERT INTO dossier(id_cli, ref_dos, mca_b_ref, date_preal, 
 																id_mod_lic, id_util, id_mod_trans, num_lic, t1, poids, ref_fact, fob, fret, assurance,
-																autre_frais, po_ref, commodity, horse, trailer_1,
-																trailer_2, road_manif, num_exo, arrival_date,
-																crossing_date, wiski_arriv, wiski_dep,
-																amicongo_arriv, insp_receiv, ir, ref_crf,
-																date_crf, ref_decl, dgda_in, ref_liq,
-																date_liq, ref_quit, date_quit, dgda_out,
-																custom_deliv, dispatch_deliv, remarque, statut,
-																bl, supplier, credit_enlev_by, bond_warehouse)
-												VALUES(?, ?, ?,
-													?, ?, ?,
-													?, ?, ?, ?, ?,
-													?, ?, ?, ?, ?,
-													?, ?, ?, ?, ?,
-													?, ?, ?, ?,
-													?, ?, ?, ?,
-													?, ?, ?, ?,
-													?, ?, ?, ?, ?,
+																autre_frais, po_ref, commodity, horse, trailer_1, 
+																trailer_2, road_manif, num_exo, arrival_date, 
+																crossing_date, wiski_arriv, wiski_dep, 
+																amicongo_arriv, insp_receiv, ir, ref_crf, 
+																date_crf, ref_decl, dgda_in, ref_liq, 
+																date_liq, ref_quit, date_quit, dgda_out, 
+																custom_deliv, dispatch_deliv, remarque, statut, 
+																bl, supplier, credit_enlev_by, bond_warehouse) 
+												VALUES(?, ?, ?, 
+													?, ?, ?, 
+													?, ?, ?, ?, ?, 
+													?, ?, ?, ?, ?, 
+													?, ?, ?, ?, ?, 
+													?, ?, ?, ?, 
+													?, ?, ?, ?, 
+													?, ?, ?, ?, 
+													?, ?, ?, ?, ?, 
 													?, ?, ?, ?, ?, ?, ?, ?)');
-			$requete-> execute(array($entree['client'], $entree['ref_dos'], $entree['mca_b_ref'],
-									$entree['date_preal'], $entree['id_mod_trac'], $entree['id_util'],
-									$entree['id_mod_trans'], $entree['num_lic'], $entree['t1'],
-									$entree['poids'], $entree['ref_fact'], $entree['fob'],
-									$entree['fret'], $entree['assurance'], $entree['autre_frais'],
-									$entree['po_ref'], $entree['commodity'], $entree['horse'],
-									$entree['trailer_1'], $entree['trailer_2'], $entree['road_manif'],
-									$entree['num_exo'], $entree['arrival_date'], $entree['crossing_date'],
-									$entree['wiski_arriv'], $entree['wiski_dep'], $entree['amicongo_arriv'],
-									$entree['insp_report'], $entree['ir'], $entree['ref_crf'],
-									$entree['date_crf'], $entree['ref_decl'], $entree['dgda_in'],
-									$entree['ref_liq'], $entree['date_liq'], $entree['ref_quit'],
-									$entree['date_quit'], $entree['dgda_out'], $entree['custom_deliv'],
-									$entree['dispatch_deliv'], $entree['remarque'], $entree['statut'],
-									$entree['bl'], $entree['supplier'], $entree['credit_enlev_by'],
+			$requete-> execute(array($entree['client'], $entree['ref_dos'], $entree['mca_b_ref'], 
+									$entree['date_preal'], $entree['id_mod_trac'], $entree['id_util'], 
+									$entree['id_mod_trans'], $entree['num_lic'], $entree['t1'], 
+									$entree['poids'], $entree['ref_fact'], $entree['fob'], 
+									$entree['fret'], $entree['assurance'], $entree['autre_frais'], 
+									$entree['po_ref'], $entree['commodity'], $entree['horse'], 
+									$entree['trailer_1'], $entree['trailer_2'], $entree['road_manif'], 
+									$entree['num_exo'], $entree['arrival_date'], $entree['crossing_date'], 
+									$entree['wiski_arriv'], $entree['wiski_dep'], $entree['amicongo_arriv'], 
+									$entree['insp_report'], $entree['ir'], $entree['ref_crf'], 
+									$entree['date_crf'], $entree['ref_decl'], $entree['dgda_in'], 
+									$entree['ref_liq'], $entree['date_liq'], $entree['ref_quit'], 
+									$entree['date_quit'], $entree['dgda_out'], $entree['custom_deliv'], 
+									$entree['dispatch_deliv'], $entree['remarque'], $entree['statut'], 
+									$entree['bl'], $entree['supplier'], $entree['credit_enlev_by'], 
 									$entree['bond_warehouse']));
 		}
 		//FIN Methodes permettant de créer
-
+	
 		//Methodes permettant d'afficher
 		public function afficherMenuLicence($id_type_lic){
 			include("connexion.php");
@@ -2978,7 +2978,7 @@
 			$active = '';
 			$open = '';
 			if($_SESSION['id_role'] == '1' || $_SESSION['id_role'] == '5' || $_SESSION['id_role'] == '11'){
-				$sql = "SELECT id_mod_lic,
+				$sql = "SELECT id_mod_lic, 
 							nom_mod_lic,
 							sigle_mod_lic
 						FROM modele_licence
@@ -3077,7 +3077,7 @@
 		              	<?php
 		              	}*/
 		              ?>
-
+		              
 		              	<?php
 		              	}
 		              ?>
@@ -3159,7 +3159,7 @@
 			$active = '';
 			$open = '';
 			if($_SESSION['id_role'] == '1' || $_SESSION['id_role'] == '5' || $_SESSION['id_role'] == '11'){
-				$sql = "SELECT id_mod_lic,
+				$sql = "SELECT id_mod_lic, 
 							nom_mod_lic,
 							sigle_mod_lic
 						FROM modele_licence
@@ -3193,8 +3193,8 @@
 			$entree['id_mod_lic'] = $id_mod_lic;
 
 			$menu = '';
-
-			$requete = $connexion-> prepare("SELECT cl.nom_cli AS nom_cli,
+			
+			$requete = $connexion-> prepare("SELECT cl.nom_cli AS nom_cli, 
 													cl.id_cli AS id_cli
 												FROM client cl, affectation_client_modele_licence aff
 												WHERE cl.id_cli = aff.id_cli
@@ -3235,14 +3235,14 @@
 			$entree['id_mod_lic'] = $id_mod_lic;
 
 			$option = '<select id=\'ref_fact\' name=\'ref_fact\' onchange=\'getDataFacture(this.value);\' class=\'form-control form-control-sm cc-exp\'><option></option>';
-
+			
 			$requete = $connexion-> prepare("SELECT *
 												FROM facture_licence
 												WHERE id_cli = ?
 													AND id_mod_lic = ?
 													AND  NOT EXISTS (
 															SELECT licence.ref_fact
-																FROM licence
+																FROM licence 
 																WHERE licence.id_cli = ?
 																	AND licence.id_mod_lic = ?
 																	AND licence.ref_fact = facture_licence.ref_fact
@@ -3268,7 +3268,7 @@
 			$active = '';
 			$open = '';
 			if($_SESSION['id_role'] == '1' || $_SESSION['id_role'] == '7'){
-				$sql = "SELECT id_mod_lic,
+				$sql = "SELECT id_mod_lic, 
 							nom_mod_lic,
 							sigle_mod_lic
 						FROM modele_licence
@@ -3763,7 +3763,7 @@
 													LEFT JOIN detail_facture_dossier
 														ON detail_facture_dossier.id_dos = dossier.id_dos
 													LEFT JOIN facture_dossier
-														ON facture_dossier.ref_fact = detail_facture_dossier.ref_fact
+														ON facture_dossier.ref_fact = detail_facture_dossier.ref_fact 
 													LEFT JOIN marchandise
 														ON marchandise.id_march = dossier.id_march
 												WHERE dossier.id_mod_lic = ?
@@ -3850,7 +3850,7 @@
 							LEFT JOIN detail_facture_dossier
 								ON detail_facture_dossier.id_dos = dossier.id_dos
 							LEFT JOIN facture_dossier
-								ON facture_dossier.ref_fact = detail_facture_dossier.ref_fact
+								ON facture_dossier.ref_fact = detail_facture_dossier.ref_fact 
 							LEFT JOIN marchandise
 								ON marchandise.id_march = dossier.id_march
 						WHERE dossier.id_mod_lic = ?
@@ -3914,7 +3914,7 @@
 							$sqlClient
 							AND facture_dossier.note_debit='0'
 							AND detail_facture_dossier.id_dos = dossier.id_dos
-							AND facture_dossier.ref_fact = detail_facture_dossier.ref_fact
+							AND facture_dossier.ref_fact = detail_facture_dossier.ref_fact 
 							AND marchandise.id_march = dossier.id_march
 							AND dossier.id_cli <> 1
 						GROUP BY dossier.id_dos
@@ -3966,24 +3966,24 @@
 							LEFT JOIN detail_facture_dossier
 								ON detail_facture_dossier.id_dos = dossier.id_dos
 							LEFT JOIN facture_dossier
-								ON facture_dossier.ref_fact = detail_facture_dossier.ref_fact
+								ON facture_dossier.ref_fact = detail_facture_dossier.ref_fact 
 							LEFT JOIN marchandise
 								ON marchandise.id_march = dossier.id_march
 						WHERE dossier.id_mod_lic = ?
-							AND (dossier.ref_decl IS NULL
-									OR dossier.date_decl IS NULL
-									OR dossier.ref_liq IS NULL
-									OR dossier.date_liq IS NULL
-									OR dossier.ref_quit IS NULL
+							AND (dossier.ref_decl IS NULL 
+									OR dossier.date_decl IS NULL 
+									OR dossier.ref_liq IS NULL 
+									OR dossier.date_liq IS NULL 
+									OR dossier.ref_quit IS NULL 
 									OR dossier.date_quit IS NULL
-								)
+								) 
 							$sqlClient
 							AND dossier.not_fact='0'
 							AND dossier.ref_dos NOT LIKE 'EXPDEC%'
 							AND dossier.ref_dos NOT LIKE '21EXP%'
 							AND dossier.ref_dos NOT LIKE '21DEC%'
 							AND dossier.id_dos NOT IN (
-								SELECT DISTINCT(det.id_dos)
+								SELECT DISTINCT(det.id_dos) 
 									FROM facture_dossier fd, detail_facture_dossier det
 									WHERE fd.ref_fact = det.ref_fact
 										AND fd.note_debit = '0'
@@ -4040,7 +4040,7 @@
 							-- AND dossier.date_quit IS NOT NULL
 							-- AND dossier.ref_quit IS NOT NULL
 
-							AND
+							AND 
 							(
 								-- Pocess 1
 								(
@@ -4057,7 +4057,7 @@
 								(
 									get_inv_process_pour_dossier(dossier.id_dos)=2
 									AND (
-											dossier.dispatch_date IS NOT NULL
+											dossier.dispatch_date IS NOT NULL 
 											OR (dossier.dgda_out IS NOT NULL AND dossier.id_mod_trans=4)
 										)
 									-- dossier.dispatch_date IS NOT NULL
@@ -4068,13 +4068,13 @@
 									get_inv_process_pour_dossier(dossier.id_dos)=3
 									AND dossier.dispatch_deliv IS NOT NULL
 								)
-
+									
 							)
 							$sqlClient
 							AND dossier.id_cli <> 1
 							AND dossier.not_fact = '0'
 							AND dossier.id_dos NOT IN (
-								SELECT DISTINCT(dos.id_dos)
+								SELECT DISTINCT(dos.id_dos) 
 									FROM facture_dossier fd, detail_facture_dossier det, dossier dos
 									WHERE fd.ref_fact = det.ref_fact
 										AND fd.note_debit = '0'
@@ -4155,7 +4155,7 @@
 							-- AND dossier.date_quit IS NOT NULL
 							-- AND dossier.ref_quit IS NOT NULL
 
-							AND
+							AND 
 							(
 								-- Pocess 1
 								(
@@ -4172,7 +4172,7 @@
 								(
 									get_inv_process_pour_dossier(dossier.id_dos)=2
 									AND (
-											dossier.dispatch_date IS NOT NULL
+											dossier.dispatch_date IS NOT NULL 
 											OR (dossier.dgda_out IS NOT NULL AND dossier.id_mod_trans=4)
 										)
 									-- dossier.dispatch_date IS NOT NULL
@@ -4183,12 +4183,12 @@
 									get_inv_process_pour_dossier(dossier.id_dos)=3
 									AND dossier.dispatch_deliv IS NOT NULL
 								)
-
+									
 							)
 							AND dossier.id_cli <> 1
 							AND dossier.not_fact = '0'
 							AND dossier.id_dos NOT IN (
-								SELECT DISTINCT(dos.id_dos)
+								SELECT DISTINCT(dos.id_dos) 
 									FROM facture_dossier fd, detail_facture_dossier det, dossier dos
 									WHERE fd.ref_fact = det.ref_fact
 										AND fd.note_debit = '0'
@@ -4594,7 +4594,7 @@
 				$reponse['nbre_dos'].='<a title="Dossiers affectés" href="#" style="color: black;" onclick="window.open(\'popUpDossierLicence.php?num_lic='.$reponse['num_lic'].'&couleur=\',\'pop1\',\'width=1300,height=900\');">
 							<i class="fa fa-folder-open"></i>
 						</a>';
-
+				
 				$reponse['btn_action'] = '<a title="Edit" href="#" style="color: black;" class="" onclick="modal_edit_suivi_licence(\''.$reponse['num_lic'].'\', \''.$reponse['fact_suiv_lic'].'\');">
 						<i class="fa fa-edit"></i>
 					</a>';
@@ -4987,7 +4987,7 @@
 													) AS montant_facture,
 													CONCAT('<a href=\"#\" title=\"View/Make the Payments\"  onclick=\"modal_paiement_facture(\'',facture.ref_fact,'\')\" class=\"text-light\">
 																<img src=\"../images/terminal-de-point-de-vente.png\" width=\"20px\"> Payments
-															</a>  |
+															</a>  |  
 															<a href=\"#\" title=\"View The Invoice\" class=\"text-light\"  onclick=\"window.open(\'',mf.view_page,'?ref_fact=',facture.ref_fact,'\',\'pop5\',\'width=1000,height=800\');\">
 																<img src=\"../images/calculator.png\" width=\"20px\"> Invoice
 															</a>') AS btn_action
@@ -5102,7 +5102,7 @@
 				}$requete-> closeCursor();
 
 			}
-
+			
 			return $rows;
 
 		}
@@ -5282,7 +5282,7 @@
 				$reponse['valeur'] = NULL;
 				return $reponse;
 			}
-
+			
 
 		}
 
@@ -5294,7 +5294,7 @@
 
 			$rows = array();
 
-			$requete = $connexion-> prepare("SELECT SUM(IF(mvt.entree IS NULL, 0, mvt.entree)) AS entree,
+			$requete = $connexion-> prepare("SELECT SUM(IF(mvt.entree IS NULL, 0, mvt.entree)) AS entree, 
 													SUM(IF(mvt.sortie IS NULL, 0, mvt.sortie)) AS sortie,
 													(SUM(IF(mvt.entree IS NULL, 0, mvt.entree))-SUM(IF(mvt.sortie IS NULL, 0, mvt.sortie))) AS balance
 											FROM mouvement_tresorerie mvt
@@ -5440,12 +5440,12 @@
 			// echo $statut;
 
 			if ($statut=='TRUCK OVERSTAY MORE THAN 2 DAYS AT KASUMBALESA') {
-
-				$requete = $connexion-> query("SELECT DATE_FORMAT(d.klsa_arriv, '%d/%m/%Y') AS klsa_arriv,
-														DATE_FORMAT(d.wiski_arriv, '%d/%m/%Y') AS wiski_arriv,
-														DATE_FORMAT(d.date_preal, '%d/%m/%Y') AS date_preal,
-														DATE_FORMAT(d.wiski_dep, '%d/%m/%Y') AS wiski_dep,
-														DATE_FORMAT(d.dispatch_klsa, '%d/%m/%Y') AS dispatch_klsa,
+				
+				$requete = $connexion-> query("SELECT DATE_FORMAT(d.klsa_arriv, '%d/%m/%Y') AS klsa_arriv, 
+														DATE_FORMAT(d.wiski_arriv, '%d/%m/%Y') AS wiski_arriv, 
+														DATE_FORMAT(d.date_preal, '%d/%m/%Y') AS date_preal, 
+														DATE_FORMAT(d.wiski_dep, '%d/%m/%Y') AS wiski_dep, 
+														DATE_FORMAT(d.dispatch_klsa, '%d/%m/%Y') AS dispatch_klsa, 
 														cli.nom_cli AS nom_cli,
 														d.id_dos AS id_dos,
 														d.ref_dos AS ref_dos,
@@ -5465,12 +5465,12 @@
 													ORDER BY d.date_creat_dos ASC");
 
 			}else if ($statut=='K\'LSA DATES ERROR') {
-
-				$requete = $connexion-> query("SELECT DATE_FORMAT(d.klsa_arriv, '%d/%m/%Y') AS klsa_arriv,
-													DATE_FORMAT(d.wiski_arriv, '%d/%m/%Y') AS wiski_arriv,
-													DATE_FORMAT(d.date_preal, '%d/%m/%Y') AS date_preal,
-													DATE_FORMAT(d.wiski_dep, '%d/%m/%Y') AS wiski_dep,
-													DATE_FORMAT(d.dispatch_klsa, '%d/%m/%Y') AS dispatch_klsa,
+				
+				$requete = $connexion-> query("SELECT DATE_FORMAT(d.klsa_arriv, '%d/%m/%Y') AS klsa_arriv, 
+													DATE_FORMAT(d.wiski_arriv, '%d/%m/%Y') AS wiski_arriv, 
+													DATE_FORMAT(d.date_preal, '%d/%m/%Y') AS date_preal, 
+													DATE_FORMAT(d.wiski_dep, '%d/%m/%Y') AS wiski_dep, 
+													DATE_FORMAT(d.dispatch_klsa, '%d/%m/%Y') AS dispatch_klsa, 
 													cli.nom_cli AS nom_cli,
 													d.id_dos AS id_dos,
 													d.ref_dos AS ref_dos,
@@ -5482,7 +5482,7 @@
 												FROM dossier d, client cli
 												WHERE d.id_cli = cli.id_cli
 													AND d.id_mod_trans = 1
-													AND ( (d.klsa_arriv IS NULL
+													AND ( (d.klsa_arriv IS NULL 
 															AND (d.wiski_arriv IS NOT NULL OR d.dispatch_klsa IS NOT NULL)
 															)
 														OR (d.wiski_arriv IS NULL AND d.dispatch_klsa IS NOT NULL)
@@ -5496,15 +5496,15 @@
 														)
 													AND d.ref_dos NOT LIKE '%20-%'
 											ORDER BY d.id_dos DESC");
-
+				
 			}else if ($statut=='FILES WITHOUT LIQUIDATION BEYOND 2 DAYS') {
-
-				$requete = $connexion-> query("SELECT DATE_FORMAT(d.date_creat_dos, '%d/%m/%Y') AS date_creat_dos,
-													DATE_FORMAT(d.date_preal, '%d/%m/%Y') AS date_preal,
+				
+				$requete = $connexion-> query("SELECT DATE_FORMAT(d.date_creat_dos, '%d/%m/%Y') AS date_creat_dos, 
+													DATE_FORMAT(d.date_preal, '%d/%m/%Y') AS date_preal, 
 													d.ref_decl AS ref_decl,
-													DATE_FORMAT(d.date_decl, '%d/%m/%Y') AS date_decl,
+													DATE_FORMAT(d.date_decl, '%d/%m/%Y') AS date_decl, 
 													d.ref_liq AS ref_liq,
-													DATE_FORMAT(d.date_liq, '%d/%m/%Y') AS date_liq,
+													DATE_FORMAT(d.date_liq, '%d/%m/%Y') AS date_liq, 
 													cli.nom_cli AS nom_cli,
 													d.id_dos AS id_dos,
 													d.ref_dos AS ref_dos,
@@ -5522,10 +5522,10 @@
 													AND d.id_cli <> 874
 													AND DATEDIFF(CURRENT_DATE(), d.date_decl) > 2
 												ORDER BY d.date_creat_dos ASC");
-
+				
 			}else if ($statut=='FILES WITHOUT QUITTANCE BEYOND 2 DAYS') {
-
-				$requete = $connexion-> query("SELECT DATE_FORMAT(d.date_preal, '%d/%m/%Y') AS date_preal,
+				
+				$requete = $connexion-> query("SELECT DATE_FORMAT(d.date_preal, '%d/%m/%Y') AS date_preal, 
 													DATE_FORMAT(d.date_decl, '%d/%m/%Y') AS date_decl,
 													DATE_FORMAT(d.date_liq, '%d/%m/%Y') AS date_liq,
 													DATE_FORMAT(d.date_quit, '%d/%m/%Y') AS date_quit,
@@ -5548,14 +5548,14 @@
 													AND d.ref_dos NOT LIKE '%20-%'
 													AND d.id_cli <> 874
 												ORDER BY d.date_creat_dos ASC");
-
+				
 			}else if ($statut=='TRUCK OVERSTAY MORE THAN 2 DAYS AT WISKI') {
-
-				$requete = $connexion-> query("SELECT DATE_FORMAT(d.klsa_arriv, '%d/%m/%Y') AS klsa_arriv,
-													DATE_FORMAT(d.wiski_arriv, '%d/%m/%Y') AS wiski_arriv,
-													DATE_FORMAT(d.date_preal, '%d/%m/%Y') AS date_preal,
-													DATE_FORMAT(d.wiski_dep, '%d/%m/%Y') AS wiski_dep,
-													DATE_FORMAT(d.dispatch_klsa, '%d/%m/%Y') AS dispatch_klsa,
+				
+				$requete = $connexion-> query("SELECT DATE_FORMAT(d.klsa_arriv, '%d/%m/%Y') AS klsa_arriv, 
+													DATE_FORMAT(d.wiski_arriv, '%d/%m/%Y') AS wiski_arriv, 
+													DATE_FORMAT(d.date_preal, '%d/%m/%Y') AS date_preal, 
+													DATE_FORMAT(d.wiski_dep, '%d/%m/%Y') AS wiski_dep, 
+													DATE_FORMAT(d.dispatch_klsa, '%d/%m/%Y') AS dispatch_klsa, 
 													cli.nom_cli AS nom_cli,
 													d.id_dos AS id_dos,
 													d.ref_dos AS ref_dos,
@@ -5573,14 +5573,14 @@
 													AND DATEDIFF(CURRENT_DATE() , d.wiski_arriv)>2
 													AND d.ref_dos NOT LIKE '%20-%'
 												ORDER BY d.date_creat_dos ASC");
-
+				
 			}else if ($statut=='FILES UNDER PREPARATION OVER 15 DAYS') {
-
-				$requete = $connexion-> query("SELECT DATE_FORMAT(d.klsa_arriv, '%d/%m/%Y') AS klsa_arriv,
-													DATE_FORMAT(d.wiski_arriv, '%d/%m/%Y') AS wiski_arriv,
-													DATE_FORMAT(d.date_preal, '%d/%m/%Y') AS date_preal,
-													DATE_FORMAT(d.wiski_dep, '%d/%m/%Y') AS wiski_dep,
-													DATE_FORMAT(d.dispatch_klsa, '%d/%m/%Y') AS dispatch_klsa,
+				
+				$requete = $connexion-> query("SELECT DATE_FORMAT(d.klsa_arriv, '%d/%m/%Y') AS klsa_arriv, 
+													DATE_FORMAT(d.wiski_arriv, '%d/%m/%Y') AS wiski_arriv, 
+													DATE_FORMAT(d.date_preal, '%d/%m/%Y') AS date_preal, 
+													DATE_FORMAT(d.wiski_dep, '%d/%m/%Y') AS wiski_dep, 
+													DATE_FORMAT(d.dispatch_klsa, '%d/%m/%Y') AS dispatch_klsa, 
 													cli.nom_cli AS nom_cli,
 													d.id_dos AS id_dos,
 													d.ref_dos AS ref_dos,
@@ -5597,16 +5597,16 @@
 													AND d.date_crf IS NOT NULL
 													AND d.date_ad IS NOT NULL
 													AND d.date_assurance IS NOT NULL
-													AND d.date_decl IS NULL
+													AND d.date_decl IS NULL 
 													AND d.ref_decl IS NULL
 													AND d.ref_dos NOT LIKE '%20-%'
 													AND d.cleared <> '2'
 												ORDER BY d.date_creat_dos ASC");
-
+				
 			}else if ($statut=='KASUMBALESA TRUCK ARRIVAL') {
-
+				
 				$requete = $connexion-> query("SELECT DATE_FORMAT(d.date_preal, '%d/%m/%Y') AS date_preal,
-													DATE_FORMAT(d.klsa_arriv, '%d/%m/%Y') AS klsa_arriv,
+													DATE_FORMAT(d.klsa_arriv, '%d/%m/%Y') AS klsa_arriv, 
 													cli.nom_cli AS nom_cli,
 													d.id_dos AS id_dos,
 													d.ref_dos AS ref_dos,
@@ -5620,7 +5620,7 @@
 													AND DATEDIFF(CURRENT_DATE() , d.klsa_arriv)<3
 													AND d.ref_dos NOT LIKE '%20-%'
 												ORDER BY d.date_creat_dos ASC");
-
+				
 			}
 
 			while ($reponse = $requete-> fetch()) {
@@ -5647,9 +5647,9 @@
 													AND id_mod = ?");
 			$requete-> execute(array($entree['id_util'], $entree['id_mod']));
 			$reponse = $requete-> fetch();
-
+			
 			return $reponse;
-
+			
 		}
 
 		public function getNombreNotificationRequestFund(){
@@ -5665,7 +5665,7 @@
 
 			return $reponse['nbre_dossier_no_apurement_dgda'];
 		}
-
+			
 		//dgda
 		public function nbre_dossier_no_apurement_dgda($id_cli, $id_mod_lic){
 			include('connexion.php');
@@ -5697,7 +5697,7 @@
 
 			return $reponse['nbre_dossier_no_apurement_dgda'];
 		}
-
+			
 		public function nbre_transmis_no_ar_dgda($id_cli, $id_mod_lic){
 			include('connexion.php');
 			$entree['id_cli'] = $id_cli;
@@ -5715,13 +5715,13 @@
 											");
 			$requete-> execute(array($entree['id_cli'], $entree['id_mod_lic']));
 			$reponse = $requete-> fetch();
-
+			
 			if(!$reponse){
 				$reponse['nbre_transmis_no_ar_dgda'] = 0;
 			}
-
+			
 			return $reponse['nbre_transmis_no_ar_dgda'];
-
+			
 		}
 
 		//occ
@@ -5755,7 +5755,7 @@
 
 			return $reponse['nbre_dossier_no_apurement_occ'];
 		}
-
+			
 		public function nbre_transmis_no_ar_occ($id_cli, $id_mod_lic){
 			include('connexion.php');
 			$entree['id_cli'] = $id_cli;
@@ -5777,9 +5777,9 @@
 			if(!$reponse){
 				$reponse['nbre_transmis_no_ar_occ'] = 0;
 			}
-
+			
 			return $reponse['nbre_transmis_no_ar_occ'];
-
+			
 		}
 
 		//occ
@@ -5808,7 +5808,7 @@
 
 			return $reponse['nbre_dossier_no_apurement_occ'];
 		}
-
+			
 		public function nbre_dossier_sans_manifeste_apurement($id_cli, $id_mod_lic){
 			include('connexion.php');
 			$entree['id_cli'] = $id_cli;
@@ -5834,7 +5834,7 @@
 
 			return $reponse['nbre_dossier_no_apurement_occ'];
 		}
-
+			
 		public function getNombreDossierStatus($statut, $id_cli=NULL, $id_mod_lic=NULL){
 			include("connexion.php");
 			$entree['id_mod_lic'] = $id_mod_lic;
@@ -5849,7 +5849,7 @@
 
 			if (isset($statut) && ($statut != '') && ($statut=='AWAITING AD/AV/INSURANCE')) {
 
-				$sqlStatus = ' AND d.ad_date IS NULL AND d.date_av IS NULL AND d.id_cli <> 888 AND d.date_assurance IS NULL AND d.id_cli <> 883
+				$sqlStatus = ' AND d.ad_date IS NULL AND d.date_av IS NULL AND d.id_cli <> 888 AND d.date_assurance IS NULL AND d.id_cli <> 883 
 								AND YEAR(d.date_creat_dos) > 2021';
 
 			}/*else if (isset($statut) && ($statut != '') && ($statut=='AWAITING AD/AV')) {
@@ -5863,7 +5863,7 @@
 			}*/
 			else if (isset($statut) && ($statut != '') && ($statut=='AWAITING AD')) {
 
-				$sqlStatus = ' AND d.ad_date IS NULL
+				$sqlStatus = ' AND d.ad_date IS NULL 
 								AND YEAR(d.date_creat_dos) > 2021';
 
 			}/*else if (isset($statut) && ($statut != '') && ($statut=='AWAITING AV/INSURANCE')) {
@@ -5872,23 +5872,23 @@
 
 			}*/else if (isset($statut) && ($statut != '') && ($statut=='AWAITING AV')) {
 
-				$sqlStatus = ' AND d.date_av IS NULL AND d.id_cli <> 888
+				$sqlStatus = ' AND d.date_av IS NULL AND d.id_cli <> 888 
 								AND YEAR(d.date_creat_dos) > 2021';
 
 			}else if (isset($statut) && ($statut != '') && ($statut=='AWAITING INSURANCE')) {
 
-				$sqlStatus = ' AND d.date_assurance IS NULL  AND d.id_cli <> 883
+				$sqlStatus = ' AND d.date_assurance IS NULL  AND d.id_cli <> 883 
 								AND YEAR(d.date_creat_dos) > 2021';
 
 			}else if (isset($statut) && ($statut != '') && ($statut=='AWAITING BAE')) {
 
-				$sqlStatus = ' AND d.bae_date IS NULL
+				$sqlStatus = ' AND d.bae_date IS NULL 
 								AND d.date_quit IS NOT NULL
 								AND YEAR(d.date_creat_dos) > 2021';
 
 			}else if (isset($statut) && ($statut != '') && ($statut=='AWAITING BS')) {
 
-				$sqlStatus = ' AND d.bs_date IS NULL
+				$sqlStatus = ' AND d.bs_date IS NULL 
 								AND d.date_quit IS NOT NULL
 								AND YEAR(d.date_creat_dos) > 2021';
 
@@ -5922,7 +5922,7 @@
 			$compteur = '0';
 			$active = '';
 			$dossiers_a_facturer = '<select onchange="getDataDossier(this.value); total()" id="id_dos" class="form-control float-right"><option></option>';
-			$requete = $connexion-> prepare("SELECT id_dos, ref_dos, ref_decl,
+			$requete = $connexion-> prepare("SELECT id_dos, ref_dos, ref_decl, 
 													DATE_FORMAT(date_decl, '%d/%m/%Y') AS date_decl, horse, commodity, id_mod_lic,
 													principal, roe_decl, id_march
 												FROM dossier
@@ -6003,7 +6003,7 @@
     															modele_facture.create_page AS create_page,
     															mode_transport.id_mod_trans AS id_mod_trans,
     															mode_transport.nom_mod_trans AS nom_mod_trans
-    														FROM affectation_modele_facture_client_marchandise aff,
+    														FROM affectation_modele_facture_client_marchandise aff, 
     															marchandise, modele_facture, mode_transport
     														WHERE aff.id_cli = ?
     															AND aff.id_march = marchandise.id_march
@@ -6037,15 +6037,15 @@
 
 			$tableau = '';
 
-			$requeteMarchandise = $connexion-> prepare("SELECT COUNT(dossier.id_dos) AS nbre,
-																dossier.num_lic aS num_lic,
+			$requeteMarchandise = $connexion-> prepare("SELECT COUNT(dossier.id_dos) AS nbre, 
+																dossier.num_lic aS num_lic, 
 																marchandise.id_march AS id_march,
     															marchandise.nom_march AS nom_march,
     															modele_facture.id_mod_fact AS id_mod_fact,
     															modele_facture.create_page AS create_page,
     															mode_transport.id_mod_trans AS id_mod_trans,
     															mode_transport.nom_mod_trans AS nom_mod_trans
-    														FROM affectation_modele_facture_client_marchandise aff,
+    														FROM affectation_modele_facture_client_marchandise aff, 
     															marchandise, modele_facture, mode_transport, dossier
     														WHERE aff.id_cli = ?
     															AND aff.id_march = marchandise.id_march
@@ -6062,7 +6062,7 @@
 																-- AND dossier.ref_decl <> ''
 																-- AND dossier.ref_liq IS NOT NULL
 																-- AND dossier.ref_liq <> ''
-																AND
+																AND 
 																(
 																	-- Pocess 1
 																	(
@@ -6079,7 +6079,7 @@
 																	(
 																		get_inv_process_pour_dossier(dossier.id_dos)=2
 																		AND (
-																			dossier.dispatch_date IS NOT NULL
+																			dossier.dispatch_date IS NOT NULL 
 																			OR (dossier.dgda_out IS NOT NULL AND dossier.id_mod_trans=4)
 																		)
 																		-- dossier.dispatch_date IS NOT NULL
@@ -6090,11 +6090,11 @@
 																		get_inv_process_pour_dossier(dossier.id_dos)=3
 																		AND dossier.dispatch_deliv IS NOT NULL
 																	)
-
+																		
 																)
 																AND dossier.not_fact = '0'
 																AND dossier.id_dos NOT IN (
-																	SELECT det.id_dos
+																	SELECT det.id_dos 
 																		FROM detail_facture_dossier det, facture_dossier fact
 																		WHERE det.ref_fact = fact.ref_fact
 																			AND fact.note_debit = '0'
@@ -6145,15 +6145,15 @@
 	              </thead>
 	              <tbody>';
 
-			$requeteMarchandise = $connexion-> prepare("SELECT COUNT(dossier.id_dos) AS nbre,
-																dossier.num_lic aS num_lic,
+			$requeteMarchandise = $connexion-> prepare("SELECT COUNT(dossier.id_dos) AS nbre, 
+																dossier.num_lic aS num_lic, 
 																marchandise.id_march AS id_march,
     															marchandise.nom_march AS nom_march,
     															modele_facture.id_mod_fact AS id_mod_fact,
     															modele_facture.create_page AS create_page,
     															mode_transport.id_mod_trans AS id_mod_trans,
     															mode_transport.nom_mod_trans AS nom_mod_trans
-    														FROM facturation_licence_globale aff,
+    														FROM facturation_licence_globale aff, 
     															marchandise, modele_facture, mode_transport, dossier
     														WHERE aff.id_cli = ?
     															AND aff.id_mod_fact = modele_facture.id_mod_fact
@@ -6211,16 +6211,16 @@
 
 			$tableau = '';
 
-			$requeteMarchandise = $connexion-> prepare("SELECT COUNT(dossier.id_dos) AS nbre,
-																dossier.num_lic aS num_lic,
-																DATE_FORMAT(dossier.date_decl, '%d/%m/%Y') aS date_decl,
+			$requeteMarchandise = $connexion-> prepare("SELECT COUNT(dossier.id_dos) AS nbre, 
+																dossier.num_lic aS num_lic, 
+																DATE_FORMAT(dossier.date_decl, '%d/%m/%Y') aS date_decl, 
 																marchandise.id_march AS id_march,
     															marchandise.nom_march AS nom_march,
     															modele_facture.id_mod_fact AS id_mod_fact,
     															modele_facture.create_page AS create_page,
     															mode_transport.id_mod_trans AS id_mod_trans,
     															mode_transport.nom_mod_trans AS nom_mod_trans
-    														FROM affectation_modele_facture_client_marchandise aff,
+    														FROM affectation_modele_facture_client_marchandise aff, 
     															marchandise, modele_facture, mode_transport, dossier
     														WHERE aff.id_cli = ?
     															AND aff.id_march = marchandise.id_march
@@ -6239,7 +6239,7 @@
 																AND dossier.ref_liq <> ''
 																AND dossier.not_fact = '0'
 																AND dossier.id_dos NOT IN (
-																	SELECT det.id_dos
+																	SELECT det.id_dos 
 																		FROM detail_facture_dossier det, facture_dossier fact
 																		WHERE det.ref_fact = fact.ref_fact
 																			AND fact.note_debit = '0'
@@ -6321,7 +6321,7 @@
 
 			$tableau = '';
 
-			$requeteDepense = $connexion-> prepare("SELECT dep.nom_dep AS nom_dep,
+			$requeteDepense = $connexion-> prepare("SELECT dep.nom_dep AS nom_dep, 
 																dep.id_dep AS id_dep,
 																mnd.view_note AS view_note,
 																mnd.new_note AS new_note
@@ -6393,7 +6393,7 @@
     			// 				<td class="text-center text-light">
     			// 					<button class="btn btn-xs btn-warning" onclick="window.location.replace(\'file_pending_worksheet.php?id_mod_lic='.$id_mod_lic.'&id_cli='.$reponse['id_cli'].'\');">
     			// 						<i class="fa fa-exclamation"></i> Files Pending ('.$this-> dossier_awaiting_worksheet_client($id_mod_lic, $reponse['id_cli']).')
-    			// 					</button> |
+    			// 					</button> | 
     			// 					<button class="btn btn-xs bg-info" onclick="window.location.replace(\'list_worksheet.php?id_mod_lic='.$id_mod_lic.'&id_cli='.$reponse['id_cli'].'\');"><i class="fa fa-list"></i> Worsheet list</button>
     			// 				</td>
     			// 			</tr>
@@ -6451,7 +6451,7 @@
     			// 				<td class="text-center text-light">
     			// 					<button class="btn btn-xs btn-warning" onclick="window.location.replace(\'file_pending_worksheet.php?id_mod_lic='.$id_mod_lic.'&id_cli='.$reponse['id_cli'].'\');">
     			// 						<i class="fa fa-exclamation"></i> Files Pending ('.$this-> dossier_awaiting_worksheet_client($id_mod_lic, $reponse['id_cli']).')
-    			// 					</button> |
+    			// 					</button> | 
     			// 					<button class="btn btn-xs bg-info" onclick="window.location.replace(\'list_worksheet.php?id_mod_lic='.$id_mod_lic.'&id_cli='.$reponse['id_cli'].'\');"><i class="fa fa-list"></i> Worsheet list</button>
     			// 				</td>
     			// 			</tr>
@@ -6643,7 +6643,7 @@
     															mode_transport.nom_mod_trans AS nom_mod_trans,
     															ml.nom_mod_lic AS nom_mod_lic,
     															ml.id_mod_lic AS id_mod_lic
-    														FROM affectation_modele_facture_client_marchandise aff,
+    														FROM affectation_modele_facture_client_marchandise aff, 
     															marchandise, modele_facture, mode_transport, modele_licence ml
     														WHERE aff.id_cli = ?
     															AND aff.id_march = marchandise.id_march
@@ -7012,7 +7012,7 @@
 			              	<?php
 			              	}
 			              ?>
-
+			            
 		              	<li class="nav-item">
 			                <a href="listerFactureDossier.php?type_fact=globale&id_mod_lic_fact=<?php echo $id_mod_lic;?>&id_cli=<?php echo $reponse['id_cli'];?>" class="nav-link">
 			                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-copy nav-icon"></i>
@@ -7170,53 +7170,53 @@
 
 		public function getGeoLocalisation($userIP){
 
-			// IP address
-			//$userIP = '162.222.198.75';
-
-			// API end URL
-			$apiURL = 'https://freegeoip.app/json/'.$userIP;
-
-			// Create a new cURL resource with URL
-			$ch = curl_init($apiURL);
-
-			// Return response instead of outputting
-			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-
-			// Execute API request
-			$apiResponse = curl_exec($ch);
-
-			// Close cURL resource
-			curl_close($ch);
-
-			// Retrieve IP data from API response
-			$ipData = json_decode($apiResponse, true);
-
-			if(!empty($ipData)){
-			    $country_code = $ipData['country_code'];
-			    $country_name = $ipData['country_name'];
-			    $region_code = $ipData['region_code'];
-			    $region_name = $ipData['region_name'];
-			    $city = $ipData['city'];
-			    $zip_code = $ipData['zip_code'];
-			    $latitude = $ipData['latitude'];
-			    $longitude = $ipData['longitude'];
-			    $time_zone = $ipData['time_zone'];
-
-			    // echo 'Country Name: '.$country_name.'<br/>';
-			    // echo 'Country Code: '.$country_code.'<br/>';
-			    // echo 'Region Code: '.$region_code.'<br/>';
-			    // echo 'Region Name: '.$region_name.'<br/>';
-			    // echo 'City: '.$city.'<br/>';
-			    // echo 'Zipcode: '.$zip_code.'<br/>';
-			    // echo 'Latitude: '.$latitude.'<br/>';
-			    // echo 'Longitude: '.$longitude.'<br/>';
-			    // echo 'Time Zone: '.$time_zone;
+			// IP address 
+			//$userIP = '162.222.198.75'; 
+			 
+			// API end URL 
+			$apiURL = 'https://freegeoip.app/json/'.$userIP; 
+			 
+			// Create a new cURL resource with URL 
+			$ch = curl_init($apiURL); 
+			 
+			// Return response instead of outputting 
+			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true); 
+			 
+			// Execute API request 
+			$apiResponse = curl_exec($ch); 
+			 
+			// Close cURL resource 
+			curl_close($ch); 
+			 
+			// Retrieve IP data from API response 
+			$ipData = json_decode($apiResponse, true); 
+			 
+			if(!empty($ipData)){ 
+			    $country_code = $ipData['country_code']; 
+			    $country_name = $ipData['country_name']; 
+			    $region_code = $ipData['region_code']; 
+			    $region_name = $ipData['region_name']; 
+			    $city = $ipData['city']; 
+			    $zip_code = $ipData['zip_code']; 
+			    $latitude = $ipData['latitude']; 
+			    $longitude = $ipData['longitude']; 
+			    $time_zone = $ipData['time_zone']; 
+			     
+			    // echo 'Country Name: '.$country_name.'<br/>'; 
+			    // echo 'Country Code: '.$country_code.'<br/>'; 
+			    // echo 'Region Code: '.$region_code.'<br/>'; 
+			    // echo 'Region Name: '.$region_name.'<br/>'; 
+			    // echo 'City: '.$city.'<br/>'; 
+			    // echo 'Zipcode: '.$zip_code.'<br/>'; 
+			    // echo 'Latitude: '.$latitude.'<br/>'; 
+			    // echo 'Longitude: '.$longitude.'<br/>'; 
+			    // echo 'Time Zone: '.$time_zone; 
 			    return $ipData;
-			}else{
+			}else{ 
 			    // echo 'IP data is not found!';
-			    return null;
-			}
-
+			    return null; 
+			} 
+			 
 		}
 
 		public function getNbreDossierTransmisFacture($id_trans_fact){
@@ -7236,13 +7236,13 @@
 		}
 
 		public function getFactureDossierTransmis($id_trans_fact){
-
+			
 			include('connexion.php');
 			$entree['id_trans_fact'] = $id_trans_fact;
 			$compteur=0;
-			$requete = $connexion-> prepare("SELECT fd.ref_fact AS ref_fact, fd.id_cli AS id_cli,
+			$requete = $connexion-> prepare("SELECT fd.ref_fact AS ref_fact, fd.id_cli AS id_cli, 
 													fd.type_fact AS type_fact
-											FROM facture_dossier fd, transmis_facture_dossier trans,
+											FROM facture_dossier fd, transmis_facture_dossier trans, 
 												detail_transmis_facture_dossier det
 											WHERE trans.id_trans_fact = ?
 												AND trans.id_trans_fact = det.id_trans_fact
@@ -7253,7 +7253,7 @@
 
 			while($reponse = $requete-> fetch()){
 				$compteur++;
-
+				
 					if ($reponse['id_cli'] == 883 || $reponse['id_cli'] == 898) {
 				?>
 					<a class="dropdown-item" onclick="window.open('generateurFactureGlobale.php?ref_fact=<?php echo $reponse['ref_fact'];?>','pop1','width=1000,height=800');" title="Générer la facture">
@@ -7310,11 +7310,11 @@
 													cl.adr_cli AS adr_cli,
 													fd.validation AS validation,
 													fd.taux_commission AS taux_commission
-												FROM client cl, facture_dossier fd, detail_facture_dossier det, marchandise march,
+												FROM client cl, facture_dossier fd, detail_facture_dossier det, marchandise march, 
 													dossier dos, banque b, compte_bancaire cb
 												WHERE fd.ref_fact = ?
 													AND fd.ref_fact = det.ref_fact
-													AND det.id_dos = dos.id_dos
+													AND det.id_dos = dos.id_dos 
 													AND dos.id_march = march.id_march
 													AND fd.id_cli = cl.id_cli
 													AND fd.num_cmpt = cb.num_cmpt
@@ -7381,8 +7381,8 @@
 			include('connexion.php');
 			$entree['ref_fact'] = $ref_fact;
 
-			$requete = $connexion-> prepare("SELECT IF(COUNT(DISTINCT(march.id_march))>1,
-														'DIVERSES MARCHANDISES',
+			$requete = $connexion-> prepare("SELECT IF(COUNT(DISTINCT(march.id_march))>1, 
+														'DIVERSES MARCHANDISES', 
 														UPPER(march.nom_march)
 													) AS nom_march,
 													march.id_march AS id_march
@@ -7412,7 +7412,7 @@
 					return $reponse;
 				}
 			}
-
+			
 		}
 
 		public function getDossierFacturePartielle($ref_fact){
@@ -7441,7 +7441,7 @@
 			}else{
 				return false;
 			}
-
+			
 		}
 
 		public function getDossierFacture2($id_dos){
@@ -7460,15 +7460,15 @@
 			}else{
 				return false;
 			}
-
+			
 		}
 
 		public function getFournisseurFacture($ref_fact){
 			include('connexion.php');
 			$entree['ref_fact'] = $ref_fact;
 
-			$requete = $connexion-> prepare("SELECT IF(COUNT(DISTINCT(dos.supplier))>1 OR dos.supplier IS NULL,
-														'FOURNISSEURS MULTIPLES',
+			$requete = $connexion-> prepare("SELECT IF(COUNT(DISTINCT(dos.supplier))>1 OR dos.supplier IS NULL, 
+														'FOURNISSEURS MULTIPLES', 
 														UPPER(dos.supplier)
 													) AS supplier
 												FROM facture_dossier f, detail_facture_dossier df, dossier dos
@@ -7484,8 +7484,8 @@
 			include('connexion.php');
 			$entree['ref_fact'] = $ref_fact;
 
-			$requete = $connexion-> prepare("SELECT IF(COUNT(DISTINCT(dos.commodity))>1 OR dos.commodity IS NULL,
-														'DIVERS MARCHANDISES',
+			$requete = $connexion-> prepare("SELECT IF(COUNT(DISTINCT(dos.commodity))>1 OR dos.commodity IS NULL, 
+														'DIVERS MARCHANDISES', 
 														UPPER(dos.commodity)
 													) AS commodity
 												FROM facture_dossier f, detail_facture_dossier df, dossier dos
@@ -7545,19 +7545,19 @@
 													det.tva AS tva,
 													d.abr_deb AS abr_deb,
 													SUM(det.montant) AS ht,
-													SUM(
-														IF(det.usd="1",
+													SUM( 
+														IF(det.usd="1", 
 															0,
 															det.montant
-														)
+														) 
 													) AS ht_cdf,
-													SUM(
-														IF(det.usd="1",
+													SUM( 
+														IF(det.usd="1", 
 															det.montant,
 															(det.montant/dos.roe_decl)
-														)
+														) 
 													) AS ht_usd,
-													IF(det.detail IS NOT NULL,
+													IF(det.detail IS NOT NULL, 
 														CONCAT(": ", det.detail),
 														""
 													) AS detail,
@@ -7709,24 +7709,24 @@
 													det.tva AS tva,
 													d.abr_deb AS abr_deb,
 													SUM(det.montant) AS ht,
-													SUM(
-														IF(det.usd="1",
+													SUM( 
+														IF(det.usd="1", 
 															0,
 															det.montant
-														)
+														) 
 													) AS ht_cdf,
-													SUM(
-														IF(det.usd="1",
+													SUM( 
+														IF(det.usd="1", 
 															det.montant,
 															(det.montant/dos.roe_decl)
-														)
+														) 
 													) AS ht_usd,
 													SUM(
-														IF(det.usd="1",
+														IF(det.usd="1", 
 															IF(det.tva="1",
 																det.montant*1.16,
 																det.montant
-															),
+															), 
 															IF(det.tva="1",
 																(det.montant/dos.roe_decl)*1.16,
 																(det.montant/dos.roe_decl)
@@ -7734,18 +7734,18 @@
 														)
 													) AS ttc_usd,
 													SUM(
-														IF(det.usd="1",
+														IF(det.usd="1", 
 															IF(det.tva="1",
 																det.montant*0.16,
 																0
-															),
+															), 
 															IF(det.tva="1",
 																(det.montant/dos.roe_decl)*0.16,
 																0
 															)
 														)
 													) AS tva_usd,
-													IF(det.detail IS NOT NULL,
+													IF(det.detail IS NOT NULL, 
 														CONCAT(": ", det.detail),
 														""
 													) AS detail,
@@ -7769,7 +7769,7 @@
 				}
 
 				if ($reponse['id_deb']=='1' || $reponse['id_deb']=='2' || $reponse['id_deb']=='3' || $reponse['id_deb']=='4' || $reponse['id_deb']=='5' || $reponse['id_deb']=='6' || $reponse['id_deb']=='7' || $reponse['id_deb']=='8') {
-
+					
 					$unite = number_format($reponse['poids'], 2, ',', ' ');
 
 				}else if($reponse['id_deb']=='11' && $reponse['poids']<30){
@@ -7875,38 +7875,38 @@
 													-- 	"TRANSIT") AS cleared
 													"CLEARED" AS cleared,
 													SUM(
-														IF(det.usd="0" AND d.id_t_deb="1",
+														IF(det.usd="0" AND d.id_t_deb="1", 
 															IF(det.tva="1",
 																IF(det.montant_tva>0,
 																	(det.montant_tva+det.montant),
 																	(det.montant*0.16)
 																),
 																det.montant
-															),
+															), 
 															0
 														)
 													) AS liquidation_cdf,
 													SUM(
-														IF(det.usd="0" AND d.id_t_deb="1",
+														IF(det.usd="0" AND d.id_t_deb="1", 
 															IF(det.tva="1",
 																IF(det.montant_tva>0,
 																	(det.montant_tva+det.montant)/dos.roe_decl,
 																	(det.montant*0.16)/dos.roe_decl
 																),
 																det.montant/dos.roe_decl
-															),
+															), 
 															0
 														)
 													) AS liquidation_usd,
 													SUM(
-														IF(det.usd="0" AND d.id_t_deb="1",
+														IF(det.usd="0" AND d.id_t_deb="1", 
 															IF(det.tva="1",
 																IF(det.montant_tva>0,
 																	((det.montant_tva+det.montant)/dos.roe_decl)/dos.poids,
 																	(det.montant*0.16)/dos.roe_decl
 																),
 																(det.montant/dos.roe_decl)/dos.poids
-															),
+															), 
 															0
 														)
 													) AS liquidation_usd_per_ton
@@ -7949,7 +7949,7 @@
 			}$requete-> closeCursor();
 
 			$tbl .= '
-					<tr>
+					<tr>				
 						<td width="48%" style="text-align: center; border: 1 solid black; font-size: 6px;"></td>
 						<td width="4%" style="text-align: center; border: 1 solid black; font-size: 6px;">'.number_format($total_poids, 3, ',', '.').'</td>
 						<td width="12%" style="text-align: center; border: 1 solid black; font-size: 6px;"></td>
@@ -7992,38 +7992,38 @@
 													-- 	"TRANSIT") AS cleared
 													"CLEARED" AS cleared,
 													SUM(
-														IF(det.usd="0" AND d.id_t_deb="1",
+														IF(det.usd="0" AND d.id_t_deb="1", 
 															IF(det.tva="1",
 																IF(det.montant_tva>0,
 																	(det.montant_tva+det.montant),
 																	(det.montant*0.16)
 																),
 																det.montant
-															),
+															), 
 															0
 														)
 													) AS liquidation_cdf,
 													SUM(
-														IF(det.usd="0" AND d.id_t_deb="1",
+														IF(det.usd="0" AND d.id_t_deb="1", 
 															IF(det.tva="1",
 																IF(det.montant_tva>0,
 																	(det.montant_tva+det.montant)/dos.roe_decl,
 																	(det.montant*0.16)/dos.roe_decl
 																),
 																det.montant/dos.roe_decl
-															),
+															), 
 															0
 														)
 													) AS liquidation_usd,
 													SUM(
-														IF(det.usd="0" AND d.id_t_deb="1",
+														IF(det.usd="0" AND d.id_t_deb="1", 
 															IF(det.tva="1",
 																IF(det.montant_tva>0,
 																	((det.montant_tva+det.montant)/dos.roe_decl)/dos.poids,
 																	(det.montant*0.16)/dos.roe_decl
 																),
 																(det.montant/dos.roe_decl)/dos.poids
-															),
+															), 
 															0
 														)
 													) AS liquidation_usd_per_ton
@@ -8059,7 +8059,7 @@
 			}$requete-> closeCursor();
 
 			$tbl .= '
-					<tr>
+					<tr>				
 						<td width="69%" style="text-align: center; border: 1 solid black; font-size: 7px;"></td>
 						<td width="7%" style="text-align: center; border: 1 solid black; font-size: 7px;">'.number_format($total_poids, 3, ',', '.').'</td>
 						<td width="24%" style="text-align: center; border: 1 solid black; font-size: 7px;"></td>
@@ -8126,7 +8126,7 @@
 			}$requete-> closeCursor();
 
 			$tbl .= '
-					<tr>
+					<tr>				
 						<td width="69%" style="text-align: center; border: 1 solid black; font-size: 7px;"></td>
 						<td width="7%" style="text-align: center; border: 1 solid black; font-size: 7px;">'.number_format($total_poids, 3, ',', '.').'</td>
 						<td width="24%" style="text-align: center; border: 1 solid black; font-size: 7px;"></td>
@@ -8167,38 +8167,38 @@
 													-- 	"TRANSIT") AS cleared
 													"CLEARED" AS cleared,
 													SUM(
-														IF(det.usd="0" AND d.id_t_deb="1",
+														IF(det.usd="0" AND d.id_t_deb="1", 
 															IF(det.tva="1",
 																IF(det.montant_tva>0,
 																	(det.montant_tva+det.montant),
 																	(det.montant*0.16)
 																),
 																det.montant
-															),
+															), 
 															0
 														)
 													) AS liquidation_cdf,
 													SUM(
-														IF(det.usd="0" AND d.id_t_deb="1",
+														IF(det.usd="0" AND d.id_t_deb="1", 
 															IF(det.tva="1",
 																IF(det.montant_tva>0,
 																	(det.montant_tva+det.montant)/dos.roe_decl,
 																	(det.montant*0.16)/dos.roe_decl
 																),
 																det.montant/dos.roe_decl
-															),
+															), 
 															0
 														)
 													) AS liquidation_usd,
 													SUM(
-														IF(det.usd="0" AND d.id_t_deb="1",
+														IF(det.usd="0" AND d.id_t_deb="1", 
 															IF(det.tva="1",
 																IF(det.montant_tva>0,
 																	((det.montant_tva+det.montant)/dos.roe_decl)/dos.poids,
 																	(det.montant*0.16)/dos.roe_decl
 																),
 																(det.montant/dos.roe_decl)/dos.poids
-															),
+															), 
 															0
 														)
 													) AS liquidation_usd_per_ton
@@ -8236,7 +8236,7 @@
 			}$requete-> closeCursor();
 
 			$tbl .= '
-					<tr>
+					<tr>				
 						<td width="73%" style="text-align: center; border: 1 solid black; font-size: 7px;"></td>
 						<td width="6%" style="text-align: center; border: 1 solid black; font-size: 7px;">'.number_format($total_poids, 3, ',', '.').'</td>
 						<td width="21%" style="text-align: center; border: 1 solid black; font-size: 7px;"></td>
@@ -8282,38 +8282,38 @@
 													-- 	"TRANSIT") AS cleared
 													"CLEARED" AS cleared,
 													SUM(
-														IF(det.usd="0" AND d.id_t_deb="1",
+														IF(det.usd="0" AND d.id_t_deb="1", 
 															IF(det.tva="1",
 																IF(det.montant_tva>0,
 																	(det.montant_tva+det.montant),
 																	(det.montant*0.16)
 																),
 																det.montant
-															),
+															), 
 															0
 														)
 													) AS liquidation_cdf,
 													SUM(
-														IF(det.usd="0" AND d.id_t_deb="1",
+														IF(det.usd="0" AND d.id_t_deb="1", 
 															IF(det.tva="1",
 																IF(det.montant_tva>0,
 																	(det.montant_tva+det.montant)/dos.roe_decl,
 																	(det.montant*0.16)/dos.roe_decl
 																),
 																det.montant/dos.roe_decl
-															),
+															), 
 															0
 														)
 													) AS liquidation_usd,
 													SUM(
-														IF(det.usd="0" AND d.id_t_deb="1",
+														IF(det.usd="0" AND d.id_t_deb="1", 
 															IF(det.tva="1",
 																IF(det.montant_tva>0,
 																	((det.montant_tva+det.montant)/dos.roe_decl)/dos.poids,
 																	(det.montant*0.16)/dos.roe_decl
 																),
 																(det.montant/dos.roe_decl)/dos.poids
-															),
+															), 
 															0
 														)
 													) AS liquidation_usd_per_ton
@@ -8360,7 +8360,7 @@
 			}$requete-> closeCursor();
 
 			// $tbl .= '
-			// 		<tr>
+			// 		<tr>				
 			// 			<td width="48%" style="text-align: center; border: 1 solid black; font-size: 6px;"></td>
 			// 			<td width="4%" style="text-align: center; border: 1 solid black; font-size: 6px;">'.number_format($total_poids, 3, ',', '.').'</td>
 			// 			<td width="12%" style="text-align: center; border: 1 solid black; font-size: 6px;"></td>
@@ -8413,14 +8413,14 @@
 														dos.montant_liq
 														,
 														SUM(
-															IF(det.usd="0" AND d.id_t_deb="1",
+															IF(det.usd="0" AND d.id_t_deb="1", 
 																IF(det.tva="1",
 																	IF(det.montant_tva>0,
 																		(det.montant_tva+det.montant),
 																		(det.montant*0.16)
 																	),
 																	det.montant
-																),
+																), 
 																0
 															)
 														)
@@ -8429,27 +8429,27 @@
 														dos.montant_liq/dos.roe_decl
 														,
 														SUM(
-															IF(det.usd="0" AND d.id_t_deb="1",
+															IF(det.usd="0" AND d.id_t_deb="1", 
 																IF(det.tva="1",
 																	IF(det.montant_tva>0,
 																		(det.montant_tva+det.montant)/dos.roe_decl,
 																		(det.montant*0.16)/dos.roe_decl
 																	),
 																	det.montant/dos.roe_decl
-																),
+																), 
 																0
 															)
 														)
 													) AS liquidation_usd,
 													SUM(
-														IF(det.usd="0" AND d.id_t_deb="1",
+														IF(det.usd="0" AND d.id_t_deb="1", 
 															IF(det.tva="1",
 																IF(det.montant_tva>0,
 																	((det.montant_tva+det.montant)/dos.roe_decl)/dos.poids,
 																	(det.montant*0.16)/dos.roe_decl
 																),
 																(det.montant/dos.roe_decl)/dos.poids
-															),
+															), 
 															0
 														)
 													) AS liquidation_usd_per_ton
@@ -8493,7 +8493,7 @@
 			}$requete-> closeCursor();
 
 			// $tbl .= '
-			// 		<tr>
+			// 		<tr>				
 			// 			<td width="48%" style="text-align: center; border: 1 solid black; font-size: 6px;"></td>
 			// 			<td width="4%" style="text-align: center; border: 1 solid black; font-size: 6px;">'.number_format($total_poids, 3, ',', '.').'</td>
 			// 			<td width="12%" style="text-align: center; border: 1 solid black; font-size: 6px;"></td>
@@ -8546,14 +8546,14 @@
 														dos.montant_liq
 														,
 														SUM(
-															IF(det.usd="0" AND d.id_t_deb="1",
+															IF(det.usd="0" AND d.id_t_deb="1", 
 																IF(det.tva="1",
 																	IF(det.montant_tva>0,
 																		(det.montant_tva+det.montant),
 																		(det.montant*0.16)
 																	),
 																	det.montant
-																),
+																), 
 																0
 															)
 														)
@@ -8562,27 +8562,27 @@
 														dos.montant_liq/dos.roe_decl
 														,
 														SUM(
-															IF(det.usd="0" AND d.id_t_deb="1",
+															IF(det.usd="0" AND d.id_t_deb="1", 
 																IF(det.tva="1",
 																	IF(det.montant_tva>0,
 																		(det.montant_tva+det.montant)/dos.roe_decl,
 																		(det.montant*0.16)/dos.roe_decl
 																	),
 																	det.montant/dos.roe_decl
-																),
+																), 
 																0
 															)
 														)
 													) AS liquidation_usd,
 													SUM(
-														IF(det.usd="0" AND d.id_t_deb="1",
+														IF(det.usd="0" AND d.id_t_deb="1", 
 															IF(det.tva="1",
 																IF(det.montant_tva>0,
 																	((det.montant_tva+det.montant)/dos.roe_decl)/dos.poids,
 																	(det.montant*0.16)/dos.roe_decl
 																),
 																(det.montant/dos.roe_decl)/dos.poids
-															),
+															), 
 															0
 														)
 													) AS liquidation_usd_per_ton,
@@ -8631,7 +8631,7 @@
 
 			}$requete-> closeCursor();
 
-
+			
 			$tbl .= '
 					<tr>
 						<td width="24%" style="text-align: center; border: 1 solid black; font-size: 7px;">Total</td>
@@ -8678,38 +8678,38 @@
 													-- 	"TRANSIT") AS cleared
 													"CLEARED" AS cleared,
 													SUM(
-														IF(det.usd="0" AND d.id_t_deb="1",
+														IF(det.usd="0" AND d.id_t_deb="1", 
 															IF(det.tva="1",
 																IF(det.montant_tva>0,
 																	(det.montant_tva+det.montant),
 																	(det.montant*0.16)
 																),
 																det.montant
-															),
+															), 
 															0
 														)
 													) AS liquidation_cdf,
 													SUM(
-														IF(det.usd="0" AND d.id_t_deb="1",
+														IF(det.usd="0" AND d.id_t_deb="1", 
 															IF(det.tva="1",
 																IF(det.montant_tva>0,
 																	(det.montant_tva+det.montant)/dos.roe_decl,
 																	(det.montant*0.16)/dos.roe_decl
 																),
 																det.montant/dos.roe_decl
-															),
+															), 
 															0
 														)
 													) AS liquidation_usd,
 													SUM(
-														IF(det.usd="0" AND d.id_t_deb="1",
+														IF(det.usd="0" AND d.id_t_deb="1", 
 															IF(det.tva="1",
 																IF(det.montant_tva>0,
 																	((det.montant_tva+det.montant)/dos.roe_decl)/dos.poids,
 																	(det.montant*0.16)/dos.roe_decl
 																),
 																(det.montant/dos.roe_decl)/dos.poids
-															),
+															), 
 															0
 														)
 													) AS liquidation_usd_per_ton
@@ -8751,7 +8751,7 @@
 			}$requete-> closeCursor();
 
 			// $tbl .= '
-			// 		<tr>
+			// 		<tr>				
 			// 			<td width="48%" style="text-align: center; border: 1 solid black; font-size: 6px;"></td>
 			// 			<td width="4%" style="text-align: center; border: 1 solid black; font-size: 6px;">'.number_format($total_poids, 3, ',', '.').'</td>
 			// 			<td width="12%" style="text-align: center; border: 1 solid black; font-size: 6px;"></td>
@@ -8801,38 +8801,38 @@
 													-- 	"TRANSIT") AS cleared
 													"CLEARED" AS cleared,
 													SUM(
-														IF(det.usd="0" AND d.id_t_deb="1",
+														IF(det.usd="0" AND d.id_t_deb="1", 
 															IF(det.tva="1",
 																IF(det.montant_tva>0,
 																	(det.montant_tva+det.montant),
 																	(det.montant*0.16)
 																),
 																det.montant
-															),
+															), 
 															0
 														)
 													) AS liquidation_cdf,
 													SUM(
-														IF(det.usd="0" AND d.id_t_deb="1",
+														IF(det.usd="0" AND d.id_t_deb="1", 
 															IF(det.tva="1",
 																IF(det.montant_tva>0,
 																	(det.montant_tva+det.montant)/dos.roe_decl,
 																	(det.montant*0.16)/dos.roe_decl
 																),
 																det.montant/dos.roe_decl
-															),
+															), 
 															0
 														)
 													) AS liquidation_usd,
 													SUM(
-														IF(det.usd="0" AND d.id_t_deb="1",
+														IF(det.usd="0" AND d.id_t_deb="1", 
 															IF(det.tva="1",
 																IF(det.montant_tva>0,
 																	((det.montant_tva+det.montant)/dos.roe_decl)/dos.poids,
 																	(det.montant*0.16)/dos.roe_decl
 																),
 																(det.montant/dos.roe_decl)/dos.poids
-															),
+															), 
 															0
 														)
 													) AS liquidation_usd_per_ton
@@ -8876,7 +8876,7 @@
 			}$requete-> closeCursor();
 
 			// $tbl .= '
-			// 		<tr>
+			// 		<tr>				
 			// 			<td width="48%" style="text-align: center; border: 1 solid black; font-size: 6px;"></td>
 			// 			<td width="4%" style="text-align: center; border: 1 solid black; font-size: 6px;">'.number_format($total_poids, 3, ',', '.').'</td>
 			// 			<td width="12%" style="text-align: center; border: 1 solid black; font-size: 6px;"></td>
@@ -8924,7 +8924,7 @@
 				$total_poids+=$reponse['poids'];
 
 				$tbl .= '
-						<tr>
+						<tr>				
 							<td width="5%" style=""></td>
 							<td width="3%" style="text-align: center; border: 1 solid black;">'.$compteur.'</td>
 							<td width="10%" style="text-align: center; border: 1 solid black;">'.$reponse['ref_dos'].'</td>
@@ -8945,7 +8945,7 @@
 			}$requete-> closeCursor();
 
 			$tbl .= '
-					<tr>
+					<tr>				
 						<td width="5%" style=""></td>
 						<td width="61%" style="text-align: center; border: 1 solid black;"></td>
 						<td width="7%" style="text-align: center; border: 1 solid black;">'.$total_poids.'</td>
@@ -8996,7 +8996,7 @@
 				$total_poids+=$reponse['poids'];
 
 				$tbl .= '
-						<tr>
+						<tr>				
 							<td width="5%" style=""></td>
 							<td width="3%" style="text-align: center; border: 1 solid black;">'.$compteur.'</td>
 							<td width="10%" style="text-align: center; border: 1 solid black;">'.$reponse['ref_dos'].'</td>
@@ -9015,7 +9015,7 @@
 			}$requete-> closeCursor();
 
 			$tbl .= '
-					<tr>
+					<tr>				
 						<td width="5%" style="text-align: right;"></td>
 						<td width="73%" style="text-align: center; border: 1 solid black;">Total</td>
 						<td width="10%" style="text-align: center; border: 1 solid black;">'.$total_poids.'</td>
@@ -9082,24 +9082,24 @@
 													det.usd AS usd,
 													d.abr_deb AS abr_deb,
 													SUM(det.montant) AS ht,
-													SUM(
-														IF(det.usd="1",
+													SUM( 
+														IF(det.usd="1", 
 															0,
 															det.montant
-														)
+														) 
 													) AS ht_cdf,
-													SUM(
-														IF(det.usd="1",
+													SUM( 
+														IF(det.usd="1", 
 															det.montant,
 															(det.montant/dos.roe_decl)
-														)
+														) 
 													) AS ht_usd,
 													SUM(
-														IF(det.usd="1",
+														IF(det.usd="1", 
 															IF(det.tva="1",
 																det.montant*1.16,
 																det.montant
-															),
+															), 
 															IF(det.tva="1",
 																(det.montant/dos.roe_decl)*1.16,
 																(det.montant/dos.roe_decl)
@@ -9107,18 +9107,18 @@
 														)
 													) AS ttc_usd,
 													SUM(
-														IF(det.usd="1",
+														IF(det.usd="1", 
 															IF(det.tva="1",
 																det.montant*0.16,
 																0
-															),
+															), 
 															IF(det.tva="1",
 																(det.montant/dos.roe_decl)*0.16,
 																0
 															)
 														)
 													) AS tva_usd,
-													IF(det.detail IS NOT NULL,
+													IF(det.detail IS NOT NULL, 
 														CONCAT(": ", det.detail),
 														""
 													) AS detail,
@@ -9143,7 +9143,7 @@
 				}
 
 				if ($reponse['id_deb']=='1' || $reponse['id_deb']=='2' || $reponse['id_deb']=='3' || $reponse['id_deb']=='4' || $reponse['id_deb']=='5' || $reponse['id_deb']=='6' || $reponse['id_deb']=='7' || $reponse['id_deb']=='8') {
-
+					
 					$unite = number_format($reponse['nbre_poids'], 3, ',', ' ');
 					$unite_2 = $reponse['nbre_poids'];
 
@@ -9172,7 +9172,7 @@
 					$cost = $reponse['ht_usd']/$unite_2;
 					$cost_2 = number_format($cost, 2, ',', '.');
 				}
-
+				
 				if($reponse['id_deb']=='54'){
 					$unite = number_format($this-> getMontantFactureTypeDeboursSansFinancialCost($ref_fact, '1'), 2, ',', '.');
 					$cost = '1,50%';
@@ -9304,24 +9304,24 @@
 													det.tva AS tva,
 													d.abr_deb AS abr_deb,
 													SUM(det.montant) AS ht,
-													SUM(
-														IF(det.usd="1",
+													SUM( 
+														IF(det.usd="1", 
 															0,
 															det.montant
-														)
+														) 
 													) AS ht_cdf,
-													SUM(
-														IF(det.usd="1",
+													SUM( 
+														IF(det.usd="1", 
 															det.montant,
 															(det.montant/dos.roe_decl)
-														)
+														) 
 													) AS ht_usd,
 													SUM(
-														IF(det.usd="1",
+														IF(det.usd="1", 
 															IF(det.tva="1",
 																det.montant*1.16,
 																det.montant
-															),
+															), 
 															IF(det.tva="1",
 																(det.montant/dos.roe_decl)*1.16,
 																(det.montant/dos.roe_decl)
@@ -9329,18 +9329,18 @@
 														)
 													) AS ttc_usd,
 													SUM(
-														IF(det.usd="1",
+														IF(det.usd="1", 
 															IF(det.tva="1",
 																det.montant*0.16,
 																0
-															),
+															), 
 															IF(det.tva="1",
 																(det.montant/dos.roe_decl)*0.16,
 																0
 															)
 														)
 													) AS tva_usd,
-													IF(det.detail IS NOT NULL,
+													IF(det.detail IS NOT NULL, 
 														CONCAT(": ", det.detail),
 														""
 													) AS detail,
@@ -9364,7 +9364,7 @@
 				}
 
 				if ($reponse['id_deb']=='1' || $reponse['id_deb']=='2' || $reponse['id_deb']=='3' || $reponse['id_deb']=='4' || $reponse['id_deb']=='5' || $reponse['id_deb']=='6' || $reponse['id_deb']=='7' || $reponse['id_deb']=='8') {
-
+					
 					$unite = number_format($reponse['nbre_poids'], 3, ',', ' ');
 					$unite_2 = $reponse['nbre_poids'];
 
@@ -9386,7 +9386,7 @@
 					$cost = $reponse['ht_usd']/$unite_2;
 					$cost_2 = number_format($cost, 2, ',', '.');
 				}
-
+				
 				if($reponse['id_deb']=='54'){
 					$unite = number_format($this-> getMontantFactureTypeDeboursSansFinancialCost($ref_fact, '1'), 2, ',', '.');
 					$cost = '1,50%';
@@ -9663,7 +9663,7 @@
 			$unite = 0;
 			$cost = 0;
 			$unite = $this-> getLicence($this-> getFactureGlobale($ref_fact)['num_lic'])['poids'];
-
+			
 			$tbl = '
 					<tr>
 						<td style="text-align: left; font-weight: bold; border-left: 1px solid black; border-right: 0.5px solid black;" colspan="2" width="49%"></td>
@@ -9706,24 +9706,24 @@
 													det.tva AS tva,
 													d.abr_deb AS abr_deb,
 													SUM(det.montant) AS ht,
-													SUM(
-														IF(det.usd="1",
+													SUM( 
+														IF(det.usd="1", 
 															0,
 															det.montant
-														)
+														) 
 													) AS ht_cdf,
-													SUM(
-														IF(det.usd="1",
+													SUM( 
+														IF(det.usd="1", 
 															det.montant,
 															(det.montant/dos.roe_decl)
-														)
+														) 
 													) AS ht_usd,
 													SUM(
-														IF(det.usd="1",
+														IF(det.usd="1", 
 															IF(det.tva="1",
 																det.montant*1.16,
 																det.montant
-															),
+															), 
 															IF(det.tva="1",
 																(det.montant/dos.roe_decl)*1.16,
 																(det.montant/dos.roe_decl)
@@ -9731,18 +9731,18 @@
 														)
 													) AS ttc_usd,
 													SUM(
-														IF(det.usd="1",
+														IF(det.usd="1", 
 															IF(det.tva="1",
 																det.montant*0.16,
 																0
-															),
+															), 
 															IF(det.tva="1",
 																(det.montant/dos.roe_decl)*0.16,
 																0
 															)
 														)
 													) AS tva_usd,
-													IF(det.detail IS NOT NULL,
+													IF(det.detail IS NOT NULL, 
 														CONCAT(": ", det.detail),
 														""
 													) AS detail,
@@ -9850,40 +9850,40 @@
 						<td style="text-align: right; border-right: 1px solid black;" width="11.5%"></td>
 					</tr>
 					';
-			$requete = $connexion-> prepare('SELECT dos.ref_dos AS ref_dos,
+			$requete = $connexion-> prepare('SELECT dos.ref_dos AS ref_dos, 
 													det.montant AS ht,
-													IF(det.usd="1",
+													IF(det.usd="1", 
 														0,
 														det.montant
 													) AS ht_cdf,
-
-													IF(det.usd="1",
+													 
+													IF(det.usd="1", 
 														det.montant,
 														(det.montant/dos.roe_decl)
 													) AS ht_usd,
-
-													IF(det.usd="1",
+													
+													IF(det.usd="1", 
 														IF(det.tva="1",
 															det.montant*1.16,
 															det.montant
-														),
+														), 
 														IF(det.tva="1",
 															(det.montant/dos.roe_decl)*1.16,
 															(det.montant/dos.roe_decl)
 														)
 													) AS ttc_usd,
-
-													IF(det.usd="1",
+													
+													IF(det.usd="1", 
 														IF(det.tva="1",
 															det.montant*0.16,
 															0
-														),
+														), 
 														IF(det.tva="1",
 															(det.montant/dos.roe_decl)*0.16,
 															0
 														)
 													) AS tva_usd,
-													IF(det.detail IS NOT NULL,
+													IF(det.detail IS NOT NULL, 
 														CONCAT(": ", det.detail),
 														""
 													) AS detail,
@@ -9894,7 +9894,7 @@
 													AND det.id_dos = dos.id_dos');
 			$requete-> execute(array($entree['ref_fact']));
 			while($reponse = $requete-> fetch()){
-
+				
 				$total_cost += $cost;
 				$sub_total += $reponse['ht_usd'];
 				$total_tva += $reponse['tva_usd'];
@@ -9981,52 +9981,52 @@
 						<td style="text-align: right; border-right: 1px solid black;" width="11.5%"></td>
 					</tr>
 					';
-			$requete = $connexion-> prepare('SELECT dos.ref_dos AS ref_dos,
+			$requete = $connexion-> prepare('SELECT dos.ref_dos AS ref_dos, 
 													det.montant AS ht,
-													IF(det.usd="1",
+													IF(det.usd="1", 
 														0,
 														det.montant
 													) AS ht_cdf,
-
-													IF(det.usd="1",
+													 
+													IF(det.usd="1", 
 														det.montant,
 														(det.montant/dos.roe_decl)
 													) AS ht_usd,
-
-													IF(det.usd="1",
+													
+													IF(det.usd="1", 
 														IF(det.tva="1",
 															det.montant*1.16*det.unite,
 															det.montant*det.unite
-														),
+														), 
 														IF(det.tva="1",
 															(det.montant/dos.roe_decl)*1.16*det.unite,
 															(det.montant/dos.roe_decl)*det.unite
 														)
 													) AS ttc_usd,
-
-													IF(det.usd="1",
+													
+													IF(det.usd="1", 
 														IF(det.tva="1",
 															det.montant*0.16,
 															0
-														),
+														), 
 														IF(det.tva="1",
 															(det.montant/dos.roe_decl)*0.16,
 															0
 														)
 													) AS tva_usd,
-													IF(det.detail IS NOT NULL,
+													IF(det.detail IS NOT NULL, 
 														CONCAT(": ", det.detail),
 														""
 													) AS detail,
 													det.unite AS unite,
-													dos.poids AS poids,
+													dos.poids AS poids, 
 													det.detail AS detail
 												FROM detail_facture_dossier det, dossier dos
 												WHERE det.ref_fact = ?
 													AND det.id_dos = dos.id_dos');
 			$requete-> execute(array($entree['ref_fact']));
 			while($reponse = $requete-> fetch()){
-
+				
 				$total_cost += $cost;
 				$sub_total += $reponse['ht_usd'];
 				$total_tva += $reponse['tva_usd'];
@@ -10127,44 +10127,44 @@
 						<td style="text-align: right; border-right: 1px solid black;" width="11.5%"></td>
 					</tr>
 					';
-			$requete = $connexion-> prepare('SELECT dos.ref_dos AS ref_dos,
+			$requete = $connexion-> prepare('SELECT dos.ref_dos AS ref_dos, 
 													dos.ref_fact AS ref_fact,
 													dos.horse AS horse,
 													dos.po_ref AS po_ref,
 													dos.poids AS poids,
 													det.montant AS ht,
-													IF(det.usd="1",
+													IF(det.usd="1", 
 														0,
 														det.montant
 													) AS ht_cdf,
-
-													IF(det.usd="1",
+													 
+													IF(det.usd="1", 
 														det.montant,
 														(det.montant/dos.roe_decl)
 													) AS ht_usd,
-
-													IF(det.usd="1",
+													
+													IF(det.usd="1", 
 														IF(det.tva="1",
 															det.montant*1.16,
 															det.montant
-														),
+														), 
 														IF(det.tva="1",
 															(det.montant/dos.roe_decl)*1.16,
 															(det.montant/dos.roe_decl)
 														)
 													) AS ttc_usd,
-
-													IF(det.usd="1",
+													
+													IF(det.usd="1", 
 														IF(det.tva="1",
 															det.montant*0.16,
 															0
-														),
+														), 
 														IF(det.tva="1",
 															(det.montant/dos.roe_decl)*0.16,
 															0
 														)
 													) AS tva_usd,
-													IF(det.detail IS NOT NULL,
+													IF(det.detail IS NOT NULL, 
 														CONCAT(": ", det.detail),
 														""
 													) AS detail,
@@ -10175,7 +10175,7 @@
 													AND det.id_dos = dos.id_dos');
 			$requete-> execute(array($entree['ref_fact']));
 			while($reponse = $requete-> fetch()){
-
+				
 				$total_cost += $reponse['ht_usd']*$unite;
 				$sub_total += $reponse['ht_usd'];
 				$total_tva += $reponse['tva_usd'];
@@ -10297,24 +10297,24 @@
 													det.tva AS tva,
 													d.abr_deb AS abr_deb,
 													SUM(det.montant) AS ht,
-													SUM(
-														IF(det.usd="1",
+													SUM( 
+														IF(det.usd="1", 
 															0,
 															det.montant
-														)
+														) 
 													) AS ht_cdf,
-													SUM(
-														IF(det.usd="1",
+													SUM( 
+														IF(det.usd="1", 
 															det.montant,
 															(det.montant/dos.roe_decl)
-														)
+														) 
 													) AS ht_usd,
 													SUM(
-														IF(det.usd="1",
+														IF(det.usd="1", 
 															IF(det.tva="1",
 																det.montant*1.16,
 																det.montant
-															),
+															), 
 															IF(det.tva="1",
 																(det.montant/dos.roe_decl)*1.16,
 																(det.montant/dos.roe_decl)
@@ -10322,18 +10322,18 @@
 														)
 													) AS ttc_usd,
 													SUM(
-														IF(det.usd="1",
+														IF(det.usd="1", 
 															IF(det.tva="1",
 																det.montant*0.16,
 																0
-															),
+															), 
 															IF(det.tva="1",
 																(det.montant/dos.roe_decl)*0.16,
 																0
 															)
 														)
 													) AS tva_usd,
-													IF(det.detail IS NOT NULL,
+													IF(det.detail IS NOT NULL, 
 														CONCAT(": ", det.detail),
 														""
 													) AS detail,
@@ -10357,7 +10357,7 @@
 				}
 
 				if ($reponse['id_deb']=='1' || $reponse['id_deb']=='2' || $reponse['id_deb']=='3' || $reponse['id_deb']=='4' || $reponse['id_deb']=='5' || $reponse['id_deb']=='6' || $reponse['id_deb']=='7' || $reponse['id_deb']=='8') {
-
+					
 					$unite = number_format($reponse['nbre_poids'], 3, ',', ' ');
 					$unite_2 = $reponse['nbre_poids'];
 
@@ -10379,7 +10379,7 @@
 					$cost = $reponse['ht_usd']/$unite_2;
 					$cost_2 = number_format($cost, 2, ',', '.');
 				}
-
+				
 				if($reponse['id_deb']=='54'){
 					$unite = number_format($this-> getMontantFactureTypeDeboursSansFinancialCost($ref_fact, '1'), 2, ',', '.');
 					$cost = '1,50%';
@@ -10474,24 +10474,24 @@
 													det.tva AS tva,
 													d.abr_deb AS abr_deb,
 													SUM(det.montant) AS ht,
-													SUM(
-														IF(det.usd="1",
+													SUM( 
+														IF(det.usd="1", 
 															0,
 															det.montant
-														)
+														) 
 													) AS ht_cdf,
-													SUM(
-														IF(det.usd="1",
+													SUM( 
+														IF(det.usd="1", 
 															det.montant,
 															(det.montant/dos.roe_decl)
-														)
+														) 
 													) AS ht_usd,
 													SUM(
-														IF(det.usd="1",
+														IF(det.usd="1", 
 															IF(det.tva="1",
 																det.montant*1.16,
 																det.montant
-															),
+															), 
 															IF(det.tva="1",
 																(det.montant/dos.roe_decl)*1.16,
 																(det.montant/dos.roe_decl)
@@ -10499,18 +10499,18 @@
 														)
 													) AS ttc_usd,
 													SUM(
-														IF(det.usd="1",
+														IF(det.usd="1", 
 															IF(det.tva="1",
 																det.montant*0.16,
 																0
-															),
+															), 
 															IF(det.tva="1",
 																(det.montant/dos.roe_decl)*0.16,
 																0
 															)
 														)
 													) AS tva_usd,
-													IF(det.detail IS NOT NULL,
+													IF(det.detail IS NOT NULL, 
 														CONCAT(": ", det.detail),
 														""
 													) AS detail,
@@ -10534,7 +10534,7 @@
 				}
 
 				if ($reponse['id_deb']=='1' || $reponse['id_deb']=='2' || $reponse['id_deb']=='3' || $reponse['id_deb']=='4' || $reponse['id_deb']=='5' || $reponse['id_deb']=='6' || $reponse['id_deb']=='7' || $reponse['id_deb']=='8') {
-
+					
 					$unite = number_format($reponse['nbre_poids'], 3, ',', ' ');
 					$unite_2 = $reponse['nbre_poids'];
 
@@ -10556,7 +10556,7 @@
 					$cost = $reponse['ht_usd']/$unite_2;
 					$cost_2 = number_format($cost, 2, ',', '.');
 				}
-
+				
 				if($reponse['id_deb']=='54'){
 					$unite = number_format($this-> getMontantFactureTypeDeboursSansFinancialCost($ref_fact, '1'), 2, ',', '.');
 					$cost = '1,50%';
@@ -10653,24 +10653,24 @@
 													det.tva AS tva,
 													d.abr_deb AS abr_deb,
 													SUM(det.montant) AS ht,
-													SUM(
-														IF(det.usd="1",
+													SUM( 
+														IF(det.usd="1", 
 															0,
 															det.montant
-														)
+														) 
 													) AS ht_cdf,
-													SUM(
-														IF(det.usd="1",
+													SUM( 
+														IF(det.usd="1", 
 															det.montant,
 															(det.montant/dos.roe_decl)
-														)
+														) 
 													) AS ht_usd,
 													SUM(
-														IF(det.usd="1",
+														IF(det.usd="1", 
 															IF(det.tva="1",
 																det.montant*1.16,
 																det.montant
-															),
+															), 
 															IF(det.tva="1",
 																(det.montant/dos.roe_decl)*1.16,
 																(det.montant/dos.roe_decl)
@@ -10678,18 +10678,18 @@
 														)
 													) AS ttc_usd,
 													SUM(
-														IF(det.usd="1",
+														IF(det.usd="1", 
 															IF(det.tva="1",
 																det.montant*0.16,
 																0
-															),
+															), 
 															IF(det.tva="1",
 																(det.montant/dos.roe_decl)*0.16,
 																0
 															)
 														)
 													) AS tva_usd,
-													IF(det.detail IS NOT NULL,
+													IF(det.detail IS NOT NULL, 
 														CONCAT(": ", det.detail),
 														""
 													) AS detail,
@@ -10713,7 +10713,7 @@
 				}
 
 				if ($reponse['id_deb']=='1' || $reponse['id_deb']=='2' || $reponse['id_deb']=='3' || $reponse['id_deb']=='4' || $reponse['id_deb']=='5' || $reponse['id_deb']=='6' || $reponse['id_deb']=='7' || $reponse['id_deb']=='8') {
-
+					
 					$unite = number_format($reponse['nbre_poids'], 3, ',', ' ');
 					$unite_2 = $reponse['nbre_poids'];
 
@@ -10735,7 +10735,7 @@
 					$cost = $reponse['ht_usd']/$unite_2;
 					$cost_2 = number_format($cost, 2, ',', '.');
 				}
-
+				
 				if($reponse['id_deb']=='54'){
 					$unite = number_format($this-> getMontantFactureTypeDeboursSansFinancialCost($ref_fact, '1'), 2, ',', '.');
 					$cost = '1,50%';
@@ -10841,24 +10841,24 @@
 													det.tva AS tva,
 													d.abr_deb AS abr_deb,
 													SUM(det.montant) AS ht,
-													SUM(
-														IF(det.usd="1",
+													SUM( 
+														IF(det.usd="1", 
 															0,
 															det.montant
-														)
+														) 
 													) AS ht_cdf,
-													SUM(
-														IF(det.usd="1",
+													SUM( 
+														IF(det.usd="1", 
 															det.montant,
 															(det.montant/dos.roe_decl)
-														)
+														) 
 													) AS ht_usd,
 													SUM(
-														IF(det.usd="1",
+														IF(det.usd="1", 
 															IF(det.tva="1",
 																det.montant*1.16,
 																det.montant
-															),
+															), 
 															IF(det.tva="1",
 																(det.montant/dos.roe_decl)*1.16,
 																(det.montant/dos.roe_decl)
@@ -10866,18 +10866,18 @@
 														)
 													) AS ttc_usd,
 													SUM(
-														IF(det.usd="1",
+														IF(det.usd="1", 
 															IF(det.tva="1",
 																det.montant*0.16,
 																0
-															),
+															), 
 															IF(det.tva="1",
 																(det.montant/dos.roe_decl)*0.16,
 																0
 															)
 														)
 													) AS tva_usd,
-													IF(det.detail IS NOT NULL,
+													IF(det.detail IS NOT NULL, 
 														CONCAT(": ", det.detail),
 														""
 													) AS detail,
@@ -10902,12 +10902,12 @@
 				}
 
 				if ($reponse['usd_2']=='0') {
-
+					
 					$unite = number_format($reponse['nbre_poids'], 0, ',', ' ');
 					$unite_2 = $reponse['nbre_poids'];
 
 				}else if ($reponse['id_deb']=='1' || $reponse['id_deb']=='2' || $reponse['id_deb']=='3' || $reponse['id_deb']=='4' || $reponse['id_deb']=='5' || $reponse['id_deb']=='6' || $reponse['id_deb']=='7' || $reponse['id_deb']=='8') {
-
+					
 					$unite = number_format($reponse['nbre_poids'], 3, ',', ' ');
 					$unite_2 = $reponse['nbre_poids'];
 
@@ -10929,7 +10929,7 @@
 					$cost = $reponse['ht_usd']/$unite_2;
 					$cost_2 = number_format($cost, 2, ',', '.');
 				}
-
+				
 				if($reponse['id_deb']=='54'){
 					$unite = number_format($this-> getMontantFactureTypeDeboursSansFinancialCost($ref_fact, '1'), 2, ',', '.');
 					$cost = '1,50%';
@@ -11063,30 +11063,30 @@
 																d.nom_deb
 																)
 														) AS nom_deb,
-													-- d.nom_deb AS nom_deb,
+													-- d.nom_deb AS nom_deb, 
 													-- CONCAT(UPPER(SUBSTRING(d.nom_deb,1,1)),LOWER(SUBSTRING(d.nom_deb,2))) AS nom_deb,
 													d.id_deb AS id_deb,
 													det.tva AS tva,
 													d.abr_deb AS abr_deb,
 													SUM(det.montant) AS ht,
-													SUM(
-														IF(det.usd="1",
+													SUM( 
+														IF(det.usd="1", 
 															0,
 															det.montant
-														)
+														) 
 													) AS ht_cdf,
-													SUM(
-														IF(det.usd="1",
+													SUM( 
+														IF(det.usd="1", 
 															det.montant,
 															(det.montant/dos.roe_decl)
-														)
+														) 
 													) AS ht_usd,
 													-- SUM(
-													-- 	IF(det.usd="1",
+													-- 	IF(det.usd="1", 
 													-- 		IF(det.tva="1",
 													-- 			det.montant*1.16,
 													-- 			det.montant
-													-- 		),
+													-- 		), 
 													-- 		IF(det.tva="1",
 													-- 			(det.montant/dos.roe_decl)*1.16,
 													-- 			(det.montant/dos.roe_decl)
@@ -11094,14 +11094,14 @@
 													-- 	)
 													-- ) AS ttc_usd,
 													SUM(
-														IF(det.usd="0",
+														IF(det.usd="0", 
 															IF(det.tva="1",
 																IF(det.montant_tva>0,
 																	(det.montant_tva+det.montant)/dos.roe_decl,
 																	(det.montant*0.16)/dos.roe_decl
 																	),
 																det.montant/dos.roe_decl
-															),
+															), 
 															IF(det.tva="1",
 																det.montant*1.16,
 																det.montant
@@ -11109,14 +11109,14 @@
 														)
 													) AS ttc_usd,
 													SUM(
-														IF(det.usd="0",
+														IF(det.usd="0", 
 															IF(det.tva="1",
 																IF(det.montant_tva>0,
 																	(det.montant_tva+det.montant),
 																	(det.montant*0.16)
 																	),
 																det.montant
-															),
+															), 
 															IF(det.tva="1",
 																(det.montant*1.16)*dos.roe_decl,
 																(det.montant)*dos.roe_decl
@@ -11124,11 +11124,11 @@
 														)
 													) AS ttc_cdf,
 													-- SUM(
-													-- 	IF(det.usd="1",
+													-- 	IF(det.usd="1", 
 													-- 		IF(det.tva="1",
 													-- 			det.montant*0.16,
 													-- 			0
-													-- 		),
+													-- 		), 
 													-- 		IF(det.tva="1",
 													-- 			(det.montant/dos.roe_decl)*0.16,
 													-- 			0
@@ -11136,11 +11136,11 @@
 													-- 	)
 													-- ) AS tva_usd,
 													SUM(
-														IF(det.usd="1",
+														IF(det.usd="1", 
 															IF(det.tva="1",
 																det.montant*0.16,
 																0
-															),
+															), 
 															IF(det.tva="1",
 																IF(det.montant_tva/dos.roe_decl > 0,
 																	det.montant_tva/dos.roe_decl,
@@ -11152,14 +11152,14 @@
 													) AS tva_usd,
 													SUM(
 														IF(d.id_t_deb=1,
-															IF(det.usd="0",
+															IF(det.usd="0", 
 																IF(det.tva="1",
 																	IF(det.montant_tva > 0,
 																		det.montant_tva,
 																		det.montant_tva*0.16
 																		),
 																	0
-																),
+																), 
 																IF(det.tva="1",
 																	(det.montant*dos.roe_decl)*0.16,
 																	0
@@ -11171,7 +11171,7 @@
 															)
 														)
 													) AS tva_cdf,
-													IF(det.detail IS NOT NULL,
+													IF(det.detail IS NOT NULL, 
 														CONCAT(": ", det.detail),
 														""
 													) AS detail,
@@ -11209,7 +11209,7 @@
 					$cost_2 = number_format($reponse['pourcentage_qte'], 2, ',', '.').'%';
 					$unite = 'CIF';
 				}else if ($reponse['id_deb']=='32') {
-
+					
 					$unite = 'CIF';
 
 					if (isset($reponse['pourcentage_qte'])) {
@@ -11222,7 +11222,7 @@
 					$unite_2 = $reponse['nbre_poids'];
 
 				}else if ($reponse['id_deb']=='96') { // DCI
-
+					
 					$unite = 'CIF+Duty';
 					// $cost_2 = number_format(floor($reponse['ht_cdf']/(($this-> getDataDossiersMultipleInvoice($ref_fact)['cif_cdf'])+$this-> getMontantFactureDossierDebours2($ref_fact, 32))*100), 2, ',', '.').'%';
 					$cost_2 = '10,00%';
@@ -11230,32 +11230,32 @@
 					$unite_2 = $reponse['nbre_poids'];
 
 				}else if ($reponse['id_deb']=='95') {
-
+					
 					$unite = 'CIF+Duty';
 					$cost_2 = '1,84%';
 					$unite_2 = $reponse['nbre_poids'];
 
 				}else if ($reponse['id_deb']=='38') {
-
+					
 					$unite = 'CIF';
 					$cost_2 = '2,25%';
 					$unite_2 = $reponse['nbre_poids'];
 
 				}else if ($reponse['id_deb']=='35') {
-
+					
 					$unite = 'CIF';
 					$cost_2 = '0,457%';
 					$unite_2 = $reponse['nbre_poids'];
 
 				}else if ($reponse['id_deb']=='3') {
-
+					
 					$unite = 'CIF+Duty';
 					$cost_2 = $reponse['rls'];
 					$unite_2 = $reponse['nbre_poids'];
 
 				}else if ($reponse['id_deb']=='29') {
 					$data_dossier = $this-> getDossier($reponse['id_dos']);
-
+					
 					$unite = 'par declaration';
 					// $cost_2 = $this-> getMontantTotalTypeDeboursFacture($ref_fact, 1)['montant_usd'];
 					if (($reponse['ht_usd']*100)/$this-> getMontantTotalTypeDeboursFacture($ref_fact, 1)['montant_usd']>1) {
@@ -11263,7 +11263,7 @@
 					}else{
 						$cost_2 = number_format(($reponse['ht_usd']*100)/$this-> getMontantTotalTypeDeboursFacture($ref_fact, 1)['montant_usd'], 2, ',', '.').'%';
 					}
-
+					
 					$unite_2 = $reponse['nbre_poids'];
 
 				}else if($reponse['id_deb']=='97'){
@@ -11273,7 +11273,7 @@
 					$unite = 'CIF';
 					$unite_2 = $reponse['nbre_dos'];
 				}else if ($reponse['id_deb']=='45' || $reponse['id_deb']=='206') {
-
+					
 					$unite = 'Par declaration';
 					$data_dossier = $this-> getDossier($reponse['id_dos']);
 					$cost_2 = $reponse['ht_usd']/$this-> getDataAffectationDeboursClientModeleLicence($reponse['id_deb'], $data_dossier['id_cli'], $data_dossier['id_mod_lic'], $data_dossier['id_march'], $data_dossier['id_mod_trans'])['montant'];
@@ -11286,7 +11286,7 @@
 				}
 
 				$cost = $reponse['ht_usd']/$unite_2;
-
+				
 				$total_cost += $cost;
 				// $sub_total_cdf += $reponse['ht_cdf'];
 				$sub_total_cdf += $reponse['ttc_cdf'];
@@ -11435,21 +11435,20 @@
 		}
 
 		public function getDetailFactureImportSingle2023($ref_fact, $id_t_deb){
-		include('connexion.php');
-		$entree['ref_fact'] = $ref_fact;
-		$entree['id_t_deb'] = $id_t_deb;
+			include('connexion.php');
+			$entree['ref_fact'] = $ref_fact;
+			$entree['id_t_deb'] = $id_t_deb;
 
-		$total_cost = 0;
-		$sub_total = 0;
-		$total_tva = 0;
-		$total_tva_cdf = 0;
-		$total_gen = 0;
-		$sub_total_cdf = 0;
-		$sub_total_cdf_2 = 0;
+			$total_cost = 0;
+			$sub_total = 0;
+			$total_tva = 0;
+			$total_tva_cdf = 0;
+			$total_gen = 0;
+			$sub_total_cdf = 0;
+			$sub_total_cdf_2 = 0;
 
-		$unite = 0;
-		$cost = 0;
-		$unite_2 = 1; // Initialiser pour éviter division par zéro
+			$unite = 0;
+			$cost = 0;
 
 			$tbl = '
 					<tr>
@@ -11496,30 +11495,30 @@
 																d.nom_deb
 																)
 														) AS nom_deb,
-													-- d.nom_deb AS nom_deb,
+													-- d.nom_deb AS nom_deb, 
 													-- CONCAT(UPPER(SUBSTRING(d.nom_deb,1,1)),LOWER(SUBSTRING(d.nom_deb,2))) AS nom_deb,
 													d.id_deb AS id_deb,
 													det.tva AS tva,
 													d.abr_deb AS abr_deb,
 													SUM(det.montant) AS ht,
-													SUM(
-														IF(det.usd="1",
+													SUM( 
+														IF(det.usd="1", 
 															0,
 															det.montant
-														)
+														) 
 													) AS ht_cdf,
-													SUM(
-														IF(det.usd="1",
+													SUM( 
+														IF(det.usd="1", 
 															det.montant,
 															(det.montant/dos.roe_decl)
-														)
+														) 
 													) AS ht_usd,
 													-- SUM(
-													-- 	IF(det.usd="1",
+													-- 	IF(det.usd="1", 
 													-- 		IF(det.tva="1",
 													-- 			det.montant*1.16,
 													-- 			det.montant
-													-- 		),
+													-- 		), 
 													-- 		IF(det.tva="1",
 													-- 			IF(det.montant_tva>0,
 													-- 				(det.montant_tva/dos.roe_decl)*1.16,
@@ -11530,14 +11529,14 @@
 													-- 	)
 													-- ) AS ttc_usd,
 													SUM(
-														IF(det.usd="0",
+														IF(det.usd="0", 
 															IF(det.tva="1",
 																IF(det.montant_tva>0,
 																	(det.montant_tva+det.montant)/dos.roe_decl,
 																	(det.montant*0.16)/dos.roe_decl
 																	),
 																det.montant/dos.roe_decl
-															),
+															), 
 															IF(det.tva="1",
 																det.montant*1.16,
 																det.montant
@@ -11545,14 +11544,14 @@
 														)
 													) AS ttc_usd,
 													SUM(
-														IF(det.usd="0",
+														IF(det.usd="0", 
 															IF(det.tva="1",
 																IF(det.montant_tva>0,
 																	det.montant_tva+det.montant,
 																	det.montant*0.16
 																	),
 																det.montant
-															),
+															), 
 															IF(det.tva="1",
 																(det.montant*dos.roe_decl)*1.16,
 																(det.montant*dos.roe_decl)
@@ -11560,11 +11559,11 @@
 														)
 													) AS ttc_cdf,
 													-- SUM(
-													-- 	IF(det.usd="1",
+													-- 	IF(det.usd="1", 
 													-- 		IF(det.tva="1",
 													-- 			det.montant*0.16,
 													-- 			0
-													-- 		),
+													-- 		), 
 													-- 		IF(det.tva="1",
 													-- 			ROUND(((((det.montant/dos.roe_decl)*100)+((det.montant/dos.roe_decl)*det.pourcentage_qte))/det.pourcentage_qte)*0.16),
 													-- 			0
@@ -11572,11 +11571,11 @@
 													-- 	)
 													-- ) AS tva_usd,
 													SUM(
-														IF(det.usd="1",
+														IF(det.usd="1", 
 															IF(det.tva="1",
 																det.montant*0.16,
 																0
-															),
+															), 
 															IF(det.tva="1",
 																IF(det.montant_tva/dos.roe_decl > 0,
 																	det.montant_tva/dos.roe_decl,
@@ -11588,11 +11587,11 @@
 													) AS tva_usd,
 													-- SUM(
 													-- 	IF(d.id_t_deb=1,
-													-- 		IF(det.usd="0",
+													-- 		IF(det.usd="0", 
 													-- 			IF(det.tva="1",
 													-- 				ROUND((((det.montant*100)+(det.montant*det.pourcentage_qte))/det.pourcentage_qte)*0.16),
 													-- 				0
-													-- 			),
+													-- 			), 
 													-- 			IF(det.tva="1",
 													-- 				(det.montant*dos.roe_decl)*0.16,
 													-- 				0
@@ -11606,14 +11605,14 @@
 													-- ) AS tva_cdf,
 													SUM(
 														IF(d.id_t_deb=1,
-															IF(det.usd="0",
+															IF(det.usd="0", 
 																IF(det.tva="1",
 																	IF(det.montant_tva > 0,
 																		det.montant_tva,
 																		det.montant_tva*0.16
 																		),
 																	0
-																),
+																), 
 																IF(det.tva="1",
 																	(det.montant*dos.roe_decl)*0.16,
 																	0
@@ -11625,7 +11624,7 @@
 															)
 														)
 													) AS tva_cdf,
-													IF(det.detail IS NOT NULL,
+													IF(det.detail IS NOT NULL, 
 														CONCAT(": ", det.detail),
 														""
 													) AS detail,
@@ -11638,7 +11637,7 @@
 														) AS rls,
 													dos.id_dos AS id_dos,
 													det.pourcentage_qte AS pourcentage_qte,
-													fact.font_size AS font_size,
+													fact.font_size AS font_size, 
 													dos.id_cli AS id_cli,
 													IF(DATE(fact.date_fact)>="2024-03-25", "1", "0") AS tmp_date
 												FROM debours d, detail_facture_dossier det, dossier dos, facture_dossier fact
@@ -11667,7 +11666,7 @@
 					$unite = 'CIF';
 					$cif_split = number_format(($reponse['ht_cdf']*100)/$reponse['pourcentage_qte'], 0, ',', '.');
 				}else if ($reponse['id_deb']=='32') {
-
+					
 					$unite = 'CIF';
 
 					if (isset($reponse['pourcentage_qte'])) {
@@ -11680,7 +11679,7 @@
 					$unite_2 = $reponse['nbre_poids'];
 
 				}else if ($reponse['id_deb']=='96') { // DCI
-
+					
 					$unite = 'CIF+Duty';
 					// $cost_2 = number_format(floor($reponse['ht_cdf']/(($this-> getDataDossiersMultipleInvoice($ref_fact)['cif_cdf'])+$this-> getMontantFactureDossierDebours2($ref_fact, 32))*100), 2, ',', '.').'%';
 					$cost_2 = '10,00%';
@@ -11688,32 +11687,32 @@
 					$unite_2 = $reponse['nbre_poids'];
 
 				}else if ($reponse['id_deb']=='95') {
-
+					
 					$unite = 'CIF+Duty';
 					$cost_2 = '1,84%';
 					$unite_2 = $reponse['nbre_poids'];
 
 				}else if ($reponse['id_deb']=='38') {
-
+					
 					$unite = 'CIF';
 					$cost_2 = '2,25%';
 					$unite_2 = $reponse['nbre_poids'];
 
 				}else if ($reponse['id_deb']=='35') {
-
+					
 					$unite = 'CIF';
 					$cost_2 = '0,457%';
 					$unite_2 = $reponse['nbre_poids'];
 
 				}else if ($reponse['id_deb']=='3') {
-
+					
 					$unite = 'CIF+Duty';
 					$cost_2 = $reponse['rls'];
 					$unite_2 = $reponse['nbre_poids'];
 
 				}else if ($reponse['id_deb']=='29') {
 					$data_dossier = $this-> getDossier($reponse['id_dos']);
-
+					
 					$unite = 'Per Declaration';
 					// $cost_2 = $this-> getMontantTotalTypeDeboursFacture($ref_fact, 1)['montant_usd'];
 					if ($data_dossier['id_cli']=='938'||$data_dossier['id_cli']=='945') {
@@ -11723,7 +11722,7 @@
 					}else{
 						$cost_2 = number_format(($reponse['ht_usd']*100)/$this-> getMontantTotalTypeDeboursFacture($ref_fact, 1)['montant_usd'], 2, ',', '.').'%';
 					}
-
+					
 					$unite_2 = $reponse['nbre_poids'];
 
 				}else if($reponse['id_deb']=='97'){
@@ -11734,7 +11733,7 @@
 					$unite_2 = $reponse['nbre_dos'];
 				}else if ($reponse['id_deb']=='45') {
 					$rate = 0;
-
+					
 					$unite = 'Per Declaration';
 					$data_dossier = $this-> getDossier($reponse['id_dos']);
 
@@ -11747,12 +11746,12 @@
 						$cost_2 = $reponse['ht_usd']/$this-> getDataAffectationDeboursClientModeleLicence2($reponse['id_deb'], $data_dossier['id_cli'], $data_dossier['id_mod_lic'], $data_dossier['id_mod_trans'])['montant'];
 						$rate = $this-> getDataAffectationDeboursClientModeleLicence2($reponse['id_deb'], $data_dossier['id_cli'], $data_dossier['id_mod_lic'], $data_dossier['id_mod_trans'])['montant'];
 					}
-
+					
 					$unite_2 = $reponse['nbre_poids'];
 
 				}else if($reponse['id_cli']==857||$reponse['id_cli']==952){
 					$data_dossier = $this-> getDossier($reponse['id_dos']);
-
+					
 					$cost_2 = '1';
 					$unite_2 = $reponse['nbre_dos'];
 
@@ -11782,7 +11781,7 @@
 
 				}else if($reponse['id_deb']=='206'){
 					$data_dossier = $this-> getDossier($reponse['id_dos']);
-
+					
 					$cost_2 = '1';
 					$unite_2 = $reponse['nbre_dos'];
 
@@ -11817,7 +11816,7 @@
 				}
 
 				$cost = $reponse['ht_usd']/$unite_2;
-
+				
 				$total_cost += $cost;
 				$sub_total_cdf += $reponse['ht_cdf'];
 				$sub_total_cdf_2 += $reponse['ttc_cdf'];
@@ -12040,30 +12039,30 @@
 																d.nom_deb
 																)
 														) AS nom_deb,
-													-- d.nom_deb AS nom_deb,
+													-- d.nom_deb AS nom_deb, 
 													-- CONCAT(UPPER(SUBSTRING(d.nom_deb,1,1)),LOWER(SUBSTRING(d.nom_deb,2))) AS nom_deb,
 													d.id_deb AS id_deb,
 													det.tva AS tva,
 													d.abr_deb AS abr_deb,
 													SUM(det.montant) AS ht,
-													SUM(
-														IF(det.usd="1",
+													SUM( 
+														IF(det.usd="1", 
 															0,
 															det.montant
-														)
+														) 
 													) AS ht_cdf,
-													SUM(
-														IF(det.usd="1",
+													SUM( 
+														IF(det.usd="1", 
 															det.montant,
 															(det.montant/dos.roe_decl)
-														)
+														) 
 													) AS ht_usd,
 													-- SUM(
-													-- 	IF(det.usd="1",
+													-- 	IF(det.usd="1", 
 													-- 		IF(det.tva="1",
 													-- 			det.montant*1.16,
 													-- 			det.montant
-													-- 		),
+													-- 		), 
 													-- 		IF(det.tva="1",
 													-- 			IF(det.montant_tva>0,
 													-- 				(det.montant_tva/dos.roe_decl)*1.16,
@@ -12074,14 +12073,14 @@
 													-- 	)
 													-- ) AS ttc_usd,
 													SUM(
-														IF(det.usd="0",
+														IF(det.usd="0", 
 															IF(det.tva="1",
 																IF(det.montant_tva>0,
 																	(det.montant_tva+det.montant)/dos.roe_decl,
 																	(det.montant*0.16)/dos.roe_decl
 																	),
 																det.montant/dos.roe_decl
-															),
+															), 
 															IF(det.tva="1",
 																det.montant*1.16,
 																det.montant
@@ -12089,14 +12088,14 @@
 														)
 													) AS ttc_usd,
 													SUM(
-														IF(det.usd="0",
+														IF(det.usd="0", 
 															IF(det.tva="1",
 																IF(det.montant_tva>0,
 																	det.montant_tva+det.montant,
 																	det.montant*0.16
 																	),
 																det.montant
-															),
+															), 
 															IF(det.tva="1",
 																(det.montant*dos.roe_decl)*1.16,
 																(det.montant*dos.roe_decl)
@@ -12104,11 +12103,11 @@
 														)
 													) AS ttc_cdf,
 													-- SUM(
-													-- 	IF(det.usd="1",
+													-- 	IF(det.usd="1", 
 													-- 		IF(det.tva="1",
 													-- 			det.montant*0.16,
 													-- 			0
-													-- 		),
+													-- 		), 
 													-- 		IF(det.tva="1",
 													-- 			ROUND(((((det.montant/dos.roe_decl)*100)+((det.montant/dos.roe_decl)*det.pourcentage_qte))/det.pourcentage_qte)*0.16),
 													-- 			0
@@ -12116,11 +12115,11 @@
 													-- 	)
 													-- ) AS tva_usd,
 													SUM(
-														IF(det.usd="1",
+														IF(det.usd="1", 
 															IF(det.tva="1",
 																det.montant*0.16,
 																0
-															),
+															), 
 															IF(det.tva="1",
 																IF(det.montant_tva/dos.roe_decl > 0,
 																	det.montant_tva/dos.roe_decl,
@@ -12132,11 +12131,11 @@
 													) AS tva_usd,
 													-- SUM(
 													-- 	IF(d.id_t_deb=1,
-													-- 		IF(det.usd="0",
+													-- 		IF(det.usd="0", 
 													-- 			IF(det.tva="1",
 													-- 				ROUND((((det.montant*100)+(det.montant*det.pourcentage_qte))/det.pourcentage_qte)*0.16),
 													-- 				0
-													-- 			),
+													-- 			), 
 													-- 			IF(det.tva="1",
 													-- 				(det.montant*dos.roe_decl)*0.16,
 													-- 				0
@@ -12150,14 +12149,14 @@
 													-- ) AS tva_cdf,
 													SUM(
 														IF(d.id_t_deb=1,
-															IF(det.usd="0",
+															IF(det.usd="0", 
 																IF(det.tva="1",
 																	IF(det.montant_tva > 0,
 																		det.montant_tva,
 																		det.montant_tva*0.16
 																		),
 																	0
-																),
+																), 
 																IF(det.tva="1",
 																	(det.montant*dos.roe_decl)*0.16,
 																	0
@@ -12169,7 +12168,7 @@
 															)
 														)
 													) AS tva_cdf,
-													IF(det.detail IS NOT NULL,
+													IF(det.detail IS NOT NULL, 
 														CONCAT(": ", det.detail),
 														""
 													) AS detail,
@@ -12182,7 +12181,7 @@
 														) AS rls,
 													dos.id_dos AS id_dos,
 													det.pourcentage_qte AS pourcentage_qte,
-													fact.font_size AS font_size,
+													fact.font_size AS font_size, 
 													dos.id_cli AS id_cli,
 													SUM(dos.m3/1000) AS m3,
 													IF(DATE(fact.date_fact)>="2024-03-25", "1", "0") AS tmp_date,
@@ -12213,7 +12212,7 @@
 					$unite = 'CIF';
 					$cif_split = number_format(($reponse['ht_cdf']*100)/$reponse['pourcentage_qte'], 0, ',', '.');
 				}else if ($reponse['id_deb']=='32') {
-
+					
 					$unite = 'CIF';
 
 					if (isset($reponse['pourcentage_qte']) && $reponse['pourcentage_qte']>0) {
@@ -12226,7 +12225,7 @@
 					$unite_2 = $reponse['nbre_poids'];
 
 				}else if ($reponse['id_deb']=='96') { // DCI
-
+					
 					$unite = 'CIF+Duty';
 					// $cost_2 = number_format(floor($reponse['ht_cdf']/(($this-> getDataDossiersMultipleInvoice($ref_fact)['cif_cdf'])+$this-> getMontantFactureDossierDebours2($ref_fact, 32))*100), 2, ',', '.').'%';
 					$cost_2 = '10,00%';
@@ -12234,32 +12233,32 @@
 					$unite_2 = $reponse['nbre_poids'];
 
 				}else if ($reponse['id_deb']=='95') {
-
+					
 					$unite = 'CIF+Duty';
 					$cost_2 = '1,84%';
 					$unite_2 = $reponse['nbre_poids'];
 
 				}else if ($reponse['id_deb']=='38') {
-
+					
 					$unite = 'CIF';
 					$cost_2 = '2,25%';
 					$unite_2 = $reponse['nbre_poids'];
 
 				}else if ($reponse['id_deb']=='35') {
-
+					
 					$unite = 'CIF';
 					$cost_2 = '0,457%';
 					$unite_2 = $reponse['nbre_poids'];
 
 				}else if ($reponse['id_deb']=='3') {
-
+					
 					$unite = 'CIF+Duty';
 					$cost_2 = $reponse['rls'];
 					$unite_2 = $reponse['nbre_poids'];
 
 				}else if ($reponse['id_deb']=='29') {
 					$data_dossier = $this-> getDossier($reponse['id_dos']);
-
+					
 					$unite = 'Per Declaration';
 					// $cost_2 = $this-> getMontantTotalTypeDeboursFacture($ref_fact, 1)['montant_usd'];
 					if ($data_dossier['id_cli']=='938'||$data_dossier['id_cli']=='945') {
@@ -12269,7 +12268,7 @@
 					}else{
 						$cost_2 = number_format(($reponse['ht_usd']*100)/$this-> getMontantTotalTypeDeboursFacture($ref_fact, 1)['montant_usd'], 2, ',', '.').'%';
 					}
-
+					
 					$unite_2 = $reponse['nbre_poids'];
 
 				}else if($reponse['id_deb']=='97'){
@@ -12280,7 +12279,7 @@
 					$unite_2 = $reponse['nbre_dos'];
 				}else if ($reponse['id_deb']=='45') {
 					$rate = 0;
-
+					
 					$unite = 'Per Declaration';
 					$data_dossier = $this-> getDossier($reponse['id_dos']);
 
@@ -12293,12 +12292,12 @@
 						$cost_2 = $reponse['ht_usd']/$this-> getDataAffectationDeboursClientModeleLicence2($reponse['id_deb'], $data_dossier['id_cli'], $data_dossier['id_mod_lic'], $data_dossier['id_mod_trans'])['montant'];
 						$rate = $this-> getDataAffectationDeboursClientModeleLicence2($reponse['id_deb'], $data_dossier['id_cli'], $data_dossier['id_mod_lic'], $data_dossier['id_mod_trans'])['montant'];
 					}
-
+					
 					$unite_2 = $reponse['nbre_poids'];
 
 				}else if(($reponse['id_cli']==857||$reponse['id_cli']==952) && $reponse['id_mod_fact']<>15){
 					$data_dossier = $this-> getDossier($reponse['id_dos']);
-
+					
 					$cost_2 = '1';
 					$unite_2 = $reponse['nbre_dos'];
 
@@ -12328,7 +12327,7 @@
 
 				}else if($reponse['id_deb']=='206'){
 					$data_dossier = $this-> getDossier($reponse['id_dos']);
-
+					
 					$cost_2 = '1';
 					$unite_2 = $reponse['nbre_dos'];
 
@@ -12363,7 +12362,7 @@
 				}
 
 				$cost = $reponse['ht_usd']/$unite_2;
-
+				
 				$total_cost += $cost;
 				$sub_total_cdf += $reponse['ht_cdf'];
 				$sub_total_cdf_2 += $reponse['ttc_cdf'];
@@ -12577,24 +12576,24 @@
 													det.tva AS tva,
 													d.abr_deb AS abr_deb,
 													SUM(det.montant) AS ht,
-													SUM(
-														IF(det.usd="1",
+													SUM( 
+														IF(det.usd="1", 
 															0,
 															det.montant
-														)
+														) 
 													) AS ht_cdf,
-													SUM(
-														IF(det.usd="1",
+													SUM( 
+														IF(det.usd="1", 
 															det.montant,
 															(det.montant/dos.roe_decl)
-														)
+														) 
 													) AS ht_usd,
 													SUM(
-														IF(det.usd="1",
+														IF(det.usd="1", 
 															IF(det.tva="1",
 																det.montant*1.16,
 																det.montant
-															),
+															), 
 															IF(det.tva="1",
 																(det.montant/dos.roe_decl)*1.16,
 																(det.montant/dos.roe_decl)
@@ -12602,18 +12601,18 @@
 														)
 													) AS ttc_usd,
 													SUM(
-														IF(det.usd="1",
+														IF(det.usd="1", 
 															IF(det.tva="1",
 																det.montant*0.16,
 																0
-															),
+															), 
 															IF(det.tva="1",
 																(det.montant/dos.roe_decl)*0.16,
 																0
 															)
 														)
 													) AS tva_usd,
-													IF(det.detail IS NOT NULL,
+													IF(det.detail IS NOT NULL, 
 														CONCAT(": ", det.detail),
 														""
 													) AS detail,
@@ -12637,7 +12636,7 @@
 				}
 
 				if ($reponse['id_deb']=='1' || $reponse['id_deb']=='2' || $reponse['id_deb']=='3' || $reponse['id_deb']=='4' || $reponse['id_deb']=='5' || $reponse['id_deb']=='6' || $reponse['id_deb']=='7' || $reponse['id_deb']=='8') {
-
+					
 					$unite = number_format($reponse['nbre_poids'], 2, ',', ' ');
 					$unite_2 = $reponse['nbre_poids'];
 
@@ -12654,7 +12653,7 @@
 
 				$cost = round($reponse['ht_usd']/$unite_2, 2);
 				$cost_2 = number_format($cost, 2, ',', '.');
-
+				
 				// if($reponse['id_deb']=='54'){
 				// 	$unite = number_format($this-> getMontantFactureTypeDebours($ref_fact, '1'), 2, ',', '.');
 				// 	$cost = '1,50%';
@@ -12802,7 +12801,7 @@
 													AND det.ref_note = ?");
 			$requete-> execute(array($entree['ref_note']));
 			while($reponse = $requete-> fetch()){
-
+				
 				$montant_ht += $reponse['montant_ht'];
 				$tva += $reponse['tva'];
 				$montant_ttc += $reponse['montant_ttc'];
@@ -12947,7 +12946,7 @@
 												GROUP BY dep.id_dep");
 			$requete-> execute(array($entree['ref_note']));
 			while($reponse = $requete-> fetch()){
-
+				
 				$montant_ht += $reponse['montant_ht'];
 				$tva += $reponse['tva'];
 				$montant_ttc += $reponse['montant_ttc'];
@@ -13060,7 +13059,7 @@
 													AND det.ref_note = ?");
 			$requete-> execute(array($entree['ref_note']));
 			while($reponse = $requete-> fetch()){
-
+				
 				$poids += $reponse['poids'];
 				$compteur++;
 
@@ -13152,7 +13151,7 @@
 													AND det.ref_note = ?");
 			$requete-> execute(array($entree['ref_note']));
 			while($reponse = $requete-> fetch()){
-
+				
 				$montant_ht += $reponse['montant_ht'];
 				$tva += $reponse['tva'];
 				$montant_ttc += $reponse['montant_ttc'];
@@ -13261,7 +13260,7 @@
 			$cost = 0;
 
 			$tbl = '
-
+					
 					';
 
 			$requete = $connexion-> prepare('SELECT d.nom_deb AS nom_deb, d.id_deb AS id_deb,
@@ -13293,24 +13292,24 @@
 														)
 													) AS total_cost,
 													SUM(det.montant) AS ht,
-													SUM(
-														IF(det.usd="1",
+													SUM( 
+														IF(det.usd="1", 
 															0,
 															det.montant
-														)
+														) 
 													) AS ht_cdf,
-													SUM(
-														IF(det.usd="1",
+													SUM( 
+														IF(det.usd="1", 
 															det.montant,
 															(det.montant/dos.roe_decl)
-														)
+														) 
 													) AS ht_usd,
 													SUM(
-														IF(det.usd="1",
+														IF(det.usd="1", 
 															IF(det.tva="1",
 																det.montant*1.16,
 																det.montant
-															),
+															), 
 															IF(det.tva="1",
 																(det.montant/dos.roe_decl)*1.16,
 																(det.montant/dos.roe_decl)
@@ -13318,11 +13317,11 @@
 														)
 													) AS ttc_usd,
 													SUM(
-														IF(det.usd="1",
+														IF(det.usd="1", 
 															IF(det.tva="1",
 																det.montant*0.16,
 																0
-															),
+															), 
 															IF(det.tva="1",
 																(det.montant/dos.roe_decl)*0.16,
 																0
@@ -13341,7 +13340,7 @@
 															0
 														)
 													) AS base_arsp,
-													IF(det.detail IS NOT NULL,
+													IF(det.detail IS NOT NULL, 
 														CONCAT(": ", det.detail),
 														""
 													) AS detail,
@@ -13368,7 +13367,7 @@
 			// 	}
 
 			// 	if ($reponse['id_deb']=='1' || $reponse['id_deb']=='2' || $reponse['id_deb']=='3' || $reponse['id_deb']=='4' || $reponse['id_deb']=='5' || $reponse['id_deb']=='6' || $reponse['id_deb']=='7' || $reponse['id_deb']=='8') {
-
+					
 			// 		$unite = number_format($reponse['poids'], 2, ',', ' ');
 
 			// 	}else if($reponse['id_deb']=='11' && $reponse['poids']<30){
@@ -13560,7 +13559,7 @@
 
 			}
 
-
+			
 			return $tbl;
 		}
 
@@ -13577,7 +13576,7 @@
 			$cost = 0;
 
 			$tbl = '
-
+					
 					';
 
 			$requete = $connexion-> prepare('SELECT d.nom_deb AS nom_deb, d.id_deb AS id_deb,
@@ -13609,24 +13608,24 @@
 														)
 													) AS total_cost,
 													SUM(det.montant) AS ht,
-													SUM(
-														IF(det.usd="1",
+													SUM( 
+														IF(det.usd="1", 
 															0,
 															det.montant
-														)
+														) 
 													) AS ht_cdf,
-													SUM(
-														IF(det.usd="1",
+													SUM( 
+														IF(det.usd="1", 
 															det.montant,
 															(det.montant/fact.taux)
-														)
+														) 
 													) AS ht_usd,
 													SUM(
-														IF(det.usd="1",
+														IF(det.usd="1", 
 															IF(det.tva="1",
 																det.montant*1.16,
 																det.montant
-															),
+															), 
 															IF(det.tva="1",
 																(det.montant/fact.taux)*1.16,
 																(det.montant/fact.taux)
@@ -13634,11 +13633,11 @@
 														)
 													) AS ttc_usd,
 													SUM(
-														IF(det.usd="1",
+														IF(det.usd="1", 
 															IF(det.tva="1",
 																det.montant*0.16,
 																0
-															),
+															), 
 															IF(det.tva="1",
 																(det.montant/fact.taux)*0.16,
 																0
@@ -13657,7 +13656,7 @@
 															0
 														)
 													) AS base_arsp,
-													IF(det.detail IS NOT NULL,
+													IF(det.detail IS NOT NULL, 
 														CONCAT(": ", det.detail),
 														""
 													) AS detail,
@@ -13684,7 +13683,7 @@
 			// 	}
 
 			// 	if ($reponse['id_deb']=='1' || $reponse['id_deb']=='2' || $reponse['id_deb']=='3' || $reponse['id_deb']=='4' || $reponse['id_deb']=='5' || $reponse['id_deb']=='6' || $reponse['id_deb']=='7' || $reponse['id_deb']=='8') {
-
+					
 			// 		$unite = number_format($reponse['poids'], 2, ',', ' ');
 
 			// 	}else if($reponse['id_deb']=='11' && $reponse['poids']<30){
@@ -13876,7 +13875,7 @@
 
 			}
 
-
+			
 			return $tbl;
 		}
 
@@ -13904,17 +13903,17 @@
 					';
 
 			$requete = $connexion-> prepare('SELECT SUM(
-														IF(det.usd="1",
-															det.montant,
+														IF(det.usd="1", 
+															det.montant, 
 															(det.montant/dos.roe_decl)
 														)
 													) AS ht_usd,
 													SUM(
-														IF(det.usd="1",
+														IF(det.usd="1", 
 															IF(det.tva="1",
 																det.montant*1.16,
 																det.montant
-															),
+															), 
 															IF(det.tva="1",
 																ROUND(((((det.montant/dos.roe_decl)*100)+((det.montant/dos.roe_decl)*det.pourcentage_qte))/det.pourcentage_qte)*0.16)+(det.montant/dos.roe_decl),
 																(det.montant/dos.roe_decl)
@@ -13922,11 +13921,11 @@
 														)
 													) AS ttc_usd,
 													SUM(
-														IF(det.usd="1",
+														IF(det.usd="1", 
 															IF(det.tva="1",
 																det.montant*0.16,
 																0
-															),
+															), 
 															IF(det.tva="1",
 																ROUND(((((det.montant/dos.roe_decl)*100)+((det.montant/dos.roe_decl)*det.pourcentage_qte))/det.pourcentage_qte)*0.16)+(det.montant/dos.roe_decl),
 																0
@@ -14030,15 +14029,15 @@
 														)
 													) AS total_cost,
 													SUM(det.montant) AS ht,
-													SUM(
-														IF(det.usd="1",
+													SUM( 
+														IF(det.usd="1", 
 															0,
 															det.montant
-														)
+														) 
 													) AS ht_cdf,
-													SUM(
-														IF(det.usd="1",
-															det.montant,
+													SUM( 
+														IF(det.usd="1", 
+															det.montant, 
 															IF(det.tva="1",
 																IF(det.montant_tva>0,
 																	(det.montant_tva+det.montant)/dos.roe_decl,
@@ -14046,14 +14045,14 @@
 																),
 																(det.montant/dos.roe_decl)
 															)
-														)
+														) 
 													) AS ht_usd,
 													SUM(
-														IF(det.usd="1",
+														IF(det.usd="1", 
 															IF(det.tva="1",
 																det.montant*1.16,
 																det.montant
-															),
+															), 
 															IF(det.tva="1",
 																IF(det.montant_tva>0,
 																	((det.montant_tva+det.montant)/dos.roe_decl),
@@ -14064,15 +14063,15 @@
 														)
 													) AS ttc_usd,
 													SUM(
-														IF(det.usd="1",
+														IF(det.usd="1", 
 															IF(det.tva="1",
 																det.montant*0.16,
 																0
-															),
+															), 
 															0
 														)
 													) AS tva_usd,
-													IF(det.detail IS NOT NULL,
+													IF(det.detail IS NOT NULL, 
 														CONCAT(": ", det.detail),
 														""
 													) AS detail,
@@ -14114,7 +14113,7 @@
 			// 	}
 
 			// 	if ($reponse['id_deb']=='1' || $reponse['id_deb']=='2' || $reponse['id_deb']=='3' || $reponse['id_deb']=='4' || $reponse['id_deb']=='5' || $reponse['id_deb']=='6' || $reponse['id_deb']=='7' || $reponse['id_deb']=='8') {
-
+					
 			// 		$unite = number_format($reponse['poids'], 2, ',', ' ');
 
 			// 	}else if($reponse['id_deb']=='11' && $reponse['poids']<30){
@@ -14138,7 +14137,7 @@
 				$total_gen = $reponse['ttc_usd'];
 
 			if ($reponse['id_cli']=='904' && $reponse['statut_arsp']=='1') {
-
+				
 			$tbl .= '
 					<tr>
 						<td style="text-align: right; border: 0.5px solid black; font-weight: bold; font-size: 8px;" width="23%">Total excl. TVA &nbsp;&nbsp;
@@ -14185,7 +14184,7 @@
 					';
 
 			}else if ($reponse['statut_arsp']=='1') {
-
+				
 			$tbl .= '
 					<tr>
 						<td style="text-align: right; border: 0.5px solid black; font-weight: bold; font-size: 8px;" width="23%">Total excl. TVA &nbsp;&nbsp;
@@ -14310,15 +14309,15 @@
 														)
 													) AS total_cost,
 													SUM(det.montant) AS ht,
-													SUM(
-														IF(det.usd="1",
+													SUM( 
+														IF(det.usd="1", 
 															0,
 															det.montant
-														)
+														) 
 													) AS ht_cdf,
-													SUM(
-														IF(det.usd="1",
-															det.montant,
+													SUM( 
+														IF(det.usd="1", 
+															det.montant, 
 															IF(det.tva="1",
 																IF(det.montant_tva>0,
 																	(det.montant_tva+det.montant)/dos.roe_decl,
@@ -14326,14 +14325,14 @@
 																),
 																(det.montant/dos.roe_decl)
 															)
-														)
+														) 
 													) AS ht_usd,
 													SUM(
-														IF(det.usd="1",
+														IF(det.usd="1", 
 															IF(det.tva="1",
 																det.montant*1.16,
 																det.montant
-															),
+															), 
 															IF(det.tva="1",
 																IF(det.montant_tva>0,
 																	((det.montant_tva+det.montant)/dos.roe_decl),
@@ -14344,15 +14343,15 @@
 														)
 													) AS ttc_usd,
 													SUM(
-														IF(det.usd="1",
+														IF(det.usd="1", 
 															IF(det.tva="1",
 																det.montant*0.16,
 																0
-															),
+															), 
 															0
 														)
 													) AS tva_usd,
-													IF(det.detail IS NOT NULL,
+													IF(det.detail IS NOT NULL, 
 														CONCAT(": ", det.detail),
 														""
 													) AS detail,
@@ -14376,7 +14375,7 @@
 			// 	}
 
 			// 	if ($reponse['id_deb']=='1' || $reponse['id_deb']=='2' || $reponse['id_deb']=='3' || $reponse['id_deb']=='4' || $reponse['id_deb']=='5' || $reponse['id_deb']=='6' || $reponse['id_deb']=='7' || $reponse['id_deb']=='8') {
-
+					
 			// 		$unite = number_format($reponse['poids'], 2, ',', ' ');
 
 			// 	}else if($reponse['id_deb']=='11' && $reponse['poids']<30){
@@ -14476,15 +14475,15 @@
 														)
 													) AS total_cost,
 													SUM(det.montant) AS ht,
-													SUM(
-														IF(det.usd="1",
+													SUM( 
+														IF(det.usd="1", 
 															0,
 															det.montant
-														)
+														) 
 													) AS ht_cdf,
-													SUM(
-														IF(det.usd="1",
-															det.montant,
+													SUM( 
+														IF(det.usd="1", 
+															det.montant, 
 															IF(det.tva="1",
 																IF(det.montant_tva>0,
 																	(det.montant_tva+det.montant)/dos.roe_decl,
@@ -14492,14 +14491,14 @@
 																),
 																(det.montant/dos.roe_decl)
 															)
-														)
+														) 
 													) AS ht_usd,
 													SUM(
-														IF(det.usd="1",
+														IF(det.usd="1", 
 															IF(det.tva="1",
 																det.montant*1.16*det.unite,
 																det.montant*det.unite
-															),
+															), 
 															IF(det.tva="1",
 																IF(det.montant_tva>0,
 																	((det.montant_tva+det.montant)/dos.roe_decl)*det.unite,
@@ -14510,15 +14509,15 @@
 														)
 													) AS ttc_usd,
 													SUM(
-														IF(det.usd="1",
+														IF(det.usd="1", 
 															IF(det.tva="1",
 																det.montant*0.16,
 																0
-															),
+															), 
 															0
 														)
 													) AS tva_usd,
-													IF(det.detail IS NOT NULL,
+													IF(det.detail IS NOT NULL, 
 														CONCAT(": ", det.detail),
 														""
 													) AS detail,
@@ -14542,7 +14541,7 @@
 			// 	}
 
 			// 	if ($reponse['id_deb']=='1' || $reponse['id_deb']=='2' || $reponse['id_deb']=='3' || $reponse['id_deb']=='4' || $reponse['id_deb']=='5' || $reponse['id_deb']=='6' || $reponse['id_deb']=='7' || $reponse['id_deb']=='8') {
-
+					
 			// 		$unite = number_format($reponse['poids'], 2, ',', ' ');
 
 			// 	}else if($reponse['id_deb']=='11' && $reponse['poids']<30){
@@ -14642,24 +14641,24 @@
 														)
 													) AS total_cost,
 													SUM(det.montant) AS ht,
-													SUM(
-														IF(det.usd="1",
+													SUM( 
+														IF(det.usd="1", 
 															0,
 															det.montant
-														)
+														) 
 													) AS ht_cdf,
-													SUM(
-														IF(det.usd="1",
+													SUM( 
+														IF(det.usd="1", 
 															det.montant,
 															(det.montant/dos.roe_decl)
-														)
+														) 
 													) AS ht_usd,
 													SUM(
-														IF(det.usd="1",
+														IF(det.usd="1", 
 															IF(det.tva="1",
 																det.montant*1.16,
 																det.montant
-															),
+															), 
 															IF(det.tva="1",
 																(det.montant/dos.roe_decl)*1.16,
 																(det.montant/dos.roe_decl)
@@ -14667,18 +14666,18 @@
 														)
 													) AS ttc_usd,
 													SUM(
-														IF(det.usd="1",
+														IF(det.usd="1", 
 															IF(det.tva="1",
 																det.montant*0.16,
 																0
-															),
+															), 
 															IF(det.tva="1",
 																(det.montant/dos.roe_decl)*0.16,
 																0
 															)
 														)
 													) AS tva_usd,
-													IF(det.detail IS NOT NULL,
+													IF(det.detail IS NOT NULL, 
 														CONCAT(": ", det.detail),
 														""
 													) AS detail,
@@ -14703,7 +14702,7 @@
 			// 	}
 
 			// 	if ($reponse['id_deb']=='1' || $reponse['id_deb']=='2' || $reponse['id_deb']=='3' || $reponse['id_deb']=='4' || $reponse['id_deb']=='5' || $reponse['id_deb']=='6' || $reponse['id_deb']=='7' || $reponse['id_deb']=='8') {
-
+					
 			// 		$unite = number_format($reponse['poids'], 2, ',', ' ');
 
 			// 	}else if($reponse['id_deb']=='11' && $reponse['poids']<30){
@@ -14803,24 +14802,24 @@
 														)
 													) AS total_cost,
 													SUM(det.montant) AS ht,
-													SUM(
-														IF(det.usd="1",
+													SUM( 
+														IF(det.usd="1", 
 															0,
 															det.montant
-														)
+														) 
 													) AS ht_cdf,
-													SUM(
-														IF(det.usd="1",
+													SUM( 
+														IF(det.usd="1", 
 															det.montant,
 															(det.montant/dos.roe_decl)
-														)
+														) 
 													) AS ht_usd,
 													SUM(
-														IF(det.usd="1",
+														IF(det.usd="1", 
 															IF(det.tva="1",
 																det.montant*1.16,
 																det.montant
-															),
+															), 
 															IF(det.tva="1",
 																(det.montant/dos.roe_decl)*1.16,
 																(det.montant/dos.roe_decl)
@@ -14828,18 +14827,18 @@
 														)
 													) AS ttc_usd,
 													SUM(
-														IF(det.usd="1",
+														IF(det.usd="1", 
 															IF(det.tva="1",
 																det.montant*0.16,
 																0
-															),
+															), 
 															IF(det.tva="1",
 																(det.montant/dos.roe_decl)*0.16,
 																0
 															)
 														)
 													) AS tva_usd,
-													IF(det.detail IS NOT NULL,
+													IF(det.detail IS NOT NULL, 
 														CONCAT(": ", det.detail),
 														""
 													) AS detail,
@@ -14864,7 +14863,7 @@
 			// 	}
 
 			// 	if ($reponse['id_deb']=='1' || $reponse['id_deb']=='2' || $reponse['id_deb']=='3' || $reponse['id_deb']=='4' || $reponse['id_deb']=='5' || $reponse['id_deb']=='6' || $reponse['id_deb']=='7' || $reponse['id_deb']=='8') {
-
+					
 			// 		$unite = number_format($reponse['poids'], 2, ',', ' ');
 
 			// 	}else if($reponse['id_deb']=='11' && $reponse['poids']<30){
@@ -14973,24 +14972,24 @@
 														)
 													) AS total_cost,
 													SUM(det.montant) AS ht,
-													SUM(
-														IF(det.usd="1",
+													SUM( 
+														IF(det.usd="1", 
 															0,
 															det.montant
-														)
+														) 
 													) AS ht_cdf,
-													SUM(
-														IF(det.usd="1",
+													SUM( 
+														IF(det.usd="1", 
 															det.montant,
 															(det.montant/dos.roe_decl)
-														)
+														) 
 													) AS ht_usd,
 													SUM(
-														IF(det.usd="1",
+														IF(det.usd="1", 
 															IF(det.tva="1",
 																det.montant*1.16,
 																det.montant
-															),
+															), 
 															IF(det.tva="1",
 																(det.montant/dos.roe_decl)*1.16,
 																(det.montant/dos.roe_decl)
@@ -14998,18 +14997,18 @@
 														)
 													) AS ttc_usd,
 													SUM(
-														IF(det.usd="1",
+														IF(det.usd="1", 
 															IF(det.tva="1",
 																det.montant*0.16,
 																0
-															),
+															), 
 															IF(det.tva="1",
 																(det.montant/dos.roe_decl)*0.16,
 																0
 															)
 														)
 													) AS tva_usd,
-													IF(det.detail IS NOT NULL,
+													IF(det.detail IS NOT NULL, 
 														CONCAT(": ", det.detail),
 														""
 													) AS detail,
@@ -15084,17 +15083,17 @@
 													det.tva AS tva,
 													d.abr_deb AS abr_deb,
 													SUM(det.montant) AS ht,
-													SUM(
-														IF(det.usd="1",
+													SUM( 
+														IF(det.usd="1", 
 															0,
 															det.montant
-														)
+														) 
 													) AS ht_cdf,
-													SUM(
-														IF(det.usd="1",
+													SUM( 
+														IF(det.usd="1", 
 															det.montant,
 															(det.montant/dos.roe_decl)
-														)
+														) 
 													) AS ht_usd
 												FROM debours d, detail_facture_dossier det, dossier dos
 												WHERE det.ref_fact = ?
@@ -15133,7 +15132,7 @@
 						<td style="text-align: right; border-right: 1px solid black; border-bottom: 0.5px solid black; font-weight: bold;  background-color: rgb(192,192,192);" width="11%">'
 							.number_format($sommeTTC, 2, ',', ' ').
 						'&nbsp;&nbsp;</td>
-
+					
 						';
 			return $tbl;
 		}
@@ -15159,17 +15158,17 @@
 													det.tva AS tva,
 													d.abr_deb AS abr_deb,
 													SUM(det.montant) AS ht,
-													SUM(
-														IF(det.usd="1",
+													SUM( 
+														IF(det.usd="1", 
 															0,
 															det.montant
-														)
+														) 
 													) AS ht_cdf,
-													SUM(
-														IF(det.usd="1",
+													SUM( 
+														IF(det.usd="1", 
 															det.montant,
 															(det.montant/dos.roe_decl)
-														)
+														) 
 													) AS ht_usd
 												FROM debours d, detail_facture_dossier det, dossier dos
 												WHERE det.ref_fact = ?
@@ -15203,7 +15202,7 @@
 						<td style="text-align: right; border-right: 1px solid black; border-bottom: 0.5px dotted black; font-weight: bold; font-size: 7px;" width="20%">'
 							.number_format($sommeTTC, 2, ',', ' ').
 						'&nbsp;&nbsp;</td>
-
+					
 						';
 			return $tbl;
 		}
@@ -15233,7 +15232,7 @@
 												WHERE fd.id_mod_lic = ?
 													AND fd.id_util = u.id_util
 													AND fd.id_cli = cl.id_cli
-
+													
 													AND fd.validation = '0'
 													$sqlClient");
 			$requete-> execute(array($entree['id_mod_lic']));
@@ -15269,7 +15268,6 @@
 													AND fd.id_cli = cl.id_cli
 													AND fd.date_mail IS NULL
 													AND fd.validation = '1'
-													AND fd.code_UID IS NULL
 													$sqlClient");
 			$requete-> execute(array($entree['id_mod_lic']));
 			$reponse = $requete-> fetch();
@@ -15404,13 +15402,13 @@
 					$bg = 'color: #CCCC00;';
 					if($this-> getDataUtilisateur($_SESSION['id_util'])['validation_facture'] == '1'){
 						$btn = '<button class="btn btn-xs bg-info square-btn-adjust" data-toggle="modal" data-target=".validerFacture_'.$reponse['ref_fact'].'" title="Valider la facture">
-			                    <i class="fas fa-check"></i>
+			                    <i class="fas fa-check"></i> 
 			                </button>
 			                ';
 			            }else{
 			            	$btn = '';
 			            }
-
+					
 					$etat = '<span class="badge badge-warning">
 							En attente de validation
 							</span>';
@@ -15430,7 +15428,7 @@
 				}
 
 				$btn .='<button class="btn btn-xs bg-danger square-btn-adjust" data-toggle="modal" data-target=".supprimerFacture_'.$reponse['ref_fact'].'" title="Supprimer la facture">
-			                    <i class="fas fa-times"></i>
+			                    <i class="fas fa-times"></i> 
 			                </button>';
 
 
@@ -15457,19 +15455,19 @@
 				</td>
 				<td style="text-align: center;">
 					<button class="btn btn-xs bg-primary square-btn-adjust" onclick="window.open('<?php echo $reponse['view_page'];?>?ref_fact=<?php echo $reponse['ref_fact'];?>','pop1','width=1000,height=800');" title="View invoice">
-	                    <i class="fas fa-eye"></i>
+	                    <i class="fas fa-eye"></i> 
 	                </button>
 					<button class="btn btn-xs bg-success square-btn-adjust" onclick="window.location.replace('<?php echo $reponse['excel'];?>?ref_fact=<?php echo $reponse['ref_fact'];?>','pop1','width=1000,height=800');" title="Export Excel File">
-	                    <i class="fas fa-file-excel"></i>
+	                    <i class="fas fa-file-excel"></i> 
 	                </button>
 					<!-- <button class="btn btn-xs bg-warning square-btn-adjust" onclick="window.location.replace('editFacturePartielle.php?ref_fact=<?php echo $reponse['ref_fact']; ?>&id_mod_lic_fact=<?php echo $reponse['id_mod_lic']; ?>&id_cli=<?php echo $reponse['id_cli']; ?>','pop1','width=80,height=80');" title="Modifier la facture">
-	                    <i class="fa fa-edit"></i>
+	                    <i class="fa fa-edit"></i> 
 	                </button> -->
 					<button class="btn btn-xs bg-purple square-btn-adjust" onclick="modal_send_invoice('<?php echo $reponse['ref_fact'];?>');" title="Send Email">
-	                    <i class="fas fa-envelope"></i>
+	                    <i class="fas fa-envelope"></i> 
 	                </button>
-					<?php
-						echo
+					<?php 
+						echo 
 						$btn;
 					?>
 				</td>
@@ -15542,19 +15540,19 @@
 								</td>
 								<td style="text-align: center;">
 									<button class="btn btn-xs bg-info square-btn-adjust" onclick="window.open(\''.$reponse['view_page'].'?ref_fact='.$reponse['ref_fact'].'\',\'pop1\',\'width=1000,height=800\');" title="View invoice">
-					                    <i class="fas fa-eye"></i>
+					                    <i class="fas fa-eye"></i> 
 					                </button>
 									<button class="btn btn-xs bg-success square-btn-adjust" onclick="window.location.replace(\''.$reponse['excel'].'?ref_fact='.$reponse['ref_fact'].'\',\'pop1\',\'width=1000,height=800\');" title="Export Excel File">
-					                    <i class="fas fa-file-excel"></i>
+					                    <i class="fas fa-file-excel"></i> 
 					                </button>
 									<button class="btn btn-xs bg-warning square-btn-adjust" onclick="editerFacture(\''.$reponse['ref_fact'].'\', \''.$reponse['edit_page'].'\');" title="Edit">
-					                    <i class="fas fa-edit"></i>
+					                    <i class="fas fa-edit"></i> 
 					                </button>
 									<button class="btn btn-xs bg-primary square-btn-adjust" onclick="validerFacture(\''.$reponse['ref_fact'].'\');" title="Validate">
-					                    <i class="fas fa-check"></i>
+					                    <i class="fas fa-check"></i> 
 					                </button>
 									<button class="btn btn-xs bg-danger square-btn-adjust" onclick="supprimerFacture(\''.$reponse['ref_fact'].'\');" title="Delete">
-					                    <i class="fas fa-times"></i>
+					                    <i class="fas fa-times"></i> 
 					                </button>
 								</td>
 							</tr>';
@@ -15648,8 +15646,8 @@
 													AND dos.id_mod_lic = ?
 													AND dos.id_cli = ?
 													AND depdos.id_dep_dos NOT IN (
-															SELECT id_dep_dos
-															 FROM detail_note_debit
+															SELECT id_dep_dos 
+															 FROM detail_note_debit 
 														)
 												GROUP BY dep.id_dep, SUBSTRING(dos.po_ref, 1, 3)");
 			$requete-> execute(array($entree['id_mod_lic'], $entree['id_cli']));
@@ -15696,8 +15694,8 @@
 													AND dos.id_cli = ?
 													AND SUBSTRING(dos.po_ref, 1, 3) = ?
 													AND depdos.id_dep_dos NOT IN (
-															SELECT id_dep_dos
-															 FROM detail_note_debit
+															SELECT id_dep_dos 
+															 FROM detail_note_debit 
 														)
 												ORDER BY dos.id_dos
 												LIMIT 0, 10");
@@ -15755,8 +15753,8 @@
 													AND dos.id_cli = ?
 													AND SUBSTRING(dos.po_ref, 1, 3) = ?
 													AND depdos.id_dep_dos NOT IN (
-															SELECT id_dep_dos
-															 FROM detail_note_debit
+															SELECT id_dep_dos 
+															 FROM detail_note_debit 
 														)
 												ORDER BY dos.id_dos
 												LIMIT 0, 10");
@@ -15855,8 +15853,8 @@
 													AND dos.id_cli = ?
 													-- AND SUBSTRING(dos.po_ref, 1, 3) = ?
 													AND depdos.id_dep_dos NOT IN (
-															SELECT id_dep_dos
-															 FROM detail_note_debit
+															SELECT id_dep_dos 
+															 FROM detail_note_debit 
 														)
 												ORDER BY dos.id_dos
 												LIMIT 0, 10");
@@ -15916,8 +15914,8 @@
 													AND dos.id_mod_lic = ?
 													-- AND SUBSTRING(dos.po_ref, 1, 3) = ?
 													AND depdos.id_dep_dos NOT IN (
-															SELECT id_dep_dos
-															 FROM detail_note_debit
+															SELECT id_dep_dos 
+															 FROM detail_note_debit 
 														)
 												ORDER BY dos.id_dos
 												LIMIT 0, 10");
@@ -15970,8 +15968,8 @@
 													AND dos.id_mod_lic = ?
 													AND dos.id_cli = ?
 													AND depdos.id_dep_dos NOT IN (
-															SELECT id_dep_dos
-															 FROM detail_note_debit
+															SELECT id_dep_dos 
+															 FROM detail_note_debit 
 														)
 												GROUP BY SUBSTRING(dos.po_ref, 1, 3)
 												ORDER BY SUBSTRING(dos.po_ref, 1, 3)");
@@ -16007,7 +16005,7 @@
 
 			$debut = $compteur;
 
-			$requete = $connexion-> prepare("SELECT ecriture.*,
+			$requete = $connexion-> prepare("SELECT ecriture.*, 
 													monnaie.sig_mon AS sig_mon
  												FROM ecriture, monnaie
 												WHERE ecriture.id_jour = ?
@@ -16024,7 +16022,7 @@
 									'.$reponse['date_e'].'
 								</td>
 								<td style="text-align: center;" class="bg bg-secondary">
-
+									
 								</td>
 								<td style="text-align: left;" class="bg bg-secondary">
 									'.$reponse['libelle_e'].'
@@ -16033,13 +16031,13 @@
 									'.$reponse['sig_mon'].'
 								</td>
 								<td style="text-align: center;" class="bg bg-secondary">
-
+									
 								</td>
 								<td style="text-align: center;" class="bg bg-secondary">
-
+									
 								</td>
 							</tr>';
-							$requeteDetail = $connexion-> prepare("SELECT compte.code_compte AS code_compte,
+							$requeteDetail = $connexion-> prepare("SELECT compte.code_compte AS code_compte, 
 																			compte.nom_compte AS nom_compte,
 																			detail_ecriture.debit AS debit,
 																			detail_ecriture.credit AS credit
@@ -16251,19 +16249,19 @@
 												mf.view_page AS view_page,
 												mf.excel AS excel,
 												CONCAT(CONCAT('<button class=\"btn btn-xs bg-info square-btn-adjust\" onclick=\"window.open(\'',mf.view_page,'?ref_fact=',fd.ref_fact,'\',\'pop3\',\'width=1000,height=800\');\" title=\"View invoice\">
-								                    <i class=\"fas fa-eye\"></i>
+								                    <i class=\"fas fa-eye\"></i> 
 								                </button>'),' ',
 								                CONCAT('<button class=\"btn btn-xs bg-success square-btn-adjust\" onclick=\"window.location.replace(\'',mf.excel,'?ref_fact=',fd.ref_fact,'\',\'pop4\',\'width=1000,height=800\');\" title=\"Export Annex\">
-								                    <i class=\"fas fa-file-excel\"></i>
+								                    <i class=\"fas fa-file-excel\"></i> 
 								                </button>'),' ',
 								                CONCAT('<button class=\"btn btn-xs bg-warning square-btn-adjust\" onclick=\"editerFacture(\'',fd.ref_fact,'\', \'',mf.edit_page,'\');\" title=\"Edit\">
-								                    <i class=\"fas fa-edit\"></i>
+								                    <i class=\"fas fa-edit\"></i> 
 								                </button>'),' ',
 								                CONCAT('<button class=\"btn btn-xs bg-primary square-btn-adjust\" onclick=\"validerFacture(\'',fd.ref_fact,'\');\" title=\"Validate\">
-								                    <i class=\"fas fa-check\"></i>
+								                    <i class=\"fas fa-check\"></i> 
 								                </button>'),' ',
 								                CONCAT('<button class=\"btn btn-xs bg-danger square-btn-adjust\" onclick=\"supprimerFacture(\'',fd.ref_fact,'\');\" title=\"Delete\">
-								                    <i class=\"fas fa-times\"></i>
+								                    <i class=\"fas fa-times\"></i> 
 								                </button>')) AS action
 												FROM facture_dossier fd, client cl, utilisateur u, modele_facture mf
 											WHERE fd.id_mod_lic = ?
@@ -16319,21 +16317,21 @@
 													mf.view_page AS view_page,
 													mf.excel AS excel,
 													CONCAT(CONCAT('<button class=\"btn btn-xs bg-info square-btn-adjust\" onclick=\"window.open(\'',mf.view_page,'?ref_fact=',fd.ref_fact,'\',\'pop3\',\'width=1000,height=800\');\" title=\"View invoice\">
-									                    <i class=\"fas fa-eye\"></i>
+									                    <i class=\"fas fa-eye\"></i> 
 									                </button>'),' ',
 									                IF(mf.excel IS NOT NULL, CONCAT('<button class=\"btn btn-xs bg-success square-btn-adjust\" onclick=\"window.location.replace(\'',mf.excel,'?ref_fact=',fd.ref_fact,'\',\'pop4\',\'width=1000,height=800\');\" title=\"Export Annex\">
-									                    <i class=\"fas fa-file-excel\"></i>
+									                    <i class=\"fas fa-file-excel\"></i> 
 									                </button>'), ''),' ',
 									                IF(mf.edit_page IS NOT NULL, CONCAT('<button class=\"btn btn-xs bg-warning square-btn-adjust\" onclick=\"editerFacture(\'',fd.ref_fact,'\', \'',mf.edit_page,'\');\" title=\"Edit\">
-									                    <i class=\"fas fa-edit\"></i>
+									                    <i class=\"fas fa-edit\"></i> 
 									                </button>'), ''),' ',
 									                CONCAT('<button class=\"btn btn-xs bg-primary square-btn-adjust\" onclick=\"validerFacture(\'',fd.ref_fact,'\');\" title=\"Validate\">
-									                    <i class=\"fas fa-check\"></i>
+									                    <i class=\"fas fa-check\"></i> 
 									                </button>'),' ',
 									                CONCAT('<button class=\"btn btn-xs bg-secondary square-btn-adjust\" onclick=\"modal_dossiers_facture(\'',fd.ref_fact,'\');\" title=\"Files in invoice\">
-									                    <i class=\"fas fa-cogs\"></i>
+									                    <i class=\"fas fa-cogs\"></i> 
 									                </button> <button class=\"btn btn-xs bg-danger square-btn-adjust\" onclick=\"supprimerFacture(\'',fd.ref_fact,'\');\" title=\"Delete\">
-									                    <i class=\"fas fa-times\"></i>
+									                    <i class=\"fas fa-times\"></i> 
 									                </button>')) AS action
  												FROM facture_dossier fd, client cl, utilisateur u, modele_facture mf
 												WHERE fd.id_mod_lic = ?
@@ -16359,30 +16357,22 @@
 													mf.edit_page AS edit_page,
 													mf.view_page AS view_page,
 													mf.excel AS excel,
-													CONCAT(CONCAT('<button class=\"btn btn-xs bg-info square-btn-adjust\" onclick=\"window.open(\'',
-													    IF(fd.code_UID IS NOT NULL, 'viewImportInvoiceSingle2023DGI.php', mf.view_page),
-													    '?ref_fact=',fd.ref_fact,'\',\'pop3\',\'width=1000,height=800\');\" title=\"View invoice\">
-									                    <i class=\"fas fa-eye\"></i>
+													CONCAT(CONCAT('<button class=\"btn btn-xs bg-info square-btn-adjust\" onclick=\"window.open(\'',mf.view_page,'?ref_fact=',fd.ref_fact,'\',\'pop3\',\'width=1000,height=800\');\" title=\"View invoice\">
+									                    <i class=\"fas fa-eye\"></i> 
 									                </button>'),' ',
 									                IF(mf.excel IS NOT NULL, CONCAT('<button class=\"btn btn-xs bg-success square-btn-adjust\" onclick=\"window.location.replace(\'',mf.excel,'?ref_fact=',fd.ref_fact,'\',\'pop4\',\'width=1000,height=800\');\" title=\"Export Annex\">
-									                    <i class=\"fas fa-file-excel\"></i>
+									                    <i class=\"fas fa-file-excel\"></i> 
 									                </button>'), ''),' ',
 									                IF(mf.edit_page IS NOT NULL, CONCAT('<button class=\"btn btn-xs bg-warning square-btn-adjust\" onclick=\"editerFacture(\'',fd.ref_fact,'\', \'',mf.edit_page,'\');\" title=\"Edit\">
-									                    <i class=\"fas fa-edit\"></i>
+									                    <i class=\"fas fa-edit\"></i> 
 									                </button>'), ''),' ',
-									                IF(fd.code_UID IS NULL, CONCAT('<button class=\"btn btn-xs bg-primary square-btn-adjust\" onclick=\"normaliserFactureDGI(\'',fd.ref_fact,'\');\" title=\"Normaliser DGI\">
-									                    <i class=\"fas fa-qrcode\"></i>
-									                </button> '), CONCAT('<button class=\"btn btn-xs bg-success square-btn-adjust\" title=\"Normalisée DGI\" disabled>
-									                    <i class=\"fas fa-check-circle\"></i>
-									                </button> ')),' ',
-
 									                CONCAT('<button class=\"btn btn-xs bg-purple square-btn-adjust\" onclick=\"modal_send_invoice(\'',fd.ref_fact,'\');\" title=\"Validate\">
-									                    <i class=\"fas fa-envelope\"></i>
+									                    <i class=\"fas fa-envelope\"></i> 
 									                </button>'),' ',
 									                CONCAT('<button class=\"btn btn-xs bg-secondary square-btn-adjust\" onclick=\"modal_dossiers_facture(\'',fd.ref_fact,'\');\" title=\"Files in invoice\">
-									                    <i class=\"fas fa-cogs\"></i>
+									                    <i class=\"fas fa-cogs\"></i> 
 									                </button> <button class=\"btn btn-xs bg-danger square-btn-adjust\" onclick=\"supprimerFacture(\'',fd.ref_fact,'\');\" title=\"Delete\">
-									                    <i class=\"fas fa-times\"></i>
+									                    <i class=\"fas fa-times\"></i> 
 									                </button>')) AS action
  												FROM facture_dossier fd, client cl, utilisateur u, modele_facture mf
 												WHERE fd.id_mod_lic = ?
@@ -16391,7 +16381,6 @@
 													AND fd.id_mod_fact = mf.id_mod_fact
 													AND fd.validation = '1'
 													AND fd.date_mail IS NULL
-													AND fd.code_UID IS NULL
 													AND fd.id_cli = ?
 												ORDER BY fd.date_fact DESC");
 			}else if ($statut=='invoice_send') {
@@ -16411,21 +16400,21 @@
 													mf.view_page AS view_page,
 													mf.excel AS excel,
 													CONCAT(CONCAT('<button class=\"btn btn-xs bg-info square-btn-adjust\" onclick=\"window.open(\'',mf.view_page,'?ref_fact=',fd.ref_fact,'\',\'pop3\',\'width=1000,height=800\');\" title=\"View invoice\">
-									                    <i class=\"fas fa-eye\"></i>
+									                    <i class=\"fas fa-eye\"></i> 
 									                </button>'),' ',
 									                IF(mf.excel IS NOT NULL, CONCAT('<button class=\"btn btn-xs bg-success square-btn-adjust\" onclick=\"window.location.replace(\'',mf.excel,'?ref_fact=',fd.ref_fact,'\',\'pop4\',\'width=1000,height=800\');\" title=\"Export Annex\">
-									                    <i class=\"fas fa-file-excel\"></i>
+									                    <i class=\"fas fa-file-excel\"></i> 
 									                </button>'), ''),' ',
 									                IF(mf.edit_page IS NOT NULL, CONCAT('<button class=\"btn btn-xs bg-warning square-btn-adjust\" onclick=\"editerFacture(\'',fd.ref_fact,'\', \'',mf.edit_page,'\');\" title=\"Edit\">
-									                    <i class=\"fas fa-edit\"></i>
+									                    <i class=\"fas fa-edit\"></i> 
 									                </button>'), ''),' ',
 									                CONCAT('<button class=\"btn btn-xs bg-purple square-btn-adjust\" onclick=\"modal_send_invoice(\'',fd.ref_fact,'\');\" title=\"Validate\">
-									                    <i class=\"fas fa-envelope\"></i>
+									                    <i class=\"fas fa-envelope\"></i> 
 									                </button>'),' ',
 									                CONCAT('<button class=\"btn btn-xs bg-secondary square-btn-adjust\" onclick=\"modal_dossiers_facture(\'',fd.ref_fact,'\');\" title=\"Files in invoice\">
-									                    <i class=\"fas fa-cogs\"></i>
+									                    <i class=\"fas fa-cogs\"></i> 
 									                </button> <button class=\"btn btn-xs bg-danger square-btn-adjust\" onclick=\"supprimerFacture(\'',fd.ref_fact,'\');\" title=\"Delete\">
-									                    <i class=\"fas fa-times\"></i>
+									                    <i class=\"fas fa-times\"></i> 
 									                </button>')) AS action
  												FROM facture_dossier fd, client cl, utilisateur u, modele_facture mf
 												WHERE fd.id_mod_lic = ?
@@ -16436,26 +16425,6 @@
 													AND fd.date_mail IS NOT NULL
 													AND fd.id_cli = ?
 												ORDER BY fd.date_fact ASC");
-			}else if ($statut=='invoice_normalized_dgi') {
-				$requete = $connexion-> prepare("SELECT fd.ref_fact AS ref_fact,
-													DATE_FORMAT(fd.date_fact, '%d/%m/%Y') AS date_fact,
-													fd.code_UID AS code_UID,
-													fd.code_DEF_DGI AS code_DEF_DGI,
-													fd.date_DGI AS date_DGI,
-													u.nom_util AS nom_util,
-													CONCAT(
-													    CONCAT('<button class=\"btn btn-xs bg-info square-btn-adjust\" onclick=\"window.open(\'viewImportInvoiceSingle2023DGI.php?ref_fact=',fd.ref_fact,'\',\'pop3\',\'width=1000,height=800\');\" title=\"View invoice with QR Code\">
-													        <i class=\"fas fa-qrcode\"></i>
-													    </button> ')
-													) AS action
- 												FROM facture_dossier fd, client cl, utilisateur u
-												WHERE fd.id_mod_lic = ?
-													AND fd.id_util = u.id_util
-													AND fd.id_cli = cl.id_cli
-													AND fd.validation = '1'
-													AND fd.code_UID IS NOT NULL
-													AND fd.id_cli = ?
-												ORDER BY fd.date_DGI DESC");
 			}
 			$requete-> execute(array($entree['id_mod_lic'], $entree['id_cli']));
 			while ($reponse = $requete-> fetch()) {
@@ -16503,13 +16472,13 @@
 												mf.view_page AS view_page,
 												mf.excel AS excel,
 												CONCAT(CONCAT('<button class=\"btn btn-xs bg-info square-btn-adjust\" onclick=\"window.open(\'',mf.view_page,'?ref_fact=',fd.ref_fact,'\',\'pop3\',\'width=1000,height=800\');\" title=\"View invoice\">
-								                    <i class=\"fas fa-eye\"></i>
+								                    <i class=\"fas fa-eye\"></i> 
 								                </button>'),' ',
 								                IF(mf.excel IS NOT NULL, CONCAT('<button class=\"btn btn-xs bg-success square-btn-adjust\" onclick=\"window.location.replace(\'',mf.excel,'?ref_fact=',fd.ref_fact,'\',\'pop4\',\'width=1000,height=800\');\" title=\"Export Annex\">
-								                    <i class=\"fas fa-file-excel\"></i>
+								                    <i class=\"fas fa-file-excel\"></i> 
 								                </button>'), '')) AS action_2,
 												CONCAT(CONCAT('<button class=\"btn btn-xs bg-info square-btn-adjust\" onclick=\"window.open(\'',mf.view_page,'?ref_fact=',fd.ref_fact,'\',\'pop3\',\'width=1000,height=800\');\" title=\"View invoice\">
-								                    <i class=\"fas fa-eye\"></i>
+								                    <i class=\"fas fa-eye\"></i> 
 								                </button>')) AS action
 												FROM facture_dossier fd, client cl, utilisateur u, modele_facture mf
 											WHERE fd.id_mod_lic = ?
@@ -16520,7 +16489,7 @@
 												AND fd.id_cli = ?
 												AND YEAR(fd.date_fact) = '2023'
 											ORDER BY fd.date_fact ASC");
-
+			
 			$requete-> execute(array($entree['id_mod_lic'], $entree['id_cli']));
 			while ($reponse = $requete-> fetch()) {
 				$compteur++;
@@ -16543,7 +16512,7 @@
 			}else{
 				$entree['ref_fact'] = $ref_fact;
 			}
-
+			
 			//$entree['type_fact'] = $type_fact;
 			$compteur=0;
 
@@ -16623,10 +16592,10 @@
 								</td>
 								<td style="text-align: center;">
 									<button class="btn btn-xs bg-info square-btn-adjust" onclick="window.open(\''.$reponse['view_page'].'?ref_fact='.$reponse['ref_fact'].'\',\'pop1\',\'width=1000,height=800\');" title="View invoice">
-					                    <i class="fas fa-eye"></i>
+					                    <i class="fas fa-eye"></i> 
 					                </button>
 									<button class="btn btn-xs bg-success square-btn-adjust" onclick="window.location.replace(\''.$reponse['excel'].'?ref_fact='.$reponse['ref_fact'].'\',\'pop1\',\'width=1000,height=800\');" title="Export Excel File">
-					                    <i class="fas fa-file-excel"></i>
+					                    <i class="fas fa-file-excel"></i> 
 					                </button>
 								</td>
 							</tr>';
@@ -16644,7 +16613,7 @@
 			}else{
 				$entree['ref_fact'] = $ref_fact;
 			}
-
+			
 			//$entree['type_fact'] = $type_fact;
 			$compteur=0;
 
@@ -16679,7 +16648,7 @@
 			}else{
 				return 0;
 			}
-
+			
 
 		}
 
@@ -16720,7 +16689,6 @@
 													AND fd.id_mod_fact = mf.id_mod_fact
 													AND fd.validation = '1'
 													AND fd.date_mail IS NULL
-													AND fd.code_UID IS NULL
 													AND fd.id_cli = ?
 												ORDER BY fd.date_fact, fd.ref_fact ASC");
 			$requete-> execute(array($entree['id_mod_lic'], $entree['id_cli']));
@@ -16731,7 +16699,7 @@
 				IF($this-> getUtilisateur($_SESSION['id_util'])['suppression_facture']=='1'){
 					$btn_delete = '
 									<button class="btn btn-xs bg-danger square-btn-adjust" onclick="supprimerFacture(\''.$reponse['ref_fact'].'\');" title="Delete">
-					                    <i class="fas fa-times"></i>
+					                    <i class="fas fa-times"></i> 
 					                </button>';
 				}
 
@@ -16756,16 +16724,16 @@
 								</td>
 								<td style="text-align: center;">
 									<button class="btn btn-xs bg-warning square-btn-adjust" onclick="editerFacture(\''.$reponse['ref_fact'].'\', \''.$reponse['edit_page'].'\');" title="Edit">
-					                    <i class="fas fa-edit"></i>
+					                    <i class="fas fa-edit"></i> 
 					                </button>
 									<button class="btn btn-xs bg-info square-btn-adjust" onclick="window.open(\''.$reponse['view_page'].'?ref_fact='.$reponse['ref_fact'].'\',\'pop1\',\'width=1000,height=800\');" title="View invoice">
-					                    <i class="fas fa-eye"></i>
+					                    <i class="fas fa-eye"></i> 
 					                </button>
 									<button class="btn btn-xs bg-success square-btn-adjust" onclick="window.location.replace(\''.$reponse['excel'].'?ref_fact='.$reponse['ref_fact'].'\',\'pop1\',\'width=1000,height=800\');" title="Export Excel File">
-					                    <i class="fas fa-file-excel"></i>
+					                    <i class="fas fa-file-excel"></i> 
 					                </button>
 									<button class="btn btn-xs bg-purple square-btn-adjust" onclick="modal_send_invoice(\''.$reponse['ref_fact'].'\');" title="Send Email">
-					                    <i class="fas fa-envelope"></i>
+					                    <i class="fas fa-envelope"></i> 
 					                </button>
 					                '.$btn_delete.'
 								</td>
@@ -16807,8 +16775,8 @@
 		// 											mf.view_page AS view_page,
 		// 											mf.excel AS excel,
 		// 											SUM(pf.montant_paie) AS montant_paie,
-		// 											SUM(
-		// 												IF(det.usd='1',
+		// 											SUM( 
+		// 												IF(det.usd='1', 
 		// 													IF(det.tva='1',
 		// 														det.montant*1.16,
 		// 														det.montant
@@ -16817,7 +16785,7 @@
 		// 														(det.montant/dos.roe_decl)*1.16,
 		// 														(det.montant/dos.roe_decl)
 		// 													)
-		// 												)
+		// 												) 
 		// 											) AS montant_fact
 		// 										FROM facture_dossier fd
 		// 										LEFT JOIN utilisateur u
@@ -16869,16 +16837,16 @@
 		// 						</td>
 		// 						<td style="text-align: center;">
 		// 							<button class="btn btn-xs bg-info square-btn-adjust" onclick="window.open(\''.$reponse['view_page'].'?ref_fact='.$reponse['ref_fact'].'\',\'pop1\',\'width=1000,height=800\');" title="View invoice">
-		// 			                    <i class="fas fa-eye"></i>
+		// 			                    <i class="fas fa-eye"></i> 
 		// 			                </button>
 		// 							<button class="btn btn-xs bg-success square-btn-adjust" onclick="window.location.replace(\''.$reponse['excel'].'?ref_fact='.$reponse['ref_fact'].'\',\'pop1\',\'width=1000,height=800\');" title="Export Excel File">
-		// 			                    <i class="fas fa-file-excel"></i>
+		// 			                    <i class="fas fa-file-excel"></i> 
 		// 			                </button>
 		// 							<button class="btn btn-xs bg-purple square-btn-adjust" onclick="modal_send_invoice(\''.$reponse['ref_fact'].'\');" title="Send Email">
-		// 			                    <i class="fas fa-envelope"></i>
+		// 			                    <i class="fas fa-envelope"></i> 
 		// 			                </button>
 		// 							<button class="btn btn-xs bg-secondary square-btn-adjust" onclick="modal_paiement(\''.$reponse['ref_fact'].'\');" title="Make Payment">
-		// 			                    <i class="fas fa-calculator"></i>
+		// 			                    <i class="fas fa-calculator"></i> 
 		// 			                </button>
 		// 						</td>
 		// 					</tr>';
@@ -16957,16 +16925,16 @@
 								</td>
 								<td style="text-align: center;">
 									<button class="btn btn-xs bg-info square-btn-adjust" onclick="window.open(\''.$reponse['view_page'].'?ref_fact='.$reponse['ref_fact'].'\',\'pop1\',\'width=1000,height=800\');" title="View invoice">
-					                    <i class="fas fa-eye"></i>
+					                    <i class="fas fa-eye"></i> 
 					                </button>
 									<button class="btn btn-xs bg-success square-btn-adjust" onclick="window.location.replace(\''.$reponse['excel'].'?ref_fact='.$reponse['ref_fact'].'\',\'pop1\',\'width=1000,height=800\');" title="Export Excel File">
-					                    <i class="fas fa-file-excel"></i>
+					                    <i class="fas fa-file-excel"></i> 
 					                </button>
 									<button class="btn btn-xs bg-purple square-btn-adjust" onclick="modal_send_invoice(\''.$reponse['ref_fact'].'\');" title="Send Email">
-					                    <i class="fas fa-envelope"></i>
+					                    <i class="fas fa-envelope"></i> 
 					                </button>
 									<button class="btn btn-xs bg-secondary square-btn-adjust" onclick="modal_paiement(\''.$reponse['ref_fact'].'\');" title="Make Payment">
-					                    <i class="fas fa-calculator"></i>
+					                    <i class="fas fa-calculator"></i> 
 					                </button>
 								</td>
 							</tr>';
@@ -17043,13 +17011,13 @@
 								</td>
 								<td style="text-align: center;">
 									<button class="btn btn-xs bg-info square-btn-adjust" onclick="window.open(\''.$reponse['view_page'].'?ref_fact='.$reponse['ref_fact'].'\',\'pop1\',\'width=1000,height=800\');" title="View invoice">
-					                    <i class="fas fa-eye"></i>
+					                    <i class="fas fa-eye"></i> 
 					                </button>
 									<button class="btn btn-xs bg-success square-btn-adjust" onclick="window.location.replace(\''.$reponse['excel'].'?ref_fact='.$reponse['ref_fact'].'\',\'pop1\',\'width=1000,height=800\');" title="Export Excel File">
-					                    <i class="fas fa-file-excel"></i>
+					                    <i class="fas fa-file-excel"></i> 
 					                </button>
 									<button class="btn btn-xs bg-purple square-btn-adjust" onclick="modal_send_invoice(\''.$reponse['ref_fact'].'\');" title="Send Email">
-					                    <i class="fas fa-envelope"></i>
+					                    <i class="fas fa-envelope"></i> 
 					                </button>
 								</td>
 							</tr>';
@@ -17069,11 +17037,11 @@
 
 
 			$requete = $connexion-> prepare('SELECT SUM(
-														IF(det.usd="1",
+														IF(det.usd="1", 
 															IF(det.tva="1",
 																det.montant*1.16,
 																det.montant
-															),
+															), 
 															IF(det.tva="1",
 																IF(det.montant_tva>0,
 																	(det.montant+det.montant_tva)/dos.roe_decl,
@@ -17118,11 +17086,6 @@
 			// }
 			$reponse = $requete-> fetch();
 
-			// Vérifier si la requête a retourné un résultat
-			if ($reponse === false || !isset($reponse['ttc_usd'])) {
-				return 0; // Retourner 0 si aucun résultat
-			}
-
 			return $reponse['ttc_usd'];
 		}
 
@@ -17151,7 +17114,7 @@
 												WHERE fd.id_mod_lic = ?
 													AND fd.id_util = u.id_util
 													AND fd.id_cli = cl.id_cli
-
+													
 													AND fd.validation = '1'
 													AND fd.transmission = '0'
 													$sqlClient");
@@ -17216,12 +17179,12 @@
 					$bg = 'color: #CCCC00;';
 					if($this-> getDataUtilisateur($_SESSION['id_util'])['validation_facture'] == '1'){
 						$btn = '<button class="btn btn-xs bg-info square-btn-adjust" data-toggle="modal" data-target=".validerFacture_'.$reponse['ref_fact'].'" title="Valider la facture">
-			                    <i class="fas fa-check"></i>
+			                    <i class="fas fa-check"></i> 
 			                </button>';
 			            }else{
 			            	$btn = '';
 			            }
-
+					
 					$etat = '<span class="badge badge-warning">
 							En attente de validation
 							</span>';
@@ -17241,12 +17204,12 @@
 				}
 
 				$btn .='<button class="btn btn-xs bg-danger square-btn-adjust" data-toggle="modal" data-target=".supprimerFacture_'.$reponse['ref_fact'].'" title="Supprimer la facture">
-			                    <i class="fas fa-times"></i>
+			                    <i class="fas fa-times"></i> 
 			                </button>';
 			    if ($reponse['master_data']!='' && $reponse['master_data']!=null) {
-
+					
 					$btn = '<button class="btn btn-xs bg-secondary square-btn-adjust" onclick="window.open(\'../FACTURES DOSSIERS/'.$reponse['ref_fact'].'/'.$reponse['master_data'].'\',\'pop1\',\'width=1000,height=800\');"title="Master Data">
-			                    <i class="fas fa-copy"></i>
+			                    <i class="fas fa-copy"></i> 
 			                </button>
 			                '.$btn;
 				}
@@ -17274,9 +17237,9 @@
 				</td>
 				<td style="text-align: center;">
 					<button class="btn bg-primary btn-xs square-btn-adjust" onclick="window.open('<?php echo $reponse['view_page'];?>?ref_fact=<?php echo $reponse['ref_fact'];?>','pop1','width=1000,height=800');" title="Générer la facture">
-	                    <i class="fas fa-eye"></i>
+	                    <i class="fas fa-eye"></i> 
 	                </button>
-					<?php
+					<?php 
 						echo $btn;
 					?>
 				</td>
@@ -17340,13 +17303,13 @@
 					$bg = 'color: #CCCC00;';
 					if($this-> getDataUtilisateur($_SESSION['id_util'])['validation_facture'] == '1'){
 						$btn = '<button class="btn btn-xs bg-info square-btn-adjust" data-toggle="modal" data-target=".validerFacture_'.$reponse['ref_fact'].'" title="Valider la facture">
-			                    <i class="fas fa-check"></i>
+			                    <i class="fas fa-check"></i> 
 			                </button>
 			                ';
 			            }else{
 			            	$btn = '';
 			            }
-
+					
 					$etat = '<span class="badge badge-warning">
 							En attente de validation
 							</span>';
@@ -17366,13 +17329,13 @@
 				}
 
 				$btn .='<button class="btn btn-xs bg-danger square-btn-adjust" data-toggle="modal" data-target=".supprimerFacture_'.$reponse['ref_fact'].'" title="Supprimer la facture">
-			                    <i class="fas fa-times"></i>
+			                    <i class="fas fa-times"></i> 
 			                </button>';
 
 			    if ($reponse['master_data']!='' && $reponse['master_data']!=null) {
-
+					
 					$btn = '<button class="btn btn-xs bg-secondary square-btn-adjust" onclick="window.open(\'../FACTURES DOSSIERS/'.$reponse['ref_fact'].'/'.$reponse['master_data'].'\',\'pop1\',\'width=1000,height=800\');"title="Master Data">
-			                    <i class="fas fa-copy"></i>
+			                    <i class="fas fa-copy"></i> 
 			                </button>
 			                '.$btn;
 				}
@@ -17400,9 +17363,9 @@
 				</td>
 				<td style="text-align: center;">
 					<button class="btn bg-primary square-btn-adjust btn-xs" onclick="window.open('<?php echo $reponse['view_page'];?>?ref_fact=<?php echo $reponse['ref_fact'];?>','pop1','width=1000,height=800');" title="Générer la facture">
-	                    <i class="fas fa-eye"></i>
+	                    <i class="fas fa-eye"></i> 
 	                </button>
-					<?php
+					<?php 
 						echo $btn;
 					?>
 				</td>
@@ -17653,7 +17616,7 @@
 			$requete = $connexion-> prepare("SELECT fd.ref_fact AS ref_fact,
 													UPPER(cl.nom_cli) AS nom_cli,
 													SUM(IF(det.usd='1',
-														IF(det.tva='1', (det.montant*1.16),det.montant)
+														IF(det.tva='1', (det.montant*1.16),det.montant) 
 														,
 														IF(det.tva='1', ((det.montant/dos.roe_decl)*1.16), (det.montant/dos.roe_decl))
 													)) AS montant,
@@ -17674,7 +17637,7 @@
 												ORDER BY dos.id_dos");
 			$requete-> execute(array($entree['id_trans_fact']));
 			while ($reponse = $requete-> fetch()) {
-
+				
 				$compteur++;
 				$montant += $reponse['montant'];
 				$bfu += $this-> getMontantFactureDossierDebours($reponse['ref_fact'], $reponse['id_dos'], 10);
@@ -17691,7 +17654,7 @@
 					<?php echo $reponse['ref_dos'];?>
 				</td>
 				<td style="text-align: center;">
-					<?php
+					<?php 
 						echo $this-> getMarchandiseFacture($reponse['ref_fact'])['nom_march'];
 					?>
 				</td>
@@ -17825,12 +17788,12 @@
 			$requete = $connexion-> prepare("SELECT fd.ref_fact AS ref_fact,
 													UPPER(cl.nom_cli) AS nom_cli,
 													DATE_FORMAT(fd.date_fact, '%d/%m/%Y') AS date_fact,
-													SUM(
+													SUM( 
 														IF(det.usd='1',
-															IF(det.tva='1', (det.montant*1.16),det.montant)
+															IF(det.tva='1', (det.montant*1.16),det.montant) 
 															,
 															IF(det.tva='1', ((det.montant/dos.roe_decl)*1.16), (det.montant/dos.roe_decl))
-														)
+														) 
 													) AS montant
 												FROM facture_dossier fd, client cl, detail_facture_dossier det, dossier dos
 												WHERE fd.id_mod_lic = ?
@@ -17846,7 +17809,7 @@
 												ORDER BY fd.date_fact");
 			$requete-> execute(array($entree['id_mod_lic'], $entree['type_fact']));
 			while ($reponse = $requete-> fetch()) {
-
+				
 				$compteur++;
 			?>
 			<tr>
@@ -18150,7 +18113,7 @@
 												WHERE fd.id_mod_lic = ?
 													AND fd.id_util = u.id_util
 													AND fd.id_cli = cl.id_cli
-
+													
 													AND fd.validation = '1'
 													AND fd.transmission = '1'
 													$sqlClient");
@@ -18196,7 +18159,7 @@
 												WHERE fd.id_mod_lic = ?
 													AND fd.id_util = u.id_util
 													AND fd.id_cli = cl.id_cli
-
+													
 													AND fd.validation = '1'
 													AND fd.transmission = '1'
 													$sqlClient
@@ -18213,12 +18176,12 @@
 					$bg = 'color: #CCCC00;';
 					if($this-> getDataUtilisateur($_SESSION['id_util'])['validation_facture'] == '1'){
 						$btn = '<button class="btn btn-xs bg-info square-btn-adjust" data-toggle="modal" data-target=".validerFacture_'.$reponse['ref_fact'].'" title="Valider la facture">
-			                    <i class="fas fa-check"></i>
+			                    <i class="fas fa-check"></i> 
 			                </button>';
 			            }else{
 			            	$btn = '';
 			            }
-
+					
 					$etat = '<span class="badge badge-warning">
 							En attente de validation
 							</span>';
@@ -18238,13 +18201,13 @@
 				}
 
 				$btn .='<button class="btn btn-xs bg-danger square-btn-adjust" data-toggle="modal" data-target=".supprimerFacture_'.$reponse['ref_fact'].'" title="Supprimer la facture">
-			                    <i class="fas fa-times"></i>
+			                    <i class="fas fa-times"></i> 
 			                </button>';
-
+			                
 			    if ($reponse['master_data']!='' && $reponse['master_data']!=null) {
-
+					
 					$btn = '<button class="btn btn-xs bg-secondary square-btn-adjust" onclick="window.open(\'../FACTURES DOSSIERS/'.$reponse['ref_fact'].'/'.$reponse['master_data'].'\',\'pop1\',\'width=1000,height=800\');"title="Master Data">
-			                    <i class="fas fa-copy"></i>
+			                    <i class="fas fa-copy"></i> 
 			                </button>
 			                '.$btn;
 				}
@@ -18272,11 +18235,11 @@
 				</td>
 				<td style="text-align: center;">
 					<button class="btn bg-primary btn-xs square-btn-adjust" onclick="window.open('generateurFacturePartielle.php?ref_fact=<?php echo $reponse['ref_fact'];?>','pop1','width=1000,height=800');" title="Générer la facture">
-	                    <i class="fas fa-eye"></i>
+	                    <i class="fas fa-eye"></i> 
 	                </button>
 
-					<?php
-						echo
+					<?php 
+						echo 
 						$btn;
 					?>
 				</td>
@@ -18306,17 +18269,17 @@
 													det.tva AS tva,
 													d.abr_deb AS abr_deb,
 													SUM(det.montant) AS ht,
-													SUM(
-														IF(det.usd="1",
+													SUM( 
+														IF(det.usd="1", 
 															0,
 															det.montant
-														)
+														) 
 													) AS ht_cdf,
-													SUM(
-														IF(det.usd="1",
+													SUM( 
+														IF(det.usd="1", 
 															det.montant,
 															(det.montant/dos.roe_decl)
-														)
+														) 
 													) AS ht_usd
 												FROM debours d, detail_facture_dossier det, dossier dos
 												WHERE det.ref_fact = ?
@@ -18592,7 +18555,7 @@
 														AND id_mod_trans = ?");
 				$requete-> execute(array($entree['id_deb'], $entree['id_mod_lic'], $entree['id_cli'], $entree['id_march'], $entree['id_mod_trans']));
 				$reponse = $requete-> fetch();
-
+				
 				if ($reponse) {
 					return $reponse;
 				}else{
@@ -18666,7 +18629,7 @@
 														AND id_mod_trans = ?");
 				$requete-> execute(array($entree['id_deb'], $entree['id_mod_lic'], $entree['id_cli'], $entree['id_march'], $entree['id_mod_trans']));
 				$reponse = $requete-> fetch();
-
+				
 				if ($reponse) {
 					return $reponse;
 				}else{
@@ -18867,7 +18830,7 @@
 			}else{
 				return NULL;
 			}
-
+			
 		}
 
 		public function getMontantDeboursFactureDossier2USD($ref_fact, $id_deb, $id_dos){
@@ -18902,7 +18865,7 @@
 			}else{
 				return NULL;
 			}
-
+			
 		}
 
 		public function getMontantTVADeboursFactureDossier($ref_fact, $id_deb, $id_dos){
@@ -18925,7 +18888,7 @@
 			}else{
 				return NULL;
 			}
-
+			
 		}
 
 		public function getTVADeboursFactureDossier($ref_fact, $id_deb, $id_dos){
@@ -18948,7 +18911,7 @@
 			}else{
 				return '0';
 			}
-
+			
 		}
 
 		public function getMontantDeboursUnderValue($id_cli, $id_deb, $id_mod_lic, $id_mod_trans, $id_march){
@@ -18973,7 +18936,7 @@
 			}else{
 				return NULL;
 			}
-
+			
 		}
 
 		public function getPourcentageDeboursFactureDossier2($ref_fact, $id_deb, $id_dos){
@@ -18996,7 +18959,7 @@
 			}else{
 				return NULL;
 			}
-
+			
 		}
 
 		public function getBureauDouane($id_bur_douane){
@@ -19014,7 +18977,7 @@
 			}else{
 				return null;
 			}
-
+			
 		}
 
 		public function getDataDossierFacturePartielle($ref_fact){
@@ -19162,7 +19125,7 @@
 				$reponse['nom_banq'] = '-';
 				return $reponse;
 			}
-
+			
 		}
 
 		public function getRangDossierFacture($ref_fact){
@@ -19220,7 +19183,7 @@
 						// $liste .= '<br>&nbsp;'.$reponse['ref_dos'];
 						$liste .= ', '.$reponse['ref_dos'];
 					}
-
+					
 
 				}
 
@@ -19266,7 +19229,7 @@
 		}
 
 
-		// public function getRangDossierFacture($ref_fact){
+		// public function getRangDossierFacture($ref_fact){  
 		// w334, 435, 4354
 		// 	include('connexion.php');
 		// 	$entree['ref_fact'] = $ref_fact;
@@ -19334,7 +19297,7 @@
 													-- AND ref_quit IS NOT NULL
 													-- AND date_quit IS NOT NULL
 													AND not_fact = '0'
-													AND
+													AND 
 													(
 														-- Pocess 1
 														(
@@ -19351,7 +19314,7 @@
 														(
 															get_inv_process_pour_dossier(id_dos)=2
 															AND (
-																	dispatch_date IS NOT NULL
+																	dispatch_date IS NOT NULL 
 																	OR (dgda_out IS NOT NULL AND id_mod_trans=4)
 																)
 														)
@@ -19361,7 +19324,7 @@
 															get_inv_process_pour_dossier(id_dos)=3
 															AND dispatch_deliv IS NOT NULL
 														)
-
+															
 													)
 													AND id_dos NOT IN (SELECT id_dos FROM detail_facture_dossier)");
 			$requete-> execute(array($entree['id_mod_lic'], $entree['id_cli']));
@@ -19573,10 +19536,10 @@
 				$code = '';
 
 				if (isset($_GET['id_mod_lic_fact']) &&  $_GET['id_mod_lic_fact']=='1') {
-
+					
 					$code = $this-> getLastFactureDossier($id_cli, $_GET['id_mod_lic_fact'], $_GET['id_mod_trans'], $_GET['id_march']);
-
-
+					
+					
 					// $i = 1;
 
 					// if (!empty($this-> getCompteurFactureClientModeleLic($id_cli, $_GET['id_mod_lic_fact'], date('Y'), $_GET['id_march'])) && ($this-> getCompteurFactureClientModeleLic($id_cli, $_GET['id_mod_lic_fact'], date('Y'), $_GET['id_march'])!='')) {
@@ -19608,8 +19571,8 @@
 					// }
 
 				}else if (isset($_POST['id_mod_lic']) && ($_POST['id_mod_lic']=='1')) {
-
-
+					
+					
 					$i = 1;
 
 					if (!empty(($this-> getCompteurFactureClientModeleLic($id_cli, $_POST['id_mod_lic'], date('Y'), $_GET['id_march']))) && ($this-> getCompteurFactureClientModeleLic($id_cli, $_GET['id_mod_lic'], date('Y'), $_GET['id_march'])!='')) {
@@ -19642,7 +19605,7 @@
 
 				}else if (isset($_POST['id_mod_lic']) &&  $_POST['id_mod_lic']=='2' && $id_march==NULL) {
 
-
+					
 					$i = 1;
 
 					if (!empty($this-> getCompteurFactureClientModeleLic($id_cli, $_POST['id_mod_lic'], date('Y'), $_POST['id_march'])) && ($this-> getCompteurFactureClientModeleLic($id_cli, $_POST['id_mod_lic'], date('Y'), $_POST['id_march'])!='')) {
@@ -19653,7 +19616,7 @@
 					// 2022-MTS-EXP-HC-037
 
 					$code_march = $this-> getDataMarchandise($_POST['id_march'])['code_march_2'];
-
+					
 
 					$code = date('Y').'-'.$this-> codePourClient($id_cli).$code_march.'-'.$a;
 
@@ -19668,7 +19631,7 @@
 				}else if (isset($_GET['id_mod_lic_fact']) &&  $_GET['id_mod_lic_fact']=='2') {
 
 					$code = $this-> getLastFactureDossier($id_cli, $_GET['id_mod_lic_fact'], $_GET['id_mod_trans'], $_GET['id_march']);
-
+					
 					// $i = 1;
 
 					// if (!empty($this-> getCompteurFactureClientModeleLic($id_cli, $_GET['id_mod_lic_fact'], date('Y'), $_GET['id_march'])) && ($this-> getCompteurFactureClientModeleLic($id_cli, $_GET['id_mod_lic_fact'], date('Y'), $_GET['id_march'])!='')) {
@@ -19678,7 +19641,7 @@
 					// $a = $this-> getTailleCompteur($i);
 
 					// $code_march = $this-> getDataMarchandise($_GET['id_march'])['code_march_2'];
-
+					
 
 					// $code = date('Y').'-'.$this-> codePourClient($id_cli).$code_march.'-'.$a;
 
@@ -19695,10 +19658,10 @@
 					// echo '<br>id_mod_trans = '.$id_mod_trans;
 					// echo '<br>id_march = '.$id_march;
 					$code = $this-> getLastFactureDossier($id_cli, $id_mod_lic, $id_mod_trans, $id_march);
-
+					
 				}else{
 
-
+					
 					$i = 1;
 
 					if (!empty($this-> getCompteurFactureClientModeleLic($id_cli, $_GET['id_mod_lic_fact'], date('Y'), $_GET['id_march'])) && ($this-> getCompteurFactureClientModeleLic($id_cli, $_GET['id_mod_lic_fact'], date('Y'), $_GET['id_march'])!='')) {
@@ -19709,7 +19672,7 @@
 					// 2022-MTS-EXP-HC-037
 
 					$code_march = $this-> getDataMarchandise($_GET['id_march'])['code_march_2'];
-
+					
 
 					$code = date('Y').'-'.$this-> codePourClient($id_cli).$code_march.'-'.$a;
 
@@ -19859,7 +19822,7 @@
 			$entree['num_cmpt_paie'] = $num_cmpt_paie;
 			$entree['id_util_paie'] = $id_util_paie;
 
-			$requete = $connexion-> prepare('UPDATE facture_dossier
+			$requete = $connexion-> prepare('UPDATE facture_dossier 
 												SET ref_paie = ?, date_paie = ?, num_cmpt_paie = ?, id_util_paie = ?, date_create_paie = NOW()
 												WHERE ref_fact = ?');
 			$requete-> execute(array($entree['ref_paie'], $entree['date_paie'], $entree['num_cmpt_paie'], $entree['id_util_paie'], $entree['ref_fact']));
@@ -20025,7 +19988,7 @@
 
 			// $tab['date_mvt'] = $date_mvt;
 
-			$requete = $connexion-> prepare('UPDATE mouvement_tresorerie
+			$requete = $connexion-> prepare('UPDATE mouvement_tresorerie 
 												SET date_mvt = ?, entree = ?, sortie = ?, libelle = ?, reference = ?
 												WHERE id_mvt = ?');
 			$requete-> execute(array($tab['date_mvt'], $tab['entree'], $tab['sortie'], $tab['libelle'], $tab['reference'], $tab['id_mvt']));
@@ -20058,16 +20021,16 @@
 			// echo "<br>taux = $taux";
 			// echo "<br>id_mod_trans = $id_mod_trans";
 
-			$requete = $connexion-> prepare('INSERT INTO facture_dossier(ref_fact, id_mod_fact, id_cli, id_util,
-																			id_mod_lic, type_fact, information,
+			$requete = $connexion-> prepare('INSERT INTO facture_dossier(ref_fact, id_mod_fact, id_cli, id_util, 
+																			id_mod_lic, type_fact, information, 
 																			note_debit, type_case, taux, id_mod_trans)
 												VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
-			$requete-> execute(array($entree['ref_fact'], $entree['id_mod_fact'], $entree['id_cli'], $entree['id_util'],
-									$entree['id_mod_lic'], $entree['type_fact'], $entree['information'],
+			$requete-> execute(array($entree['ref_fact'], $entree['id_mod_fact'], $entree['id_cli'], $entree['id_util'], 
+									$entree['id_mod_lic'], $entree['type_fact'], $entree['information'], 
 									$entree['note_debit'], $entree['type_case'], $entree['taux'], $entree['id_mod_trans']));
 
 		}
-
+		
 		public function creerFactureLicenceGlobale($ref_fact, $id_mod_fact, $id_cli, $id_util, $id_mod_lic, $type_fact, $num_lic, $note_debit='0', $type_case=NULL, $taux=NULL, $id_mod_trans=1){
 			include('connexion.php');
 
@@ -20095,16 +20058,16 @@
 			// echo "<br>taux = $taux";
 			// echo "<br>id_mod_trans = $id_mod_trans";
 
-			$requete = $connexion-> prepare('INSERT INTO facture_dossier(ref_fact, id_mod_fact, id_cli, id_util,
-																			id_mod_lic, type_fact, num_lic,
+			$requete = $connexion-> prepare('INSERT INTO facture_dossier(ref_fact, id_mod_fact, id_cli, id_util, 
+																			id_mod_lic, type_fact, num_lic, 
 																			note_debit, type_case, taux, id_mod_trans)
 												VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
-			$requete-> execute(array($entree['ref_fact'], $entree['id_mod_fact'], $entree['id_cli'], $entree['id_util'],
-									$entree['id_mod_lic'], $entree['type_fact'], $entree['num_lic'],
+			$requete-> execute(array($entree['ref_fact'], $entree['id_mod_fact'], $entree['id_cli'], $entree['id_util'], 
+									$entree['id_mod_lic'], $entree['type_fact'], $entree['num_lic'], 
 									$entree['note_debit'], $entree['type_case'], $entree['taux'], $entree['id_mod_trans']));
 
 		}
-
+		
 		public function creerNoteDebit($ref_note, $id_model_nd, $id_cli, $id_util, $id_mod_lic, $libelle){
 			include('connexion.php');
 
@@ -20124,15 +20087,15 @@
 			// echo "<br>information = $information";
 			// echo "<br>note_debit = $note_debit";
 
-			$requete = $connexion-> prepare('INSERT INTO note_debit(ref_note, id_model_nd, id_cli, id_util,
+			$requete = $connexion-> prepare('INSERT INTO note_debit(ref_note, id_model_nd, id_cli, id_util, 
 																			id_mod_lic, libelle)
 												VALUES(?, ?, ?, ?, ?, ?)');
-			$requete-> execute(array($entree['ref_note'], $entree['id_model_nd'], $entree['id_cli'], $entree['id_util'],
-									$entree['id_mod_lic'],
+			$requete-> execute(array($entree['ref_note'], $entree['id_model_nd'], $entree['id_cli'], $entree['id_util'], 
+									$entree['id_mod_lic'], 
 									$entree['libelle']));
 
 		}
-
+		
 		public function creerFactureDossierWithDuty($ref_fact, $id_mod_fact, $id_cli, $id_util, $id_mod_lic, $type_fact, $information, $note_debit='0', $with_duty){
 			include('connexion.php');
 
@@ -20146,16 +20109,16 @@
 			$entree['note_debit'] = $note_debit;
 			$entree['with_duty'] = $with_duty;
 
-			$requete = $connexion-> prepare('INSERT INTO facture_dossier(ref_fact, id_mod_fact, id_cli, id_util,
-																			id_mod_lic, type_fact, information,
+			$requete = $connexion-> prepare('INSERT INTO facture_dossier(ref_fact, id_mod_fact, id_cli, id_util, 
+																			id_mod_lic, type_fact, information, 
 																			note_debit, with_duty)
 												VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)');
-			$requete-> execute(array($entree['ref_fact'], $entree['id_mod_fact'], $entree['id_cli'], $entree['id_util'],
-									$entree['id_mod_lic'], $entree['type_fact'], $entree['information'],
+			$requete-> execute(array($entree['ref_fact'], $entree['id_mod_fact'], $entree['id_cli'], $entree['id_util'], 
+									$entree['id_mod_lic'], $entree['type_fact'], $entree['information'], 
 									$entree['note_debit'], $entree['with_duty']));
 
 		}
-
+		
 		public function getMontantFactureDeboursDossier3($ref_fact, $id_deb, $id_dos){
 			include('connexion.php');
 			$entree['ref_fact'] = $ref_fact;
@@ -20223,14 +20186,14 @@
 
 
 			$requete = $connexion-> prepare('SELECT SUM(
-														IF(det.usd="0",
+														IF(det.usd="0", 
 															IF(det.tva="1",
 																IF(det.montant_tva>0,
 																	(det.montant_tva+det.montant)/dos.roe_decl,
 																	(det.montant*0.16)/dos.roe_decl
 																	),
 																det.montant/dos.roe_decl
-															),
+															), 
 															IF(det.tva="1",
 																det.montant*1.16,
 																det.montant
@@ -20279,17 +20242,17 @@
 													det.tva AS tva,
 													d.abr_deb AS abr_deb,
 													SUM(det.montant) AS ht,
-													SUM(
-														IF(det.usd="1",
+													SUM( 
+														IF(det.usd="1", 
 															0,
 															det.montant
-														)
+														) 
 													) AS ht_cdf,
-													SUM(
-														IF(det.usd="1",
+													SUM( 
+														IF(det.usd="1", 
 															det.montant,
 															(det.montant/dos.roe_decl)
-														)
+														) 
 													) AS ht_usd
 												FROM debours d, detail_facture_dossier det, dossier dos
 												WHERE det.ref_fact = ?
@@ -20345,17 +20308,17 @@
 													det.tva AS tva,
 													d.abr_deb AS abr_deb,
 													SUM(det.montant) AS ht,
-													SUM(
-														IF(det.usd="1",
+													SUM( 
+														IF(det.usd="1", 
 															0,
 															det.montant
-														)
+														) 
 													) AS ht_cdf,
-													SUM(
-														IF(det.usd="1",
+													SUM( 
+														IF(det.usd="1", 
 															det.montant,
 															(det.montant/dos.roe_decl)
-														)
+														) 
 													) AS ht_usd
 												FROM debours d, detail_facture_dossier det, dossier dos, type_debours t
 												WHERE det.ref_fact = ?
@@ -20412,17 +20375,17 @@
 													det.tva AS tva,
 													d.abr_deb AS abr_deb,
 													SUM(det.montant) AS ht,
-													SUM(
-														IF(det.usd="1",
+													SUM( 
+														IF(det.usd="1", 
 															0,
 															det.montant
-														)
+														) 
 													) AS ht_cdf,
-													SUM(
-														IF(det.usd="1",
+													SUM( 
+														IF(det.usd="1", 
 															det.montant,
 															(det.montant/dos.roe_decl)
-														)
+														) 
 													) AS ht_usd
 												FROM debours d, detail_facture_dossier det, dossier dos, type_debours t
 												WHERE det.ref_fact = ?
@@ -20478,17 +20441,17 @@
 													det.tva AS tva,
 													d.abr_deb AS abr_deb,
 													SUM(det.montant) AS ht,
-													SUM(
-														IF(det.usd="1",
+													SUM( 
+														IF(det.usd="1", 
 															0,
 															det.montant
-														)
+														) 
 													) AS ht_cdf,
-													SUM(
-														IF(det.usd="1",
+													SUM( 
+														IF(det.usd="1", 
 															det.montant,
 															(det.montant/dos.roe_decl)
-														)
+														) 
 													) AS ht_usd
 												FROM debours d, detail_facture_dossier det, dossier dos, type_debours t
 												WHERE det.ref_fact = ?
@@ -20539,7 +20502,7 @@
 			$compteur = '0';
 			$sous_compteur = 0;
 			$active = '';
-			$requete = $connexion-> prepare("SELECT id_dos, ref_dos, principal, roe_decl, fob,
+			$requete = $connexion-> prepare("SELECT id_dos, ref_dos, principal, roe_decl, fob, 
 													fret, assurance, autre_frais, poids
 												FROM dossier
 												WHERE id_dos = ?
@@ -20644,7 +20607,7 @@
 			$compteur = '0';
 			$sous_compteur = 0;
 			$active = '';
-			$requete = $connexion-> prepare("SELECT id_dos, ref_dos, principal, roe_decl, fob,
+			$requete = $connexion-> prepare("SELECT id_dos, ref_dos, principal, roe_decl, fob, 
 													fret, assurance, autre_frais, poids
 												FROM dossier
 												WHERE id_dos = ?
@@ -20749,7 +20712,7 @@
 			$compteur = '0';
 			$sous_compteur = 0;
 			$active = '';
-			$requete = $connexion-> prepare("SELECT id_dos, ref_dos, principal, roe_decl, fob,
+			$requete = $connexion-> prepare("SELECT id_dos, ref_dos, principal, roe_decl, fob, 
 													fret, assurance, autre_frais, poids
 												FROM dossier
 												WHERE id_dos = ?
@@ -20878,17 +20841,17 @@
 													det.tva AS tva,
 													d.abr_deb AS abr_deb,
 													SUM(det.montant) AS ht,
-													SUM(
-														IF(det.usd='1',
+													SUM( 
+														IF(det.usd='1', 
 															0,
 															det.montant
-														)
+														) 
 													) AS ht_cdf,
-													SUM(
-														IF(det.usd='1',
+													SUM( 
+														IF(det.usd='1', 
 															det.montant,
 															(det.montant/dos.roe_decl)
-														)
+														) 
 													) AS ht_usd
 												FROM debours d, detail_facture_dossier det, dossier dos, facture_dossier fd
 												WHERE fd.type_fact = ?
@@ -20951,27 +20914,27 @@
 													det.tva AS tva,
 													d.abr_deb AS abr_deb,
 													SUM(det.montant) AS ht,
-													-- SUM(
-													-- 	IF(det.usd='1',
+													-- SUM( 
+													-- 	IF(det.usd='1', 
 													-- 		det.montant*dos.roe_decl,
 													-- 		det.montant
-													-- 	)
+													-- 	) 
 													-- ) AS montant_cdf,
-													-- SUM(
-													-- 	IF(det.usd='1',
+													-- SUM( 
+													-- 	IF(det.usd='1', 
 													-- 		det.montant,
 													-- 		(det.montant/dos.roe_decl)
-													-- 	)
+													-- 	) 
 													-- ) AS montant_usd,
 													SUM(
-														IF(det.usd='0',
+														IF(det.usd='0', 
 															IF(det.tva='1',
 																IF(det.montant_tva>0,
 																	(det.montant_tva+det.montant)/dos.roe_decl,
 																	(det.montant*0.16)/dos.roe_decl
 																	),
 																det.montant/dos.roe_decl
-															),
+															), 
 															IF(det.tva='1',
 																det.montant*1.16,
 																det.montant
@@ -20979,14 +20942,14 @@
 														)
 													) AS montant_usd,
 													SUM(
-														IF(det.usd='0',
+														IF(det.usd='0', 
 															IF(det.tva='1',
 																IF(det.montant_tva>0,
 																	det.montant_tva+det.montant,
 																	det.montant*0.16
 																	),
 																det.montant
-															),
+															), 
 															IF(det.tva='1',
 																(det.montant*dos.roe_decl)*1.16,
 																(det.montant*dos.roe_decl)
@@ -21072,8 +21035,8 @@
 
 			$requete = $connexion-> prepare("SELECT *,
 													CONCAT('<button class=\"btn btn-xs bg-warning square-btn-adjust\" onclick=\"modal_edit_statut_dossier_air(\'',id_dos,'\');\">
-									                    <i class=\"fas fa-edit\"></i>
-									                </button>') AS btn_action
+									                    <i class=\"fas fa-edit\"></i> 
+									                </button>') AS btn_action 
 											FROM dossier
 											WHERE id_mod_lic = ?
 												AND id_mod_trans = 3
@@ -21410,7 +21373,7 @@
 													) AS ogrefrem_unit,
 													IF(dos.pied_container='10',
 														25,
-														IF(dos.pied_container='20',
+														IF(dos.pied_container='20', 
 															50,
 															IF(dos.pied_container='30',
 																75,
@@ -21423,7 +21386,7 @@
 													) AS ogrefrem_tax,
 													IF(dos.pied_container='10',
 														25,
-														IF(dos.pied_container='20',
+														IF(dos.pied_container='20', 
 															50,
 															IF(dos.pied_container='30',
 																75,
@@ -21455,7 +21418,7 @@
 													LEFT JOIN client cl
 														ON dos.id_cli = cl.id_cli
 													LEFT JOIN marchandise march
-														ON dos.id_march = march.id_march
+														ON dos.id_march = march.id_march 
 													LEFT JOIN mode_transport mt
 														ON dos.id_mod_trans = mt.id_mod_trans
 													LEFT JOIN detail_facture_dossier det
@@ -21540,7 +21503,7 @@
 													LEFT JOIN client cl
 														ON dos.id_cli = cl.id_cli
 													LEFT JOIN marchandise march
-														ON dos.id_march = march.id_march
+														ON dos.id_march = march.id_march 
 													LEFT JOIN mode_transport mt
 														ON dos.id_mod_trans = mt.id_mod_trans
 													LEFT JOIN detail_facture_dossier det
@@ -21648,7 +21611,7 @@
 															'')
 													) AS truck,
 													fd.ref_fact AS ref_fact,
-													IF(IF(dos.dispatch_date IS NOT NULL, dos.dispatch_date, dos.sncc_sakania) IS NOT NULL,
+													IF(IF(dos.dispatch_date IS NOT NULL, dos.dispatch_date, dos.sncc_sakania) IS NOT NULL, 
 														DATEDIFF(IF(dos.dispatch_date IS NOT NULL, dos.dispatch_date, dos.sncc_sakania), dos.load_date),
 														DATEDIFF(CURRENT_DATE(), dos.load_date)
 													) AS delays,
@@ -21658,7 +21621,7 @@
 													LEFT JOIN client cl
 														ON dos.id_cli = cl.id_cli
 													LEFT JOIN marchandise march
-														ON dos.id_march = march.id_march
+														ON dos.id_march = march.id_march 
 													LEFT JOIN mode_transport mt
 														ON dos.id_mod_trans = mt.id_mod_trans
 													LEFT JOIN detail_facture_dossier det
@@ -21767,7 +21730,7 @@
 															'')
 													) AS truck,
 													fd.ref_fact AS ref_fact,
-													IF(IF(dos.dispatch_date IS NOT NULL, dos.dispatch_date, dos.sncc_sakania) IS NOT NULL,
+													IF(IF(dos.dispatch_date IS NOT NULL, dos.dispatch_date, dos.sncc_sakania) IS NOT NULL, 
 														DATEDIFF(IF(dos.dispatch_date IS NOT NULL, dos.dispatch_date, dos.sncc_sakania), dos.load_date),
 														DATEDIFF(CURRENT_DATE(), dos.load_date)
 													) AS delays,
@@ -21778,7 +21741,7 @@
 													LEFT JOIN client cl
 														ON dos.id_cli = cl.id_cli
 													LEFT JOIN marchandise march
-														ON dos.id_march = march.id_march
+														ON dos.id_march = march.id_march 
 													LEFT JOIN mode_transport mt
 														ON dos.id_mod_trans = mt.id_mod_trans
 													LEFT JOIN detail_facture_dossier det
@@ -21788,7 +21751,7 @@
 												WHERE dos.id_mod_lic = 1
 													AND (
 															(dos.dispatch_date BETWEEN ? AND ?)
-															OR
+															OR 
 															(dos.sncc_sakania BETWEEN ? AND ?)
 														)
 													$sqlClient
@@ -21892,7 +21855,7 @@
 															'')
 													) AS truck,
 													fd.ref_fact AS ref_fact,
-													IF(IF(dos.dispatch_date IS NOT NULL, dos.dispatch_date, dos.sncc_sakania) IS NOT NULL,
+													IF(IF(dos.dispatch_date IS NOT NULL, dos.dispatch_date, dos.sncc_sakania) IS NOT NULL, 
 														DATEDIFF(IF(dos.dispatch_date IS NOT NULL, dos.dispatch_date, dos.sncc_sakania), dos.load_date),
 														DATEDIFF(CURRENT_DATE(), dos.load_date)
 													) AS delays,
@@ -21902,7 +21865,7 @@
 													LEFT JOIN client cl
 														ON dos.id_cli = cl.id_cli
 													LEFT JOIN marchandise march
-														ON dos.id_march = march.id_march
+														ON dos.id_march = march.id_march 
 													LEFT JOIN mode_transport mt
 														ON dos.id_mod_trans = mt.id_mod_trans
 													LEFT JOIN detail_facture_dossier det
@@ -21969,7 +21932,7 @@
 													LEFT JOIN client cl
 														ON dos.id_cli = cl.id_cli
 													LEFT JOIN marchandise march
-														ON dos.id_march = march.id_march
+														ON dos.id_march = march.id_march 
 													LEFT JOIN mode_transport mt
 														ON dos.id_mod_trans = mt.id_mod_trans
 													LEFT JOIN detail_facture_dossier det
@@ -21996,7 +21959,7 @@
 
 		public function code_tarifaire_ajax(){
 			include('connexion.php');
-
+			
 			$compteur = 0;
 			$rows = array();
 
@@ -22018,7 +21981,7 @@
 
 		public function template_invoice_excl_client($id_cli){
 			include('connexion.php');
-
+			
 			$compteur = 0;
 			$rows = array();
 			$entree['id_cli'] = $id_cli;
@@ -22072,10 +22035,10 @@
 													dos.ref_dos AS ref_dos,
 													cl.code_cli AS code_cli,
 													DATE_FORMAT(dos.date_feuil_calc, '%d/%m/%Y') AS date_feuil_calc,
-													-- CONCAT('<button class=\"btn btn-xs btn-info\" title=\"Feuille de calcul\" onclick=\"modal_worksheet(',dos.id_dos,');\"><i class=\"fa fa-calculator\"></i></button>
+													-- CONCAT('<button class=\"btn btn-xs btn-info\" title=\"Feuille de calcul\" onclick=\"modal_worksheet(',dos.id_dos,');\"><i class=\"fa fa-calculator\"></i></button> 
 													-- 	<button class=\"btn btn-xs bg-secondary square-btn-adjust\" onclick=\"window.open(\'generateurWorksheet.php?id_dos=',dos.id_dos,'&ref_dos=',dos.ref_dos,'\',\'',dos.ref_dos,'\',\'width=1000,height=800\');\" title=\"View Worsheet\">
-										            --         <i class=\"fas fa-eye\"></i>
-										            --     </button>
+										            --         <i class=\"fas fa-eye\"></i> 
+										            --     </button> 
 										            --     <button class=\"btn btn-xs btn-primary\" title=\"Valider\" onclick=\"valider_worksheet(',dos.id_dos,');\"><i class=\"fa fa-check\"></i></button>') AS btn_action,
 													CONCAT('<button class=\"btn btn-xs btn-info\" title=\"Feuille de calcul\" onclick=\"window.location.replace(\'worksheet.php?id_dos=',dos.id_dos,'\');\"><i class=\"fa fa-calculator\"></i></button>
 										                <div class=\"btn-group\">
@@ -22134,7 +22097,7 @@
 													DATE_FORMAT(dos.date_feuil_calc, '%d/%m/%Y') AS date_feuil_calc,
 													DATE_FORMAT(dos.date_verif_feuil_calc, '%d/%m/%Y') AS date_verif_feuil_calc,
 													CONCAT('<button class=\"btn btn-xs btn-info\" title=\"Feuille de calcul\" onclick=\"window.location.replace(\'worksheet.php?id_dos=',dos.id_dos,'\');\"><i class=\"fa fa-calculator\"></i></button>
-
+														
 										                <div class=\"btn-group\">
 										                    <button type=\"button\" class=\"btn btn-secondary btn-xs dropdown-toggle dropdown-icon\" data-toggle=\"dropdown\">
 										                      <i class=\"fa fa-eye\"></i>
@@ -22190,7 +22153,7 @@
 													DATE_FORMAT(dos.date_feuil_calc, '%d/%m/%Y') AS date_feuil_calc,
 													DATE_FORMAT(dos.date_verif_feuil_calc, '%d/%m/%Y') AS date_verif_feuil_calc,
 													CONCAT('<button class=\"btn btn-xs btn-info\" title=\"Feuille de calcul\" onclick=\"window.location.replace(\'worksheet.php?id_dos=',dos.id_dos,'\');\"><i class=\"fa fa-calculator\"></i></button>
-
+														
 										                <div class=\"btn-group\">
 										                    <button type=\"button\" class=\"btn btn-secondary btn-xs dropdown-toggle dropdown-icon\" data-toggle=\"dropdown\">
 										                      <i class=\"fa fa-eye\"></i>
@@ -22275,7 +22238,7 @@
 				$reponse['compteur'] = $compteur;
 				$reponse['btn_action'] = $this-> checkArchivedFile($reponse['id_trans_ap'], $reponse['fichier_trans_ap'], $reponse['ref_trans_ap']);
 				$reponse['btn_action'] .= ' <button class="btn btn-xs bg bg-warning square-btn-adjust" onclick="modal_modifier_transmis('.$reponse['id_trans_ap'].');">
-							                    <i class="fas fa-edit"></i>
+							                    <i class="fas fa-edit"></i> 
 							                </button>';
 
 				$rows[] = $reponse;
@@ -22426,8 +22389,8 @@
 					</th>
 				</tr>
 				<div>
-				<?php
-				$requeteDebours = $connexion-> prepare("SELECT deb.abr_deb AS abr_deb, UPPER(REPLACE(deb.nom_deb, '\'', '')) AS nom_deb,
+				<?php 
+				$requeteDebours = $connexion-> prepare("SELECT deb.abr_deb AS abr_deb, UPPER(REPLACE(deb.nom_deb, '\'', '')) AS nom_deb, 
 														deb.id_deb AS id_deb,
 														af.tva AS tva, af.usd AS usd, af.montant AS montant,
 														af.detail AS detail,
@@ -22441,12 +22404,12 @@
 				$requeteDebours-> execute(array($reponseTypeDebours['id_t_deb'], $entree['id_mod_lic'], $entree['id_cli']));
 				while($reponseDebours = $requeteDebours-> fetch()){
 					$compteur++;
-
+					
 
 					if ($id_mod_lic == '1' && $reponseDebours['id_deb']=='37' && (($this-> getDossier($id_dos)['poids']/1000)>=30)) {
 
 						$reponseDebours['montant'] = 250;
-
+						
 					}
 
 					?>
@@ -22456,8 +22419,8 @@
 							<?php echo $reponseDebours['abr_deb']; ?>
 						</td>
 						<td width="50%">
-							<?php
-								echo $reponseDebours['nom_deb'];
+							<?php 
+								echo $reponseDebours['nom_deb']; 
 								if ($reponseDebours['detail']=='1') {
 								?>
 								: <input type="text" style="width: 20em;" name="detail_<?php echo $compteur;?>">
@@ -22549,13 +22512,13 @@
 							</tr>
 							<div>';
 				?>
-				<?php
-				$requeteDebours = $connexion-> prepare("SELECT deb.abr_deb AS abr_deb,
-														-- UPPER(REPLACE(deb.nom_deb, '\'', '')) AS nom_deb,
+				<?php 
+				$requeteDebours = $connexion-> prepare("SELECT deb.abr_deb AS abr_deb, 
+														-- UPPER(REPLACE(deb.nom_deb, '\'', '')) AS nom_deb, 
 														IF(af.montant_min > 0,
 															CONCAT(UPPER(REPLACE(deb.nom_deb, '\'', '')), ' (',af.montant_min,'$ min)'),
 															UPPER(REPLACE(deb.nom_deb, '\'', ''))
-														) AS nom_deb,
+														) AS nom_deb, 
 														deb.id_deb AS id_deb,
 														af.tva AS tva, af.usd AS usd, af.montant AS montant,
 														af.detail AS detail,
@@ -22584,7 +22547,7 @@
 					}
 
 					$mask_tva = '';
-
+					
 
 					if ($reponseDebours['id_deb']=='32') { // DDI
 
@@ -22592,80 +22555,80 @@
 						$montant_input = '<input type="number" step="0.001" style="text-align: center;" name="montant_'.$compteur.'" id="ddi" value="'.$reponseDebours['montant'].'" onblur="calculDroit();">';
 						$montant_tva_input = '<input type="number" step="0.001" style="text-align: center;" name="montant_tva_'.$compteur.'" id="montant_tva_ddi" onblur="calculDroit2();">';
 						$mask_tva = 'ddi';
-
+						
 					}else if ($reponseDebours['id_deb']=='118') { // DDI_2
 
 						$unite_input = '<input type="number" step="0.001" style="text-align: center; width: 5em;" class="" name="pourcentage_qte_ddi_'.$compteur.'" id="pourcentage_qte_ddi_2" value="" onblur="calculDroit();">';
 						$montant_input = '<input type="number" step="0.001" style="text-align: center;" name="montant_'.$compteur.'" id="ddi_2" value="'.$reponseDebours['montant'].'" onblur="calculDroit();">';
 						$montant_tva_input = '<input type="number" step="0.001" style="text-align: center;" name="montant_tva_'.$compteur.'" id="montant_tva_ddi_2" onblur="calculDroit2();">';
 						$mask_tva = 'ddi_2';
-
+						
 					}else if ($reponseDebours['id_deb']=='119') { // DDI_3
 
 						$unite_input = '<input type="number" step="0.001" style="text-align: center; width: 5em;" class="" name="pourcentage_qte_ddi_'.$compteur.'" id="pourcentage_qte_ddi_3" value="" onblur="calculDroit();">';
 						$montant_input = '<input type="number" step="0.001" style="text-align: center;" name="montant_'.$compteur.'" id="ddi_3" value="'.$reponseDebours['montant'].'" onblur="calculDroit();">';
 						$mask_tva = 'ddi_3';
 						$montant_tva_input = '<input type="number" step="0.001" style="text-align: center;" name="montant_tva_'.$compteur.'" id="montant_tva_ddi_3" onblur="calculDroit2();">';
-
+						
 					}else if ($reponseDebours['id_deb']=='120') { // DDI_4
 
 						$unite_input = '<input type="number" step="0.001" style="text-align: center; width: 5em;" class="" name="pourcentage_qte_ddi_'.$compteur.'" id="pourcentage_qte_ddi_4" value="" onblur="calculDroit();">';
 						$montant_input = '<input type="number" step="0.001" style="text-align: center;" name="montant_'.$compteur.'" id="ddi_4" value="'.$reponseDebours['montant'].'" onblur="calculDroit();">';
 						$montant_tva_input = '<input type="number" step="0.001" style="text-align: center;" name="montant_tva_'.$compteur.'" id="montant_tva_ddi_4" onblur="calculDroit2();">';
 						$mask_tva = 'ddi_4';
-
+						
 					}else if ($reponseDebours['id_deb']=='109') {
 
 						$unite_input = '<span></span>';
 						$montant_input = '<input type="number" step="0.001" style="text-align: center;" name="montant_'.$compteur.'" id="tva" value="'.$reponseDebours['montant'].'" onblur="calculDroit();">';
-
+						
 					}else if ($reponseDebours['id_deb']=='95') {
 
 						$unite_input = '<span id="unite_fpi"></span>';
 						$montant_input = '<input type="number" step="0.001" style="text-align: center;" name="montant_'.$compteur.'" id="fpi" value="'.$reponseDebours['montant'].'" onblur="calculDroit();">';
 						$mask_tva = 'fpi';
-
+						
 					}else if ($reponseDebours['id_deb']=='38') {
 
 						$unite_input = '<span id="unite_rri"></span>';
 						$montant_input = '<input type="number" step="0.001" style="text-align: center;" name="montant_'.$compteur.'" id="rri" value="'.$reponseDebours['montant'].'" onblur="calculDroit();">';
 						$mask_tva = 'rri';
-
+						
 					}else if ($reponseDebours['id_deb']=='35') {
 
 						$unite_input = '<span id="unite_cog"></span>';
 						$montant_input = '<input type="number" step="0.001" style="text-align: center;" name="montant_'.$compteur.'" id="cog" value="'.$reponseDebours['montant'].'" onblur="calculDroit();">';
 						$mask_tva = 'cog';
-
+						
 					}else if ($reponseDebours['id_deb']=='3') {
 
 						$unite_input = '<input type="number" step="0.001" style="text-align: center; width: 5em;" class="" name="" id="unite_rls" value="" onblur="calculDroit();">';
 						$montant_input = '<input type="number" step="0.001" style="text-align: center;" name="montant_'.$compteur.'" id="rls" value="'.$reponseDebours['montant'].'" onblur="calculDroit();">';
 						$mask_tva = 'rls';
-
+						
 					}else if ($reponseDebours['id_deb']=='96') {
 
 						$unite_input = '<span id="unite_dci"></span>';
 						$montant_input = '<input type="number" step="0.001" style="text-align: center;" name="montant_'.$compteur.'" id="dci" value="'.$reponseDebours['montant'].'" onblur="calculDroit();">';
 						$montant_tva_input = '<input type="number" step="0.001" style="text-align: center;" name="montant_tva_'.$compteur.'" id="montant_tva_dci" onblur="calculDroit2();">';
 						$mask_tva = 'dci';
-
+						
 					}else if ($reponseDebours['id_deb']=='97') {
 
 						$unite_input = '<span id="unite_autres_taxes"></span>';
 						$montant_input = '<input type="number" step="0.001" style="text-align: center;" name="montant_'.$compteur.'" id="autres_taxes" value="'.$reponseDebours['montant'].'" onblur="calculDroit();">';
 						$mask_tva = 'autre_taxe';
-
+						
 					}else if ($reponseDebours['id_deb']=='29') {
 
 						$unite_input = '<input type="number" step="0.001" style="text-align: center; width: 5em;" class="" name="" id="unite_frais_bancaire" value="'.$reponseDebours['montant'].'" onblur="calculDroit();">';
 						$montant_input = '<input type="number" step="0.001" style="text-align: center;" name="montant_'.$compteur.'" id="frais_bancaire" value=""><input type="hidden" id="montant_min" name="montant_min" value="'.$reponseDebours['montant_min'].'">';
-
+						
 					}else if ($reponseDebours['id_deb']=='94') {
 
 						$unite_input = '';
 						$montant_input = '<input type="number" step="0.001" style="text-align: center;" name="montant_'.$compteur.'" id="tresco" onblur="calculDroit();">';
-
+						
 					}else if ($reponseDebours['id_deb']=='45' || $reponseDebours['id_deb']=='206') {
 
 						$trailer_1 = $this-> getDossier($id_dos)['trailer_1'];
@@ -22676,24 +22639,24 @@
 							$unite_input = '2';
 							$montant_input = '<input type="number" step="0.001" style="text-align: center;" name="montant_'.$compteur.'" id="scelle" value="'.$reponseDebours['montant'].'" onblur="calculDroit();">';
 						}else{
-
+							
 							$unite_input = '1';
 							$montant_input = '<input type="number" step="0.001" style="text-align: center;" name="montant_'.$compteur.'" id="scelle" value="'.$reponseDebours['montant'].'" onblur="calculDroit();">';
 						}
 
-
+						
 					}else if ( $this-> get_facturation_suivi_licence($this-> getDossier($id_dos)['id_cli'], $this-> getDossier($id_dos)['id_mod_lic'])!=false && $this-> checkFileInvoicedLicense($this-> getDossier($id_dos)['num_lic'])!=false && ($reponseDebours['id_deb']=='102' || $reponseDebours['id_deb']=='102')){
 
 						$unite_input = '<span id="unite_'.$compteur.'"></span>';
 						$montant_input = '<input type="number" step="0.001" style="text-align: center;" class="bg-dark" name="montant_'.$compteur.'" id="montant_'.$reponseDebours['id_deb'].'" value="" onblur="getTotal()">';
 						$montant_tva_input = '';
-
+						
 					}else if ( $this-> getLicence($this-> getDossier($id_dos)['num_lic'])['fact_suiv_lic']=='0' && ($reponseDebours['id_deb']=='102' || $reponseDebours['id_deb']=='102')){
 
 						$unite_input = '<span id="unite_'.$compteur.'"></span>';
 						$montant_input = '<input type="number" step="0.001" style="text-align: center;" class="bg-dark" name="montant_'.$compteur.'" id="montant_'.$reponseDebours['id_deb'].'" value="" onblur="getTotal()">';
 						$montant_tva_input = '';
-
+						
 					}else if ($reponseDebours['id_deb']=='5') {//FERE
 
 						$reponseDebours['montant'] = $reponseDebours['montant']*$this-> getDossier($id_dos)['poids'];
@@ -22701,7 +22664,7 @@
 						$unite_input = '<span id="unite_'.$compteur.'"></span>';
 						$montant_input = '<input type="number" step="0.001" style="text-align: center;" class="bg-dark" name="montant_'.$compteur.'" id="montant_'.$reponseDebours['id_deb'].'" value="'.$reponseDebours['montant'].'" onblur="getTotal()">';
 						$montant_tva_input = '';
-
+						
 					}else if ($reponseDebours['id_deb']=='6') {//LMC
 
 						$reponseDebours['montant'] = $reponseDebours['montant']*$this-> getDossier($id_dos)['poids'];
@@ -22709,7 +22672,7 @@
 						$unite_input = '<span id="unite_'.$compteur.'"></span>';
 						$montant_input = '<input type="number" step="0.001" style="text-align: center;" class="bg-dark" name="montant_'.$compteur.'" id="montant_'.$reponseDebours['id_deb'].'" value="'.$reponseDebours['montant'].'" onblur="getTotal()">';
 						$montant_tva_input = '';
-
+						
 					}else if ($reponseDebours['id_deb']=='8') {//Taxe Concentree
 
 						$reponseDebours['montant'] = $reponseDebours['montant']*$this-> getDossier($id_dos)['poids'];
@@ -22717,7 +22680,7 @@
 						$unite_input = '<span id="unite_'.$compteur.'"></span>';
 						$montant_input = '<input type="number" step="0.001" style="text-align: center;" class="bg-dark" name="montant_'.$compteur.'" id="montant_'.$reponseDebours['id_deb'].'" value="'.$reponseDebours['montant'].'" onblur="getTotal()">';
 						$montant_tva_input = '';
-
+						
 					}else if ($reponseDebours['id_deb']=='11') {//CEEC
 
 						$reponseDebours['montant'] = 0;
@@ -22729,7 +22692,7 @@
 						$unite_input = '<span id="unite_'.$compteur.'"></span>';
 						$montant_input = '<input type="number" step="0.001" style="text-align: center;" class="bg-dark" name="montant_'.$compteur.'" id="montant_'.$reponseDebours['id_deb'].'" value="'.$reponseDebours['montant'].'" onblur="getTotal()">';
 						$montant_tva_input = '';
-
+						
 					}else if ($reponseDebours['id_deb']=='12') {//CEEC
 
 						$reponseDebours['montant'] = 0;
@@ -22741,7 +22704,7 @@
 						$unite_input = '<span id="unite_'.$compteur.'"></span>';
 						$montant_input = '<input type="number" step="0.001" style="text-align: center;" class="bg-dark" name="montant_'.$compteur.'" id="montant_'.$reponseDebours['id_deb'].'" value="'.$reponseDebours['montant'].'" onblur="getTotal()">';
 						$montant_tva_input = '';
-
+						
 					}else if($this-> check_depense_debours_dossier($id_dos, $reponseDebours['id_deb'])>0){
 
 						$bg_depense = ' text-warning font-weight-bold';
@@ -22750,13 +22713,13 @@
 						$unite_input = '<span id="unite_'.$compteur.'"></span>';
 						$montant_input = '<input type="number" step="0.001" style="text-align: center;" class="bg-dark" name="montant_'.$compteur.'" id="montant_'.$reponseDebours['id_deb'].'" value="'.$this-> check_depense_debours_dossier($id_dos, $reponseDebours['id_deb']).'" onblur="getTotal()">';
 						$montant_tva_input = '';
-
+						
 					}else{
 
 						$unite_input = '<span id="unite_'.$compteur.'"></span>';
 						$montant_input = '<input type="number" step="0.001" style="text-align: center;" class="bg-dark" name="montant_'.$compteur.'" id="montant_'.$reponseDebours['id_deb'].'" value="'.$reponseDebours['montant'].'" onblur="getTotal()">';
 						$montant_tva_input = '';
-
+						
 					}
 
 					if ($reponseDebours['detail']=='1') {
@@ -22776,7 +22739,7 @@
 					}else{
 						$tva_input = '<option value="1">YES</option><option value="0">NO</option>';
 					}
-
+				
 					$debours .= '<tr>
 									<td width="10%">
 										<input type="hidden" id="id_deb_'.$compteur.'" name="id_deb_'.$compteur.'" value="'.$reponseDebours['id_deb'].'">
@@ -22809,16 +22772,16 @@
 								</tr>';
 
 					?>
-
+					
 					<?php
 				}$requeteDebours-> closeCursor();
 
 				//---------- Depense KAMOA
 				// if ($entree['id_cli']==857) {
 				if ($entree['id_cli']==857) {
-					$requeteDebours = $connexion-> prepare("SELECT deb.abr_deb AS abr_deb,
-															UPPER(REPLACE(deb.nom_deb, '\'', '')) AS nom_deb,
-															-- deb.nom_deb AS nom_deb,
+					$requeteDebours = $connexion-> prepare("SELECT deb.abr_deb AS abr_deb, 
+															UPPER(REPLACE(deb.nom_deb, '\'', '')) AS nom_deb, 
+															-- deb.nom_deb AS nom_deb, 
 															deb.id_deb AS id_deb,
 															ROUND(depdos.montant, 2) AS montant
 														FROM debours deb, depense dep, depense_dossier depdos, dossier dos
@@ -22839,12 +22802,12 @@
 						$compteur++;
 						$montant_tva_input = '';
 						$mask_tva = '';
-
+						
 
 						$unite_input = '<span id="unite_'.$compteur.'"></span>';
 						$montant_input = '<input type="number" step="0.001" style="text-align: center;" class="bg-dark" name="montant_'.$compteur.'" id="montant_'.$reponseDebours['id_deb'].'" value="'.$reponseDebours['montant'].'" onblur="getTotal()">';
 						$montant_tva_input = '';
-
+						
 						$detail_input = '';
 						$usd_input = '<option value="1">USD</option><option value="0">CDF</option>';
 						$tva_input = '<option value="0">NO</option><option value="1">YES</option><option value="1">YES</option><option value="0">NO</option>';
@@ -22881,12 +22844,12 @@
 									</tr>';
 
 						?>
-
+						
 						<?php
 					}$requeteDebours-> closeCursor();
 
 				}
-
+				
 				//---------- Fin Depense KAMOA
 				$debours .= '</div>';
 
@@ -22927,13 +22890,13 @@
 							</tr>
 							<div>';
 				?>
-				<?php
-				$requeteDebours = $connexion-> prepare("SELECT deb.abr_deb AS abr_deb,
-														-- UPPER(REPLACE(deb.nom_deb, '\'', '')) AS nom_deb,
+				<?php 
+				$requeteDebours = $connexion-> prepare("SELECT deb.abr_deb AS abr_deb, 
+														-- UPPER(REPLACE(deb.nom_deb, '\'', '')) AS nom_deb, 
 														IF(af.montant_min > 0,
 															CONCAT(UPPER(REPLACE(deb.nom_deb, '\'', '')), ' (',af.montant_min,'$ min)'),
 															UPPER(REPLACE(deb.nom_deb, '\'', ''))
-														) AS nom_deb,
+														) AS nom_deb, 
 														deb.id_deb AS id_deb,
 														deb.id_t_deb AS id_t_deb,
 														af.tva AS tva, af.usd AS usd, af.montant AS montant,
@@ -22956,7 +22919,7 @@
 					$bg_depense = '';
 
 					$mask_tva = '';
-
+					
 
 					if ($reponseDebours['id_deb']=='32') { // DDI
 
@@ -22964,30 +22927,30 @@
 						$montant_input = '<input type="number" step="0.001" style="text-align: center;" name="montant_a_'.$compteur.'" id="ddi" value="'.$reponseDebours['montant'].'" onkeyup="calculDroit2();">';
 						$montant_tva_input = '<input type="number" step="0.001" style="text-align: center;" name="montant_tva_a_'.$compteur.'" id="montant_tva_ddi" onkeyup="calculDroit2();"><input type="hidden" name="tva_a_'.$compteur.'">';
 						$mask_tva = 'ddi';
-
+						
 					}else if ($reponseDebours['id_deb']=='97') {
 
 						$unite_input = '<input type="hidden" id="unite_a_'.$compteur.'" id="name_a_'.$compteur.'">';
 						$montant_input = '<input type="number" step="0.001" style="text-align: center;" name="montant_a_'.$compteur.'"  id="autres_taxes" value="'.$reponseDebours['montant'].'" onkeyup="calculDroit2();"><input type="hidden" name="tva_a_'.$compteur.'">';
 						$montant_tva_input = '';
-
+						
 					}else if ($reponseDebours['id_t_deb']=='1') {
 
 						$unite_input = '<input type="hidden" id="unite_a_'.$compteur.'" id="name_a_'.$compteur.'">';
 						$montant_input = '<input type="number" step="0.001" style="text-align: center;" name="montant_a_'.$compteur.'"  id="debours_'.$compteur.'" value="'.$reponseDebours['montant'].'" onkeyup="calculDroit2();"><input type="hidden" name="tva_a_'.$compteur.'">';
 						$montant_tva_input = '';
-
+						
 					}else if ($reponseDebours['id_t_deb']<>'1') {
 
 						$unite_input = '<input type="number" step="0.001" style="text-align: center; width: 8em;" class="" name="" value="'.$m3.'" onblur="calculDroit();"><input type="hidden" id="unite_a_'.$compteur.'" id="name_a_'.$compteur.'">';
 						$montant_input = '<input type="number" step="0.001" style="text-align: center;" name="montant_a_'.$compteur.'" value="'.($reponseDebours['montant']*$m3).'" onblur="calculDroit();"><input type="hidden" id="montant_min" name="montant_min" value="'.$reponseDebours['montant_min'].'">';
-
+						
 					}else{
 
 						$unite_input = '<input type="hidden" id="unite_a_'.$compteur.'" id="name_a_'.$compteur.'">';
 						$montant_input = '<input type="number" step="0.001" style="text-align: center;" class="bg-dark" name="montant_a_'.$compteur.'" id="montant_'.$reponseDebours['id_deb'].'" value="'.$reponseDebours['montant'].'" onblur="calculDroit2()">';
 						$montant_tva_input = '';
-
+						
 					}
 
 					if ($reponseDebours['detail']=='1') {
@@ -23007,7 +22970,7 @@
 					}else{
 						$tva_input = '<option value="1">YES</option><option value="0">NO</option>';
 					}
-
+				
 					$debours .= '<tr>
 									<td width="10%">
 										<input type="hidden" id="id_deb_a_'.$compteur.'" name="id_deb_a_'.$compteur.'" value="'.$reponseDebours['id_deb'].'">
@@ -23040,7 +23003,7 @@
 								</tr>';
 
 					?>
-
+					
 					<?php
 				}$requeteDebours-> closeCursor();
 
@@ -23108,13 +23071,13 @@
 							</tr>
 							<div>';
 				?>
-				<?php
-				$requeteDebours = $connexion-> prepare("SELECT deb.abr_deb AS abr_deb,
-														-- UPPER(REPLACE(deb.nom_deb, '\'', '')) AS nom_deb,
+				<?php 
+				$requeteDebours = $connexion-> prepare("SELECT deb.abr_deb AS abr_deb, 
+														-- UPPER(REPLACE(deb.nom_deb, '\'', '')) AS nom_deb, 
 														IF(af.montant_min > 0,
 															CONCAT(UPPER(REPLACE(deb.nom_deb, '\'', '')), ' (',af.montant_min,'$ min)'),
 															UPPER(REPLACE(deb.nom_deb, '\'', ''))
-														) AS nom_deb,
+														) AS nom_deb, 
 														deb.id_deb AS id_deb,
 														af.tva AS tva, af.usd AS usd, af.montant AS montant,
 														af.detail AS detail,
@@ -23159,7 +23122,7 @@
 
 					//RLS 140$ par Escieu
 					if ($reponseDebours['id_deb']==3) {
-
+						
 						if (strlen(trim($this-> getDossier($id_dos)['horse']))>=5) {
 							$montant += 140;
 						}
@@ -23180,54 +23143,54 @@
 
 					}
 					else if ($reponseDebours['id_deb'] == 7) { //GOV Tax 50$/T
-
+						
 						$montant = $this-> getDossier($id_dos)['poids']*50;
 
 					}
 					else if ($reponseDebours['id_deb'] == 5 && (empty($this-> getDossier($id_dos)['pied_container']) || ($this-> getDossier($id_dos)['pied_container']=='N/A') || ($this-> getDossier($id_dos)['pied_container']=='NA'))) { //FERE 3$/T
-
+						
 						$montant = $this-> getDossier($id_dos)['poids']*3;
 
 					}
 					else if ($reponseDebours['id_deb'] == 5 && !empty($this-> getDossier($id_dos)['pied_container'])) { //FERE 3$/T
-
+						
 						$montant = null;
 
 					}
 					else if ($reponseDebours['id_deb'] == 6 && $reponseDebours['montant']>5) { //LMC
-
+						
 						$montant = $this-> getDossier($id_dos)['poids']*$reponseDebours['montant'];
 
 					}
 					else if ($reponseDebours['id_deb'] == 6) { //LMC 5$/T
-
+						
 						$montant = $this-> getDossier($id_dos)['poids']*5;
 
 					}
 					else if ($reponseDebours['id_deb'] == 8) { //TAX CONCENTREE
-
+						
 						$montant = $this-> getDossier($id_dos)['poids']*$reponseDebours['montant'];
 
 					}
 					else if ($reponseDebours['id_deb'] == 11 && $this-> getDossier($id_dos)['poids']<30) { //CEEC 300
-
+						
 						$montant = 600;
 
 					}
 					else if ($reponseDebours['id_deb'] == 12 && $this-> getDossier($id_dos)['poids']>=30) { //CEEC 450
-
+						
 						$montant = 800;
 
 					}else if ($reponseDebours['id_deb'] == 196 && $this-> getDossier($id_dos)['pied_container']=='10') { // Container 10'
-
+						
 						$montant = 25;
 
 					}else if ($reponseDebours['id_deb'] == 197 && $this-> getDossier($id_dos)['pied_container']=='20') { // Container 20'
-
+						
 						$montant = 50;
 
 					}else if ($reponseDebours['id_deb'] == 198 && $this-> getDossier($id_dos)['pied_container']=='40') { // Container 40'
-
+						
 						$montant = 100;
 
 					}
@@ -23247,7 +23210,7 @@
 								</tr>';
 
 					?>
-
+					
 					<?php
 				}$requeteDebours-> closeCursor();
 				$debours .= '</div>';
@@ -23289,13 +23252,13 @@
 							</tr>
 							<div>';
 				?>
-				<?php
-				$requeteDebours = $connexion-> prepare("SELECT deb.abr_deb AS abr_deb,
-														-- UPPER(REPLACE(deb.nom_deb, '\'', '')) AS nom_deb,
+				<?php 
+				$requeteDebours = $connexion-> prepare("SELECT deb.abr_deb AS abr_deb, 
+														-- UPPER(REPLACE(deb.nom_deb, '\'', '')) AS nom_deb, 
 														IF(af.montant_min > 0,
 															CONCAT(UPPER(REPLACE(deb.nom_deb, '\'', '')), ' (',af.montant_min,'$ min)'),
 															UPPER(REPLACE(deb.nom_deb, '\'', ''))
-														) AS nom_deb,
+														) AS nom_deb, 
 														deb.id_deb AS id_deb,
 														af.tva AS tva, af.usd AS usd, af.montant AS montant,
 														af.detail AS detail,
@@ -23344,7 +23307,7 @@
 						$select_tva = '<option value="0">NO</option><option value="1">YES</option>';
 					}
 
-
+					
 					$debours .= '<tr>
 									<td width="10%">
 										<input type="hidden" id="id_deb_'.$compteur.'" name="id_deb_'.$compteur.'" value="'.$reponseDebours['id_deb'].'">
@@ -23360,7 +23323,7 @@
 								</tr>';
 
 					?>
-
+					
 					<?php
 				}$requeteDebours-> closeCursor();
 				$debours .= '</div>';
@@ -23399,9 +23362,9 @@
 							</tr>
 							<div>';
 				?>
-				<?php
-				$requeteDebours = $connexion-> prepare("SELECT deb.abr_deb AS abr_deb,
-														UPPER(REPLACE(deb.nom_deb, '\'', '')) AS nom_deb,
+				<?php 
+				$requeteDebours = $connexion-> prepare("SELECT deb.abr_deb AS abr_deb, 
+														UPPER(REPLACE(deb.nom_deb, '\'', '')) AS nom_deb, 
 														deb.id_deb AS id_deb,
 														af.tva AS tva, af.usd AS usd, af.montant AS montant,
 														af.unite AS unite
@@ -23448,27 +23411,27 @@
 
 					}
 					else if ($reponseDebours['id_deb'] == 7) { //GOV Tax 50$/T
-
+						
 						$montant = $this-> getLicence($num_lic)['poids']*50;
 
 					}
 					else if ($reponseDebours['id_deb'] == 5) { //FERE 3$/T
-
+						
 						$montant = $this-> getLicence($num_lic)['poids']*3;
 
 					}
 					else if ($reponseDebours['id_deb'] == 6) { //LMC 5$/T
-
+						
 						$montant = $this-> getLicence($num_lic)['poids']*5;
 
 					}
 					else if ($reponseDebours['id_deb'] == 11 ) { //CEEC 300
-
+						
 						$montant = $this-> getNbreDossierLicence($num_lic)*600;
 
 					}
 					else if ($reponseDebours['id_deb'] == 12) { //CEEC 450
-
+						
 						// $montant = 450;
 
 					}
@@ -23491,7 +23454,7 @@
 								</tr>';
 
 					?>
-
+					
 					<?php
 				}$requeteDebours-> closeCursor();
 				$debours .= '</div>';
@@ -23532,13 +23495,13 @@
 							</tr>
 							<div>';
 				?>
-				<?php
-				$requeteDebours = $connexion-> prepare("SELECT deb.abr_deb AS abr_deb,
-														-- UPPER(REPLACE(deb.nom_deb, '\'', '')) AS nom_deb,
+				<?php 
+				$requeteDebours = $connexion-> prepare("SELECT deb.abr_deb AS abr_deb, 
+														-- UPPER(REPLACE(deb.nom_deb, '\'', '')) AS nom_deb, 
 														IF(af.montant_min > 0,
 															CONCAT(UPPER(REPLACE(deb.nom_deb, '\'', '')), ' (',af.montant_min,'$ min)'),
 															UPPER(REPLACE(deb.nom_deb, '\'', ''))
-														) AS nom_deb,
+														) AS nom_deb, 
 														deb.id_deb AS id_deb,
 														af.tva AS tva, af.usd AS usd, af.montant AS montant,
 														af.detail AS detail,
@@ -23564,7 +23527,7 @@
 					}
 
 					$mask_tva = '';
-
+					
 
 					if ($reponseDebours['id_deb']=='32') { // DDI
 
@@ -23572,80 +23535,80 @@
 						$montant_input = '<input type="number" step="0.001" style="text-align: center;" name="montant_'.$compteur.'" id="ddi" value="'.$reponseDebours['montant'].'" onblur="calculDroit();">';
 						$montant_tva_input = '<input type="number" step="0.001" style="text-align: center;" name="montant_tva_'.$compteur.'" id="montant_tva_ddi" onblur="calculDroit2();">';
 						$mask_tva = 'ddi';
-
+						
 					}else if ($reponseDebours['id_deb']=='118') { // DDI_2
 
 						$unite_input = '<input type="number" step="0.001" style="text-align: center; width: 5em;" class="" name="pourcentage_qte_ddi_'.$compteur.'" id="pourcentage_qte_ddi_2" value="" onblur="calculDroit();">';
 						$montant_input = '<input type="number" step="0.001" style="text-align: center;" name="montant_'.$compteur.'" id="ddi_2" value="'.$reponseDebours['montant'].'" onblur="calculDroit();">';
 						$montant_tva_input = '<input type="number" step="0.001" style="text-align: center;" name="montant_tva_'.$compteur.'" id="montant_tva_ddi_2" onblur="calculDroit2();">';
 						$mask_tva = 'ddi_2';
-
+						
 					}else if ($reponseDebours['id_deb']=='119') { // DDI_3
 
 						$unite_input = '<input type="number" step="0.001" style="text-align: center; width: 5em;" class="" name="pourcentage_qte_ddi_'.$compteur.'" id="pourcentage_qte_ddi_3" value="" onblur="calculDroit();">';
 						$montant_input = '<input type="number" step="0.001" style="text-align: center;" name="montant_'.$compteur.'" id="ddi_3" value="'.$reponseDebours['montant'].'" onblur="calculDroit();">';
 						$mask_tva = 'ddi_3';
 						$montant_tva_input = '<input type="number" step="0.001" style="text-align: center;" name="montant_tva_'.$compteur.'" id="montant_tva_ddi_3" onblur="calculDroit2();">';
-
+						
 					}else if ($reponseDebours['id_deb']=='120') { // DDI_4
 
 						$unite_input = '<input type="number" step="0.001" style="text-align: center; width: 5em;" class="" name="pourcentage_qte_ddi_'.$compteur.'" id="pourcentage_qte_ddi_4" value="" onblur="calculDroit();">';
 						$montant_input = '<input type="number" step="0.001" style="text-align: center;" name="montant_'.$compteur.'" id="ddi_4" value="'.$reponseDebours['montant'].'" onblur="calculDroit();">';
 						$montant_tva_input = '<input type="number" step="0.001" style="text-align: center;" name="montant_tva_'.$compteur.'" id="montant_tva_ddi_4" onblur="calculDroit2();">';
 						$mask_tva = 'ddi_4';
-
+						
 					}else if ($reponseDebours['id_deb']=='109') {
 
 						$unite_input = '<span></span>';
 						$montant_input = '<input type="number" step="0.001" style="text-align: center;" name="montant_'.$compteur.'" id="tva" value="'.$reponseDebours['montant'].'" onblur="calculDroit();">';
-
+						
 					}else if ($reponseDebours['id_deb']=='95') {
 
 						$unite_input = '<span id="unite_fpi"></span>';
 						$montant_input = '<input type="number" step="0.001" style="text-align: center;" name="montant_'.$compteur.'" id="fpi" value="'.$reponseDebours['montant'].'" onblur="calculDroit();">';
 						$mask_tva = 'fpi';
-
+						
 					}else if ($reponseDebours['id_deb']=='38') {
 
 						$unite_input = '<span id="unite_rri"></span>';
 						$montant_input = '<input type="number" step="0.001" style="text-align: center;" name="montant_'.$compteur.'" id="rri" value="'.$reponseDebours['montant'].'" onblur="calculDroit();">';
 						$mask_tva = 'rri';
-
+						
 					}else if ($reponseDebours['id_deb']=='35') {
 
 						$unite_input = '<span id="unite_cog"></span>';
 						$montant_input = '<input type="number" step="0.001" style="text-align: center;" name="montant_'.$compteur.'" id="cog" value="'.$reponseDebours['montant'].'" onblur="calculDroit();">';
 						$mask_tva = 'cog';
-
+						
 					}else if ($reponseDebours['id_deb']=='3') {
 
 						$unite_input = '<input type="number" step="0.001" style="text-align: center; width: 5em;" class="" name="" id="unite_rls" value="" onblur="calculDroit();">';
 						$montant_input = '<input type="number" step="0.001" style="text-align: center;" name="montant_'.$compteur.'" id="rls" value="'.$reponseDebours['montant'].'" onblur="calculDroit();">';
 						$mask_tva = 'rls';
-
+						
 					}else if ($reponseDebours['id_deb']=='96') {
 
 						$unite_input = '<span id="unite_dci"></span>';
 						$montant_input = '<input type="number" step="0.001" style="text-align: center;" name="montant_'.$compteur.'" id="dci" value="'.$reponseDebours['montant'].'" onblur="calculDroit();">';
 						$montant_tva_input = '<input type="number" step="0.001" style="text-align: center;" name="montant_tva_'.$compteur.'" id="montant_tva_dci" onblur="calculDroit2();">';
 						$mask_tva = 'dci';
-
+						
 					}else if ($reponseDebours['id_deb']=='97') {
 
 						$unite_input = '<span id="unite_autres_taxes"></span>';
 						$montant_input = '<input type="number" step="0.001" style="text-align: center;" name="montant_'.$compteur.'" id="autres_taxes" value="'.$reponseDebours['montant'].'" onblur="calculDroit();">';
 						$mask_tva = 'autre_taxe';
-
+						
 					}else if ($reponseDebours['id_deb']=='29') {
 
 						$unite_input = '<input type="number" step="0.001" style="text-align: center; width: 5em;" class="" name="" id="unite_frais_bancaire" value="'.$reponseDebours['montant'].'" onblur="calculDroit();">';
 						$montant_input = '<input type="number" step="0.001" style="text-align: center;" name="montant_'.$compteur.'" id="frais_bancaire" value=""><input type="hidden" id="montant_min" name="montant_min" value="'.$reponseDebours['montant_min'].'">';
-
+						
 					}else if ($reponseDebours['id_deb']=='94') {
 
 						$unite_input = '';
 						$montant_input = '<input type="number" step="0.001" style="text-align: center;" name="montant_'.$compteur.'" id="tresco"  onblur="calculDroit();">';
-
+						
 					}else if ($reponseDebours['id_deb']=='45') {
 
 						$trailer_1 = $this-> getDossier($id_dos)['trailer_1'];
@@ -23656,30 +23619,30 @@
 							$unite_input = '2';
 							$montant_input = '<input type="number" step="0.001" style="text-align: center;" name="montant_'.$compteur.'" id="scelle" value="'.$reponseDebours['montant'].'" onblur="calculDroit();">';
 						}else{
-
+							
 							$unite_input = '1';
 							$montant_input = '<input type="number" step="0.001" style="text-align: center;" name="montant_'.$compteur.'" id="scelle" value="'.$reponseDebours['montant'].'" onblur="calculDroit();">';
 						}
 
-
+						
 					}else if ( $this-> get_facturation_suivi_licence($this-> getDossier($id_dos)['id_cli'], $this-> getDossier($id_dos)['id_mod_lic'])!=false && $this-> checkFileInvoicedLicense($this-> getDossier($id_dos)['num_lic'])!=false && ($reponseDebours['id_deb']=='102' || $reponseDebours['id_deb']=='102')){
 
 						$unite_input = '<span id="unite_'.$compteur.'"></span>';
 						$montant_input = '<input type="number" step="0.001" style="text-align: center;" class="bg-dark" name="montant_'.$compteur.'" id="montant_'.$reponseDebours['id_deb'].'" value="" onblur="getTotal()">';
 						$montant_tva_input = '';
-
+						
 					}else if ( $this-> getLicence($this-> getDossier($id_dos)['num_lic'])['fact_suiv_lic']=='0' && ($reponseDebours['id_deb']=='102' || $reponseDebours['id_deb']=='102')){
 
 						$unite_input = '<span id="unite_'.$compteur.'"></span>';
 						$montant_input = '<input type="number" step="0.001" style="text-align: center;" class="bg-dark" name="montant_'.$compteur.'" id="montant_'.$reponseDebours['id_deb'].'" value="" onblur="getTotal()">';
 						$montant_tva_input = '';
-
+						
 					}else{
 
 						$unite_input = '<span id="unite_'.$compteur.'"></span>';
 						$montant_input = '<input type="number" step="0.001" style="text-align: center;" class="bg-dark" name="montant_'.$compteur.'" id="montant_'.$reponseDebours['id_deb'].'" value="'.$reponseDebours['montant'].'" onblur="getTotal()">';
 						$montant_tva_input = '';
-
+						
 					}
 
 					if ($reponseDebours['detail']=='1') {
@@ -23699,7 +23662,7 @@
 					}else{
 						$tva_input = '<option value="1">YES</option><option value="0">NO</option>';
 					}
-
+				
 					$debours .= '<tr>
 									<td width="10%">
 										<input type="hidden" id="id_deb_'.$compteur.'" name="id_deb_'.$compteur.'" value="'.$reponseDebours['id_deb'].'">
@@ -23732,7 +23695,7 @@
 								</tr>';
 
 					?>
-
+					
 					<?php
 				}$requeteDebours-> closeCursor();
 				$debours .= '</div>';
@@ -23772,12 +23735,12 @@
 							</tr>
 							<div>';
 				?>
-				<?php
-				$requeteDebours = $connexion-> prepare("SELECT deb.abr_deb AS abr_deb,
+				<?php 
+				$requeteDebours = $connexion-> prepare("SELECT deb.abr_deb AS abr_deb, 
 														IF(af.montant_min > 0,
 															CONCAT(UPPER(REPLACE(deb.nom_deb, '\'', '')), ' (',af.montant_min,'$ min)'),
 															UPPER(REPLACE(deb.nom_deb, '\'', ''))
-														) AS nom_deb,
+														) AS nom_deb, 
 														deb.id_deb AS id_deb,
 														af.tva AS tva, af.usd AS usd, af.montant AS montant_deb,
 														af.detail AS detail,
@@ -23802,7 +23765,7 @@
 					$montant_tva = $this-> getMontantTVADeboursFactureDossier($ref_fact, $reponseDebours['id_deb'], $id_dos);
 					$reponseDebours['pourcentage_qte'] = $this-> getPourcentageDeboursFactureDossier2($ref_fact, $reponseDebours['id_deb'], $id_dos);
 					$reponseDebours['tva'] = $this-> getTVADeboursFactureDossier($ref_fact, $reponseDebours['id_deb'], $id_dos);
-
+					
 
 					if ($reponseDebours['id_deb']=='32') { // DDI
 
@@ -23810,80 +23773,80 @@
 						$montant_input = '<input type="number" step="0.001" style="text-align: center;" name="montant_'.$compteur.'" id="ddi" value="'.$reponseDebours['montant'].'" onblur="calculDroit();">';
 						$montant_tva_input = '<input type="number" step="0.001" style="text-align: center;" name="montant_tva_'.$compteur.'" value="'.$montant_tva.'" id="montant_tva_ddi" onblur="calculDroit2();">';
 						$mask_tva = 'ddi';
-
+						
 					}else if ($reponseDebours['id_deb']=='118') { // DDI_2
 
 						$unite_input = '<input type="number" step="0.001" style="text-align: center; width: 5em;" class=""  value="'.$reponseDebours['pourcentage_qte'].'" name="pourcentage_qte_ddi_'.$compteur.'" id="pourcentage_qte_ddi_2" value="" onblur="calculDroit();">';
 						$montant_input = '<input type="number" step="0.001" style="text-align: center;" name="montant_'.$compteur.'" id="ddi_2" value="'.$reponseDebours['montant'].'" onblur="calculDroit();">';
 						$montant_tva_input = '<input type="number" step="0.001" style="text-align: center;" name="montant_tva_'.$compteur.'" value="'.$montant_tva.'" id="montant_tva_ddi_2" onblur="calculDroit2();">';
 						$mask_tva = 'ddi_2';
-
+						
 					}else if ($reponseDebours['id_deb']=='119') { // DDI_3
 
 						$unite_input = '<input type="number" step="0.001" style="text-align: center; width: 5em;" class=""  value="'.$reponseDebours['pourcentage_qte'].'" name="pourcentage_qte_ddi_'.$compteur.'" id="pourcentage_qte_ddi_3" value="" onblur="calculDroit();">';
 						$montant_input = '<input type="number" step="0.001" style="text-align: center;" name="montant_'.$compteur.'" id="ddi_3" value="'.$reponseDebours['montant'].'" onblur="calculDroit();">';
 						$montant_tva_input = '<input type="number" step="0.001" style="text-align: center;" name="montant_tva_'.$compteur.'" value="'.$montant_tva.'" id="montant_tva_ddi_3" onblur="calculDroit2();">';
 						$mask_tva = 'ddi_3';
-
+						
 					}else if ($reponseDebours['id_deb']=='120') { // DDI_4
 
 						$unite_input = '<input type="number" step="0.001" style="text-align: center; width: 5em;" class=""  value="'.$reponseDebours['pourcentage_qte'].'" name="pourcentage_qte_ddi_'.$compteur.'" id="pourcentage_qte_ddi_4" value="" onblur="calculDroit();">';
 						$montant_input = '<input type="number" step="0.001" style="text-align: center;" name="montant_'.$compteur.'" id="ddi_4" value="'.$reponseDebours['montant'].'" onblur="calculDroit();">';
 						$montant_tva_input = '<input type="number" step="0.001" style="text-align: center;" name="montant_tva_'.$compteur.'" value="'.$montant_tva.'" id="montant_tva_ddi_4" onblur="calculDroit2();">';
 						$mask_tva = 'ddi_4';
-
+						
 					}else if ($reponseDebours['id_deb']=='109') {
 
 						$unite_input = '<span id=""></span>';
 						$montant_input = '<input type="number" step="0.001" style="text-align: center;" class="bg-dark" name="montant_'.$compteur.'" id="tva" value="'.$reponseDebours['montant'].'" onblur="calculDroit();">';
-
+						
 					}else if ($reponseDebours['id_deb']=='95') {
 
 						$unite_input = '<span id="unite_fpi"></span>';
 						$montant_input = '<input type="number" step="0.001" style="text-align: center;" class="bg-dark" name="montant_'.$compteur.'" id="fpi" value="'.$reponseDebours['montant'].'" onblur="calculDroit();">';
 						$mask_tva = 'fpi';
-
+						
 					}else if ($reponseDebours['id_deb']=='38') {
 
 						$unite_input = '<span id="unite_rri"></span>';
 						$montant_input = '<input type="number" step="0.001" style="text-align: center;" class="bg-dark" name="montant_'.$compteur.'" id="rri" value="'.$reponseDebours['montant'].'" onblur="calculDroit();">';
 						$mask_tva = 'rri';
-
+						
 					}else if ($reponseDebours['id_deb']=='35') {
 
 						$unite_input = '<span id="unite_cog"></span>';
 						$montant_input = '<input type="number" step="0.001" style="text-align: center;" class="bg-dark" name="montant_'.$compteur.'" id="cog" value="'.$reponseDebours['montant'].'" onblur="calculDroit();">';
 						$mask_tva = 'cog';
-
+						
 					}else if ($reponseDebours['id_deb']=='3') {
 
 						$unite_input = '<input type="number" step="0.001" style="text-align: center; width: 5em;" class="" name="" id="unite_rls" value="" onblur="calculDroit();">';
 						$montant_input = '<input type="number" step="0.001" style="text-align: center;" class="bg-dark" name="montant_'.$compteur.'" id="rls" value="'.$reponseDebours['montant'].'" onblur="calculDroit();">';
 						$mask_tva = 'rls';
-
+						
 					}else if ($reponseDebours['id_deb']=='96') {
 
 						$unite_input = '<span id="unite_dci"></span>';
 						$montant_input = '<input type="number" step="0.001" style="text-align: center;" class="bg-dark" name="montant_'.$compteur.'" id="dci" value="'.$reponseDebours['montant'].'" onblur="calculDroit();">';
 						$montant_tva_input = '<input type="number" step="0.001" style="text-align: center;" name="montant_tva_'.$compteur.'" value="'.$montant_tva.'" id="montant_tva_dci" onblur="calculDroit2();">';
 						$mask_tva = 'dci';
-
+						
 					}else if ($reponseDebours['id_deb']=='97') {
 
 						$unite_input = '<span id="unite_autres_taxes"></span>';
 						$montant_input = '<input type="number" step="0.001" style="text-align: center;" class="bg-dark" name="montant_'.$compteur.'" id="autres_taxes" value="'.$reponseDebours['montant'].'" onblur="calculDroit();">';
 						$mask_tva = 'autre_taxe';
-
+						
 					}else if ($reponseDebours['id_deb']=='29') {
 
 						$unite_input = '<input type="number" step="0.001" style="text-align: center; width: 5em;" class="" name="" id="unite_frais_bancaire"  value="'.$reponseDebours['montant_deb'].'" onblur="calculDroit2();">';
 						$montant_input = '<input type="number" step="0.001" style="text-align: center;" class="bg-dark" name="montant_'.$compteur.'" id="frais_bancaire" value="'.$reponseDebours['montant'].'"><input type="hidden" id="montant_min" name="montant_min" value="'.$reponseDebours['montant_min'].'">';
-
+						
 					}else{
 
 						$unite_input = '<span id="unite_'.$compteur.'"></span>';
 						$montant_input = '<input type="number" step="0.001" style="text-align: center;" class="bg-dark" name="montant_'.$compteur.'" id="montant_'.$reponseDebours['id_deb'].'" value="'.$reponseDebours['montant'].'" onblur="getTotal()">';
-
+						
 					}
 
 					if ($reponseDebours['detail']=='1') {
@@ -23903,7 +23866,7 @@
 					}else{
 						$tva_input = '<option value="1">YES</option><option value="0">NO</option>';
 					}
-
+				
 					$debours .= '<tr>
 									<td width="10%">
 										<input type="hidden" id="id_deb_'.$compteur.'" name="id_deb_'.$compteur.'" value="'.$reponseDebours['id_deb'].'">
@@ -23936,7 +23899,7 @@
 								</tr>';
 
 					?>
-
+					
 					<?php
 				}$requeteDebours-> closeCursor();
 				$debours .= '</div>';
@@ -23977,13 +23940,13 @@
 							</tr>
 							<div>';
 				?>
-				<?php
-				$requeteDebours = $connexion-> prepare("SELECT deb.abr_deb AS abr_deb,
-														-- UPPER(REPLACE(deb.nom_deb, '\'', '')) AS nom_deb,
+				<?php 
+				$requeteDebours = $connexion-> prepare("SELECT deb.abr_deb AS abr_deb, 
+														-- UPPER(REPLACE(deb.nom_deb, '\'', '')) AS nom_deb, 
 														IF(af.montant_min > 0,
 															CONCAT(UPPER(REPLACE(deb.nom_deb, '\'', '')), ' (',af.montant_min,'$ min)'),
 															UPPER(REPLACE(deb.nom_deb, '\'', ''))
-														) AS nom_deb,
+														) AS nom_deb, 
 														deb.id_deb AS id_deb,
 														af.tva AS tva, af.usd AS usd, af.montant AS montant,
 														af.detail AS detail,
@@ -24008,7 +23971,7 @@
 					$montant_tva = $this-> getMontantTVADeboursFactureDossier($ref_fact, $reponseDebours['id_deb'], $id_dos);
 					$reponseDebours['pourcentage_qte'] = $this-> getPourcentageDeboursFactureDossier2($ref_fact, $reponseDebours['id_deb'], $id_dos);
 					$reponseDebours['tva'] = $this-> getTVADeboursFactureDossier($ref_fact, $reponseDebours['id_deb'], $id_dos);
-
+					
 
 					if ($reponseDebours['id_deb']=='32') { // DDI
 
@@ -24016,80 +23979,80 @@
 						$montant_input = '<input type="number" step="0.001" style="text-align: center;" name="montant_'.$compteur.'" id="ddi" value="'.$reponseDebours['montant'].'" onblur="calculDroit();">';
 						$montant_tva_input = '<input type="number" step="0.001" style="text-align: center;" name="montant_tva_'.$compteur.'" value="'.$montant_tva.'" id="montant_tva_ddi" onblur="calculDroit2();">';
 						$mask_tva = 'ddi';
-
+						
 					}else if ($reponseDebours['id_deb']=='118') { // DDI_2
 
 						$unite_input = '<input type="number" step="0.001" style="text-align: center; width: 5em;" class=""  value="'.$reponseDebours['pourcentage_qte'].'" name="pourcentage_qte_ddi_'.$compteur.'" id="pourcentage_qte_ddi_2" value="" onblur="calculDroit();">';
 						$montant_input = '<input type="number" step="0.001" style="text-align: center;" name="montant_'.$compteur.'" id="ddi_2" value="'.$reponseDebours['montant'].'" onblur="calculDroit();">';
 						$montant_tva_input = '<input type="number" step="0.001" style="text-align: center;" name="montant_tva_'.$compteur.'" value="'.$montant_tva.'" id="montant_tva_ddi_2" onblur="calculDroit2();">';
 						$mask_tva = 'ddi_2';
-
+						
 					}else if ($reponseDebours['id_deb']=='119') { // DDI_3
 
 						$unite_input = '<input type="number" step="0.001" style="text-align: center; width: 5em;" class=""  value="'.$reponseDebours['pourcentage_qte'].'" name="pourcentage_qte_ddi_'.$compteur.'" id="pourcentage_qte_ddi_3" value="" onblur="calculDroit();">';
 						$montant_input = '<input type="number" step="0.001" style="text-align: center;" name="montant_'.$compteur.'" id="ddi_3" value="'.$reponseDebours['montant'].'" onblur="calculDroit();">';
 						$montant_tva_input = '<input type="number" step="0.001" style="text-align: center;" name="montant_tva_'.$compteur.'" value="'.$montant_tva.'" id="montant_tva_ddi_3" onblur="calculDroit2();">';
 						$mask_tva = 'ddi_3';
-
+						
 					}else if ($reponseDebours['id_deb']=='120') { // DDI_4
 
 						$unite_input = '<input type="number" step="0.001" style="text-align: center; width: 5em;" class=""  value="'.$reponseDebours['pourcentage_qte'].'" name="pourcentage_qte_ddi_'.$compteur.'" id="pourcentage_qte_ddi_4" value="" onblur="calculDroit();">';
 						$montant_input = '<input type="number" step="0.001" style="text-align: center;" name="montant_'.$compteur.'" id="ddi_4" value="'.$reponseDebours['montant'].'" onblur="calculDroit();">';
 						$montant_tva_input = '<input type="number" step="0.001" style="text-align: center;" name="montant_tva_'.$compteur.'" value="'.$montant_tva.'" id="montant_tva_ddi_4" onblur="calculDroit2();">';
 						$mask_tva = 'ddi_4';
-
+						
 					}else if ($reponseDebours['id_deb']=='109') {
 
 						$unite_input = '<span id=""></span>';
 						$montant_input = '<input type="number" step="0.001" style="text-align: center;" class="bg-dark" name="montant_'.$compteur.'" id="tva" value="'.$reponseDebours['montant'].'" onblur="calculDroit();">';
-
+						
 					}else if ($reponseDebours['id_deb']=='95') {
 
 						$unite_input = '<span id="unite_fpi"></span>';
 						$montant_input = '<input type="number" step="0.001" style="text-align: center;" class="bg-dark" name="montant_'.$compteur.'" id="fpi" value="'.$reponseDebours['montant'].'" onblur="calculDroit();">';
 						$mask_tva = 'fpi';
-
+						
 					}else if ($reponseDebours['id_deb']=='38') {
 
 						$unite_input = '<span id="unite_rri"></span>';
 						$montant_input = '<input type="number" step="0.001" style="text-align: center;" class="bg-dark" name="montant_'.$compteur.'" id="rri" value="'.$reponseDebours['montant'].'" onblur="calculDroit();">';
 						$mask_tva = 'rri';
-
+						
 					}else if ($reponseDebours['id_deb']=='35') {
 
 						$unite_input = '<span id="unite_cog"></span>';
 						$montant_input = '<input type="number" step="0.001" style="text-align: center;" class="bg-dark" name="montant_'.$compteur.'" id="cog" value="'.$reponseDebours['montant'].'" onblur="calculDroit();">';
 						$mask_tva = 'cog';
-
+						
 					}else if ($reponseDebours['id_deb']=='3') {
 
 						$unite_input = '<input type="number" step="0.001" style="text-align: center; width: 5em;" class="" name="" id="unite_rls" value="" onblur="calculDroit();">';
 						$montant_input = '<input type="number" step="0.001" style="text-align: center;" class="bg-dark" name="montant_'.$compteur.'" id="rls" value="'.$reponseDebours['montant'].'" onblur="calculDroit();">';
 						$mask_tva = 'rls';
-
+						
 					}else if ($reponseDebours['id_deb']=='96') {
 
 						$unite_input = '<span id="unite_dci"></span>';
 						$montant_input = '<input type="number" step="0.001" style="text-align: center;" class="bg-dark" name="montant_'.$compteur.'" id="dci" value="'.$reponseDebours['montant'].'" onblur="calculDroit();">';
 						$montant_tva_input = '<input type="number" step="0.001" style="text-align: center;" name="montant_tva_'.$compteur.'" value="'.$montant_tva.'" id="montant_tva_dci" onblur="calculDroit2();">';
 						$mask_tva = 'dci';
-
+						
 					}else if ($reponseDebours['id_deb']=='97') {
 
 						$unite_input = '<span id="unite_autres_taxes"></span>';
 						$montant_input = '<input type="number" step="0.001" style="text-align: center;" class="bg-dark" name="montant_'.$compteur.'" id="autres_taxes" value="'.$reponseDebours['montant'].'" onblur="calculDroit();">';
 						$mask_tva = 'autre_taxe';
-
+						
 					}else if ($reponseDebours['id_deb']=='29') {
 
 						$unite_input = '<input type="number" step="0.001" style="text-align: center; width: 5em;" class="" name="" id="unite_frais_bancaire"  value="'.$reponseDebours['montant_deb'].'" onblur="calculDroit2();">';
 						$montant_input = '<input type="number" step="0.001" style="text-align: center;" class="bg-dark" name="montant_'.$compteur.'" id="frais_bancaire" value="'.$reponseDebours['montant'].'"><input type="hidden" id="montant_min" name="montant_min" value="'.$reponseDebours['montant_min'].'">';
-
+						
 					}else{
 
 						$unite_input = '<span id="unite_'.$compteur.'"></span>';
 						$montant_input = '<input type="number" step="0.001" style="text-align: center;" class="bg-dark" name="montant_'.$compteur.'" id="montant_'.$reponseDebours['id_deb'].'" value="'.$reponseDebours['montant'].'" onblur="getTotal()">';
-
+						
 					}
 
 					if ($reponseDebours['detail']=='1') {
@@ -24109,7 +24072,7 @@
 					}else{
 						$tva_input = '<option value="1">YES</option><option value="0">NO</option>';
 					}
-
+				
 					$debours .= '<tr>
 									<td width="10%">
 										<input type="hidden" id="id_deb_'.$compteur.'" name="id_deb_'.$compteur.'" value="'.$reponseDebours['id_deb'].'">
@@ -24142,7 +24105,7 @@
 								</tr>';
 
 					?>
-
+					
 					<?php
 				}$requeteDebours-> closeCursor();
 				$debours .= '</div>';
@@ -24182,8 +24145,8 @@
 							</tr>
 							<div>';
 				?>
-				<?php
-				$requeteDebours = $connexion-> prepare("SELECT deb.abr_deb AS abr_deb, UPPER(REPLACE(deb.nom_deb, '\'', '')) AS nom_deb,
+				<?php 
+				$requeteDebours = $connexion-> prepare("SELECT deb.abr_deb AS abr_deb, UPPER(REPLACE(deb.nom_deb, '\'', '')) AS nom_deb, 
 														deb.id_deb AS id_deb,
 														af.tva AS tva, af.usd AS usd, af.montant AS montant,
 														af.detail AS detail,
@@ -24202,73 +24165,73 @@
 
 					$reponseDebours['montant'] = $this-> getMontantDeboursFactureDossier2($ref_fact, $reponseDebours['id_deb'], $id_dos);
 					$reponseDebours['pourcentage_qte'] = $this-> getPourcentageDeboursFactureDossier2($ref_fact, $reponseDebours['id_deb'], $id_dos);
-
+					
 
 					if ($reponseDebours['id_deb']=='32') { // DDI
 
 						$unite_input = '<input type="number" step="0.001" style="text-align: center; width: 5em;" class=""  value="'.$reponseDebours['pourcentage_qte'].'" name="pourcentage_qte_ddi_'.$compteur.'" id="pourcentage_qte_ddi" value="" onblur="calculDroit();">';
 						$montant_input = '<input type="number" step="0.001" style="text-align: center;" name="montant_'.$compteur.'" id="ddi" value="'.$reponseDebours['montant'].'" onblur="calculDroit();">';
-
+						
 					}else if ($reponseDebours['id_deb']=='118') { // DDI_2
 
 						$unite_input = '<input type="number" step="0.001" style="text-align: center; width: 5em;" class=""  value="'.$reponseDebours['pourcentage_qte'].'" name="pourcentage_qte_ddi_'.$compteur.'" id="pourcentage_qte_ddi_2" value="" onblur="calculDroit();">';
 						$montant_input = '<input type="number" step="0.001" style="text-align: center;" name="montant_'.$compteur.'" id="ddi_2" value="'.$reponseDebours['montant'].'" onblur="calculDroit();">';
-
+						
 					}else if ($reponseDebours['id_deb']=='119') { // DDI_3
 
 						$unite_input = '<input type="number" step="0.001" style="text-align: center; width: 5em;" class=""  value="'.$reponseDebours['pourcentage_qte'].'" name="pourcentage_qte_ddi_'.$compteur.'" id="pourcentage_qte_ddi_3" value="" onblur="calculDroit();">';
 						$montant_input = '<input type="number" step="0.001" style="text-align: center;" name="montant_'.$compteur.'" id="ddi_3" value="'.$reponseDebours['montant'].'" onblur="calculDroit();">';
-
+						
 					}else if ($reponseDebours['id_deb']=='120') { // DDI_4
 
 						$unite_input = '<input type="number" step="0.001" style="text-align: center; width: 5em;" class=""  value="'.$reponseDebours['pourcentage_qte'].'" name="pourcentage_qte_ddi_'.$compteur.'" id="pourcentage_qte_ddi_4" value="" onblur="calculDroit();">';
 						$montant_input = '<input type="number" step="0.001" style="text-align: center;" name="montant_'.$compteur.'" id="ddi_4" value="'.$reponseDebours['montant'].'" onblur="calculDroit();">';
-
+						
 					}else if ($reponseDebours['id_deb']=='109') {
 
 						$unite_input = '<span id=""></span>';
 						$montant_input = '<input type="number" step="0.001" style="text-align: center;" class="bg-dark" name="montant_'.$compteur.'" id="tva" value="'.$reponseDebours['montant'].'" onblur="calculDroit();">';
-
+						
 					}else if ($reponseDebours['id_deb']=='95') {
 
 						$unite_input = '<span id="unite_fpi"></span>';
 						$montant_input = '<input type="number" step="0.001" style="text-align: center;" class="bg-dark" name="montant_'.$compteur.'" id="fpi" value="'.$reponseDebours['montant'].'" onblur="calculDroit();">';
-
+						
 					}else if ($reponseDebours['id_deb']=='38') {
 
 						$unite_input = '<span id="unite_rri"></span>';
 						$montant_input = '<input type="number" step="0.001" style="text-align: center;" class="bg-dark" name="montant_'.$compteur.'" id="rri" value="'.$reponseDebours['montant'].'" onblur="calculDroit();">';
-
+						
 					}else if ($reponseDebours['id_deb']=='35') {
 
 						$unite_input = '<span id="unite_cog"></span>';
 						$montant_input = '<input type="number" step="0.001" style="text-align: center;" class="bg-dark" name="montant_'.$compteur.'" id="cog" value="'.$reponseDebours['montant'].'" onblur="calculDroit();">';
-
+						
 					}else if ($reponseDebours['id_deb']=='3') {
 
 						$unite_input = '<input type="number" step="0.001" style="text-align: center; width: 5em;" class="" name="" id="unite_rls" value="" onblur="calculDroit();">';
 						$montant_input = '<input type="number" step="0.001" style="text-align: center;" class="bg-dark" name="montant_'.$compteur.'" id="rls" value="'.$reponseDebours['montant'].'" onblur="calculDroit();">';
-
+						
 					}else if ($reponseDebours['id_deb']=='96') {
 
 						$unite_input = '<span id="unite_dci"></span>';
 						$montant_input = '<input type="number" step="0.001" style="text-align: center;" class="bg-dark" name="montant_'.$compteur.'" id="dci" value="'.$reponseDebours['montant'].'" onblur="calculDroit();">';
-
+						
 					}else if ($reponseDebours['id_deb']=='97') {
 
 						$unite_input = '<span id="unite_autres_taxes"></span>';
 						$montant_input = '<input type="number" step="0.001" style="text-align: center;" class="bg-dark" name="montant_'.$compteur.'" id="autres_taxes" value="'.$reponseDebours['montant'].'" onblur="calculDroit();">';
-
+						
 					}else if ($reponseDebours['id_deb']=='29') {
 
 						$unite_input = '<input type="number" step="0.001" style="text-align: center; width: 5em;" class="" name="" id="unite_frais_bancaire" value="" onblur="calculDroit();">';
 						$montant_input = '<input type="number" step="0.001" style="text-align: center;" class="bg-dark" name="montant_'.$compteur.'" id="frais_bancaire" value="'.$reponseDebours['montant'].'">';
-
+						
 					}else{
 
 						$unite_input = '<span id="unite_'.$compteur.'"></span>';
 						$montant_input = '<input type="number" step="0.001" style="text-align: center;" class="bg-dark" name="montant_'.$compteur.'" id="montant_'.$reponseDebours['id_deb'].'" value="'.$reponseDebours['montant'].'" onblur="getTotal()">';
-
+						
 					}
 
 					if ($reponseDebours['detail']=='1') {
@@ -24288,7 +24251,7 @@
 					}else{
 						$tva_input = '<option value="1">YES</option><option value="0">NO</option>';
 					}
-
+				
 					$debours .= '<tr>
 									<td width="10%">
 										<input type="hidden" id="id_deb_'.$compteur.'" name="id_deb_'.$compteur.'" value="'.$reponseDebours['id_deb'].'">
@@ -24317,7 +24280,7 @@
 								</tr>';
 
 					?>
-
+					
 					<?php
 				}$requeteDebours-> closeCursor();
 				$debours .= '</div>';
@@ -24354,8 +24317,8 @@
 					</th>
 				</tr>
 				<div>
-				<?php
-				$requeteDebours = $connexion-> prepare("SELECT deb.abr_deb AS abr_deb, UPPER(REPLACE(deb.nom_deb, '\'', '')) AS nom_deb,
+				<?php 
+				$requeteDebours = $connexion-> prepare("SELECT deb.abr_deb AS abr_deb, UPPER(REPLACE(deb.nom_deb, '\'', '')) AS nom_deb, 
 														deb.id_deb AS id_deb,
 														af.tva AS tva, af.usd AS usd, af.montant AS montant,
 														af.detail AS detail,
@@ -24374,11 +24337,11 @@
 					}
 
 					if ($id_cli == 906 && $id_mod_lic == 2 && $reponseDebours['id_deb'] == '59' && isset($_GET['id_dos']) && $this-> getDossier($_GET['id_dos'])['id_mod_trans']==3 ) {
-
+						
 						$reponseDebours['montant'] = '60.000';
 
 					}else if ($id_cli == 906 && $id_mod_lic == 2 && $reponseDebours['id_deb'] == '60' && isset($_GET['id_dos']) && $this-> getDossier($_GET['id_dos'])['id_mod_trans']==3 ) {
-
+						
 						$reponseDebours['montant'] = '200.000';
 
 					}else if ($id_mod_lic == '1' && $reponseDebours['id_deb']=='39') {
@@ -24388,23 +24351,23 @@
 					}else if ($id_mod_lic == '1' && $reponseDebours['id_deb']=='40') {
 
 						$reponseDebours['montant'] =( 50*$this-> getDossier($id_dos)['poids'])/1000;
-
+						
 					}else if ($id_mod_lic == '1' && $reponseDebours['id_deb']=='43') {
 
 						$reponseDebours['montant'] = (3*$this-> getDossier($id_dos)['poids'])/1000;
-
+						
 					}else if ($id_mod_lic == '1' && $reponseDebours['id_deb']=='44') {
 
 						$reponseDebours['montant'] = (8*$this-> getDossier($id_dos)['poids'])/1000;
-
+						
 					}else if ($id_mod_lic == '1' && $reponseDebours['id_deb']=='37' && (($this-> getDossier($id_dos)['poids']/1000)<30)) {
 
 						$reponseDebours['montant'] = 125;
-
+						
 					}else if ($id_mod_lic == '1' && $reponseDebours['id_deb']=='37' && (($this-> getDossier($id_dos)['poids']/1000)>=30)) {
 
 						$reponseDebours['montant'] = 250;
-
+						
 					}
 
 					?>
@@ -24414,8 +24377,8 @@
 							<?php echo $reponseDebours['abr_deb']; ?>
 						</td>
 						<td width="50%">
-							<?php
-								echo $reponseDebours['nom_deb'];
+							<?php 
+								echo $reponseDebours['nom_deb']; 
 								if ($reponseDebours['detail']=='1') {
 								?>
 								: <input type="text" style="width: 20em;" name="detail_<?php echo $sous_compteur.'_'.$compteur_dossier;?>">
@@ -24501,8 +24464,8 @@
 					</th>
 				</tr>
 				<div>
-				<?php
-				$requeteDebours = $connexion-> prepare("SELECT deb.abr_deb AS abr_deb, UPPER(REPLACE(deb.nom_deb, '\'', '')) AS nom_deb,
+				<?php 
+				$requeteDebours = $connexion-> prepare("SELECT deb.abr_deb AS abr_deb, UPPER(REPLACE(deb.nom_deb, '\'', '')) AS nom_deb, 
 														deb.id_deb AS id_deb
 													FROM debours deb, affectation_debours_modele_facture af
 													WHERE deb.id_t_deb = ?
@@ -24510,14 +24473,14 @@
 														AND af.id_mod_fact = ?");
 				$requeteDebours-> execute(array($reponseTypeDebours['id_t_deb'], $entree['id_mod_fact']));
 				while($reponseDebours = $requeteDebours-> fetch()){
-
+					
 					$compteur++;
 					if ($this-> getDataAffectationDeboursClientModeleLicence($reponseDebours['id_deb'], $_GET['id_cli'], $_GET['id_mod_lic_fact'], $_GET['id_march'], $_GET['id_mod_trans'])) {
 
 						$montant = $this-> getDataAffectationDeboursClientModeleLicence($reponseDebours['id_deb'], $_GET['id_cli'], $_GET['id_mod_lic_fact'], $_GET['id_march'], $_GET['id_mod_trans'])['montant'];
 
 					}
-
+					
 
 					?>
 					<tr class="collapse multi-collapse" id="multiCollapseExample1_<?php echo $reponseTypeDebours['id_t_deb']; ?>">
@@ -24526,8 +24489,8 @@
 							<?php echo $reponseDebours['abr_deb']; ?>
 						</td>
 						<td width="50%">
-							<?php
-								echo $reponseDebours['nom_deb'];
+							<?php 
+								echo $reponseDebours['nom_deb']; 
 							?>
 						</td>
 						<td style="text-align: center;">
@@ -24588,8 +24551,8 @@
 					</th>
 				</tr>
 				<div>
-				<?php
-				$requeteDebours = $connexion-> prepare("SELECT deb.abr_deb AS abr_deb, UPPER(REPLACE(deb.nom_deb, '\'', '')) AS nom_deb,
+				<?php 
+				$requeteDebours = $connexion-> prepare("SELECT deb.abr_deb AS abr_deb, UPPER(REPLACE(deb.nom_deb, '\'', '')) AS nom_deb, 
 														deb.id_deb AS id_deb,
 														af.tva AS tva, af.usd AS usd, af.montant AS montant,
 														af.detail AS detail,
@@ -24614,7 +24577,7 @@
 					// }
 
 					$reponseDebours['montant'] = $this-> getMontantFactureDeboursDossier3($_GET['ref_fact'], $reponseDebours['id_deb'], $id_dos);
-
+					
 					if ($id_mod_lic == '1' && $reponseDebours['id_deb']=='39') {
 
 						$reponseDebours['montant'] = (100*$this-> getDossier($id_dos)['poids'])/1000;
@@ -24622,23 +24585,23 @@
 					}else if ($id_mod_lic == '1' && $reponseDebours['id_deb']=='40') {
 
 						$reponseDebours['montant'] =( 50*$this-> getDossier($id_dos)['poids'])/1000;
-
+						
 					}else if ($id_mod_lic == '1' && $reponseDebours['id_deb']=='43') {
 
 						$reponseDebours['montant'] = (3*$this-> getDossier($id_dos)['poids'])/1000;
-
+						
 					}else if ($id_mod_lic == '1' && $reponseDebours['id_deb']=='44') {
 
 						$reponseDebours['montant'] = (8*$this-> getDossier($id_dos)['poids'])/1000;
-
+						
 					}else if ($id_mod_lic == '1' && $reponseDebours['id_deb']=='37' && (($this-> getDossier($id_dos)['poids']/1000)<30)) {
 
 						$reponseDebours['montant'] = 125;
-
+						
 					}else if ($id_mod_lic == '1' && $reponseDebours['id_deb']=='37' && (($this-> getDossier($id_dos)['poids']/1000)>=30)) {
 
 						$reponseDebours['montant'] = 250;
-
+						
 					}
 					?>
 					<tr class="collapse multi-collapse" id="multiCollapseExample1_<?php echo $reponseTypeDebours['id_t_deb']; ?>">
@@ -24647,8 +24610,8 @@
 							<?php echo $reponseDebours['abr_deb']; ?>
 						</td>
 						<td width="50%">
-							<?php
-								echo $reponseDebours['nom_deb'];
+							<?php 
+								echo $reponseDebours['nom_deb']; 
 								if ($reponseDebours['detail']=='1') {
 								?>
 								: <input type="text" style="width: 20em;" name="detail_<?php echo $sous_compteur.'_'.$compteur_dossier;?>">
@@ -24744,7 +24707,7 @@
 													DATE_FORMAT(dossier.date_liq, '%d/%m/%Y') AS date_liq,
 													dossier.ref_quit AS ref_quit,
 													DATE_FORMAT(dossier.date_quit, '%d/%m/%Y') AS date_quit,
-													dossier.fob AS fob,
+													dossier.fob AS fob, 
 													dossier.poids AS poids
 												FROM dossier
 												LEFT JOIN marchandise
@@ -24763,7 +24726,7 @@
 			while ($reponse = $requete-> fetch()) {
 				$compteur++;
 				// include("modalFactureDossier.php");
-
+				
 			?>
 			<tr style="<?php echo $bg;?>">
 				<!-- <input type="hidden" name="id_dos_<?php //echo $compteur;?>" value="<?php //echo $reponse['id_dos'];?>"> -->
@@ -24773,7 +24736,7 @@
 				<td class="" style="text-align: center;" class="bg bg-dark">
 					<?php echo $reponse['ref_dos'];?>
 					&nbsp;&nbsp;
-
+					
 					<!-- <button data-toggle="modal" data-target=".facture_<?php echo $reponse['id_dos'];?>" class="btn-xs btn btn-secondary">
 						<i class="fa fa-calculator"></i>
 					</button> -->
@@ -24836,7 +24799,7 @@
 													DATE_FORMAT(dossier.date_liq, '%d/%m/%Y') AS date_liq,
 													dossier.ref_quit AS ref_quit,
 													DATE_FORMAT(dossier.date_quit, '%d/%m/%Y') AS date_quit,
-													dossier.fob AS fob,
+													dossier.fob AS fob, 
 													dossier.poids AS poids
 												FROM dossier
 												LEFT JOIN marchandise
@@ -24924,7 +24887,7 @@
 													dossier.ref_quit AS ref_quit,
 													dossier.date_quit AS date_quit,
 													-- DATE_FORMAT(dossier.date_quit, '%d/%m/%Y') AS date_quit,
-													dossier.fob AS fob,
+													dossier.fob AS fob, 
 													dossier.poids AS poids,
 													IF(dossier.support_doc='1',
 														CONCAT('<div class=\"dropdown\">
@@ -24964,7 +24927,7 @@
 													-- AND dossier.date_liq IS NOT NULL
 													-- AND dossier.ref_quit IS NOT NULL
 													-- AND dossier.date_quit IS NOT NULL
-													AND
+													AND 
 													(
 														-- Pocess 1
 														(
@@ -24981,7 +24944,7 @@
 														(
 															get_inv_process_pour_dossier(dossier.id_dos)=2
 															AND (
-																	dossier.dispatch_date IS NOT NULL
+																	dossier.dispatch_date IS NOT NULL 
 																	OR (dossier.dgda_out IS NOT NULL AND dossier.id_mod_trans=4)
 																)
 															-- dossier.dispatch_date IS NOT NULL
@@ -24992,7 +24955,7 @@
 															get_inv_process_pour_dossier(dossier.id_dos)=3
 															AND dossier.dispatch_deliv IS NOT NULL
 														)
-
+															
 													)
 													AND dossier.id_dos NOT IN (SELECT id_dos FROM detail_facture_dossier)
 													AND dossier.not_fact = '0'");
@@ -25189,8 +25152,8 @@
 			}else{
 				return '0';
 			}
-
-
+			
+			
 		}
 
 		public function getMontantTauxBanqueDate($id_banq, $date_taux){
@@ -25212,8 +25175,8 @@
 			}else{
 				return '0';
 			}
-
-
+			
+			
 		}
 
 		public function creerTauxBCC($date_taux, $montant){
@@ -25226,7 +25189,7 @@
 			$requete = $connexion-> prepare("INSERT INTO taux_bcc(date_taux, montant, id_util)
 											VALUES(?, ?, ?)");
 			$requete-> execute(array($entree['date_taux'], $entree['montant'], $_SESSION['id_util']));
-
+			
 		}
 
 		public function creerWorksheet($id_dos, $nom_march, $num_av, $ref_fact, $code_tarif_march, $position_av, $origine, $provenance, $code_add, $nbr_bags, $qte, $poids, $fob){
@@ -25250,7 +25213,7 @@
 			$requete-> execute(array($entree['id_dos'], $entree['nom_march'], $entree['num_av'], $entree['ref_fact'], $entree['code_tarif_march'], $entree['position_av'], $entree['origine'], $entree['provenance'], $entree['code_add'], $entree['nbr_bags'], $entree['qte'], $entree['poids'], $entree['fob'], $_SESSION['id_util']));
 
 			$this-> MAJ_feuil_calc($id_dos);
-
+			
 		}
 
 		public function getTauxBCCDate($date_taux){
@@ -25259,14 +25222,14 @@
 
 			$compteur = 0;
 
-			$requete = $connexion-> prepare("SELECT *
-											FROM taux_bcc
+			$requete = $connexion-> prepare("SELECT * 
+											FROM taux_bcc 
 											WHERE date_taux = ?");
 			$requete-> execute(array($entree['date_taux']));
 			$reponse = $requete-> fetch();
 
 			return $reponse;
-
+			
 		}
 
 		public function creerTauxBanque($id_taux_bcc, $id_banq, $date_taux, $montant){
@@ -25281,7 +25244,7 @@
 			$requete = $connexion-> prepare("INSERT INTO taux_banque(id_taux_bcc, id_banq, date_taux, montant, id_util)
 											VALUES(?, ?, ?, ?, ?)");
 			$requete-> execute(array($entree['id_taux_bcc'], $entree['id_banq'], $entree['date_taux'], $entree['montant'], $_SESSION['id_util']));
-
+			
 		}
 
 		public function insert_modele_facture($id_mod_fact, $id_cli, $id_march, $id_mod_trans, $id_cli_old, $id_mod_lic){
@@ -25298,21 +25261,21 @@
 			$requete = $connexion-> prepare("INSERT INTO affectation_modele_facture_client_marchandise(id_mod_fact, id_cli, id_march, id_mod_trans, id_util)
 											VALUES(?, ?, ?, ?, ?)");
 			$requete-> execute(array($entree['id_mod_fact'], $entree['id_cli'], $entree['id_march'], $entree['id_mod_trans'], $_SESSION['id_util']));
-
-			$requete = $connexion-> prepare("SELECT id_deb, id_cli, id_mod_lic, id_march, id_mod_trans,
+			
+			$requete = $connexion-> prepare("SELECT id_deb, id_cli, id_mod_lic, id_march, id_mod_trans, 
 													code_serv, montant, montant_min, usd, tva, detail, unite
 												FROM affectation_debours_client_modele_licence
-												WHERE id_cli = ?
-													AND id_mod_lic = ?
-													AND id_march = ?
+												WHERE id_cli = ? 
+													AND id_mod_lic = ? 
+													AND id_march = ? 
 													AND id_mod_trans = ?");
 			$requete-> execute(array($entree['id_cli_old'], $entree['id_mod_lic'], $entree['id_march'], $entree['id_mod_trans']));
 			while($reponse = $requete-> fetch()){
 
 				$this-> inserer_aff_debours($reponse['id_deb'], $entree['id_cli'], $reponse['id_mod_lic'], $reponse['id_march'], $reponse['id_mod_trans'], $reponse['montant'], NULL, $reponse['usd'], $reponse['tva'], $reponse['unite']);
 
-				// $requete2 = $connexion-> prepare("INSERT INTO affectation_debours_client_modele_licence(id_deb,
-				// 										id_cli, id_mod_lic, id_march, id_mod_trans,
+				// $requete2 = $connexion-> prepare("INSERT INTO affectation_debours_client_modele_licence(id_deb, 
+				// 										id_cli, id_mod_lic, id_march, id_mod_trans, 
 				// 										code_serv, montant, montant_min, usd, tva, detail, unite)
 				// 									VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 				// $requete2-> execute(array($entree['id_cli'], $reponse['id_mod_lic'], $reponse['id_march'], $reponse['id_mod_trans'], $reponse['code_serv'], $reponse['montant'], $reponse['montant_min'], $reponse['usd'], $reponse['tva'], $reponse['detail'], $reponse['unite'], $reponse['id_mod_trans']));
@@ -25435,16 +25398,16 @@
 			$requete = $connexion-> prepare("SELECT COUNT(dos.id_dos) AS nbre_awaiting_elq
 											FROM dossier dos
 											WHERE dos.id_mod_lic = ?
-												AND (dos.ref_decl IS NULL
-														OR dos.date_decl IS NULL
-														OR dos.ref_liq IS NULL
-														OR dos.date_liq IS NULL
-														OR dos.ref_quit IS NULL
+												AND (dos.ref_decl IS NULL 
+														OR dos.date_decl IS NULL 
+														OR dos.ref_liq IS NULL 
+														OR dos.date_liq IS NULL 
+														OR dos.ref_quit IS NULL 
 														OR dos.date_quit
-													)
+													) 
 												AND dos.not_fact='0'
 												AND dos.id_dos NOT IN (
-													SELECT DISTINCT(dos.id_dos)
+													SELECT DISTINCT(dos.id_dos) 
 														FROM facture_dossier fd, detail_facture_dossier det, dossier dos
 														WHERE fd.ref_fact = det.ref_fact
 															AND fd.note_debit = '0'
@@ -25463,7 +25426,7 @@
 			// 										AND dos.date_quit IS NOT NULL
 			// 										AND dos.ref_quit IS NOT NULL
 			// 										AND dos.id_dos NOT IN (
-			// 											SELECT DISTINCT(dos.id_dos)
+			// 											SELECT DISTINCT(dos.id_dos) 
 			// 												FROM facture_dossier fd, detail_facture_dossier det, dossier dos
 			// 												WHERE fd.ref_fact = det.ref_fact
 			// 													AND fd.note_debit = '0'
@@ -25484,11 +25447,11 @@
 			// $requete = $connexion-> prepare("SELECT COUNT(dos.id_dos) AS nbre_disabled
 			// 									FROM dossier dos
 			// 									WHERE dos.id_mod_lic = ?
-			// 										AND dos.ref_decl IS  NOT NULL
-			// 										AND dos.date_decl IS  NOT NULL
-			// 										AND dos.ref_liq IS  NOT NULL
-			// 										AND dos.date_liq IS  NOT NULL
-			// 										AND dos.ref_quit IS  NOT NULL
+			// 										AND dos.ref_decl IS  NOT NULL 
+			// 										AND dos.date_decl IS  NOT NULL 
+			// 										AND dos.ref_liq IS  NOT NULL 
+			// 										AND dos.date_liq IS  NOT NULL 
+			// 										AND dos.ref_quit IS  NOT NULL 
 			// 										AND dos.date_quit IS NOT NULL
 			// 										AND dos.not_fact = '1'");
 			// $requete-> execute(array($entree['id_mod_lic']));
@@ -25515,13 +25478,13 @@
 			$requete = $connexion-> prepare("SELECT COUNT(dos.id_dos) AS nbre_awaiting_elq
 											FROM dossier dos
 											WHERE dos.id_mod_lic = ?
-												AND (dos.ref_decl IS NULL
-														OR dos.date_decl IS NULL
-														OR dos.ref_liq IS NULL
-														OR dos.date_liq IS NULL
-														OR dos.ref_quit IS NULL
+												AND (dos.ref_decl IS NULL 
+														OR dos.date_decl IS NULL 
+														OR dos.ref_liq IS NULL 
+														OR dos.date_liq IS NULL 
+														OR dos.ref_quit IS NULL 
 														OR dos.date_quit IS NULL
-													)
+													) 
 												AND dos.not_fact='0'
 												AND dos.ref_dos NOT LIKE 'EXPDEC%'
 												AND dos.ref_dos NOT LIKE '21EXP%'
@@ -25530,7 +25493,7 @@
 												$sqlClient
 												AND dos.id_cli <> 1
 												AND dos.id_dos NOT IN (
-													SELECT DISTINCT(det.id_dos)
+													SELECT DISTINCT(det.id_dos) 
 														FROM facture_dossier fd, detail_facture_dossier det
 														WHERE fd.ref_fact = det.ref_fact
 															AND fd.note_debit = '0'
@@ -25566,7 +25529,7 @@
 													-- AND dos.date_quit IS NOT NULL
 													-- AND dos.ref_quit IS NOT NULL
 
-													AND
+													AND 
 													(
 														-- Pocess 1
 														(
@@ -25583,7 +25546,7 @@
 														(
 															get_inv_process_pour_dossier(dos.id_dos)=2
 															AND (
-																	dos.dispatch_date IS NOT NULL
+																	dos.dispatch_date IS NOT NULL 
 																	OR (dos.dgda_out IS NOT NULL AND dos.id_mod_trans=4)
 																)
 															-- dos.dispatch_date IS NOT NULL
@@ -25594,12 +25557,12 @@
 															get_inv_process_pour_dossier(dos.id_dos)=3
 															AND dos.dispatch_deliv IS NOT NULL
 														)
-
+															
 													)
 													AND dos.id_cli <> 1
 													AND dos.not_fact = '0'
 													AND dos.id_dos NOT IN (
-														SELECT DISTINCT(dos.id_dos)
+														SELECT DISTINCT(dos.id_dos) 
 															FROM facture_dossier fd, detail_facture_dossier det, dossier dos
 															WHERE fd.ref_fact = det.ref_fact
 																AND fd.note_debit = '0'
@@ -25639,7 +25602,7 @@
 													AND dos.id_cli <> 1
 													AND dos.not_fact = '0'
 													AND dos.id_dos NOT IN (
-														SELECT DISTINCT(dos.id_dos)
+														SELECT DISTINCT(dos.id_dos) 
 															FROM facture_dossier fd, detail_facture_dossier det, dossier dos
 															WHERE fd.ref_fact = det.ref_fact
 																AND fd.note_debit = '0'
@@ -25676,7 +25639,7 @@
 													AND dos.id_cli <> 1
 													AND dos.not_fact = '0'
 													AND dos.id_dos NOT IN (
-														SELECT DISTINCT(dos.id_dos)
+														SELECT DISTINCT(dos.id_dos) 
 															FROM facture_dossier fd, detail_facture_dossier det, dossier dos
 															WHERE fd.ref_fact = det.ref_fact
 																AND fd.note_debit = '0'
@@ -25736,11 +25699,11 @@
 			$requete = $connexion-> prepare("SELECT COUNT(dos.id_dos) AS nbre_disabled
 												FROM dossier dos
 												WHERE dos.id_mod_lic = ?
-													AND dos.ref_decl IS  NOT NULL
-													AND dos.date_decl IS  NOT NULL
-													AND dos.ref_liq IS  NOT NULL
-													AND dos.date_liq IS  NOT NULL
-													AND dos.ref_quit IS  NOT NULL
+													AND dos.ref_decl IS  NOT NULL 
+													AND dos.date_decl IS  NOT NULL 
+													AND dos.ref_liq IS  NOT NULL 
+													AND dos.date_liq IS  NOT NULL 
+													AND dos.ref_quit IS  NOT NULL 
 													AND dos.date_quit IS NOT NULL
 													$sqlClient
 													AND dos.id_cli <> 1
@@ -25794,7 +25757,7 @@
 														SELECT DISTINCT(id_dos)
 															FROM detail_facture_dossier det, facture_dossier fact
 															WHERE det.ref_fact = fact.ref_fact
-
+																
 													)
 													AND (
 														dos.id_bank_liq IS NULL
@@ -25868,8 +25831,8 @@
 			$entree['num_lic'] = $num_lic;
 			$compteur = 0;
 
-			$requete = $connexion-> prepare("SELECT ref_dos, id_dos, num_lot,
-													horse, trailer_1, trailer_2,
+			$requete = $connexion-> prepare("SELECT ref_dos, id_dos, num_lot, 
+													horse, trailer_1, trailer_2, 
 													poids, roe_decl, id_bank_liq,
 													roe_liq, montant_liq,
 													CONCAT(ref_decl, ' ', DATE_FORMAT(date_decl, '%d/%m/%Y')) AS declaration,
@@ -25890,7 +25853,7 @@
 												-- AND ref_liq IS NOT NULL
 												-- AND ref_liq <> ''
 
-												AND
+												AND 
 												(
 													-- Pocess 1
 													(
@@ -25907,7 +25870,7 @@
 													(
 														get_inv_process_pour_dossier(id_dos)=2
 														AND (
-																	dispatch_date IS NOT NULL
+																	dispatch_date IS NOT NULL 
 																	OR (dgda_out IS NOT NULL AND id_mod_trans=4)
 																)
 														-- dispatch_date IS NOT NULL
@@ -25918,7 +25881,7 @@
 														get_inv_process_pour_dossier(id_dos)=3
 														AND dispatch_deliv IS NOT NULL
 													)
-
+														
 												)
 												AND id_dos NOT IN (
 														SELECT id_dos FROM detail_facture_dossier
@@ -26235,8 +26198,8 @@
 			$entree['num_lic'] = $num_lic;
 			$compteur = 0;
 
-			$requete = $connexion-> prepare("SELECT ref_dos, id_dos, num_lot,
-													horse, trailer_1, trailer_2,
+			$requete = $connexion-> prepare("SELECT ref_dos, id_dos, num_lot, 
+													horse, trailer_1, trailer_2, 
 													poids, roe_decl, id_bank_liq,
 													roe_liq,
 													CONCAT(ref_decl, ' ', DATE_FORMAT(date_decl, '%d/%m/%Y')) AS declaration,
@@ -26256,7 +26219,7 @@
 												-- AND ref_liq IS NOT NULL
 												-- AND ref_liq <> ''
 
-												AND
+												AND 
 												(
 													-- Pocess 1
 													(
@@ -26273,7 +26236,7 @@
 													(
 														get_inv_process_pour_dossier(id_dos)=2
 														AND (
-																	dispatch_date IS NOT NULL
+																	dispatch_date IS NOT NULL 
 																	OR (dgda_out IS NOT NULL AND id_mod_trans=4)
 																)
 														-- dispatch_date IS NOT NULL
@@ -26284,7 +26247,7 @@
 														get_inv_process_pour_dossier(id_dos)=3
 														AND dispatch_deliv IS NOT NULL
 													)
-
+														
 												)
 												AND id_dos NOT IN (
 														SELECT id_dos FROM detail_facture_dossier
@@ -26519,8 +26482,8 @@
 			$entree['num_lic'] = $num_lic;
 			$compteur = 0;
 
-			$requete = $connexion-> prepare("SELECT ref_dos, id_dos, num_lot,
-													horse, trailer_1, trailer_2,
+			$requete = $connexion-> prepare("SELECT ref_dos, id_dos, num_lot, 
+													horse, trailer_1, trailer_2, 
 													poids, roe_decl,
 													CONCAT(ref_decl, ' ', DATE_FORMAT(date_decl, '%d/%m/%Y')) AS declaration,
 													CONCAT(ref_liq, ' ', DATE_FORMAT(date_liq, '%d/%m/%Y')) AS liquidation,
@@ -26613,7 +26576,7 @@
 			<input name="nbre" type="hidden" value="<?php echo $compteur;?>">
 			<?php
 		}
-
+		
 		public function dossiers_facture_ajax($ref_fact){
 			include('connexion.php');
 
@@ -26622,9 +26585,9 @@
 			$compteur = 0;
 
 			$requete = $connexion-> prepare("SELECT CONCAT(dos.ref_dos,'   <a href=\"#\" onclick=\"remove_file_invoice(\'',dos.id_dos,'\');\" title=\"Remove this file\">
-									                    <i class=\"fas fa-times text-danger\"></i>
-									                </a>') AS ref_dos, dos.id_dos, dos.num_lot,
-													dos.horse, dos.trailer_1, dos.trailer_2,
+									                    <i class=\"fas fa-times text-danger\"></i> 
+									                </a>') AS ref_dos, dos.id_dos, dos.num_lot, 
+													dos.horse, dos.trailer_1, dos.trailer_2, 
 													dos.poids, dos.roe_decl,
 													CONCAT(dos.ref_decl, ' ', DATE_FORMAT(dos.date_decl, '%d/%m/%Y')) AS declaration,
 													CONCAT(dos.ref_liq, ' ', DATE_FORMAT(dos.date_liq, '%d/%m/%Y')) AS liquidation,
@@ -26643,11 +26606,11 @@
 													) AS truck,
 
 													SUM(
-														IF(det.usd='1',
+														IF(det.usd='1', 
 															IF(det.tva='1',
 																det.montant*1.16,
 																det.montant
-															),
+															), 
 															IF(det.tva='1',
 																IF(det.montant_tva>0,
 																	((det.montant_tva+det.montant)/dos.roe_decl),
@@ -26676,7 +26639,7 @@
 
 			return $rows;
 		}
-
+		
 		public function getDepense($id_dep){
 			include('connexion.php');
 
@@ -26692,7 +26655,7 @@
 
 			return $reponse;
 		}
-
+		
 		public function monitoring_depenses($id_mod_lic){
 			include('connexion.php');
 
@@ -26700,7 +26663,7 @@
 			$rows = array();
 			$compteur = 0;
 
-			$requete = $connexion-> prepare("SELECT dep.nom_dep AS nom_dep,
+			$requete = $connexion-> prepare("SELECT dep.nom_dep AS nom_dep, 
 													dep.id_dep AS id_dep
 												FROM depense dep, depense_dossier depdos, dossier dos
 												WHERE dep.id_dep = depdos.id_dep
@@ -26725,7 +26688,7 @@
 
 			return $rows;
 		}
-
+		
 		public function get_monitoring_depenses_pending($id_dep, $id_mod_lic){
 			include('connexion.php');
 
@@ -26760,7 +26723,7 @@
 			}
 
 		}
-
+		
 		public function get_monitoring_depenses_invoiced($id_dep, $id_mod_lic){
 			include('connexion.php');
 
@@ -26789,9 +26752,9 @@
 				return '0';
 			}
 
-
+			
 		}
-
+		
 		public function get_nbre_debit_note($id_dep, $id_mod_lic){
 			include('connexion.php');
 
@@ -26815,7 +26778,7 @@
 
 			return $reponse['nbre'];
 		}
-
+		
 		public function pending_report(){
 			include('connexion.php');
 
@@ -26871,7 +26834,7 @@
 
 			return $rows;
 		}
-
+		
 		public function kpi_tracking_report($debut, $fin){
 			include('connexion.php');
 
@@ -26913,7 +26876,7 @@
 														)
 													) AS comment_delay_klsa,
 													DATE_FORMAT(d.wiski_arriv, '%d/%m/%Y') AS wiski_arriv,
-													IF(d.wiski_dep IS NULL AND d.dispatch_klsa IS NOT NULL,
+													IF(d.wiski_dep IS NULL AND d.dispatch_klsa IS NOT NULL, 
 														DATE_FORMAT(d.dispatch_klsa, '%d/%m/%Y'),
 														DATE_FORMAT(d.wiski_dep, '%d/%m/%Y')) AS wiski_dep,
 													IF(d.wiski_arriv IS NULL,
@@ -26924,7 +26887,7 @@
 																DATEDIFF(CURRENT_DATE(), d.wiski_arriv),
 																DATEDIFF(d.wiski_dep, d.wiski_arriv)
 															)
-
+															
 														)
 													) AS delay_wiski
 												FROM dossier d, client cl
@@ -26946,7 +26909,7 @@
 
 			return $rows;
 		}
-
+		
 		public function kpi_tracking_reportAll($debut, $fin, $id_cli=null, $id_mod_lic=null){
 			include('connexion.php');
 
@@ -27047,7 +27010,7 @@
 														)
 													) AS comment_delay_klsa,
 													DATE_FORMAT(d.wiski_arriv, '%d/%m/%Y') AS wiski_arriv,
-													IF(d.wiski_dep IS NULL AND d.dispatch_klsa IS NOT NULL,
+													IF(d.wiski_dep IS NULL AND d.dispatch_klsa IS NOT NULL, 
 														DATE_FORMAT(d.dispatch_klsa, '%d/%m/%Y'),
 														DATE_FORMAT(d.wiski_dep, '%d/%m/%Y')) AS wiski_dep,
 													IF(d.wiski_arriv IS NULL,
@@ -27058,7 +27021,7 @@
 																DATEDIFF(CURRENT_DATE(), d.wiski_arriv),
 																DATEDIFF(d.wiski_dep, d.wiski_arriv)
 															)
-
+															
 														)
 													) AS delay_wiski,
 													IF(d.wiski_arriv IS NULL,
@@ -27077,7 +27040,7 @@
 													          IF(d.date_crf IS NULL AND d.date_ad IS NOT NULL AND d.date_assurance IS NULL,
 													            'AWAITING CRF/INSURANCE',
 													            IF(d.date_crf IS NULL AND d.date_ad IS NOT NULL AND d.date_assurance IS NOT NULL,
-													              'AWAITING CRF',
+													              'AWAITING CRF', 
 													              IF(d.date_crf IS NOT NULL AND d.date_ad IS NULL AND d.date_assurance IS NULL,
 													                'AWAITING AD/INSURANCE',
 													                IF(d.date_crf IS NOT NULL AND d.date_ad IS NULL AND d.date_assurance IS NOT NULL,
@@ -27088,13 +27051,13 @@
 													                      IF(d.date_decl IS NULL AND d.ref_decl IS NULL, 'UNDER PREPARATION',
 													                        IF(d.date_liq IS NULL AND d.ref_liq IS NULL, 'AWAITING LIQUIDATION',
 													                          IF(d.date_quit IS NULL AND d.ref_quit IS NULL, 'AWAITING QUITTANCE',
-													                            IF(d.date_quit IS NOT NULL AND d.ref_quit IS NOT NULL AND d.dgda_out IS NULL, 'AWAITING BAE/BS',
+													                            IF(d.date_quit IS NOT NULL AND d.ref_quit IS NOT NULL AND d.dgda_out IS NULL, 'AWAITING BAE/BS', 
 													                              IF(d.dgda_out IS NOT NULL AND d.dispatch_deliv IS NOT NULL, 'CLEARING COMPLETED', '')
 													                              )
 													                            )
 													                          )
 													                        )
-
+													                      
 													                      )
 													                  )
 													                )
@@ -27125,7 +27088,7 @@
 
 			return $rows;
 		}
-
+		
 		public function kpi_tracking_reportAll2($champ_col, $debut, $fin, $id_cli=null, $id_mod_lic=null){
 			include('connexion.php');
 
@@ -27249,7 +27212,7 @@
 														IF(d.cleared='1',
 															'Cleared',
 															'Cancelled'
-														)
+														)	
 													) AS clearing_status,
 													IF(d.id_march='4',
 														IF(d.docs_sncc IS NOT NULL,
@@ -27297,7 +27260,7 @@
 														)
 													) AS comment_delay_klsa,
 													DATE_FORMAT(d.wiski_arriv, '%d/%m/%Y') AS wiski_arriv,
-													IF(d.wiski_dep IS NULL AND d.dispatch_klsa IS NOT NULL,
+													IF(d.wiski_dep IS NULL AND d.dispatch_klsa IS NOT NULL, 
 														DATE_FORMAT(d.dispatch_klsa, '%d/%m/%Y'),
 														DATE_FORMAT(d.wiski_dep, '%d/%m/%Y')) AS wiski_dep,
 													IF(d.wiski_arriv IS NULL,
@@ -27308,7 +27271,7 @@
 																DATEDIFF(CURRENT_DATE(), d.wiski_arriv),
 																DATEDIFF(d.wiski_dep, d.wiski_arriv)
 															)
-
+															
 														)
 													) AS delay_wiski,
 													IF(d.wiski_arriv IS NULL,
@@ -27327,7 +27290,7 @@
 													          IF(d.date_crf IS NULL AND d.date_ad IS NOT NULL AND d.date_assurance IS NULL,
 													            'AWAITING CRF/INSURANCE',
 													            IF(d.date_crf IS NULL AND d.date_ad IS NOT NULL AND d.date_assurance IS NOT NULL,
-													              'AWAITING CRF',
+													              'AWAITING CRF', 
 													              IF(d.date_crf IS NOT NULL AND d.date_ad IS NULL AND d.date_assurance IS NULL,
 													                'AWAITING AD/INSURANCE',
 													                IF(d.date_crf IS NOT NULL AND d.date_ad IS NULL AND d.date_assurance IS NOT NULL,
@@ -27338,13 +27301,13 @@
 													                      IF(d.date_decl IS NULL AND d.ref_decl IS NULL, 'UNDER PREPARATION',
 													                        IF(d.date_liq IS NULL AND d.ref_liq IS NULL, 'AWAITING LIQUIDATION',
 													                          IF(d.date_quit IS NULL AND d.ref_quit IS NULL, 'AWAITING QUITTANCE',
-													                            IF(d.date_quit IS NOT NULL AND d.ref_quit IS NOT NULL AND d.dgda_out IS NULL, 'AWAITING BAE/BS',
+													                            IF(d.date_quit IS NOT NULL AND d.ref_quit IS NOT NULL AND d.dgda_out IS NULL, 'AWAITING BAE/BS', 
 													                              IF(d.dgda_out IS NOT NULL AND d.dispatch_deliv IS NOT NULL, 'CLEARING COMPLETED', '')
 													                              )
 													                            )
 													                          )
 													                        )
-
+													                      
 													                      )
 													                  )
 													                )
@@ -27376,7 +27339,7 @@
 
 			return $rows;
 		}
-
+		
 		public function getDispatchFromBorderUtilisateur($id_util, $debut, $fin){
 			include('connexion.php');
 
@@ -27397,7 +27360,7 @@
 
 			return $reponse['nbre_dossier_dispatch_border'];
 		}
-
+		
 		public function getBorderWHArrivalUtilisateur($id_util, $debut, $fin){
 			include('connexion.php');
 
@@ -27418,7 +27381,7 @@
 
 			return $reponse['nbre_dossier_border_wh_arriv'];
 		}
-
+	
 		public function getBorderWHDepUtilisateur($id_util, $debut, $fin){
 			include('connexion.php');
 
@@ -27439,7 +27402,7 @@
 
 			return $reponse['nbre_dossier_border_wh_dep'];
 		}
-
+	
 		public function getBorderArrivalUtilisateur($id_util, $debut, $fin){
 			include('connexion.php');
 
@@ -27460,7 +27423,7 @@
 
 			return $reponse['nbre_dossier_border_arriv'];
 		}
-
+	
 		public function getDossierCreesUtilisateur($id_util, $debut, $fin){
 			include('connexion.php');
 
@@ -27552,7 +27515,7 @@
 
 			return $rows;
 		}
-
+		
 		public function invoice_assigned(){
 			include('connexion.php');
 
@@ -27565,7 +27528,7 @@
 													cl.nom_cli AS nom_cli,
 													-- ml.nom_mod_lic AS nom_mod_lic,
 													CONCAT(ml.nom_mod_lic,'   <a href=\"#\" onclick=\"remove_assignement(',u.id_util,',',ml.id_mod_lic,',',cl.id_cli,');\" title=\"Remove this assignement\">
-									                    <i class=\"fas fa-times text-danger\"></i>
+									                    <i class=\"fas fa-times text-danger\"></i> 
 									                </a>')  AS nom_mod_lic
 												FROM utilisateur u, client cl, modele_licence ml, affectation_utilisateur_client_facturation aff
 												WHERE u.id_util = aff.id_util
@@ -27586,7 +27549,7 @@
 
 			return $rows;
 		}
-
+		
 		public function create_assignement($id_util, $id_mod_lic, $id_cli){
 			include("connexion.php");
 			$entree['id_util'] = $id_util;
@@ -27596,7 +27559,7 @@
 			$requete = $connexion-> prepare("INSERT INTO affectation_utilisateur_client_facturation(id_util, id_mod_lic, id_cli)
 												VALUES(?, ?, ?)");
 			$requete-> execute(array($entree['id_util'], $entree['id_mod_lic'], $entree['id_cli']));
-
+			
 
 		}
 
@@ -27607,12 +27570,12 @@
 			$entree['id_cli'] = $id_cli;
 
 			$requete = $connexion-> prepare("DELETE FROM affectation_utilisateur_client_facturation
-												WHERE id_util = ?
-													AND id_mod_lic = ?
+												WHERE id_util = ? 
+													AND id_mod_lic = ? 
 													AND id_cli = ?");
 
 			$requete-> execute(array($entree['id_util'], $entree['id_mod_lic'], $entree['id_cli']));
-
+			
 
 		}
 
@@ -27622,11 +27585,11 @@
 			$entree['id_dep_dos'] = $id_dep_dos;
 
 			$requete = $connexion-> prepare("DELETE FROM detail_note_debit
-												WHERE ref_note = ?
+												WHERE ref_note = ? 
 													AND id_dep_dos = ?");
 
 			$requete-> execute(array($entree['ref_note'], $entree['id_dep_dos']));
-
+			
 
 		}
 
@@ -27636,11 +27599,11 @@
 			$entree['id_df'] = $id_df;
 
 			$requete = $connexion-> prepare("DELETE FROM depense_dossier
-												WHERE id_dos = ?
+												WHERE id_dos = ? 
 													AND id_df = ?");
 
 			$requete-> execute(array($entree['id_dos'], $entree['id_df']));
-
+			
 
 		}
 
@@ -27652,11 +27615,11 @@
 
 			$requete = $connexion-> prepare("UPDATE detail_note_debit
 												SET montant = ?
-												WHERE ref_note = ?
+												WHERE ref_note = ? 
 													AND id_dep_dos = ?");
 
 			$requete-> execute(array($entree['montant'], $entree['ref_note'], $entree['id_dep_dos']));
-
+			
 
 		}
 
@@ -27668,7 +27631,7 @@
 												WHERE id = ? ");
 
 			$requete-> execute(array($entree['id']));
-
+			
 
 		}
 
@@ -27682,13 +27645,13 @@
 			// $entree['num_lic'] = $num_lic;
 			$compteur = 0;
 
-			$requete = $connexion-> prepare("SELECT dos.ref_dos AS ref_dos,
-													dos.id_dos AS id_dos,
-													dos.num_lot AS num_lot,
-													dos.horse AS horse,
-													dos.trailer_1 AS trailer_1,
-													dos.trailer_2 AS trailer_2,
-													dos.poids AS poids,
+			$requete = $connexion-> prepare("SELECT dos.ref_dos AS ref_dos, 
+													dos.id_dos AS id_dos, 
+													dos.num_lot AS num_lot, 
+													dos.horse AS horse, 
+													dos.trailer_1 AS trailer_1, 
+													dos.trailer_2 AS trailer_2, 
+													dos.poids AS poids, 
 													ROUND(dos.roe_decl, 4) AS roe_decl,
 													CONCAT(dos.ref_decl, ' ', DATE_FORMAT(dos.date_decl, '%d/%m/%Y')) AS declaration,
 													CONCAT(dos.ref_liq, ' ', DATE_FORMAT(dos.date_liq, '%d/%m/%Y')) AS liquidation,
@@ -27776,9 +27739,9 @@
 			<input name="nbre" type="hidden" value="<?php echo $compteur;?>">
 			<?php
 		}
-
+		
 		public function creerDetailFactureWithoutTaxe($ref_fact, $id_dos, $id_cli, $id_mod_lic, $id_march, $id_mod_trans){
-
+			
 			include('connexion.php');
 			$entree['id_cli'] = $id_cli;
 			$entree['id_mod_lic'] = $id_mod_lic;
@@ -27798,7 +27761,7 @@
 													AND aff.usd = '1'");
 			$requeteDebours-> execute(array($entree['id_cli'], $entree['id_mod_lic'], $entree['id_march'], $entree['id_mod_trans']));
 			while ($reponseDebours = $requeteDebours-> fetch()) {
-
+				
 				$montant = $this-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport($reponseDebours['id_deb'], $id_mod_lic, $id_cli, $id_march, $id_mod_trans)['montant'];
 				$tva = $this-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport($reponseDebours['id_deb'], $id_mod_lic, $id_cli, $id_march, $id_mod_trans)['tva'];
 				$usd = $this-> getMontantDeboursClientModeleLicenceMarchandiseModeTransport($reponseDebours['id_deb'], $id_mod_lic, $id_cli, $id_march, $id_mod_trans)['usd'];
@@ -27814,7 +27777,7 @@
 
 			}$requeteDebours-> closeCursor();
 
-		}
+		} 
 
 		public function getDossiersExportEditFactures($ref_fact){
 			include('connexion.php');
@@ -27823,17 +27786,17 @@
 			$compteur = 0;
 			$total_duty = 0;
 
-			$requete = $connexion-> prepare("SELECT dos.ref_dos AS ref_dos,
-													dos.id_dos AS id_dos,
-													dos.num_lot AS num_lot,
-													dos.id_cli AS id_cli,
-													dos.id_mod_lic AS id_mod_lic,
-													dos.horse AS horse,
-													dos.trailer_1 AS trailer_1,
-													dos.trailer_2 AS trailer_2,
-													dos.poids AS poids,
-													dos.id_bank_liq AS id_bank_liq,
-													dos.montant_liq AS montant_liq,
+			$requete = $connexion-> prepare("SELECT dos.ref_dos AS ref_dos, 
+													dos.id_dos AS id_dos, 
+													dos.num_lot AS num_lot, 
+													dos.id_cli AS id_cli, 
+													dos.id_mod_lic AS id_mod_lic, 
+													dos.horse AS horse, 
+													dos.trailer_1 AS trailer_1, 
+													dos.trailer_2 AS trailer_2, 
+													dos.poids AS poids, 
+													dos.id_bank_liq AS id_bank_liq, 
+													dos.montant_liq AS montant_liq, 
 													ROUND(dos.roe_decl, 4) AS roe_decl,
 													ROUND(dos.roe_liq, 4) AS roe_liq,
 													CONCAT(dos.ref_decl, ' ', DATE_FORMAT(dos.date_decl, '%d/%m/%Y')) AS declaration,
@@ -27991,7 +27954,7 @@
 				<?php
 				}
 				?>
-
+				
 				<td style="text-align: center;">
 					<input type="number" step="0.001" min="0" style="text-align: center; width: 8em;" id="gov_tax_<?php echo $compteur;?>" name="gov_tax_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDataDetailFacture($ref_fact, $reponse['id_dos'], 7)['montant'];?>" class="bg bg-dark">
 					<input type="hidden" style="text-align: center; width: 8em;" name="gov_tax_tva_<?php echo $compteur;?>" id="tva_<?php echo $compteur;?>" value="<?php echo $this-> getMontantDataDetailFacture($ref_fact, $reponse['id_dos'], 7)['tva'];?>" class="bg bg-dark">
@@ -28159,13 +28122,13 @@
 			$compteur = 0;
 			$total_duty = 0;
 
-			$requete = $connexion-> prepare("SELECT dos.ref_dos AS ref_dos,
-													dos.id_dos AS id_dos,
-													dos.num_lot AS num_lot,
-													dos.horse AS horse,
-													dos.trailer_1 AS trailer_1,
-													dos.trailer_2 AS trailer_2,
-													dos.poids AS poids,
+			$requete = $connexion-> prepare("SELECT dos.ref_dos AS ref_dos, 
+													dos.id_dos AS id_dos, 
+													dos.num_lot AS num_lot, 
+													dos.horse AS horse, 
+													dos.trailer_1 AS trailer_1, 
+													dos.trailer_2 AS trailer_2, 
+													dos.poids AS poids, 
 													ROUND(dos.roe_decl, 4) AS roe_decl,
 													CONCAT(dos.ref_decl, ' ', DATE_FORMAT(dos.date_decl, '%d/%m/%Y')) AS declaration,
 													CONCAT(dos.ref_liq, ' ', DATE_FORMAT(dos.date_liq, '%d/%m/%Y')) AS liquidation,
@@ -28437,8 +28400,8 @@
 															1,
 															0)
 													)*250) AS ceec_60,
-													ref_dos, id_dos, num_lot,
-													horse, trailer_1, trailer_2,
+													ref_dos, id_dos, num_lot, 
+													horse, trailer_1, trailer_2, 
 													poids, roe_decl,
 													CONCAT(ref_decl, ' ', DATE_FORMAT(date_decl, '%d/%m/%Y')) AS declaration,
 													CONCAT(ref_liq, ' ', DATE_FORMAT(date_liq, '%d/%m/%Y')) AS liquidation,
@@ -28490,7 +28453,7 @@
 					$active = '';
 					$open = '';
 				}
-
+				
 
 				?>
 				<li class="nav-item <?php echo $open;?>  <?php echo $active;?>">
@@ -28514,7 +28477,7 @@
 			$open = '';
 			$reponse['id_cli'] = '';
 			if($_SESSION['id_role'] == '1' || $_SESSION['id_role'] == '6' || $_SESSION['id_role'] == '7' || $_SESSION['id_role'] == '8' || $_SESSION['id_role'] == '9' || $_SESSION['id_role'] == '10' || $_SESSION['id_role'] == '11' || $_SESSION['id_role'] == '14'){
-				$sql = "SELECT id_mod_lic,
+				$sql = "SELECT id_mod_lic, 
 							nom_mod_lic,
 							sigle_mod_lic
 						FROM modele_licence
@@ -28571,7 +28534,7 @@
 		              // 	# code...
 		              // 	$this-> afficherMenuClientModeleLicence($reponse['id_mod_lic']);
 		              // }
-
+		              	
 		              ?>
 		              <li class="nav-item">
 		                <a href="sydonia_upload.php?id_mod_trac=<?php echo $reponse['id_mod_lic'];?>&amp;id_cli=<?php echo $id_cli;?>" class="nav-link">
@@ -28639,7 +28602,7 @@
 			$open = '';
 			$reponse['id_cli'] = '';
 			if($_SESSION['id_role'] == '1' || $_SESSION['id_role'] == '6' || $_SESSION['id_role'] == '7' || $_SESSION['id_role'] == '8' || $_SESSION['id_role'] == '9' || $_SESSION['id_role'] == '10' || $_SESSION['id_role'] == '11'){
-				$sql = "SELECT id_trans,
+				$sql = "SELECT id_trans, 
 							nom_trans
 						FROM transit
 						ORDER BY nom_trans";
@@ -28683,8 +28646,8 @@
 			$active = '';
 			$open = '';
 
-			$requete = $connexion-> prepare("SELECT UPPER(nom_march) AS nom_march, id_march AS id_march
-												FROM marchandise
+			$requete = $connexion-> prepare("SELECT UPPER(nom_march) AS nom_march, id_march AS id_march 
+												FROM marchandise 
 												WHERE id_mod_lic = ?
 												ORDER BY nom_march");
 			$requete-> execute(array($entree['id_mod_lic']));
@@ -28724,7 +28687,7 @@
 			$compteur = 0;
 
 			$requete = $connexion-> prepare("SELECT *
-												FROM licence
+												FROM licence 
 												WHERE id_mod_lic = ?
 													AND id_cli = ?
 													AND id_mod_trans = ?
@@ -28788,7 +28751,7 @@
 
 			if ($_SESSION['id_role'] == '10') {
 				$sqlWarehouse = ' AND c.id_cli IN (
-										SELECT DISTINCT(id_cli)
+										SELECT DISTINCT(id_cli) 
 										FROM dossier
 										WHERE bond_warehouse = "LUBUMBASHI"
 											AND id_mod_lic = '.$id_mod_lic.'
@@ -28797,8 +28760,8 @@
 				$sqlWarehouse = '';
 			}
 
-			$requete = $connexion-> prepare("SELECT UPPER(c.nom_cli) AS nom_cli, c.id_cli AS id_cli
-												FROM client c, affectation_client_modele_licence cm, modele_licence m
+			$requete = $connexion-> prepare("SELECT UPPER(c.nom_cli) AS nom_cli, c.id_cli AS id_cli 
+												FROM client c, affectation_client_modele_licence cm, modele_licence m 
 												WHERE m.id_mod_lic = ?
 													AND m.id_mod_lic = cm.id_mod_lic
 													AND cm.id_cli = c.id_cli
@@ -28955,8 +28918,8 @@
 			$open = '';
 			$style = '';
 
-			$requete = $connexion-> prepare("SELECT UPPER(c.nom_cli) AS nom_cli, c.id_cli AS id_cli
-												FROM client c, affectation_client_modele_licence cm, modele_licence m
+			$requete = $connexion-> prepare("SELECT UPPER(c.nom_cli) AS nom_cli, c.id_cli AS id_cli 
+												FROM client c, affectation_client_modele_licence cm, modele_licence m 
 												WHERE m.id_mod_lic = ?
 													AND m.id_mod_lic = cm.id_mod_lic
 													AND cm.id_cli = c.id_cli
@@ -29016,8 +28979,8 @@
 			$active = '';
 			$open = '';
 
-			$requete = $connexion-> prepare("SELECT UPPER(c.nom_cli) AS nom_cli, c.id_cli AS id_cli
-												FROM client c, affectation_client_modele_licence cm, modele_licence m
+			$requete = $connexion-> prepare("SELECT UPPER(c.nom_cli) AS nom_cli, c.id_cli AS id_cli 
+												FROM client c, affectation_client_modele_licence cm, modele_licence m 
 												WHERE m.id_mod_lic = ?
 													AND m.id_mod_lic = cm.id_mod_lic
 													AND cm.id_cli = c.id_cli
@@ -29068,7 +29031,7 @@
 			//$entree['id_mod_lic'] = $id_mod_lic;
 			$style = '';
 
-			$requete = $connexion-> query("SELECT UPPER(nom_mod_trans) AS nom_mod_trans, id_mod_trans AS id_mod_trans
+			$requete = $connexion-> query("SELECT UPPER(nom_mod_trans) AS nom_mod_trans, id_mod_trans AS id_mod_trans 
 												FROM mode_transport ");
 			//$requete-> execute(array($entree['id_mod_lic']));
 			while ($reponse = $requete-> fetch()) {
@@ -29094,13 +29057,13 @@
 			$entree['id_cli'] = $id_cli;
 			$style = '';
 
-			$requete = $connexion-> prepare("SELECT UPPER(nom_mod_trans) AS nom_mod_trans, id_mod_trans AS id_mod_trans
+			$requete = $connexion-> prepare("SELECT UPPER(nom_mod_trans) AS nom_mod_trans, id_mod_trans AS id_mod_trans 
 												FROM mode_transport
 												WHERE id_mod_trans IN(
-													SELECT DISTINCT(id_mod_trans)
+													SELECT DISTINCT(id_mod_trans) 
 													FROM dossier
 													WHERE id_cli = ?
-														AND id_mod_lic = ?
+														AND id_mod_lic = ? 		
 											)");
 			$requete-> execute(array($entree['id_cli'], $entree['id_mod_lic']));
 			while ($reponse = $requete-> fetch()) {
@@ -29126,13 +29089,13 @@
 			$entree['id_cli'] = $id_cli;
 			$style = '';
 
-			$requete = $connexion-> prepare("SELECT UPPER(nom_mod_trans) AS nom_mod_trans, id_mod_trans AS id_mod_trans
+			$requete = $connexion-> prepare("SELECT UPPER(nom_mod_trans) AS nom_mod_trans, id_mod_trans AS id_mod_trans 
 												FROM mode_transport
 												WHERE id_mod_trans IN(
-													SELECT DISTINCT(id_mod_trans)
+													SELECT DISTINCT(id_mod_trans) 
 													FROM dossier_logistique
 													WHERE id_cli = ?
-														AND id_trans = ?
+														AND id_trans = ? 		
 											)");
 			$requete-> execute(array($entree['id_cli'], $entree['id_trans']));
 			while ($reponse = $requete-> fetch()) {
@@ -29159,7 +29122,7 @@
 			$style = '';
 
 			//On recupere Les marchandises
-			$requeteMarchandise = $connexion-> prepare('SELECT m.id_march AS id_march,
+			$requeteMarchandise = $connexion-> prepare('SELECT m.id_march AS id_march, 
 																UPPER(m.nom_march) AS nom_march
 															FROM marchandise m, affectation_marchandise_client_modele_licence a
 															WHERE m.id_march = a.id_march
@@ -29176,9 +29139,9 @@
 	                <ul class="nav nav-treeview">
 	                <?php
 
-						$requete = $connexion-> prepare("SELECT DISTINCT(id_mod_trans) AS id_mod_trans ,
+						$requete = $connexion-> prepare("SELECT DISTINCT(id_mod_trans) AS id_mod_trans , 
 															UPPER(nom_mod_trans) AS nom_mod_trans
-														FROM mode_transport
+														FROM mode_transport 
 														WHERE id_mod_trans IN(
 																	SELECT id_mod_trans FROM dossier
 																		WHERE id_cli = ?
@@ -29211,12 +29174,12 @@
 			$entree['id_mod_lic'] = $id_mod_lic;
 			$style = '';
 
-			$requete = $connexion-> prepare("SELECT DISTINCT(id_mod_trans) AS id_mod_trans,
+			$requete = $connexion-> prepare("SELECT DISTINCT(id_mod_trans) AS id_mod_trans, 
 													UPPER(nom_mod_trans) AS nom_mod_trans
-												FROM mode_transport
+												FROM mode_transport 
 												WHERE id_mod_trans IN (
-													SELECT DISTINCT(id_mod_trans) AS id_mod_trans
-														FROM dossier
+													SELECT DISTINCT(id_mod_trans) AS id_mod_trans 
+														FROM dossier 
 														WHERE id_mod_lic = ?
 												)
 											");
@@ -29246,7 +29209,7 @@
 
 			$requete = $connexion-> prepare("SELECT num_lic
 												FROM licence
-												WHERE id_mod_lic = ?
+												WHERE id_mod_lic = ? 
 													AND id_cli = ?
 												ORDER BY date_creat_lic DESC");
 			$requete-> execute(array($entree['id_mod_lic'], $entree['id_cli']));
@@ -29273,7 +29236,7 @@
 			if ($id_cli == 869 && $_GET['id_march'] == 11) {
 				$id_cli = 883;
 			}
-
+			
 			$entree['id_mod_trans'] = $id_mod_trans;
 
 			if (isset($id_cli) && ($id_cli!='')) {
@@ -29283,7 +29246,7 @@
 			}
 
             if ($_GET['id_mod_lic'] == '1') {
-
+              
 				if (isset($id_cli) && ($id_cli!='')) {
 					$sqlClient = ' AND cl.id_cli = "'.$id_cli.'"';
 				}else{
@@ -29291,7 +29254,7 @@
 				}
 
             }else if ($_GET['id_mod_lic'] == '2') {
-
+              
 				if (isset($id_cli) && ($id_cli!='')) {
 					$sqlClient = ' AND cl.id_cli = "'.$id_cli.'"';
 				}else{
@@ -29301,7 +29264,7 @@
             }
 
 			if ($_SESSION['id_role'] != '7' && $_SESSION['id_role'] != '8' && $_SESSION['id_role'] != '9' && $_SESSION['id_role'] != '10' && $_SESSION['id_role'] != '14') {
-
+				
 			$requete = $connexion-> prepare("SELECT c.titre_col AS titre_col, c.id_col AS id_col
 												FROM colonne c, client cl, affectation_colonne_client_modele_licence af
 												WHERE c.id_col = af.id_col
@@ -29364,13 +29327,13 @@
 				<th style="border: 1px solid white;"><?php echo $reponse['titre_col'];?></th>
 				<th style="border: 1px solid white;">Delay Reason</th>
 				<?php
-
+				
 				}else{
 
 				?>
 				<th style="border: 1px solid white;"><?php echo $reponse['titre_col'];?></th>
 				<?php
-
+				
 				}
 
 			}$requete-> closeCursor();
@@ -29392,7 +29355,7 @@
 			}
 
             if ($_GET['id_mod_lic'] == '1') {
-
+              
 				if (isset($id_cli) && ($id_cli!='')) {
 					$sqlClient = ' AND cl.id_cli = "'.$id_cli.'"';
 				}else{
@@ -29400,7 +29363,7 @@
 				}
 
             }else if ($_GET['id_mod_lic'] == '2') {
-
+              
 				if (isset($id_cli) && ($id_cli!='')) {
 					$sqlClient = ' AND cl.id_cli = "'.$id_cli.'"';
 				}else{
@@ -29424,7 +29387,7 @@
 		      <th style="border: 1px solid white; background-color: #222530; color: white;" class="">MCA File REF</th>
 			<?php
 			while ($reponse = $requete-> fetch()) {
-
+				
 			?>
 			<th style="border: 1px solid white;"><?php echo $reponse['titre_col'];?></th>
 			<?php
@@ -29461,7 +29424,7 @@
 	            </div>
 
 				<?php
-
+			
 
 			}$requete-> closeCursor();
 			?>
@@ -29533,13 +29496,13 @@
 				<td style="border: 0.5px solid black;">
 					<input type="text" style="width: 10em;" class="form-control cc-exp" name="trailer_2_<?php echo $i;?>">
 				</td>
-				<?php
+				<?php 
 				} else {
 				?>
 				<input type="hidden" style="width: 10em;" class="form-control cc-exp" name="trailer_1_<?php echo $i;?>">
 				<input type="hidden" style="width: 10em;" class="form-control cc-exp" name="trailer_2_<?php echo $i;?>">
-				<?php
-				}
+				<?php 
+				} 
 				?>
 				<td style="border: 0.5px solid black;">
 					<input type="text" style="width: 10em;" class="form-control cc-exp" name="nbr_bags_<?php echo $i;?>">
@@ -29559,16 +29522,16 @@
 				<td style="border: 0.5px solid black;">
 					<input type="text" style="width: 10em;" class="form-control cc-exp" name="transporter_<?php echo $i;?>">
 				</td>
-				<?php
+				<?php 
 				} else {
 				?>
 				<input type="hidden" style="width: 10em;" class="form-control cc-exp" name="transporter_<?php echo $i;?>">
-				<?php
-				}
+				<?php 
+				} 
 				?>
 			</tr>
 			<?php
-			for ($i=2; $i <=10 ; $i++) {
+			for ($i=2; $i <=10 ; $i++) { 
 				?>
 				<tr style="border: 1px solid white;">
 					<td style="" class="col_1"><?php echo $i;?></td>
@@ -29620,13 +29583,13 @@
 					<td style="border: 0.5px solid black;">
 						<input type="text" style="width: 10em;" class="form-control cc-exp" name="trailer_2_<?php echo $i;?>">
 					</td>
-					<?php
+					<?php 
 					} else {
 					?>
 					<input type="hidden" style="width: 10em;" class="form-control cc-exp" name="trailer_1_<?php echo $i;?>">
 					<input type="hidden" style="width: 10em;" class="form-control cc-exp" name="trailer_2_<?php echo $i;?>">
-					<?php
-					}
+					<?php 
+					} 
 					?>
 					<td style="border: 0.5px solid black;">
 						<input type="text" style="width: 10em;" class="form-control cc-exp" name="nbr_bags_<?php echo $i;?>">
@@ -29646,12 +29609,12 @@
 					<td style="border: 0.5px solid black;">
 						<input type="text" style="width: 10em;" class="form-control cc-exp" name="transporter_<?php echo $i;?>">
 					</td>
-					<?php
+					<?php 
 					} else {
 					?>
 					<input type="hidden" style="width: 10em;" class="form-control cc-exp" name="transporter_<?php echo $i;?>">
-					<?php
-					}
+					<?php 
+					} 
 					?>
 				</tr>
 				<?php
@@ -29739,7 +29702,7 @@
 				</td>
 			</tr>
 			<?php
-			for ($i=2; $i <=10 ; $i++) {
+			for ($i=2; $i <=10 ; $i++) { 
 				?>
 				<tr style="border: 1px solid white;">
 					<td style="" class="col_1"><?php echo $i;?></td>
@@ -29885,7 +29848,7 @@
 				</td>
 			</tr>
 			<?php
-			for ($i=2; $i <=10 ; $i++) {
+			for ($i=2; $i <=10 ; $i++) { 
 				?>
 				<tr style="border: 1px solid white;">
 					<td style="" class="col_1"><?php echo $i;?></td>
@@ -29982,27 +29945,27 @@
 		      <th style="border: 0.2px solid white; background-color: #696969; color: white;">MCA File REF</th>
 			<?php
 			while ($reponse = $requete-> fetch()) {
-				if ($reponse['id_col'] == '44') {
+				if ($reponse['id_col'] == '44') {	
 				?>
 				<th style="border: 0.2px solid white; background-color: #696969; color: white; padding-left: 50em; padding-right: 50em;"><?php echo $reponse['titre_col'];?></th>
 				<?php
 
-				}else if ($reponse['id_col'] == '43') {
+				}else if ($reponse['id_col'] == '43') {	
 				?>
 				<th style="border: 0.2px solid white; background-color: #696969; color: white; padding-left: 60em; padding-right: 60em;"><?php echo $reponse['titre_col'];?></th>
 				<?php
 
-				}else if ($reponse['id_col'] == '11') {
+				}else if ($reponse['id_col'] == '11') {	
 				?>
 				<th style="border: 0.2px solid white; background-color: #696969; color: white; padding-left: 300px; padding-right: 300px;"><?php echo $reponse['titre_col'];?></th>
 				<?php
 
-				}else if ($reponse['id_col'] == '13') {
+				}else if ($reponse['id_col'] == '13') {	
 				?>
 				<th style="border: 0.2px solid white; background-color: #696969; color: white; padding-left: 300px; padding-right: 300px;"><?php echo $reponse['titre_col'];?></th>
 				<?php
 
-				}else {
+				}else {	
 				?>
 				<th style="border: 0.2px solid white; background-color: #696969; color: white;">
 					<?php echo $reponse['titre_col'];?>
@@ -30035,7 +29998,7 @@
 			$excel-> getActiveSheet()
 				-> setCellValue('A1', $reponse['titre_col'])
 				-> setCellValue('A1', $reponse['titre_col']);
-
+			
 				/*
 			?>
 		    <tr class="bg bg-dark">
@@ -30043,27 +30006,27 @@
 		      <th style="border: 0.2px solid white; background-color: #696969; color: white;">MCA File REF</th>
 			<?php
 			while ($reponse = $requete-> fetch()) {
-				if ($reponse['id_col'] == '44') {
+				if ($reponse['id_col'] == '44') {	
 				?>
 				<th style="border: 0.2px solid white; background-color: #696969; color: white; padding-left: 50em; padding-right: 50em;"><?php echo $reponse['titre_col'];?></th>
 				<?php
 
-				}else if ($reponse['id_col'] == '43') {
+				}else if ($reponse['id_col'] == '43') {	
 				?>
 				<th style="border: 0.2px solid white; background-color: #696969; color: white; padding-left: 60em; padding-right: 60em;"><?php echo $reponse['titre_col'];?></th>
 				<?php
 
-				}else if ($reponse['id_col'] == '11') {
+				}else if ($reponse['id_col'] == '11') {	
 				?>
 				<th style="border: 0.2px solid white; background-color: #696969; color: white; padding-left: 300px; padding-right: 300px;"><?php echo $reponse['titre_col'];?></th>
 				<?php
 
-				}else if ($reponse['id_col'] == '13') {
+				}else if ($reponse['id_col'] == '13') {	
 				?>
 				<th style="border: 0.2px solid white; background-color: #696969; color: white; padding-left: 300px; padding-right: 300px;"><?php echo $reponse['titre_col'];?></th>
 				<?php
 
-				}else {
+				}else {	
 				?>
 				<th style="border: 0.2px solid white; background-color: #696969; color: white;">
 					<?php echo $reponse['titre_col'];?>
@@ -30135,7 +30098,7 @@
 															(d.klsa_arriv IS NOT NULL AND d.id_mod_trans = '1')
 															OR
 															(d.arrival_date IS NOT NULL AND d.id_mod_trans = '3')
-														)
+														) 
 													AND d.date_ext_temporelle IS NULL");
 			$requeteVerifier-> execute(array($entree['id_cli'], $entree['id_mod_trans'], $entree['id_mod_lic']));
 			$reponseVerifier = $requeteVerifier-> fetch();
@@ -30188,7 +30151,7 @@
 			if ($reponse) {
 				return $reponse;
 			}
-
+			
 		}
 
 		public function verifierSouscriptionLicence($id_cli, $id_mod_lic){
@@ -30222,7 +30185,7 @@
 												WHERE id_dos = ?
 													AND id_mod_lic = 2
 													AND id_mod_trans = 1
-													AND ( (klsa_arriv IS NULL
+													AND ( (klsa_arriv IS NULL 
 															AND (wiski_arriv IS NOT NULL OR dispatch_klsa IS NOT NULL)
 															)
 														OR (wiski_arriv IS NULL AND dispatch_klsa IS NOT NULL)
@@ -30256,7 +30219,7 @@
 												FROM dossier
 												WHERE id_mod_lic = 2
 													AND id_mod_trans = 1
-													AND ( (klsa_arriv IS NULL
+													AND ( (klsa_arriv IS NULL 
 															AND (wiski_arriv IS NOT NULL OR dispatch_klsa IS NOT NULL)
 															)
 														OR (wiski_arriv IS NULL AND dispatch_klsa IS NOT NULL)
@@ -30307,12 +30270,12 @@
 
 			$requete = $connexion-> prepare('SELECT id_dos
 												FROM dossier
-												WHERE
+												WHERE 
 												-- Import Route
 													(
 														id_mod_lic = 2
 														AND id_mod_trans = 1
-														AND ( (klsa_arriv IS NULL
+														AND ( (klsa_arriv IS NULL 
 																AND (wiski_arriv IS NOT NULL OR dispatch_klsa IS NOT NULL)
 																)
 															OR (wiski_arriv IS NULL AND dispatch_klsa IS NOT NULL)
@@ -30330,7 +30293,7 @@
 												-- 	(
 												-- 		id_mod_lic = 2
 												-- 		AND id_mod_trans = 1
-												-- 		AND ( (klsa_arriv IS NULL
+												-- 		AND ( (klsa_arriv IS NULL 
 												-- 				AND (wiski_arriv IS NOT NULL OR dispatch_klsa IS NOT NULL)
 												-- 				)
 												-- 			OR (wiski_arriv IS NULL AND dispatch_klsa IS NOT NULL)
@@ -30380,7 +30343,7 @@
 													AND d.ref_dos NOT LIKE '%20-%'
 													AND DATEDIFF(CURRENT_DATE(), d.date_decl) > 2
 													AND d.ref_dos NOT LIKE '%20-%'
-													AND d.id_cli <> 874
+													AND d.id_cli <> 874 
 												ORDER BY d.date_creat_dos ASC
 													$sqlClient");
 			//$requete-> execute(array($entree['id_mod_lic']));
@@ -30393,11 +30356,11 @@
 			include('connexion.php');
 			$ligne = '';
 			$compteur = 0;
-			$requete = $connexion-> query("SELECT DATE_FORMAT(d.klsa_arriv, '%d/%m/%Y') AS klsa_arriv,
-													DATE_FORMAT(d.wiski_arriv, '%d/%m/%Y') AS wiski_arriv,
-													DATE_FORMAT(d.date_preal, '%d/%m/%Y') AS date_preal,
-													DATE_FORMAT(d.wiski_dep, '%d/%m/%Y') AS wiski_dep,
-													DATE_FORMAT(d.dispatch_klsa, '%d/%m/%Y') AS dispatch_klsa,
+			$requete = $connexion-> query("SELECT DATE_FORMAT(d.klsa_arriv, '%d/%m/%Y') AS klsa_arriv, 
+													DATE_FORMAT(d.wiski_arriv, '%d/%m/%Y') AS wiski_arriv, 
+													DATE_FORMAT(d.date_preal, '%d/%m/%Y') AS date_preal, 
+													DATE_FORMAT(d.wiski_dep, '%d/%m/%Y') AS wiski_dep, 
+													DATE_FORMAT(d.dispatch_klsa, '%d/%m/%Y') AS dispatch_klsa, 
 													cli.nom_cli AS nom_cli,
 													d.id_dos AS id_dos,
 													d.ref_dos AS ref_dos,
@@ -30409,7 +30372,7 @@
 												FROM dossier d, client cli
 												WHERE d.id_cli = cli.id_cli
 													AND d.id_mod_trans = 1
-													AND ( (d.klsa_arriv IS NULL
+													AND ( (d.klsa_arriv IS NULL 
 															AND (d.wiski_arriv IS NOT NULL OR d.dispatch_klsa IS NOT NULL)
 															)
 														OR (d.wiski_arriv IS NULL AND d.dispatch_klsa IS NOT NULL)
@@ -30503,7 +30466,7 @@
 
 			$compteur = 0;
 			$ligne = '';
-			$requete = $connexion-> query("SELECT DATE_FORMAT(d.date_preal, '%d/%m/%Y') AS date_preal,
+			$requete = $connexion-> query("SELECT DATE_FORMAT(d.date_preal, '%d/%m/%Y') AS date_preal, 
 													DATE_FORMAT(d.date_decl, '%d/%m/%Y') AS date_decl,
 													DATE_FORMAT(d.date_liq, '%d/%m/%Y') AS date_liq,
 													DATEDIFF(CURRENT_DATE(), d.date_liq) AS duree_liq,
@@ -30572,12 +30535,12 @@
 
 			$compteur = 0;
 			$ligne = '';
-			$requete = $connexion-> query("SELECT DATE_FORMAT(d.date_creat_dos, '%d/%m/%Y') AS date_creat_dos,
-													DATE_FORMAT(d.date_preal, '%d/%m/%Y') AS date_preal,
+			$requete = $connexion-> query("SELECT DATE_FORMAT(d.date_creat_dos, '%d/%m/%Y') AS date_creat_dos, 
+													DATE_FORMAT(d.date_preal, '%d/%m/%Y') AS date_preal, 
 													d.ref_decl AS ref_decl,
-													DATE_FORMAT(d.date_decl, '%d/%m/%Y') AS date_decl,
+													DATE_FORMAT(d.date_decl, '%d/%m/%Y') AS date_decl, 
 													d.ref_liq AS ref_liq,
-													DATE_FORMAT(d.date_liq, '%d/%m/%Y') AS date_liq,
+													DATE_FORMAT(d.date_liq, '%d/%m/%Y') AS date_liq, 
 													cli.nom_cli AS nom_cli,
 													d.id_dos AS id_dos,
 													d.ref_dos AS ref_dos,
@@ -30665,11 +30628,11 @@
 
 			$compteur = 0;
 			$ligne = '';
-			$requete = $connexion-> query("SELECT DATE_FORMAT(d.klsa_arriv, '%d/%m/%Y') AS klsa_arriv,
-													DATE_FORMAT(d.wiski_arriv, '%d/%m/%Y') AS wiski_arriv,
-													DATE_FORMAT(d.date_preal, '%d/%m/%Y') AS date_preal,
-													DATE_FORMAT(d.wiski_dep, '%d/%m/%Y') AS wiski_dep,
-													DATE_FORMAT(d.dispatch_klsa, '%d/%m/%Y') AS dispatch_klsa,
+			$requete = $connexion-> query("SELECT DATE_FORMAT(d.klsa_arriv, '%d/%m/%Y') AS klsa_arriv, 
+													DATE_FORMAT(d.wiski_arriv, '%d/%m/%Y') AS wiski_arriv, 
+													DATE_FORMAT(d.date_preal, '%d/%m/%Y') AS date_preal, 
+													DATE_FORMAT(d.wiski_dep, '%d/%m/%Y') AS wiski_dep, 
+													DATE_FORMAT(d.dispatch_klsa, '%d/%m/%Y') AS dispatch_klsa, 
 													cli.nom_cli AS nom_cli,
 													d.id_dos AS id_dos,
 													d.ref_dos AS ref_dos,
@@ -30742,12 +30705,12 @@
 
 			$compteur = 0;
 			$ligne = '';
-			$requete = $connexion-> query("SELECT DATE_FORMAT(d.klsa_arriv, '%d/%m/%Y') AS klsa_arriv,
-													DATE_FORMAT(d.wiski_arriv, '%d/%m/%Y') AS wiski_arriv,
-													DATE_FORMAT(d.date_preal, '%d/%m/%Y') AS date_preal,
-													DATE_FORMAT(d.wiski_dep, '%d/%m/%Y') AS wiski_dep,
-													DATE_FORMAT(d.dispatch_klsa, '%d/%m/%Y') AS dispatch_klsa,
-													DATE_FORMAT(d.dispatch_deliv, '%d/%m/%Y') AS dispatch_deliv,
+			$requete = $connexion-> query("SELECT DATE_FORMAT(d.klsa_arriv, '%d/%m/%Y') AS klsa_arriv, 
+													DATE_FORMAT(d.wiski_arriv, '%d/%m/%Y') AS wiski_arriv, 
+													DATE_FORMAT(d.date_preal, '%d/%m/%Y') AS date_preal, 
+													DATE_FORMAT(d.wiski_dep, '%d/%m/%Y') AS wiski_dep, 
+													DATE_FORMAT(d.dispatch_klsa, '%d/%m/%Y') AS dispatch_klsa, 
+													DATE_FORMAT(d.dispatch_deliv, '%d/%m/%Y') AS dispatch_deliv, 
 													cli.nom_cli AS nom_cli,
 													d.id_dos AS id_dos,
 													d.ref_dos AS ref_dos,
@@ -30823,11 +30786,11 @@
 
 			$compteur = 0;
 			$ligne = '';
-			$requete = $connexion-> query("SELECT DATE_FORMAT(d.klsa_arriv, '%d/%m/%Y') AS klsa_arriv,
-													DATE_FORMAT(d.wiski_arriv, '%d/%m/%Y') AS wiski_arriv,
-													DATE_FORMAT(d.date_preal, '%d/%m/%Y') AS date_preal,
-													DATE_FORMAT(d.wiski_dep, '%d/%m/%Y') AS wiski_dep,
-													DATE_FORMAT(d.dispatch_klsa, '%d/%m/%Y') AS dispatch_klsa,
+			$requete = $connexion-> query("SELECT DATE_FORMAT(d.klsa_arriv, '%d/%m/%Y') AS klsa_arriv, 
+													DATE_FORMAT(d.wiski_arriv, '%d/%m/%Y') AS wiski_arriv, 
+													DATE_FORMAT(d.date_preal, '%d/%m/%Y') AS date_preal, 
+													DATE_FORMAT(d.wiski_dep, '%d/%m/%Y') AS wiski_dep, 
+													DATE_FORMAT(d.dispatch_klsa, '%d/%m/%Y') AS dispatch_klsa, 
 													cli.nom_cli AS nom_cli,
 													d.id_dos AS id_dos,
 													d.ref_dos AS ref_dos,
@@ -30900,12 +30863,12 @@
 
 			$compteur = 0;
 			$ligne = '';
-			$requete = $connexion-> query("SELECT DATE_FORMAT(d.klsa_arriv, '%d/%m/%Y') AS klsa_arriv,
-													DATE_FORMAT(d.wiski_arriv, '%d/%m/%Y') AS wiski_arriv,
-													DATE_FORMAT(d.date_preal, '%d/%m/%Y') AS date_preal,
-													DATE_FORMAT(d.wiski_dep, '%d/%m/%Y') AS wiski_dep,
-													DATE_FORMAT(d.dispatch_klsa, '%d/%m/%Y') AS dispatch_klsa,
-													DATE_FORMAT(d.dispatch_deliv, '%d/%m/%Y') AS dispatch_deliv,
+			$requete = $connexion-> query("SELECT DATE_FORMAT(d.klsa_arriv, '%d/%m/%Y') AS klsa_arriv, 
+													DATE_FORMAT(d.wiski_arriv, '%d/%m/%Y') AS wiski_arriv, 
+													DATE_FORMAT(d.date_preal, '%d/%m/%Y') AS date_preal, 
+													DATE_FORMAT(d.wiski_dep, '%d/%m/%Y') AS wiski_dep, 
+													DATE_FORMAT(d.dispatch_klsa, '%d/%m/%Y') AS dispatch_klsa, 
+													DATE_FORMAT(d.dispatch_deliv, '%d/%m/%Y') AS dispatch_deliv, 
 													cli.nom_cli AS nom_cli,
 													d.id_dos AS id_dos,
 													d.ref_dos AS ref_dos,
@@ -30980,11 +30943,11 @@
 
 			$compteur = 0;
 			$ligne = '';
-			$requete = $connexion-> query("SELECT DATE_FORMAT(d.klsa_arriv, '%d/%m/%Y') AS klsa_arriv,
-													DATE_FORMAT(d.wiski_arriv, '%d/%m/%Y') AS wiski_arriv,
-													DATE_FORMAT(d.date_preal, '%d/%m/%Y') AS date_preal,
-													DATE_FORMAT(d.wiski_dep, '%d/%m/%Y') AS wiski_dep,
-													DATE_FORMAT(d.dispatch_klsa, '%d/%m/%Y') AS dispatch_klsa,
+			$requete = $connexion-> query("SELECT DATE_FORMAT(d.klsa_arriv, '%d/%m/%Y') AS klsa_arriv, 
+													DATE_FORMAT(d.wiski_arriv, '%d/%m/%Y') AS wiski_arriv, 
+													DATE_FORMAT(d.date_preal, '%d/%m/%Y') AS date_preal, 
+													DATE_FORMAT(d.wiski_dep, '%d/%m/%Y') AS wiski_dep, 
+													DATE_FORMAT(d.dispatch_klsa, '%d/%m/%Y') AS dispatch_klsa, 
 													cli.nom_cli AS nom_cli,
 													d.id_dos AS id_dos,
 													d.ref_dos AS ref_dos,
@@ -31046,7 +31009,7 @@
 			$compteur = 0;
 			$ligne = '';
 			$requete = $connexion-> query("SELECT DATE_FORMAT(d.date_preal, '%d/%m/%Y') AS date_preal,
-													DATE_FORMAT(d.klsa_arriv, '%d/%m/%Y') AS klsa_arriv,
+													DATE_FORMAT(d.klsa_arriv, '%d/%m/%Y') AS klsa_arriv, 
 													cli.nom_cli AS nom_cli,
 													d.id_dos AS id_dos,
 													d.ref_dos AS ref_dos,
@@ -31109,7 +31072,7 @@
 												FROM status_dashboard
 												WHERE id_mod_lic = 1");
 			while ($reponseStatus = $requeteStatus-> fetch()) {
-
+				
 				$this-> nbreSummary($reponseStatus['nom_stat'], 1, NULL, NULL, NULL);
 				$compteur = 0;
 			$ligne .='
@@ -31219,8 +31182,8 @@
 			$compteur = 0;
 			$ligne = '';
 			$requete = $connexion-> query("SELECT DATE_FORMAT(d.date_preal, '%d/%m/%Y') AS date_preal,
-													DATE_FORMAT(d.klsa_arriv, '%d/%m/%Y') AS klsa_arriv,
-													DATE_FORMAT(d.dispatch_deliv, '%d/%m/%Y') AS dispatch_deliv,
+													DATE_FORMAT(d.klsa_arriv, '%d/%m/%Y') AS klsa_arriv, 
+													DATE_FORMAT(d.dispatch_deliv, '%d/%m/%Y') AS dispatch_deliv, 
 													cli.nom_cli AS nom_cli,
 													d.id_dos AS id_dos,
 													d.ref_dos AS ref_dos,
@@ -31281,27 +31244,27 @@
 
 			$compteur = 0;
 			$ligne = '';
-
+			
 			if (isset($id_cli) && ($id_cli!='')) {
-				$sqlClient = " AND d.id_cli = $id_cli";
+				$sqlClient = " AND d.id_cli = $id_cli"; 
 			}else{
 				$sqlClient = '';
 			}
 
 			if (isset($id_mod_lic) && ($id_mod_lic!='')) {
-				$sqlModeLic = " AND d.id_mod_lic = $id_mod_lic";
+				$sqlModeLic = " AND d.id_mod_lic = $id_mod_lic"; 
 			}else{
 				$sqlModeLic = '';
 			}
 
 			if (isset($id_mod_trans) && ($id_mod_trans!='')) {
-				$sqlTrans = " AND d.id_mod_trans = $id_mod_trans";
+				$sqlTrans = " AND d.id_mod_trans = $id_mod_trans"; 
 			}else{
 				$sqlTrans = '';
 			}
 
 			if (isset($commodity) && ($commodity!='')) {
-				$sqlCommodity = " AND d.commodity = $commodity";
+				$sqlCommodity = " AND d.commodity = $commodity"; 
 			}else{
 				$sqlCommodity = '';
 			}
@@ -31422,9 +31385,9 @@
 
 		}
 
-		public function afficherSearchFile($mot_cle, $id_cli, $id_mod_trans,
+		public function afficherSearchFile($mot_cle, $id_cli, $id_mod_trans, 
 														$id_mod_lic, $commodity,
-														$id_march=NULL, $statut=NULL, $num_lic=NULL,
+														$id_march=NULL, $statut=NULL, $num_lic=NULL, 
 														$cleared=NULL){
 			include("connexion.php");
 			$entree['mot_cle'] = $mot_cle;
@@ -31451,7 +31414,7 @@
 													d.custom_deliv AS custom_deliv_1,
 													d.arrival_date AS arrival_date_1,
 
-
+													
 													IF(d.id_mod_lic='2' AND d.id_mod_trans='1',
 														IF(d.date_crf IS NULL AND d.date_ad IS NULL AND d.date_assurance IS NULL,
 													      'AWAITING CRF/AD/INSURANCE',
@@ -31460,7 +31423,7 @@
 													          IF(d.date_crf IS NULL AND d.date_ad IS NOT NULL AND d.date_assurance IS NULL,
 													            'AWAITING CRF/INSURANCE',
 													            IF(d.date_crf IS NULL AND d.date_ad IS NOT NULL AND d.date_assurance IS NOT NULL,
-													              'AWAITING CRF',
+													              'AWAITING CRF', 
 													              IF(d.date_crf IS NOT NULL AND d.date_ad IS NULL AND d.date_assurance IS NULL,
 													                'AWAITING AD/INSURANCE',
 													                IF(d.date_crf IS NOT NULL AND d.date_ad IS NULL AND d.date_assurance IS NOT NULL,
@@ -31471,13 +31434,13 @@
 													                      IF(d.date_decl IS NULL AND d.ref_decl IS NULL, 'UNDER PREPARATION',
 													                        IF(d.date_liq IS NULL AND d.ref_liq IS NULL, 'AWAITING LIQUIDATION',
 													                          IF(d.date_quit IS NULL AND d.ref_quit IS NULL, 'AWAITING QUITTANCE',
-													                            IF(d.date_quit IS NOT NULL AND d.ref_quit IS NOT NULL AND d.dgda_out IS NULL, 'AWAITING BAE/BS',
+													                            IF(d.date_quit IS NOT NULL AND d.ref_quit IS NOT NULL AND d.dgda_out IS NULL, 'AWAITING BAE/BS', 
 													                              IF(d.dgda_out IS NOT NULL AND d.dispatch_deliv IS NOT NULL, 'CLEARING COMPLETED', '')
 													                              )
 													                            )
 													                          )
 													                        )
-
+													                      
 													                      )
 													                  )
 													                )
@@ -31488,23 +31451,23 @@
 														,
 														d.statut) AS statut,
 
-													IF(d.id_mod_trans='1' AND d.id_mod_lic='2',
-														IF(d.klsa_arriv IS NOT NULL AND d.wiski_arriv IS NULL,'ARRIVED AT K\'LSA',
+													IF(d.id_mod_trans='1' AND d.id_mod_lic='2', 
+														IF(d.klsa_arriv IS NOT NULL AND d.wiski_arriv IS NULL,'ARRIVED AT K\'LSA', 
 															IF(d.wiski_arriv IS NOT NULL AND d.dispatch_klsa IS NULL, 'AT WISKI',
 																IF(d.dispatch_klsa IS NOT NULL, 'DISPATCHED FROM K\'LSA', 'EXCEPTED TO ARRIVE')
 																)
 															)
 														, '') AS klsa_status,
-													IF(d.id_mod_trans='1' AND d.id_mod_lic='2',
+													IF(d.id_mod_trans='1' AND d.id_mod_lic='2', 
 														IF(d.bond_warehouse='LUBUMBASHI',
-															IF(d.warehouse_arriv IS NOT NULL AND d.warehouse_dep IS NOT NULL, 'DISPATCHED FROM AMICONGO',
+															IF(d.warehouse_arriv IS NOT NULL AND d.warehouse_dep IS NOT NULL, 'DISPATCHED FROM AMICONGO', 
 																IF(d.warehouse_arriv IS NOT NULL, 'ARRIVED AT AMICONGO', '')
 																)
 															,'')
 														,'') AS amicongo_status,
-													IF(d.id_mod_trans='1' AND d.id_mod_lic='2',
+													IF(d.id_mod_trans='1' AND d.id_mod_lic='2', 
 														IF(d.bond_warehouse='KOLWEZI',
-															IF(d.warehouse_arriv IS NOT NULL AND d.warehouse_dep IS NOT NULL, 'DISPATCHED FROM WAREHOUSE',
+															IF(d.warehouse_arriv IS NOT NULL AND d.warehouse_dep IS NOT NULL, 'DISPATCHED FROM WAREHOUSE', 
 																IF(d.warehouse_arriv IS NOT NULL, 'ARRIVED AT WAREHOUSE', '')
 																)
 															,'')
@@ -31515,8 +31478,8 @@
 												FROM dossier d, client cl, site s, mode_transport mt
 												WHERE d.id_cli = cl.id_cli
 													AND d.id_mod_lic = ?
-													AND (d.ref_dos = ? OR d.ref_fact = ?
-															OR d.ref_crf = ? OR d.horse = ?
+													AND (d.ref_dos = ? OR d.ref_fact = ? 
+															OR d.ref_crf = ? OR d.horse = ? 
 															OR d.trailer_1 = ? OR d.trailer_2 = ?
 															OR d.num_lot = ?)
 													AND cl.id_cli = ?
@@ -31554,7 +31517,7 @@
 				}
 
 				//include('modalDeleteDossier.php');
-
+				
 
 			?>
 				<input type="hidden" name="ref_dos" value="<?php echo $ref_dos;?>">
@@ -31563,9 +31526,9 @@
 				<tr class="<?php echo $bg;?>" <?php echo $style;?>>
 					<td class="<?php echo $class;?> <?php echo $bg;?>" style=" border-right: 1px solid black; vertical-align: middle; text-align: left; padding: 0.6rem; border-top: 1px solid black;" <?php echo $style;?>><?php echo $compteur;?></td>
 					<td class="<?php echo $class;?> <?php echo $bg;?>" style=" border-right: 1px solid black; vertical-align: middle; text-align: left; padding: 0.6rem; border-top: 1px solid black; <?php echo $color;?>"><span class="" style="<?php ?>"><?php echo $reponse['ref_dos'];?></span>
-					 <?php
+					 <?php 
 					  if(!isset($this-> getDataUtilisateur($_SESSION['id_util'])['tracking_enab'])){
-
+					  
 
 						if ($this-> getDataUtilisateur($_SESSION['id_util'])['tracking_log'] == '1') {
 						?>
@@ -31574,7 +31537,7 @@
 	                	</span>
 		                <?php
 						}
-
+					
 					  }
 					  ?>
 					</td>
@@ -31603,16 +31566,16 @@
 
 		}
 
-		public function afficherSearchFileKBP($debut, $fin, $id_mod_trans,
+		public function afficherSearchFileKBP($debut, $fin, $id_mod_trans, 
 														$id_mod_lic, $commodity,
-														$id_march=NULL, $statut=NULL, $num_lic=NULL,
+														$id_march=NULL, $statut=NULL, $num_lic=NULL, 
 														$cleared=NULL){
 			include("connexion.php");
 			$entree['debut'] = $debut;
 			$entree['fin'] = $fin;
 			$entree['id_mod_lic'] = $id_mod_lic;
 			$entree['id_mod_trans'] = $id_mod_trans;
-
+			
 			if (isset($id_cli) && ($id_cli!='')) {
 				$sqlClient = ' AND d.id_cli = "'.$id_cli.'"';
 			}else{
@@ -31640,7 +31603,7 @@
 													cl.id_cli AS id_cli,
 													cl.code_cli AS code_cli,
 
-
+													
 													IF(d.id_mod_lic='2' AND d.id_mod_trans='1',
 														IF(d.date_crf IS NULL AND d.date_ad IS NULL AND d.date_assurance IS NULL,
 													      'AWAITING CRF/AD/INSURANCE',
@@ -31649,7 +31612,7 @@
 													          IF(d.date_crf IS NULL AND d.date_ad IS NOT NULL AND d.date_assurance IS NULL,
 													            'AWAITING CRF/INSURANCE',
 													            IF(d.date_crf IS NULL AND d.date_ad IS NOT NULL AND d.date_assurance IS NOT NULL,
-													              'AWAITING CRF',
+													              'AWAITING CRF', 
 													              IF(d.date_crf IS NOT NULL AND d.date_ad IS NULL AND d.date_assurance IS NULL,
 													                'AWAITING AD/INSURANCE',
 													                IF(d.date_crf IS NOT NULL AND d.date_ad IS NULL AND d.date_assurance IS NOT NULL,
@@ -31660,13 +31623,13 @@
 													                      IF(d.date_decl IS NULL AND d.ref_decl IS NULL, 'UNDER PREPARATION',
 													                        IF(d.date_liq IS NULL AND d.ref_liq IS NULL, 'AWAITING LIQUIDATION',
 													                          IF(d.date_quit IS NULL AND d.ref_quit IS NULL, 'AWAITING QUITTANCE',
-													                            IF(d.date_quit IS NOT NULL AND d.ref_quit IS NOT NULL AND d.dgda_out IS NULL, 'AWAITING BAE/BS',
+													                            IF(d.date_quit IS NOT NULL AND d.ref_quit IS NOT NULL AND d.dgda_out IS NULL, 'AWAITING BAE/BS', 
 													                              IF(d.dgda_out IS NOT NULL AND d.dispatch_deliv IS NOT NULL, 'CLEARING COMPLETED', '')
 													                              )
 													                            )
 													                          )
 													                        )
-
+													                      
 													                      )
 													                  )
 													                )
@@ -31677,23 +31640,23 @@
 														,
 														d.statut) AS statut,
 
-													IF(d.id_mod_trans='1' AND d.id_mod_lic='2',
-														IF(d.klsa_arriv IS NOT NULL AND d.wiski_arriv IS NULL,'ARRIVED AT K\'LSA',
+													IF(d.id_mod_trans='1' AND d.id_mod_lic='2', 
+														IF(d.klsa_arriv IS NOT NULL AND d.wiski_arriv IS NULL,'ARRIVED AT K\'LSA', 
 															IF(d.wiski_arriv IS NOT NULL AND d.dispatch_klsa IS NULL, 'AT WISKI',
 																IF(d.dispatch_klsa IS NOT NULL, 'DISPATCHED FROM K\'LSA', 'EXCEPTED TO ARRIVE')
 																)
 															)
 														, '') AS klsa_status,
-													IF(d.id_mod_trans='1' AND d.id_mod_lic='2',
+													IF(d.id_mod_trans='1' AND d.id_mod_lic='2', 
 														IF(d.bond_warehouse='LUBUMBASHI',
-															IF(d.warehouse_arriv IS NOT NULL AND d.warehouse_dep IS NOT NULL, 'DISPATCHED FROM AMICONGO',
+															IF(d.warehouse_arriv IS NOT NULL AND d.warehouse_dep IS NOT NULL, 'DISPATCHED FROM AMICONGO', 
 																IF(d.warehouse_arriv IS NOT NULL, 'ARRIVED AT AMICONGO', '')
 																)
 															,'')
 														,'') AS amicongo_status,
-													IF(d.id_mod_trans='1' AND d.id_mod_lic='2',
+													IF(d.id_mod_trans='1' AND d.id_mod_lic='2', 
 														IF(d.bond_warehouse='KOLWEZI',
-															IF(d.warehouse_arriv IS NOT NULL AND d.warehouse_dep IS NOT NULL, 'DISPATCHED FROM WAREHOUSE',
+															IF(d.warehouse_arriv IS NOT NULL AND d.warehouse_dep IS NOT NULL, 'DISPATCHED FROM WAREHOUSE', 
 																IF(d.warehouse_arriv IS NOT NULL, 'ARRIVED AT WAREHOUSE', '')
 																)
 															,'')
@@ -31739,7 +31702,7 @@
 				}
 
 				//include('modalDeleteDossier.php');
-
+				
 
 			?>
 				<input type="hidden" name="ref_dos" value="<?php echo $ref_dos;?>">
@@ -31748,7 +31711,7 @@
 				<tr class="<?php echo $bg;?>" <?php echo $style;?>>
 					<td class="<?php echo $class;?> <?php echo $bg;?>" style=" vertical-align: middle; text-align: left; padding: 0.6rem;" <?php echo $style;?>><?php echo $compteur;?></td>
 					<td class="<?php echo $class;?> <?php echo $bg;?>" style=" vertical-align: middle; text-align: left; padding: 0.6rem;" <?php echo $style;?>><?php echo $reponse['ref_dos'];?></td>
-
+					
 					<td style="text-align: center;">
 						<?php echo $reponse['code_cli'];?>
 					</td>
@@ -31835,8 +31798,8 @@
 
 			if ($id_mod_lic == '2' && $id_mod_trans == '1') {
 				$requete = $connexion-> prepare("SELECT d.ref_dos AS ref_dos, cl.nom_cli AS nom_cli,
-														d.commodity AS commodity,
-														d.horse AS horse, d.trailer_1 AS trailer_1,
+														d.commodity AS commodity, 
+														d.horse AS horse, d.trailer_1 AS trailer_1, 
 														d.trailer_2 AS trailer_2,
 														DATE_FORMAT(d.wiski_arriv, '%d/%m/%Y') AS wiski_arriv,
 														d.wiski_arriv AS wiski_arriv_2,
@@ -31849,9 +31812,9 @@
 														DATE_FORMAT(d.date_quit, '%d/%m/%Y') AS date_quit,
 														DATE_FORMAT(d.dispatch_deliv, '%d/%m/%Y') AS dispatch_deliv,
 														d.dispatch_deliv AS dispatch_deliv_2,
-														d.statut AS statut, d.remarque AS remarque
+														d.statut AS statut, d.remarque AS remarque 
 													FROM dossier d, client cl
-													WHERE d.id_cli = cl.id_cli
+													WHERE d.id_cli = cl.id_cli 
 														AND d.id_mod_lic = ?
 														AND d.wiski_arriv BETWEEN ? AND ?
 														$sqlClient
@@ -31862,7 +31825,7 @@
 
 			while ($reponse = $requete-> fetch()) {
 				$compteur++;
-
+			
 				$ligne .= '
 				<tr style="<?php echo $bg;?>">
 					<td class="" style="border: 1px solid black; " class="">
@@ -31928,8 +31891,8 @@
 
 			}else if ($id_mod_lic == '2' && ($id_mod_trans == '3' || $id_mod_trans == '4') ) {
 				$requete = $connexion-> prepare("SELECT d.ref_dos AS ref_dos, cl.nom_cli AS nom_cli,
-														d.commodity AS commodity,
-														d.horse AS horse, d.trailer_1 AS trailer_1,
+														d.commodity AS commodity, 
+														d.horse AS horse, d.trailer_1 AS trailer_1, 
 														d.trailer_2 AS trailer_2,
 														DATE_FORMAT(d.arrival_date, '%d/%m/%Y') AS arrival_date,
 														d.arrival_date AS arrival_date_2,
@@ -31942,9 +31905,9 @@
 														DATE_FORMAT(d.date_quit, '%d/%m/%Y') AS date_quit,
 														DATE_FORMAT(d.dispatch_deliv, '%d/%m/%Y') AS dispatch_deliv,
 														d.dispatch_deliv AS dispatch_deliv_2,
-														d.statut AS statut, d.remarque AS remarque
+														d.statut AS statut, d.remarque AS remarque 
 													FROM dossier d, client cl
-													WHERE d.id_cli = cl.id_cli
+													WHERE d.id_cli = cl.id_cli 
 														AND d.id_mod_lic = ?
 														AND d.arrival_date BETWEEN ? AND ?
 														$sqlClient
@@ -31955,7 +31918,7 @@
 
 			while ($reponse = $requete-> fetch()) {
 				$compteur++;
-
+			
 				$ligne .= '
 				<tr style="<?php echo $bg;?>">
 					<td class="" style="border: 1px solid black; " class="">
@@ -32015,8 +31978,8 @@
 
 			}elseif ($id_mod_lic == '2') {
 				$requete = $connexion-> prepare("SELECT d.ref_dos AS ref_dos, cl.nom_cli AS nom_cli,
-														d.commodity AS commodity,
-														d.horse AS horse, d.trailer_1 AS trailer_1,
+														d.commodity AS commodity, 
+														d.horse AS horse, d.trailer_1 AS trailer_1, 
 														d.trailer_2 AS trailer_2,
 														IF(d.id_mod_trans='1', DATE_FORMAT(d.wiski_arriv, '%d/%m/%Y') AS wiski_arriv, DATE_FORMAT(d.arrival_date, '%d/%m/%Y') AS wiski_arriv),
 														IF(d.id_mod_trans='1', d.wiski_arriv AS wiski_arriv_2, d.arrival_date AS wiski_arriv_2),
@@ -32029,9 +31992,9 @@
 														DATE_FORMAT(d.date_quit, '%d/%m/%Y') AS date_quit,
 														DATE_FORMAT(d.dispatch_deliv, '%d/%m/%Y') AS dispatch_deliv,
 														d.dispatch_deliv AS dispatch_deliv_2,
-														d.statut AS statut, d.remarque AS remarque
+														d.statut AS statut, d.remarque AS remarque 
 													FROM dossier d, client cl
-													WHERE d.id_cli = cl.id_cli
+													WHERE d.id_cli = cl.id_cli 
 														AND d.id_mod_lic = ?
 														AND d.wiski_arriv BETWEEN ? AND ?
 														$sqlClient
@@ -32042,7 +32005,7 @@
 
 			while ($reponse = $requete-> fetch()) {
 				$compteur++;
-
+			
 				$ligne .= '
 				<tr style="<?php echo $bg;?>">
 					<td class="" style="border: 1px solid black; " class="">
@@ -32102,8 +32065,8 @@
 
 			}else if ($id_mod_lic == '1' && ($id_mod_trans=='4' || $id_mod_trans=='3')) {
 				$requete = $connexion-> prepare("SELECT d.ref_dos AS ref_dos, cl.nom_cli AS nom_cli,
-														d.commodity AS commodity,
-														d.horse AS horse, d.trailer_1 AS trailer_1,
+														d.commodity AS commodity, 
+														d.horse AS horse, d.trailer_1 AS trailer_1, 
 														d.trailer_2 AS trailer_2,
 														DATE_FORMAT(d.load_date, '%d/%m/%Y') AS load_date,
 														d.load_date AS load_date_2,
@@ -32116,9 +32079,9 @@
 														DATE_FORMAT(d.date_quit, '%d/%m/%Y') AS date_quit,
 														DATE_FORMAT(d.exit_drc, '%d/%m/%Y') AS exit_drc,
 														d.exit_drc AS exit_drc_2,
-														d.statut AS statut, d.remarque AS remarque
+														d.statut AS statut, d.remarque AS remarque 
 													FROM dossier d, client cl
-													WHERE d.id_cli = cl.id_cli
+													WHERE d.id_cli = cl.id_cli 
 														AND d.id_mod_lic = ?
 														AND d.load_date BETWEEN ? AND ?
 														$sqlClient
@@ -32128,7 +32091,7 @@
 
 			while ($reponse = $requete-> fetch()) {
 				$compteur++;
-
+			
 				$ligne .= '
 					<tr style="<?php echo $bg;?>">
 						<td class="" style="border: 1px solid black; " class="">
@@ -32193,8 +32156,8 @@
 				}
 			}else if ($id_mod_lic == '1') {
 				$requete = $connexion-> prepare("SELECT d.ref_dos AS ref_dos, cl.nom_cli AS nom_cli,
-														d.commodity AS commodity,
-														d.horse AS horse, d.trailer_1 AS trailer_1,
+														d.commodity AS commodity, 
+														d.horse AS horse, d.trailer_1 AS trailer_1, 
 														d.trailer_2 AS trailer_2,
 														DATE_FORMAT(d.load_date, '%d/%m/%Y') AS load_date,
 														d.load_date AS load_date_2,
@@ -32207,9 +32170,9 @@
 														DATE_FORMAT(d.date_quit, '%d/%m/%Y') AS date_quit,
 														DATE_FORMAT(d.exit_drc, '%d/%m/%Y') AS exit_drc,
 														d.exit_drc AS exit_drc_2,
-														d.statut AS statut, d.remarque AS remarque
+														d.statut AS statut, d.remarque AS remarque 
 													FROM dossier d, client cl
-													WHERE d.id_cli = cl.id_cli
+													WHERE d.id_cli = cl.id_cli 
 														AND d.id_mod_lic = ?
 														AND d.load_date BETWEEN ? AND ?
 														$sqlClient
@@ -32219,7 +32182,7 @@
 
 			while ($reponse = $requete-> fetch()) {
 				$compteur++;
-
+			
 				$ligne .= '
 					<tr style="<?php echo $bg;?>">
 						<td class="" style="border: 1px solid black; " class="">
@@ -32316,7 +32279,7 @@
 				$requete = $connexion-> prepare("SELECT d.wiski_arriv AS wiski_arriv_2,
 														d.dispatch_deliv AS dispatch_deliv_2
 													FROM dossier d, client cl
-													WHERE d.id_cli = cl.id_cli
+													WHERE d.id_cli = cl.id_cli 
 														AND d.id_mod_lic = ?
 														AND d.wiski_arriv BETWEEN ? AND ?
 														$sqlClient
@@ -32335,7 +32298,7 @@
 				$requete = $connexion-> prepare("SELECT d.arrival_date AS arrival_date_2,
 														d.dispatch_deliv AS dispatch_deliv_2
 													FROM dossier d, client cl
-													WHERE d.id_cli = cl.id_cli
+													WHERE d.id_cli = cl.id_cli 
 														AND d.id_mod_lic = ?
 														AND d.arrival_date BETWEEN ? AND ?
 														$sqlClient
@@ -32351,11 +32314,11 @@
 			}$requete-> closeCursor();
 
 			}elseif ($id_mod_lic == '2') {
-				$requete = $connexion-> prepare("SELECT IF(d.id_mod_trans='1', d.wiski_arriv AS wiski_arriv_2,
+				$requete = $connexion-> prepare("SELECT IF(d.id_mod_trans='1', d.wiski_arriv AS wiski_arriv_2, 
 															d.arrival_date AS wiski_arriv_2),
 														d.dispatch_deliv AS dispatch_deliv_2
 													FROM dossier d, client cl
-													WHERE d.id_cli = cl.id_cli
+													WHERE d.id_cli = cl.id_cli 
 														AND d.id_mod_lic = ?
 														AND d.wiski_arriv BETWEEN ? AND ?
 														$sqlClient
@@ -32366,7 +32329,7 @@
 
 			while ($reponse = $requete-> fetch()) {
 				$compteur++;
-
+			
 				$ligne += ($this-> getDifferenceDate($reponse['dispatch_deliv_2'], $reponse['wiski_arriv_2'])-$this-> getWeekendsAndHolidays($reponse['dispatch_deliv_2'], $reponse['wiski_arriv_2']));
 
 			}$requete-> closeCursor();
@@ -32375,7 +32338,7 @@
 				$requete = $connexion-> prepare("SELECT d.load_date AS load_date_2,
 														d.exit_drc AS exit_drc_2
 													FROM dossier d, client cl
-													WHERE d.id_cli = cl.id_cli
+													WHERE d.id_cli = cl.id_cli 
 														AND d.id_mod_lic = ?
 														AND d.load_date BETWEEN ? AND ?
 														$sqlClient
@@ -32385,12 +32348,12 @@
 
 			while ($reponse = $requete-> fetch()) {
 				$compteur++;
-
+			
 				$ligne += ($this-> getDifferenceDate($reponse['exit_drc_2'], $reponse['load_date_2'])-$this-> getWeekendsAndHolidays($reponse['load_date_2'], $reponse['exit_drc_2']));
 
 				}
 			}
-
+			
 			if ($compteur == 0) {
 				$compteur = 1;
 			}
@@ -32406,8 +32369,8 @@
 			$compteur = 0;
 			$ligne = '';
 			$requete = $connexion-> query("SELECT DATE_FORMAT(d.date_preal, '%d/%m/%Y') AS date_preal,
-													DATE_FORMAT(d.klsa_arriv, '%d/%m/%Y') AS klsa_arriv,
-													DATE_FORMAT(d.wiski_arriv, '%d/%m/%Y') AS wiski_arriv,
+													DATE_FORMAT(d.klsa_arriv, '%d/%m/%Y') AS klsa_arriv, 
+													DATE_FORMAT(d.wiski_arriv, '%d/%m/%Y') AS wiski_arriv, 
 													cli.nom_cli AS nom_cli,
 													d.id_dos AS id_dos,
 													d.ref_dos AS ref_dos,
@@ -32468,11 +32431,11 @@
 
 			$compteur = 0;
 			$ligne = '';
-			$requete = $connexion-> prepare("SELECT DATE_FORMAT(d.klsa_arriv, '%d/%m/%Y') AS klsa_arriv,
-													DATE_FORMAT(d.wiski_arriv, '%d/%m/%Y') AS wiski_arriv,
-													DATE_FORMAT(d.date_preal, '%d/%m/%Y') AS date_preal,
-													DATE_FORMAT(d.wiski_dep, '%d/%m/%Y') AS wiski_dep,
-													DATE_FORMAT(d.dispatch_klsa, '%d/%m/%Y') AS dispatch_klsa,
+			$requete = $connexion-> prepare("SELECT DATE_FORMAT(d.klsa_arriv, '%d/%m/%Y') AS klsa_arriv, 
+													DATE_FORMAT(d.wiski_arriv, '%d/%m/%Y') AS wiski_arriv, 
+													DATE_FORMAT(d.date_preal, '%d/%m/%Y') AS date_preal, 
+													DATE_FORMAT(d.wiski_dep, '%d/%m/%Y') AS wiski_dep, 
+													DATE_FORMAT(d.dispatch_klsa, '%d/%m/%Y') AS dispatch_klsa, 
 													cli.nom_cli AS nom_cli,
 													d.id_dos AS id_dos,
 													d.ref_dos AS ref_dos,
@@ -32533,11 +32496,11 @@
 
 			$compteur = 0;
 			$ligne = '';
-			$requete = $connexion-> query("SELECT DATE_FORMAT(d.klsa_arriv, '%d/%m/%Y') AS klsa_arriv,
-													DATE_FORMAT(d.wiski_arriv, '%d/%m/%Y') AS wiski_arriv,
-													DATE_FORMAT(d.date_preal, '%d/%m/%Y') AS date_preal,
-													DATE_FORMAT(d.wiski_dep, '%d/%m/%Y') AS wiski_dep,
-													DATE_FORMAT(d.dispatch_klsa, '%d/%m/%Y') AS dispatch_klsa,
+			$requete = $connexion-> query("SELECT DATE_FORMAT(d.klsa_arriv, '%d/%m/%Y') AS klsa_arriv, 
+													DATE_FORMAT(d.wiski_arriv, '%d/%m/%Y') AS wiski_arriv, 
+													DATE_FORMAT(d.date_preal, '%d/%m/%Y') AS date_preal, 
+													DATE_FORMAT(d.wiski_dep, '%d/%m/%Y') AS wiski_dep, 
+													DATE_FORMAT(d.dispatch_klsa, '%d/%m/%Y') AS dispatch_klsa, 
 													cli.nom_cli AS nom_cli,
 													d.id_dos AS id_dos,
 													d.ref_dos AS ref_dos,
@@ -32555,7 +32518,7 @@
 													AND d.date_crf IS NOT NULL
 													AND d.date_ad IS NOT NULL
 													AND d.date_assurance IS NOT NULL
-													AND d.date_decl IS NULL
+													AND d.date_decl IS NULL 
 													AND d.ref_decl IS NULL
 													AND d.ref_dos NOT LIKE '%20-%'
 													AND d.cleared <> '2'
@@ -32658,25 +32621,25 @@
 			include('connexion.php');
 
 			if (isset($id_cli) && ($id_cli!='')) {
-				$sqlClient = " AND id_cli = $id_cli";
+				$sqlClient = " AND id_cli = $id_cli"; 
 			}else{
 				$sqlClient = '';
 			}
 
 			if (isset($id_mod_lic) && ($id_mod_lic!='')) {
-				$sqlModeLic = " AND id_mod_lic = $id_mod_lic";
+				$sqlModeLic = " AND id_mod_lic = $id_mod_lic"; 
 			}else{
 				$sqlModeLic = '';
 			}
 
 			if (isset($id_mod_trans) && ($id_mod_trans!='')) {
-				$sqlTrans = " AND id_mod_trans = $id_mod_trans";
+				$sqlTrans = " AND id_mod_trans = $id_mod_trans"; 
 			}else{
 				$sqlTrans = '';
 			}
 
 			if (isset($commodity) && ($commodity!='')) {
-				$sqlCommodity = " AND commodity = $commodity";
+				$sqlCommodity = " AND commodity = $commodity"; 
 			}else{
 				$sqlCommodity = '';
 			}
@@ -32722,7 +32685,7 @@
 												");
 			}
 
-
+			
 			//$requete-> execute(array($entree['id_dos']));
 
 			$reponse = $requete-> fetch();
@@ -32800,8 +32763,8 @@
 			$requete = $connexion-> prepare('SELECT COUNT(id_dos) AS nbre
 												FROM dossier
 												WHERE id_mod_lic = ?
-													AND (ref_dos = ? OR ref_fact = ?
-															OR ref_crf = ? OR horse = ?
+													AND (ref_dos = ? OR ref_fact = ? 
+															OR ref_crf = ? OR horse = ? 
 															OR trailer_1 = ? OR trailer_2 = ?
 															OR num_lot = ?)
 											');
@@ -32822,7 +32785,7 @@
 			$requete = $connexion-> prepare('SELECT COUNT(id_dos) AS nbre
 												FROM dossier
 												WHERE id_mod_lic = ?
-													AND (date_preal BETWEEN ? AND ?)
+													AND (date_preal BETWEEN ? AND ?) 
 													AND klsa_arriv IS NOT NULL');
 			$requete-> execute(array($entree['id_mod_lic'], $entree['debut'], $entree['fin']));
 
@@ -32840,8 +32803,8 @@
 			$requete = $connexion-> prepare('SELECT *
 												FROM dossier
 												WHERE id_mod_lic = ?
-													AND (ref_dos = ? OR ref_fact = ?
-															OR ref_crf = ? OR horse = ?
+													AND (ref_dos = ? OR ref_fact = ? 
+															OR ref_crf = ? OR horse = ? 
 															OR trailer_1 = ? OR trailer_2 = ?
 															OR num_lot = ?)
 											');
@@ -32951,7 +32914,7 @@
 												");
 			}
 
-
+			
 			$requete-> execute(array($entree['id_mod_lic'], $entree['debut'], $entree['fin']));
 
 			$reponse = $requete-> fetch();
@@ -33030,7 +32993,7 @@
 												WHERE d.date_crf IS NOT NULL
 													AND d.date_ad IS NOT NULL
 													AND d.date_assurance IS NOT NULL
-													AND d.date_decl IS NULL
+													AND d.date_decl IS NULL 
 													AND d.ref_decl IS NULL
 													AND d.ref_dos NOT LIKE "%20-%"
 													AND DATEDIFF(CURRENT_DATE() , d.klsa_arriv)>14
@@ -33140,17 +33103,17 @@
 			}else{
 				$entree['id_cli'] = $id_cli;
 			}
-
+			
 			$entree['id_mod_trans'] = $id_mod_trans;
 			$bg = '';
 
 			if ($_SESSION['id_role'] != '7' && $_SESSION['id_role'] != '8' && $_SESSION['id_role'] != '9' && $_SESSION['id_role'] != '10' && $_SESSION['id_role'] != '14') {
-
-			$requete = $connexion-> prepare("SELECT c.champ_col AS champ_col,
-													c.type_col AS type_col,
+				
+			$requete = $connexion-> prepare("SELECT c.champ_col AS champ_col, 
+													c.type_col AS type_col, 
 													c.calcul AS calcul,
 													c.id_col AS id_col,
-													c.attribut_col AS attribut_col
+													c.attribut_col AS attribut_col 
 											FROM colonne c, client cl, affectation_colonne_client_modele_licence af
 											WHERE c.id_col = af.id_col
 												AND af.id_cli = cl.id_cli
@@ -33161,11 +33124,11 @@
 			$requete-> execute(array($entree['id_cli'], $entree['id_mod_trans'], $entree['id_mod_lic']));
 
 			}else{
-				$requete = $connexion-> prepare("SELECT c.champ_col AS champ_col,
-													c.type_col AS type_col,
+				$requete = $connexion-> prepare("SELECT c.champ_col AS champ_col, 
+													c.type_col AS type_col, 
 													c.calcul AS calcul,
 													c.id_col AS id_col,
-													c.attribut_col AS attribut_col
+													c.attribut_col AS attribut_col 
 													FROM colonne c, client cl, affectation_colonne_client_modele_licence af, affectation_colonne_role_modele_licence rolic
 													WHERE c.id_col = af.id_col
 														AND af.id_cli = cl.id_cli
@@ -33252,7 +33215,7 @@
 								</select>
 							</td>
 							<?php
-
+						
 							$bg = '';
 
 						}else{
@@ -33274,7 +33237,7 @@
 							</span>
 						</td>
 						<?php
-
+						
 							$bg = '';
 						}
 
@@ -33284,7 +33247,7 @@
 
 				}
 				else if ($reponse['id_col'] == '38') {
-
+					
 				?>
 				<td class=" <?php echo $bg;?>" style="border: 1px solid black; text-align: center;">
 					<select name="<?php echo $reponse['champ_col'];?>_<?php echo $compteur;?>" <?php echo $this-> getDataUtilisateur($_SESSION['id_util'])['tracking_enab'];?>>
@@ -33302,7 +33265,7 @@
 							<?php
 							}
 							?>
-
+							
 						<?php
 					}else if ( ($getDataRow == '1') ) {
 						?>
@@ -33327,7 +33290,7 @@
 							<?php
 							}
 							?>
-
+							
 						<?php
 					}
 					?>
@@ -33336,7 +33299,7 @@
 				<?php
 				}
 				else if ($reponse['id_col'] == '26') {
-
+					
 				?>
 				<td class=" <?php echo $bg;?>" style="border: 1px solid black; text-align: center;">
 					<select style="width: 7em;" name="<?php echo $reponse['champ_col'];?>_<?php echo $compteur;?>" <?php echo $this-> getDataUtilisateur($_SESSION['id_util'])['tracking_enab'];?>>
@@ -33365,7 +33328,7 @@
 				</td>
 				<?php
 				}else if ($reponse['champ_col'] == 'ir_crf') {
-
+					
 				?>
 				<td class=" <?php echo $bg;?>" style="border: 1px solid black; text-align: center;">
 					<select style="width: 7em;" name="<?php echo $reponse['champ_col'];?>_<?php echo $compteur;?>" <?php echo $this-> getDataUtilisateur($_SESSION['id_util'])['tracking_enab'];?>>
@@ -33403,7 +33366,7 @@
 				</td>
 				<?php
 				}else if ($reponse['id_col'] == '49') {
-
+					
 				?>
 				<td class=" <?php echo $bg;?>" style="border: 1px solid black; text-align: center;">
 					<select name="<?php echo $reponse['champ_col'];?>_<?php echo $compteur;?>" <?php echo $this-> getDataUtilisateur($_SESSION['id_util'])['tracking_enab'];?>>
@@ -33416,7 +33379,7 @@
 				</td>
 				<?php
 				}else if ($reponse['id_col'] == '113') {
-
+					
 				?>
 				<td class=" <?php echo $bg;?>" style="border: 1px solid black; text-align: center;">
 					<select name="<?php echo $reponse['champ_col'];?>_<?php echo $compteur;?>" <?php echo $this-> getDataUtilisateur($_SESSION['id_util'])['tracking_enab'];?>>
@@ -33429,7 +33392,7 @@
 				</td>
 				<?php
 				}else if ($reponse['id_col'] == '115') {
-
+					
 				?>
 				<td class=" <?php echo $bg;?>" style="border: 1px solid black; text-align: center;">
 					<select name="<?php echo $reponse['champ_col'];?>_<?php echo $compteur;?>" <?php echo $this-> getDataUtilisateur($_SESSION['id_util'])['tracking_enab'];?>>
@@ -33442,7 +33405,7 @@
 				</td>
 				<?php
 				}else if ($reponse['id_col'] == '118') {
-
+					
 				?>
 				<td class=" <?php echo $bg;?>" style="border: 1px solid black; text-align: center;">
 					<select name="<?php echo $reponse['champ_col'];?>_<?php echo $compteur;?>" <?php echo $this-> getDataUtilisateur($_SESSION['id_util'])['tracking_enab'];?>>
@@ -33455,7 +33418,7 @@
 				</td>
 				<?php
 				}else if ($reponse['id_col'] == '17') {
-
+					
 				?>
 				<td class=" <?php echo $bg;?>" style="border: 1px solid black; text-align: center;">
 					<span class="<?php echo $clignoteDos;?>" style="<?php echo $couleurDos;?>"><?php echo $this-> getDataRow($reponse['champ_col'], $id_dos);?></span>
@@ -33539,10 +33502,10 @@
 						</td>
 						<?php
 					}
-
+				
 				}
 				else if ($reponse['calcul'] == '1') {
-
+					
 				?>
 				<td class=" <?php echo $bg;?>" style="border: 1px solid black; text-align: center;">
 					<?php
@@ -33556,7 +33519,7 @@
 
 				}else if ($reponse['id_col'] == '44') {
 					if (!isset($this-> getLicence($this-> getDossier($id_dos)['num_lic'])['fournisseur'])) {
-
+						
 						?>
 						<td class=" <?php echo $bg;?>" style="border: 1px solid black; ">
 							<input <?php echo $this-> getDataUtilisateur($_SESSION['id_util'])['tracking_enab'];?> type="<?php echo $reponse['type_col'];?>" style="width: 25em;" name="supplier_<?php echo $compteur;?>" value="<?php echo $this-> getDataRow('supplier', $id_dos);?>" <?php echo $this-> getDataUtilisateur($_SESSION['id_util'])['tracking_enab'];?>>
@@ -33608,7 +33571,7 @@
 							$this-> selectionnerStatusModeleLicence($id_mod_lic);
 						?>
 					</select>
-					<?php
+					<?php 
 					*/
 					//echo $this-> getDifferenceDate($this-> getDataRow('gov_out', $id_dos), $this-> getDataRow('gov_in', $id_dos));?>
 					</span>
@@ -33656,7 +33619,7 @@
 							$this-> selectionnerStatusModeleLicence($id_mod_lic);
 						?>
 					</select>
-					<?php
+					<?php 
 					*/
 					//echo $this-> getDifferenceDate($this-> getDataRow('gov_out', $id_dos), $this-> getDataRow('gov_in', $id_dos));?>
 					</span>
@@ -33672,7 +33635,7 @@
 				<td class=" <?php echo $bg.$bgStatuts;?>" style="border: 1px solid black; text-align: center;">
 					<?php
 					//echo $statut;
-
+					
 					?>
 					<select name="<?php echo $reponse['champ_col'];?>_<?php echo $compteur;?>" <?php echo $this-> getDataUtilisateur($_SESSION['id_util'])['tracking_enab'];?>>
 						<option value="<?php echo $this-> getDataRow($reponse['champ_col'], $id_dos);?>">
@@ -33683,10 +33646,10 @@
 							$this-> selectionnerStatusModeleLicence($id_mod_lic);
 						?>
 					</select>
-					<?php
-
+					<?php 
+					
 					//echo $this-> getDifferenceDate($this-> getDataRow('gov_out', $id_dos), $this-> getDataRow('gov_in', $id_dos));?>
-
+					
 				</td>
 				<?php
 				}
@@ -33694,7 +33657,7 @@
 				else if ($reponse['id_col'] == '11' && ($this-> verifierDoublonFacture($this-> getDataRow($reponse['champ_col'], $id_dos)) > 1) ) {
 
 					$textColor = 'color: black; background-color: #FF4500;';
-
+					
 
 					?>
 					<td class=" <?php echo $bg;?>" style="border: 1px solid black;" title="<?php echo $this-> getDossiersDoublonFacture($this-> getDataRow($reponse['champ_col'], $id_dos));?>">
@@ -33706,7 +33669,7 @@
 				else if ($reponse['id_col'] == '14' && ($this-> verifierDoublonHorse($this-> getDataRow($reponse['champ_col'], $id_dos)) > 1) ) {
 
 					$textColor = 'color: black; background-color: #CCCC00;';
-
+					
 
 					?>
 					<td class=" <?php echo $bg;?>" style="border: 1px solid black;" title="<?php echo $this-> getDossiersDoublonHorse($this-> getDataRow($reponse['champ_col'], $id_dos));?>">
@@ -33718,7 +33681,7 @@
 				else if ($reponse['champ_col'] == 'ref_crf' && ($this-> verifierDoublonCRF($this-> getDataRow($reponse['champ_col'], $id_dos)) > 1) ) {
 
 					$textColor = 'color: black; background-color: #CC99FF;';
-
+					
 
 					?>
 					<td class=" <?php echo $bg;?>" style="border: 1px solid black;" title="<?php echo $this-> getDossiersDoublonCRF($this-> getDataRow($reponse['champ_col'], $id_dos));?>">
@@ -33730,7 +33693,7 @@
 				else if ($this-> verifierDimancheDate($this-> getDataRow($reponse['champ_col'], $id_dos))!=false ) {
 
 					$textColor = 'color: black; background-color: #FF4500;';
-
+					
 
 					?>
 					<td class=" <?php echo $bg;?>" style="border: 1px solid black;" title="<?php echo $this-> getDossiersDoublonFacture($this-> getDataRow($reponse['champ_col'], $id_dos));?>">
@@ -33779,7 +33742,7 @@
 			$bg = '';
 
             if ($_GET['id_mod_lic'] == '1') {
-
+              
 				if (isset($id_cli) && ($id_cli!='')) {
 					$sqlClient = ' AND cl.id_cli = "'.$id_cli.'"';
 				}else{
@@ -33787,7 +33750,7 @@
 				}
 
             }else if ($_GET['id_mod_lic'] == '2') {
-
+              
 				if (isset($id_cli) && ($id_cli!='')) {
 					$sqlClient = ' AND cl.id_cli = "'.$id_cli.'"';
 				}else{
@@ -33796,11 +33759,11 @@
 
             }
 
-			$requete = $connexion-> prepare("SELECT c.champ_col AS champ_col,
-													c.type_col AS type_col,
+			$requete = $connexion-> prepare("SELECT c.champ_col AS champ_col, 
+													c.type_col AS type_col, 
 													c.calcul AS calcul,
 													c.id_col AS id_col,
-													c.attribut_col AS attribut_col
+													c.attribut_col AS attribut_col 
 											FROM colonne c, client cl, affectation_colonne_client_modele_licence af
 											WHERE c.id_col = af.id_col
 												AND af.id_cli = cl.id_cli
@@ -33838,7 +33801,7 @@
 						# code...
 					}else{
 
-
+						
 
 							//$getDataRowCalculNetDays = $this-> getDataRowCalculNetDays($reponse['champ_col'], $id_dos);
 							if ( ($this-> getDifferenceDate($this-> getDataRow('dispatch_date', $id_dos), $this-> getDataRow('demande_attestation', $id_dos)) - $this-> getWeekendsAndHolidays($this-> getDataRow('demande_attestation', $id_dos), $this-> getDataRow('dispatch_date', $id_dos)) >= 0) && ($this-> getDifferenceDate($this-> getDataRow('dispatch_date', $id_dos), $this-> getDataRow('demande_attestation', $id_dos)) - $this-> getWeekendsAndHolidays($this-> getDataRow('demande_attestation', $id_dos), $this-> getDataRow('dispatch_date', $id_dos)) <= 5) ) {
@@ -33860,7 +33823,7 @@
 							<?php echo $this-> getDataRow($reponse['delay_reason'], $id_dos)?>
 						</td>
 						<?php
-
+						
 							$bg = '';
 
 
@@ -33870,7 +33833,7 @@
 
 				}
 				else if ($reponse['id_col'] == '38') {
-
+					
 				?>
 				<td class=" <?php echo $bg;?>" style="border: 1px solid black; text-align: center;">
 					<?php
@@ -33892,14 +33855,14 @@
 				</td>
 				<?php
 				}else if ($reponse['id_col'] == '49') {
-
+					
 				?>
 				<td class=" <?php echo $bg;?>" style="border: 1px solid black; text-align: center;">
 					<?php echo $this-> getDataRow($reponse['champ_col'], $id_dos);?>
 				</td>
 				<?php
 				}else if ($reponse['id_col'] == '17') {
-
+					
 				?>
 				<td class=" <?php echo $bg;?>" style="border: 1px solid black; text-align: center;">
 					<?php echo $this-> getDataRow($reponse['champ_col'], $id_dos);?>
@@ -33969,10 +33932,10 @@
 						</td>
 						<?php
 					}
-
+				
 				}
 				else if ($reponse['calcul'] == '1') {
-
+					
 				?>
 				<td class=" <?php echo $bg;?>" style="border: 1px solid black; text-align: center;">
 					<?php
@@ -33986,7 +33949,7 @@
 
 				}else if ($reponse['id_col'] == '44') {
 					if (!isset($this-> getLicence($this-> getDossier($id_dos)['num_lic'])['fournisseur'])) {
-
+						
 						?>
 						<td class=" <?php echo $bg;?>" style="border: 1px solid black; ">
 							<?php echo $this-> getDataRow('supplier', $id_dos);?>
@@ -34014,7 +33977,7 @@
 				else if ($reponse['id_col'] == '11' && ($this-> verifierDoublonFacture($this-> getDataRow($reponse['champ_col'], $id_dos)) > 1) ) {
 
 					$textColor = 'color: black; background-color: #FF4500;';
-
+					
 
 					?>
 					<td class=" <?php echo $bg;?>" style="border: 1px solid black;" title="<?php echo $this-> getDossiersDoublonFacture($this-> getDataRow($reponse['champ_col'], $id_dos));?>">
@@ -34049,7 +34012,7 @@
 			$bg = '';
 
             if ($_GET['id_mod_lic'] == '1') {
-
+              
 				if (isset($id_cli) && ($id_cli!='')) {
 					$sqlClient = ' AND cl.id_cli = "'.$id_cli.'"';
 				}else{
@@ -34057,7 +34020,7 @@
 				}
 
             }else if ($_GET['id_mod_lic'] == '2') {
-
+              
 				if (isset($id_cli) && ($id_cli!='')) {
 					$sqlClient = ' AND cl.id_cli = "'.$id_cli.'"';
 				}else{
@@ -34066,11 +34029,11 @@
 
             }
 
-			$requete = $connexion-> prepare("SELECT c.champ_col AS champ_col,
-													c.type_col AS type_col,
+			$requete = $connexion-> prepare("SELECT c.champ_col AS champ_col, 
+													c.type_col AS type_col, 
 													c.calcul AS calcul,
 													c.id_col AS id_col,
-													c.attribut_col AS attribut_col
+													c.attribut_col AS attribut_col 
 											FROM colonne c, client cl, affectation_colonne_client_modele_licence af
 											WHERE c.id_col = af.id_col
 												AND af.id_cli = cl.id_cli
@@ -34110,7 +34073,7 @@
 						# code...
 					}else{
 
-
+						
 
 							//$getDataRowCalculNetDays = $this-> getDataRowCalculNetDays($reponse['champ_col'], $id_dos);
 							if ( ($this-> getDifferenceDate($this-> getDataRow('dispatch_date', $id_dos), $this-> getDataRow('demande_attestation', $id_dos)) - $this-> getWeekendsAndHolidays($this-> getDataRow('demande_attestation', $id_dos), $this-> getDataRow('dispatch_date', $id_dos)) >= 0) && ($this-> getDifferenceDate($this-> getDataRow('dispatch_date', $id_dos), $this-> getDataRow('demande_attestation', $id_dos)) - $this-> getWeekendsAndHolidays($this-> getDataRow('demande_attestation', $id_dos), $this-> getDataRow('dispatch_date', $id_dos)) <= 5) ) {
@@ -34140,7 +34103,7 @@
 							</select>
 						</td>
 						<?php
-
+						
 							$bg = '';
 
 
@@ -34150,7 +34113,7 @@
 
 				}
 				else if ($reponse['id_col'] == '38') {
-
+					
 				?>
 				<td class=" <?php echo $bg;?>" style="border: 1px solid black; text-align: center;">
 					<select name="<?php echo $reponse['champ_col'];?>_<?php echo $compteur;?>" <?php echo $this-> getDataUtilisateur($_SESSION['id_util'])['tracking_enab'];?>>
@@ -34168,7 +34131,7 @@
 							<?php
 							}
 							?>
-
+							
 						<?php
 					}else if ( ($getDataRow == '1') ) {
 						?>
@@ -34193,7 +34156,7 @@
 							<?php
 							}
 							?>
-
+							
 						<?php
 					}
 					?>
@@ -34202,7 +34165,7 @@
 				<?php
 				}
 				else if ($reponse['id_col'] == '26') {
-
+					
 				?>
 				<td class=" <?php echo $bg;?>" style="border: 1px solid black; text-align: center;">
 					<select style="width: 7em;" name="<?php echo $reponse['champ_col'];?>_<?php echo $compteur;?>" <?php echo $this-> getDataUtilisateur($_SESSION['id_util'])['tracking_enab'];?>>
@@ -34231,7 +34194,7 @@
 				</td>
 				<?php
 				}else if ($reponse['id_col'] == '49') {
-
+					
 				?>
 				<td class=" <?php echo $bg;?>" style="border: 1px solid black; text-align: center;">
 					<select name="<?php echo $reponse['champ_col'];?>_<?php echo $compteur;?>" <?php echo $this-> getDataUtilisateur($_SESSION['id_util'])['tracking_enab'];?>>
@@ -34244,7 +34207,7 @@
 				</td>
 				<?php
 				}else if ($reponse['id_col'] == '17') {
-
+					
 				?>
 				<td class=" <?php echo $bg;?>" style="border: 1px solid black; text-align: center;">
 					<?php echo $this-> getDataRow($reponse['champ_col'], $id_dos);?>
@@ -34328,10 +34291,10 @@
 						</td>
 						<?php
 					}
-
+				
 				}
 				else if ($reponse['calcul'] == '1') {
-
+					
 				?>
 				<td class=" <?php echo $bg;?>" style="border: 1px solid black; text-align: center;">
 					<?php
@@ -34345,7 +34308,7 @@
 
 				}else if ($reponse['id_col'] == '44') {
 					if (!isset($this-> getLicence($this-> getDossier($id_dos)['num_lic'])['fournisseur'])) {
-
+						
 						?>
 						<td class=" <?php echo $bg;?>" style="border: 1px solid black; ">
 							<input <?php echo $this-> getDataUtilisateur($_SESSION['id_util'])['tracking_enab'];?> type="<?php echo $reponse['type_col'];?>" style="width: 25em;" name="supplier_<?php echo $compteur;?>" value="<?php echo $this-> getDataRow('supplier', $id_dos);?>" <?php echo $this-> getDataUtilisateur($_SESSION['id_util'])['tracking_enab'];?>>
@@ -34383,7 +34346,7 @@
 							$this-> selectionnerStatusModeleLicence($id_mod_lic);
 						?>
 					</select>
-					<?php
+					<?php 
 					*/
 					//echo $this-> getDifferenceDate($this-> getDataRow('gov_out', $id_dos), $this-> getDataRow('gov_in', $id_dos));?>
 				</td>
@@ -34399,7 +34362,7 @@
 
 					<?php
 					//echo $statut;
-
+					
 					?>
 					<select name="<?php echo $reponse['champ_col'];?>_<?php echo $compteur;?>" <?php echo $this-> getDataUtilisateur($_SESSION['id_util'])['tracking_enab'];?>>
 						<option value="<?php echo $this-> getDataRow($reponse['champ_col'], $id_dos);?>">
@@ -34410,8 +34373,8 @@
 							$this-> selectionnerStatusModeleLicence($id_mod_lic);
 						?>
 					</select>
-					<?php
-
+					<?php 
+					
 					//echo $this-> getDifferenceDate($this-> getDataRow('gov_out', $id_dos), $this-> getDataRow('gov_in', $id_dos));?>
 				</td>
 				<?php
@@ -34420,7 +34383,7 @@
 				else if ($reponse['id_col'] == '11' && ($this-> verifierDoublonFacture($this-> getDataRow($reponse['champ_col'], $id_dos)) > 1) ) {
 
 					$textColor = 'color: black; background-color: #FF4500;';
-
+					
 
 					?>
 					<td class=" <?php echo $bg;?>" style="border: 1px solid black;" title="<?php echo $this-> getDossiersDoublonFacture($this-> getDataRow($reponse['champ_col'], $id_dos));?>">
@@ -34432,7 +34395,7 @@
 				else if ($this-> verifierDimancheDate($this-> getDataRow($reponse['champ_col'], $id_dos))!=false ) {
 
 					$textColor = 'color: black; background-color: #FF4500;';
-
+					
 
 					?>
 					<td class=" <?php echo $bg;?>" style="border: 1px solid black;" title="<?php echo $this-> getDossiersDoublonFacture($this-> getDataRow($reponse['champ_col'], $id_dos));?>">
@@ -34466,11 +34429,11 @@
 			$entree['id_mod_trans'] = $id_mod_trans;
 			$bg = '';
 
-			$requete = $connexion-> prepare("SELECT c.champ_col AS champ_col,
-													c.type_col AS type_col,
+			$requete = $connexion-> prepare("SELECT c.champ_col AS champ_col, 
+													c.type_col AS type_col, 
 													c.calcul AS calcul,
 													c.id_col AS id_col,
-													c.titre_col AS titre_col
+													c.titre_col AS titre_col 
 											FROM colonne c, client cl, affectation_colonne_client_modele_licence af
 											WHERE c.id_col = af.id_col
 												AND af.id_cli = cl.id_cli
@@ -34490,7 +34453,7 @@
 			          </div>
 			        <?php
 				}
-
+				
 
 			}$requete-> closeCursor();
 		}
@@ -34502,12 +34465,12 @@
 			$entree['id_mod_trans'] = $id_mod_trans;
 			$bg = '';
 
-			$requete = $connexion-> prepare("SELECT c.champ_col AS champ_col,
-													c.type_col AS type_col,
+			$requete = $connexion-> prepare("SELECT c.champ_col AS champ_col, 
+													c.type_col AS type_col, 
 													c.calcul AS calcul,
 													c.id_col AS id_col,
-													c.titre_col AS titre_col,
-													c.attribut_col AS attribut_col
+													c.titre_col AS titre_col, 
+													c.attribut_col AS attribut_col 
 											FROM colonne c, client cl, affectation_colonne_client_modele_licence af
 											WHERE c.id_col = af.id_col
 												AND af.id_cli = cl.id_cli
@@ -34535,7 +34498,7 @@
 			          </div>
 			        <?php
 				}
-
+				
 
 			}$requete-> closeCursor();
 		}
@@ -34550,11 +34513,11 @@
 			$a = '';
 			$champ_col = array();
 
-			$requete = $connexion-> prepare("SELECT c.champ_col AS champ_col,
-													c.type_col AS type_col,
+			$requete = $connexion-> prepare("SELECT c.champ_col AS champ_col, 
+													c.type_col AS type_col, 
 													c.calcul AS calcul,
 													c.id_col AS id_col,
-													c.titre_col AS titre_col
+													c.titre_col AS titre_col 
 											FROM colonne c, client cl, affectation_colonne_client_modele_licence af
 											WHERE c.id_col = af.id_col
 												AND af.id_cli = cl.id_cli
@@ -34578,7 +34541,7 @@
 					$champ_col[] = $reponse['champ_col'];*/
 
 				}
-
+				
 
 			}$requete-> closeCursor();
 			return $champ_col;
@@ -34594,11 +34557,11 @@
 			$a = '';
 			$champ_col = array();
 
-			$requete = $connexion-> prepare("SELECT c.champ_col AS champ_col,
-													c.type_col AS type_col,
+			$requete = $connexion-> prepare("SELECT c.champ_col AS champ_col, 
+													c.type_col AS type_col, 
 													c.calcul AS calcul,
 													c.id_col AS id_col,
-													c.titre_col AS titre_col
+													c.titre_col AS titre_col 
 											FROM colonne c, client cl, affectation_colonne_client_modele_licence af
 											WHERE c.id_col = af.id_col
 												AND af.id_cli = cl.id_cli
@@ -34623,7 +34586,7 @@
 					$champ_col[] = $reponse['champ_col'];*/
 
 				}
-
+				
 
 			}$requete-> closeCursor();
 			return $champ_col;
@@ -34653,10 +34616,10 @@
 				if ($reponse['id_col'] != '18' && $reponse['id_col'] != '50' && $reponse['id_col'] != '54' && $reponse['id_col'] != '71' && $reponse['id_col'] != '74' && $reponse['id_col'] != '36' && $reponse['id_col'] != '88' && $reponse['id_col'] != '80' && $reponse['id_col'] != '38' && $reponse['id_col'] != '40' && $reponse['id_col'] != '42') {
 
 					$name_champ_col[] = $reponse['champ_col'];
-
+					
 
 				}
-
+				
 
 			}$requete-> closeCursor();
 			return $name_champ_col;
@@ -34675,10 +34638,10 @@
 				$sqlClient = '';
 			}
 
-			$requete = $connexion-> prepare("SELECT c.champ_col AS champ_col,
-													c.type_col AS type_col,
+			$requete = $connexion-> prepare("SELECT c.champ_col AS champ_col, 
+													c.type_col AS type_col, 
 													c.calcul AS calcul,
-													c.id_col AS id_col
+													c.id_col AS id_col 
 											FROM colonne c, client cl, affectation_colonne_client_modele_licence af
 											WHERE c.id_col = af.id_col
 												AND af.id_cli = cl.id_cli
@@ -34714,7 +34677,7 @@
 						# code...
 					}else{
 
-
+						
 
 							//$getDataRowCalculNetDays = $this-> getDataRowCalculNetDays($reponse['champ_col'], $id_dos);
 							if ( ($this-> getDifferenceDate($this-> getDataRow('dispatch_date', $id_dos), $this-> getDataRow('demande_attestation', $id_dos)) - $this-> getWeekendsAndHolidays($this-> getDataRow('demande_attestation', $id_dos), $this-> getDataRow('dispatch_date', $id_dos)) >= 0) && ($this-> getDifferenceDate($this-> getDataRow('dispatch_date', $id_dos), $this-> getDataRow('demande_attestation', $id_dos)) - $this-> getWeekendsAndHolidays($this-> getDataRow('demande_attestation', $id_dos), $this-> getDataRow('dispatch_date', $id_dos)) <= 2) ) {
@@ -34737,7 +34700,7 @@
 							<?php echo $this-> getDataRow($reponse['delay_reason'], $id_dos)?>">
 						</td>
 						<?php
-
+						
 							$bg = '';
 
 
@@ -34747,7 +34710,7 @@
 
 				}
 				else if ($reponse['id_col'] == '38') {
-
+					
 				?>
 				<td style="border: 0.5px solid black; text-align: center;">
 					<?php
@@ -34769,7 +34732,7 @@
 				</td>
 				<?php
 				}else if ($reponse['id_col'] == '17') {
-
+					
 				?>
 				<td class=" <?php echo $bg;?>" style="border: 1px solid black; text-align: center;">
 					<?php echo $this-> getDataRow($reponse['champ_col'], $id_dos);?>
@@ -34839,10 +34802,10 @@
 						</td>
 						<?php
 					}
-
+				
 				}
 				else if ($reponse['calcul'] == '1') {
-
+					
 				?>
 				<td class="" style="border: 1px solid black; text-align: center; <?php echo $bg;?>">
 					<?php
@@ -34856,7 +34819,7 @@
 
 				}else if ($reponse['id_col'] == '44') {
 					if (!isset($this-> getLicence($this-> getDossier($id_dos)['num_lic'])['fournisseur'])) {
-
+						
 						?>
 						<td class=" <?php echo $bg;?>" style="border: 1px solid black; ">
 							<?php echo $this-> getDataRow('supplier', $id_dos);?>
@@ -34976,7 +34939,7 @@
 					<a title="Visualiser les détails" href="#" style="color: black;" onclick="window.open('popUpDossiersApures.php?id_trans_ap=<?php echo $reponse['id_trans_ap'];?>&id_cli=<?php echo $entree['id_cli'];?>','pop1','width=1900,height=900');">
 						<button class="btn bg bg-warning">Détails</button>
 					</a>
-					<?php
+					<?php 
 						if (!($reponse['fichier_trans_ap']) || ($reponse['fichier_trans_ap']=='')) {
 						?>
 						<button class="btn btn-dark square-btn-adjust" data-toggle="modal" data-target=".editTransmission_<?php echo $reponse['id_trans_ap'];?>">
@@ -35015,7 +34978,7 @@
 
 			$row = array();
 
-			$requete = $connexion-> prepare("SELECT tr.id_trans_ap AS id_trans_ap,
+			$requete = $connexion-> prepare("SELECT tr.id_trans_ap AS id_trans_ap, 
 													cl.nom_cli AS nom_cli,
 													tr.ref_trans_ap AS ref_trans_ap,
 													tr.id_trans_ap AS id_trans_ap,
@@ -35148,7 +35111,7 @@
 														OR ref_fact IS NULL OR ref_fact = ''
 													)
 													AND (
-															(fob = '' OR fob IS NULL OR fob = '0')
+															(fob = '' OR fob IS NULL OR fob = '0') 
 															OR (fob IS NOT NULL AND fob >= '2500')
 														)
 													AND (cleared = '1' OR cleared = '0')
@@ -35274,7 +35237,7 @@
 						<?php
 					}
 					?>
-
+					
 				</td>
 				<td>
 					<?php
@@ -35290,7 +35253,7 @@
 						<?php
 					}
 					?>
-
+					
 				</td>
 				<td>
 					<?php
@@ -35306,7 +35269,7 @@
 						<?php
 					}
 					?>
-
+					
 				</td>
 			</tr>
 			<?php
@@ -35342,8 +35305,8 @@
 
 			$debut = $compteur;
 
-			$requete = $connexion-> prepare("SELECT *, DATE_FORMAT(date_decl, '%d/%m/%Y') AS date_decl,
-													DATE_FORMAT(date_liq, '%d/%m/%Y') AS date_liq,
+			$requete = $connexion-> prepare("SELECT *, DATE_FORMAT(date_decl, '%d/%m/%Y') AS date_decl, 
+													DATE_FORMAT(date_liq, '%d/%m/%Y') AS date_liq, 
 													DATE_FORMAT(date_quit, '%d/%m/%Y') AS date_quit
  												FROM dossier
 												WHERE facture = '0'
@@ -35415,8 +35378,8 @@
 
 			$debut = $compteur;
 
-			$requete = $connexion-> prepare("SELECT *, DATE_FORMAT(date_decl, '%d/%m/%Y') AS date_decl,
-													DATE_FORMAT(date_liq, '%d/%m/%Y') AS date_liq,
+			$requete = $connexion-> prepare("SELECT *, DATE_FORMAT(date_decl, '%d/%m/%Y') AS date_decl, 
+													DATE_FORMAT(date_liq, '%d/%m/%Y') AS date_liq, 
 													DATE_FORMAT(date_quit, '%d/%m/%Y') AS date_quit
  												FROM dossier
 												WHERE facture = '1'
@@ -35484,8 +35447,8 @@
 
 			$debut = $compteur;
 
-			$requete = $connexion-> prepare("SELECT *, DATE_FORMAT(date_decl, '%d/%m/%Y') AS date_decl,
-													DATE_FORMAT(date_liq, '%d/%m/%Y') AS date_liq,
+			$requete = $connexion-> prepare("SELECT *, DATE_FORMAT(date_decl, '%d/%m/%Y') AS date_decl, 
+													DATE_FORMAT(date_liq, '%d/%m/%Y') AS date_liq, 
 													DATE_FORMAT(date_quit, '%d/%m/%Y') AS date_quit
  												FROM dossier
 												WHERE facture = '0'
@@ -35566,8 +35529,8 @@
 
 			$debut = $compteur;
 
-			$requete = $connexion-> prepare("SELECT *, DATE_FORMAT(date_decl, '%d/%m/%Y') AS date_decl,
-													DATE_FORMAT(date_liq, '%d/%m/%Y') AS date_liq,
+			$requete = $connexion-> prepare("SELECT *, DATE_FORMAT(date_decl, '%d/%m/%Y') AS date_decl, 
+													DATE_FORMAT(date_liq, '%d/%m/%Y') AS date_liq, 
 													DATE_FORMAT(date_quit, '%d/%m/%Y') AS date_quit
  												FROM dossier
 												WHERE facture = '1'
@@ -35699,7 +35662,7 @@
 					<a title="Visualiser les détails" href="#" style="color: black;" onclick="window.open('popUpDossiersApures.php?id_trans_ap=<?php echo $reponse['id_trans_ap'];?>&id_cli=<?php echo $entree['id_cli'];?>','pop1','width=1900,height=900');">
 						<button class="btn bg bg-warning">Détails</button>
 					</a>
-					<?php
+					<?php 
 						if (!($reponse['fichier_trans_ap']) || ($reponse['fichier_trans_ap']=='')) {
 						?>
 						<button class="btn btn-dark square-btn-adjust" data-toggle="modal" data-target=".editTransmission_<?php echo $reponse['id_trans_ap'];?>">
@@ -35813,7 +35776,7 @@
 			$entree['id_trans_ap'] = $id_trans_ap;
 			$compteur=0;
 
-			$requete = $connexion-> prepare("SELECT d.ref_dos AS ref_dos, d.num_lic AS num_lic,
+			$requete = $connexion-> prepare("SELECT d.ref_dos AS ref_dos, d.num_lic AS num_lic, 
 													d.ref_fact,
 													d.fob AS fob, d.ref_av AS ref_av, d.montant_av AS montant_av,
 													d.ref_fact AS ref_fact, d.ref_decl AS ref_decl,
@@ -36039,7 +36002,7 @@
 
 				$sqlEtat = " WHERE p.fob < (
 									SELECT SUM(fob)
-										FROM dossier
+										FROM dossier 
 										WHERE REPLACE(ref_crf, ' ', '') = REPLACE(CONCAT(p.cod,p.num_part), ' ', '')
 								)
 							";
@@ -36048,7 +36011,7 @@
 
 				$sqlEtat = " WHERE p.poids < (
 									SELECT SUM(poids)
-										FROM dossier
+										FROM dossier 
 										WHERE REPLACE(ref_crf, ' ', '') = REPLACE(CONCAT(p.cod,p.num_part), ' ', '')
 								)
 							";
@@ -36080,7 +36043,7 @@
 														ON l.id_cli = cl.id_cli
 												$sqlEtat
 												AND p.cod IN (
-													SELECT cod
+													SELECT cod 
 														FROM licence
 														WHERE consommable = ?
 															$sqlClient
@@ -36166,7 +36129,7 @@
 													IF(l.consommable='1', 'Consommable', 'Divers') AS label_consommable,
 													cl.nom_cli AS nom_cli,
 													cl.code_cli AS code_cli,
-													IF( LENGTH(REPLACE(l.cod, ' ', '')) < 5,
+													IF( LENGTH(REPLACE(l.cod, ' ', '')) < 5, 
 														CONCAT('<a class=\" btn-xs btn-info\" title=\"Ajouter la partielle\" onclick=\"alert(\'Erreur: Veuillez renseigner correctement le COD de la licence ',l.num_lic,' !\')\">
 															<i class=\"fa fa-plus\"></i>
 														</a>'),
@@ -36509,7 +36472,7 @@
 				$sqlClient = '';
 			}
 
-			$requete = $connexion-> prepare("SELECT d.ref_dos AS ref_dos, d.num_lic AS num_lic,
+			$requete = $connexion-> prepare("SELECT d.ref_dos AS ref_dos, d.num_lic AS num_lic, 
 													d.ref_fact,
 													d.fob AS fob, d.ref_av AS ref_av, d.montant_av AS montant_av,
 													d.ref_fact AS ref_fact, d.ref_decl AS ref_decl,
@@ -36594,7 +36557,7 @@
 
 			$compteur=0;
 
-			$requete = $connexion-> prepare("SELECT d.ref_dos AS ref_dos, d.num_lic AS num_lic,
+			$requete = $connexion-> prepare("SELECT d.ref_dos AS ref_dos, d.num_lic AS num_lic, 
 													d.ref_fact,
 													d.fob AS fob, d.ref_av AS ref_av, d.montant_av AS montant_av,
 													d.ref_fact AS ref_fact, d.ref_decl AS ref_decl,
@@ -36622,8 +36585,8 @@
 													AND d.num_lic <> 'UNDERVALUE'
 													AND d.num_lic NOT LIKE '%UNDER%'
 													AND d.id_dos NOT IN (
-														SELECT id_dos
-															FROM dossier
+														SELECT id_dos 
+															FROM dossier 
 															WHERE ref_dos LIKE '%RF20-%' OR ref_dos LIKE '%AW20-%' OR ref_dos LIKE '%-ACID-%' OR ref_dos LIKE '%-SUL%'
 														)
 													AND d.id_dos NOT IN(
@@ -36723,7 +36686,7 @@
 			$compteur=0;
 			$row = array();
 
-			$requete = $connexion-> prepare("SELECT d.ref_dos AS ref_dos, d.num_lic AS num_lic,
+			$requete = $connexion-> prepare("SELECT d.ref_dos AS ref_dos, d.num_lic AS num_lic, 
 													d.ref_fact,
 													d.fob AS fob, d.ref_av AS ref_av, d.montant_av AS montant_av,
 													d.ref_fact AS ref_fact, d.ref_decl AS ref_decl,
@@ -36785,12 +36748,12 @@
 													AND d.num_lic <> 'UNDERVALUE'
 													AND d.num_lic NOT LIKE '%UNDER%'
 													AND d.id_dos NOT IN (
-														SELECT id_dos
-															FROM dossier
+														SELECT id_dos 
+															FROM dossier 
 															WHERE ref_dos LIKE '%RF20-%' OR ref_dos LIKE '%AW20-%' OR ref_dos LIKE '%-ACID-%' OR ref_dos LIKE '%-SUL%'
 														)
 													AND d.id_dos NOT IN(
-														SELECT detap.id_dos
+														SELECT detap.id_dos 
 															FROM detail_apurement detap, transmission_apurement tr
 															WHERE detap.id_trans_ap = tr.id_trans_ap
 															AND tr.type_trans_ap = ?
@@ -36826,7 +36789,7 @@
 			$compteur=0;
 			$row = array();
 
-			$requete = $connexion-> prepare("SELECT d.ref_dos AS ref_dos, d.num_lic AS num_lic,
+			$requete = $connexion-> prepare("SELECT d.ref_dos AS ref_dos, d.num_lic AS num_lic, 
 													d.ref_fact,
 													d.fob AS fob, d.ref_av AS ref_av, d.montant_av AS montant_av,
 													d.ref_fact AS ref_fact, d.ref_decl AS ref_decl,
@@ -36885,12 +36848,12 @@
 													AND d.not_apurement = '0'
 													AND (d.fob < 1 OR d.fob IS NULL)
 													AND d.id_dos NOT IN (
-														SELECT id_dos
-															FROM dossier
+														SELECT id_dos 
+															FROM dossier 
 															WHERE ref_dos LIKE '%RF20-%' OR ref_dos LIKE '%AW20-%' OR ref_dos LIKE '%-ACID-%' OR ref_dos LIKE '%-SUL%'
 														)
 													AND d.id_dos NOT IN(
-														SELECT detap.id_dos
+														SELECT detap.id_dos 
 															FROM detail_apurement detap, transmission_apurement tr
 															WHERE detap.id_trans_ap = tr.id_trans_ap
 															AND tr.type_trans_ap = ?
@@ -36918,7 +36881,7 @@
 			$compteur=0;
 			$row = array();
 
-			$requete = $connexion-> prepare("SELECT d.ref_dos AS ref_dos, d.num_lic AS num_lic,
+			$requete = $connexion-> prepare("SELECT d.ref_dos AS ref_dos, d.num_lic AS num_lic, 
 													d.ref_fact,
 													d.fob AS fob, d.ref_av AS ref_av, d.montant_av AS montant_av,
 													d.ref_fact AS ref_fact, d.ref_decl AS ref_decl,
@@ -36981,7 +36944,7 @@
 			$compteur=0;
 			$row = array();
 
-			$requete = $connexion-> prepare("SELECT d.ref_dos AS ref_dos, d.num_lic AS num_lic,
+			$requete = $connexion-> prepare("SELECT d.ref_dos AS ref_dos, d.num_lic AS num_lic, 
 													d.ref_fact,
 													d.fob AS fob, d.ref_av AS ref_av, d.montant_av AS montant_av,
 													d.ref_fact AS ref_fact, d.ref_decl AS ref_decl,
@@ -37039,7 +37002,7 @@
 			$compteur=0;
 			$row = array();
 
-			$requete = $connexion-> prepare("SELECT d.ref_dos AS ref_dos, d.num_lic AS num_lic,
+			$requete = $connexion-> prepare("SELECT d.ref_dos AS ref_dos, d.num_lic AS num_lic, 
 													d.ref_fact,
 													d.fob AS fob, d.ref_av AS ref_av, d.montant_av AS montant_av,
 													d.ref_fact AS ref_fact, d.ref_decl AS ref_decl,
@@ -37106,7 +37069,7 @@
 				$sqlClient = '';
 			}
 
-			$requete = $connexion-> prepare("SELECT d.ref_dos AS ref_dos, d.num_lic AS num_lic,
+			$requete = $connexion-> prepare("SELECT d.ref_dos AS ref_dos, d.num_lic AS num_lic, 
 													d.ref_fact,
 													d.fob AS fob, d.ref_av AS ref_av, d.montant_av AS montant_av,
 													d.ref_fact AS ref_fact, d.ref_decl AS ref_decl,
@@ -37269,7 +37232,7 @@
 
 			$sql = "";
 			$sql2 = "";
-
+			
 			if( ($id_cli != null) && ($id_cli != '')){
 				$sql = ' AND cl.id_cli = '.$id_cli;
 			}
@@ -37279,7 +37242,7 @@
 			}
 
 			$compteur = $premiere_entree;
-
+			
 			if($_SESSION['id_role'] == 1 || $_SESSION['id_role'] == 5 || $_SESSION['id_role'] == '11'){
 				$sql = "SELECT l.num_lic AS num_lic,
 							DATE_FORMAT(l.date_val, '%d/%m/%Y') AS date_val,
@@ -37308,7 +37271,7 @@
 							UPPER(t.nom_type_lic) AS nom_type_lic,
 							DATE_FORMAT(l.date_fact, '%d/%m/%Y') AS date_fact,
 							l.poids AS poids_lic,
-							l.id_mod_trans AS id_mod_trans
+							l.id_mod_trans AS id_mod_trans							
 						FROM licence l, monnaie m, client cl, banque b, type_licence t
 						WHERE l.id_mod_lic = ?
 							AND l.id_type_lic = t.id_type_lic
@@ -37325,11 +37288,11 @@
 			while($reponse = $requete-> fetch()){
 				$compteur++;
 				$date_exp = $this-> getLastEpirationLicence2($reponse['num_lic']);
-
+				
 				$bg = "bg-light";
 				$couleur = "";
 				$clignoteLic = '';
-
+				
 				$style = '';//" style='color: black; background-color: orange;'";
 				if( ($reponse['fob'] <= $this-> getSommeFobAppureLicence($reponse['num_lic'])) || (($reponse['fob']-$this-> getSommeFobAppureLicence($reponse['num_lic']))<1) ){
 					$bg = "bg-success";
@@ -37432,7 +37395,7 @@
 				</td>
 				<td style="text-align: center; border: 1px solid black;">
 					<span class="<?php echo $clignoteLic;?>">
-						<?php
+						<?php 
 						echo ($reponse['fob'] - $this-> getSommeFobLicence($reponse['num_lic']));
 						?>
 					</span>
@@ -37495,7 +37458,7 @@
 			$compteur = 0;
 			$rows = array();
 
-
+			
 			$requete = $connexion-> prepare("SELECT l.num_lic AS num_lic,
 												DATE_FORMAT(l.date_val, '%d/%m/%Y') AS date_val,
 												l.date_val AS date_val_2,
@@ -37535,12 +37498,12 @@
 												SUM(IF(dos.poids IS NOT NULL, dos.poids, 0)) AS poids_dos,
 												(IF(l.fob IS NOT NULL, l.fob, 0)-SUM(IF(dos.fob IS NOT NULL, dos.fob, 0))) AS solde_fob,
 												IF((IF(l.fob IS NOT NULL, l.fob, 0)-SUM(IF(dos.fob IS NOT NULL, dos.fob, 0)))<0,
-													'bg bg-danger',
+													'bg bg-danger', 
 													''
 												) AS class_solde_fob,
 												(IF(l.poids IS NOT NULL, l.poids, 0)-SUM(IF(dos.poids IS NOT NULL, dos.poids, 0))) AS solde_poids,
 												IF((IF(l.poids IS NOT NULL, l.poids, 0)-SUM(IF(dos.poids IS NOT NULL, dos.poids, 0)))<0,
-													'bg bg-danger',
+													'bg bg-danger', 
 													''
 												) AS class_solde_poids,
 												DATE_FORMAT(l.date_fact, '%d/%m/%Y') AS date_fact,
@@ -37555,7 +37518,7 @@
 														<i class=\"fa fa-file\"></i> Fichier Licence
 													</button>') AS fichier,
 												IF(l.consommable='1', 'Consommable', 'Autres/Divers') AS type_lic,
-												march.nom_march AS nom_march
+												march.nom_march AS nom_march				
 											-- FROM licence l, monnaie m, client cl, banque b, type_licence t
 											-- WHERE l.id_mod_lic = ?
 											-- 	AND l.id_type_lic = t.id_type_lic
@@ -37563,14 +37526,14 @@
 											-- 	AND l.id_mon = m.id_mon
 											-- 	AND l.id_banq = b.id_banq
 											-- 	-- AND YEAR(l.date_val) >= YEAR(CURRENT_DATE())-1
-											-- ORDER BY l.date_val DESC
+											-- ORDER BY l.date_val DESC			
 											FROM licence l
 												LEFT JOIN monnaie m
-													ON l.id_mon = m.id_mon
+													ON l.id_mon = m.id_mon 
 												LEFT JOIN client cl
-													ON l.id_cli = cl.id_cli
+													ON l.id_cli = cl.id_cli 
 												LEFT JOIN banque b
-													ON l.id_banq = b.id_banq
+													ON l.id_banq = b.id_banq 
 												LEFT JOIN type_licence t
 													ON l.id_type_lic = t.id_type_lic
 												LEFT JOIN dossier dos
@@ -37578,7 +37541,7 @@
 														AND dos.cleared <> '2'
 												LEFT JOIN marchandise march
 													ON l.id_march = march.id_march
-
+												
 												-- AND YEAR(l.date_val) >= YEAR(CURRENT_DATE())-1
 											WHERE l.id_mod_lic = ?
 												AND l.id_cli = ?
@@ -37634,7 +37597,7 @@
 
 				}
 				$rows[] = $reponse;
-
+				
 			}$requete-> closeCursor();
 
 			return $rows;
@@ -37647,7 +37610,7 @@
 
 			$sql = "";
 			$sql2 = "";
-
+			
 			if( ($id_cli != null) && ($id_cli != '')){
 				$sql = ' AND cl.id_cli = '.$id_cli;
 			}
@@ -37657,7 +37620,7 @@
 			}
 
 			$compteur = $premiere_entree;
-
+			
 			if($_SESSION['id_role'] == 1 || $_SESSION['id_role'] == 5 || $_SESSION['id_role'] == '11'){
 				$sql = "SELECT l.num_lic AS num_lic,
 							DATE_FORMAT(l.date_val, '%d/%m/%Y') AS date_val,
@@ -37685,7 +37648,7 @@
 							UPPER(t.nom_type_lic) AS nom_type_lic,
 							DATE_FORMAT(l.date_fact, '%d/%m/%Y') AS date_fact,
 							l.poids AS poids,
-							l.id_mod_trans AS id_mod_trans
+							l.id_mod_trans AS id_mod_trans							
 						FROM licence l, monnaie m, client cl, banque b, type_licence t, marchandise mse
 						WHERE l.id_mod_lic = ?
 							AND l.id_type_lic = t.id_type_lic
@@ -37703,10 +37666,10 @@
 			while($reponse = $requete-> fetch()){
 				$compteur++;
 				$date_exp = $this-> getLastEpirationLicence2($reponse['num_lic']);
-
+				
 				$bg = "bg-light";
 				$couleur = "";
-
+				
 				$style = '';//" style='color: black; background-color: orange;'";
 				if( ($reponse['fob'] == $this-> getSommeFobLicence($reponse['num_lic'])) && ($reponse['fob'] != $this-> getSommeFobAppureLicence($reponse['num_lic'])) ){
 					$bg = "bg-dark";
@@ -37742,7 +37705,7 @@
 					<td style="text-align: left; border: 1px solid black;"><?php echo $reponse['nom_cli'];?></td>
 					<td style="text-align: center; border: 1px solid black;"><?php echo $reponse['date_val'];?></td>
 					<td style="text-align: center; border: 1px solid black;"><?php echo $this-> getLastEpirationLicence($reponse['num_lic']);?></td>
-
+					
 					<td style="text-align: center; border: 1px solid black;"><?php echo $reponse['acheteur'];?></td>
 					<td style="text-align: center; border: 1px solid black;"><?php echo $reponse['nom_march'];?></td>
 					<td style="text-align: center;border: 1px solid black;"><?php echo $reponse['unit_mes'];?></td>
@@ -37751,7 +37714,7 @@
 					</td>
 					<td style="text-align: center;border: 1px solid black;"><?php echo $reponse['nom_banq'];?></td>
 					<td style="text-align: center; border: 1px solid black;">
-						<?php
+						<?php 
 							echo number_format( ($this-> getSommeFobLicence($reponse['num_lic'])), 2, ',', ' ');
 						?>
 					</td>
@@ -37759,7 +37722,7 @@
 						<?php echo $this-> getNbreDossierLicence($reponse['num_lic']);?>
 					</td>
 					<td style="text-align: center; border: 1px solid black;">
-						<?php
+						<?php 
 							echo number_format( ($reponse['poids']-$this-> getSommeFobLicence($reponse['num_lic'])), 2, ',', ' ');
 						?>
 					</td>
@@ -37812,7 +37775,7 @@
 
 			$sql = "";
 			$sql2 = "";
-
+			
 			if( ($id_cli != null) && ($id_cli != '')){
 				$sql = ' AND cl.id_cli = '.$id_cli;
 			}
@@ -37822,7 +37785,7 @@
 			}
 
 			$compteur = 0;
-
+			
 			if($_SESSION['id_role'] == 1 || $_SESSION['id_role'] == 5 || $_SESSION['id_role'] == '11'){
 				$sql = "SELECT l.num_lic AS num_lic,
 							DATE_FORMAT(l.date_val, '%d/%m/%Y') AS date_val,
@@ -37848,7 +37811,7 @@
 							b.id_banq AS id_banq,
 							l.ref_fact AS ref_fact,
 							l.remarque AS remarque,
-							DATE_FORMAT(l.date_fact, '%d/%m/%Y') AS date_fact
+							DATE_FORMAT(l.date_fact, '%d/%m/%Y') AS date_fact							
 						FROM licence l, monnaie m, client cl, banque b
 						WHERE l.id_mod_lic = ?
 							AND l.id_cli = cl.id_cli
@@ -37864,10 +37827,10 @@
 			while($reponse = $requete-> fetch()){
 				$compteur++;
 				$date_exp = $this-> getLastEpirationLicence2($reponse['num_lic']);
-
+				
 				$bg = "bg-light";
 				$couleur = "";
-
+				
 				$style = '';//" style='color: black; background-color: orange;'";
 				if( ($reponse['fob'] == $this-> getSommeFobLicence($reponse['num_lic'])) && ($reponse['fob'] != $this-> getSommeFobAppureLicence($reponse['num_lic'])) ){
 					$bg = "bg-dark";
@@ -37962,7 +37925,7 @@
 					<?php echo $this-> getNbreDossierLicence($reponse['num_lic']);?>
 				</td>
 				<td style="text-align: center; border: 1px solid black;">
-					<?php
+					<?php 
 						echo ($reponse['fob'] - $this-> getSommeFobLicence($reponse['num_lic']));
 					?>
 				</td>
@@ -38021,7 +37984,7 @@
 			$entree['num_lic'] = $num_lic;
 
 			$compteur = 0;
-
+			
 			if($_SESSION['id_role'] == 1 || $_SESSION['id_role'] == 5){
 				$sql = "SELECT l.num_lic AS num_lic,
 							l.date_val AS date_val,
@@ -38041,7 +38004,7 @@
 							l.ref_fact AS ref_fact,
 							l.remarque AS remarque,
 							cl.id_cli AS id_cli,
-							DATE_FORMAT(l.date_fact, '%d/%m/%Y') AS date_fact
+							DATE_FORMAT(l.date_fact, '%d/%m/%Y') AS date_fact							
 						FROM licence l, monnaie m, client cl, banque b
 						WHERE l.num_lic = ?
 							AND l.id_cli = cl.id_cli
@@ -38054,10 +38017,10 @@
 			while($reponse = $requete-> fetch()){
 				$compteur++;
 				$date_exp = $this-> getLastEpirationLicence2($reponse['num_lic']);
-
+				
 				$bg = "bg-light";
 				$couleur = "";
-
+				
 				$style = '';//" style='color: black; background-color: orange;'";
 				if( ($reponse['fob'] == $this-> getSommeFobLicence($reponse['num_lic'])) && ($reponse['fob'] != $this-> getSommeFobAppureLicence($reponse['num_lic'])) ){
 					$bg = "bg-dark";
@@ -38084,7 +38047,7 @@
 					$style = " style=''";
 					$couleur = "info";
 				}
-
+				
 			?>
 				<form method="POST" action="">
 					<input type="hidden" value="<?php echo $reponse['num_lic'];?>" name="num_lic_old">
@@ -38155,7 +38118,7 @@
 					<?php echo $this-> getNbreDossierLicence($reponse['num_lic']);?>
 				</td>
 				<td style="text-align: center; border: 1px solid black;">
-					<?php
+					<?php 
 						echo ($reponse['fob'] - $this-> getSommeFobLicence($reponse['num_lic']));
 					?>
 				</td>
@@ -38200,7 +38163,7 @@
 
 			$sql = "";
 			$sql2 = "";
-
+			
 			if( ($id_cli != null) && ($id_cli != '')){
 				$sql = ' AND cl.id_cli = '.$id_cli;
 			}
@@ -38212,7 +38175,7 @@
 			$status = "";
 
 			$compteur = 0;
-
+			
 			if($_SESSION['id_role'] == 1 || $_SESSION['id_role'] == 5){
 				$sql = "SELECT l.num_lic AS num_lic,
 							DATE_FORMAT(l.date_val, '%d/%m/%Y') AS date_val,
@@ -38231,7 +38194,7 @@
 							b.id_banq AS id_banq,
 							l.ref_fact AS ref_fact,
 							l.remarque AS remarque,
-							DATE_FORMAT(l.date_fact, '%d/%m/%Y') AS date_fact
+							DATE_FORMAT(l.date_fact, '%d/%m/%Y') AS date_fact							
 						FROM licence l, monnaie m, client cl, banque b
 						WHERE l.id_mod_lic = ?
 							AND l.id_cli = cl.id_cli
@@ -38246,10 +38209,10 @@
 			while($reponse = $requete-> fetch()){
 				$compteur++;
 				$date_exp = $this-> getLastEpirationLicence2($reponse['num_lic']);
-
+				
 				$bg = "bg-light";
 				$couleur = "";
-
+				
 				$style = '';//" style='color: black; background-color: orange;'";
 				if( ($reponse['fob'] == $this-> getSommeFobLicence($reponse['num_lic'])) && ($reponse['fob'] != $this-> getSommeFobAppureLicence($reponse['num_lic'])) ){
 					$bg = "bg-dark";
@@ -38282,7 +38245,7 @@
 					$couleur = "info";
 					$status = 'Partielle';
 				}
-
+				
 			?>
 				<tr class="<?php echo $bg;?>" <?php echo $style;?>>
 					<td class="col_1 <?php echo $bg;?>" style=" text-align: left; border: 0.5px solid black;" <?php echo $style;?>><?php echo $compteur;?></td>
@@ -38342,7 +38305,7 @@
 					<?php echo $this-> getNbreDossierLicence($reponse['num_lic']);?>
 				</td>
 				<td style="text-align: center; border: 0.5px solid black;">
-					<?php
+					<?php 
 						echo ($reponse['fob'] - $this-> getSommeFobLicence($reponse['num_lic']));
 					?>
 				</td>
@@ -38391,46 +38354,46 @@
 						<?php echo $compteur;?>
 					</td>
 					<td>
-						<?php echo $reponse['fournisseur'];?>
+						<?php echo $reponse['fournisseur'];?>	
 					</td>
 					<td>
-						<?php echo $reponse['commodity'];?>
+						<?php echo $reponse['commodity'];?>	
 					</td>
 					<td>
-						<?php echo $reponse['po'];?>
+						<?php echo $reponse['po'];?>	
 					</td>
 					<td>
-						<?php echo $reponse['facture'];?>
+						<?php echo $reponse['facture'];?>	
 					</td>
 					<td>
-						<?php echo $reponse['num_licence'];?>
+						<?php echo $reponse['num_licence'];?>	
 					</td>
 					<td>
-						<?php echo $reponse['monnaie'];?>
+						<?php echo $reponse['monnaie'];?>	
 					</td>
 					<td>
-						<?php echo $reponse['fob'];?>
+						<?php echo $reponse['fob'];?>	
 					</td>
 					<td>
-						<?php echo $reponse['fret'];?>
+						<?php echo $reponse['fret'];?>	
 					</td>
 					<td>
-						<?php echo $reponse['assurance'];?>
+						<?php echo $reponse['assurance'];?>	
 					</td>
 					<td>
-						<?php echo $reponse['autre_frais'];?>
+						<?php echo $reponse['autre_frais'];?>	
 					</td>
 					<td>
-						<?php echo $reponse['fsi'];?>
+						<?php echo $reponse['fsi'];?>	
 					</td>
 					<td>
-						<?php echo $reponse['aur'];?>
+						<?php echo $reponse['aur'];?>	
 					</td>
 					<td>
-						<?php echo $reponse['validation'];?>
+						<?php echo $reponse['validation'];?>	
 					</td>
 					<td>
-						<?php echo $reponse['extreme'];?>
+						<?php echo $reponse['extreme'];?>	
 					</td>
 					<td style="text-align: center;">
 						<button class="btn btn-danger" type="submit" name="deleteLicence">
@@ -38465,52 +38428,52 @@
 						<?php echo $compteur;?>
 					</td>
 					<td>
-						<?php echo $reponse['ref_dos'];?>
+						<?php echo $reponse['ref_dos'];?>	
 					</td>
 					<td>
-						<?php echo $reponse['num_lic'];?>
+						<?php echo $reponse['num_lic'];?>	
 					</td>
 					<td>
-						<?php echo $reponse['cod'];?>
+						<?php echo $reponse['cod'];?>	
 					</td>
 					<td>
-						<?php echo $reponse['fxi'];?>
+						<?php echo $reponse['fxi'];?>	
 					</td>
 					<td>
-						<?php echo $reponse['montant_av'];?>
+						<?php echo $reponse['montant_av'];?>	
 					</td>
 					<td>
-						<?php echo $reponse['date_fact'];?>
+						<?php echo $reponse['date_fact'];?>	
 					</td>
 					<td>
-						<?php echo $reponse['ref_fact'];?>
+						<?php echo $reponse['ref_fact'];?>	
 					</td>
 					<td>
-						<?php echo $reponse['fob'];?>
+						<?php echo $reponse['fob'];?>	
 					</td>
 					<td>
-						<?php echo $reponse['fret'];?>
+						<?php echo $reponse['fret'];?>	
 					</td>
 					<td>
-						<?php echo $reponse['assurance'];?>
+						<?php echo $reponse['assurance'];?>	
 					</td>
 					<td>
-						<?php echo $reponse['autre_frais'];?>
+						<?php echo $reponse['autre_frais'];?>	
 					</td>
 					<td>
-						<?php echo $reponse['ref_decl'];?>
+						<?php echo $reponse['ref_decl'];?>	
 					</td>
 					<td>
-						<?php echo $reponse['montant_decl'];?>
+						<?php echo $reponse['montant_decl'];?>	
 					</td>
 					<td>
-						<?php echo $reponse['ref_liq'];?>
+						<?php echo $reponse['ref_liq'];?>	
 					</td>
 					<td>
-						<?php echo $reponse['ref_quit'];?>
+						<?php echo $reponse['ref_quit'];?>	
 					</td>
 					<td>
-						<?php echo $reponse['date_quit'];?>
+						<?php echo $reponse['date_quit'];?>	
 					</td>
 					<td style="text-align: center;">
 						<button class="btn btn-danger" type="submit" name="deleteDossierUpload">
@@ -38545,49 +38508,49 @@
 						<?php echo $compteur;?>
 					</td>
 					<td>
-						<?php echo $reponse['ref_dos'];?>
+						<?php echo $reponse['ref_dos'];?>	
 					</td>
 					<td>
-						<?php echo $reponse['num_lic'];?>
+						<?php echo $reponse['num_lic'];?>	
 					</td>
 					<td>
-						<?php echo $reponse['t1'];?>
+						<?php echo $reponse['t1'];?>	
 					</td>
 					<td>
-						<?php echo $reponse['poids'];?>
+						<?php echo $reponse['poids'];?>	
 					</td>
 					<td>
-						<?php echo $reponse['ref_fact'];?>
+						<?php echo $reponse['ref_fact'];?>	
 					</td>
 					<td>
-						<?php echo $reponse['horse'];?>
+						<?php echo $reponse['horse'];?>	
 					</td>
 					<td>
-						<?php echo $reponse['trailer_1'];?>
+						<?php echo $reponse['trailer_1'];?>	
 					</td>
 					<td>
-						<?php echo $reponse['trailer_2'];?>
+						<?php echo $reponse['trailer_2'];?>	
 					</td>
 					<td>
-						<?php echo $reponse['transporteur'];?>
+						<?php echo $reponse['transporteur'];?>	
 					</td>
 					<td>
-						<?php echo $reponse['destination'];?>
+						<?php echo $reponse['destination'];?>	
 					</td>
 					<td>
-						<?php echo $reponse['arrival_date'];?>
+						<?php echo $reponse['arrival_date'];?>	
 					</td>
 					<td>
-						<?php echo $reponse['crossing_date'];?>
+						<?php echo $reponse['crossing_date'];?>	
 					</td>
 					<td>
-						<?php echo $reponse['wiski_arriv'];?>
+						<?php echo $reponse['wiski_arriv'];?>	
 					</td>
 					<td>
-						<?php echo $reponse['wiski_dep'];?>
+						<?php echo $reponse['wiski_dep'];?>	
 					</td>
 					<td>
-						<?php echo $reponse['remarque'];?>
+						<?php echo $reponse['remarque'];?>	
 					</td>
 					<td style="text-align: center;">
 						<button class="btn btn-danger" type="submit" name="deleteDossierUpload">
@@ -38611,7 +38574,7 @@
 													AND etat = '0'");
 			$requete-> execute(array($entree['id_util']));
 			while($reponse = $requete-> fetch()){
-				$compteur++;
+				$compteur++; 
 			?>
 				<form method="POST" action="">
 					<input type="hidden" name="id" value="<?php echo $reponse['id'];?>">
@@ -38620,160 +38583,160 @@
 						<?php echo $compteur;?>
 					</td>
 					<td>
-						<?php echo $reponse['ref_dos'];?>
+						<?php echo $reponse['ref_dos'];?>	
 					</td>
 					<td>
-						<?php echo $reponse['num_lic'];?>
+						<?php echo $reponse['num_lic'];?>	
 					</td>
 					<td>
-						<?php echo $reponse['date_exp'];?>
+						<?php echo $reponse['date_exp'];?>	
 					</td>
 					<td>
-						<?php echo $reponse['tonnage'];?>
+						<?php echo $reponse['tonnage'];?>	
 					</td>
 					<td>
-						<?php echo $reponse['ship_num'];?>
+						<?php echo $reponse['ship_num'];?>	
 					</td>
 					<td>
-						<?php echo $reponse['barge'];?>
+						<?php echo $reponse['barge'];?>	
 					</td>
 					<td>
-						<?php echo $reponse['horse'];?>
+						<?php echo $reponse['horse'];?>	
 					</td>
 					<td>
-						<?php echo $reponse['trailer_1'];?>
+						<?php echo $reponse['trailer_1'];?>	
 					</td>
 					<td>
-						<?php echo $reponse['trailer_2'];?>
+						<?php echo $reponse['trailer_2'];?>	
 					</td>
 					<td>
-						<?php echo $reponse['num_lot'];?>
+						<?php echo $reponse['num_lot'];?>	
 					</td>
 					<td>
-						<?php echo $reponse['nbr_bags'];?>
+						<?php echo $reponse['nbr_bags'];?>	
 					</td>
 					<td>
-						<?php echo $reponse['poids'];?>
+						<?php echo $reponse['poids'];?>	
 					</td>
 					<td>
-						<?php echo $reponse['kapulo_load'];?>
+						<?php echo $reponse['kapulo_load'];?>	
 					</td>
 					<td>
-						<?php echo $reponse['dispatch_pweto'];?>
+						<?php echo $reponse['dispatch_pweto'];?>	
 					</td>
 					<td>
-						<?php echo $reponse['arrival_pweto'];?>
+						<?php echo $reponse['arrival_pweto'];?>	
 					</td>
 					<td>
-						<?php echo $reponse['barge_load'];?>
+						<?php echo $reponse['barge_load'];?>	
 					</td>
 					<td>
-						<?php echo $reponse['barge_dispatch_date'];?>
+						<?php echo $reponse['barge_dispatch_date'];?>	
 					</td>
 					<td>
-						<?php echo $reponse['doc_receiv'];?>
+						<?php echo $reponse['doc_receiv'];?>	
 					</td>
 					<td>
-						<?php echo $reponse['nbre_seal'];?>
+						<?php echo $reponse['nbre_seal'];?>	
 					</td>
 					<td>
-						<?php echo $reponse['dgda_seal'];?>
+						<?php echo $reponse['dgda_seal'];?>	
 					</td>
 					<td>
-						<?php echo $reponse['remarque'];?>
+						<?php echo $reponse['remarque'];?>	
 					</td>
 					<td>
-						<?php echo $reponse['transporter'];?>
+						<?php echo $reponse['transporter'];?>	
 					</td>
 					<td>
-						<?php echo $reponse['load_date'];?>
+						<?php echo $reponse['load_date'];?>	
 					</td>
 					<td>
-						<?php echo $reponse['pv_mine'];?>
+						<?php echo $reponse['pv_mine'];?>	
 					</td>
 					<td>
-						<?php echo $reponse['demande_attestation'];?>
+						<?php echo $reponse['demande_attestation'];?>	
 					</td>
 					<td>
-						<?php echo $reponse['assay_date'];?>
+						<?php echo $reponse['assay_date'];?>	
 					</td>
 					<td>
-						<?php echo $reponse['ceec_in'];?>
+						<?php echo $reponse['ceec_in'];?>	
 					</td>
 					<td>
-						<?php echo $reponse['ceec_out'];?>
+						<?php echo $reponse['ceec_out'];?>	
 					</td>
 					<td>
-						<?php echo $reponse['min_div_in'];?>
+						<?php echo $reponse['min_div_in'];?>	
 					</td>
 					<td>
-						<?php echo $reponse['min_div_out'];?>
+						<?php echo $reponse['min_div_out'];?>	
 					</td>
 					<td>
-						<?php echo $reponse['date_decl'];?>
+						<?php echo $reponse['date_decl'];?>	
 					</td>
 					<td>
-						<?php echo $reponse['dgda_in'];?>
+						<?php echo $reponse['dgda_in'];?>	
 					</td>
 					<td>
-						<?php echo $reponse['date_liq'];?>
+						<?php echo $reponse['date_liq'];?>	
 					</td>
 					<td>
-						<?php echo $reponse['date_quit'];?>
+						<?php echo $reponse['date_quit'];?>	
 					</td>
 					<td>
-						<?php echo $reponse['dgda_out'];?>
+						<?php echo $reponse['dgda_out'];?>	
 					</td>
 					<td>
-						<?php echo $reponse['gov_in'];?>
+						<?php echo $reponse['gov_in'];?>	
 					</td>
 					<td>
-						<?php echo $reponse['gov_out'];?>
+						<?php echo $reponse['gov_out'];?>	
 					</td>
 					<td>
-						<?php echo $reponse['dispatch_date'];?>
+						<?php echo $reponse['dispatch_date'];?>	
 					</td>
 					<td>
-						<?php echo $reponse['klsa_arriv'];?>
+						<?php echo $reponse['klsa_arriv'];?>	
 					</td>
 					<td>
-						<?php echo $reponse['end_form'];?>
+						<?php echo $reponse['end_form'];?>	
 					</td>
 					<td>
-						<?php echo $reponse['exit_drc'];?>
+						<?php echo $reponse['exit_drc'];?>	
 					</td>
 					<td>
-						<?php echo $reponse['cleared'];?>
+						<?php echo $reponse['cleared'];?>	
 					</td>
 					<td>
-						<?php echo $reponse['statut'];?>
+						<?php echo $reponse['statut'];?>	
 					</td>
 					<td>
-						<?php echo $reponse['site_load'];?>
+						<?php echo $reponse['site_load'];?>	
 					</td>
 					<td>
-						<?php echo $reponse['destination'];?>
+						<?php echo $reponse['destination'];?>	
 					</td>
 					<td>
-						<?php echo $reponse['ref_decl'];?>
+						<?php echo $reponse['ref_decl'];?>	
 					</td>
 					<td>
-						<?php echo $reponse['ref_liq'];?>
+						<?php echo $reponse['ref_liq'];?>	
 					</td>
 					<td>
-						<?php echo $reponse['ref_quit'];?>
+						<?php echo $reponse['ref_quit'];?>	
 					</td>
 					<td>
-						<?php echo $reponse['impala_sncc'];?>
+						<?php echo $reponse['impala_sncc'];?>	
 					</td>
 					<td>
-						<?php echo $reponse['docs_sncc'];?>
+						<?php echo $reponse['docs_sncc'];?>	
 					</td>
 					<td>
-						<?php echo $reponse['sncc_sakania'];?>
+						<?php echo $reponse['sncc_sakania'];?>	
 					</td>
 					<td>
-						<?php echo $reponse['sakania_date'];?>
+						<?php echo $reponse['sakania_date'];?>	
 					</td>
 					<td style="text-align: center;">
 						<button class="btn btn-danger" type="submit" name="deleteDossierUpload">
@@ -38808,121 +38771,121 @@
 						<?php echo $compteur;?>
 					</td>
 					<td>
-						<?php echo $reponse['ref_dos'];?>
+						<?php echo $reponse['ref_dos'];?>	
 					</td>
 					<td>
-						<?php echo $reponse['mca_b_ref'];?>
+						<?php echo $reponse['mca_b_ref'];?>	
 					</td>
 					<td>
-						<?php echo $reponse['road_manif'];?>
+						<?php echo $reponse['road_manif'];?>	
 					</td>
 					<td>
-						<?php echo $reponse['date_preal'];?>
+						<?php echo $reponse['date_preal'];?>	
 					</td>
 					<td>
-						<?php echo $reponse['t1'];?>
+						<?php echo $reponse['t1'];?>	
 					</td>
 					<td>
-						<?php echo $reponse['poids'];?>
+						<?php echo $reponse['poids'];?>	
 					</td>
 					<td>
-						<?php echo $reponse['fob'];?>
+						<?php echo $reponse['fob'];?>	
 					</td>
 					<td>
-						<?php echo $reponse['fret'];?>
+						<?php echo $reponse['fret'];?>	
 					</td>
 					<td>
-						<?php echo $reponse['assurance'];?>
+						<?php echo $reponse['assurance'];?>	
 					</td>
 					<td>
-						<?php echo $reponse['autre_frais'];?>
+						<?php echo $reponse['autre_frais'];?>	
 					</td>
 					<td>
-						<?php echo $reponse['ref_fact'];?>
+						<?php echo $reponse['ref_fact'];?>	
 					</td>
 					<td>
-						<?php echo $reponse['fournisseur'];?>
+						<?php echo $reponse['fournisseur'];?>	
 					</td>
 					<td>
-						<?php echo $reponse['po'];?>
+						<?php echo $reponse['po'];?>	
 					</td>
 					<td>
-						<?php echo $reponse['commodity'];?>
+						<?php echo $reponse['commodity'];?>	
 					</td>
 					<td>
-						<?php echo $reponse['horse'];?>
+						<?php echo $reponse['horse'];?>	
 					</td>
 					<td>
-						<?php echo $reponse['trailer_1'];?>
+						<?php echo $reponse['trailer_1'];?>	
 					</td>
 					<td>
-						<?php echo $reponse['trailer_2'];?>
+						<?php echo $reponse['trailer_2'];?>	
 					</td>
 					<td>
-						<?php echo $reponse['num_lic'];?>
+						<?php echo $reponse['num_lic'];?>	
 					</td>
 					<td>
-						<?php echo $reponse['num_exo'];?>
+						<?php echo $reponse['num_exo'];?>	
 					</td>
 					<td>
-						<?php echo $reponse['crossing_date'];?>
+						<?php echo $reponse['crossing_date'];?>	
 					</td>
 					<td>
-						<?php echo $reponse['arrival_date'];?>
+						<?php echo $reponse['arrival_date'];?>	
 					</td>
 					<td>
-						<?php echo $reponse['wiski_arriv'];?>
+						<?php echo $reponse['wiski_arriv'];?>	
 					</td>
 					<td>
-						<?php echo $reponse['wiski_dep'];?>
+						<?php echo $reponse['wiski_dep'];?>	
 					</td>
 					<td>
-						<?php echo $reponse['amicongo_arriv'];?>
+						<?php echo $reponse['amicongo_arriv'];?>	
 					</td>
 					<td>
-						<?php echo $reponse['insp_report'];?>
+						<?php echo $reponse['insp_report'];?>	
 					</td>
 					<td>
-						<?php echo $reponse['ir'];?>
+						<?php echo $reponse['ir'];?>	
 					</td>
 					<td>
-						<?php echo $reponse['ref_crf'];?>
+						<?php echo $reponse['ref_crf'];?>	
 					</td>
 					<td>
-						<?php echo $reponse['date_crf'];?>
+						<?php echo $reponse['date_crf'];?>	
 					</td>
 					<td>
-						<?php echo $reponse['ref_decl'];?>
+						<?php echo $reponse['ref_decl'];?>	
 					</td>
 					<td>
-						<?php echo $reponse['dgda_in'];?>
+						<?php echo $reponse['dgda_in'];?>	
 					</td>
 					<td>
-						<?php echo $reponse['ref_liq'];?>
+						<?php echo $reponse['ref_liq'];?>	
 					</td>
 					<td>
-						<?php echo $reponse['date_liq'];?>
+						<?php echo $reponse['date_liq'];?>	
 					</td>
 					<td>
-						<?php echo $reponse['ref_quit'];?>
+						<?php echo $reponse['ref_quit'];?>	
 					</td>
 					<td>
-						<?php echo $reponse['date_quit'];?>
+						<?php echo $reponse['date_quit'];?>	
 					</td>
 					<td>
-						<?php echo $reponse['dgda_out'];?>
+						<?php echo $reponse['dgda_out'];?>	
 					</td>
 					<td>
-						<?php echo $reponse['custom_deliv'];?>
+						<?php echo $reponse['custom_deliv'];?>	
 					</td>
 					<td>
-						<?php echo $reponse['dispatch_deliv'];?>
+						<?php echo $reponse['dispatch_deliv'];?>	
 					</td>
 					<td>
-						<?php echo $reponse['statut'];?>
+						<?php echo $reponse['statut'];?>	
 					</td>
 					<td>
-						<?php echo $reponse['remarque'];?>
+						<?php echo $reponse['remarque'];?>	
 					</td>
 					<td style="text-align: center;">
 						<button class="btn btn-danger" type="submit" name="deleteDossierUpload">
@@ -38945,7 +38908,7 @@
 			$nbre_dossier = 0;
 			$num_lic = '';
 			$active_rowspan = 1;
-
+			
 			if( ($id_cli != null) && ($id_cli != '')){
 				$sql = ' AND cl.id_cli = '.$id_cli;
 			}
@@ -38955,7 +38918,7 @@
 			}
 
 			$compteur = 0;
-
+			
 			if($_SESSION['id_role'] == 1 || $_SESSION['id_role'] == 5){
 				$sql = "SELECT l.num_lic AS num_lic,
 							DATE_FORMAT(l.date_val, '%d/%m/%Y') AS date_val,
@@ -38994,7 +38957,7 @@
 							l.commodity AS commodityLic,
 							d.montant_av AS montant_av,
 							d.remarque_lic AS remarque_lic,
-							DATE_FORMAT(d.date_quit, '%d/%m/%Y') AS date_quit
+							DATE_FORMAT(d.date_quit, '%d/%m/%Y') AS date_quit					
 						FROM licence l, monnaie m, client cl, banque b, dossier d
 						WHERE l.id_mod_lic = ?
 							AND l.id_cli = cl.id_cli
@@ -39016,10 +38979,10 @@
 				$num_lic = $reponse['num_lic'];
 				$marchandise = $this-> getMarchandiseLicence($reponse['num_lic']);
 				$date_exp = $this-> getLastEpirationLicence2($reponse['num_lic']);
-
+				
 				$bg = "bg-light";
 				$couleur = "";
-
+				
 				$style = '';//" style='color: black; background-color: orange;'";
 				if( ($reponse['fob'] == $this-> getSommeFobLicence($reponse['num_lic'])) && ($reponse['fob'] != $this-> getSommeFobAppureLicence($reponse['num_lic'])) ){
 					$bg = "bg-dark";
@@ -39046,7 +39009,7 @@
 					$style = " style=''";
 					$couleur = "info";
 				}
-
+				
 			?>
 				<input type="hidden" name="id_dos_<?php echo $compteur;?>" value="<?php echo $reponse['id_dos'];?>">
 				<tr class="<?php echo $bg;?>" <?php echo $style;?>>
@@ -39194,7 +39157,7 @@
 							l.commodity AS commodityLic,
 							d.montant_av AS montant_av,
 							d.remarque_lic AS remarque_lic,
-							DATE_FORMAT(d.date_quit, '%d/%m/%Y') AS date_quit
+							DATE_FORMAT(d.date_quit, '%d/%m/%Y') AS date_quit					
 						FROM licence l, monnaie m, client cl, banque b, dossier d
 						WHERE l.num_lic = ?
 							AND l.id_cli = cl.id_cli
@@ -39291,7 +39254,7 @@
 			$nbre_dossier = 0;
 			$num_lic = '';
 			$active_rowspan = 1;
-
+			
 			if( ($id_cli != null) && ($id_cli != '')){
 				$sql = ' AND cl.id_cli = '.$id_cli;
 			}
@@ -39301,7 +39264,7 @@
 			}
 
 			$compteur = 0;
-
+			
 			if($_SESSION['id_role'] == 1 || $_SESSION['id_role'] == 5){
 				$sql = "SELECT l.num_lic AS num_lic,
 							DATE_FORMAT(l.date_val, '%d/%m/%Y') AS date_val,
@@ -39340,7 +39303,7 @@
 							l.commodity AS commodityLic,
 							d.montant_av AS montant_av,
 							d.remarque_lic AS remarque_lic,
-							DATE_FORMAT(d.date_quit, '%d/%m/%Y') AS date_quit
+							DATE_FORMAT(d.date_quit, '%d/%m/%Y') AS date_quit					
 						FROM licence l, monnaie m, client cl, banque b, dossier d
 						WHERE l.id_mod_lic = ?
 							AND l.id_cli = cl.id_cli
@@ -39362,10 +39325,10 @@
 				$num_lic = $reponse['num_lic'];
 				$marchandise = $this-> getMarchandiseLicence($reponse['num_lic']);
 				$date_exp = $this-> getLastEpirationLicence2($reponse['num_lic']);
-
+				
 				$bg = "bg-light";
 				$couleur = "";
-
+				
 				$style = '';//" style='color: black; background-color: orange;'";
 				if( ($reponse['fob'] == $this-> getSommeFobLicence($reponse['num_lic'])) && ($reponse['fob'] != $this-> getSommeFobAppureLicence($reponse['num_lic'])) ){
 					$bg = "bg-dark";
@@ -39392,7 +39355,7 @@
 					$style = " style='color: blue;'";
 					$couleur = "info";
 				}
-
+				
 			?>
 				<input type="hidden" name="id_dos_<?php echo $compteur;?>" value="<?php echo $reponse['id_dos'];?>">
 				<tr class="<?php echo $bg;?>" <?php echo $style;?>>
@@ -39535,14 +39498,14 @@
 				$compteur++;
 				$marchandise = $this-> getMarchandiseLicence($reponse['num_lic']);
 				$date_exp = $this-> getLastEpirationLicence2($reponse['num_lic']);
-
+				
 				$bg = "bg-info";
 				if( ($date_exp >= $reponse['aujourdhui']) ){
 					$bg = "bg-success";
 				}else if($date_exp < $reponse['aujourdhui']){
 					$bg = "bg-danger";
-				}
-
+				} 
+				
 			?>
 				<tr class="<?php echo $bg;?>" style="">
 					<td class="col_1 <?php echo $bg;?>" style=" text-align: left; border: 1px solid black;"><?php echo $compteur;?></td>
@@ -39616,7 +39579,7 @@
 			}
 
 			if ($etat == 'Factures sans licence') {
-
+				
 				$requete = $connexion-> prepare("SELECT f.ref_fact AS ref_fact,
 												DATE_FORMAT(f.date_fact, '%d/%m/%Y') AS date_fact,
 												DATE_FORMAT(f.date_fact_rec, '%d/%m/%Y') AS date_fact_rec,
@@ -39652,7 +39615,7 @@
 											LIMIT $premiere_entree, $nombre_dossier_par_page");
 
 			}else if ($etat == 'Facture ayant licence') {
-
+				
 				$requete = $connexion-> prepare("SELECT f.ref_fact AS ref_fact,
 												DATE_FORMAT(f.date_fact, '%d/%m/%Y') AS date_fact,
 												DATE_FORMAT(f.date_fact_rec, '%d/%m/%Y') AS date_fact_rec,
@@ -39729,14 +39692,14 @@
 					<td class="" style="text-align: left; border: 1px solid black;"><?php echo $reponse['date_fact'];?></td>
 					<td class="" style="text-align: left; border: 1px solid black;"><?php echo $reponse['date_fact_rec']?></td>
 					<td class="" style="text-align: center; border: 1px solid black;">
-						<?php
+						<?php 
 
 							if ( $this-> getDelaiFactureLicence($reponse['ref_fact']) != null ) {
 								echo $this-> getDelaiFactureLicence($reponse['ref_fact']);
 							}else{
 								echo $this-> getDifferenceDate($reponse['aujourdhui'], $reponse['date_fact_rec2']);
 							}
-
+				
 						?>
 					</td>
 					<td class="" style="text-align: left; border: 1px solid black;"><?php echo $reponse['fournisseur'];?></td>
@@ -39852,14 +39815,14 @@
 					<td class="" style="text-align: left; border: 1px solid black;"><?php echo $reponse['date_fact'];?></td>
 					<td class="" style="text-align: left; border: 1px solid black;"><?php echo $reponse['date_fact_rec']?></td>
 					<td class="" style="text-align: center; border: 1px solid black;">
-						<?php
+						<?php 
 
 							if ( $this-> getDelaiFactureLicence($reponse['ref_fact']) != null ) {
 								echo $this-> getDelaiFactureLicence($reponse['ref_fact']);
 							}else{
 								echo $this-> getDifferenceDate($reponse['aujourdhui'], $reponse['date_fact_rec2']);
 							}
-
+				
 						?>
 					</td>
 					<td class="" style="text-align: left; border: 1px solid black;"><?php echo $reponse['fournisseur'];?></td>
@@ -39929,7 +39892,7 @@
 			$bg = '';
 
 			$requete = $connexion-> prepare("SELECT a.cod AS cod, DATE_FORMAT(a.date_av, '%d/%m/%Y') AS date_av,
-													a.fxi AS fxi, a.montant_av AS montant_av,
+													a.fxi AS fxi, a.montant_av AS montant_av, 
 													a.fichier_av AS fichier_av, m.sig_mon AS sig_mon,
 													a.num_lic AS num_lic,
 													REPLACE(REPLACE(cod, ' ', '_'), '-', '_') AS cod_2
@@ -40008,14 +39971,14 @@
 			while($reponse = $requete-> fetch()){
 				$compteur++;
 				$marchandise = $this-> getMarchandiseLicence($reponse['num_lic']);
-
+				
 				$bg = "bg-info";
 				if( ($date_exp >= $reponse['aujourdhui']) ){
 					$bg = "bg-success";
 				}else if($date_exp < $reponse['aujourdhui']){
 					$bg = "bg-danger";
-				}
-
+				} 
+				
 			?>
 				<tr class="<?php echo $bg;?>" style="">
 					<td class="col_1 <?php echo $bg;?>" style=" text-align: left; border: 1px solid black;"><?php echo $compteur;?></td>
@@ -40085,10 +40048,10 @@
 			$sql2 = '';
 			if( ($id_cli != null) && ($id_cli != '')){
 				$sql = ' AND cl.id_cli = '.$id_cli;
-			}
+			} 
 			if( ($id_mod_trans != null) && ($id_mod_trans != '')){
 				$sql2 = ' AND d.id_mod_trans = '.$id_mod_trans;
-			}
+			} 
 
 			$requete = $connexion-> prepare("SELECT d.ref_dos AS ref_dos,
 													UPPER(cl.nom_cli) AS nom_cli,
@@ -40121,9 +40084,9 @@
 				$bg = "bg-light";
 
 				$date_exp = $this-> getLastEpirationLicence($reponse['num_lic']);
-
-				/*$ref_dos, $id_cli, $ref_fact, $fob,
-				$fret, $assurance, $autre_frais, $num_lic,
+				
+				/*$ref_dos, $id_cli, $ref_fact, $fob, 
+				$fret, $assurance, $autre_frais, $num_lic, 
 				$id_mod_lic, $id_march*/
 
 			?>
@@ -40141,7 +40104,7 @@
 					?>
 					<td class=" <?php echo $bg;?>" style="border: 1px solid black;">
 						<select name="cleared_<?php echo $compteur;?>" class="control-form">
-							<?php
+							<?php 
 							if ($reponse['cleared'] == '1') {
 							?>
 							<option>CLEARED</option>
@@ -40223,9 +40186,9 @@
 				$bg = "bg-light";
 
 				$date_exp = $this-> getLastEpirationLicence($reponse['num_lic']);
-
-				/*$ref_dos, $id_cli, $ref_fact, $fob,
-				$fret, $assurance, $autre_frais, $num_lic,
+				
+				/*$ref_dos, $id_cli, $ref_fact, $fob, 
+				$fret, $assurance, $autre_frais, $num_lic, 
 				$id_mod_lic, $id_march*/
 
 			?>
@@ -40242,7 +40205,7 @@
 					?>
 					<td class=" <?php echo $bg;?>" style="border: 1px solid black;">
 						<select name="cleared_<?php echo $compteur;?>" class="control-form">
-							<?php
+							<?php 
 							if ($reponse['cleared'] == '1') {
 							?>
 							<option>CLEARED</option>
@@ -40280,8 +40243,8 @@
 			<?php
 		}
 
-		public function afficherDossierClientModeTransportModeLicence2($id_cli, $id_mod_trans,
-														$id_mod_lic, $commodity,
+		public function afficherDossierClientModeTransportModeLicence2($id_cli, $id_mod_trans, 
+														$id_mod_lic, $commodity, 
 														$premiere_entree, $nombre_dossier_par_page){
 			include('connexion.php');
 
@@ -40327,7 +40290,7 @@
 													AND d.id_mod_trans = mt.id_mod_trans
 													AND mt.id_mod_trans = ?
 													AND d.id_mod_lic = ?
-													AND ((d.date_quit IS NULL AND d.ref_quit IS NULL)
+													AND ((d.date_quit IS NULL AND d.ref_quit IS NULL) 
 														OR (d.date_quit = '' OR d.ref_quit = ''))
 													$sql1
 												ORDER BY d.ref_dos DESC
@@ -40338,9 +40301,9 @@
 				$bg = "";
 
 				$date_exp = $this-> getLastEpirationLicence($reponse['num_lic']);
-
-				/*$ref_dos, $id_cli, $ref_fact, $fob,
-				$fret, $assurance, $autre_frais, $num_lic,
+				
+				/*$ref_dos, $id_cli, $ref_fact, $fob, 
+				$fret, $assurance, $autre_frais, $num_lic, 
 				$id_mod_lic, $id_march*/
 
 			?>
@@ -40371,10 +40334,10 @@
 			<?php
 		}
 
-		public function afficherRowDossierClientModeTransportModeLicence2($id_cli, $id_mod_trans,
+		public function afficherRowDossierClientModeTransportModeLicence2($id_cli, $id_mod_trans, 
 														$id_mod_lic, $commodity,
-														$premiere_entree, $nombre_dossier_par_page,
-														$id_march=NULL, $statut=NULL, $num_lic=NULL,
+														$premiere_entree, $nombre_dossier_par_page, 
+														$id_march=NULL, $statut=NULL, $num_lic=NULL, 
 														$cleared=NULL){
 			include('connexion.php');
 
@@ -40460,7 +40423,7 @@
 													          IF(d.date_crf IS NULL AND d.date_ad IS NOT NULL AND d.date_assurance IS NULL,
 													            'AWAITING CRF/INSURANCE',
 													            IF(d.date_crf IS NULL AND d.date_ad IS NOT NULL AND d.date_assurance IS NOT NULL,
-													              'AWAITING CRF',
+													              'AWAITING CRF', 
 													              IF(d.date_crf IS NOT NULL AND d.date_ad IS NULL AND d.date_assurance IS NULL,
 													                'AWAITING AD/INSURANCE',
 													                IF(d.date_crf IS NOT NULL AND d.date_ad IS NULL AND d.date_assurance IS NOT NULL,
@@ -40471,13 +40434,13 @@
 													                      IF(d.date_decl IS NULL AND d.ref_decl IS NULL, 'UNDER PREPARATION',
 													                        IF(d.date_liq IS NULL AND d.ref_liq IS NULL, 'AWAITING LIQUIDATION',
 													                          IF(d.date_quit IS NULL AND d.ref_quit IS NULL, 'AWAITING QUITTANCE',
-													                            IF(d.date_quit IS NOT NULL AND d.ref_quit IS NOT NULL AND d.dgda_out IS NULL, 'AWAITING BAE/BS',
+													                            IF(d.date_quit IS NOT NULL AND d.ref_quit IS NOT NULL AND d.dgda_out IS NULL, 'AWAITING BAE/BS', 
 													                              IF(d.dgda_out IS NOT NULL AND d.dispatch_deliv IS NOT NULL, 'CLEARING COMPLETED', '')
 													                              )
 													                            )
 													                          )
 													                        )
-
+													                      
 													                      )
 													                  )
 													                )
@@ -40486,7 +40449,7 @@
 													          )
 													      )
 														,
-														IF(d.id_mod_lic='1' AND d.cleared<>'2',
+														IF(d.id_mod_lic='1' AND d.cleared<>'2', 
 															IF(d.load_date IS NOT NULL AND d.ceec_in IS NULL,
 																'LOADED',
 																IF(d.ceec_in IS NOT NULL AND d.ceec_out IS NULL, 'AT CEEC',
@@ -40499,7 +40462,7 @@
 																							IF(d.gov_in IS NOT NULL AND d.gov_out IS NULL, 'AT GOVERNOR\'S OFFICE',
 																								IF(d.gov_out IS NOT NULL AND d.dispatch_date IS NULL, 'GOVERNOR\'S OFFICE OUT',
 																									IF(d.dispatch_date IS NOT NULL AND d.klsa_arriv IS NULL,
-																										'DISPATCHED',
+																										'DISPATCHED', 
 																											IF(d.klsa_arriv IS NOT NULL AND d.end_form IS NULL, 'AT BORDER',
 																												IF(d.end_form IS NOT NULL AND d.exit_drc IS NULL, 'UNDER FORMALITIES',
 																													IF(d.exit_drc IS NOT NULL, 'EXIT DRC', '')
@@ -40519,23 +40482,23 @@
 															, d.statut )
 													) AS statut,
 
-													IF(d.id_mod_trans='1' AND d.id_mod_lic='2' AND d.cleared<>2,
-														IF(d.klsa_arriv IS NOT NULL AND d.wiski_arriv IS NULL,'ARRIVED AT K\'LSA',
+													IF(d.id_mod_trans='1' AND d.id_mod_lic='2' AND d.cleared<>2, 
+														IF(d.klsa_arriv IS NOT NULL AND d.wiski_arriv IS NULL,'ARRIVED AT K\'LSA', 
 															IF(d.wiski_arriv IS NOT NULL AND d.dispatch_klsa IS NULL, 'AT WISKI',
 																IF(d.dispatch_klsa IS NOT NULL, 'DISPATCHED FROM K\'LSA', 'EXCEPTED TO ARRIVE')
 																)
 															)
 														, '') AS klsa_status,
-													IF(d.id_mod_trans='1' AND d.id_mod_lic='2' AND d.cleared<>2,
+													IF(d.id_mod_trans='1' AND d.id_mod_lic='2' AND d.cleared<>2, 
 														IF(d.bond_warehouse='LUBUMBASHI',
-															IF(d.warehouse_arriv IS NOT NULL AND d.warehouse_dep IS NOT NULL, 'DISPATCHED FROM AMICONGO',
+															IF(d.warehouse_arriv IS NOT NULL AND d.warehouse_dep IS NOT NULL, 'DISPATCHED FROM AMICONGO', 
 																IF(d.warehouse_arriv IS NOT NULL, 'ARRIVED AT AMICONGO', '')
 																)
 															,'')
 														,'') AS amicongo_status,
-													IF(d.id_mod_trans='1' AND d.id_mod_lic='2' AND d.cleared<>2,
+													IF(d.id_mod_trans='1' AND d.id_mod_lic='2' AND d.cleared<>2, 
 														IF(d.bond_warehouse='KOLWEZI',
-															IF(d.warehouse_arriv IS NOT NULL AND d.warehouse_dep IS NOT NULL, 'DISPATCHED FROM WAREHOUSE',
+															IF(d.warehouse_arriv IS NOT NULL AND d.warehouse_dep IS NOT NULL, 'DISPATCHED FROM WAREHOUSE', 
 																IF(d.warehouse_arriv IS NOT NULL, 'ARRIVED AT WAREHOUSE', '')
 																)
 															,'')
@@ -40602,13 +40565,13 @@
 				}
 
 				//include('modalDeleteDossier.php');
-
+				
 			?>
 				<input type="hidden" name="id_dos_<?php echo $compteur;?>" value="<?php echo $reponse['id_dos'];?>">
 				<tr class="<?php echo $bg;?>" <?php echo $style;?>>
 					<td class="<?php echo $class;?> <?php echo $bg;?>" style=" border-right: 1px solid black; vertical-align: middle; text-align: left; padding: 0.6rem; border-top: 1px solid black;" <?php echo $style;?>><?php echo $compteur;?></td>
 					<td class="<?php echo $class;?> <?php echo $bg;?>" style=" border-right: 1px solid black; vertical-align: middle; text-align: left; padding: 0.6rem; border-top: 1px solid black; <?php echo $color;?>"><span class="<?php echo $clignoteDos;?>" style="<?php echo $couleurDos?>"><?php echo $reponse['ref_dos'];?></span>
-					 <?php
+					 <?php 
 					  if(!isset($this-> getDataUtilisateur($_SESSION['id_util'])['tracking_enab'])){
 					  	if($this-> getDossierFacture2($reponse['id_dos'])==false){
 					  ?>
@@ -40633,9 +40596,9 @@
 	                	</span>
 		                <?php
 						}
-
-
-
+					
+						
+					
 					  }
 					  ?>
 					</td>
@@ -40664,10 +40627,10 @@
 			<?php
 		}
 
-		public function afficherRowDossierClientModeTransportModeLicence2_($id_cli, $id_mod_trans,
+		public function afficherRowDossierClientModeTransportModeLicence2_($id_cli, $id_mod_trans, 
 														$id_mod_lic, $commodity,
-														$premiere_entree, $nombre_dossier_par_page,
-														$id_march=NULL, $statut=NULL, $num_lic=NULL,
+														$premiere_entree, $nombre_dossier_par_page, 
+														$id_march=NULL, $statut=NULL, $num_lic=NULL, 
 														$cleared=NULL){
 			include('connexion.php');
 
@@ -40758,7 +40721,7 @@
 													          IF(d.date_crf IS NULL AND d.date_ad IS NOT NULL AND d.date_assurance IS NULL,
 													            'AWAITING CRF/INSURANCE',
 													            IF(d.date_crf IS NULL AND d.date_ad IS NOT NULL AND d.date_assurance IS NOT NULL,
-													              'AWAITING CRF',
+													              'AWAITING CRF', 
 													              IF(d.date_crf IS NOT NULL AND d.date_ad IS NULL AND d.date_assurance IS NULL,
 													                'AWAITING AD/INSURANCE',
 													                IF(d.date_crf IS NOT NULL AND d.date_ad IS NULL AND d.date_assurance IS NOT NULL,
@@ -40769,13 +40732,13 @@
 													                      IF(d.date_decl IS NULL AND d.ref_decl IS NULL, 'UNDER PREPARATION',
 													                        IF(d.date_liq IS NULL AND d.ref_liq IS NULL, 'AWAITING LIQUIDATION',
 													                          IF(d.date_quit IS NULL AND d.ref_quit IS NULL, 'AWAITING QUITTANCE',
-													                            IF(d.date_quit IS NOT NULL AND d.ref_quit IS NOT NULL AND d.dgda_out IS NULL, 'AWAITING BAE/BS',
+													                            IF(d.date_quit IS NOT NULL AND d.ref_quit IS NOT NULL AND d.dgda_out IS NULL, 'AWAITING BAE/BS', 
 													                              IF(d.dgda_out IS NOT NULL AND d.dispatch_deliv IS NOT NULL, 'CLEARING COMPLETED', '')
 													                              )
 													                            )
 													                          )
 													                        )
-
+													                      
 													                      )
 													                  )
 													                )
@@ -40785,23 +40748,23 @@
 													      )
 														,
 														d.statut) AS statut,
-													IF(d.id_mod_trans='1' AND d.id_mod_lic='2',
-														IF(d.klsa_arriv IS NOT NULL AND d.wiski_arriv IS NULL,'ARRIVED AT K\'LSA',
+													IF(d.id_mod_trans='1' AND d.id_mod_lic='2', 
+														IF(d.klsa_arriv IS NOT NULL AND d.wiski_arriv IS NULL,'ARRIVED AT K\'LSA', 
 															IF(d.wiski_arriv IS NOT NULL AND d.dispatch_klsa IS NULL, 'AT WISKI',
 																IF(d.dispatch_klsa IS NOT NULL, 'DISPATCHED FROM K\'LSA', 'EXCEPTED TO ARRIVE')
 																)
 															)
 														, '') AS klsa_status,
-													IF(d.id_mod_trans='1' AND d.id_mod_lic='2',
+													IF(d.id_mod_trans='1' AND d.id_mod_lic='2', 
 														IF(d.bond_warehouse='LUBUMBASHI',
-															IF(d.warehouse_arriv IS NOT NULL AND d.warehouse_dep IS NOT NULL, 'DISPATCHED FROM AMICONGO',
+															IF(d.warehouse_arriv IS NOT NULL AND d.warehouse_dep IS NOT NULL, 'DISPATCHED FROM AMICONGO', 
 																IF(d.warehouse_arriv IS NOT NULL, 'ARRIVED AT AMICONGO', '')
 																)
 															,'')
 														,'') AS amicongo_status,
-													IF(d.id_mod_trans='1' AND d.id_mod_lic='2',
+													IF(d.id_mod_trans='1' AND d.id_mod_lic='2', 
 														IF(d.bond_warehouse='KOLWEZI',
-															IF(d.warehouse_arriv IS NOT NULL AND d.warehouse_dep IS NOT NULL, 'DISPATCHED FROM WAREHOUSE',
+															IF(d.warehouse_arriv IS NOT NULL AND d.warehouse_dep IS NOT NULL, 'DISPATCHED FROM WAREHOUSE', 
 																IF(d.warehouse_arriv IS NOT NULL, 'ARRIVED AT WAREHOUSE', '')
 																)
 															,'')
@@ -40868,13 +40831,13 @@
 				}
 
 				//include('modalDeleteDossier.php');
-
+				
 			?>
 				<input type="hidden" name="id_dos_<?php echo $compteur;?>" value="<?php echo $reponse['id_dos'];?>">
 				<tr class="<?php echo $bg;?>" <?php echo $style;?>>
 					<td class="<?php echo $class;?> <?php echo $bg;?>" style="" <?php echo $style;?>><?php echo $compteur;?></td>
 					<td class="<?php echo $class;?> <?php echo $bg;?>" style=" <?php echo $color;?>"><span class="<?php echo $clignoteDos;?>" style="<?php echo $couleurDos?>"><?php echo $reponse['ref_dos'];?></span>
-					 <?php
+					 <?php 
 					  if(!isset($this-> getDataUtilisateur($_SESSION['id_util'])['tracking_enab'])){
 					  ?>
 						<span title="Edit File" onclick="window.location.replace('editFile.php?id_cli=<?php echo $_GET['id_cli']; ?>&id_mod_trans=<?php echo $_GET['id_mod_trans']; ?>&id_mod_trac=<?php echo $_GET['id_mod_trac']; ?>&commodity=<?php echo $_GET['commodity']; ?>&statut=<?php echo $_GET['statut'];?>&id_march=<?php echo $_GET['id_march'];?>&page=<?php echo $page;?>&id_dos=<?php echo $reponse['id_dos'];?>','pop1','width=80,height=80');">&nbsp;&nbsp;&nbsp;<i class="fa fa-edit bg bg-warning" style="padding: 3px; border-radius: 5px;"></i></span>
@@ -40896,9 +40859,9 @@
 	                	</span>
 		                <?php
 						}
-
-
-
+					
+						
+					
 					  }
 					  ?>
 					</td>
@@ -40970,11 +40933,11 @@
 					<?php
 				}else{
 					$num_dos = $this-> getDossier($id_dos)['ref_dos'];
-
+						
 					if(stristr($num_dos, '/') == true) {
 						$num_dos = str_replace("/", "_", "$num_dos");
 					}
-
+					
 					$piece = $this-> getDocumentForDossier($id_dos, $reponse['id_doc']);
 					?>
 		            <div class="col-md-4">
@@ -41012,12 +40975,12 @@
 				?>
 				<tr>
 					<td>
-						<?php
+						<?php 
 						echo $compteur;
 						?>
 					</td>
 					<td>
-					<?php
+					<?php 
 						echo $reponse['nom_doc'];
 					?>
 					</td>
@@ -41122,7 +41085,7 @@
 		}
 
 		public function getListeDocumentForDossier($id_dos, $id_mod_lic){
-
+			
 			include('connexion.php');
 			$entree['id_mod_lic'] = $id_mod_lic;
 			$compteur=0;
@@ -41139,14 +41102,14 @@
 			while($reponse = $requete-> fetch()){
 				$compteur++;
 				if($this-> getDocumentForDossier($id_dos, $reponse['id_doc']) == '0'){
-
+					
 				}else{
 					$num_dos = $this-> getDossier($id_dos)['ref_dos'];
-
+						
 					if(stristr($num_dos, '/') == true) {
 						$num_dos = str_replace("/", "_", "$num_dos");
 					}
-
+					
 					$piece = $this-> getDocumentForDossier($id_dos, $reponse['id_doc']);
 					?>
 					<a class="dropdown-item" onclick="window.open('../documents/<?php echo $num_dos;?>/<?php echo $piece;?>','pop1','width=700,height=900');">
@@ -41161,9 +41124,9 @@
 			<?php
 		}
 
-		public function afficherRowDossierClientModeTransportModeLicence2Recherche($ref_dos, $id_cli, $id_mod_trans,
+		public function afficherRowDossierClientModeTransportModeLicence2Recherche($ref_dos, $id_cli, $id_mod_trans, 
 														$id_mod_lic, $commodity,
-														$id_march=NULL, $statut=NULL, $num_lic=NULL,
+														$id_march=NULL, $statut=NULL, $num_lic=NULL, 
 														$cleared=NULL){
 			include('connexion.php');
 
@@ -41193,7 +41156,7 @@
 			}else{
 				$entree['id_cli'] = $id_cli;
 			}
-
+			
 			if (isset($commodity) && ($commodity != '')) {
 				$sql1 = ' AND d.commodity = "'.$commodity.'"';
 			}
@@ -41244,7 +41207,7 @@
 													d.custom_deliv AS custom_deliv_1,
 													d.arrival_date AS arrival_date_1,
 
-
+													
 													IF(d.id_mod_lic='2' AND d.id_mod_trans='1' AND d.cleared<>'2',
 														IF(d.date_crf IS NULL AND d.date_ad IS NULL AND d.date_assurance IS NULL,
 													      'AWAITING CRF/AD/INSURANCE',
@@ -41253,7 +41216,7 @@
 													          IF(d.date_crf IS NULL AND d.date_ad IS NOT NULL AND d.date_assurance IS NULL,
 													            'AWAITING CRF/INSURANCE',
 													            IF(d.date_crf IS NULL AND d.date_ad IS NOT NULL AND d.date_assurance IS NOT NULL,
-													              'AWAITING CRF',
+													              'AWAITING CRF', 
 													              IF(d.date_crf IS NOT NULL AND d.date_ad IS NULL AND d.date_assurance IS NULL,
 													                'AWAITING AD/INSURANCE',
 													                IF(d.date_crf IS NOT NULL AND d.date_ad IS NULL AND d.date_assurance IS NOT NULL,
@@ -41264,13 +41227,13 @@
 													                      IF(d.date_decl IS NULL AND d.ref_decl IS NULL, 'UNDER PREPARATION',
 													                        IF(d.date_liq IS NULL AND d.ref_liq IS NULL, 'AWAITING LIQUIDATION',
 													                          IF(d.date_quit IS NULL AND d.ref_quit IS NULL, 'AWAITING QUITTANCE',
-													                            IF(d.date_quit IS NOT NULL AND d.ref_quit IS NOT NULL AND d.dgda_out IS NULL, 'AWAITING BAE/BS',
+													                            IF(d.date_quit IS NOT NULL AND d.ref_quit IS NOT NULL AND d.dgda_out IS NULL, 'AWAITING BAE/BS', 
 													                              IF(d.dgda_out IS NOT NULL AND d.dispatch_deliv IS NOT NULL, 'CLEARING COMPLETED', '')
 													                              )
 													                            )
 													                          )
 													                        )
-
+													                      
 													                      )
 													                  )
 													                )
@@ -41279,7 +41242,7 @@
 													          )
 													      )
 														,
-														IF(d.id_mod_lic='1' AND d.cleared<>'2',
+														IF(d.id_mod_lic='1' AND d.cleared<>'2', 
 															IF(d.load_date IS NOT NULL AND d.ceec_in IS NULL,
 																'LOADED',
 																IF(d.ceec_in IS NOT NULL AND d.ceec_out IS NULL, 'AT CEEC',
@@ -41292,7 +41255,7 @@
 																							IF(d.gov_in IS NOT NULL AND d.gov_out IS NULL, 'AT GOVERNOR\'S OFFICE',
 																								IF(d.gov_out IS NOT NULL AND d.dispatch_date IS NULL, 'GOVERNOR\'S OFFICE OUT',
 																									IF(d.dispatch_date IS NOT NULL AND d.klsa_arriv IS NULL,
-																										'DISPATCHED',
+																										'DISPATCHED', 
 																											IF(d.klsa_arriv IS NOT NULL AND d.end_form IS NULL, 'AT BORDER',
 																												IF(d.end_form IS NOT NULL AND d.exit_drc IS NULL, 'UNDER FORMALITIES',
 																													IF(d.exit_drc IS NOT NULL, 'EXIT DRC', '')
@@ -41312,23 +41275,23 @@
 															, d.statut )
 													) AS statut,
 
-													IF(d.id_mod_trans='1' AND d.id_mod_lic='2',
-														IF(d.klsa_arriv IS NOT NULL AND d.wiski_arriv IS NULL,'ARRIVED AT K\'LSA',
+													IF(d.id_mod_trans='1' AND d.id_mod_lic='2', 
+														IF(d.klsa_arriv IS NOT NULL AND d.wiski_arriv IS NULL,'ARRIVED AT K\'LSA', 
 															IF(d.wiski_arriv IS NOT NULL AND d.dispatch_klsa IS NULL, 'AT WISKI',
 																IF(d.dispatch_klsa IS NOT NULL, 'DISPATCHED FROM K\'LSA', 'EXCEPTED TO ARRIVE')
 																)
 															)
 														, '') AS klsa_status,
-													IF(d.id_mod_trans='1' AND d.id_mod_lic='2',
+													IF(d.id_mod_trans='1' AND d.id_mod_lic='2', 
 														IF(d.bond_warehouse='LUBUMBASHI',
-															IF(d.warehouse_arriv IS NOT NULL AND d.warehouse_dep IS NOT NULL, 'DISPATCHED FROM AMICONGO',
+															IF(d.warehouse_arriv IS NOT NULL AND d.warehouse_dep IS NOT NULL, 'DISPATCHED FROM AMICONGO', 
 																IF(d.warehouse_arriv IS NOT NULL, 'ARRIVED AT AMICONGO', '')
 																)
 															,'')
 														,'') AS amicongo_status,
-													IF(d.id_mod_trans='1' AND d.id_mod_lic='2',
+													IF(d.id_mod_trans='1' AND d.id_mod_lic='2', 
 														IF(d.bond_warehouse='KOLWEZI',
-															IF(d.warehouse_arriv IS NOT NULL AND d.warehouse_dep IS NOT NULL, 'DISPATCHED FROM WAREHOUSE',
+															IF(d.warehouse_arriv IS NOT NULL AND d.warehouse_dep IS NOT NULL, 'DISPATCHED FROM WAREHOUSE', 
 																IF(d.warehouse_arriv IS NOT NULL, 'ARRIVED AT WAREHOUSE', '')
 																)
 															,'')
@@ -41388,7 +41351,7 @@
 				}
 
 				//include('modalDeleteDossier.php');
-
+				
 
 			?>
 				<input type="hidden" name="ref_dos" value="<?php echo $ref_dos;?>">
@@ -41397,13 +41360,13 @@
 				<tr class="<?php echo $bg;?>" <?php echo $style;?>>
 					<td class="<?php echo $class;?> <?php echo $bg;?>" style=" border-right: 1px solid black; vertical-align: middle; text-align: left; padding: 0.6rem; border-top: 1px solid black;" <?php echo $style;?>><?php echo $compteur;?></td>
 					<td class="<?php echo $class;?> <?php echo $bg;?>" style=" border-right: 1px solid black; vertical-align: middle; text-align: left; padding: 0.6rem; border-top: 1px solid black; <?php echo $color;?>"><span class="<?php echo $clignoteDos?>" style="<?php echo $couleurDos?>"><?php echo $reponse['ref_dos'];?></span>
-					 <?php
+					 <?php 
 					  if(!isset($this-> getDataUtilisateur($_SESSION['id_util'])['tracking_enab'])){
 					  ?>
 						<span title="Edit File" onclick="window.location.replace('editFile.php?id_cli=<?php echo $_GET['id_cli']; ?>&id_mod_trans=<?php echo $_GET['id_mod_trans']; ?>&id_mod_trac=<?php echo $_GET['id_mod_trac']; ?>&commodity=<?php echo $_GET['commodity']; ?>&statut=<?php echo $_GET['statut'];?>&id_march=<?php echo $_GET['id_march'];?>&id_dos=<?php echo $reponse['id_dos'];?>&page=<?php echo $page;?>','pop1','width=80,height=80');">&nbsp;&nbsp;&nbsp;<i class="fa fa-edit bg bg-warning" style="padding: 3px; border-radius: 5px;"></i></span>
 						<?php
 						if ($reponse['cleared'] != '2') {
-
+							
 						}
 
 						if ($this-> getDataUtilisateur($_SESSION['id_util'])['tracking_log'] == '1') {
@@ -41413,7 +41376,7 @@
 	                	</span>
 		                <?php
 						}
-
+					
 					  }
 					  ?>
 					</td>
@@ -41658,7 +41621,7 @@
 													AND ref_dos = ?
 												ORDER BY ref_dos DESC
 												LIMIT $premiere_entree, $nombre_dossier_par_page");
-			$requete-> execute(array($entree['id_cli'], $entree['id_mod_trans'],
+			$requete-> execute(array($entree['id_cli'], $entree['id_mod_trans'], 
 										$entree['id_trans'], $entree['ref_dos']));
 			while ($reponse = $requete-> fetch()) {
 				$compteur++;
@@ -41772,9 +41735,9 @@
 			}$requete-> closeCursor();
 		}
 
-		public function afficherRowDossierClientModeTransportModeLicence3($id_cli, $id_mod_trans,
-														$id_mod_lic, $commodity,
-														$id_march=NULL, $statut=NULL, $num_lic=NULL,
+		public function afficherRowDossierClientModeTransportModeLicence3($id_cli, $id_mod_trans, 
+														$id_mod_lic, $commodity, 
+														$id_march=NULL, $statut=NULL, $num_lic=NULL, 
 														$cleared=NULL){
 			include('connexion.php');
 
@@ -41826,7 +41789,7 @@
 			}
 
             if ($_GET['id_mod_lic'] == '1') {
-
+              
 				if (isset($id_cli) && ($id_cli!='')) {
 					$sqlClient = ' AND cl.id_cli = "'.$id_cli.'"';
 				}else{
@@ -41834,7 +41797,7 @@
 				}
 
             }else if ($_GET['id_mod_lic'] == '2') {
-
+              
 				if (isset($id_cli) && ($id_cli!='')) {
 					$sqlClient = ' AND cl.id_cli = "'.$id_cli.'"';
 				}else{
@@ -41903,7 +41866,7 @@
 				}
 
 				//include('modalDeleteDossier.php');
-
+				
 
 			?>
 				<input type="hidden" name="id_dos_<?php echo $compteur;?>" value="<?php echo $reponse['id_dos'];?>">
@@ -41927,9 +41890,9 @@
 			<?php
 		}
 
-		public function afficherRowDossierClientModeTransportModeLicenceStatusAuto($id_cli, $id_mod_trans,
-														$id_mod_lic, $commodity,
-														$id_march=NULL, $statut=NULL, $num_lic=NULL,
+		public function afficherRowDossierClientModeTransportModeLicenceStatusAuto($id_cli, $id_mod_trans, 
+														$id_mod_lic, $commodity, 
+														$id_march=NULL, $statut=NULL, $num_lic=NULL, 
 														$cleared=NULL){
 			include('connexion.php');
 
@@ -41982,7 +41945,7 @@
 			}
 
             if ($_GET['id_mod_lic'] == '1') {
-
+              
 				if (isset($id_cli) && ($id_cli!='')) {
 					$sqlClient = ' AND cl.id_cli = "'.$id_cli.'"';
 				}else{
@@ -41990,7 +41953,7 @@
 				}
 
             }else if ($_GET['id_mod_lic'] == '2') {
-
+              
 				if (isset($id_cli) && ($id_cli!='')) {
 					$sqlClient = ' AND cl.id_cli = "'.$id_cli.'"';
 				}else{
@@ -42000,7 +41963,7 @@
             }
 
             if ($id_mod_lic=='2' && $id_mod_trans=='1') {
-
+            	
 
 				if ($statut == 'AWAITING CRF/AD/INSURANCE') {
 
@@ -42065,7 +42028,7 @@
 					$sqlStatus = " AND d.date_crf IS NOT NULL
 													AND d.date_ad IS NOT NULL
 													AND d.date_assurance IS NOT NULL
-													AND d.date_decl IS NULL
+													AND d.date_decl IS NULL 
 													AND d.ref_decl IS NULL
 													AND d.ref_dos NOT LIKE '%20-%'
 													AND d.cleared <> '2'";
@@ -42078,7 +42041,7 @@
 						// 								AND date_crf IS NOT NULL
 						// 								AND date_ad IS NOT NULL
 						// 								AND date_assurance IS NOT NULL
-						// 								AND date_decl IS NULL
+						// 								AND date_decl IS NULL 
 						// 								AND ref_decl IS NULL
 						// 								AND ref_dos NOT LIKE '%20-%'
 						// 								AND cleared <> '2'
@@ -42089,9 +42052,9 @@
 					$sqlStatus = " AND d.date_crf IS NOT NULL
 													AND d.date_ad IS NOT NULL
 													AND d.date_assurance IS NOT NULL
-													AND d.date_decl IS NULL
+													AND d.date_decl IS NULL 
 													AND d.ref_decl IS NULL
-													AND d.klsa_arriv IS NULL
+													AND d.klsa_arriv IS NULL 
 													AND d.ref_dos NOT LIKE '%20-%'
 													AND d.cleared <> '2'";
 
@@ -42103,9 +42066,9 @@
 						// 								AND date_crf IS NOT NULL
 						// 								AND date_ad IS NOT NULL
 						// 								AND date_assurance IS NOT NULL
-						// 								AND dispatch_klsa IS NOT NULL
+						// 								AND dispatch_klsa IS NOT NULL 
 						// 								AND wiski_arriv IS NOT NULL
-						// 								AND date_decl IS NULL
+						// 								AND date_decl IS NULL 
 						// 								AND ref_decl IS NULL
 						// 								AND ref_dos NOT LIKE '%20-%'
 						// 								AND cleared <> '2'
@@ -42116,9 +42079,9 @@
 					$sqlStatus = " AND d.date_crf IS NOT NULL
 													AND d.date_ad IS NOT NULL
 													AND d.date_assurance IS NOT NULL
-													AND d.date_decl IS NULL
+													AND d.date_decl IS NULL 
 													AND d.ref_decl IS NULL
-													AND d.dispatch_klsa IS NOT NULL
+													AND d.dispatch_klsa IS NOT NULL 
 													AND d.wiski_arriv IS NOT NULL
 													AND d.ref_dos NOT LIKE '%20-%'
 													AND d.cleared <> '2'";
@@ -42131,9 +42094,9 @@
 						// 								AND date_crf IS NOT NULL
 						// 								AND date_ad IS NOT NULL
 						// 								AND date_assurance IS NOT NULL
-						// 								AND dispatch_klsa IS NULL
+						// 								AND dispatch_klsa IS NULL 
 						// 								AND wiski_arriv IS NOT NULL
-						// 								AND date_decl IS NULL
+						// 								AND date_decl IS NULL 
 						// 								AND ref_decl IS NULL
 						// 								AND ref_dos NOT LIKE '%20-%'
 						// 								AND cleared <> '2'
@@ -42144,41 +42107,41 @@
 					$sqlStatus = " AND d.date_crf IS NOT NULL
 													AND d.date_ad IS NOT NULL
 													AND d.date_assurance IS NOT NULL
-													AND d.dispatch_klsa IS NULL
+													AND d.dispatch_klsa IS NULL 
 													AND d.wiski_arriv IS NOT NULL
-													AND d.date_decl IS NULL
+													AND d.date_decl IS NULL 
 													AND d.ref_decl IS NULL
 													AND d.ref_dos NOT LIKE '%20-%'
 													AND d.cleared <> '2'";
 
 					}else if ($statut == 'AWAITING LIQUIDATION') {
 
-					$sqlStatus = " AND d.date_decl IS NOT NULL
+					$sqlStatus = " AND d.date_decl IS NOT NULL 
 													AND d.ref_decl IS NOT NULL
-													AND d.date_liq IS NULL
+													AND d.date_liq IS NULL 
 													AND d.ref_liq IS NULL
 													AND d.ref_dos NOT LIKE '%20-%'
 													AND d.cleared <> '2'";
 
 				}else if ($statut == 'AWAITING QUITTANCE') {
 
-					$sqlStatus = " AND d.date_liq IS NOT NULL
+					$sqlStatus = " AND d.date_liq IS NOT NULL 
 													AND d.ref_liq IS NOT NULL
-													AND d.date_quit IS NULL
+													AND d.date_quit IS NULL 
 													AND d.ref_quit IS NULL
 													AND d.ref_dos NOT LIKE '%20-%'
 													AND d.cleared <> '2'";
 
 				}else if ($statut == 'AWAITING BAE/BS') {
 
-					$sqlStatus = " AND d.date_quit IS NOT NULL
+					$sqlStatus = " AND d.date_quit IS NOT NULL 
 													AND d.ref_quit IS NOT NULL
 													AND dgda_out IS NULL
 													AND d.cleared <> '2'";
 
 				}else if ($statut == 'CLEARING COMPLETED') {
 
-					$sqlStatus = " AND d.dgda_out IS NOT NULL
+					$sqlStatus = " AND d.dgda_out IS NOT NULL 
 													AND d.dispatch_deliv IS NOT NULL
 													AND d.cleared <> '2'";
 
@@ -42205,7 +42168,7 @@
 													d.custom_deliv AS custom_deliv_1,
 													d.arrival_date AS arrival_date_1,
 
-
+													
 													IF(d.id_mod_lic='2' AND d.id_mod_trans='1',
 														IF(d.date_crf IS NULL AND d.date_ad IS NULL AND d.date_assurance IS NULL,
 													      'AWAITING CRF/AD/INSURANCE',
@@ -42214,7 +42177,7 @@
 													          IF(d.date_crf IS NULL AND d.date_ad IS NOT NULL AND d.date_assurance IS NULL,
 													            'AWAITING CRF/INSURANCE',
 													            IF(d.date_crf IS NULL AND d.date_ad IS NOT NULL AND d.date_assurance IS NOT NULL,
-													              'AWAITING CRF',
+													              'AWAITING CRF', 
 													              IF(d.date_crf IS NOT NULL AND d.date_ad IS NULL AND d.date_assurance IS NULL,
 													                'AWAITING AD/INSURANCE',
 													                IF(d.date_crf IS NOT NULL AND d.date_ad IS NULL AND d.date_assurance IS NOT NULL,
@@ -42225,13 +42188,13 @@
 													                      IF(d.date_decl IS NULL AND d.ref_decl IS NULL, 'UNDER PREPARATION',
 													                        IF(d.date_liq IS NULL AND d.ref_liq IS NULL, 'AWAITING LIQUIDATION',
 													                          IF(d.date_quit IS NULL AND d.ref_quit IS NULL, 'AWAITING QUITTANCE',
-													                            IF(d.date_quit IS NOT NULL AND d.ref_quit IS NOT NULL AND d.dgda_out IS NULL, 'AWAITING BAE/BS',
+													                            IF(d.date_quit IS NOT NULL AND d.ref_quit IS NOT NULL AND d.dgda_out IS NULL, 'AWAITING BAE/BS', 
 													                              IF(d.dgda_out IS NOT NULL AND d.dispatch_deliv IS NOT NULL, 'CLEARING COMPLETED', '')
 													                              )
 													                            )
 													                          )
 													                        )
-
+													                      
 													                      )
 													                  )
 													                )
@@ -42286,7 +42249,7 @@
 				}
 
 				//include('modalDeleteDossier.php');
-
+				
 
 			?>
 				<input type="hidden" name="id_dos_<?php echo $compteur;?>" value="<?php echo $reponse['id_dos'];?>">
@@ -42310,8 +42273,8 @@
 			<?php
 		}
 
-		public function afficherRowDossierClientModeTransportModeLicenceDashboard($id_cli, $id_mod_trans,
-														$id_mod_lic, $commodity,
+		public function afficherRowDossierClientModeTransportModeLicenceDashboard($id_cli, $id_mod_trans, 
+														$id_mod_lic, $commodity, 
 														$premiere_entree, $nombre_dossier_par_page, $type){
 			include('connexion.php');
 
@@ -42384,7 +42347,7 @@
 			if (isset($type) && ($type == 'LIQUIDATED / AWAIT QUITTANCE')) {
 				$sqlType = " AND ( (d.date_liq IS NOT NULL OR d.date_liq <> '')
 													OR (d.ref_liq IS NOT NULL AND d.ref_liq <> '') )
-												AND ( (d.date_quit IS NULL OR d.date_quit = '')
+												AND ( (d.date_quit IS NULL OR d.date_quit = '') 
 													OR (d.ref_quit IS NULL OR d.ref_quit = '') )";
 			}
 
@@ -42446,9 +42409,9 @@
 				$bg = "";
 
 				$date_exp = $this-> getLastEpirationLicence($reponse['num_lic']);
-
-				/*$ref_dos, $id_cli, $ref_fact, $fob,
-				$fret, $assurance, $autre_frais, $num_lic,
+				
+				/*$ref_dos, $id_cli, $ref_fact, $fob, 
+				$fret, $assurance, $autre_frais, $num_lic, 
 				$id_mod_lic, $id_march*/
 
 			?>
@@ -42480,7 +42443,7 @@
 			<?php
 		}
 
-		public function afficherRowDossierClientModeTransportModeLicenceExcel($id_cli, $id_mod_trans,
+		public function afficherRowDossierClientModeTransportModeLicenceExcel($id_cli, $id_mod_trans, 
 														$id_mod_lic, $commodity, $id_march=NULL, $statut=NULL){
 			include('connexion.php');
 
@@ -42562,9 +42525,9 @@
 				}
 
 				$date_exp = $this-> getLastEpirationLicence($reponse['num_lic']);
-
-				/*$ref_dos, $id_cli, $ref_fact, $fob,
-				$fret, $assurance, $autre_frais, $num_lic,
+				
+				/*$ref_dos, $id_cli, $ref_fact, $fob, 
+				$fret, $assurance, $autre_frais, $num_lic, 
 				$id_mod_lic, $id_march*/
 
 			?>
@@ -42585,7 +42548,7 @@
 			}$requete-> closeCursor();
 		}
 
-		public function afficherDossierClientModeTransportModeLicenceExcel($id_cli, $id_mod_trans,
+		public function afficherDossierClientModeTransportModeLicenceExcel($id_cli, $id_mod_trans, 
 														$id_mod_lic, $commodity){
 			include('connexion.php');
 
@@ -42643,9 +42606,9 @@
 				$bg = "";
 
 				$date_exp = $this-> getLastEpirationLicence($reponse['num_lic']);
-
-				/*$ref_dos, $id_cli, $ref_fact, $fob,
-				$fret, $assurance, $autre_frais, $num_lic,
+				
+				/*$ref_dos, $id_cli, $ref_fact, $fob, 
+				$fret, $assurance, $autre_frais, $num_lic, 
 				$id_mod_lic, $id_march*/
 
 			?>
@@ -42678,7 +42641,7 @@
 			$sql2 = '';
 			$sommeFob = 0;
 			$sommePoids = 0;
-			$requete = $connexion-> prepare("SELECT d.*,
+			$requete = $connexion-> prepare("SELECT d.*, 
 													IF(cod IS NOT NULL AND cod <> 'TBC', cod, IF(ref_av IS NOT NULL, ref_av, IF(ref_crf IS NOT NULL, ref_crf, NULL))) AS cod,
 													DATE_FORMAT(d.date_decl, '%d/%m/%Y') AS date_decl,
 													DATE_FORMAT(d.date_liq, '%d/%m/%Y') AS date_liq,
@@ -42702,7 +42665,7 @@
 				$sommeFob += $reponse['fob'];
 				$sommePoids += $reponse['poids'];
 				$ok_apurement = '';
-
+				
 				if ($this-> verifierApurementDossier($reponse['id_dos'])==true) {
 					$bg = 'text-success';
 					$ok_apurement = '<span class="text-success">YES</span>';
@@ -42711,8 +42674,8 @@
 					$ok_apurement = '<span class="text-danger">NO</span>';
 				}
 
-				/*$ref_dos, $id_cli, $ref_fact, $fob,
-				$fret, $assurance, $autre_frais, $num_lic,
+				/*$ref_dos, $id_cli, $ref_fact, $fob, 
+				$fret, $assurance, $autre_frais, $num_lic, 
 				$id_mod_lic, $id_march*/
 
 			?>
@@ -42805,12 +42768,12 @@
 						<?php echo $reponse['num_part'];?>
 					</td>
 					<td>
-						<?php
+						<?php 
 							echo $reponse['poids'];
 						?>
 					</td>
 					<td>
-						<?php
+						<?php 
 							echo $reponse['fob'];
 						?>
 					</td>
@@ -42827,7 +42790,7 @@
 			$requete = $connexion-> prepare("SELECT DATE_FORMAT(ld.date_log, '%d/%m/%Y %h:%i:%s') AS date_log,
 													ld.colonne AS colonne,
 													ld.valeur AS valeur,
-													UPPER(u.nom_util) AS nom_util
+													UPPER(u.nom_util) AS nom_util  
 												FROM log_dossier ld, utilisateur u
 												WHERE ld.id_dos = ?
 													AND ld.id_util =  u.id_util
@@ -42952,7 +42915,7 @@
 			$entree['id_mod_trans'] = $id_mod_trans;
 			$entree['id_mod_lic'] = $id_mod_lic;
 			$compteur = 0;
-			$requete = $connexion-> prepare("SELECT d.ref_dos AS ref_dos, d.num_lic AS num_lic,
+			$requete = $connexion-> prepare("SELECT d.ref_dos AS ref_dos, d.num_lic AS num_lic, 
 													DATE_FORMAT(d.klsa_arriv, '%d/%m/%Y') AS klsa_arriv,
 													DATE_FORMAT(d.date_decl, '%d/%m/%Y') AS date_decl,
 													d.ref_decl AS ref_decl,
@@ -42969,7 +42932,7 @@
 															(d.klsa_arriv IS NOT NULL AND d.id_mod_trans = 1)
 															OR
 															(d.arrival_date IS NOT NULL AND d.id_mod_trans = 3)
-														)
+														) 
 													AND d.date_ext_temporelle IS NULL");
 			$requete-> execute(array($entree['id_cli'], $entree['id_mod_trans'], $entree['id_mod_lic']));
 			while ($reponse = $requete-> fetch()) {
@@ -43020,7 +42983,7 @@
 			$entree['id_mod_trans'] = $id_mod_trans;
 			$entree['id_mod_lic'] = $id_mod_lic;
 			$compteur = 0;
-			$requete = $connexion-> prepare("SELECT d.ref_dos AS ref_dos, d.num_lic AS num_lic,
+			$requete = $connexion-> prepare("SELECT d.ref_dos AS ref_dos, d.num_lic AS num_lic, 
 													DATE_FORMAT(d.klsa_arriv, '%d/%m/%Y') AS klsa_arriv,
 													DATE_FORMAT(d.date_decl, '%d/%m/%Y') AS date_decl,
 													DATE_FORMAT(d.date_ext_temporelle, '%d/%m/%Y') AS date_ext_temporelle,
@@ -44004,7 +43967,7 @@
 			return $reponse['nbre'];
 		}
 
-		public function afficherDossierPopUp($id_cli, $id_mod_trans,
+		public function afficherDossierPopUp($id_cli, $id_mod_trans, 
 											$id_mod_lic, $commodity, $statut){
 			include('connexion.php');
 
@@ -44063,7 +44026,7 @@
 				<tr class="<?php echo $bg;?>" <?php echo $style;?>>
 					<td class=" <?php echo $bg;?>" style="" <?php echo $style;?>><?php echo $compteur;?></td>
 					<td class=" <?php echo $bg;?>" style=""><?php echo $reponse['ref_dos'];?></td>
-					<?php
+					<?php 
 					if ($_GET['id_mod_lic'] == '1') {
                      	?><td><?php echo $reponse['num_lot'];?></td><?php
                      }else if ($_GET['id_mod_lic'] == '2') {
@@ -44082,7 +44045,7 @@
 			}$requete-> closeCursor();
 		}
 
-		public function afficherDossierPopUpBackUp($id_cli, $id_mod_trans,
+		public function afficherDossierPopUpBackUp($id_cli, $id_mod_trans, 
 											$id_mod_lic, $commodity, $type,
 											$premiere_entree, $nombre_dossier_par_page){
 			include('connexion.php');
@@ -44161,7 +44124,7 @@
 			if (isset($type) && ($type == 'LIQUIDATED / AWAIT QUITTANCE')) {
 				$sqlType = " AND ( (d.date_liq IS NOT NULL OR d.date_liq <> '')
 													OR (d.ref_liq IS NOT NULL AND d.ref_liq <> '') )
-												AND ( (d.date_quit IS NULL OR d.date_quit = '')
+												AND ( (d.date_quit IS NULL OR d.date_quit = '') 
 													OR (d.ref_quit IS NULL OR d.ref_quit = '') )";
 			}
 
@@ -44217,9 +44180,9 @@
 				$bg = "";
 
 				$date_exp = $this-> getLastEpirationLicence($reponse['num_lic']);
-
-				/*$ref_dos, $id_cli, $ref_fact, $fob,
-				$fret, $assurance, $autre_frais, $num_lic,
+				
+				/*$ref_dos, $id_cli, $ref_fact, $fob, 
+				$fret, $assurance, $autre_frais, $num_lic, 
 				$id_mod_lic, $id_march*/
 
 			?>
@@ -44275,7 +44238,7 @@
 													AND d.facture = '0'");
 
 			}
-
+			
 			$requete-> execute(array($entree['id_mod_lic']));
 			while ($reponse = $requete-> fetch()) {
 				$compteur++;
@@ -44314,7 +44277,7 @@
 				</tr>
 			<?php
 			}$requete-> closeCursor();
-
+			
 			*/
 		}
 
@@ -44345,9 +44308,9 @@
 			$sommeFob = 0;
 
 			if ($id_mod_lic == '1') {
-
-				$requete = $connexion-> prepare("SELECT l.num_lic AS num_lic,
-														DATE(CURRENT_DATE()) AS aujourdhui,
+				
+				$requete = $connexion-> prepare("SELECT l.num_lic AS num_lic, 
+														DATE(CURRENT_DATE()) AS aujourdhui, 
 														l.poids AS fob,
 														(l.poids) AS cif,
 														UPPER(cl.nom_cli) AS nom_cli,
@@ -44361,14 +44324,14 @@
 													$sql2
 													$sql3
 													AND l.id_cli IN (
-														SELECT id_cli
-															FROM souscription_licence
-															WHERE id_mod_lic = ?
+														SELECT id_cli 
+															FROM souscription_licence 
+															WHERE id_mod_lic = ? 
 														)");
 			}else{
 
-				$requete = $connexion-> prepare("SELECT l.num_lic AS num_lic,
-														DATE(CURRENT_DATE()) AS aujourdhui,
+				$requete = $connexion-> prepare("SELECT l.num_lic AS num_lic, 
+														DATE(CURRENT_DATE()) AS aujourdhui, 
 														l.fob AS fob,
 														(l.fob+l.fret+l.assurance+l.autre_frais) AS cif,
 														UPPER(cl.nom_cli) AS nom_cli,
@@ -44382,9 +44345,9 @@
 													$sql2
 													$sql3
 													AND l.id_cli IN (
-														SELECT id_cli
-															FROM souscription_licence
-															WHERE id_mod_lic = ?
+														SELECT id_cli 
+															FROM souscription_licence 
+															WHERE id_mod_lic = ? 
 														)");
 			}
 
@@ -44395,13 +44358,13 @@
 				$date_exp2 = $this-> getLastEpirationLicence($reponse['num_lic']);
 				$bg = "";
 				$sommeFob += $reponse['fob'];
-
+				
 				if ($type == 'EN COURS') {
 
 					if( ($this-> getDifferenceDate($date_exp, $reponse['aujourdhui']) >= 0) && ($this-> getDifferenceDate($date_exp, $reponse['aujourdhui']) > 0) && ($reponse['fob'] > $this-> getSommeFobLicence($reponse['num_lic']))){
 						$compteur++;
 						?>
-						<tr>
+						<tr>	
 							<td class="<?php echo $bg;?>" style=" text-align: left;" <?php echo $style;?>><?php echo $compteur;?></td>
 							<td class="<?php echo $bg;?>" style="text-align: left;"><?php echo $reponse['num_lic'];?></td>
 							<td style="text-align: left;"><?php echo $reponse['nom_cli'];?></td>
@@ -44418,7 +44381,7 @@
 							<?php
 							}
 							?>
-
+							
 	                    	<td style="text-align: center;">
 	                    		<?php echo number_format($this->getNbreDossierLicence($reponse['num_lic']), 0, ',', ' ');?>
 	                    	</td>
@@ -44437,7 +44400,7 @@
 	                    	<td style="text-align: right;">
 	                    		<?php echo number_format($reponse['fob']-$this->getSommeFobLicence($reponse['num_lic']), 2, ',', ' ');?>
 	                    	</td>
-
+							
 						</tr>
 						<?php
 					}
@@ -44448,7 +44411,7 @@
 						$compteur++;
 						?>
 						<tr>
-						<tr>
+						<tr>	
 							<td class="<?php echo $bg;?>" style=" text-align: left;" <?php echo $style;?>><?php echo $compteur;?></td>
 							<td class="<?php echo $bg;?>" style="text-align: left;"><?php echo $reponse['num_lic'];?></td>
 							<td style="text-align: left;"><?php echo $reponse['nom_cli'];?></td>
@@ -44465,7 +44428,7 @@
 							<?php
 							}
 							?>
-
+							
 	                    	<td style="text-align: center;">
 	                    		<?php echo number_format($this->getNbreDossierLicence($reponse['num_lic']), 0, ',', ' ');?>
 	                    	</td>
@@ -44484,7 +44447,7 @@
 	                    	<td style="text-align: right;">
 	                    		<?php echo number_format($reponse['fob']-$this->getSommeFobLicence($reponse['num_lic']), 2, ',', ' ');?>
 	                    	</td>
-
+							
 						</tr>
 						<?php
 					}
@@ -44494,7 +44457,7 @@
 					if(($date_exp < $reponse['aujourdhui']) && ($reponse['fob'] > $this-> getSommeFobLicence($reponse['num_lic'])) && ( $reponse['num_lic'] != $this-> getLicenceApuree($reponse['num_lic'])) ){
 						$compteur++;
 						?>
-						<tr>
+						<tr>	
 							<td class="<?php echo $bg;?>" style=" text-align: left;" <?php echo $style;?>><?php echo $compteur;?></td>
 							<td class="<?php echo $bg;?>" style="text-align: left;"><?php echo $reponse['num_lic'];?></td>
 							<td style="text-align: left;"><?php echo $reponse['nom_cli'];?></td>
@@ -44511,7 +44474,7 @@
 							<?php
 							}
 							?>
-
+							
 	                    	<td style="text-align: center;">
 	                    		<?php echo number_format($this->getNbreDossierLicence($reponse['num_lic']), 0, ',', ' ');?>
 	                    	</td>
@@ -44530,7 +44493,7 @@
 	                    	<td style="text-align: right;">
 	                    		<?php echo number_format($reponse['fob']-$this->getSommeFobLicence($reponse['num_lic']), 2, ',', ' ');?>
 	                    	</td>
-
+							
 						</tr>
 						<?php
 					}
@@ -44540,7 +44503,7 @@
 					if(($reponse['fob'] == $this-> getSommeFobLicence($reponse['num_lic'])) && ($reponse['fob'] != $this-> getSommeFobAppureLicence($reponse['num_lic'])) &&  ( $reponse['num_lic'] != $this-> getLicenceApuree($reponse['num_lic'])) && ($this-> verifierApurementDossierLicence($reponse['num_lic']) == false)){
 						$compteur++;
 						?>
-						<tr>
+						<tr>	
 							<td class="<?php echo $bg;?>" style=" text-align: left;" <?php echo $style;?>><?php echo $compteur;?></td>
 							<td class="<?php echo $bg;?>" style="text-align: left;"><?php echo $reponse['num_lic'];?></td>
 							<td style="text-align: left;"><?php echo $reponse['nom_cli'];?></td>
@@ -44557,7 +44520,7 @@
 							<?php
 							}
 							?>
-
+							
 	                    	<td style="text-align: center;">
 	                    		<?php echo number_format($this->getNbreDossierLicence($reponse['num_lic']), 0, ',', ' ');?>
 	                    	</td>
@@ -44573,7 +44536,7 @@
 							<?php
 							}
 							?>
-
+							
 	                    	<td style="text-align: right;">
 	                    		<?php echo number_format($reponse['fob']-$this->getSommeFobLicence($reponse['num_lic']), 2, ',', ' ');?>
 	                    	</td>
@@ -44586,7 +44549,7 @@
 					if( ($this-> verifierApurementDossierLicence($reponse['num_lic']) != false) && ($reponse['num_lic'] != 'UNDER VALUE') ){
 						$compteur++;
 						?>
-						<tr>
+						<tr>	
 							<td class="<?php echo $bg;?>" style=" text-align: left;" <?php echo $style;?>><?php echo $compteur;?></td>
 							<td class="<?php echo $bg;?>" style="text-align: left;"><?php echo $reponse['num_lic'];?></td>
 							<td style="text-align: left;"><?php echo $reponse['nom_cli'];?></td>
@@ -44616,7 +44579,7 @@
 					if(($reponse['fob'] == $this-> getSommeFobLicence($reponse['num_lic'])) && ($reponse['cif'] != $this-> getSommeCIFLicence($reponse['num_lic']))){
 						$compteur++;
 						?>
-						<tr>
+						<tr>	
 							<td class="<?php echo $bg;?>" style=" text-align: left;" <?php echo $style;?>><?php echo $compteur;?></td>
 							<td class="<?php echo $bg;?>" style="text-align: left;"><?php echo $reponse['num_lic'];?></td>
 							<td style="text-align: left;"><?php echo $reponse['nom_cli'];?></td>
@@ -44690,9 +44653,9 @@
 			$sommeFob = 0;
 
 			if ($id_mod_lic == '1') {
-
-				$requete = $connexion-> prepare("SELECT l.num_lic AS num_lic,
-														DATE(CURRENT_DATE()) AS aujourdhui,
+				
+				$requete = $connexion-> prepare("SELECT l.num_lic AS num_lic, 
+														DATE(CURRENT_DATE()) AS aujourdhui, 
 														l.poids AS fob,
 														(l.poids) AS cif,
 														UPPER(cl.nom_cli) AS nom_cli,
@@ -44707,8 +44670,8 @@
 													$sql3");
 			}else{
 
-				$requete = $connexion-> prepare("SELECT l.num_lic AS num_lic,
-														DATE(CURRENT_DATE()) AS aujourdhui,
+				$requete = $connexion-> prepare("SELECT l.num_lic AS num_lic, 
+														DATE(CURRENT_DATE()) AS aujourdhui, 
 														l.fob AS fob,
 														(l.fob+l.fret+l.assurance+l.autre_frais) AS cif,
 														UPPER(cl.nom_cli) AS nom_cli,
@@ -44729,7 +44692,7 @@
 				$date_exp = $this-> getLastEpirationLicence2($reponse['num_lic']);
 				$date_exp2 = $this-> getLastEpirationLicence($reponse['num_lic']);
 				$sommeFob += $reponse['fob'];
-
+				
 				if ($type == 'EN COURS') {
 
 					if( ($this-> getDifferenceDate($date_exp, $reponse['aujourdhui']) >= 0) && ($this-> getDifferenceDate($date_exp, $reponse['aujourdhui']) > 0) && ($reponse['fob'] > $this-> getSommeFobLicence($reponse['num_lic']))){
@@ -44807,11 +44770,11 @@
 
 			$sommeFob = 0;
 
-
+			
 			if ($id_mod_lic == '1') {
-
-				$requete = $connexion-> prepare("SELECT l.num_lic AS num_lic,
-														DATE(CURRENT_DATE()) AS aujourdhui,
+				
+				$requete = $connexion-> prepare("SELECT l.num_lic AS num_lic, 
+														DATE(CURRENT_DATE()) AS aujourdhui, 
 														l.poids AS fob,
 														(l.poids) AS cif,
 														UPPER(cl.nom_cli) AS nom_cli,
@@ -44826,8 +44789,8 @@
 													$sql3");
 			}else{
 
-				$requete = $connexion-> prepare("SELECT l.num_lic AS num_lic,
-														DATE(CURRENT_DATE()) AS aujourdhui,
+				$requete = $connexion-> prepare("SELECT l.num_lic AS num_lic, 
+														DATE(CURRENT_DATE()) AS aujourdhui, 
 														l.fob AS fob,
 														(l.fob+l.fret+l.assurance+l.autre_frais) AS cif,
 														UPPER(cl.nom_cli) AS nom_cli,
@@ -44849,13 +44812,13 @@
 				$date_exp2 = $this-> getLastEpirationLicence($reponse['num_lic']);
 				$bg = "";
 				$sommeFob += $reponse['fob'];
-
+				
 				if ($type == 'EN COURS') {
 
 					if( ($this-> getDifferenceDate($date_exp, $reponse['aujourdhui']) >= 0) && ($this-> getDifferenceDate($date_exp, $reponse['aujourdhui']) > 0) && ($reponse['fob'] > $this-> getSommeFobLicence($reponse['num_lic']))){
 						$compteur++;
 						?>
-						<tr>
+						<tr>	
 							<td class="<?php echo $bg;?>" style=" text-align: left;" <?php echo $style;?>><?php echo $compteur;?></td>
 							<td class="<?php echo $bg;?>" style="text-align: left;"><?php echo $reponse['num_lic'];?></td>
 							<td style="text-align: left;"><?php echo $reponse['nom_cli'];?></td>
@@ -44881,7 +44844,7 @@
 					if(($this-> getDifferenceDate($date_exp, $reponse['aujourdhui']) <= 40) && ($this-> getDifferenceDate($date_exp, $reponse['aujourdhui']) > 0) && ($reponse['fob'] > $this-> getSommeFobLicence($reponse['num_lic']))){
 						$compteur++;
 						?>
-						<tr>
+						<tr>	
 							<td class="<?php echo $bg;?>" style=" text-align: left;" <?php echo $style;?>><?php echo $compteur;?></td>
 							<td class="<?php echo $bg;?>" style="text-align: left;"><?php echo $reponse['num_lic'];?></td>
 							<td style="text-align: left;"><?php echo $reponse['nom_cli'];?></td>
@@ -44907,7 +44870,7 @@
 					if(($date_exp < $reponse['aujourdhui']) && ($reponse['fob'] > $this-> getSommeFobLicence($reponse['num_lic']))){
 						$compteur++;
 						?>
-						<tr>
+						<tr>	
 							<td class="<?php echo $bg;?>" style=" text-align: left;" <?php echo $style;?>><?php echo $compteur;?></td>
 							<td class="<?php echo $bg;?>" style="text-align: left;"><?php echo $reponse['num_lic'];?></td>
 							<td style="text-align: left;"><?php echo $reponse['nom_cli'];?></td>
@@ -44933,7 +44896,7 @@
 					if(($reponse['fob'] == $this-> getSommeFobLicence($reponse['num_lic'])) && ($reponse['fob'] != $this-> getSommeFobAppureLicence($reponse['num_lic']))){
 						$compteur++;
 						?>
-						<tr>
+						<tr>	
 							<td class="<?php echo $bg;?>" style=" text-align: left;" <?php echo $style;?>><?php echo $compteur;?></td>
 							<td class="<?php echo $bg;?>" style="text-align: left;"><?php echo $reponse['num_lic'];?></td>
 							<td style="text-align: left;"><?php echo $reponse['nom_cli'];?></td>
@@ -44959,7 +44922,7 @@
 					if(($reponse['fob'] == $this-> getSommeFobLicence($reponse['num_lic'])) && ($reponse['fob'] == $this-> getSommeFobAppureLicence($reponse['num_lic']))){
 						$compteur++;
 						?>
-						<tr>
+						<tr>	
 							<td class="<?php echo $bg;?>" style=" text-align: left;" <?php echo $style;?>><?php echo $compteur;?></td>
 							<td class="<?php echo $bg;?>" style="text-align: left;"><?php echo $reponse['num_lic'];?></td>
 							<td style="text-align: left;"><?php echo $reponse['nom_cli'];?></td>
@@ -44985,7 +44948,7 @@
 					if(($reponse['fob'] == $this-> getSommeFobLicence($reponse['num_lic'])) && ($reponse['cif'] != $this-> getSommeCIFLicence($reponse['num_lic']))){
 						$compteur++;
 						?>
-						<tr>
+						<tr>	
 							<td class="<?php echo $bg;?>" style=" text-align: left;" <?php echo $style;?>><?php echo $compteur;?></td>
 							<td class="<?php echo $bg;?>" style="text-align: left;"><?php echo $reponse['num_lic'];?></td>
 							<td style="text-align: left;"><?php echo $reponse['nom_cli'];?></td>
@@ -45041,9 +45004,9 @@
 				$compteur++;
 				$bg = "";
 				$sommeFob += $reponse['fob'];
-
-				/*$ref_dos, $id_cli, $ref_fact, $fob,
-				$fret, $assurance, $autre_frais, $num_lic,
+				
+				/*$ref_dos, $id_cli, $ref_fact, $fob, 
+				$fret, $assurance, $autre_frais, $num_lic, 
 				$id_mod_lic, $id_march*/
 
 			?>
@@ -45119,9 +45082,9 @@
 				$compteur++;
 				$bg = "";
 				$sommeFob += $reponse['fob'];
-
-				/*$ref_dos, $id_cli, $ref_fact, $fob,
-				$fret, $assurance, $autre_frais, $num_lic,
+				
+				/*$ref_dos, $id_cli, $ref_fact, $fob, 
+				$fret, $assurance, $autre_frais, $num_lic, 
 				$id_mod_lic, $id_march*/
 
 			?>
@@ -45194,9 +45157,9 @@
 				$compteur++;
 				$bg = "";
 				$sommeFob += $reponse['fob'];
-
-				/*$ref_dos, $id_cli, $ref_fact, $fob,
-				$fret, $assurance, $autre_frais, $num_lic,
+				
+				/*$ref_dos, $id_cli, $ref_fact, $fob, 
+				$fret, $assurance, $autre_frais, $num_lic, 
 				$id_mod_lic, $id_march*/
 
 			?>
@@ -45272,9 +45235,9 @@
 				$compteur++;
 				$bg = "";
 				$sommeFob += $reponse['fob'];
-
-				/*$ref_dos, $id_cli, $ref_fact, $fob,
-				$fret, $assurance, $autre_frais, $num_lic,
+				
+				/*$ref_dos, $id_cli, $ref_fact, $fob, 
+				$fret, $assurance, $autre_frais, $num_lic, 
 				$id_mod_lic, $id_march*/
 
 			?>
@@ -45326,7 +45289,7 @@
 
 		//FIN Methodes permettant d'afficher
 
-		//Methode permettant de verifier
+		//Methode permettant de verifier 
 		public function verifierUtilisateur($pseudo_util, $pass_util){
 			include('connexion.php');
 			$entree['pseudo_util'] = $pseudo_util;
@@ -45404,9 +45367,9 @@
 			include('connexion.php');
 			$entree['id_trans_ap'] = $id_trans_ap;
 
-			$requete = $connexion-> prepare("SELECT ref_trans_ap, id_trans_ap,
-													DATE_FORMAT(date_trans_ap, '%d/%m/%Y') AS date_trans_ap,
-													DATE_FORMAT(date_trans_ap, '%d-%m-%Y') AS date_trans_ap2,
+			$requete = $connexion-> prepare("SELECT ref_trans_ap, id_trans_ap, 
+													DATE_FORMAT(date_trans_ap, '%d/%m/%Y') AS date_trans_ap, 
+													DATE_FORMAT(date_trans_ap, '%d-%m-%Y') AS date_trans_ap2, 
 													UPPER(banque) AS banque,
 													date_depot
 												FROM transmission_apurement
@@ -45466,7 +45429,7 @@
 		// 		return false;
 		// 	}
 		// }
-		//FIN Methode permettant de verifier
+		//FIN Methode permettant de verifier 
 
 		//Methode permettant de recuperer
 
@@ -45480,7 +45443,7 @@
 			}
 			return $i;
 		}
-
+		
 		public function getTailleCompteur2($i){
 			if(strlen($i) == '1' ){
 				$i = '000'.$i;
@@ -45493,7 +45456,7 @@
 			}
 			return $i;
 		}
-
+		
 		public function nbreSummary($statut, $id_mod_lic, $id_cli, $id_mod_trans, $commodity){
 			include('connexion.php');
 			$entree['id_mod_lic'] = $id_mod_lic;
@@ -45665,7 +45628,7 @@
 													AND date_crf IS NOT NULL
 													AND date_ad IS NOT NULL
 													AND date_assurance IS NOT NULL
-													AND date_decl IS NULL
+													AND date_decl IS NULL 
 													AND ref_decl IS NULL
 													AND ref_dos NOT LIKE '%20-%'
 													AND cleared <> '2'
@@ -45681,8 +45644,8 @@
 													AND date_crf IS NOT NULL
 													AND date_ad IS NOT NULL
 													AND date_assurance IS NOT NULL
-													AND klsa_arriv IS NULL
-													AND date_decl IS NULL
+													AND klsa_arriv IS NULL 
+													AND date_decl IS NULL 
 													AND ref_decl IS NULL
 													AND ref_dos NOT LIKE '%20-%'
 													AND cleared <> '2'
@@ -45698,9 +45661,9 @@
 													AND date_crf IS NOT NULL
 													AND date_ad IS NOT NULL
 													AND date_assurance IS NOT NULL
-													AND dispatch_klsa IS NOT NULL
+													AND dispatch_klsa IS NOT NULL 
 													AND wiski_arriv IS NOT NULL
-													AND date_decl IS NULL
+													AND date_decl IS NULL 
 													AND ref_decl IS NULL
 													AND ref_dos NOT LIKE '%20-%'
 													AND cleared <> '2'
@@ -45716,9 +45679,9 @@
 													AND date_crf IS NOT NULL
 													AND date_ad IS NOT NULL
 													AND date_assurance IS NOT NULL
-													AND dispatch_klsa IS NULL
+													AND dispatch_klsa IS NULL 
 													AND wiski_arriv IS NOT NULL
-													AND date_decl IS NULL
+													AND date_decl IS NULL 
 													AND ref_decl IS NULL
 													AND ref_dos NOT LIKE '%20-%'
 													AND cleared <> '2'
@@ -45731,9 +45694,9 @@
 					$requete = $connexion-> prepare("SELECT COUNT(ref_dos) AS nbre
 												FROM dossier
 												WHERE id_mod_lic = ?
-													AND date_decl IS NOT NULL
+													AND date_decl IS NOT NULL 
 													AND ref_decl IS NOT NULL
-													AND date_liq IS NULL
+													AND date_liq IS NULL 
 													AND ref_liq IS NULL
 													AND ref_dos NOT LIKE '%20-%'
 													AND cleared <> '2'
@@ -45746,9 +45709,9 @@
 					$requete = $connexion-> prepare("SELECT COUNT(ref_dos) AS nbre
 												FROM dossier
 												WHERE id_mod_lic = ?
-													AND date_liq IS NOT NULL
+													AND date_liq IS NOT NULL 
 													AND ref_liq IS NOT NULL
-													AND date_quit IS NULL
+													AND date_quit IS NULL 
 													AND ref_quit IS NULL
 													AND ref_dos NOT LIKE '%20-%'
 													AND cleared <> '2'
@@ -45761,7 +45724,7 @@
 					$requete = $connexion-> prepare("SELECT COUNT(ref_dos) AS nbre
 												FROM dossier
 												WHERE id_mod_lic = ?
-													AND date_quit IS NOT NULL
+													AND date_quit IS NOT NULL 
 													AND ref_quit IS NOT NULL
 													AND dgda_out IS NULL
 													AND ref_dos NOT LIKE '%20-%'
@@ -45775,7 +45738,7 @@
 					$requete = $connexion-> prepare("SELECT COUNT(ref_dos) AS nbre
 												FROM dossier
 												WHERE id_mod_lic = ?
-													AND date_quit IS NOT NULL
+													AND date_quit IS NOT NULL 
 													AND ref_quit IS NOT NULL
 													AND dgda_out IS NOT NULL
 													AND dispatch_deliv IS NOT NULL
@@ -45855,7 +45818,7 @@
 													AND date_crf IS NOT NULL
 													AND date_ad IS NOT NULL
 													AND date_assurance IS NOT NULL
-													AND date_decl IS NULL
+													AND date_decl IS NULL 
 													AND ref_decl IS NULL
 													AND ref_dos NOT LIKE '%20-%'
 													AND cleared <> '2'
@@ -45867,9 +45830,9 @@
 					$requete = $connexion-> prepare("SELECT COUNT(ref_dos) AS nbre
 												FROM dossier
 												WHERE id_mod_lic = ?
-													AND date_decl IS NOT NULL
+													AND date_decl IS NOT NULL 
 													AND ref_decl IS NOT NULL
-													AND date_liq IS NULL
+													AND date_liq IS NULL 
 													AND ref_liq IS NULL
 													AND ref_dos NOT LIKE '%20-%'
 													AND cleared <> '2'
@@ -45881,9 +45844,9 @@
 					$requete = $connexion-> prepare("SELECT COUNT(ref_dos) AS nbre
 												FROM dossier
 												WHERE id_mod_lic = ?
-													AND date_liq IS NOT NULL
+													AND date_liq IS NOT NULL 
 													AND ref_liq IS NOT NULL
-													AND date_quit IS NULL
+													AND date_quit IS NULL 
 													AND ref_quit IS NULL
 													AND ref_dos NOT LIKE '%20-%'
 													AND cleared <> '2'
@@ -45895,7 +45858,7 @@
 					$requete = $connexion-> prepare("SELECT COUNT(ref_dos) AS nbre
 												FROM dossier
 												WHERE id_mod_lic = ?
-													AND date_quit IS NOT NULL
+													AND date_quit IS NOT NULL 
 													AND ref_quit IS NOT NULL
 													AND dgda_out IS NULL
 													$sqlClient
@@ -45906,7 +45869,7 @@
 					$requete = $connexion-> prepare("SELECT COUNT(ref_dos) AS nbre
 												FROM dossier
 												WHERE id_mod_lic = ?
-													AND date_quit IS NOT NULL
+													AND date_quit IS NOT NULL 
 													AND ref_quit IS NOT NULL
 													AND dgda_out IS NOT NULL
 													AND dispatch_deliv IS NOT NULL
@@ -45974,7 +45937,7 @@
 
 	            <!-- /.info-box -->
 	          </div>
-
+	        
 			<?php
 			}$requete-> closeCursor();
 		}
@@ -46022,7 +45985,7 @@
 
 	            <!-- /.info-box -->
 	          </div>
-
+	        
 			<?php
 			}$requete-> closeCursor();
 		}
@@ -46069,7 +46032,7 @@
               	</button>
               </td>
             </tr>
-
+	        
 			<?php
 					// code...
 				}
@@ -46127,7 +46090,7 @@
               	</button>
               </td>
             </tr>
-
+	        
 			<?php
 				}
 			}$requete-> closeCursor();
@@ -46146,7 +46109,7 @@
 			$bg[7] = 'dark';
 			$bg[8] = 'danger';
 
-
+			
 			?>
 
 	          <div class="col-md-3 col-sm-6 col-12">
@@ -46169,7 +46132,7 @@
 
 	            <!-- /.info-box -->
 	          </div>
-
+	        
 			<?php
 		}
 
@@ -46350,7 +46313,7 @@
 												WHERE id_dos = ?");
 			$requete-> execute(array($entree['id_dos']));
 			if (!empty($this-> checkRegimeSuspens($id_dos))) {
-
+				
 				while($reponse=$requete-> fetch()){
 					$compteur++;
 					$ddi = $reponse['fob']*$coef*($this-> getCode_tarif($reponse['code_tarif_march'])['DDI']/100)*$roe_feuil_calc;
@@ -46359,8 +46322,8 @@
 					$table .='<tr>
 									<td>'.$compteur.'</td>
 										<td>
-											<a href="#" class="btn-xs btn-warning" onclick="modal_edit_marchandise_dossier('.$reponse['id_march_dos'].', '.$reponse['id_dos'].', '.$compteur.');"><span class="fa fa-edit"></span></a>
-
+											<a href="#" class="btn-xs btn-warning" onclick="modal_edit_marchandise_dossier('.$reponse['id_march_dos'].', '.$reponse['id_dos'].', '.$compteur.');"><span class="fa fa-edit"></span></a> 
+											
 											<a href="#" class="btn-xs btn-danger" onclick="supprimerMarchandiseDossier('.$reponse['id_march_dos'].', '.$reponse['id_dos'].', '.$compteur.');"><span class="fa fa-times"></span></a>
 										</td>
 									<td>'.$reponse['nom_march'].'</td>
@@ -46384,7 +46347,7 @@
 									<td>
 										<button class="btn-xs btn-warning" onclick="modal_edit_marchandise_dossier('.$reponse['id_march_dos'].', '.$reponse['id_dos'].');">
 											<span class="fa fa-edit"></span>
-										</button>
+										</button> 
 										<button class="btn-xs btn-danger" onclick="supprimerMarchandiseDossier('.$reponse['id_march_dos'].', '.$reponse['id_dos'].');">
 											<span class="fa fa-times"></span>
 										</button>
@@ -46399,8 +46362,8 @@
 					$table .='<tr>
 									<td>'.$compteur.'</td>
 										<td>
-											<a href="#" class="btn-xs btn-warning" onclick="modal_edit_marchandise_dossier('.$reponse['id_march_dos'].', '.$reponse['id_dos'].', '.$compteur.');"><span class="fa fa-edit"></span></a>
-
+											<a href="#" class="btn-xs btn-warning" onclick="modal_edit_marchandise_dossier('.$reponse['id_march_dos'].', '.$reponse['id_dos'].', '.$compteur.');"><span class="fa fa-edit"></span></a> 
+											
 											<a href="#" class="btn-xs btn-danger" onclick="supprimerMarchandiseDossier('.$reponse['id_march_dos'].', '.$reponse['id_dos'].', '.$compteur.');"><span class="fa fa-times"></span></a>
 										</td>
 									<td>'.$reponse['nom_march'].'</td>
@@ -46420,8 +46383,8 @@
 									<td style="text-align: right;">'.number_format($this-> getCode_tarif($reponse['code_tarif_march'])['DDI'], 2, '.', ',').'</td>
 									<td style="text-align: right;">'.number_format($reponse['fob']*$coef*($this-> getCode_tarif($reponse['code_tarif_march'])['DDI']/100)*$roe_feuil_calc, 0, '.', ',').'</td>
 									<td>
-										<a href="#" class="btn-xs btn-warning" onclick="modal_edit_marchandise_dossier('.$reponse['id_march_dos'].', '.$reponse['id_dos'].', '.$compteur.');"><span class="fa fa-edit"></span></a>
-
+										<a href="#" class="btn-xs btn-warning" onclick="modal_edit_marchandise_dossier('.$reponse['id_march_dos'].', '.$reponse['id_dos'].', '.$compteur.');"><span class="fa fa-edit"></span></a> 
+										
 										<a href="#" class="btn-xs btn-danger" onclick="supprimerMarchandiseDossier('.$reponse['id_march_dos'].', '.$reponse['id_dos'].', '.$compteur.');"><span class="fa fa-times"></span></a>
 									</td>
 								</tr>';
@@ -46429,7 +46392,7 @@
 			}
 
 			return $table;
-
+			
 		}
 
 		public function lister_commentaire_dossier($id_dos, $id_col){
@@ -46455,9 +46418,9 @@
 							</tr>';
 			}$requete-> closeCursor();
 
-
+		
 			return $table;
-
+			
 		}
 
 		public function getMarchandiseDossierEdit($id_dos, $ligne){
@@ -46483,7 +46446,7 @@
 												WHERE id_dos = ?");
 			$requete-> execute(array($entree['id_dos']));
 			if (!empty($this-> checkRegimeSuspens($id_dos))) {
-
+				
 				while($reponse=$requete-> fetch()){
 					$compteur++;
 					$ddi = $reponse['fob']*$coef*($this-> getCode_tarif($reponse['code_tarif_march'])['DDI']/100)*$roe_feuil_calc;
@@ -46491,7 +46454,7 @@
 					$loyer = ($ddi+$tva)*0.03*$duree_loyer;
 
 					if ($ligne == $compteur) {
-
+						
 						$table .='<tr>
 			                        <td>'.$compteur.'</td>
 			                        <td>
@@ -46518,12 +46481,12 @@
 								</tr>';
 
 					}else{
-
+						
 						$table .='<tr>
 										<td>'.$compteur.'</td>
 										<td>
-											<a href="#" class="btn-xs btn-warning" onclick="modal_edit_marchandise_dossier('.$reponse['id_march_dos'].', '.$reponse['id_dos'].', '.$compteur.');"><span class="fa fa-edit"></span></a>
-
+											<a href="#" class="btn-xs btn-warning" onclick="modal_edit_marchandise_dossier('.$reponse['id_march_dos'].', '.$reponse['id_dos'].', '.$compteur.');"><span class="fa fa-edit"></span></a> 
+											
 											<a href="#" class="btn-xs btn-danger" onclick="supprimerMarchandiseDossier('.$reponse['id_march_dos'].', '.$reponse['id_dos'].', '.$compteur.');"><span class="fa fa-times"></span></a>
 										</td>
 										<td>'.$reponse['nom_march'].'</td>
@@ -46545,12 +46508,12 @@
 										<td style="text-align: right;">'.number_format($tva, 0, '.', ',').'</td>
 										<td style="text-align: right;">'.number_format($loyer, 0, '.', ',').'</td>
 										<td>
-											<a href="#" class="btn-xs btn-warning" onclick="modal_edit_marchandise_dossier('.$reponse['id_march_dos'].', '.$reponse['id_dos'].', '.$compteur.');"><span class="fa fa-edit"></span></a>
-
+											<a href="#" class="btn-xs btn-warning" onclick="modal_edit_marchandise_dossier('.$reponse['id_march_dos'].', '.$reponse['id_dos'].', '.$compteur.');"><span class="fa fa-edit"></span></a> 
+											
 											<a href="#" class="btn-xs btn-danger" onclick="supprimerMarchandiseDossier('.$reponse['id_march_dos'].', '.$reponse['id_dos'].', '.$compteur.');"><span class="fa fa-times"></span></a>
 										</td>
 									</tr>';
-
+									
 					}
 
 				}$requete-> closeCursor();
@@ -46561,7 +46524,7 @@
 					$compteur++;
 
 					if ($ligne == $compteur) {
-
+						
 						$table .='<tr>
 			                        <td>'.$compteur.'</td>
 			                        <td>
@@ -46588,12 +46551,12 @@
 								</tr>';
 
 					}else{
-
+							
 						$table .='<tr>
 										<td>'.$compteur.'</td>
 										<td>
-											<a href="#" class="btn-xs btn-warning" onclick="modal_edit_marchandise_dossier('.$reponse['id_march_dos'].', '.$reponse['id_dos'].', '.$compteur.');"><span class="fa fa-edit"></span></a>
-
+											<a href="#" class="btn-xs btn-warning" onclick="modal_edit_marchandise_dossier('.$reponse['id_march_dos'].', '.$reponse['id_dos'].', '.$compteur.');"><span class="fa fa-edit"></span></a> 
+											
 											<a href="#" class="btn-xs btn-danger" onclick="supprimerMarchandiseDossier('.$reponse['id_march_dos'].', '.$reponse['id_dos'].', '.$compteur.');"><span class="fa fa-times"></span></a>
 										</td>
 										<td>'.$reponse['nom_march'].'</td>
@@ -46613,8 +46576,8 @@
 										<td style="text-align: right;">'.number_format($this-> getCode_tarif($reponse['code_tarif_march'])['DDI'], 2, '.', ',').'</td>
 										<td style="text-align: right;">'.number_format($reponse['fob']*$coef*($this-> getCode_tarif($reponse['code_tarif_march'])['DDI']/100)*$roe_feuil_calc, 0, '.', ',').'</td>
 										<td>
-											<a href="#" class="btn-xs btn-warning" onclick="modal_edit_marchandise_dossier('.$reponse['id_march_dos'].', '.$reponse['id_dos'].', '.$compteur.');"><span class="fa fa-edit"></span></a>
-
+											<a href="#" class="btn-xs btn-warning" onclick="modal_edit_marchandise_dossier('.$reponse['id_march_dos'].', '.$reponse['id_dos'].', '.$compteur.');"><span class="fa fa-edit"></span></a> 
+											
 											<a href="#" class="btn-xs btn-danger" onclick="supprimerMarchandiseDossier('.$reponse['id_march_dos'].', '.$reponse['id_dos'].', '.$compteur.');"><span class="fa fa-times"></span></a>
 										</td>
 									</tr>';
@@ -46624,7 +46587,7 @@
 			}
 
 			return $table;
-
+			
 		}
 
 		public function getMarchandiseDossier2($id_dos, $groupe){
@@ -46713,7 +46676,7 @@
 						</tr>';
 
 			return $table;
-
+			
 		}
 
 		public function supprimerMarchandiseDossier($id_march_dos){
@@ -46724,7 +46687,7 @@
 			$requete = $connexion-> prepare("DELETE FROM marchandise_dossier
 												WHERE id_march_dos = ?");
 			$requete-> execute(array($entree['id_march_dos']));
-
+			
 		}
 
 		public function maj_march_dos_fob($id_march_dos, $fob){
@@ -46737,7 +46700,7 @@
 												SET fob = ?
 												WHERE id_march_dos = ?");
 			$requete-> execute(array($entree['fob'], $entree['id_march_dos']));
-
+			
 		}
 
 		public function maj_march_dos_nom_march($id_march_dos, $nom_march){
@@ -46750,7 +46713,7 @@
 												SET nom_march = ?
 												WHERE id_march_dos = ?");
 			$requete-> execute(array($entree['nom_march'], $entree['id_march_dos']));
-
+			
 		}
 
 		public function maj_march_dos_num_av($id_march_dos, $num_av){
@@ -46763,7 +46726,7 @@
 												SET num_av = ?
 												WHERE id_march_dos = ?");
 			$requete-> execute(array($entree['num_av'], $entree['id_march_dos']));
-
+			
 		}
 
 		public function maj_march_dos_ref_fact($id_march_dos, $ref_fact){
@@ -46776,7 +46739,7 @@
 												SET ref_fact = ?
 												WHERE id_march_dos = ?");
 			$requete-> execute(array($entree['ref_fact'], $entree['id_march_dos']));
-
+			
 		}
 
 		public function maj_march_dos_position_av($id_march_dos, $position_av){
@@ -46789,7 +46752,7 @@
 												SET position_av = ?
 												WHERE id_march_dos = ?");
 			$requete-> execute(array($entree['position_av'], $entree['id_march_dos']));
-
+			
 		}
 
 		public function maj_march_dos_origine($id_march_dos, $origine){
@@ -46802,7 +46765,7 @@
 												SET origine = ?
 												WHERE id_march_dos = ?");
 			$requete-> execute(array($entree['origine'], $entree['id_march_dos']));
-
+			
 		}
 
 		public function maj_march_dos_provenance($id_march_dos, $provenance){
@@ -46815,7 +46778,7 @@
 												SET provenance = ?
 												WHERE id_march_dos = ?");
 			$requete-> execute(array($entree['provenance'], $entree['id_march_dos']));
-
+			
 		}
 
 		public function maj_march_dos_code_add($id_march_dos, $code_add){
@@ -46828,7 +46791,7 @@
 												SET code_add = ?
 												WHERE id_march_dos = ?");
 			$requete-> execute(array($entree['code_add'], $entree['id_march_dos']));
-
+			
 		}
 
 		public function maj_march_dos_nbr_bags($id_march_dos, $nbr_bags){
@@ -46841,7 +46804,7 @@
 												SET nbr_bags = ?
 												WHERE id_march_dos = ?");
 			$requete-> execute(array($entree['nbr_bags'], $entree['id_march_dos']));
-
+			
 		}
 
 		public function maj_march_dos_qte($id_march_dos, $qte){
@@ -46854,7 +46817,7 @@
 												SET qte = ?
 												WHERE id_march_dos = ?");
 			$requete-> execute(array($entree['qte'], $entree['id_march_dos']));
-
+			
 		}
 
 		public function maj_march_dos_poids($id_march_dos, $poids){
@@ -46867,7 +46830,7 @@
 												SET poids = ?
 												WHERE id_march_dos = ?");
 			$requete-> execute(array($entree['poids'], $entree['id_march_dos']));
-
+			
 		}
 
 		public function getDataMarchandiseDossier($id_march_dos){
@@ -46882,7 +46845,7 @@
 			$requete-> execute(array($entree['id_march_dos']));
 			$reponse=$requete-> fetch();
 			return $reponse;
-
+			
 		}
 
 		public function getFOBMarchandiseDossier($id_dos){
@@ -46897,7 +46860,7 @@
 			$requete-> execute(array($entree['id_dos']));
 			$reponse=$requete-> fetch();
 			return $reponse['fob'];
-
+			
 		}
 
 		public function getDossier2($id_dos){
@@ -46919,11 +46882,11 @@
 		// 	include('connexion.php');
 		// 	$entree['id_dos'] = $id_dos;
 
-		// 	$requete = $connexion-> prepare("SELECT *,
-		// 											entF.nom_ent AS nom_ent_front,
-		// 											entF.id_ent AS id_ent_front,
-		// 											entrepot_frontiere_dossier.date_in AS date_in_front,
-		// 											entrepot_frontiere_dossier.date_out AS date_out_front,
+		// 	$requete = $connexion-> prepare("SELECT *, 
+		// 											entF.nom_ent AS nom_ent_front, 
+		// 											entF.id_ent AS id_ent_front, 
+		// 											entrepot_frontiere_dossier.date_in AS date_in_front, 
+		// 											entrepot_frontiere_dossier.date_out AS date_out_front, 
 		// 											dossier.id_dos AS id_dos
 		// 										FROM dossier
 		// 										LEFT JOIN frontiere
@@ -47174,7 +47137,7 @@
 				$sqlIdMarch = '';
 			}
 
-			$requete = $connexion-> prepare("SELECT COUNT(id_dos) AS nbre
+			$requete = $connexion-> prepare("SELECT COUNT(id_dos) AS nbre 
 												FROM dossier
 												WHERE id_cli = ?
 													AND id_mod_trans = ?
@@ -47197,7 +47160,7 @@
 			$masque_date = '%'.date('y').'-%';
 			$entree['masque_date']= '\'%'.date('y').'-%\'';
 
-			$requete = $connexion-> prepare("SELECT COUNT(ref_dos) AS nbre
+			$requete = $connexion-> prepare("SELECT COUNT(ref_dos) AS nbre 
 												FROM dossier_logistique
 												WHERE id_cli = ?
 													AND id_trans = ?
@@ -47222,7 +47185,7 @@
 			}else{
 				$i = 1;
 			}
-
+			
 			//$i = $nbre;
 
 			$a = $this-> getTailleCompteur($i);
@@ -47263,9 +47226,9 @@
 			// }else{
 			// 	$i = 1;
 			// }
-
+			
 			$i = $this->  getNbreMcaFile($id_cli, $id_mod_trans, '2')+1;
-
+			
 			//$i = $nbre;
 
 			$a = $this-> getTailleCompteur($i);
@@ -47289,7 +47252,7 @@
 
 			return $ref_dos;
 		}
-
+		
 		public function getMcaFileLogistique($id_cli, $id_trans){
 			include('connexion.php');
 			$entree['id_cli'] = $id_cli;
@@ -47302,7 +47265,7 @@
 			}else{
 				$i = 1;
 			}
-
+			
 			//$i = $nbre;
 
 			$a = $this-> getTailleCompteur($i);
@@ -47361,14 +47324,14 @@
 			$annee = date('Y');
 			$entree['annee'] = "%$annee%";
 
-			$requete = $connexion-> prepare("SELECT COUNT(id_dos) AS nbre
+			$requete = $connexion-> prepare("SELECT COUNT(id_dos) AS nbre 
 												FROM dossier
 												WHERE id_cli = ?
 													AND id_mod_trans = ?
 													AND id_march = ?
 													AND id_mod_lic = ?
 													AND ref_dos LIKE ?");
-			$requete-> execute(array($entree['id_cli'], $entree['id_mod_trans'],
+			$requete-> execute(array($entree['id_cli'], $entree['id_mod_trans'], 
 									$entree['id_march'], $entree['id_mod_lic'], $entree['annee']));
 
 			$reponse = $requete-> fetch();
@@ -47385,14 +47348,14 @@
 			$entree['id_mod_lic'] = $id_mod_lic;
 			$entree['annee'] = date('Y');
 
-			$requete = $connexion-> prepare("SELECT COUNT(id_dos) AS nbre
+			$requete = $connexion-> prepare("SELECT COUNT(id_dos) AS nbre 
 												FROM dossier
 												WHERE id_cli = ?
 													AND id_mod_trans = ?
 													AND id_march = ?
 													AND id_mod_lic = ?
 													AND YEAR(date_creat_dos) = ?");
-			$requete-> execute(array($entree['id_cli'], $entree['id_mod_trans'],
+			$requete-> execute(array($entree['id_cli'], $entree['id_mod_trans'], 
 									$entree['id_march'], $entree['id_mod_lic'], $entree['annee']));
 
 			$reponse = $requete-> fetch();
@@ -47410,17 +47373,17 @@
 				$nbre = $this-> getNombreMcaFileAcide($id_cli, $id_mod_trans, $id_march, $id_mod_lic);
 				// $nbre = $this-> getNombreMcaFileExport($id_cli, $id_mod_trans, $id_march, $id_mod_lic);
 			}
-
+			
 			if ($nbre > 20) {
-
+				
 					$i = $nbre-10;
-
-
+				
+				
 			}else{
 				$i = $compteur;
-
+				
 			}
-
+			
 
 
 			$code_marchandise = $this-> getCodeModeMarchandise($id_cli, $id_mod_lic, $id_march);
@@ -47450,7 +47413,7 @@
 				}else{
 					$code = $this-> codePourClient($id_cli).'-'.$code_marchandise.date('y').'-'.$cod_mod_trans.$code_2_marchandise.$a;
 				}
-
+				
 			}
 
 			while($this-> verifierExistanceMCAFile($code) == true){
@@ -47468,7 +47431,7 @@
 					}else{
 						$a = $this-> getTailleCompteur($i);
 					}
-
+					
 
 					if ($id_cli == 874) {
 						$code = $this-> codePourClient($id_cli).'-'.$code_marchandise.'21'.'-'.$cod_mod_trans.$code_2_marchandise.$a;
@@ -47501,7 +47464,7 @@
 					}else{
 						$a = $this-> getTailleCompteur($a+$step);
 					}
-
+					
 					//$a = $this-> getTailleCompteur($a+$step);
 					//$code = $this-> codePourClient($id_cli).'-'.$code_marchandise.date('y').'-'.$cod_mod_trans.$code_2_marchandise.$a;
 					if ($id_cli == 874) {
@@ -47526,20 +47489,20 @@
 			// 	$nbre = $this-> getNombreMcaFileAcide($id_cli, $id_mod_trans, $id_march, $id_mod_lic);
 			// 	// $nbre = $this-> getNombreMcaFileExport($id_cli, $id_mod_trans, $id_march, $id_mod_lic);
 			// }
-
+			
 			// if ($nbre > 20) {
-
+				
 			// 		$i = $nbre-10;
-
-
+				
+				
 			// }else{
 			// 	$i = $compteur;
-
+				
 			// }
 
 
 			$i = $this-> getNombreMcaFileAcide($id_cli, $id_mod_trans, $id_march, $id_mod_lic)+1;
-
+			
 			$a = $this-> getTailleCompteur($i);
 			$code_cli = $this-> codePourClient($id_cli);
 			$code_mod_lic = $this-> getElementModeleLicence($id_mod_lic)['code_1'];
@@ -47862,7 +47825,7 @@
 												LIMIT 0, 1");
 				$requete-> execute(array($entree['id_mod_lic'], $entree['id_cli'], $entree['id_mod_trans']));
 			}
-
+			
 			/*$requete = $connexion-> prepare("SELECT *
 												FROM licence
 												WHERE id_cli = ?
@@ -47932,7 +47895,7 @@
 												LIMIT 0, 1");
 				$requete-> execute(array($entree['id_mod_lic'], $entree['id_cli'], $entree['id_mod_trans']));
 			}
-
+			
 			/*$requete = $connexion-> prepare("SELECT *
 												FROM licence
 												WHERE id_cli = ?
@@ -48191,8 +48154,8 @@
 				$reponse['roe_liq'] = null;
 				return $reponse;
 			}
-
-
+			
+			
 		}
 
 		public function getDataUtilisateur($id_util){
@@ -48411,7 +48374,7 @@
 			include('connexion.php');
 			$entree['num_lic'] = $num_lic;
 
-			$requete = $connexion-> prepare("SELECT l.*, cl.*,
+			$requete = $connexion-> prepare("SELECT l.*, cl.*, 
 													IF(l.poids IS NULL OR l.poids='', 0, l.poids) AS poids_lic,
 													IF(l.consommable='1', 'Consommable', 'Divers') AS label_consommable,
 													l.id_mod_lic AS id_mod_lic
@@ -48431,7 +48394,7 @@
 			include('connexion.php');
 			$entree['cod'] = $cod;
 
-			$requete = $connexion-> prepare("SELECT l.*, cl.*,
+			$requete = $connexion-> prepare("SELECT l.*, cl.*, 
 													IF(l.poids IS NULL OR l.poids='', 0, l.poids) AS poids_lic,
 													IF(l.consommable='1', 'Consommable', 'Divers') AS label_consommable
 												FROM licence l, client cl
@@ -48483,7 +48446,7 @@
 			$entree['num_lic'] = $num_lic;
 
 			$requete = $connexion-> prepare("SELECT *
-												FROM licence
+												FROM licence 
 												WHERE num_lic = ?");
 			$requete-> execute(array($entree['num_lic']));
 			$reponse = $requete-> fetch();
@@ -48574,7 +48537,7 @@
 			$entree['num_lic'] = $num_lic;
 
 			if ( $this-> getLicence($num_lic)['tonnage'] == '1') {
-
+				
 				$requete = $connexion-> prepare("SELECT SUM(poids) AS fob
 													FROM dossier
 													WHERE num_lic = ?
@@ -48621,7 +48584,7 @@
 												WHERE num_lic = ?
 													AND cleared <> '2'");
 
-
+		
 			$requete-> execute(array($entree['num_lic']));
 			$reponse = $requete-> fetch();
 			if($reponse){
@@ -48773,7 +48736,7 @@
 				return null;
 			}
 
-
+			
 		}
 
 		public function getLastEpirationLicence2($num_lic){
@@ -48825,12 +48788,12 @@
 				return $reponse;
 			}
         }
-
+        
 		public function getElementModeleLicence($id_mod_lic){
 			include('connexion.php');
 			$entree['id_mod_lic'] = $id_mod_lic;
 
-			$requete = $connexion-> prepare('SELECT id_mod_lic,
+			$requete = $connexion-> prepare('SELECT id_mod_lic, 
 													UPPER(nom_mod_lic) AS nom_mod_lic,
 													sigle_mod_lic,
 													SUBSTRING(nom_mod_lic, 1, 1) AS code_1
@@ -48842,12 +48805,12 @@
 				return $reponse;
 			}
         }
-
+        
 		public function getElementMarchandise($id_march){
 			include('connexion.php');
 			$entree['id_march'] = $id_march;
 
-			$requete = $connexion-> prepare('SELECT id_march,
+			$requete = $connexion-> prepare('SELECT id_march, 
 													UPPER(nom_march) AS nom_march,
 													code
 												FROM marchandise
@@ -48858,12 +48821,12 @@
 				return $reponse;
 			}
         }
-
+        
 		public function getElementClient($id_cli){
 			include('connexion.php');
 			$entree['id_cli'] = $id_cli;
 
-			$requete = $connexion-> prepare('SELECT *, id_cli,
+			$requete = $connexion-> prepare('SELECT *, id_cli, 
 													UPPER(nom_cli) AS nom_cli
 												FROM client
 												WHERE id_cli = ?');
@@ -48873,7 +48836,7 @@
 				return $reponse;
 			}
         }
-
+        
 		public function getNomClient($id_cli){
 			include('connexion.php');
 			$entree['id_cli'] = $id_cli;
@@ -48887,7 +48850,7 @@
 				return $reponse['nom_cli'];
 			}
         }
-
+        
 		public function getUtilisateur($id_util){
 			include('connexion.php');
 			$entree['id_util'] = $id_util;
@@ -48904,7 +48867,7 @@
 				return $reponse;
 			}
         }
-
+        
 		public function getNomTypeLicence($id_type_lic){
 			include('connexion.php');
 			$entree['id_type_lic'] = $id_type_lic;
@@ -48918,7 +48881,7 @@
 				return $reponse['nom_type_lic'];
 			}
         }
-
+        
 		public function getIdRoleUtilisateur($id){
 			include('connexion.php');
 			$entree['id'] = $id;
@@ -48933,7 +48896,7 @@
 				return $reponse['id_role'];
 			}
         }
-
+        
 		public function getNomRoleUtilisateur($id){
 			include('connexion.php');
 			$entree['id'] = $id;
@@ -49003,39 +48966,39 @@
 				$sqlStatus = " AND d.date_crf IS NOT NULL
 												AND d.date_ad IS NOT NULL
 												AND d.date_assurance IS NOT NULL
-												AND d.date_decl IS NULL
+												AND d.date_decl IS NULL 
 												AND d.ref_decl IS NULL
 												AND d.ref_dos NOT LIKE '%20-%'
 												AND d.cleared <> '2'";
 
 			}else if ($statut == 'AWAITING LIQUIDATION') {
 
-				$sqlStatus = " AND d.date_decl IS NOT NULL
+				$sqlStatus = " AND d.date_decl IS NOT NULL 
 												AND d.ref_decl IS NOT NULL
-												AND d.date_liq IS NULL
+												AND d.date_liq IS NULL 
 												AND d.ref_liq IS NULL
 												AND d.ref_dos NOT LIKE '%20-%'
 												AND d.cleared <> '2'";
 
 			}else if ($statut == 'AWAITING QUITTANCE') {
 
-				$sqlStatus = " AND d.date_liq IS NOT NULL
+				$sqlStatus = " AND d.date_liq IS NOT NULL 
 												AND d.ref_liq IS NOT NULL
-												AND d.date_quit IS NULL
+												AND d.date_quit IS NULL 
 												AND d.ref_quit IS NULL
 												AND d.ref_dos NOT LIKE '%20-%'
 												AND d.cleared <> '2'";
 
 			}else if ($statut == 'AWAITING BAE/BS') {
 
-				$sqlStatus = " AND d.date_quit IS NOT NULL
+				$sqlStatus = " AND d.date_quit IS NOT NULL 
 												AND d.ref_quit IS NOT NULL
 												AND dgda_out IS NULL
 												AND d.cleared <> '2'";
 
 			}else if ($statut == 'CLEARING COMPLETED') {
 
-				$sqlStatus = " AND d.dgda_out IS NOT NULL
+				$sqlStatus = " AND d.dgda_out IS NOT NULL 
 												AND d.dispatch_deliv IS NOT NULL
 												AND d.cleared <> '2'";
 
@@ -49132,16 +49095,16 @@
 														AND id_mod_lic = ?
 														AND id_mod_trans = ?
 														AND statut = ?");
-			$requete-> execute(array($entree['id_cli'], $entree['id_mod_lic'],
+			$requete-> execute(array($entree['id_cli'], $entree['id_mod_lic'], 
 								$entree['id_mod_trans'], $entree['statut']));
 			while ($reponse = $requete-> fetch()) {
-
+				
 				if ( ( ( $reponse['arrival_deliver_delay'] - $this-> getWeekendsAndHolidays($reponse['arrival_date'], $reponse['dispatch_deliv']) ) >= $nombreInf ) && ( ( $reponse['arrival_deliver_delay'] - $this-> getWeekendsAndHolidays($reponse['arrival_date'], $reponse['dispatch_deliv']) ) < $nombreSup )){
 					$nbre++;
 				}
 
 			}$requete-> closeCursor();
-
+			
 			return $nbre;
 		}
 
@@ -49179,39 +49142,39 @@
 				$sqlStatus = " AND d.date_crf IS NOT NULL
 												AND d.date_ad IS NOT NULL
 												AND d.date_assurance IS NOT NULL
-												AND d.date_decl IS NULL
+												AND d.date_decl IS NULL 
 												AND d.ref_decl IS NULL
 												AND d.ref_dos NOT LIKE '%20-%'
 												AND d.cleared <> '2'";
 
 			}else if ($statut == 'AWAITING LIQUIDATION') {
 
-				$sqlStatus = " AND d.date_decl IS NOT NULL
+				$sqlStatus = " AND d.date_decl IS NOT NULL 
 												AND d.ref_decl IS NOT NULL
-												AND d.date_liq IS NULL
+												AND d.date_liq IS NULL 
 												AND d.ref_liq IS NULL
 												AND d.ref_dos NOT LIKE '%20-%'
 												AND d.cleared <> '2'";
 
 			}else if ($statut == 'AWAITING QUITTANCE') {
 
-				$sqlStatus = " AND d.date_liq IS NOT NULL
+				$sqlStatus = " AND d.date_liq IS NOT NULL 
 												AND d.ref_liq IS NOT NULL
-												AND d.date_quit IS NULL
+												AND d.date_quit IS NULL 
 												AND d.ref_quit IS NULL
 												AND d.ref_dos NOT LIKE '%20-%'
 												AND d.cleared <> '2'";
 
 			}else if ($statut == 'AWAITING BAE/BS') {
 
-				$sqlStatus = " AND d.date_quit IS NOT NULL
+				$sqlStatus = " AND d.date_quit IS NOT NULL 
 												AND d.ref_quit IS NOT NULL
 												AND dgda_out IS NULL
 												AND d.cleared <> '2'";
 
 			}else if ($statut == 'CLEARING COMPLETED') {
 
-				$sqlStatus = " AND d.dgda_out IS NOT NULL
+				$sqlStatus = " AND d.dgda_out IS NOT NULL 
 												AND d.dispatch_deliv IS NOT NULL
 												AND d.cleared <> '2'";
 
@@ -49225,16 +49188,16 @@
 														AND d.id_mod_lic = ?
 														AND d.id_mod_trans = ?
 														$sqlStatus");
-			$requete-> execute(array($entree['id_cli'], $entree['id_mod_lic'],
+			$requete-> execute(array($entree['id_cli'], $entree['id_mod_lic'], 
 								$entree['id_mod_trans']));
 			while ($reponse = $requete-> fetch()) {
-
+				
 				if ( ( ( $reponse['arrival_deliver_delay'] - $this-> getWeekendsAndHolidays($reponse['arrival_date'], $reponse['dispatch_deliv']) ) >= $nombreInf ) && ( ( $reponse['arrival_deliver_delay'] - $this-> getWeekendsAndHolidays($reponse['arrival_date'], $reponse['dispatch_deliv']) ) < $nombreSup )){
 					$nbre++;
 				}
 
 			}$requete-> closeCursor();
-
+			
 			return $nbre;
 		}
 
@@ -49254,17 +49217,17 @@
 													WHERE id_mod_lic = ?
 														AND id_mod_trans = ?
 														AND statut = ?");
-			$requete-> execute(array($entree['id_mod_lic'],
+			$requete-> execute(array($entree['id_mod_lic'], 
 								$entree['id_mod_trans'], $entree['statut']));
 			while ($reponse = $requete-> fetch()) {
-
+				
 				if ( ( ( $reponse['arrival_deliver_delay'] - $this-> getWeekendsAndHolidays($reponse['arrival_date'], $reponse['dispatch_deliv']) ) >= $nombreInf ) && ( ( $reponse['arrival_deliver_delay'] - $this-> getWeekendsAndHolidays($reponse['arrival_date'], $reponse['dispatch_deliv']) ) < $nombreSup )){
 					$nbre++;
 				}
 
 
 			}$requete-> closeCursor();
-
+			
 			return $nbre;
 		}
 
@@ -49364,8 +49327,8 @@
 													AND num_lic <> 'UNDERVALUE'
 													AND num_lic NOT LIKE '%UNDER%'
 													AND id_dos NOT IN (
-														SELECT id_dos
-															FROM dossier
+														SELECT id_dos 
+															FROM dossier 
 															WHERE ref_dos LIKE '%RF20-%' OR ref_dos LIKE '%AW20-%' OR ref_dos LIKE '%-ACID-%' OR ref_dos LIKE '%-SUL%'
 														)
 													AND (id_cli <> 869 AND id_cli <> 929 AND id_cli <> 927 AND id_cli <> 870 AND id_cli <> 902 AND id_cli <> 873 AND id_cli <> 871 AND id_cli <> 872 AND id_cli <> 905)
@@ -49424,7 +49387,7 @@
 				}
 
 			}$requete-> closeCursor();
-
+			
 			return $compteur;
 		}
 
@@ -49463,7 +49426,7 @@
 													$sqlTime");
 			// $requete-> execute(array($entree['id_mod_lic']));
 			$reponse = $requete-> fetch();
-
+			
 			return $reponse['nbre'];
 		}
 
@@ -49502,7 +49465,7 @@
 													$sqlTime");
 			// $requete-> execute(array($entree['id_mod_lic']));
 			$reponse = $requete-> fetch();
-
+			
 			return $reponse['nbre'];
 		}
 
@@ -49542,7 +49505,7 @@
 													$sqlTime");
 			// $requete-> execute(array($entree['id_mod_lic']));
 			$reponse = $requete-> fetch();
-
+			
 			return $reponse['nbre'];
 		}
 
@@ -49582,7 +49545,7 @@
 													");
 			// $requete-> execute(array($entree['id_mod_lic']));
 			$reponse = $requete-> fetch();
-
+			
 			return $reponse['nbre'];
 		}
 
@@ -49598,7 +49561,7 @@
 				<a class="dropdown-item" href="#" onclick="modal_upload_depense('<?php echo $reponse['id_dep'];?>', '<?php echo $reponse['nom_dep'];?>');"><?php echo $reponse['nom_dep'];?></a>
 				<?php
 			}$requete-> closeCursor();
-
+			
 		}
 
 		public function getListeUploadDepense(){
@@ -49620,7 +49583,7 @@
 			}$requete-> closeCursor();
 
 			return $table;
-
+			
 		}
 
 		public function getReportPendingInvoiceCommodityCategory($id_mod_lic){
@@ -49643,7 +49606,7 @@
 												-- AND dos.date_quit IS NOT NULL
 												-- AND dos.ref_quit IS NOT NULL
 
-												AND
+												AND 
 												(
 													-- Pocess 1
 													(
@@ -49660,7 +49623,7 @@
 													(
 														get_inv_process_pour_dossier(dos.id_dos)=2
 														AND (
-																	dos.dispatch_date IS NOT NULL
+																	dos.dispatch_date IS NOT NULL 
 																	OR (dos.dgda_out IS NOT NULL AND dos.id_mod_trans=4)
 																)
 														-- dos.dispatch_date IS NOT NULL
@@ -49671,7 +49634,7 @@
 														get_inv_process_pour_dossier(dos.id_dos)=3
 														AND dos.dispatch_deliv IS NOT NULL
 													)
-
+														
 												)
 												AND dos.id_dos NOT IN (SELECT id_dos FROM detail_facture_dossier)
 											GROUP BY march.id_march
@@ -49686,7 +49649,7 @@
 			}$requete-> closeCursor();
 
 			return $table;
-
+			
 		}
 
 		public function getListeFactures($statut, $id_mod_lic, $id_util=NULL, $debut=NULL, $fin=NULL, $id_cli=NULL){
@@ -49718,7 +49681,7 @@
 					$sqlTime = ' AND DATE(fd.date_fact) BETWEEN "'.$debut.'" AND "'.$fin.'"';
 				}
 
-				$requete = $connexion-> query("SELECT fd.ref_fact AS ref_fact,
+				$requete = $connexion-> query("SELECT fd.ref_fact AS ref_fact, 
 													DATE_FORMAT(fd.date_fact, '%d/%m/%Y') AS date_fact,
 													cl.nom_cli AS nom_cli,
 													util.nom_util AS nom_util,
@@ -49733,14 +49696,14 @@
 															)
 														) AS statut,
 													CONCAT(CONCAT('<button class=\"btn btn-xs bg-primary square-btn-adjust\" onclick=\"window.open(\'',mf.view_page,'?ref_fact=',fd.ref_fact,'\',\'pop3\',\'width=1000,height=800\');\" title=\"View invoice\">
-									                    <i class=\"fas fa-eye\"></i>
+									                    <i class=\"fas fa-eye\"></i> 
 									                </button>'),' ',
 									                IF(mf.excel IS NOT NULL, CONCAT('<button class=\"btn btn-xs bg-success square-btn-adjust\" onclick=\"window.location.replace(\'',mf.excel,'?ref_fact=',fd.ref_fact,'\',\'pop4\',\'width=1000,height=800\');\" title=\"Export Annex\">
-									                    <i class=\"fas fa-file-excel\"></i>
+									                    <i class=\"fas fa-file-excel\"></i> 
 									                </button>'), '')) AS view_page,
-									                SUM(
-															IF(det.usd='1',
-																det.montant,
+									                SUM( 
+															IF(det.usd='1', 
+																det.montant, 
 																IF(det.tva='1',
 																	IF(det.montant_tva>0,
 																		(det.montant_tva+det.montant)/dos.roe_decl,
@@ -49748,26 +49711,26 @@
 																	),
 																	(det.montant/dos.roe_decl)
 																)
-															)
+															) 
 														) AS montant_ht,
 									                SUM(
-																IF(det.usd='1',
+																IF(det.usd='1', 
 																	IF(det.tva='1',
 																		det.montant*0.16,
 																		0
-																	),
+																	), 
 																	0
 																)
 															) AS tva_usd,
 									                SUM(
-														IF(det.usd='0',
+														IF(det.usd='0', 
 															IF(det.tva='1',
 																IF(det.montant_tva>0,
 																	(det.montant_tva+det.montant)/dos.roe_decl,
 																	(det.montant*0.16)/dos.roe_decl
 																	),
 																det.montant/dos.roe_decl
-															),
+															), 
 															IF(det.tva='1',
 																det.montant*1.16,
 																det.montant
@@ -49776,11 +49739,11 @@
 													) AS montant,
 
 													SUM(
-														IF(det.usd='1',
+														IF(det.usd='1', 
 															IF(det.tva='1',
 																det.montant*1.16,
 																det.montant
-															),
+															), 
 															IF(det.tva='1',
 																IF(det.montant_tva>0,
 																	((det.montant_tva+det.montant)/dos.roe_decl),
@@ -49792,7 +49755,7 @@
 													) AS ttc_usd,
 
 													SUM(
-														IF(det.usd='0',
+														IF(det.usd='0', 
 															IF(det.tva='1',
 																IF(det.montant_tva>0,
 																	det.montant_tva+det.montant,
@@ -49956,7 +49919,7 @@
 					$reponse['commodity'] = $this-> getMarchandiseFacture($reponse['ref_fact'])['nom_march'];
 					$rows[] = $reponse;
 				}$requete-> closeCursor();
-
+				
 				return $rows;
 
 			}else if($statut=='Dossiers Facturés'){
@@ -49980,9 +49943,9 @@
 				if (isset($debut) && ($debut != '') && isset($fin) && ($fin != '')) {
 					$sqlTime = ' AND DATE(fd.date_fact) BETWEEN "'.$debut.'" AND "'.$fin.'"';
 				}
-				$requete = $connexion-> query("SELECT dos.ref_dos AS ref_dos,
+				$requete = $connexion-> query("SELECT dos.ref_dos AS ref_dos, 
 													dos.mca_b_ref AS mca_b_ref,
-													fd.ref_fact AS ref_fact,
+													fd.ref_fact AS ref_fact, 
 													util.nom_util AS nom_util,
 													dos.po_ref AS po_ref,
 													dos.roe_decl AS roe_decl,
@@ -50019,7 +49982,7 @@
 														)
 													) AS other_charge,
 													SUM(
-														IF(deb.id_t_deb='1',
+														IF(deb.id_t_deb='1', 
 															IF(det.usd='0',
 																IF(det.tva='1',
 																	IF(det.montant_tva>0,
@@ -50106,14 +50069,14 @@
 														)
 													) AS total_agency_fee,
 									                SUM(
-														IF(det.usd='0',
+														IF(det.usd='0', 
 															IF(det.tva='1',
 																IF(det.montant_tva>0,
 																	(det.montant_tva+det.montant)/dos.roe_decl,
 																	(det.montant*0.16)/dos.roe_decl
 																	),
 																det.montant/dos.roe_decl
-															),
+															), 
 															IF(det.tva='1',
 																det.montant*1.16,
 																det.montant
@@ -50131,10 +50094,10 @@
 															)
 														) AS statut,
 													CONCAT(CONCAT('<a href=\"#\" onclick=\"window.open(\'',mf.view_page,'?ref_fact=',fd.ref_fact,'\',\'pop3\',\'width=1000,height=800\');\" title=\"View invoice\">
-									                    <i class=\"fas fa-eye\"></i>
+									                    <i class=\"fas fa-eye\"></i> 
 									                </a>'),' ',
 									                CONCAT('<a href=\"#\" class=\"text-success\" onclick=\"window.location.replace(\'',mf.excel,'?ref_fact=',fd.ref_fact,'\',\'pop4\',\'width=1000,height=800\');\" title=\"Export Annex\">
-									                    <i class=\"fas fa-file-excel\"></i>
+									                    <i class=\"fas fa-file-excel\"></i> 
 									                </a>')) AS view_page,
 									                dos.id_mod_lic AS id_mod_lic,
 									                dos.id_cli AS id_cli,
@@ -50164,7 +50127,7 @@
 					$compteur++;
 
 					if ($id_mod_lic=='1') {
-
+						
 						$reponse['avg_liquidation_usd_per_ton'] = $this-> getMontantFactureDossierDebours3($reponse['ref_fact'], 2)/$this-> getPoidsFacture($reponse['ref_fact']);
 
 					}else{
@@ -50208,7 +50171,7 @@
 					$reponse['rls_per_ton'] = ($this-> getMontantDeboursFactureDossier2USD($reponse['ref_fact'], 3, $reponse['id_dos'])/$reponse['poids']);
 					$reponse['fsr'] = ($this-> getMontantDeboursFactureDossier2USD($reponse['ref_fact'], 4, $reponse['id_dos']));
 					$reponse['fsr_per_ton'] = ($this-> getMontantDeboursFactureDossier2USD($reponse['ref_fact'], 4, $reponse['id_dos'])/$reponse['poids']);
-
+					
 					$reponse['occ_sample'] = $this-> getMontantDeboursFactureDossier2($reponse['ref_fact'], 9, $reponse['id_dos']);
 					$reponse['cgea'] = $this-> getMontantDeboursFactureDossier2($reponse['ref_fact'], 10, $reponse['id_dos']);
 					$reponse['dgda_seal'] = $this-> getMontantDeboursFactureDossier2($reponse['ref_fact'], 13, $reponse['id_dos']);
@@ -50218,16 +50181,16 @@
 					}else{
 						$reponse['nbre_scelle'] = $this-> getMontantDeboursFactureDossier2($reponse['ref_fact'], 45, $reponse['id_dos'])/35;
 					}
-
+					
 					$reponse['scelle'] = $this-> getMontantDeboursFactureDossier2($reponse['ref_fact'], 45, $reponse['id_dos']);
 					$reponse['tresco'] = $this-> getMontantDeboursFactureDossier2($reponse['ref_fact'], 94, $reponse['id_dos']);
 					$reponse['nom_banq'] = $this-> getDataBancaire($reponse['id_bank_liq'])['nom_banq'];
 
 					$rows[] = $reponse;
 				}$requete-> closeCursor();
-
+				
 				return $rows;
-
+				
 			}else if($statut=='Dossiers Non Facturés'){
 
 				$sqlTransit = "";
@@ -50241,7 +50204,7 @@
 				}
 
 				$requete = $connexion-> query("SELECT dos.ref_dos AS ref_dos,
-													cl.nom_cli AS nom_cli,
+													cl.nom_cli AS nom_cli, 
 													dos.mca_b_ref AS mca_b_ref,
 													dos.id_dos AS id_dos,
 													dos.po_ref AS po_ref,
@@ -50278,7 +50241,7 @@
 													          IF(dos.date_crf IS NULL AND dos.date_ad IS NOT NULL AND dos.date_assurance IS NULL,
 													            'AWAITING CRF/INSURANCE',
 													            IF(dos.date_crf IS NULL AND dos.date_ad IS NOT NULL AND dos.date_assurance IS NOT NULL,
-													              'AWAITING CRF',
+													              'AWAITING CRF', 
 													              IF(dos.date_crf IS NOT NULL AND dos.date_ad IS NULL AND dos.date_assurance IS NULL,
 													                'AWAITING AD/INSURANCE',
 													                IF(dos.date_crf IS NOT NULL AND dos.date_ad IS NULL AND dos.date_assurance IS NOT NULL,
@@ -50289,13 +50252,13 @@
 													                      IF(dos.date_decl IS NULL AND dos.ref_decl IS NULL, 'UNDER PREPARATION',
 													                        IF(dos.date_liq IS NULL AND dos.ref_liq IS NULL, 'AWAITING LIQUIDATION',
 													                          IF(dos.date_quit IS NULL AND dos.ref_quit IS NULL, 'AWAITING QUITTANCE',
-													                            IF(dos.date_quit IS NOT NULL AND dos.ref_quit IS NOT NULL AND dos.dgda_out IS NULL, 'AWAITING BAE/BS',
+													                            IF(dos.date_quit IS NOT NULL AND dos.ref_quit IS NOT NULL AND dos.dgda_out IS NULL, 'AWAITING BAE/BS', 
 													                              IF(dos.dgda_out IS NOT NULL AND dos.dispatch_deliv IS NOT NULL, 'CLEARING COMPLETED', '')
 													                              )
 													                            )
 													                          )
 													                        )
-
+													                      
 													                      )
 													                  )
 													                )
@@ -50304,7 +50267,7 @@
 													          )
 													      )
 														,
-														IF(dos.id_mod_lic='1',
+														IF(dos.id_mod_lic='1', 
 															IF(dos.load_date IS NOT NULL AND dos.ceec_in IS NULL,
 																'LOADED',
 																IF(dos.ceec_in IS NOT NULL AND dos.ceec_out IS NULL, 'AT CEEC',
@@ -50317,7 +50280,7 @@
 																							IF(dos.gov_in IS NOT NULL AND dos.gov_out IS NULL, 'AT GOVERNOR\'S OFFICE',
 																								IF(dos.gov_out IS NOT NULL AND dos.dispatch_date IS NULL, 'GOVERNOR\'S OFFICE OUT',
 																									IF(dos.dispatch_date IS NOT NULL AND dos.klsa_arriv IS NULL,
-																										'DISPATCHED',
+																										'DISPATCHED', 
 																											IF(dos.klsa_arriv IS NOT NULL AND dos.end_form IS NULL, 'AT BORDER',
 																												IF(dos.end_form IS NOT NULL AND dos.exit_drc IS NULL, 'UNDER FORMALITIES',
 																													IF(dos.exit_drc IS NOT NULL, 'EXIT DRC', '')
@@ -50363,7 +50326,7 @@
 													-- AND dos.ref_liq IS NOT NULL
 													-- AND dos.date_quit IS NOT NULL
 													-- AND dos.ref_quit IS NOT NULL
-													AND
+													AND 
 													(
 														-- Pocess 1
 														(
@@ -50380,7 +50343,7 @@
 														(
 															get_inv_process_pour_dossier(dos.id_dos)=2
 															AND (
-																	dos.dispatch_date IS NOT NULL
+																	dos.dispatch_date IS NOT NULL 
 																	OR (dos.dgda_out IS NOT NULL AND dos.id_mod_trans=4)
 																)
 															-- dos.dispatch_date IS NOT NULL
@@ -50391,10 +50354,10 @@
 															get_inv_process_pour_dossier(dos.id_dos)=3
 															AND dos.dispatch_deliv IS NOT NULL
 														)
-
+															
 													)
 													AND dos.id_dos NOT IN (
-														SELECT DISTINCT(dos.id_dos)
+														SELECT DISTINCT(dos.id_dos) 
 															FROM facture_dossier fd, detail_facture_dossier det, dossier dos
 															WHERE fd.ref_fact = det.ref_fact
 																AND fd.note_debit = '0'
@@ -50413,9 +50376,9 @@
 					$reponse['truck'] = $reponse['horse'].' / '.$reponse['trailer_1'].' / '.$reponse['trailer_2'];
 					$rows[] = $reponse;
 				}$requete-> closeCursor();
-
+				
 				return $rows;
-
+				
 			}else if($statut=='Excel Invoice'){
 
 				$sqlTransit = "";
@@ -50429,7 +50392,7 @@
 				}
 
 				$requete = $connexion-> query("SELECT dos.ref_dos AS ref_dos,
-													cl.nom_cli AS nom_cli,
+													cl.nom_cli AS nom_cli, 
 													dos.mca_b_ref AS mca_b_ref,
 													dos.ref_fact_excel AS ref_fact_excel,
 													dos.id_dos AS id_dos,
@@ -50482,9 +50445,9 @@
 					$reponse['truck'] = $reponse['horse'].' / '.$reponse['trailer_1'].' / '.$reponse['trailer_2'];
 					$rows[] = $reponse;
 				}$requete-> closeCursor();
-
+				
 				return $rows;
-
+				
 			}
 
 		}
@@ -50519,7 +50482,7 @@
 			}
 
 			$requete = $connexion-> query("SELECT dos.ref_dos AS ref_dos,
-												cl.nom_cli AS nom_cli,
+												cl.nom_cli AS nom_cli, 
 												dos.mca_b_ref AS mca_b_ref,
 												dos.id_dos AS id_dos,
 												dos.po_ref AS po_ref,
@@ -50556,7 +50519,7 @@
 												          IF(dos.date_crf IS NULL AND dos.date_ad IS NOT NULL AND dos.date_assurance IS NULL,
 												            'AWAITING CRF/INSURANCE',
 												            IF(dos.date_crf IS NULL AND dos.date_ad IS NOT NULL AND dos.date_assurance IS NOT NULL,
-												              'AWAITING CRF',
+												              'AWAITING CRF', 
 												              IF(dos.date_crf IS NOT NULL AND dos.date_ad IS NULL AND dos.date_assurance IS NULL,
 												                'AWAITING AD/INSURANCE',
 												                IF(dos.date_crf IS NOT NULL AND dos.date_ad IS NULL AND dos.date_assurance IS NOT NULL,
@@ -50567,13 +50530,13 @@
 												                      IF(dos.date_decl IS NULL AND dos.ref_decl IS NULL, 'UNDER PREPARATION',
 												                        IF(dos.date_liq IS NULL AND dos.ref_liq IS NULL, 'AWAITING LIQUIDATION',
 												                          IF(dos.date_quit IS NULL AND dos.ref_quit IS NULL, 'AWAITING QUITTANCE',
-												                            IF(dos.date_quit IS NOT NULL AND dos.ref_quit IS NOT NULL AND dos.dgda_out IS NULL, 'AWAITING BAE/BS',
+												                            IF(dos.date_quit IS NOT NULL AND dos.ref_quit IS NOT NULL AND dos.dgda_out IS NULL, 'AWAITING BAE/BS', 
 												                              IF(dos.dgda_out IS NOT NULL AND dos.dispatch_deliv IS NOT NULL, 'CLEARING COMPLETED', '')
 												                              )
 												                            )
 												                          )
 												                        )
-
+												                      
 												                      )
 												                  )
 												                )
@@ -50582,7 +50545,7 @@
 												          )
 												      )
 													,
-													IF(dos.id_mod_lic='1',
+													IF(dos.id_mod_lic='1', 
 														IF(dos.load_date IS NOT NULL AND dos.ceec_in IS NULL,
 															'LOADED',
 															IF(dos.ceec_in IS NOT NULL AND dos.ceec_out IS NULL, 'AT CEEC',
@@ -50595,7 +50558,7 @@
 																						IF(dos.gov_in IS NOT NULL AND dos.gov_out IS NULL, 'AT GOVERNOR\'S OFFICE',
 																							IF(dos.gov_out IS NOT NULL AND dos.dispatch_date IS NULL, 'GOVERNOR\'S OFFICE OUT',
 																								IF(dos.dispatch_date IS NOT NULL AND dos.klsa_arriv IS NULL,
-																									'DISPATCHED',
+																									'DISPATCHED', 
 																										IF(dos.klsa_arriv IS NOT NULL AND dos.end_form IS NULL, 'AT BORDER',
 																											IF(dos.end_form IS NOT NULL AND dos.exit_drc IS NULL, 'UNDER FORMALITIES',
 																												IF(dos.exit_drc IS NOT NULL, 'EXIT DRC', '')
@@ -50641,7 +50604,7 @@
 												-- AND dos.ref_liq IS NOT NULL
 												-- AND dos.date_quit IS NOT NULL
 												-- AND dos.ref_quit IS NOT NULL
-												-- AND
+												-- AND 
 												-- (
 												-- 	-- Pocess 1
 												-- 	(
@@ -50665,10 +50628,10 @@
 												-- 		get_inv_process_pour_dossier(dos.id_dos)=3
 												-- 		AND dos.dispatch_deliv IS NOT NULL
 												-- 	)
-
+														
 												-- )
 												AND dos.id_dos NOT IN (
-													SELECT DISTINCT(dos.id_dos)
+													SELECT DISTINCT(dos.id_dos) 
 														FROM facture_dossier fd, detail_facture_dossier det, dossier dos
 														WHERE fd.ref_fact = det.ref_fact
 															AND fd.note_debit = '0'
@@ -50688,9 +50651,9 @@
 				$reponse['truck'] = $reponse['horse'].' / '.$reponse['trailer_1'].' / '.$reponse['trailer_2'];
 				$rows[] = $reponse;
 			}$requete-> closeCursor();
-
+			
 			return $rows;
-
+			
 		}
 
 		public function pay_report_dossier($statut, $date_create_debut, $date_create_fin, $date_visa_dept_debut, $date_visa_dept_fin, $date_visa_fin_debut, $date_visa_fin_fin, $date_decaiss_debut, $date_decaiss_fin, $id_dep, $id_dos){
@@ -50703,7 +50666,7 @@
 			// statut
 			$sql_statut= "";
 			if (isset($statut) && ($statut != '')) {
-
+				
 				if ($statut=="Awaiting Dept. Approval") {
 					$sql_statut = ' AND df.date_visa_dept IS NULL';
 				}else if ($statut=="Awaiting Management Approval") {
@@ -50754,7 +50717,7 @@
 												dept.nom_dept AS nom_dept,
 												util.nom_util AS nom_util,
 												IF(df.usd='1', 'USD', 'CDF') AS monnaie,
-
+												
 												IF(df.id_util_reject_dept IS NOT NULL,
 													'Rejected',
 													IF(df.date_visa_dept IS NULL,
@@ -50797,7 +50760,7 @@
 				$rows[] = $reponse;
 
 			}$requete-> closeCursor();
-
+			
 			return $rows;
 
 		}
@@ -50868,7 +50831,7 @@
 				$rows[] = $reponse;
 
 			}$requete-> closeCursor();
-
+			
 			return $rows;
 
 		}
@@ -50932,7 +50895,7 @@
 														<i class=\"fa fa-print\"></i>
 													</a>') AS btn_action
 											FROM depense_dossier depdos
-												LEFT JOIN demande_fond df
+												LEFT JOIN demande_fond df 
 													ON df.id_df = depdos.id_df
 												LEFT JOIN dossier dos
 													ON depdos.id_dos = dos.id_dos
@@ -50963,7 +50926,7 @@
 				$rows[] = $reponse;
 
 			}$requete-> closeCursor();
-
+			
 			return $rows;
 
 		}
@@ -50999,7 +50962,7 @@
 													(dos.montant_liq/dos.roe_decl),
 													0
 												) AS montant_liq_usd,
-
+												
 												IF(df.id_util_reject_dept IS NOT NULL,
 													'Rejected',
 													IF(df.date_visa_dept IS NULL,
@@ -51038,7 +51001,7 @@
 				$rows[] = $reponse;
 
 			}$requete-> closeCursor();
-
+			
 			return $rows;
 
 		}
@@ -51053,7 +51016,7 @@
 			// statut
 			$sql_statut= "";
 			if (isset($statut) && ($statut != '')) {
-
+				
 				if ($statut=="Awaiting Dept. Approval") {
 					$sql_statut = ' AND df.date_visa_dept IS NULL';
 				}else if ($statut=="Awaiting Management Approval") {
@@ -51104,7 +51067,7 @@
 												dept.nom_dept AS nom_dept,
 												util.nom_util AS nom_util,
 												IF(df.usd='1', 'USD', 'CDF') AS monnaie,
-
+												
 												IF(df.id_util_reject_dept IS NOT NULL,
 													'Rejected',
 													IF(df.date_visa_dept IS NULL,
@@ -51145,7 +51108,7 @@
 				$rows[] = $reponse;
 
 			}$requete-> closeCursor();
-
+			
 			return $rows;
 
 		}
@@ -51191,8 +51154,8 @@
 													AND dos.id_cli = cl.id_cli
 													AND depdos.id_dep = dep.id_dep
 													AND depdos.id_dep_dos NOT IN (
-															SELECT id_dep_dos
-															 FROM detail_note_debit
+															SELECT id_dep_dos 
+															 FROM detail_note_debit 
 														)");
 				$requete-> execute(array($entree['id_mod_lic']));
 				while($reponse = $requete-> fetch()){
@@ -51200,7 +51163,7 @@
 					$reponse['compteur'] = $compteur;
 					$rows[] = $reponse;
 				}$requete-> closeCursor();
-
+				
 				return $rows;
 
 			}else if($statut=='REPORTING - AS PER FILES CLEARED'){
@@ -51236,7 +51199,7 @@
 					$reponse['compteur'] = $compteur;
 					$rows[] = $reponse;
 				}$requete-> closeCursor();
-
+				
 				return $rows;
 
 			}
@@ -51265,8 +51228,8 @@
 												AND depdos.id_dep = dep.id_dep
 												AND depdos.charge_back = '1'
 												AND depdos.id_dep_dos NOT IN (
-														SELECT id_dep_dos
-														 FROM detail_note_debit
+														SELECT id_dep_dos 
+														 FROM detail_note_debit 
 													)
 												AND CONCAT(depdos.id_dos,'-',dep.id_deb) NOT IN (
 															SELECT CONCAT(det.id_dos,'-',det.id_deb)
@@ -51279,7 +51242,7 @@
 				$reponse['compteur'] = $compteur;
 				$rows[] = $reponse;
 			}$requete-> closeCursor();
-
+			
 			return $rows;
 
 		}
@@ -51319,7 +51282,7 @@
 				$reponse['compteur'] = $compteur;
 				$rows[] = $reponse;
 			}$requete-> closeCursor();
-
+			
 			return $rows;
 
 		}
@@ -51332,7 +51295,7 @@
 
 			$rows = array();
 
-			$requete = $connexion-> prepare("SELECT
+			$requete = $connexion-> prepare("SELECT 
 												det.ref_note AS ref_note,
 												cl.nom_cli AS nom_cli,
 												(
@@ -51365,7 +51328,7 @@
 				$reponse['compteur'] = $compteur;
 				$rows[] = $reponse;
 			}$requete-> closeCursor();
-
+			
 			return $rows;
 
 		}
@@ -51391,7 +51354,7 @@
 				$reponse['compteur'] = $compteur;
 				$rows[] = $reponse;
 			}$requete-> closeCursor();
-
+			
 			return $rows;
 
 		}
@@ -51408,8 +51371,8 @@
 			$rows = array();
 			$compteur = 0;
 
-			$requete = $connexion-> prepare("SELECT dos.ref_dos AS ref_dos,
-												fd.ref_fact AS ref_fact,
+			$requete = $connexion-> prepare("SELECT dos.ref_dos AS ref_dos, 
+												fd.ref_fact AS ref_fact, 
 												dos.po_ref AS po_ref,
 												dos.roe_decl AS roe_decl,
 												IF(dos.poids>1,
@@ -51429,14 +51392,14 @@
 												-- DATE_FORMAT(fd.date_fact, '%d/%m/%Y') AS date_fact,
 												cl.nom_cli AS nom_cli,
 								                SUM(
-													IF(det.usd='0',
+													IF(det.usd='0', 
 														IF(det.tva='1',
 															IF(det.montant_tva>0,
 																(det.montant_tva+det.montant)/dos.roe_decl,
 																(det.montant*0.16)/dos.roe_decl
 																),
 															det.montant/dos.roe_decl
-														),
+														), 
 														IF(det.tva='1',
 															det.montant*1.16,
 															det.montant
@@ -51455,10 +51418,10 @@
 														)
 													) AS statut,
 												CONCAT(CONCAT('<a href=\"#\" onclick=\"window.open(\'',mf.view_page,'?ref_fact=',fd.ref_fact,'\',\'pop3\',\'width=1000,height=800\');\" title=\"View invoice\">
-								                    <i class=\"fas fa-eye\"></i>
+								                    <i class=\"fas fa-eye\"></i> 
 								                </a>'),' ',
 								                CONCAT('<a href=\"#\" class=\"text-success\" onclick=\"window.location.replace(\'',mf.excel,'?ref_fact=',fd.ref_fact,'\',\'pop4\',\'width=1000,height=800\');\" title=\"Export Annex\">
-								                    <i class=\"fas fa-file-excel\"></i>
+								                    <i class=\"fas fa-file-excel\"></i> 
 								                </a>')) AS view_page,
 								                dos.id_mod_lic AS id_mod_lic,
 								                dos.id_cli AS id_cli,
@@ -51472,7 +51435,7 @@
 													          IF(dos.date_crf IS NULL AND dos.date_ad IS NOT NULL AND dos.date_assurance IS NULL,
 													            'AWAITING CRF/INSURANCE',
 													            IF(dos.date_crf IS NULL AND dos.date_ad IS NOT NULL AND dos.date_assurance IS NOT NULL,
-													              'AWAITING CRF',
+													              'AWAITING CRF', 
 													              IF(dos.date_crf IS NOT NULL AND dos.date_ad IS NULL AND dos.date_assurance IS NULL,
 													                'AWAITING AD/INSURANCE',
 													                IF(dos.date_crf IS NOT NULL AND dos.date_ad IS NULL AND dos.date_assurance IS NOT NULL,
@@ -51483,13 +51446,13 @@
 													                      IF(dos.date_decl IS NULL AND dos.ref_decl IS NULL, 'UNDER PREPARATION',
 													                        IF(dos.date_liq IS NULL AND dos.ref_liq IS NULL, 'AWAITING LIQUIDATION',
 													                          IF(dos.date_quit IS NULL AND dos.ref_quit IS NULL, 'AWAITING QUITTANCE',
-													                            IF(dos.date_quit IS NOT NULL AND dos.ref_quit IS NOT NULL AND dos.dgda_out IS NULL, 'AWAITING BAE/BS',
+													                            IF(dos.date_quit IS NOT NULL AND dos.ref_quit IS NOT NULL AND dos.dgda_out IS NULL, 'AWAITING BAE/BS', 
 													                              IF(dos.dgda_out IS NOT NULL AND dos.dispatch_deliv IS NOT NULL, 'CLEARING COMPLETED', '')
 													                              )
 													                            )
 													                          )
 													                        )
-
+													                      
 													                      )
 													                  )
 													                )
@@ -51498,7 +51461,7 @@
 													          )
 													      )
 														,
-														IF(dos.id_mod_lic='1',
+														IF(dos.id_mod_lic='1', 
 															IF(dos.load_date IS NOT NULL AND dos.ceec_in IS NULL,
 																'LOADED',
 																IF(dos.ceec_in IS NOT NULL AND dos.ceec_out IS NULL, 'AT CEEC',
@@ -51511,7 +51474,7 @@
 																							IF(dos.gov_in IS NOT NULL AND dos.gov_out IS NULL, 'AT GOVERNOR\'S OFFICE',
 																								IF(dos.gov_out IS NOT NULL AND dos.dispatch_date IS NULL, 'GOVERNOR\'S OFFICE OUT',
 																									IF(dos.dispatch_date IS NOT NULL AND dos.klsa_arriv IS NULL,
-																										'DISPATCHED',
+																										'DISPATCHED', 
 																											IF(dos.klsa_arriv IS NOT NULL AND dos.end_form IS NULL, 'AT BORDER',
 																												IF(dos.end_form IS NOT NULL AND dos.exit_drc IS NULL, 'UNDER FORMALITIES',
 																													IF(dos.exit_drc IS NOT NULL, 'EXIT DRC', '')
@@ -51542,7 +51505,7 @@
 								                	'Disabled'
 								                ) AS invoicing_status,
 								                dos.remarque AS remarque
-											FROM dossier dos
+											FROM dossier dos 
 												LEFT JOIN client cl
 													ON dos.id_cli = cl.id_cli
 												LEFT JOIN detail_facture_dossier det
@@ -51605,7 +51568,7 @@
 				// $reponse['rls_per_ton'] = ($this-> getMontantDeboursFactureDossier2($reponse['ref_fact'], 3, $reponse['id_dos'])/$reponse['poids'])/$reponse['roe_decl'];
 				// $reponse['fsr'] = ($this-> getMontantDeboursFactureDossier2($reponse['ref_fact'], 4, $reponse['id_dos']))/$reponse['roe_decl'];
 				// $reponse['fsr_per_ton'] = ($this-> getMontantDeboursFactureDossier2($reponse['ref_fact'], 4, $reponse['id_dos'])/$reponse['poids'])/$reponse['roe_decl'];
-
+				
 				// $reponse['occ_sample'] = $this-> getMontantDeboursFactureDossier2($reponse['ref_fact'], 9, $reponse['id_dos']);
 				// $reponse['cgea'] = $this-> getMontantDeboursFactureDossier2($reponse['ref_fact'], 10, $reponse['id_dos']);
 				// $reponse['dgda_seal'] = $this-> getMontantDeboursFactureDossier2($reponse['ref_fact'], 13, $reponse['id_dos']);
@@ -51615,15 +51578,15 @@
 				// }else{
 				// 	$reponse['nbre_scelle'] = $this-> getMontantDeboursFactureDossier2($reponse['ref_fact'], 45, $reponse['id_dos'])/35;
 				// }
-
+				
 				// $reponse['scelle'] = $this-> getMontantDeboursFactureDossier2($reponse['ref_fact'], 45, $reponse['id_dos']);
 				// $reponse['tresco'] = $this-> getMontantDeboursFactureDossier2($reponse['ref_fact'], 94, $reponse['id_dos']);
 
 				$rows[] = $reponse;
 			}$requete-> closeCursor();
-
+			
 			return $rows;
-
+			
 
 
 		}
@@ -51656,7 +51619,7 @@
 					$sqlTime = ' AND DATE(fd.date_fact) BETWEEN "'.$debut.'" AND "'.$fin.'"';
 				}
 
-				$requete = $connexion-> query("SELECT fd.ref_fact AS ref_fact,
+				$requete = $connexion-> query("SELECT fd.ref_fact AS ref_fact, 
 													DATE_FORMAT(fd.date_fact, '%d/%m/%Y') AS date_fact,
 													cl.nom_cli AS nom_cli,
 													IF(fd.validation='0',
@@ -51670,14 +51633,14 @@
 															)
 														) AS statut,
 													CONCAT(CONCAT('<button class=\"btn btn-xs bg-primary square-btn-adjust\" onclick=\"window.open(\'',mf.view_page,'?ref_fact=',fd.ref_fact,'\',\'pop3\',\'width=1000,height=800\');\" title=\"View invoice\">
-									                    <i class=\"fas fa-eye\"></i>
+									                    <i class=\"fas fa-eye\"></i> 
 									                </button>'),' ',
 									                IF(mf.excel IS NOT NULL, CONCAT('<button class=\"btn btn-xs bg-success square-btn-adjust\" onclick=\"window.location.replace(\'',mf.excel,'?ref_fact=',fd.ref_fact,'\',\'pop4\',\'width=1000,height=800\');\" title=\"Export Annex\">
-									                    <i class=\"fas fa-file-excel\"></i>
+									                    <i class=\"fas fa-file-excel\"></i> 
 									                </button>'), '')) AS view_page,
-									                SUM(
-															IF(det.usd='1',
-																det.montant,
+									                SUM( 
+															IF(det.usd='1', 
+																det.montant, 
 																IF(det.tva='1',
 																	IF(det.montant_tva>0,
 																		(det.montant_tva+det.montant)/dos.roe_decl,
@@ -51685,26 +51648,26 @@
 																	),
 																	(det.montant/dos.roe_decl)
 																)
-															)
+															) 
 														) AS montant_ht,
 									                SUM(
-																IF(det.usd='1',
+																IF(det.usd='1', 
 																	IF(det.tva='1',
 																		det.montant*0.16,
 																		0
-																	),
+																	), 
 																	0
 																)
 															) AS tva_usd,
 									                SUM(
-														IF(det.usd='0',
+														IF(det.usd='0', 
 															IF(det.tva='1',
 																IF(det.montant_tva>0,
 																	(det.montant_tva+det.montant)/dos.roe_decl,
 																	(det.montant*0.16)/dos.roe_decl
 																	),
 																det.montant/dos.roe_decl
-															),
+															), 
 															IF(det.tva='1',
 																det.montant*1.16,
 																det.montant
@@ -51713,11 +51676,11 @@
 													) AS montant,
 
 													SUM(
-														IF(det.usd='1',
+														IF(det.usd='1', 
 															IF(det.tva='1',
 																det.montant*1.16,
 																det.montant
-															),
+															), 
 															IF(det.tva='1',
 																IF(det.montant_tva>0,
 																	((det.montant_tva+det.montant)/dos.roe_decl),
@@ -51729,7 +51692,7 @@
 													) AS ttc_usd,
 
 													SUM(
-														IF(det.usd='0',
+														IF(det.usd='0', 
 															IF(det.tva='1',
 																IF(det.montant_tva>0,
 																	det.montant_tva+det.montant,
@@ -51865,7 +51828,7 @@
 					$reponse['commodity'] = $this-> getMarchandiseFacture($reponse['ref_fact'])['nom_march'];
 					$rows[] = $reponse;
 				}$requete-> closeCursor();
-
+				
 				return $rows;
 
 			}else if($statut=='Dossiers Facturés'){
@@ -51884,8 +51847,8 @@
 				if (isset($debut) && ($debut != '') && isset($fin) && ($fin != '')) {
 					$sqlTime = ' AND DATE(fd.date_fact) BETWEEN "'.$debut.'" AND "'.$fin.'"';
 				}
-				$requete = $connexion-> query("SELECT dos.ref_dos AS ref_dos,
-													fd.ref_fact AS ref_fact,
+				$requete = $connexion-> query("SELECT dos.ref_dos AS ref_dos, 
+													fd.ref_fact AS ref_fact, 
 													dos.po_ref AS po_ref,
 													DATE_FORMAT(fd.date_fact, '%d/%m/%Y') AS date_fact,
 													cl.nom_cli AS nom_cli,
@@ -51900,10 +51863,10 @@
 															)
 														) AS statut,
 													CONCAT(CONCAT('<button class=\"btn btn-xs bg-primary square-btn-adjust\" onclick=\"window.open(\'',mf.view_page,'?ref_fact=',fd.ref_fact,'\',\'pop3\',\'width=1000,height=800\');\" title=\"View invoice\">
-									                    <i class=\"fas fa-eye\"></i>
+									                    <i class=\"fas fa-eye\"></i> 
 									                </button>'),' ',
 									                IF(mf.excel IS NOT NULL, CONCAT('<button class=\"btn btn-xs bg-success square-btn-adjust\" onclick=\"window.location.replace(\'',mf.excel,'?ref_fact=',fd.ref_fact,'\',\'pop4\',\'width=1000,height=800\');\" title=\"Export Annex\">
-									                    <i class=\"fas fa-file-excel\"></i>
+									                    <i class=\"fas fa-file-excel\"></i> 
 									                </button>'), '')) AS view_page
 												FROM facture_dossier fd, modele_facture mf, client cl, dossier dos, detail_facture_dossier det
 												WHERE YEAR(fd.date_fact) = YEAR(CURRENT_DATE())
@@ -51926,9 +51889,9 @@
 					$reponse['commodity'] = $this-> getMarchandiseFacture($reponse['ref_fact'])['nom_march'];
 					$rows[] = $reponse;
 				}$requete-> closeCursor();
-
+				
 				return $rows;
-
+				
 			}else if($statut=='Dossiers Non Facturés'){
 
 				$sqlTransit = "";
@@ -51937,7 +51900,7 @@
 				}
 
 				$requete = $connexion-> query("SELECT dos.ref_dos AS ref_dos,
-													cl.nom_cli AS nom_cli,
+													cl.nom_cli AS nom_cli, 
 													dos.po_ref AS po_ref,
 													dos.horse AS horse,
 													dos.trailer_1 AS trailer_1,
@@ -51970,7 +51933,7 @@
 													AND dos.date_quit IS NOT NULL
 													AND dos.ref_quit IS NOT NULL
 													AND dos.id_dos NOT IN (
-														SELECT DISTINCT(dos.id_dos)
+														SELECT DISTINCT(dos.id_dos) 
 															FROM facture_dossier fd, detail_facture_dossier det, dossier dos
 															WHERE YEAR(fd.date_fact) = YEAR(CURRENT_DATE())
 																AND fd.ref_fact = det.ref_fact
@@ -51987,9 +51950,9 @@
 					$reponse['truck'] = $reponse['horse'].' / '.$reponse['trailer_1'].' / '.$reponse['trailer_2'];
 					$rows[] = $reponse;
 				}$requete-> closeCursor();
-
+				
 				return $rows;
-
+				
 			}
 
 		}
@@ -52002,12 +51965,12 @@
 
 			$requete = $connexion-> query("SELECT *,
 												CONCAT('<button class=\"btn btn-xs bg-primary square-btn-adjust\" onclick=\"window.location.replace(\'detail_client.php?id_cli=',id_cli,'\');\">
-									                    <i class=\"fas fa-eye\"></i>
+									                    <i class=\"fas fa-eye\"></i> 
 									                </button>') AS btn_action ,
 												CONCAT('<button class=\"btn btn-xs bg-info square-btn-adjust\" onclick=\"window.location.replace(\'detail_client_2.php?id_cli=',id_cli,'\');\">
-									                    <i class=\"fas fa-arrow-circle-right\"></i>
-									                </button>') AS btn_action_2
-											FROM client
+									                    <i class=\"fas fa-arrow-circle-right\"></i> 
+									                </button>') AS btn_action_2 
+											FROM client 
 											ORDER BY nom_cli
 										");
 			// $requete-> execute(array($entree['id_mod_lic']));
@@ -52017,9 +51980,9 @@
 				$reponse['compteur'] = $compteur;
 				$rows[] = $reponse;
 			}$requete-> closeCursor();
-
+			
 			return $rows;
-
+			
 
 		}
 
@@ -52054,9 +52017,9 @@
 				$reponse['compteur'] = $compteur;
 				$rows[] = $reponse;
 			}$requete-> closeCursor();
-
+			
 			return $rows;
-
+			
 
 		}
 
@@ -52091,9 +52054,9 @@
 				$reponse['compteur'] = $compteur;
 				$rows[] = $reponse;
 			}$requete-> closeCursor();
-
+			
 			return $rows;
-
+			
 
 		}
 
@@ -52171,9 +52134,9 @@
 							</tbody>
 						</table>';
 			}$requete-> closeCursor();
-
+			
 			return $tab;
-
+			
 
 		}
 
@@ -52202,9 +52165,9 @@
 			while($reponse = $requete-> fetch()){
 				$select.='<option value="'.$reponse['id_deb'].'">'.$reponse['nom_deb'].'</option>';
 			}$requete-> closeCursor();
-
+			
 			return $select;
-
+			
 
 		}
 
@@ -52256,7 +52219,7 @@
 			}
 			// echo $mot_cle;
 			$table = '';
-
+			
 			$requete = $connexion-> prepare("SELECT cl.id_cli AS id_cli,
 															cl.nom_cli AS nom_cli,
 															cl.code_cli AS code_cli
@@ -52275,7 +52238,7 @@
 							<td>'.$reponse['nom_cli'].'</td>
 						</tr>';
 			}$requete-> closeCursor();
-
+			
 			return $table;
 
 		}
@@ -52293,7 +52256,7 @@
 			}
 			// echo $mot_cle;
 			$table = '';
-
+			
 			$requete = $connexion-> prepare("SELECT cl.id_cli AS id_cli,
 															cl.nom_cli AS nom_cli,
 															cl.code_cli AS code_cli
@@ -52324,7 +52287,7 @@
 							</td>
 						</tr>';
 			}$requete-> closeCursor();
-
+			
 			return $table;
 
 		}
@@ -52341,7 +52304,7 @@
 			}
 			// echo $mot_cle;
 			$table = '';
-
+			
 			$requete = $connexion-> query("SELECT cl.id_cli AS id_cli,
 															cl.nom_cli AS nom_cli,
 															cl.code_cli AS code_cli
@@ -52360,7 +52323,7 @@
 							<td>'.$reponse['nom_cli'].'</td>
 						</tr>';
 			}$requete-> closeCursor();
-
+			
 			return $table;
 
 		}
@@ -52433,7 +52396,7 @@
 					$reponse['truck'] = $reponse['horse'].' / '.$reponse['trailer_1'].' / '.$reponse['trailer_2'];
 					$rows[] = $reponse;
 				}$requete-> closeCursor();
-
+				
 				return $rows;
 
 			}else if($statut=='Dossiers non declarés'){
@@ -52477,7 +52440,7 @@
 					$reponse['truck'] = $reponse['horse'].' / '.$reponse['trailer_1'].' / '.$reponse['trailer_2'];
 					$rows[] = $reponse;
 				}$requete-> closeCursor();
-
+				
 				return $rows;
 
 			}else if($statut=='Dossiers Declarés Non Liquidés'){
@@ -52523,7 +52486,7 @@
 					$reponse['truck'] = $reponse['horse'].' / '.$reponse['trailer_1'].' / '.$reponse['trailer_2'];
 					$rows[] = $reponse;
 				}$requete-> closeCursor();
-
+				
 				return $rows;
 
 			}else if($statut=='Dossiers En Attente Quittance'){
@@ -52569,7 +52532,7 @@
 					$reponse['truck'] = $reponse['horse'].' / '.$reponse['trailer_1'].' / '.$reponse['trailer_2'];
 					$rows[] = $reponse;
 				}$requete-> closeCursor();
-
+				
 				return $rows;
 
 			}
@@ -52612,7 +52575,7 @@
 													$sqlTime");
 			// $requete-> execute(array($entree['id_mod_lic']));
 			$reponse = $requete-> fetch();
-
+			
 			return $reponse['nbre'];
 		}
 
@@ -52648,7 +52611,7 @@
 													$sqlTransit");
 			// $requete-> execute(array($entree['id_mod_lic']));
 			$reponse = $requete-> fetch();
-
+			
 			return $reponse['nbre'];
 		}
 
@@ -52671,7 +52634,7 @@
 			$requete = $connexion-> query("SELECT COUNT(id_dos) AS nbre
 											FROM dossier
 											WHERE not_fact = '0'
-												AND
+												AND 
 												(
 													-- Pocess 1
 													(
@@ -52688,7 +52651,7 @@
 													(
 														get_inv_process_pour_dossier(id_dos)=2
 														AND (
-																	dispatch_date IS NOT NULL
+																	dispatch_date IS NOT NULL 
 																	OR (dgda_out IS NOT NULL AND id_mod_trans=4)
 																)
 														-- dispatch_date IS NOT NULL
@@ -52699,10 +52662,10 @@
 														get_inv_process_pour_dossier(id_dos)=3
 														AND dispatch_deliv IS NOT NULL
 													)
-
+														
 												)
 												AND id_dos NOT IN (
-													SELECT DISTINCT(dos.id_dos)
+													SELECT DISTINCT(dos.id_dos) 
 														FROM facture_dossier fd, detail_facture_dossier det, dossier dos
 														WHERE fd.ref_fact = det.ref_fact
 															AND fd.note_debit = '0'
@@ -52713,7 +52676,7 @@
 										");
 			// $requete-> execute(array($entree['id_mod_lic']));
 			$reponse = $requete-> fetch();
-
+			
 			return $reponse['nbre'];
 		}
 
@@ -52747,7 +52710,7 @@
 										");
 			// $requete-> execute(array($entree['id_mod_lic']));
 			$reponse = $requete-> fetch();
-
+			
 			return $reponse['nbre'];
 		}
 
@@ -52774,7 +52737,7 @@
 				}
 
 			}$requete-> closeCursor();
-
+			
 			return $compteur;
 		}
 
@@ -52938,8 +52901,8 @@
 				return $reponse['nbre'];
 			}
 		}
-
-		public function getNombreDossierClientModeTransportModeLicence3($id_cli, $id_mod_trans,
+		
+		public function getNombreDossierClientModeTransportModeLicence3($id_cli, $id_mod_trans, 
 														$id_mod_lic, $commodity){
 			include('connexion.php');
 
@@ -52968,13 +52931,13 @@
 													AND d.id_mod_trans = mt.id_mod_trans
 													AND mt.id_mod_trans = ?
 													AND d.id_mod_lic = ?
-													AND ((d.date_quit IS NULL AND d.ref_quit IS NULL)
+													AND ((d.date_quit IS NULL AND d.ref_quit IS NULL) 
 														OR (d.date_quit = '' OR d.ref_quit = ''))
 													$sql1
 												ORDER BY d.id_dos DESC");
 			$requete-> execute(array($entree['id_cli'], $entree['id_mod_trans'], $entree['id_mod_lic']));
 			$reponse = $requete-> fetch();
-
+			
 			return $reponse['nbre'];
 		}
 
@@ -52989,11 +52952,11 @@
 			echo '<br> num_lic = '.$num_lic;*/
 
 			$requete = $connexion-> prepare("SELECT COUNT(id_dos) AS nbre
-												FROM dossier
+												FROM dossier 
 												WHERE num_lic = ?");
 			$requete-> execute(array($entree['num_lic']));
 			$reponse = $requete-> fetch();
-
+			
 			return $reponse['nbre'];
 		}
 
@@ -53016,11 +52979,11 @@
 												AND id_trans_ap = ?");
 			$requete-> execute(array($entree['num_lic'], $entree['id_trans_ap']));
 			$reponse = $requete-> fetch();
-
+			
 			return $reponse['nbre'];
 		}
 
-		public function getNombreDossierClientModeTransportModeLicenceUpdate($id_cli, $id_mod_trans,
+		public function getNombreDossierClientModeTransportModeLicenceUpdate($id_cli, $id_mod_trans, 
 														$id_mod_lic, $commodity, $debut, $fin){
 			include('connexion.php');
 
@@ -53051,15 +53014,15 @@
 													AND d.id_mod_trans = mt.id_mod_trans
 													AND mt.id_mod_trans = ?
 													AND d.id_mod_lic = ?
-													AND ((d.date_quit IS NULL AND d.ref_quit IS NULL)
+													AND ((d.date_quit IS NULL AND d.ref_quit IS NULL) 
 														OR (d.date_quit = '' OR d.ref_quit = ''))
 													$sql1
 													AND d.id_dos BETWEEN ? AND ?
 												ORDER BY d.id_dos DESC");
-			$requete-> execute(array($entree['id_cli'], $entree['id_mod_trans'], $entree['id_mod_lic'],
+			$requete-> execute(array($entree['id_cli'], $entree['id_mod_trans'], $entree['id_mod_lic'], 
 									$entree['debut'], $entree['fin']));
 			$reponse = $requete-> fetch();
-
+			
 			return $reponse['nbre'];
 		}
 
@@ -53070,7 +53033,7 @@
 
 			$sql = "";
 			$sql2 = "";
-
+			
 			if( ($id_cli != null) && ($id_cli != '')){
 				$sql = ' AND id_cli = '.$id_cli;
 			}
@@ -53085,14 +53048,14 @@
 												$sql
 												$sql2
 													AND id_cli IN (
-														SELECT id_cli
-															FROM souscription_licence
-															WHERE id_mod_lic = ?
+														SELECT id_cli 
+															FROM souscription_licence 
+															WHERE id_mod_lic = ? 
 														)");
 			$requete-> execute(array($entree['id_mod_lic'], $entree['id_mod_lic']));
 			while ($reponse = $requete-> fetch()) {
 				$date_exp = $this-> getLastEpirationLicence2($reponse['num_lic']);
-
+				
 				if ($id_mod_lic == '1') {
 					if( ($this-> getDifferenceDate($date_exp, $reponse['aujourdhui']) >= 0) && ($this-> getDifferenceDate($date_exp, $reponse['aujourdhui']) > 0) && ($reponse['poids'] > $this-> getSommeFobLicence($reponse['num_lic']))){
 						$nbre++;
@@ -53103,7 +53066,7 @@
 					}
 				}
 
-			}$requete-> closeCursor();
+			}$requete-> closeCursor(); 
 
 			return $nbre;
 			//return $this-> getDifferenceDate('2020-11-15', $date_exp);
@@ -53117,7 +53080,7 @@
 
 			$sqlClient = "";
 			$sql2 = "";
-
+			
 			if( ($id_cli != null) && ($id_cli != '')){
 				$sqlClient = ' AND cl.id_cli = '.$id_cli;
 			}
@@ -53140,7 +53103,7 @@
 													AND l.id_mod_lic = ?
 													$sqlClient");
 			$requete-> execute(array($entree['id_mod_lic']));
-			$reponse = $requete-> fetch();
+			$reponse = $requete-> fetch(); 
 
 			return $reponse['nbre'];
 
@@ -53154,7 +53117,7 @@
 
 			$sqlClient = "";
 			$sql2 = "";
-
+			
 			if( ($id_cli != null) && ($id_cli != '')){
 				$sqlClient = ' AND cl.id_cli = '.$id_cli;
 			}
@@ -53171,7 +53134,7 @@
 													AND l.id_mod_lic = ?
 													$sqlClient");
 			$requete-> execute(array($entree['id_mod_lic']));
-			$reponse = $requete-> fetch();
+			$reponse = $requete-> fetch(); 
 
 			return $reponse['nbre'];
 
@@ -53185,7 +53148,7 @@
 
 			$sqlClient = "";
 			$sql2 = "";
-
+			
 			if( ($id_cli != null) && ($id_cli != '')){
 				$sqlClient = ' AND cl.id_cli = '.$id_cli;
 			}
@@ -53232,7 +53195,7 @@
 													AND l.id_mod_lic = ?
 													$sqlClient");
 			$requete-> execute(array($entree['id_mod_lic']));
-			$reponse = $requete-> fetch();
+			$reponse = $requete-> fetch(); 
 
 			return $reponse['nbre'];
 
@@ -53246,7 +53209,7 @@
 
 			$sqlClient = "";
 			$sql2 = "";
-
+			
 			if( ($id_cli != null) && ($id_cli != '')){
 				$sqlClient = ' AND cl.id_cli = '.$id_cli;
 			}
@@ -53279,7 +53242,7 @@
 													AND l.id_mod_lic = ?
 													$sqlClient");
 			$requete-> execute(array($entree['id_mod_lic']));
-			$reponse = $requete-> fetch();
+			$reponse = $requete-> fetch(); 
 
 			return $reponse['nbre'];
 
@@ -53308,9 +53271,9 @@
 													$sql
 													$sql2
 													AND id_cli IN (
-														SELECT id_cli
-															FROM souscription_licence
-															WHERE id_mod_lic = ?
+														SELECT id_cli 
+															FROM souscription_licence 
+															WHERE id_mod_lic = ? 
 														)");
 			}else{
 				$requete = $connexion-> prepare("SELECT num_lic, DATE(CURRENT_DATE()) AS aujourdhui, fob
@@ -53319,20 +53282,20 @@
 													$sql
 													$sql2
 													AND id_cli IN (
-														SELECT id_cli
-															FROM souscription_licence
-															WHERE id_mod_lic = ?
+														SELECT id_cli 
+															FROM souscription_licence 
+															WHERE id_mod_lic = ? 
 														)");
 			}
 
 			$requete-> execute(array($entree['id_mod_lic'], $entree['id_mod_lic']));
 			while ($reponse = $requete-> fetch()) {
 				$date_exp = $this-> getLastEpirationLicence2($reponse['num_lic']);
-
+				
 				if( ($this-> getDifferenceDate($date_exp, $reponse['aujourdhui']) <= 40) && ($this-> getDifferenceDate($date_exp, $reponse['aujourdhui']) > 0) && ($reponse['fob'] > $this-> getSommeFobLicence($reponse['num_lic']))){
 					$nbre++;
 				}
-			}$requete-> closeCursor();
+			}$requete-> closeCursor(); 
 
 			return $nbre;
 			//return $this-> getDifferenceDate('2020-11-15', $date_exp);
@@ -53363,9 +53326,9 @@
 													$sql
 													$sql2
 													AND l.id_cli IN (
-														SELECT id_cli
-															FROM souscription_licence
-															WHERE id_mod_lic = ?
+														SELECT id_cli 
+															FROM souscription_licence 
+															WHERE id_mod_lic = ? 
 														)");
 			}else{
 				$requete = $connexion-> prepare("SELECT num_lic, DATE(CURRENT_DATE()) AS aujourdhui, fob
@@ -53376,20 +53339,20 @@
 													$sql
 													$sql2
 													AND l.id_cli IN (
-														SELECT id_cli
-															FROM souscription_licence
-															WHERE id_mod_lic = ?
+														SELECT id_cli 
+															FROM souscription_licence 
+															WHERE id_mod_lic = ? 
 														)");
 			}
 
 			$requete-> execute(array($entree['id_mod_lic'], $entree['id_mod_lic']));
 			while ($reponse = $requete-> fetch()) {
 				$date_exp = $this-> getLastEpirationLicence2($reponse['num_lic']);
-
+				
 				if( ($date_exp < $reponse['aujourdhui']) && ($reponse['fob'] > $this-> getSommeFobLicence($reponse['num_lic']))){
 					$nbre++;
 				}
-			}$requete-> closeCursor();
+			}$requete-> closeCursor(); 
 
 			return $nbre;
 			//return $this-> getDifferenceDate('2020-11-15', $date_exp);
@@ -53420,9 +53383,9 @@
 													$sql
 													$sql2
 													AND id_cli IN (
-														SELECT id_cli
-															FROM souscription_licence
-															WHERE id_mod_lic = ?
+														SELECT id_cli 
+															FROM souscription_licence 
+															WHERE id_mod_lic = ? 
 														)");
 			}else{
 				$requete = $connexion-> prepare("SELECT num_lic, DATE(CURRENT_DATE()) AS aujourdhui, fob
@@ -53433,20 +53396,20 @@
 													$sql
 													$sql2
 													AND id_cli IN (
-														SELECT id_cli
-															FROM souscription_licence
-															WHERE id_mod_lic = ?
+														SELECT id_cli 
+															FROM souscription_licence 
+															WHERE id_mod_lic = ? 
 														)");
 			}
 
 			$requete-> execute(array($entree['id_mod_lic'], $entree['id_mod_lic']));
 			while ($reponse = $requete-> fetch()) {
 				$date_exp = $this-> getLastEpirationLicence2($reponse['num_lic']);
-
+				
 				if( ($reponse['fob'] == $this-> getSommeFobLicence($reponse['num_lic'])) && ($reponse['fob'] != $this-> getSommeFobAppureLicence($reponse['num_lic'])) && ($this-> verifierApurementDossierLicence($reponse['num_lic']) == false) ){
 					$nbre++;
 				}
-			}$requete-> closeCursor();
+			}$requete-> closeCursor(); 
 
 			return $nbre;
 			//return $this-> getDifferenceDate('2020-11-15', $date_exp);
@@ -53475,18 +53438,18 @@
 												$sql
 												$sql2
 													AND id_cli IN (
-														SELECT id_cli
-															FROM souscription_licence
-															WHERE id_mod_lic = ?
+														SELECT id_cli 
+															FROM souscription_licence 
+															WHERE id_mod_lic = ? 
 														)");
 			$requete-> execute(array($entree['id_mod_lic'], $entree['id_mod_lic']));
 			while ($reponse = $requete-> fetch()) {
 				$date_exp = $this-> getLastEpirationLicence2($reponse['num_lic']);
-
+				
 				if( ($reponse['fob'] == $this-> getSommeFobLicence($reponse['num_lic'])) && ($reponse['cif'] != $this-> getSommeCIFLicence($reponse['num_lic'])) ){
 					$nbre++;
 				}
-			}$requete-> closeCursor();
+			}$requete-> closeCursor(); 
 
 			return $nbre;
 			//return $this-> getDifferenceDate('2020-11-15', $date_exp);
@@ -53516,9 +53479,9 @@
 													$sql
 													$sql2
 													AND id_cli IN (
-														SELECT id_cli
-															FROM souscription_licence
-															WHERE id_mod_lic = ?
+														SELECT id_cli 
+															FROM souscription_licence 
+															WHERE id_mod_lic = ? 
 														)");
 			}else{
 				$requete = $connexion-> prepare("SELECT num_lic, DATE(CURRENT_DATE()) AS aujourdhui, fob
@@ -53528,20 +53491,20 @@
 													$sql
 													$sql2
 													AND id_cli IN (
-														SELECT id_cli
-															FROM souscription_licence
-															WHERE id_mod_lic = ?
+														SELECT id_cli 
+															FROM souscription_licence 
+															WHERE id_mod_lic = ? 
 														)");
 			}
 
 			$requete-> execute(array($entree['id_mod_lic'], $entree['id_mod_lic']));
 			while ($reponse = $requete-> fetch()) {
 				$date_exp = $this-> getLastEpirationLicence2($reponse['num_lic']);
-
+				
 				if( ($this-> verifierApurementDossierLicence($reponse['num_lic']) != false) && ($reponse['num_lic'] != 'UNDER VALUE') ){
 					$nbre++;
 				}
-			}$requete-> closeCursor();
+			}$requete-> closeCursor(); 
 
 			return $nbre;
 			//return $this-> getDifferenceDate('2020-11-15', $date_exp);
@@ -53714,7 +53677,7 @@
 														$sqlClient
 														AND part.fob < (
 															SELECT SUM(fob)
-																FROM dossier
+																FROM dossier 
 																WHERE REPLACE(ref_crf, ' ', '') = REPLACE(CONCAT(part.cod,part.num_part), ' ', '')
 																GROUP BY REPLACE(ref_crf, ' ', '')
 														)
@@ -53728,7 +53691,7 @@
 														$sqlClient
 														AND part.poids < (
 															SELECT SUM(poids)
-																FROM dossier
+																FROM dossier 
 																WHERE REPLACE(ref_crf, ' ', '') = REPLACE(CONCAT(part.cod,part.num_part), ' ', '')
 																GROUP BY REPLACE(ref_crf, ' ', '')
 														)
@@ -53772,7 +53735,7 @@
 			}else{
 				return 0;
 			}
-
+			
 
 		}
 
@@ -54098,7 +54061,7 @@
 											FROM dossier
 											WHERE ( (date_liq IS NOT NULL OR date_liq <> '')
 													OR (ref_liq IS NOT NULL OR ref_liq <> '') )
-												AND ( (date_quit IS NULL OR date_quit = '')
+												AND ( (date_quit IS NULL OR date_quit = '') 
 													OR (ref_quit IS NULL OR ref_quit = '') )
 												AND id_mod_lic = ?
 												$sql
@@ -54550,7 +54513,7 @@
 
 		//FIN Methode permettant de recuperer
 
-		//Methodes permettant de Selectionner
+		//Methodes permettant de Selectionner 
 
 		public function selectionnerUserVisaDept(){
 			include('connexion.php');
@@ -54849,7 +54812,7 @@
 													dossier.num_lic AS num_lic,
 													dossier.roe_decl AS roe_decl,
 													SUM(
-														IF(detail_facture_dossier.usd='0',
+														IF(detail_facture_dossier.usd='0', 
 															IF(detail_facture_dossier.tva='1',
 																IF(detail_facture_dossier.montant_tva>0,
 																	detail_facture_dossier.montant_tva+detail_facture_dossier.montant,
@@ -55004,7 +54967,7 @@
 													dossier.num_lic AS num_lic,
 													dossier.roe_decl AS roe_decl,
 													SUM(
-														IF(detail_facture_dossier.usd='0',
+														IF(detail_facture_dossier.usd='0', 
 															IF(detail_facture_dossier.tva='1',
 																IF(detail_facture_dossier.montant_tva>0,
 																	detail_facture_dossier.montant_tva+detail_facture_dossier.montant,
@@ -55202,34 +55165,34 @@
 														IF(debours.id_t_deb='1', detail_facture_dossier.montant+IF(detail_facture_dossier.montant_tva IS NOT NULL, detail_facture_dossier.montant_tva, 0), 0)
 													)) AS taxe,
 													SUM(
-														IF(debours.id_t_deb='2',
-															IF(detail_facture_dossier.tva='1',
+														IF(debours.id_t_deb='2', 
+															IF(detail_facture_dossier.tva='1', 
 																detail_facture_dossier.montant*1.16,
 																detail_facture_dossier.montant
-															),
+															), 
 															0
 														)
 													) AS other,
 													SUM(
-														IF(debours.id_t_deb='3',
-															IF(detail_facture_dossier.tva='1',
+														IF(debours.id_t_deb='3', 
+															IF(detail_facture_dossier.tva='1', 
 																detail_facture_dossier.montant*1.16,
 																detail_facture_dossier.montant
-															),
+															), 
 															0
 														)
 													) AS ops,
 													SUM(
-														IF(debours.id_t_deb='4',
-															IF(detail_facture_dossier.tva='1',
+														IF(debours.id_t_deb='4', 
+															IF(detail_facture_dossier.tva='1', 
 																detail_facture_dossier.montant*1.16,
 																detail_facture_dossier.montant
-															),
+															), 
 															0
 														)
 													) AS service
 												FROM detail_facture_dossier, debours
-												WHERE detail_facture_dossier.ref_fact = ?
+												WHERE detail_facture_dossier.ref_fact = ? 
 													AND detail_facture_dossier.id_dos = ?
 													and detail_facture_dossier.id_deb = debours.id_deb
 												GROUP BY detail_facture_dossier.id_dos");
@@ -55323,9 +55286,9 @@
 			$entree['fichier_pv']=$fichier_pv;
 			$entree['id_util']=$id_util;
 
-			$requete = $connexion-> prepare('INSERT INTO pv_contencieux(ref_pv, date_pv, date_reception,
-																id_bur_douane, annee, marchandise,
-																id_cli, id_mod_lic, fichier_pv, id_util)
+			$requete = $connexion-> prepare('INSERT INTO pv_contencieux(ref_pv, date_pv, date_reception, 
+																id_bur_douane, annee, marchandise, 
+																id_cli, id_mod_lic, fichier_pv, id_util) 
 												VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
 			$requete-> execute(array($entree['ref_pv'], $entree['date_pv'], $entree['date_reception'], $entree['id_bur_douane'], $entree['annee'], $entree['marchandise'], $entree['id_cli'], $entree['id_mod_lic'], $entree['fichier_pv'], $entree['id_util']));
 
@@ -55344,9 +55307,9 @@
 			$entree['fichier']=$fichier;
 			$entree['id_util']=$id_util;
 
-			$requete = $connexion-> prepare('INSERT INTO dossier_risque_douane(ref_doc, id_cli, date_doc, date_recept,
-																id_bur_douane, id_etap, date_proch_pres,
-																id_reg, fichier, id_util)
+			$requete = $connexion-> prepare('INSERT INTO dossier_risque_douane(ref_doc, id_cli, date_doc, date_recept, 
+																id_bur_douane, id_etap, date_proch_pres, 
+																id_reg, fichier, id_util) 
 												VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
 			$requete-> execute(array($entree['ref_doc'], $entree['id_cli'], $entree['date_doc'], $entree['date_recept'], $entree['id_bur_douane'], $entree['id_etap'], $entree['date_proch_pres'], $entree['id_reg'], $entree['fichier'], $entree['id_util']));
 
@@ -55372,8 +55335,8 @@
 			}
 
 			$requete = $connexion-> prepare('UPDATE dossier_risque_douane
-												SET ref_doc = ?, date_doc = ?, date_recept = ?,
-																id_bur_douane = ?, id_etap = ?, id_sen = ?, date_proch_pres = ?,
+												SET ref_doc = ?, date_doc = ?, date_recept = ?, 
+																id_bur_douane = ?, id_etap = ?, id_sen = ?, date_proch_pres = ?, 
 																id_reg = ?, date_pres = ?, remarque = ?, id_cli = ?
 												WHERE id = ?');
 			$requete-> execute(array($entree['ref_doc'], $entree['date_doc'], $entree['date_recept'], $entree['id_bur_douane'], $entree['id_etap'], $entree['id_sen'], $entree['date_proch_pres'], $entree['id_reg'], $entree['date_pres'], $entree['remarque'], $entree['id_cli'], $entree['id']));
@@ -55441,7 +55404,7 @@
 				return NULL;
 			}
 
-
+			
 
 		}
 
@@ -55481,7 +55444,7 @@
 			}$requete-> closeCursor();
 
 			return $row;
-
+			
 
 		}
 
@@ -55515,7 +55478,7 @@
 			}$requete-> closeCursor();
 
 			return $row;
-
+			
 
 		}
 
@@ -55535,7 +55498,7 @@
 			$requete-> execute(array($entree['id_e']));
 			$reponse = $requete-> fetch();
 			return $reponse;
-
+			
 
 		}
 
@@ -55571,16 +55534,16 @@
 													)
 												) AS delai
 											FROM dossier_risque_douane dos
-												LEFT JOIN bureau_douane bur
+												LEFT JOIN bureau_douane bur 
 													ON dos.id_bur_douane = bur.id_bur_douane
-												LEFT JOIN regime reg
-													ON dos.id_reg = reg.id_reg
+												LEFT JOIN regime reg 
+													ON dos.id_reg = reg.id_reg 
 												LEFT JOIN modele_licence ml
-													ON reg.id_mod_lic = ml.id_mod_lic
+													ON reg.id_mod_lic = ml.id_mod_lic 
 												LEFT JOIN etape_risque_douane et
-													ON dos.id_etap = et.id_etap
-												LEFT JOIN senario_pv sen
-													ON dos.id_sen = sen.id_sen
+													ON dos.id_etap = et.id_etap 
+												LEFT JOIN senario_pv sen 
+													ON dos.id_sen = sen.id_sen 
 												LEFT JOIN client cl
 													ON dos.id_cli = cl.id_cli
 												LEFT JOIN presentation_risque_douane prd
@@ -55603,7 +55566,7 @@
 			}$requete-> closeCursor();
 
 			return $row;
-
+			
 
 		}
 
@@ -55630,7 +55593,7 @@
 										</a>';
 			return $reponse;
 
-
+			
 
 		}
 
@@ -55673,7 +55636,7 @@
 			}
 			return $tableau;
 
-
+			
 
 		}
 
@@ -55707,7 +55670,7 @@
 			}
 			return $tableau;
 
-
+			
 
 		}
 
@@ -55724,7 +55687,7 @@
 			include("connexion.php");
 			// $entree['id_pres'] = $id_pres;
 
-			$requete = $connexion-> query("SELECT COUNT(*) AS nbre_not_pres
+			$requete = $connexion-> query("SELECT COUNT(*) AS nbre_not_pres 
 												FROM presentation_risque_douane pres, dossier_risque_douane dos
 												WHERE pres.date_prevu IS NOT NULL
 													AND pres.date_pres IS NULL
@@ -55759,7 +55722,7 @@
 			include("connexion.php");
 			$entree['id_pres'] = $id_pres;
 
-			$requete = $connexion-> prepare("SELECT *
+			$requete = $connexion-> prepare("SELECT * 
 												FROM presentation_risque_douane
 												WHERE id_pres = ?");
 			$requete-> execute(array($entree['id_pres']));
@@ -55784,7 +55747,7 @@
 			$requete = $connexion-> prepare("INSERT INTO presentation_risque_douane(id, date_prevu, date_pres, remarque, fichier, id_util)
 												VALUES(?, ?, ?, ?, ?, ?)");
 			$requete-> execute(array($entree['id'], $entree['date_prevu'], $entree['date_pres'], $entree['remarque'], $entree['fichier'], $_SESSION['id_util']));
-
+			
 
 		}
 
@@ -55803,7 +55766,7 @@
 			$requete = $connexion-> prepare("INSERT INTO depense_dossier(id_dep, id_dos, date_dep, montant, assigned_to, id_util)
 												VALUES(?, ?, ?, ?, ?, ?)");
 			$requete-> execute(array($entree['id_dep'], $entree['id_dos'], $entree['date_dep'], $entree['montant'], $entree['assigned_to'], $_SESSION['id_util']));
-
+			
 
 		}
 
@@ -55822,7 +55785,7 @@
 			$requete = $connexion-> prepare("INSERT INTO depense_dossier(id_dep, id_dos, date_dep, montant, id_df, charge_back, id_util)
 												VALUES(?, ?, ?, ?, ?, '0', ?)");
 			$requete-> execute(array($entree['id_dep'], $entree['id_dos'], $entree['date_dep'], $entree['montant'], $entree['id_df'], $_SESSION['id_util']));
-
+			
 
 		}
 
@@ -55835,11 +55798,11 @@
 			// 	$entree['date_dep'] = NULL;
 			// }
 
-			$requete = $connexion-> prepare("UPDATE depense_dossier
+			$requete = $connexion-> prepare("UPDATE depense_dossier	
 												SET charge_back = '1'
 												WHERE id_df = ?");
 			$requete-> execute(array($entree['id_df']));
-
+			
 
 		}
 
@@ -55858,7 +55821,7 @@
 		// 	$requete = $connexion-> prepare("INSERT INTO dossier_demande_fond(id_dep, id_dos, id_df, montant, id_util)
 		// 										VALUES(?, ?, ?, ?, ?)");
 		// 	$requete-> execute(array($entree['id_dep'], $entree['id_dos'], $entree['id_df'], $entree['montant'], $_SESSION['id_util']));
-
+			
 
 		// }
 
@@ -55870,7 +55833,7 @@
 			$requete = $connexion-> prepare("INSERT INTO bureau_douane(nom_bur_douane)
 												VALUES(?)");
 			$requete-> execute(array($entree['nom_bur_douane']));
-
+			
 
 		}
 
@@ -55883,7 +55846,7 @@
 			$requete = $connexion-> prepare("INSERT INTO regime(nom_reg, id_mod_lic)
 												VALUES(?, ?)");
 			$requete-> execute(array($entree['nom_reg'], $entree['id_mod_lic']));
-
+			
 
 		}
 
@@ -55896,7 +55859,7 @@
 			$requete = $connexion-> prepare("INSERT INTO document_joint_risque(id_dos, id_doc, fichier, id_util)
 												VALUES(?, ?, ?, ?)");
 			$requete-> execute(array($entree['id'], $entree['id_doc'], $entree['fichier'], $_SESSION['id_util']));
-
+			
 
 		}
 
@@ -55912,7 +55875,7 @@
 				$entree['date_pres'] = NULL;
 			}
 
-			$requete = $connexion-> prepare("UPDATE presentation_risque_douane
+			$requete = $connexion-> prepare("UPDATE presentation_risque_douane 
 												SET date_prevu = ?, date_pres = ?, remarque = ?, fichier = ?
 												WHERE id_pres = ?");
 			$requete-> execute(array($entree['date_prevu'], $entree['date_pres'], $entree['remarque'], $entree['fichier'], $entree['id_pres']));
@@ -55930,7 +55893,7 @@
 				$entree['date_pres'] = NULL;
 			}
 
-			$requete = $connexion-> prepare("UPDATE presentation_risque_douane
+			$requete = $connexion-> prepare("UPDATE presentation_risque_douane 
 												SET date_prevu = ?, date_pres = ?, remarque = ?
 												WHERE id_pres = ?");
 			$requete-> execute(array($entree['date_prevu'], $entree['date_pres'], $entree['remarque'], $entree['id_pres']));
@@ -56035,7 +55998,7 @@
 												VALUES(?, ?, ?, ?)');
 			$requete-> execute(array($entree['date_act'], $entree['detail_act'], $entree['id_pv'], $_SESSION['id_util']));
 		}
-
+			
 		public function selectionnerBureauDouaneAjax(){
 			include('connexion.php');
 			$select = "";
@@ -56052,7 +56015,7 @@
 
 			return $select;
 		}
-
+		
 		public function selectionnerBureauDouaneAjax2(){
 			include('connexion.php');
 			$select = "<select name='id_bur_douane' id='id_bur_douane' class='form-control cc-exp form-control-sm' required>
@@ -56073,7 +56036,7 @@
 
 			return $select;
 		}
-
+		
 		public function selectionnerBureauDouaneAjax2_edit(){
 			include('connexion.php');
 			$select = "<select name='id_bur_douane' id='id_bur_douane_edit' class='form-control cc-exp form-control-sm' required>
@@ -56094,7 +56057,7 @@
 
 			return $select;
 		}
-
+		
 		public function selectionnerDocumentRisqueAjax(){
 			include('connexion.php');
 			$select = "";
@@ -56193,11 +56156,11 @@
 			// echo '<br>id_util = '.$id_util;
 
 			$requete = $connexion-> prepare('UPDATE pv_contencieux
-												SET ref_pv = ?, date_pv = ?, date_reception = ?,
-													id_bur_douane = ?, annee = ?, marchandise = ?,
-													id_cli = ?, id_mod_lic = ?, id_etat = ?, id_sen = ?, remarque = ?,
-													date_deb_contrad = ?, date_next_pres = ?, delai_grief = ?,
-													infraction = ?, droit_cdf = ?, droit_usd = ?, amende_cdf = ?,
+												SET ref_pv = ?, date_pv = ?, date_reception = ?, 
+													id_bur_douane = ?, annee = ?, marchandise = ?, 
+													id_cli = ?, id_mod_lic = ?, id_etat = ?, id_sen = ?, remarque = ?, 
+													date_deb_contrad = ?, date_next_pres = ?, delai_grief = ?, 
+													infraction = ?, droit_cdf = ?, droit_usd = ?, amende_cdf = ?, 
 													amende_usd = ?, risque_potentiel = ?
 												WHERE id_pv = ?');
 			$requete-> execute(array($entree['ref_pv'], $entree['date_pv'], $entree['date_reception'], $entree['id_bur_douane'], $entree['annee'], $entree['marchandise'], $entree['id_cli'], $entree['id_mod_lic'], $entree['id_etat'], $entree['id_sen'], $entree['remarque'], $entree['date_deb_contrad'], $entree['date_next_pres'], $entree['delai_grief'], $entree['infraction'], $entree['droit_cdf'], $entree['droit_usd'], $entree['amende_cdf'], $entree['amende_usd'], $entree['risque_potentiel'], $entree['id_pv']));
@@ -56318,7 +56281,7 @@
 								<td>'.$compteur.'</td>
 								<td>'.$reponse['nom_jour'].'</td>
 								<td style="text-align: center;">
-								'.$this-> getNombreCompteJournal($reponse['id_jour']).' |
+								'.$this-> getNombreCompteJournal($reponse['id_jour']).' | 
 								<button class="btn btn-xs bg-info" onclick="modal_compte_journal('.$reponse['id_jour'].');">
 										<i class="fa fa-eye"></i>
 									</button>
@@ -56434,7 +56397,7 @@
 
 			$tableau = '';
 
-			$requete = $connexion-> prepare("SELECT compte.id_compte AS id_compte,
+			$requete = $connexion-> prepare("SELECT compte.id_compte AS id_compte, 
 													compte.nom_compte AS nom_compte
 											FROM compte, compte_journal
 											WHERE compte.id_compte = compte_journal.id_compte
@@ -56464,7 +56427,7 @@
 
 			$row = array();
 
-			$requete = $connexion-> prepare("SELECT dos.id_dos AS id_dos,
+			$requete = $connexion-> prepare("SELECT dos.id_dos AS id_dos, 
 													dos.ref_dos AS ref_dos
 											FROM dossier dos
 											WHERE id_cli = ?
@@ -56504,12 +56467,12 @@
 													(
 														l.fob - SUM(
 															IF(dos.fob IS NULL, 0, dos.fob)
-														)
+														) 
 													)AS solde_fob,
 													(
 														l.poids - SUM(
 															IF(dos.poids IS NULL, 0, dos.poids)
-														)
+														) 
 													)AS solde_poids,
 													IF(march.id_march IS NULL,
 														l.commodity,
@@ -56546,7 +56509,7 @@
 
 			$tableau = '';
 
-			$requete = $connexion-> query("SELECT compte.id_compte AS id_compte,
+			$requete = $connexion-> query("SELECT compte.id_compte AS id_compte, 
 													compte.nom_compte AS nom_compte
 											FROM compte
 											ORDER BY compte.nom_compte");
@@ -56572,7 +56535,7 @@
 
 		// 	$tableau = '';
 
-		// 	$requete = $connexion-> query("SELECT compte.id_compte AS id_compte,
+		// 	$requete = $connexion-> query("SELECT compte.id_compte AS id_compte, 
 		// 											compte.nom_compte AS nom_compte
 		// 									FROM compte
 		// 									ORDER BY compte.nom_compte");
@@ -56598,7 +56561,7 @@
 
 			$row = array();
 
-			$requete = $connexion-> query("SELECT compte.id_compte AS id_compte,
+			$requete = $connexion-> query("SELECT compte.id_compte AS id_compte, 
 													compte.nom_compte AS nom_compte
 											FROM compte
 											ORDER BY compte.nom_compte");
@@ -56825,7 +56788,7 @@
 				$reponse['detail_act']=null;
 				return $reponse;
 			}
-
+			
 
 		}
 
@@ -56859,9 +56822,9 @@
 			while ($reponse1=$requete1-> fetch()) {
 				$option .= '<optgroup label="'.$reponse1['nom_t_deb'].'">';
 
-				$requete = $connexion-> prepare("SELECT *
-													FROM debours
-													WHERE id_t_deb = ?
+				$requete = $connexion-> prepare("SELECT * 
+													FROM debours 
+													WHERE id_t_deb = ? 
 														AND id_deb NOT IN (
 																SELECT id_deb
 																	FROM affectation_debours_client_modele_licence
@@ -56891,13 +56854,13 @@
 			include('connexion.php');
 
 			$entree['id_cli'] = $id_cli;
-			$requete = $connexion-> prepare("SELECT *
+			$requete = $connexion-> prepare("SELECT * 
 												FROM modele_facture mf
 												-- WHERE mf.id_mod_fact NOT IN (
 												-- 	SELECT id_mod_fact
 												-- 		FROM affectation_modele_facture_client_marchandise
 												-- 		WHERE id_cli = ?
-												-- )
+												-- ) 
 											");
 
 			$requete-> execute(array($entree['id_cli']));
@@ -56930,7 +56893,7 @@
 
 			// $entree['id_cli'] = $id_cli;
 			$tbl = '<option></option>';
-			$requete = $connexion-> query("SELECT *
+			$requete = $connexion-> query("SELECT * 
 												FROM compte_bancaire");
 
 			// $requete-> execute(array($entree['id_cli']));
@@ -56948,7 +56911,7 @@
 			include('connexion.php');
 
 			$entree['id_cli'] = $id_cli;
-			$requete = $connexion-> prepare("SELECT march.nom_march AS nom_march, march.id_march AS id_march
+			$requete = $connexion-> prepare("SELECT march.nom_march AS nom_march, march.id_march AS id_march 
 												FROM affectation_marchandise_client_modele_licence aff, marchandise march
 												WHERE aff.id_cli = ?
 													AND aff.id_march = march.id_march
@@ -56991,7 +56954,7 @@
 												-- AND ref_decl <> ''
 												-- AND ref_liq IS NOT NULL
 												-- AND ref_liq <> ''
-												AND
+												AND 
 												(
 													-- Pocess 1
 													(
@@ -57008,7 +56971,7 @@
 													(
 														get_inv_process_pour_dossier(id_dos)=2
 														AND (
-																	dispatch_date IS NOT NULL
+																	dispatch_date IS NOT NULL 
 																	OR (dgda_out IS NOT NULL AND id_mod_trans=4)
 																)
 														-- dispatch_date IS NOT NULL
@@ -57019,7 +56982,7 @@
 														get_inv_process_pour_dossier(id_dos)=3
 														AND dispatch_deliv IS NOT NULL
 													)
-
+														
 												)
 												AND id_dos NOT IN (
 														SELECT id_dos FROM detail_facture_dossier
@@ -57062,7 +57025,7 @@
 												-- AND ref_decl <> ''
 												-- AND ref_liq IS NOT NULL
 												-- AND ref_liq <> ''
-												AND
+												AND 
 												(
 													-- Pocess 1
 													(
@@ -57079,7 +57042,7 @@
 													(
 														get_inv_process_pour_dossier(id_dos)=2
 														AND (
-																	dispatch_date IS NOT NULL
+																	dispatch_date IS NOT NULL 
 																	OR (dgda_out IS NOT NULL AND id_mod_trans=4)
 																)
 														-- dispatch_date IS NOT NULL
@@ -57090,7 +57053,7 @@
 														get_inv_process_pour_dossier(id_dos)=3
 														AND dispatch_deliv IS NOT NULL
 													)
-
+														
 												)
 												AND id_dos NOT IN (
 														SELECT id_dos FROM detail_facture_dossier
@@ -57143,7 +57106,7 @@
 												AND id_mod_lic = ?
 												AND id_march = ?
 												AND ref_liq = ?
-												AND
+												AND 
 												(
 													-- Pocess 1
 													(
@@ -57160,7 +57123,7 @@
 													(
 														get_inv_process_pour_dossier(id_dos)=2
 														AND (
-																	dispatch_date IS NOT NULL
+																	dispatch_date IS NOT NULL 
 																	OR (dgda_out IS NOT NULL AND id_mod_trans=4)
 																)
 														-- dispatch_date IS NOT NULL
@@ -57171,7 +57134,7 @@
 														get_inv_process_pour_dossier(id_dos)=3
 														AND dispatch_deliv IS NOT NULL
 													)
-
+														
 												)
 												AND id_dos NOT IN (
 														SELECT id_dos FROM detail_facture_dossier
@@ -57406,7 +57369,7 @@
 											FROM dossier
 											WHERE id_mod_lic = ?
 												AND id_dos NOT IN (
-													SELECT id_dos
+													SELECT id_dos 
 														FROM detail_apurement
 													)
 												AND ref_quit IS NOT NULL
@@ -57420,8 +57383,8 @@
 												AND num_lic <> 'UNDERVALUE'
 												AND (id_cli <> 869 AND id_cli <> 929 AND id_cli <> 927 AND id_cli <> 870 AND id_cli <> 902 AND id_cli <> 873 AND id_cli <> 871 AND id_cli <> 872 AND id_cli <> 905)
 												AND id_dos NOT IN (
-													SELECT id_dos
-														FROM dossier
+													SELECT id_dos 
+														FROM dossier 
 														WHERE ref_dos LIKE '%RF20-%' OR ref_dos LIKE '%AW20-%' OR ref_dos LIKE '%-ACID-%' OR ref_dos LIKE '%-SUL%'
 													)
 												$sqlClient
@@ -57453,7 +57416,7 @@
 											FROM dossier
 											WHERE id_mod_lic = ?
 												AND id_dos NOT IN (
-													SELECT id_dos
+													SELECT id_dos 
 														FROM detail_apurement
 													)
 												AND ref_quit IS NOT NULL
@@ -57467,8 +57430,8 @@
 												AND num_lic <> 'UNDERVALUE'
 												AND (id_cli <> 869 AND id_cli <> 929 AND id_cli <> 927 AND id_cli <> 870 AND id_cli <> 902 AND id_cli <> 873 AND id_cli <> 871 AND id_cli <> 872 AND id_cli <> 905)
 												AND id_dos NOT IN (
-													SELECT id_dos
-														FROM dossier
+													SELECT id_dos 
+														FROM dossier 
 														WHERE ref_dos LIKE '%RF20-%' OR ref_dos LIKE '%AW20-%' OR ref_dos LIKE '%-ACID-%' OR ref_dos LIKE '%-SUL%'
 													)
 												$sqlClient
@@ -57501,7 +57464,7 @@
 											FROM dossier
 											WHERE id_mod_lic = ?
 												AND id_dos NOT IN (
-													SELECT detail_apurement.id_dos
+													SELECT detail_apurement.id_dos 
 														FROM detail_apurement, transmission_apurement
 														WHERE transmission_apurement.type_trans_ap = 'dgda'
 															AND transmission_apurement.id_trans_ap = detail_apurement.id_trans_ap
@@ -57517,8 +57480,8 @@
 												AND num_lic <> 'UNDERVALUE'
 												AND (id_cli <> 869 AND id_cli <> 929 AND id_cli <> 927 AND id_cli <> 870 AND id_cli <> 902 AND id_cli <> 873 AND id_cli <> 871 AND id_cli <> 872 AND id_cli <> 905)
 												AND id_dos NOT IN (
-													SELECT id_dos
-														FROM dossier
+													SELECT id_dos 
+														FROM dossier 
 														WHERE ref_dos LIKE '%RF20-%' OR ref_dos LIKE '%AW20-%' OR ref_dos LIKE '%-ACID-%' OR ref_dos LIKE '%-SUL%'
 													)
 												$sqlClient
@@ -57551,7 +57514,7 @@
 											FROM dossier
 											WHERE id_mod_lic = ?
 												AND id_dos NOT IN (
-													SELECT detail_apurement.id_dos
+													SELECT detail_apurement.id_dos 
 														FROM detail_apurement, transmission_apurement
 														WHERE transmission_apurement.type_trans_ap = 'occ'
 															AND transmission_apurement.id_trans_ap = detail_apurement.id_trans_ap
@@ -57567,8 +57530,8 @@
 												AND num_lic <> 'UNDERVALUE'
 												AND (id_cli <> 869 AND id_cli <> 929 AND id_cli <> 927 AND id_cli <> 870 AND id_cli <> 902 AND id_cli <> 873 AND id_cli <> 871 AND id_cli <> 872 AND id_cli <> 905)
 												AND id_dos NOT IN (
-													SELECT id_dos
-														FROM dossier
+													SELECT id_dos 
+														FROM dossier 
 														WHERE ref_dos LIKE '%RF20-%' OR ref_dos LIKE '%AW20-%' OR ref_dos LIKE '%-ACID-%' OR ref_dos LIKE '%-SUL%'
 													)
 												$sqlClient
@@ -57606,11 +57569,11 @@
 														fob_usd,
 														fob
 													) AS fob_usd
-
+													
 											FROM dossier
 											WHERE num_lic = ?
 												AND id_dos NOT IN (
-													SELECT id_dos
+													SELECT id_dos 
 														FROM detail_apurement
 													)
 												AND ref_quit IS NOT NULL
@@ -57624,8 +57587,8 @@
 												AND num_lic <> 'UNDERVALUE'
 												AND (id_cli <> 869 AND id_cli <> 929 AND id_cli <> 927 AND id_cli <> 870 AND id_cli <> 902 AND id_cli <> 873 AND id_cli <> 871 AND id_cli <> 872 AND id_cli <> 905)
 												AND id_dos NOT IN (
-													SELECT id_dos
-														FROM dossier
+													SELECT id_dos 
+														FROM dossier 
 														WHERE ref_dos LIKE '%RF20-%' OR ref_dos LIKE '%AW20-%' OR ref_dos LIKE '%-ACID-%' OR ref_dos LIKE '%-SUL%'
 													)
 											ORDER BY id_dos");
@@ -57674,11 +57637,11 @@
 														fob_usd,
 														fob
 													) AS fob_usd
-
+													
 											FROM dossier
 											WHERE num_lic = ?
 												AND id_dos NOT IN (
-													SELECT detap.id_dos
+													SELECT detap.id_dos 
 														FROM detail_apurement detap, transmission_apurement ta
 														WHERE detap.id_trans_ap = ta.id_trans_ap
 														AND ta.type_trans_ap = 'dgda'
@@ -57694,8 +57657,8 @@
 												AND num_lic <> 'UNDERVALUE'
 												AND (id_cli <> 869 AND id_cli <> 929 AND id_cli <> 927 AND id_cli <> 870 AND id_cli <> 902 AND id_cli <> 873 AND id_cli <> 871 AND id_cli <> 872 AND id_cli <> 905)
 												AND id_dos NOT IN (
-													SELECT id_dos
-														FROM dossier
+													SELECT id_dos 
+														FROM dossier 
 														WHERE ref_dos LIKE '%RF20-%' OR ref_dos LIKE '%AW20-%' OR ref_dos LIKE '%-ACID-%' OR ref_dos LIKE '%-SUL%'
 													)
 											ORDER BY id_dos");
@@ -57744,11 +57707,11 @@
 														fob_usd,
 														fob
 													) AS fob_usd
-
+													
 											FROM dossier
 											WHERE num_lic = ?
 												AND id_dos NOT IN (
-													SELECT detap.id_dos
+													SELECT detap.id_dos 
 														FROM detail_apurement detap, transmission_apurement ta
 														WHERE detap.id_trans_ap = ta.id_trans_ap
 														AND ta.type_trans_ap = 'occ'
@@ -57764,8 +57727,8 @@
 												AND num_lic <> 'UNDERVALUE'
 												AND (id_cli <> 869 AND id_cli <> 929 AND id_cli <> 927 AND id_cli <> 870 AND id_cli <> 902 AND id_cli <> 873 AND id_cli <> 871 AND id_cli <> 872 AND id_cli <> 905)
 												AND id_dos NOT IN (
-													SELECT id_dos
-														FROM dossier
+													SELECT id_dos 
+														FROM dossier 
 														WHERE ref_dos LIKE '%RF20-%' OR ref_dos LIKE '%AW20-%' OR ref_dos LIKE '%-ACID-%' OR ref_dos LIKE '%-SUL%'
 													)
 											ORDER BY id_dos");
@@ -57819,11 +57782,11 @@
 														fob_usd,
 														fob
 													) AS fob_usd
-
+													
 											FROM dossier
 											WHERE id_mod_lic = ?
 												AND id_dos NOT IN (
-													SELECT id_dos
+													SELECT id_dos 
 														FROM detail_apurement
 													)
 												AND ref_quit IS NOT NULL
@@ -57837,8 +57800,8 @@
 												AND num_lic <> 'UNDERVALUE'
 												AND (id_cli <> 869 AND id_cli <> 929 AND id_cli <> 927 AND id_cli <> 870 AND id_cli <> 902 AND id_cli <> 873 AND id_cli <> 871 AND id_cli <> 872 AND id_cli <> 905)
 												AND id_dos NOT IN (
-													SELECT id_dos
-														FROM dossier
+													SELECT id_dos 
+														FROM dossier 
 														WHERE ref_dos LIKE '%RF20-%' OR ref_dos LIKE '%AW20-%' OR ref_dos LIKE '%-ACID-%' OR ref_dos LIKE '%-SUL%'
 													)
 												$sqlClient
@@ -57879,7 +57842,7 @@
 			$style = '';
 			$option = '';
 
-			$requete = $connexion-> prepare("SELECT DISTINCT(cl.id_cli) AS id_cli,
+			$requete = $connexion-> prepare("SELECT DISTINCT(cl.id_cli) AS id_cli, 
 													UPPER(cl.nom_cli) AS nom_cli
 											FROM facture_licence f, client cl
 											WHERE f.id_mod_lic = ?
@@ -57983,7 +57946,7 @@
 
 		}
 
-		public function selectionnerDossierClientModeTransportModeLicence2($id_cli, $id_mod_trans,
+		public function selectionnerDossierClientModeTransportModeLicence2($id_cli, $id_mod_trans, 
 														$id_mod_lic, $commodity){
 			include('connexion.php');
 
@@ -58021,7 +57984,7 @@
 													$sql1
 												ORDER BY d.ref_dos ASC");
 			$requete-> execute(array($entree['id_mod_trans'], $entree['id_mod_lic']));
-
+			
 			while($reponse = $requete-> fetch()){
 			?>
 			<option value="<?php echo $reponse['ref_dos'];?>">
@@ -58031,7 +57994,7 @@
 			}$requete-> closeCursor();
 		}
 
-		public function selectionnerDossierClientModeTransportModeLicence3($id_cli, $id_mod_trans,
+		public function selectionnerDossierClientModeTransportModeLicence3($id_cli, $id_mod_trans, 
 														$id_mod_lic, $commodity, $type){
 			include('connexion.php');
 
@@ -58107,7 +58070,7 @@
 			if (isset($type) && ($type == 'LIQUIDATED / AWAIT QUITTANCE')) {
 				$sqlType = " AND ( (date_liq IS NOT NULL OR date_liq <> '')
 													OR (refORq IS NOT NULL AND ref_liq <> '') )
-												AND ( (date_quit IS NULL OR date_quit = '')
+												AND ( (date_quit IS NULL OR date_quit = '') 
 													OR (ref_quit IS NULL OR ref_quit = '') )";
 			}
 
@@ -58136,7 +58099,7 @@
 													$sql1
 												ORDER BY d.ref_dos ASC");
 			$requete-> execute(array($entree['id_mod_trans'], $entree['id_mod_lic']));
-
+			
 			while($reponse = $requete-> fetch()){
 			?>
 			<option value="<?php echo $reponse['ref_dos'];?>">
@@ -58228,13 +58191,13 @@
 
 			while($reponse = $requete-> fetch()){
 				if ($reponse['statut']=='CANCELLED' && $_SESSION['id_role']!='1') {
-
+					
 				}else{
 				?>
 				<option value="<?php echo $reponse['statut'];?>">
 					<?php echo $reponse['statut'];?>
 				</option>
-				<?php
+				<?php	
 				}
 			}$requete-> closeCursor();
 
@@ -58530,7 +58493,7 @@
 
 		public function selectionnerRegimeGroupingAjax(){
 			include('connexion.php');
-
+			
 			$select = "<select name='id_reg' id='id_reg' class='form-control cc-exp form-control-sm' required>
               			<option></option>";
 
@@ -58565,7 +58528,7 @@
 
 		public function selectionnerRegimeGroupingAjax_edit(){
 			include('connexion.php');
-
+			
 			$select = "<select name='id_reg' id='id_reg_edit' class='form-control cc-exp form-control-sm' required>
               			<option></option>";
 
@@ -58671,7 +58634,7 @@
 		public function selectionnerSousTypePaiement($id_mod_lic){
 			include('connexion.php');
 			$entree['id_mod_lic'] = $id_mod_lic;
-			$requete = $connexion-> prepare("SELECT id_sous_type_paie, code,
+			$requete = $connexion-> prepare("SELECT id_sous_type_paie, code, 
 												UPPER(nom_sous_type_paie) AS nom_sous_type_paie
 											FROM sous_type_paiement
 											WHERE id_mod_lic = ?");
@@ -58683,7 +58646,7 @@
 			  </option>
 			<?php
 			}$requete-> closeCursor();
-		}
+		} 
 
 		public function selectionnerMonnaie(){
 			include('connexion.php');
@@ -58696,7 +58659,7 @@
 			  </option>
 			<?php
 			}$requete-> closeCursor();
-		}
+		} 
 
 		public function selectionnerMonnaie2(){
 			include('connexion.php');
@@ -58710,7 +58673,7 @@
 			}$requete-> closeCursor();
 
 			return $monnaie;
-		}
+		} 
 
 		public function selectionnerMonnaie3($mon){
 			include('connexion.php');
@@ -58726,7 +58689,7 @@
 			$monnaie .= '</select>';
 
 			return $monnaie;
-		}
+		} 
 
 		public function selectionnerModeTransport(){
 			include('connexion.php');
@@ -58740,7 +58703,7 @@
 			  </option>
 			<?php
 			}$requete-> closeCursor();
-		}
+		} 
 
 		/*public function selectionnerMarchandiseModeleLicence($id_mod_lic){
 			include('connexion.php');
@@ -58774,7 +58737,7 @@
 			  </option>
 			<?php
 			}$requete-> closeCursor();
-		}
+		} 
 
 		public function selectionnerLicenceModele2($id_mod_lic, $id_cli, $id_type_lic){
 			include('connexion.php');
@@ -58804,7 +58767,7 @@
 			  </option>
 			<?php
 			}$requete-> closeCursor();
-		}
+		} 
 
 		public function selectionnerLicenceModeleClient($id_mod_lic, $id_cli, $id_mod_trans, $id_march=NULL){
 			include('connexion.php');
@@ -58820,7 +58783,7 @@
 													AND id_march = ?
 													AND id_mod_trans = ?
 												ORDER BY date_creat_lic  DESC");
-				$requete-> execute(array($entree['id_mod_lic'], $entree['id_cli'],
+				$requete-> execute(array($entree['id_mod_lic'], $entree['id_cli'], 
 										$entree['id_march'], $entree['id_mod_trans']));
 				# code...
 			}else{
@@ -58833,7 +58796,7 @@
 												ORDER BY date_creat_lic  DESC");
 				$requete-> execute(array($entree['id_mod_lic'], $entree['id_cli'], $entree['id_mod_trans']));
 			}
-
+			
 			while($reponse = $requete-> fetch()){
 			?>
 			  <option value="<?php echo $reponse['num_lic'];?>">
@@ -58841,7 +58804,7 @@
 			  </option>
 			<?php
 			}$requete-> closeCursor();
-		}
+		} 
 
 		public function selectionnerLicenceModeleClientActive($id_mod_lic, $id_cli, $id_mod_trans, $id_march=NULL){
 			include('connexion.php');
@@ -58858,7 +58821,7 @@
 													AND id_mod_trans = ?
 													AND affichier_tracking = '1'
 												ORDER BY date_creat_lic  DESC");
-				$requete-> execute(array($entree['id_mod_lic'], $entree['id_cli'],
+				$requete-> execute(array($entree['id_mod_lic'], $entree['id_cli'], 
 										$entree['id_march'], $entree['id_mod_trans']));
 				# code...
 			}else{
@@ -58871,7 +58834,7 @@
 												ORDER BY date_creat_lic  DESC");
 				$requete-> execute(array($entree['id_mod_lic'], $entree['id_cli'], $entree['id_mod_trans']));
 			}
-
+			
 			while($reponse = $requete-> fetch()){
 			?>
 			  <option value="<?php echo $reponse['num_lic'];?>">
@@ -58879,7 +58842,7 @@
 			  </option>
 			<?php
 			}$requete-> closeCursor();
-		}
+		} 
 
 		public function selectionnerLicenceEnCoursModele($id_mod_lic){
 			include('connexion.php');
@@ -58898,9 +58861,9 @@
 				$compteur++;
 				$marchandise = $this-> getMarchandiseLicence($reponse['num_lic']);
 				$date_exp = $this-> getLastEpirationLicence2($reponse['num_lic']);
-
+				
 				$bg = "bg-light";
-
+				
 				if( (!$date_exp) && ($this-> getSommeFobLicence($reponse['num_lic']) <= $fob) ){
 					?>
 					  <option value="<?php echo $reponse['num_lic'];?>">
@@ -58908,7 +58871,7 @@
 					  </option>
 					<?php
 				}else{
-
+						
 					$style = '';//" style='color: black; background-color: orange;'";
 					if( ($reponse['fob'] == $this-> getSommeFobLicence($reponse['num_lic'])) ){
 						$bg = "bg-success";
@@ -58939,7 +58902,7 @@
 					}
 				}
 			}$requete-> closeCursor();
-		}
+		} 
 
 		public function selectionnerLicenceEnCoursModeleClient($id_mod_lic, $id_cli){
 			include('connexion.php');
@@ -58949,10 +58912,10 @@
 			$style = '';
 
 			if ($id_cli==845 || $id_cli==885) {
-
-				$requete = $connexion-> prepare("SELECT l.num_lic AS num_lic,
-														l.fob AS fob,
-														DATE(CURRENT_DATE()) AS aujourdhui,
+				
+				$requete = $connexion-> prepare("SELECT l.num_lic AS num_lic, 
+														l.fob AS fob, 
+														DATE(CURRENT_DATE()) AS aujourdhui, 
 														l.date_val
 												FROM licence l
 												WHERE l.id_mod_lic = ?
@@ -58978,10 +58941,10 @@
 				$requete-> execute(array($entree['id_mod_lic']));
 
 			}else if ($id_cli==918 || $id_cli==903) {
-
-				$requete = $connexion-> prepare("SELECT l.num_lic AS num_lic,
-														l.fob AS fob,
-														DATE(CURRENT_DATE()) AS aujourdhui,
+				
+				$requete = $connexion-> prepare("SELECT l.num_lic AS num_lic, 
+														l.fob AS fob, 
+														DATE(CURRENT_DATE()) AS aujourdhui, 
 														l.date_val
 												FROM licence l
 												WHERE l.id_mod_lic = ?
@@ -59007,10 +58970,10 @@
 				$requete-> execute(array($entree['id_mod_lic']));
 
 			}else{
-
-				$requete = $connexion-> prepare("SELECT l.num_lic AS num_lic,
-														l.fob AS fob,
-														DATE(CURRENT_DATE()) AS aujourdhui,
+				
+				$requete = $connexion-> prepare("SELECT l.num_lic AS num_lic, 
+														l.fob AS fob, 
+														DATE(CURRENT_DATE()) AS aujourdhui, 
 														l.date_val
 												FROM licence l
 												WHERE l.id_mod_lic = ?
@@ -59044,9 +59007,9 @@
 					<?php echo $reponse['num_lic'];?>
 				  </option>
 				<?php
-
+			
 			}$requete-> closeCursor();
-		}
+		} 
 /*
 		public function selectionnerLicenceEnCoursModeleClient($id_mod_lic, $id_cli){
 			include('connexion.php');
@@ -59056,10 +59019,10 @@
 			$style = '';
 
 			if ($id_cli==845 || $id_cli==885) {
-
-				$requete = $connexion-> prepare("SELECT l.num_lic AS num_lic,
-														l.fob AS fob,
-														DATE(CURRENT_DATE()) AS aujourdhui,
+				
+				$requete = $connexion-> prepare("SELECT l.num_lic AS num_lic, 
+														l.fob AS fob, 
+														DATE(CURRENT_DATE()) AS aujourdhui, 
 														l.date_val
 												FROM licence l
 												WHERE l.id_mod_lic = ?
@@ -59085,7 +59048,7 @@
 				$requete-> execute(array($entree['id_mod_lic']));
 
 			}else{
-
+				
 				$requete = $connexion-> prepare("SELECT num_lic, fob, DATE(CURRENT_DATE()) AS aujourdhui, date_val
 												FROM licence
 												WHERE id_mod_lic = ?
@@ -59111,14 +59074,14 @@
 			}$requete-> closeCursor();
 		} */
 
-		//FIN Methodes permettant de Selectionner
+		//FIN Methodes permettant de Selectionner 
 
 		//Methodes permettant de mettre à jour
-		public function modifierLicence($num_lic, $date_val, $date_exp,
-										$fournisseur, $commodity, $fob,
-										$fret, $assurance, $autre_frais,
-										$num_lic_old, $id_mon, $id_mod_paie,
-										$id_type_lic, $id_sous_type_paie, $poids,
+		public function modifierLicence($num_lic, $date_val, $date_exp, 
+										$fournisseur, $commodity, $fob, 
+										$fret, $assurance, $autre_frais, 
+										$num_lic_old, $id_mon, $id_mod_paie, 
+										$id_type_lic, $id_sous_type_paie, $poids, 
 										$id_mod_trans, $cod, $consommable, $id_banq){
 
 			include('connexion.php');
@@ -59157,18 +59120,18 @@
 			echo '<br> id_type_lic = '.$id_type_lic;
 			echo '<br> id_sous_type_paie = '.$id_sous_type_paie;*/
 
-			$requete = $connexion-> prepare("UPDATE licence SET num_lic= ?,  date_val = ?,
-													fournisseur = ?, commodity = ?, fob = ?,
-													fret = ?, assurance = ?, autre_frais = ?,
+			$requete = $connexion-> prepare("UPDATE licence SET num_lic= ?,  date_val = ?, 
+													fournisseur = ?, commodity = ?, fob = ?, 
+													fret = ?, assurance = ?, autre_frais = ?, 
 													id_mon = ?, id_mod_paie = ?, id_type_lic = ?,
-													id_sous_type_paie = ?, poids = ?, id_mod_trans = ?,
+													id_sous_type_paie = ?, poids = ?, id_mod_trans = ?, 
 													cod = ?, consommable = ?, id_banq = ?
 												WHERE num_lic = ?");
-			$requete-> execute(array($entree['num_lic'], $entree['date_val'], $entree['fournisseur'],
-									$entree['commodity'], $entree['fob'], $entree['fret'],
-									$entree['assurance'], $entree['autre_frais'], $entree['id_mon'],
-									$entree['id_mod_paie'], $entree['id_type_lic'], $entree['id_sous_type_paie'],
-									$entree['poids'], $entree['id_mod_trans'], $entree['cod'], $entree['consommable'], $entree['id_banq'],
+			$requete-> execute(array($entree['num_lic'], $entree['date_val'], $entree['fournisseur'], 
+									$entree['commodity'], $entree['fob'], $entree['fret'], 
+									$entree['assurance'], $entree['autre_frais'], $entree['id_mon'], 
+									$entree['id_mod_paie'], $entree['id_type_lic'], $entree['id_sous_type_paie'], 
+									$entree['poids'], $entree['id_mod_trans'], $entree['cod'], $entree['consommable'], $entree['id_banq'], 
 									$entree['num_lic_old']));
 
 			if ($date_exp != $this-> getLastEpirationLicence2($num_lic)) {
@@ -59178,12 +59141,12 @@
 
 			$this-> modifierLicencePourDossier($num_lic, $num_lic_old);
 
-		}
+		} 
 
-		public function modifierLicenceExport($num_lic, $date_val, $date_exp,
-										$acheteur, $commodity, $fob,
-										$fret, $assurance, $autre_frais,
-										$num_lic_old, $id_mon, $id_mod_paie,
+		public function modifierLicenceExport($num_lic, $date_val, $date_exp, 
+										$acheteur, $commodity, $fob, 
+										$fret, $assurance, $autre_frais, 
+										$num_lic_old, $id_mon, $id_mod_paie, 
 										$id_type_lic, $id_mod_trans, $id_banq){
 
 			include('connexion.php');
@@ -59217,15 +59180,15 @@
 			echo '<br> id_mod_paie = '.$id_mod_paie;
 			echo '<br> id_type_lic = '.$id_type_lic;*/
 
-			$requete = $connexion-> prepare("UPDATE licence SET num_lic= ?,  date_val = ?,
-													acheteur = ?, commodity = ?, fob = ?,
-													fret = ?, assurance = ?, autre_frais = ?,
+			$requete = $connexion-> prepare("UPDATE licence SET num_lic= ?,  date_val = ?, 
+													acheteur = ?, commodity = ?, fob = ?, 
+													fret = ?, assurance = ?, autre_frais = ?, 
 													id_mon = ?, id_mod_paie = ?, id_type_lic = ?, id_mod_trans = ?, id_banq= ?
 												WHERE num_lic = ?");
-			$requete-> execute(array($entree['num_lic'], $entree['date_val'], $entree['acheteur'],
-									$entree['commodity'], $entree['fob'], $entree['fret'],
-									$entree['assurance'], $entree['autre_frais'], $entree['id_mon'],
-									$entree['id_mod_paie'], $entree['id_type_lic'],  $entree['id_mod_trans'],  $entree['id_banq'],
+			$requete-> execute(array($entree['num_lic'], $entree['date_val'], $entree['acheteur'], 
+									$entree['commodity'], $entree['fob'], $entree['fret'], 
+									$entree['assurance'], $entree['autre_frais'], $entree['id_mon'], 
+									$entree['id_mod_paie'], $entree['id_type_lic'],  $entree['id_mod_trans'],  $entree['id_banq'],  
 									$entree['num_lic_old']));
 
 			if ($date_exp != $this-> getLastEpirationLicence2($num_lic)) {
@@ -59235,7 +59198,7 @@
 
 			$this-> modifierLicencePourDossier($num_lic, $num_lic_old);
 
-		}
+		} 
 
 		public function modifierLicencePourDossier($num_lic, $num_lic_old){
 
@@ -59250,12 +59213,12 @@
 			echo '<br> commodity = '.$commodity;
 			echo '<br> fob = '.$fob;*/
 
-			$requete = $connexion-> prepare("UPDATE dossier SET num_lic= ?
+			$requete = $connexion-> prepare("UPDATE dossier SET num_lic= ?	
 												WHERE num_lic = ?");
 			$requete-> execute(array($entree['num_lic'], $entree['num_lic_old']));
 
-		}
-
+		} 
+		
 		public function appliquer_taux($id){
 
 			include('connexion.php');
@@ -59265,10 +59228,10 @@
 												FROM taux_banque
 												WHERE id_taux_bcc = ?');
 			while ($reponse = $requete-> fetch()) {
-
+				
 				$requete2 = $connexion-> prepare('UPDATE dossier dos, affectation_client_modele_licence aff
 													SET dos.roe_decl = ?
-													WHERE dos.id_bank_liq = ?
+													WHERE dos.id_bank_liq = ? 
 														AND dos.date_quit = ?
 														AND dos.id_cli = aff.id_cli
 														AND dos.id_mod_lic = aff.id_mod_lic
@@ -59277,7 +59240,7 @@
 
 			}$requete-> closeCursor();
 
-		}
+		} 
 
 		public function uploadAccuseeRecpetionTransmissionApurement($id_trans_ap, $fichier_trans_ap, $tmp){
 
@@ -59294,7 +59257,7 @@
 			move_uploaded_file($tmp, '../transmision_apurements/'.$id_trans_ap.'/' . basename($fichier_trans_ap));
 
 			if(file_exists('../transmision_apurements/'.$id_trans_ap.'/'.$fichier_trans_ap)){
-				$requete = $connexion-> prepare("UPDATE transmission_apurement SET fichier_trans_ap= ?
+				$requete = $connexion-> prepare("UPDATE transmission_apurement SET fichier_trans_ap= ?	
 												WHERE id_trans_ap = ?");
 				$requete-> execute(array($entree['fichier_trans_ap'], $entree['id_trans_ap']));
 			}
@@ -59302,7 +59265,7 @@
 
 
 
-		}
+		} 
 
 		public function annuler_accuser_reception_transmis_apurement($id_trans_ap){
 
@@ -59315,7 +59278,7 @@
 
 
 
-		}
+		} 
 
 		public function update_date_depot_transmis($id_trans_ap, $date_depot){
 
@@ -59327,13 +59290,13 @@
 				$entree['date_depot'] = NULL;
 			}
 
-			$requete = $connexion-> prepare("UPDATE transmission_apurement SET date_depot= ?
+			$requete = $connexion-> prepare("UPDATE transmission_apurement SET date_depot= ?	
 												WHERE id_trans_ap = ?");
 			$requete-> execute(array($entree['date_depot'], $entree['id_trans_ap']));
 
 
 
-		}
+		} 
 
 		public function update_ref_trans_ap($id_trans_ap, $ref_trans_ap){
 
@@ -59341,22 +59304,22 @@
 			$entree['id_trans_ap'] = $id_trans_ap;
 			$entree['ref_trans_ap'] = $ref_trans_ap;
 
-			$requete = $connexion-> prepare("UPDATE transmission_apurement SET ref_trans_ap= ?
+			$requete = $connexion-> prepare("UPDATE transmission_apurement SET ref_trans_ap= ?	
 												WHERE id_trans_ap = ?");
 			$requete-> execute(array($entree['ref_trans_ap'], $entree['id_trans_ap']));
 
 
 
-		}
+		} 
 
-		public function updateMultipleFiles($debut, $fin, $klsa_arriv,
-			                                  $crossing_date, $wiski_arriv, $wiski_dep,
-			                                  $amicong_arriv, $insp_receiv, $ir,
+		public function updateMultipleFiles($debut, $fin, $klsa_arriv, 
+			                                  $crossing_date, $wiski_arriv, $wiski_dep, 
+			                                  $amicong_arriv, $insp_receiv, $ir, 
 			                                  $ref_crf, $date_crf, $dgda_in, $ref_decl,
-			                                  $ref_liq, $date_liq, $ref_quit,
-			                                  $date_quit, $custom_deliv, $cleared,
-			                                  $dispatch_deliv, $statut, $remarque,
-			                                  $nbre, $id_cli, $id_mod_trans, $id_mod_lic,
+			                                  $ref_liq, $date_liq, $ref_quit, 
+			                                  $date_quit, $custom_deliv, $cleared, 
+			                                  $dispatch_deliv, $statut, $remarque, 
+			                                  $nbre, $id_cli, $id_mod_trans, $id_mod_lic, 
 			                                  $commodity){
 
 			include('connexion.php');
@@ -59372,10 +59335,10 @@
 			echo '<br> fournisseur = '.$fournisseur;
 			echo '<br> commodity = '.$commodity;
 			echo '<br> fob = '.$fob;*/
-			/*$nbre = $this-> getNombreDossierClientModeTransportModeLicenceUpdate($id_cli, $id_mod_trans,
+			/*$nbre = $this-> getNombreDossierClientModeTransportModeLicenceUpdate($id_cli, $id_mod_trans, 
 														$id_mod_lic, $commodity, $debut, $fin);
 
-			for ($i=1; $i <= $nbre ; $i++) {
+			for ($i=1; $i <= $nbre ; $i++) { 
 				# code...
 			}*/
 
@@ -59395,9 +59358,9 @@
 													AND d.ref_dos BETWEEN ? AND ?
 													$sql1
 												ORDER BY d.ref_dos ASC");
-			$requete-> execute(array($entree['id_cli'], $entree['id_mod_trans'], $entree['id_mod_lic'],
+			$requete-> execute(array($entree['id_cli'], $entree['id_mod_trans'], $entree['id_mod_lic'], 
 									$entree['debut'], $entree['fin']));
-
+			
 			while($reponse = $requete-> fetch()){
 
 		      if (isset($ref_decl) && ($ref_decl != '')) {
@@ -59431,31 +59394,31 @@
 		      if (isset($klsa_arriv) && ($klsa_arriv != '')) {
 		        $this-> MAJ_klsa_arriv($reponse['id_dos'], $klsa_arriv);
 		      }
-
+		      
 		      if (isset($crossing_date) && ($crossing_date != '')) {
 		        $this-> MAJ_crossing_date($reponse['id_dos'], $crossing_date);
 		      }
-
+		      
 		      if (isset($wiski_arriv) && ($wiski_arriv != '')) {
 		        $this-> MAJ_wiski_arriv($reponse['id_dos'], $wiski_arriv);
 		      }
-
+		      
 		      if (isset($wiski_dep) && ($wiski_dep != '')) {
 		        $this-> MAJ_wiski_dep($reponse['id_dos'], $wiski_dep);
 		      }
-
+		      
 		      if (isset($ref_crf) && ($ref_crf != '')) {
 		        $this-> MAJ_ref_crf($reponse['id_dos'], $ref_crf);
 		      }
-
+		      
 		      if (isset($date_crf) && ($date_crf != '')) {
 		        $this-> MAJ_date_crf($reponse['id_dos'], $date_crf);
 		      }
-
+		      
 		      if (isset($dgda_in) && ($dgda_in != '')) {
 		        $this-> MAJ_dgda_in($reponse['id_dos'], $dgda_in);
 		      }
-
+		      
 		      if (isset($dgda_out) && ($dgda_out != '')) {
 		        $this-> MAJ_dgda_out($reponse['id_dos'], $dgda_out);
 		      }
@@ -59467,15 +59430,15 @@
 		      if (isset($custom_deliv) && ($custom_deliv != '')) {
 		        $this-> MAJ_custom_deliv($reponse['id_dos'], $custom_deliv);
 		      }
-
+		      
 		      if (isset($dispatch_klsa) && ($dispatch_klsa != '')) {
 		        $this-> MAJ_dispatch_klsa($reponse['id_dos'], $dispatch_klsa);
 		      }
-
+		      
 		      if (isset($dispatch_deliv) && ($dispatch_deliv != '')) {
 		        $this-> MAJ_dispatch_deliv($reponse['id_dos'], $dispatch_deliv);
 		      }
-
+		      
 		      if (isset($cleared) && ($cleared != '')) {
 		        $this-> MAJ_cleared($reponse['id_dos'], $cleared);
 		      }
@@ -59515,7 +59478,7 @@
 
 			}
 
-		}
+		} 
 
 		public function updateMultipleFiles2($debut, $fin, $data){
 
@@ -59532,10 +59495,10 @@
 			echo '<br> fournisseur = '.$fournisseur;
 			echo '<br> commodity = '.$commodity;
 			echo '<br> fob = '.$fob;*/
-			/*$nbre = $this-> getNombreDossierClientModeTransportModeLicenceUpdate($id_cli, $id_mod_trans,
+			/*$nbre = $this-> getNombreDossierClientModeTransportModeLicenceUpdate($id_cli, $id_mod_trans, 
 														$id_mod_lic, $commodity, $debut, $fin);
 
-			for ($i=1; $i <= $nbre ; $i++) {
+			for ($i=1; $i <= $nbre ; $i++) { 
 				# code...
 			}*/
 
@@ -59555,9 +59518,9 @@
 													AND d.ref_dos BETWEEN ? AND ?
 													$sql1
 												ORDER BY d.ref_dos ASC");
-			$requete-> execute(array($entree['id_cli'], $entree['id_mod_trans'], $entree['id_mod_lic'],
+			$requete-> execute(array($entree['id_cli'], $entree['id_mod_trans'], $entree['id_mod_lic'], 
 									$entree['debut'], $entree['fin']));
-
+			
 			while($reponse = $requete-> fetch()){
 
 		      if (isset($ref_decl) && ($ref_decl != '')) {
@@ -59591,31 +59554,31 @@
 		      if (isset($klsa_arriv) && ($klsa_arriv != '')) {
 		        $this-> MAJ_klsa_arriv($reponse['id_dos'], $klsa_arriv);
 		      }
-
+		      
 		      if (isset($crossing_date) && ($crossing_date != '')) {
 		        $this-> MAJ_crossing_date($reponse['id_dos'], $crossing_date);
 		      }
-
+		      
 		      if (isset($wiski_arriv) && ($wiski_arriv != '')) {
 		        $this-> MAJ_wiski_arriv($reponse['id_dos'], $wiski_arriv);
 		      }
-
+		      
 		      if (isset($wiski_dep) && ($wiski_dep != '')) {
 		        $this-> MAJ_wiski_dep($reponse['id_dos'], $wiski_dep);
 		      }
-
+		      
 		      if (isset($ref_crf) && ($ref_crf != '')) {
 		        $this-> MAJ_ref_crf($reponse['id_dos'], $ref_crf);
 		      }
-
+		      
 		      if (isset($date_crf) && ($date_crf != '')) {
 		        $this-> MAJ_date_crf($reponse['id_dos'], $date_crf);
 		      }
-
+		      
 		      if (isset($dgda_in) && ($dgda_in != '')) {
 		        $this-> MAJ_dgda_in($reponse['id_dos'], $dgda_in);
 		      }
-
+		      
 		      if (isset($dgda_out) && ($dgda_out != '')) {
 		        $this-> MAJ_dgda_out($reponse['id_dos'], $dgda_out);
 		      }
@@ -59627,15 +59590,15 @@
 		      if (isset($custom_deliv) && ($custom_deliv != '')) {
 		        $this-> MAJ_custom_deliv($reponse['id_dos'], $custom_deliv);
 		      }
-
+		      
 		      if (isset($dispatch_klsa) && ($dispatch_klsa != '')) {
 		        $this-> MAJ_dispatch_klsa($reponse['id_dos'], $dispatch_klsa);
 		      }
-
+		      
 		      if (isset($dispatch_deliv) && ($dispatch_deliv != '')) {
 		        $this-> MAJ_dispatch_deliv($reponse['id_dos'], $dispatch_deliv);
 		      }
-
+		      
 		      if (isset($cleared) && ($cleared != '')) {
 		        $this-> MAJ_cleared($reponse['id_dos'], $cleared);
 		      }
@@ -59675,7 +59638,7 @@
 
 			}
 
-		}
+		} 
 
 		public function updateMultipleFilesExport($debut, $fin, $id_cli, $id_mod_trans, $id_mod_lic){
 
@@ -59692,10 +59655,10 @@
 			echo '<br> fournisseur = '.$fournisseur;
 			echo '<br> commodity = '.$commodity;
 			echo '<br> fob = '.$fob;*/
-			/*$nbre = $this-> getNombreDossierClientModeTransportModeLicenceUpdate($id_cli, $id_mod_trans,
+			/*$nbre = $this-> getNombreDossierClientModeTransportModeLicenceUpdate($id_cli, $id_mod_trans, 
 														$id_mod_lic, $commodity, $debut, $fin);
 
-			for ($i=1; $i <= $nbre ; $i++) {
+			for ($i=1; $i <= $nbre ; $i++) { 
 				# code...
 			}*/
 
@@ -59718,9 +59681,9 @@
 													AND d.ref_dos BETWEEN ? AND ?
 													$sql1
 												ORDER BY d.ref_dos ASC");
-			$requete-> execute(array($entree['id_cli'], $entree['id_mod_trans'], $entree['id_mod_lic'],
+			$requete-> execute(array($entree['id_cli'], $entree['id_mod_trans'], $entree['id_mod_lic'], 
 									$entree['debut'], $entree['fin']));
-
+			
 			while($reponse = $requete-> fetch()){
 				$increment = 0;
 				foreach ($this->getNameRowUpdate($_GET['id_mod_trac'], $_GET['id_cli'], $_GET['id_mod_trans']) as $champCol) {
@@ -59731,7 +59694,7 @@
 			        //$this-> $maj($reponse['id_dos'], $this-> getRowUpdate($_GET['id_mod_trac'], $_GET['id_cli'], $_GET['id_mod_trans'])[$increment]);
 			        $this-> $maj($reponse['id_dos'], $_POST[$champCol]);
 			      }
-
+			      
 			        //echo '<br>----------------------------'.$champCol.' = '.$maClasse-> getRowUpdate($_GET['id_mod_trac'], $_GET['id_cli'], $_GET['id_mod_trans'])[$increment];
 			        $increment++;
 		      	}
@@ -59741,7 +59704,7 @@
 		      }*/
 			}
 
-		}
+		} 
 
 		public function updateFile($id_dos, $id_cli, $id_mod_trans, $id_mod_lic){
 
@@ -59757,10 +59720,10 @@
 			echo '<br> fournisseur = '.$fournisseur;
 			echo '<br> commodity = '.$commodity;
 			echo '<br> fob = '.$fob;*/
-			/*$nbre = $this-> getNombreDossierClientModeTransportModeLicenceUpdate($id_cli, $id_mod_trans,
+			/*$nbre = $this-> getNombreDossierClientModeTransportModeLicenceUpdate($id_cli, $id_mod_trans, 
 														$id_mod_lic, $commodity, $id_dos, $fin);
 
-			for ($i=1; $i <= $nbre ; $i++) {
+			for ($i=1; $i <= $nbre ; $i++) { 
 				# code...
 			}*/
 
@@ -59782,9 +59745,9 @@
 													AND d.id_dos = ?
 													$sql1
 												ORDER BY d.ref_dos ASC");
-			$requete-> execute(array($entree['id_cli'], $entree['id_mod_trans'], $entree['id_mod_lic'],
+			$requete-> execute(array($entree['id_cli'], $entree['id_mod_trans'], $entree['id_mod_lic'], 
 									$entree['id_dos']));
-
+			
 			while($reponse = $requete-> fetch()){
 				$increment = 0;
 				foreach ($this->getNameRowUpdate($_GET['id_mod_trac'], $_GET['id_cli'], $_GET['id_mod_trans']) as $champCol) {
@@ -59793,7 +59756,7 @@
 				  	$maj = 'MAJ_'.$champCol;
 
 				  	$this-> $maj($reponse['id_dos'], $this-> getRowUpdate2($_GET['id_mod_trac'], $_GET['id_cli'], $_GET['id_mod_trans'])[$increment]);
-
+				  	
 			        //$this-> $maj($reponse['id_dos'], $this-> getRowUpdate($_GET['id_mod_trac'], $_GET['id_cli'], $_GET['id_mod_trans'])[$increment]);
 			      }else{
 
@@ -59801,7 +59764,7 @@
 				  		$requeteUpdate-> execute(array($entree['id_dos']));
 
 			      }
-
+			      
 			        //echo '<br>----------------------------'.$champCol.' = '.$maClasse-> getRowUpdate($_GET['id_mod_trac'], $_GET['id_cli'], $_GET['id_mod_trans'])[$increment];
 			        $increment++;
 		      	}
@@ -59811,16 +59774,16 @@
 		      }*/
 			}
 
-		}
+		} 
 
-		public function updateMultipleFilesPopUp($debut, $fin, $klsa_arriv,
-			                                  $crossing_date, $wiski_arriv, $wiski_dep,
-			                                  $amicong_arriv, $insp_receiv, $ir,
+		public function updateMultipleFilesPopUp($debut, $fin, $klsa_arriv, 
+			                                  $crossing_date, $wiski_arriv, $wiski_dep, 
+			                                  $amicong_arriv, $insp_receiv, $ir, 
 			                                  $ref_crf, $date_crf, $dgda_in, $ref_decl,
-			                                  $ref_liq, $date_liq, $ref_quit,
-			                                  $date_quit, $dgda_out, $custom_deliv, $cleared,
-			                                  $dispatch_deliv, $statut, $remarque,
-			                                  $nbre, $id_cli, $id_mod_trans, $id_mod_lic,
+			                                  $ref_liq, $date_liq, $ref_quit, 
+			                                  $date_quit, $dgda_out, $custom_deliv, $cleared, 
+			                                  $dispatch_deliv, $statut, $remarque, 
+			                                  $nbre, $id_cli, $id_mod_trans, $id_mod_lic, 
 			                                  $commodity, $type){
 
 			include('connexion.php');
@@ -59839,10 +59802,10 @@
 			echo '<br> fournisseur = '.$fournisseur;
 			echo '<br> commodity = '.$commodity;
 			echo '<br> fob = '.$fob;*/
-			/*$nbre = $this-> getNombreDossierClientModeTransportModeLicenceUpdate($id_cli, $id_mod_trans,
+			/*$nbre = $this-> getNombreDossierClientModeTransportModeLicenceUpdate($id_cli, $id_mod_trans, 
 														$id_mod_lic, $commodity, $debut, $fin);
 
-			for ($i=1; $i <= $nbre ; $i++) {
+			for ($i=1; $i <= $nbre ; $i++) { 
 				# code...
 			}*/
 			$sqlType = '';
@@ -59902,7 +59865,7 @@
 			if (isset($type) && ($type == 'LIQUIDATED / AWAIT QUITTANCE')) {
 				$sqlType = " AND ( (d.date_liq IS NOT NULL OR d.date_liq <> '')
 													OR (d.ref_liq IS NOT NULL OR d.ref_liq <> '') )
-												AND ( (d.date_quit IS NULL AND d.date_quit = '')
+												AND ( (d.date_quit IS NULL AND d.date_quit = '') 
 													AND (d.ref_quit IS NULL AND d.ref_quit = '') )";
 			}
 
@@ -59936,9 +59899,9 @@
 													$sqlType
 													$sqlClient
 												ORDER BY d.ref_dos ASC");
-			$requete-> execute(array($entree['id_mod_trans'], $entree['id_mod_lic'],
+			$requete-> execute(array($entree['id_mod_trans'], $entree['id_mod_lic'], 
 									$entree['debut'], $entree['fin']));
-
+			
 			while($reponse = $requete-> fetch()){
 				//echo $reponse['id_dos'].'<br>';
 		      if (isset($ref_decl) && ($ref_decl != '')) {
@@ -59972,31 +59935,31 @@
 		      if (isset($klsa_arriv) && ($klsa_arriv != '')) {
 		        $this-> MAJ_klsa_arriv($reponse['id_dos'], $klsa_arriv);
 		      }
-
+		      
 		      if (isset($crossing_date) && ($crossing_date != '')) {
 		        $this-> MAJ_crossing_date($reponse['id_dos'], $crossing_date);
 		      }
-
+		      
 		      if (isset($wiski_arriv) && ($wiski_arriv != '')) {
 		        $this-> MAJ_wiski_arriv($reponse['id_dos'], $wiski_arriv);
 		      }
-
+		      
 		      if (isset($wiski_dep) && ($wiski_dep != '')) {
 		        $this-> MAJ_wiski_dep($reponse['id_dos'], $wiski_dep);
 		      }
-
+		      
 		      if (isset($ref_crf) && ($ref_crf != '')) {
 		        $this-> MAJ_ref_crf($reponse['id_dos'], $ref_crf);
 		      }
-
+		      
 		      if (isset($date_crf) && ($date_crf != '')) {
 		        $this-> MAJ_date_crf($reponse['id_dos'], $date_crf);
 		      }
-
+		      
 		      if (isset($dgda_in) && ($dgda_in != '')) {
 		        $this-> MAJ_dgda_in($reponse['id_dos'], $dgda_in);
 		      }
-
+		      
 		      if (isset($dgda_out) && ($dgda_out != '')) {
 		        $this-> MAJ_dgda_out($reponse['id_dos'], $dgda_out);
 		      	//echo "<br> $dgda_out";
@@ -60009,15 +59972,15 @@
 		      if (isset($custom_deliv) && ($custom_deliv != '')) {
 		        $this-> MAJ_custom_deliv($reponse['id_dos'], $custom_deliv);
 		      }
-
+		      
 		      if (isset($dispatch_klsa) && ($dispatch_klsa != '')) {
 		        $this-> MAJ_dispatch_klsa($reponse['id_dos'], $dispatch_klsa);
 		      }
-
+		      
 		      if (isset($dispatch_deliv) && ($dispatch_deliv != '')) {
 		        $this-> MAJ_dispatch_deliv($reponse['id_dos'], $dispatch_deliv);
 		      }
-
+		      
 		      if (isset($cleared) && ($cleared != '')) {
 		        $this-> MAJ_cleared($reponse['id_dos'], $cleared);
 		      }
@@ -60057,10 +60020,10 @@
 
 			}$requete-> closeCursor();
 
-		}
+		} 
 
-		public function modifierFacture($ref_fact, $date_fact, $date_fact_rec, $fournisseur, $date_val,
-										$id_cli, $commodity, $montant_fact, $id_mon, $fret_fact, $assurance_fact,
+		public function modifierFacture($ref_fact, $date_fact, $date_fact_rec, $fournisseur, $date_val, 
+										$id_cli, $commodity, $montant_fact, $id_mon, $fret_fact, $assurance_fact, 
 										$autre_frais_fact, $ref_fact_old, $fsi, $aur){
 
 			include('connexion.php');
@@ -60107,21 +60070,21 @@
 			echo '<br> autre_frais_fact = '.$autre_frais_fact;
 			echo '<br> ref_fact_old = '.$ref_fact_old;*/
 
-			$requete = $connexion-> prepare("UPDATE facture_licence
-														SET ref_fact = ?, date_fact = ?, date_fact_rec = ?,
-															fournisseur = ?, date_val = ?, id_cli = ?,
-															commodity = ?, montant_fact = ?, id_mon = ?,
-															fret_fact = ?, assurance_fact = ?,
-															fsi = ?, aur = ?, autre_frais_fact = ?
+			$requete = $connexion-> prepare("UPDATE facture_licence 
+														SET ref_fact = ?, date_fact = ?, date_fact_rec = ?, 
+															fournisseur = ?, date_val = ?, id_cli = ?, 
+															commodity = ?, montant_fact = ?, id_mon = ?, 
+															fret_fact = ?, assurance_fact = ?, 
+															fsi = ?, aur = ?, autre_frais_fact = ? 	
 												WHERE ref_fact = ?");
-			$requete-> execute(array($entree['ref_fact'], $entree['date_fact'], $entree['date_fact_rec'],
-									$entree['fournisseur'], $entree['date_val'], $entree['id_cli'],
-									$entree['commodity'], $entree['montant_fact'], $entree['id_mon'],
+			$requete-> execute(array($entree['ref_fact'], $entree['date_fact'], $entree['date_fact_rec'], 
+									$entree['fournisseur'], $entree['date_val'], $entree['id_cli'], 
+									$entree['commodity'], $entree['montant_fact'], $entree['id_mon'], 
 									$entree['fret_fact'], $entree['assurance_fact'],
-									$entree['fsi'], $entree['aur'], $entree['autre_frais_fact'],
+									$entree['fsi'], $entree['aur'], $entree['autre_frais_fact'], 
 									$entree['ref_fact_old']));
 
-		}
+		} 
 
 		public function modifierFichierFacture($ref_fact, $fichier_fact, $tmp_fact){
 
@@ -60142,8 +60105,8 @@
 			echo '<br> autre_frais_fact = '.$autre_frais_fact;
 			echo '<br> ref_fact_old = '.$ref_fact_old;*/
 
-			$requete = $connexion-> prepare("UPDATE facture_licence
-														SET fichier_fact = ?
+			$requete = $connexion-> prepare("UPDATE facture_licence 
+														SET fichier_fact = ?	
 												WHERE ref_fact = ?");
 			$requete-> execute(array($entree['fichier_fact'], $entree['ref_fact']));
 
@@ -60155,7 +60118,7 @@
 
 			move_uploaded_file($tmp_fact, '../factures/'.$ref_fact.'/' . basename($fichier_fact));
 
-		}
+		} 
 
 		public function modifierFichierLicence($num_lic, $fichier_lic, $tmp){
 
@@ -60176,8 +60139,8 @@
 			echo '<br> autre_frais_fact = '.$autre_frais_fact;
 			echo '<br> num_lic_old = '.$num_lic_old;*/
 
-			$requete = $connexion-> prepare("UPDATE licence
-														SET fichier_lic = ?
+			$requete = $connexion-> prepare("UPDATE licence 
+														SET fichier_lic = ?	
 												WHERE num_lic = ?");
 			$requete-> execute(array($entree['fichier_lic'], $entree['num_lic']));
 
@@ -60189,7 +60152,7 @@
 
 			move_uploaded_file($tmp, '../dossiers/'.$num_lic.'/' . basename($fichier_lic));
 
-		}
+		} 
 
 		public function annulerDateExpirationLicence($num_lic){
 
@@ -60199,13 +60162,13 @@
 												WHERE num_lic = ?");
 			$requete-> execute(array($entree['num_lic']));
 
-		}
+		} 
 
 		public function MAJ_ref_dos($id_dos, $ref_dos){
 
 			//Log
 			if ($this-> getDossier($id_dos)['ref_dos'] != $ref_dos) {
-
+				
 				$colonne = $this-> getNomColonneClient('ref_dos', $_GET['id_cli'], $_GET['id_mod_trans'], $_GET['id_mod_trac']);
 				$this-> creerLogDossier($colonne, $ref_dos, $id_dos, $_SESSION['id_util']);
 
@@ -60218,13 +60181,13 @@
 												WHERE id_dos = ?");
 			$requete-> execute(array($entree['ref_dos'], $entree['id_dos']));
 
-		}
+		} 
 
 		public function maj_incoterm($id_dos, $incoterm){
 
 			//Log
 			if ($this-> getDossier($id_dos)['incoterm'] != $incoterm) {
-
+				
 				// $colonne = $this-> getNomColonneClient('incoterm', $_GET['id_cli'], $_GET['id_mod_trans'], $_GET['id_mod_trac']);
 				$this-> creerLogDossier('Incoterm', $incoterm, $id_dos, $_SESSION['id_util']);
 
@@ -60237,7 +60200,7 @@
 												WHERE id_dos = ?");
 			$requete-> execute(array($entree['incoterm'], $entree['id_dos']));
 
-		}
+		} 
 
 		public function maj_statut_arsp($ref_fact, $statut_arsp){
 
@@ -60248,7 +60211,7 @@
 												WHERE ref_fact = ?");
 			$requete-> execute(array($entree['statut_arsp'], $entree['ref_fact']));
 
-		}
+		} 
 
 		public function MAJ_feuil_calc($id_dos){
 
@@ -60261,7 +60224,7 @@
 												WHERE id_dos = ?");
 			$requete-> execute(array($_SESSION['id_util'], $entree['id_dos']));
 
-		}
+		} 
 
 		public function MAJ_verif_feuil_calc($id_dos){
 
@@ -60274,7 +60237,7 @@
 												WHERE id_dos = ?");
 			$requete-> execute(array($_SESSION['id_util'], $entree['id_dos']));
 
-		}
+		} 
 
 
 		public function MAJ_verif_feuil_calc_ops($id_dos){
@@ -60288,13 +60251,13 @@
 												WHERE id_dos = ?");
 			$requete-> execute(array($_SESSION['id_util'], $entree['id_dos']));
 
-		}
+		} 
 
 		public function maj_roe_feuil_calc($id_dos, $roe_feuil_calc){
 
 			//Log
 			if ($this-> getDossier($id_dos)['roe_feuil_calc'] != $roe_feuil_calc) {
-
+				
 				// $colonne = $this-> getNomColonneClient('roe_feuil_calc', $_GET['id_cli'], $_GET['id_mod_trans'], $_GET['id_mod_trac']);
 				$this-> creerLogDossier('roe_feuil_calc', $roe_feuil_calc, $id_dos, $_SESSION['id_util']);
 
@@ -60307,13 +60270,13 @@
 												WHERE id_dos = ?");
 			$requete-> execute(array($entree['roe_feuil_calc'], $entree['id_dos']));
 
-		}
+		} 
 		//note_feuille
 		public function maj_note_feuille($id_dos, $note_feuille){
 
 			//Log
 			if ($this-> getDossier($id_dos)['note_feuille'] != $note_feuille) {
-
+				
 				// $colonne = $this-> getNomColonneClient('note_feuille', $_GET['id_cli'], $_GET['id_mod_trans'], $_GET['id_mod_trac']);
 				$this-> creerLogDossier('note_feuille', $note_feuille, $id_dos, $_SESSION['id_util']);
 
@@ -60326,14 +60289,14 @@
 												WHERE id_dos = ?");
 			$requete-> execute(array($entree['note_feuille'], $entree['id_dos']));
 
-		}
+		} 
 
 		//note_fret
 		public function maj_note_fret($id_dos, $note_fret){
 
 			//Log
 			if ($this-> getDossier($id_dos)['note_fret'] != $note_fret) {
-
+				
 				// $colonne = $this-> getNomColonneClient('note_fret', $_GET['id_cli'], $_GET['id_mod_trans'], $_GET['id_mod_trac']);
 				$this-> creerLogDossier('note_fret', $note_fret, $id_dos, $_SESSION['id_util']);
 
@@ -60346,14 +60309,14 @@
 												WHERE id_dos = ?");
 			$requete-> execute(array($entree['note_fret'], $entree['id_dos']));
 
-		}
+		} 
 
 		//note_assurance
 		public function maj_note_assurance($id_dos, $note_assurance){
 
 			//Log
 			if ($this-> getDossier($id_dos)['note_assurance'] != $note_assurance) {
-
+				
 				// $colonne = $this-> getNomColonneClient('note_assurance', $_GET['id_cli'], $_GET['id_mod_trans'], $_GET['id_mod_trac']);
 				$this-> creerLogDossier('note_assurance', $note_assurance, $id_dos, $_SESSION['id_util']);
 
@@ -60366,14 +60329,14 @@
 												WHERE id_dos = ?");
 			$requete-> execute(array($entree['note_assurance'], $entree['id_dos']));
 
-		}
+		} 
 
 		//ceec_ref
 		public function maj_ceec_ref($id_dos, $ceec_ref){
 
 			//Log
 			if ($this-> getDossier($id_dos)['ceec_ref'] != $ceec_ref) {
-
+				
 				// $colonne = $this-> getNomColonneClient('ceec_ref', $_GET['id_cli'], $_GET['id_mod_trans'], $_GET['id_mod_trac']);
 				$this-> creerLogDossier('ceec_ref', $ceec_ref, $id_dos, $_SESSION['id_util']);
 
@@ -60386,14 +60349,14 @@
 												WHERE id_dos = ?");
 			$requete-> execute(array($entree['ceec_ref'], $entree['id_dos']));
 
-		}
+		} 
 
 		//cgea_ref
 		public function maj_cgea_ref($id_dos, $cgea_ref){
 
 			//Log
 			if ($this-> getDossier($id_dos)['cgea_ref'] != $cgea_ref) {
-
+				
 				// $colonne = $this-> getNomColonneClient('cgea_ref', $_GET['id_cli'], $_GET['id_mod_trans'], $_GET['id_mod_trac']);
 				$this-> creerLogDossier('cgea_ref', $cgea_ref, $id_dos, $_SESSION['id_util']);
 
@@ -60406,14 +60369,14 @@
 												WHERE id_dos = ?");
 			$requete-> execute(array($entree['cgea_ref'], $entree['id_dos']));
 
-		}
+		} 
 
 		//rcv_ref
 		public function maj_rcv_ref($id_dos, $rcv_ref){
 
 			//Log
 			if ($this-> getDossier($id_dos)['rcv_ref'] != $rcv_ref) {
-
+				
 				// $colonne = $this-> getNomColonneClient('rcv_ref', $_GET['id_cli'], $_GET['id_mod_trans'], $_GET['id_mod_trac']);
 				$this-> creerLogDossier('rcv_ref', $rcv_ref, $id_dos, $_SESSION['id_util']);
 
@@ -60426,14 +60389,14 @@
 												WHERE id_dos = ?");
 			$requete-> execute(array($entree['rcv_ref'], $entree['id_dos']));
 
-		}
+		} 
 
 		//seguce_pay_date
 		public function maj_seguce_pay_date($id_dos, $seguce_pay_date){
 
 			//Log
 			if ($this-> getDossier($id_dos)['seguce_pay_date'] != $seguce_pay_date) {
-
+				
 				// $colonne = $this-> getNomColonneClient('seguce_pay_date', $_GET['id_cli'], $_GET['id_mod_trans'], $_GET['id_mod_trac']);
 				$this-> creerLogDossier('seguce_pay_date', $seguce_pay_date, $id_dos, $_SESSION['id_util']);
 
@@ -60446,14 +60409,14 @@
 												WHERE id_dos = ?");
 			$requete-> execute(array($entree['seguce_pay_date'], $entree['id_dos']));
 
-		}
+		} 
 
 		//note_autre_frais
 		public function maj_note_autre_frais($id_dos, $note_autre_frais){
 
 			//Log
 			if ($this-> getDossier($id_dos)['note_autre_frais'] != $note_autre_frais) {
-
+				
 				// $colonne = $this-> getNomColonneClient('note_autre_frais', $_GET['id_cli'], $_GET['id_mod_trans'], $_GET['id_mod_trac']);
 				$this-> creerLogDossier('note_autre_frais', $note_autre_frais, $id_dos, $_SESSION['id_util']);
 
@@ -60466,13 +60429,13 @@
 												WHERE id_dos = ?");
 			$requete-> execute(array($entree['note_autre_frais'], $entree['id_dos']));
 
-		}
+		} 
 
 		public function MAJ_id_front($id_dos, $id_front){
 
 			//Log
 			if ($this-> getDossier($id_dos)['id_front'] != $id_front) {
-
+				
 				$colonne = $this-> getNomColonneClient('id_front', $_GET['id_cli'], $_GET['id_mod_trans'], $_GET['id_mod_trac']);
 				$this-> creerLogDossier($colonne, $id_front, $id_dos, $_SESSION['id_util']);
 
@@ -60485,13 +60448,13 @@
 												WHERE id_dos = ?");
 			$requete-> execute(array($entree['id_front'], $entree['id_dos']));
 
-		}
+		} 
 
 		public function MAJ_support_doc($id_dos, $support_doc){
 
 			//Log
 			if ($this-> getDossier($id_dos)['support_doc'] != $support_doc) {
-
+				
 				// $colonne = $this-> getNomColonneClient('support_doc', $_GET['id_cli'], $_GET['id_mod_trans'], $_GET['id_mod_trac']);
 				$this-> creerLogDossier('Support Documents', $support_doc, $id_dos, $_SESSION['id_util']);
 
@@ -60504,13 +60467,13 @@
 												WHERE id_dos = ?");
 			$requete-> execute(array($entree['support_doc'], $entree['id_dos']));
 
-		}
+		} 
 
 		public function MAJ_id_reg($id_dos, $id_reg){
 
 			//Log
 			if ($this-> getDossier($id_dos)['id_reg'] != $id_reg) {
-
+				
 				$colonne = $this-> getNomColonneClient('id_reg', $_GET['id_cli'], $_GET['id_mod_trans'], $_GET['id_mod_trac']);
 				$this-> creerLogDossier($colonne, $id_reg, $id_dos, $_SESSION['id_util']);
 
@@ -60523,13 +60486,13 @@
 												WHERE id_dos = ?");
 			$requete-> execute(array($entree['id_reg'], $entree['id_dos']));
 
-		}
+		} 
 
 		public function MAJ_not_fact($id_dos, $not_fact){
 
 			//Log
 			if ($this-> getDossier($id_dos)['not_fact'] != $not_fact) {
-
+				
 				// $colonne = $this-> getNomColonneClient('not_fact', $_GET['id_cli'], $_GET['id_mod_trans'], $_GET['id_mod_trac']);
 				$this-> creerLogDossier('Facturation', $not_fact, $id_dos, $_SESSION['id_util']);
 
@@ -60542,17 +60505,17 @@
 												WHERE id_dos = ?");
 			$requete-> execute(array($entree['not_fact'], $entree['id_dos']));
 
-		}
+		} 
 
 		public function MAJ_ref_fact_excel($id_dos, $ref_fact_excel){
-
+			
 			if ($ref_fact_excel == '') {
 				$ref_fact_excel = NULL;
 			}
 
 			//Log
 			if ($this-> getDossier($id_dos)['ref_fact_excel'] != $ref_fact_excel) {
-
+				
 				// $colonne = $this-> getNomColonneClient('ref_fact_excel', $_GET['id_cli'], $_GET['id_mod_trans'], $_GET['id_mod_trac']);
 				$this-> creerLogDossier('Excel Invoice', $ref_fact_excel, $id_dos, $_SESSION['id_util']);
 
@@ -60565,7 +60528,7 @@
 												WHERE id_dos = ?");
 			$requete-> execute(array($entree['ref_fact_excel'], $entree['id_dos']));
 
-		}
+		} 
 
 		public function MAJ_roe_decl($id_dos, $roe_decl){
 
@@ -60575,7 +60538,7 @@
 
 			//Log
 			if ($this-> getDossier($id_dos)['roe_decl'] != $roe_decl) {
-
+				
 				$this-> creerLogDossier('ROE Decl', $roe_decl, $id_dos, $_SESSION['id_util']);
 
 			}
@@ -60594,7 +60557,7 @@
 
 			//Log
 			if ($this-> getDossier($id_dos)['id_bank_liq'] != $id_bank_liq) {
-
+				
 				$this-> creerLogDossier('Bank Liq', $id_bank_liq, $id_dos, $_SESSION['id_util']);
 
 			}
@@ -60613,7 +60576,7 @@
 
 			//Log
 			if ($this-> getDossier($id_dos)['roe_liq'] != $roe_liq) {
-
+				
 				$this-> creerLogDossier('Roe Liq', $roe_liq, $id_dos, $_SESSION['id_util']);
 
 			}
@@ -60632,7 +60595,7 @@
 
 			//Log
 			if ($this-> getDossier($id_dos)['roe_inv'] != $roe_inv) {
-
+				
 				$this-> creerLogDossier('ROE INV', $roe_inv, $id_dos, $_SESSION['id_util']);
 
 			}
@@ -60651,7 +60614,7 @@
 
 			//Log
 			if ($this-> getDossier($id_dos)['montant_liq'] != $montant_liq) {
-
+				
 				if (isset($_GET['id_mod_lic']) && ($_GET['id_mod_lic']!='') && (!isset($_GET['id_mod_trac']) || $_GET['id_mod_trac'] == '' )) {
 					$_GET['id_mod_trac'] = $_GET['id_mod_lic'];
 				}else if (!isset($_GET['id_mod_trac']) || $_GET['id_mod_trac'] == '') {
@@ -60666,7 +60629,7 @@
 				if (!isset($_GET['id_mod_trans']) || ($_GET['id_mod_trans']=='')) {
 					$_GET['id_mod_trans'] = 1;
 				}
-
+				
 				$colonne = $this-> getNomColonneClient('montant_liq', $_GET['id_cli'], $_GET['id_mod_trans'], $_GET['id_mod_trac']);
 				$this-> creerLogDossier($colonne, $montant_liq, $id_dos, $_SESSION['id_util']);
 
@@ -60857,7 +60820,7 @@
 
 			//Log
 			if ($this-> getDossier($id_dos)['temporelle'] != $temporelle) {
-
+				
 				$colonne = $this-> getNomColonneClient('temporelle', $_GET['id_cli'], $_GET['id_mod_trans'], $_GET['id_mod_trac']);
 				$this-> creerLogDossier($colonne, $temporelle, $id_dos, $_SESSION['id_util']);
 
@@ -60870,13 +60833,13 @@
 												WHERE id_dos = ?");
 			$requete-> execute(array($entree['temporelle'], $entree['id_dos']));
 
-		}
+		} 
 
 		public function MAJ_id_march($id_dos, $id_march){
 
 			//Log
 			if ($this-> getDossier($id_dos)['id_march'] != $id_march) {
-
+				
 				$this-> creerLogDossier('ID Commodity Cat.', $id_march, $id_dos, $_SESSION['id_util']);
 
 			}
@@ -60888,13 +60851,13 @@
 												WHERE id_dos = ?");
 			$requete-> execute(array($entree['id_march'], $entree['id_dos']));
 
-		}
+		} 
 
 		public function MAJ_warehouse_arriv($id_dos, $warehouse_arriv){
 
 			//Log
 			if ($this-> getDossier($id_dos)['warehouse_arriv'] != $warehouse_arriv) {
-
+				
 				$colonne = $this-> getNomColonneClient('warehouse_arriv', $_GET['id_cli'], $_GET['id_mod_trans'], $_GET['id_mod_trac']);
 				$this-> creerLogDossier($colonne, $warehouse_arriv, $id_dos, $_SESSION['id_util']);
 
@@ -60907,13 +60870,13 @@
 												WHERE id_dos = ?");
 			$requete-> execute(array($entree['warehouse_arriv'], $entree['id_dos']));
 
-		}
+		} 
 
 		public function MAJ_warehouse_dep($id_dos, $warehouse_dep){
 
 			//Log
 			if ($this-> getDossier($id_dos)['warehouse_dep'] != $warehouse_dep) {
-
+				
 				$colonne = $this-> getNomColonneClient('warehouse_dep', $_GET['id_cli'], $_GET['id_mod_trans'], $_GET['id_mod_trac']);
 				$this-> creerLogDossier($colonne, $warehouse_dep, $id_dos, $_SESSION['id_util']);
 
@@ -60926,13 +60889,13 @@
 												WHERE id_dos = ?");
 			$requete-> execute(array($entree['warehouse_dep'], $entree['id_dos']));
 
-		}
+		} 
 
 		public function MAJ_mca_b_ref($id_dos, $mca_b_ref){
 
 			//Log
 			if ($this-> getDossier($id_dos)['mca_b_ref'] != $mca_b_ref) {
-
+				
 				$colonne = $this-> getNomColonneClient('mca_b_ref', $_GET['id_cli'], $_GET['id_mod_trans'], $_GET['id_mod_trac']);
 				$this-> creerLogDossier($colonne, $mca_b_ref, $id_dos, $_SESSION['id_util']);
 
@@ -60945,13 +60908,13 @@
 												WHERE id_dos = ?");
 			$requete-> execute(array($entree['mca_b_ref'], $entree['id_dos']));
 
-		}
+		} 
 
 		public function MAJ_regime($id_dos, $regime){
 
 			//Log
 			if ($this-> getDossier($id_dos)['regime'] != $regime) {
-
+				
 				$colonne = $this-> getNomColonneClient('regime', $_GET['id_cli'], $_GET['id_mod_trans'], $_GET['id_mod_trac']);
 				$this-> creerLogDossier($colonne, $regime, $id_dos, $_SESSION['id_util']);
 
@@ -60964,13 +60927,13 @@
 												WHERE id_dos = ?");
 			$requete-> execute(array($entree['regime'], $entree['id_dos']));
 
-		}
+		} 
 
 		public function MAJ_ref_decl($id_dos, $ref_decl){
 
 			//Log
 			if ($this-> getDossier($id_dos)['ref_decl'] != $ref_decl) {
-
+				
 				$colonne = $this-> getNomColonneClient('ref_decl', $_GET['id_cli'], $_GET['id_mod_trans'], $_GET['id_mod_trac']);
 				$this-> creerLogDossier($colonne, $ref_decl, $id_dos, $_SESSION['id_util']);
 
@@ -60983,13 +60946,13 @@
 												WHERE id_dos = ?");
 			$requete-> execute(array($entree['ref_decl'], $entree['id_dos']));
 
-		}
+		} 
 
 		public function MAJ_date_decl($id_dos, $date_decl){
-
+			
 			//Log
 			if ($this-> getDossier($id_dos)['date_decl'] != $date_decl) {
-
+				
 				$colonne = $this-> getNomColonneClient('date_decl', $_GET['id_cli'], $_GET['id_mod_trans'], $_GET['id_mod_trac']);
 				$this-> creerLogDossier($colonne, $date_decl, $id_dos, $_SESSION['id_util']);
 
@@ -61002,13 +60965,13 @@
 												WHERE id_dos = ?");
 			$requete-> execute(array($entree['date_decl'], $entree['id_dos']));
 
-		}
+		} 
 
 		public function MAJ_ref_liq($id_dos, $ref_liq){
-
+			
 			//Log
 			if ($this-> getDossier($id_dos)['ref_liq'] != $ref_liq) {
-
+				
 				$colonne = $this-> getNomColonneClient('ref_liq', $_GET['id_cli'], $_GET['id_mod_trans'], $_GET['id_mod_trac']);
 				$this-> creerLogDossier($colonne, $ref_liq, $id_dos, $_SESSION['id_util']);
 
@@ -61021,13 +60984,13 @@
 												WHERE id_dos = ?");
 			$requete-> execute(array($entree['ref_liq'], $entree['id_dos']));
 
-		}
+		} 
 
 		public function MAJ_date_liq($id_dos, $date_liq){
-
+			
 			//Log
 			if ($this-> getDossier($id_dos)['date_liq'] != $date_liq) {
-
+				
 				$colonne = $this-> getNomColonneClient('date_liq', $_GET['id_cli'], $_GET['id_mod_trans'], $_GET['id_mod_trac']);
 				$this-> creerLogDossier($colonne, $date_liq, $id_dos, $_SESSION['id_util']);
 
@@ -61040,13 +61003,13 @@
 												WHERE id_dos = ?");
 			$requete-> execute(array($entree['date_liq'], $entree['id_dos']));
 
-		}
+		} 
 
 		public function MAJ_ref_quit($id_dos, $ref_quit){
-
+			
 			//Log
 			if ($this-> getDossier($id_dos)['ref_quit'] != $ref_quit) {
-
+				
 				$colonne = $this-> getNomColonneClient('ref_quit', $_GET['id_cli'], $_GET['id_mod_trans'], $_GET['id_mod_trac']);
 				$this-> creerLogDossier($colonne, $ref_quit, $id_dos, $_SESSION['id_util']);
 
@@ -61059,13 +61022,13 @@
 												WHERE id_dos = ?");
 			$requete-> execute(array($entree['ref_quit'], $entree['id_dos']));
 
-		}
+		} 
 
 		public function MAJ_date_quit($id_dos, $date_quit){
-
+			
 			//Log
 			if ($this-> getDossier($id_dos)['date_quit'] != $date_quit) {
-
+				
 				$colonne = $this-> getNomColonneClient('date_quit', $_GET['id_cli'], $_GET['id_mod_trans'], $_GET['id_mod_trac']);
 				$this-> creerLogDossier($colonne, $date_quit, $id_dos, $_SESSION['id_util']);
 
@@ -61078,13 +61041,13 @@
 												WHERE id_dos = ?");
 			$requete-> execute(array($entree['date_quit'], $entree['id_dos']));
 
-		}
+		} 
 
 		public function MAJ_montant_decl($id_dos, $montant_decl){
-
+			
 			//Log
 			if ($this-> getDossier($id_dos)['montant_decl'] != $montant_decl) {
-
+				
 				$colonne = $this-> getNomColonneClient('montant_decl', $_GET['id_cli'], $_GET['id_mod_trans'], $_GET['id_mod_trac']);
 				$this-> creerLogDossier($colonne, $montant_decl, $id_dos, $_SESSION['id_util']);
 
@@ -61097,13 +61060,13 @@
 												WHERE id_dos = ?");
 			$requete-> execute(array($entree['montant_decl'], $entree['id_dos']));
 
-		}
+		} 
 
 		public function MAJ_ref_assurance($id_dos, $ref_assurance){
-
+			
 			//Log
 			if ($this-> getDossier($id_dos)['ref_assurance'] != $ref_assurance) {
-
+				
 				// $colonne = $this-> getNomColonneClient('ref_assurance', $_GET['id_cli'], $_GET['id_mod_trans'], $_GET['id_mod_trac']);
 				$this-> creerLogDossier('ref_assurance', $ref_assurance, $id_dos, $_SESSION['id_util']);
 
@@ -61116,13 +61079,13 @@
 												WHERE id_dos = ?");
 			$requete-> execute(array($entree['ref_assurance'], $entree['id_dos']));
 
-		}
+		} 
 
 		public function MAJ_type_apurement($id_dos, $type_apurement){
-
+			
 			//Log
 			if ($this-> getDossier($id_dos)['type_apurement'] != $type_apurement) {
-
+				
 				// $colonne = $this-> getNomColonneClient('type_apurement', $_GET['id_cli'], $_GET['id_mod_trans'], $_GET['id_mod_trac']);
 				$this-> creerLogDossier('type_apurement', $type_apurement, $id_dos, $_SESSION['id_util']);
 
@@ -61135,13 +61098,13 @@
 												WHERE id_dos = ?");
 			$requete-> execute(array($entree['type_apurement'], $entree['id_dos']));
 
-		}
+		} 
 
 		public function MAJ_remarque_apurement($id_dos, $remarque_apurement){
-
+			
 			//Log
 			if ($this-> getDossier($id_dos)['remarque_apurement'] != $remarque_apurement) {
-
+				
 				// $colonne = $this-> getNomColonneClient('remarque_apurement', $_GET['id_cli'], $_GET['id_mod_trans'], $_GET['id_mod_trac']);
 				$this-> creerLogDossier('remarque_apurement', $remarque_apurement, $id_dos, $_SESSION['id_util']);
 
@@ -61154,14 +61117,14 @@
 												WHERE id_dos = ?");
 			$requete-> execute(array($entree['remarque_apurement'], $entree['id_dos']));
 
-		}
+		} 
 
 		//ref_cvee
 		public function MAJ_ref_cvee($id_dos, $ref_cvee){
-
+			
 			//Log
 			if ($this-> getDossier($id_dos)['ref_cvee'] != $ref_cvee) {
-
+				
 				// $colonne = $this-> getNomColonneClient('ref_cvee', $_GET['id_cli'], $_GET['id_mod_trans'], $_GET['id_mod_trac']);
 				$this-> creerLogDossier('ref_cvee', $ref_cvee, $id_dos, $_SESSION['id_util']);
 
@@ -61174,14 +61137,14 @@
 												WHERE id_dos = ?");
 			$requete-> execute(array($entree['ref_cvee'], $entree['id_dos']));
 
-		}
+		} 
 
 		//fob_cvee
 		public function MAJ_fob_cvee($id_dos, $fob_cvee){
-
+			
 			//Log
 			if ($this-> getDossier($id_dos)['fob_cvee'] != $fob_cvee) {
-
+				
 				// $colonne = $this-> getNomColonneClient('fob_cvee', $_GET['id_cli'], $_GET['id_mod_trans'], $_GET['id_mod_trac']);
 				$this-> creerLogDossier('fob_cvee', $fob_cvee, $id_dos, $_SESSION['id_util']);
 
@@ -61194,13 +61157,13 @@
 												WHERE id_dos = ?");
 			$requete-> execute(array($entree['fob_cvee'], $entree['id_dos']));
 
-		}
+		} 
 
 		public function MAJ_cod($id_dos, $cod){
 
 			//Log
 			if ($this-> getDossier($id_dos)['cod'] != $cod) {
-
+				
 				$colonne = $this-> getNomColonneClient('cod', $_GET['id_cli'], $_GET['id_mod_trans'], $_GET['id_mod_trac']);
 				$this-> creerLogDossier($colonne, $cod, $id_dos, $_SESSION['id_util']);
 
@@ -61216,7 +61179,7 @@
 												WHERE id_dos = ?");
 			$requete-> execute(array($entree['cod'], $entree['id_dos']));
 
-		}
+		} 
 
 		public function MAJ_codAllDossier($ref_crf, $cod){
 
@@ -61228,13 +61191,13 @@
 												WHERE ref_crf = ?");
 			$requete-> execute(array($entree['cod'], $this-> getDataAv($cod)['fxi'], $entree['ref_crf']));
 
-		}
+		} 
 
 		public function MAJ_fxi($id_dos, $fxi){
-
+			
 			//Log
 			if ($this-> getDossier($id_dos)['fxi'] != $fxi) {
-
+				
 				$colonne = $this-> getNomColonneClient('fxi', $_GET['id_cli'], $_GET['id_mod_trans'], $_GET['id_mod_trac']);
 				$this-> creerLogDossier($colonne, $fxi, $id_dos, $_SESSION['id_util']);
 
@@ -61247,13 +61210,13 @@
 												WHERE id_dos = ?");
 			$requete-> execute(array($entree['fxi'], $entree['id_dos']));
 
-		}
+		} 
 
 		public function MAJ_montant_av($id_dos, $montant_av){
 
 			//Log
 			if ($this-> getDossier($id_dos)['montant_av'] != $montant_av) {
-
+				
 				$colonne = $this-> getNomColonneClient('montant_av', $_GET['id_cli'], $_GET['id_mod_trans'], $_GET['id_mod_trac']);
 				$this-> creerLogDossier($colonne, $montant_av, $id_dos, $_SESSION['id_util']);
 
@@ -61266,13 +61229,13 @@
 												WHERE id_dos = ?");
 			$requete-> execute(array($entree['montant_av'], $entree['id_dos']));
 
-		}
+		} 
 
 		public function MAJ_ref_av($id_dos, $ref_av){
 
 			//Log
 			if ($this-> getDossier($id_dos)['ref_av'] != $ref_av) {
-
+				
 				$colonne = $this-> getNomColonneClient('ref_av', $_GET['id_cli'], $_GET['id_mod_trans'], $_GET['id_mod_trac']);
 				$this-> creerLogDossier($colonne, $ref_av, $id_dos, $_SESSION['id_util']);
 
@@ -61285,13 +61248,13 @@
 												WHERE id_dos = ?");
 			$requete-> execute(array($entree['ref_av'], $entree['id_dos']));
 
-		}
+		} 
 
 		public function MAJ_fret_dos($id_dos, $fret){
-
+			
 			//Log
 			if ($this-> getDossier($id_dos)['fret'] != $fret) {
-
+				
 				$colonne = $this-> getNomColonneClient('fret', $_GET['id_cli'], $_GET['id_mod_trans'], $_GET['id_mod_trac']);
 				$this-> creerLogDossier($colonne, $fret, $id_dos, $_SESSION['id_util']);
 
@@ -61304,13 +61267,13 @@
 												WHERE id_dos = ?");
 			$requete-> execute(array($entree['fret'], $entree['id_dos']));
 
-		}
+		} 
 
 		public function MAJ_assurance_dos($id_dos, $assurance){
-
+			
 			//Log
 			if ($this-> getDossier($id_dos)['assurance'] != $assurance) {
-
+				
 				$colonne = $this-> getNomColonneClient('assurance', $_GET['id_cli'], $_GET['id_mod_trans'], $_GET['id_mod_trac']);
 				$this-> creerLogDossier($colonne, $assurance, $id_dos, $_SESSION['id_util']);
 
@@ -61323,13 +61286,13 @@
 												WHERE id_dos = ?");
 			$requete-> execute(array($entree['assurance'], $entree['id_dos']));
 
-		}
+		} 
 
 		public function MAJ_autre_frais_dos($id_dos, $autre_frais){
-
+			
 			//Log
 			if ($this-> getDossier($id_dos)['autre_frais'] != $autre_frais) {
-
+				
 				$colonne = $this-> getNomColonneClient('autre_frais', $_GET['id_cli'], $_GET['id_mod_trans'], $_GET['id_mod_trac']);
 				$this-> creerLogDossier($colonne, $autre_frais, $id_dos, $_SESSION['id_util']);
 
@@ -61342,13 +61305,13 @@
 												WHERE id_dos = ?");
 			$requete-> execute(array($entree['autre_frais'], $entree['id_dos']));
 
-		}
+		} 
 
 		public function MAJ_t1($id_dos, $t1){
-
+			
 			//Log
 			if ($this-> getDossier($id_dos)['t1'] != $t1) {
-
+				
 				$this-> creerLogDossier('t1', $t1, $id_dos, $_SESSION['id_util']);
 
 			}
@@ -61360,13 +61323,13 @@
 												WHERE id_dos = ?");
 			$requete-> execute(array($entree['t1'], $entree['id_dos']));
 
-		}
+		}  
 
 		public function MAJ_t1_date($id_dos, $t1_date){
-
+			
 			//Log
 			if ($this-> getDossier($id_dos)['t1_date'] != $t1_date) {
-
+				
 				// $colonne = $this-> getNomColonneClient('t1_date', $_GET['id_cli'], $_GET['id_mod_trans'], $_GET['id_mod_trac']);
 				$this-> creerLogDossier('T1 Date', $t1_date, $id_dos, $_SESSION['id_util']);
 
@@ -61379,13 +61342,13 @@
 												WHERE id_dos = ?");
 			$requete-> execute(array($entree['t1_date'], $entree['id_dos']));
 
-		}
+		}  
 
 		public function MAJ_poids($id_dos, $poids){
-
+			
 			//Log
 			if ($this-> getDossier($id_dos)['poids'] != $poids) {
-
+				
 				$colonne = $this-> getNomColonneClient('poids', $_GET['id_cli'], $_GET['id_mod_trans'], $_GET['id_mod_trac']);
 				$this-> creerLogDossier($colonne, $poids, $id_dos, $_SESSION['id_util']);
 
@@ -61398,13 +61361,13 @@
 												WHERE id_dos = ?");
 			$requete-> execute(array($entree['poids'], $entree['id_dos']));
 
-		}
+		}  
 
 		public function MAJ_horse($id_dos, $horse){
-
+			
 			//Log
 			if ($this-> getDossier($id_dos)['horse'] != $horse) {
-
+				
 				$colonne = $this-> getNomColonneClient('horse', $_GET['id_cli'], $_GET['id_mod_trans'], $_GET['id_mod_trac']);
 				$this-> creerLogDossier($colonne, $horse, $id_dos, $_SESSION['id_util']);
 
@@ -61417,13 +61380,13 @@
 												WHERE id_dos = ?");
 			$requete-> execute(array($entree['horse'], $entree['id_dos']));
 
-		}
+		}  
 
 		public function MAJ_trailer_1($id_dos, $trailer_1){
-
+			
 			//Log
 			if ($this-> getDossier($id_dos)['trailer_1'] != $trailer_1) {
-
+				
 				$colonne = $this-> getNomColonneClient('trailer_1', $_GET['id_cli'], $_GET['id_mod_trans'], $_GET['id_mod_trac']);
 				$this-> creerLogDossier($colonne, $trailer_1, $id_dos, $_SESSION['id_util']);
 
@@ -61436,13 +61399,13 @@
 												WHERE id_dos = ?");
 			$requete-> execute(array($entree['trailer_1'], $entree['id_dos']));
 
-		}
+		}  
 
 		public function MAJ_trailer_2($id_dos, $trailer_2){
-
+			
 			//Log
 			if ($this-> getDossier($id_dos)['trailer_2'] != $trailer_2) {
-
+				
 				$colonne = $this-> getNomColonneClient('trailer_2', $_GET['id_cli'], $_GET['id_mod_trans'], $_GET['id_mod_trac']);
 				$this-> creerLogDossier($colonne, $trailer_2, $id_dos, $_SESSION['id_util']);
 
@@ -61455,13 +61418,13 @@
 												WHERE id_dos = ?");
 			$requete-> execute(array($entree['trailer_2'], $entree['id_dos']));
 
-		}
+		}  
 
 		public function MAJ_pied_container($id_dos, $pied_container){
-
+			
 			//Log
 			if ($this-> getDossier($id_dos)['pied_container'] != $pied_container) {
-
+				
 				$colonne = $this-> getNomColonneClient('pied_container', $_GET['id_cli'], $_GET['id_mod_trans'], $_GET['id_mod_trac']);
 				$this-> creerLogDossier($colonne, $pied_container, $id_dos, $_SESSION['id_util']);
 
@@ -61474,13 +61437,13 @@
 												WHERE id_dos = ?");
 			$requete-> execute(array($entree['pied_container'], $entree['id_dos']));
 
-		}
+		}  
 
 		public function MAJ_container($id_dos, $container){
-
+			
 			//Log
 			if ($this-> getDossier($id_dos)['container'] != $container) {
-
+				
 				$colonne = $this-> getNomColonneClient('container', $_GET['id_cli'], $_GET['id_mod_trans'], $_GET['id_mod_trac']);
 				$this-> creerLogDossier($colonne, $container, $id_dos, $_SESSION['id_util']);
 
@@ -61493,13 +61456,13 @@
 												WHERE id_dos = ?");
 			$requete-> execute(array($entree['container'], $entree['id_dos']));
 
-		}
+		}  
 
 		public function MAJ_klsa_arriv($id_dos, $klsa_arriv){
-
+			
 			//Log
 			if ($this-> getDossier($id_dos)['klsa_arriv'] != $klsa_arriv) {
-
+				
 				$colonne = $this-> getNomColonneClient('klsa_arriv', $_GET['id_cli'], $_GET['id_mod_trans'], $_GET['id_mod_trac']);
 				$this-> creerLogDossier($colonne, $klsa_arriv, $id_dos, $_SESSION['id_util']);
 
@@ -61512,13 +61475,13 @@
 												WHERE id_dos = ?");
 			$requete-> execute(array($entree['klsa_arriv'], $entree['id_dos']));
 
-		}
+		}  
 
 		public function MAJ_crossing_date($id_dos, $crossing_date){
-
+			
 			//Log
 			if ($this-> getDossier($id_dos)['crossing_date'] != $crossing_date) {
-
+				
 				$colonne = $this-> getNomColonneClient('crossing_date', $_GET['id_cli'], $_GET['id_mod_trans'], $_GET['id_mod_trac']);
 				$this-> creerLogDossier($colonne, $crossing_date, $id_dos, $_SESSION['id_util']);
 
@@ -61531,13 +61494,13 @@
 												WHERE id_dos = ?");
 			$requete-> execute(array($entree['crossing_date'], $entree['id_dos']));
 
-		}
+		}  
 
 		public function MAJ_wiski_arriv($id_dos, $wiski_arriv){
-
+			
 			//Log
 			if ($this-> getDossier($id_dos)['wiski_arriv'] != $wiski_arriv) {
-
+				
 				$colonne = $this-> getNomColonneClient('wiski_arriv', $_GET['id_cli'], $_GET['id_mod_trans'], $_GET['id_mod_trac']);
 				$this-> creerLogDossier($colonne, $wiski_arriv, $id_dos, $_SESSION['id_util']);
 
@@ -61550,13 +61513,13 @@
 												WHERE id_dos = ?");
 			$requete-> execute(array($entree['wiski_arriv'], $entree['id_dos']));
 
-		}
+		}  
 
 		public function MAJ_wiski_dep($id_dos, $wiski_dep){
-
+			
 			//Log
 			if ($this-> getDossier($id_dos)['wiski_dep'] != $wiski_dep) {
-
+				
 				$colonne = $this-> getNomColonneClient('wiski_dep', $_GET['id_cli'], $_GET['id_mod_trans'], $_GET['id_mod_trac']);
 				$this-> creerLogDossier($colonne, $wiski_dep, $id_dos, $_SESSION['id_util']);
 
@@ -61569,13 +61532,13 @@
 												WHERE id_dos = ?");
 			$requete-> execute(array($entree['wiski_dep'], $entree['id_dos']));
 
-		}
+		}  
 
 		public function MAJ_ref_crf($id_dos, $ref_crf){
-
+			
 			//Log
 			if ($this-> getDossier($id_dos)['ref_crf'] != $ref_crf) {
-
+				
 				$colonne = $this-> getNomColonneClient('ref_crf', $_GET['id_cli'], $_GET['id_mod_trans'], $_GET['id_mod_trac']);
 				$this-> creerLogDossier($colonne, $ref_crf, $id_dos, $_SESSION['id_util']);
 
@@ -61591,13 +61554,13 @@
 												WHERE id_dos = ?");
 			$requete-> execute(array($entree['ref_crf'], $entree['id_dos']));
 
-		}
+		}  
 
 		public function MAJ_date_crf($id_dos, $date_crf){
-
+			
 			//Log
 			if ($this-> getDossier($id_dos)['date_crf'] != $date_crf) {
-
+				
 				$colonne = $this-> getNomColonneClient('date_crf', $_GET['id_cli'], $_GET['id_mod_trans'], $_GET['id_mod_trac']);
 				$this-> creerLogDossier($colonne, $date_crf, $id_dos, $_SESSION['id_util']);
 
@@ -61610,13 +61573,13 @@
 												WHERE id_dos = ?");
 			$requete-> execute(array($entree['date_crf'], $entree['id_dos']));
 
-		}
+		}  
 
 		public function MAJ_ir_crf($id_dos, $ir_crf){
-
+			
 			//Log
 			if ($this-> getDossier($id_dos)['ir_crf'] != $ir_crf) {
-
+				
 				$colonne = $this-> getNomColonneClient('ir_crf', $_GET['id_cli'], $_GET['id_mod_trans'], $_GET['id_mod_trac']);
 				$this-> creerLogDossier($colonne, $ir_crf, $id_dos, $_SESSION['id_util']);
 
@@ -61629,13 +61592,13 @@
 												WHERE id_dos = ?");
 			$requete-> execute(array($entree['ir_crf'], $entree['id_dos']));
 
-		}
+		}  
 
 		public function MAJ_date_ad($id_dos, $date_ad){
-
+			
 			//Log
 			if ($this-> getDossier($id_dos)['date_ad'] != $date_ad) {
-
+				
 				$colonne = $this-> getNomColonneClient('date_ad', $_GET['id_cli'], $_GET['id_mod_trans'], $_GET['id_mod_trac']);
 				$this-> creerLogDossier($colonne, $date_ad, $id_dos, $_SESSION['id_util']);
 
@@ -61648,13 +61611,13 @@
 												WHERE id_dos = ?");
 			$requete-> execute(array($entree['date_ad'], $entree['id_dos']));
 
-		}
+		}  
 
 		public function MAJ_date_assurance($id_dos, $date_assurance){
-
+			
 			//Log
 			if ($this-> getDossier($id_dos)['date_assurance'] != $date_assurance) {
-
+				
 				$colonne = $this-> getNomColonneClient('date_assurance', $_GET['id_cli'], $_GET['id_mod_trans'], $_GET['id_mod_trac']);
 				$this-> creerLogDossier($colonne, $date_assurance, $id_dos, $_SESSION['id_util']);
 
@@ -61667,13 +61630,13 @@
 												WHERE id_dos = ?");
 			$requete-> execute(array($entree['date_assurance'], $entree['id_dos']));
 
-		}
+		}  
 
 		public function MAJ_dgda_in($id_dos, $dgda_in){
-
+			
 			//Log
 			if ($this-> getDossier($id_dos)['dgda_in'] != $dgda_in) {
-
+				
 				$colonne = $this-> getNomColonneClient('dgda_in', $_GET['id_cli'], $_GET['id_mod_trans'], $_GET['id_mod_trac']);
 				$this-> creerLogDossier($colonne, $dgda_in, $id_dos, $_SESSION['id_util']);
 
@@ -61686,13 +61649,13 @@
 												WHERE id_dos = ?");
 			$requete-> execute(array($entree['dgda_in'], $entree['id_dos']));
 
-		}
+		}  
 
 		public function MAJ_dgda_out($id_dos, $dgda_out){
-
+			
 			//Log
 			if ($this-> getDossier($id_dos)['dgda_out'] != $dgda_out) {
-
+				
 				$colonne = $this-> getNomColonneClient('dgda_out', $_GET['id_cli'], $_GET['id_mod_trans'], $_GET['id_mod_trac']);
 				$this-> creerLogDossier($colonne, $dgda_out, $id_dos, $_SESSION['id_util']);
 
@@ -61705,13 +61668,13 @@
 												WHERE id_dos = ?");
 			$requete-> execute(array($entree['dgda_out'], $entree['id_dos']));
 
-		}
+		}  
 
 		public function MAJ_date_preal($id_dos, $date_preal){
-
+			
 			//Log
 			if ($this-> getDossier($id_dos)['date_preal'] != $date_preal) {
-
+				
 				$colonne = $this-> getNomColonneClient('date_preal', $_GET['id_cli'], $_GET['id_mod_trans'], $_GET['id_mod_trac']);
 				$this-> creerLogDossier($colonne, $date_preal, $id_dos, $_SESSION['id_util']);
 
@@ -61727,10 +61690,10 @@
 		}
 
 		public function MAJ_frontiere($id_dos, $frontiere){
-
+			
 			//Log
 			if ($this-> getDossier($id_dos)['frontiere'] != $frontiere) {
-
+				
 				$colonne = $this-> getNomColonneClient('frontiere', $_GET['id_cli'], $_GET['id_mod_trans'], $_GET['id_mod_trac']);
 				$this-> creerLogDossier($colonne, $frontiere, $id_dos, $_SESSION['id_util']);
 
@@ -61746,10 +61709,10 @@
 		}
 
 		public function MAJ_entrepot_frontiere($id_dos, $entrepot_frontiere){
-
+			
 			//Log
 			if ($this-> getDossier($id_dos)['entrepot_frontiere'] != $entrepot_frontiere) {
-
+				
 				$colonne = $this-> getNomColonneClient('entrepot_frontiere', $_GET['id_cli'], $_GET['id_mod_trans'], $_GET['id_mod_trac']);
 				$this-> creerLogDossier($colonne, $entrepot_frontiere, $id_dos, $_SESSION['id_util']);
 
@@ -61765,10 +61728,10 @@
 		}
 
 		public function MAJ_po_ref($id_dos, $po_ref){
-
+			
 			//Log
 			if ($this-> getDossier($id_dos)['po_ref'] != $po_ref) {
-
+				
 				$colonne = $this-> getNomColonneClient('po_ref', $_GET['id_cli'], $_GET['id_mod_trans'], $_GET['id_mod_trac']);
 				$this-> creerLogDossier($colonne, $po_ref, $id_dos, $_SESSION['id_util']);
 
@@ -61782,12 +61745,12 @@
 			$requete-> execute(array($entree['po_ref'], $entree['id_dos']));
 
 		}
-
+		
 		public function MAJ_m3($id_dos, $m3){
-
+			
 			//Log
 			if ($this-> getDossier($id_dos)['m3'] != $m3) {
-
+				
 				$colonne = $this-> getNomColonneClient('m3', $_GET['id_cli'], $_GET['id_mod_trans'], $_GET['id_mod_trac']);
 				$this-> creerLogDossier($colonne, $m3, $id_dos, $_SESSION['id_util']);
 
@@ -61801,12 +61764,12 @@
 			$requete-> execute(array($entree['m3'], $entree['id_dos']));
 
 		}
-
+		
 		public function MAJ_road_manif($id_dos, $road_manif){
-
+			
 			//Log
 			if ($this-> getDossier($id_dos)['road_manif'] != $road_manif) {
-
+				
 				$colonne = $this-> getNomColonneClient('road_manif', $_GET['id_cli'], $_GET['id_mod_trans'], $_GET['id_mod_trac']);
 				$this-> creerLogDossier($colonne, $road_manif, $id_dos, $_SESSION['id_util']);
 
@@ -61820,12 +61783,12 @@
 			$requete-> execute(array($entree['road_manif'], $entree['id_dos']));
 
 		}
-
+		
 		public function MAJ_arr_bond($id_dos, $arr_bond){
-
+			
 			//Log
 			if ($this-> getDossier($id_dos)['arr_bond'] != $arr_bond) {
-
+				
 				$colonne = $this-> getNomColonneClient('arr_bond', $_GET['id_cli'], $_GET['id_mod_trans'], $_GET['id_mod_trac']);
 				$this-> creerLogDossier($colonne, $arr_bond, $id_dos, $_SESSION['id_util']);
 
@@ -61839,12 +61802,12 @@
 			$requete-> execute(array($entree['arr_bond'], $entree['id_dos']));
 
 		}
-
+		
 		public function MAJ_custom_deliv($id_dos, $custom_deliv){
-
+			
 			//Log
 			if ($this-> getDossier($id_dos)['custom_deliv'] != $custom_deliv) {
-
+				
 				$colonne = $this-> getNomColonneClient('custom_deliv', $_GET['id_cli'], $_GET['id_mod_trans'], $_GET['id_mod_trac']);
 				$this-> creerLogDossier($colonne, $custom_deliv, $id_dos, $_SESSION['id_util']);
 
@@ -61858,12 +61821,12 @@
 			$requete-> execute(array($entree['custom_deliv'], $entree['id_dos']));
 
 		}
-
+		
 		public function MAJ_lshi_arriv($id_dos, $lshi_arriv){
-
+			
 			//Log
 			if ($this-> getDossier($id_dos)['lshi_arriv'] != $lshi_arriv) {
-
+				
 				$colonne = $this-> getNomColonneClient('lshi_arriv', $_GET['id_cli'], $_GET['id_mod_trans'], $_GET['id_mod_trac']);
 				$this-> creerLogDossier($colonne, $lshi_arriv, $id_dos, $_SESSION['id_util']);
 
@@ -61877,12 +61840,12 @@
 			$requete-> execute(array($entree['lshi_arriv'], $entree['id_dos']));
 
 		}
-
+		
 		public function MAJ_dispatch_klsa($id_dos, $dispatch_klsa){
-
+			
 			//Log
 			if ($this-> getDossier($id_dos)['dispatch_klsa'] != $dispatch_klsa) {
-
+				
 				$colonne = $this-> getNomColonneClient('dispatch_klsa', $_GET['id_cli'], $_GET['id_mod_trans'], $_GET['id_mod_trac']);
 				$this-> creerLogDossier($colonne, $dispatch_klsa, $id_dos, $_SESSION['id_util']);
 
@@ -61896,12 +61859,12 @@
 			$requete-> execute(array($entree['dispatch_klsa'], $entree['id_dos']));
 
 		}
-
+		
 		public function MAJ_dispatch_deliv($id_dos, $dispatch_deliv){
-
+			
 			//Log
 			if ($this-> getDossier($id_dos)['dispatch_deliv'] != $dispatch_deliv) {
-
+				
 				$colonne = $this-> getNomColonneClient('dispatch_deliv', $_GET['id_cli'], $_GET['id_mod_trans'], $_GET['id_mod_trac']);
 				$this-> creerLogDossier($colonne, $dispatch_deliv, $id_dos, $_SESSION['id_util']);
 
@@ -61915,12 +61878,12 @@
 			$requete-> execute(array($entree['dispatch_deliv'], $entree['id_dos']));
 
 		}
-
+		
 		public function MAJ_arrival_date($id_dos, $arrival_date){
-
+			
 			//Log
 			if ($this-> getDossier($id_dos)['arrival_date'] != $arrival_date) {
-
+				
 				$colonne = $this-> getNomColonneClient('arrival_date', $_GET['id_cli'], $_GET['id_mod_trans'], $_GET['id_mod_trac']);
 				$this-> creerLogDossier($colonne, $arrival_date, $id_dos, $_SESSION['id_util']);
 
@@ -61936,10 +61899,10 @@
 		}
 
 		public function MAJ_cleared($id_dos, $cleared){
-
+			
 			//Log
 			if ($this-> getDossier($id_dos)['cleared'] != $cleared) {
-
+				
 				$colonne = $this-> getNomColonneClient('cleared', $_GET['id_cli'], $_GET['id_mod_trans'], $_GET['id_mod_trac']);
 				$this-> creerLogDossier($colonne, $cleared, $id_dos, $_SESSION['id_util']);
 
@@ -61953,15 +61916,15 @@
 			$requete-> execute(array($entree['cleared'], $entree['id_dos']));
 
 			if ($this-> getDossier($id_dos)['cleared'] == '1') {
-
+				
 				$this-> MAJ_statut($id_dos, 'CLEARING COMPLETED');
 
 			}
-
+			
 		}
 
 		public function MAJ_cleared_is_null(){
-
+			
 			//Log
 
 			include('connexion.php');
@@ -61969,15 +61932,15 @@
 			$entree['cleared'] = $cleared;
 			$connexion-> exec("UPDATE dossier SET cleared = '0'
 								WHERE cleared = '' OR cleared is null");
-
-
+			
+			
 		}
 
 		public function MAJ_ref_fact($id_dos, $ref_fact){
-
+			
 			//Log
 			if ($this-> getDossier($id_dos)['ref_fact'] != $ref_fact) {
-
+				
 				$colonne = $this-> getNomColonneClient('ref_fact', $_GET['id_cli'], $_GET['id_mod_trans'], $_GET['id_mod_trac']);
 				$this-> creerLogDossier($colonne, $ref_fact, $id_dos, $_SESSION['id_util']);
 
@@ -61990,13 +61953,13 @@
 												WHERE id_dos = ?");
 			$requete-> execute(array($entree['ref_fact'], $entree['id_dos']));
 
-		}
-
+		} 
+		
 		public function MAJ_fournisseur($id_dos, $fournisseur){
-
+			
 			//Log
 			if ($this-> getDossier($id_dos)['fournisseur'] != $fournisseur) {
-
+				
 				$colonne = $this-> getNomColonneClient('fournisseur', $_GET['id_cli'], $_GET['id_mod_trans'], $_GET['id_mod_trac']);
 				$this-> creerLogDossier($colonne, $fournisseur, $id_dos, $_SESSION['id_util']);
 
@@ -62009,13 +61972,13 @@
 												WHERE id_dos = ?");
 			$requete-> execute(array($entree['fournisseur'], $entree['id_dos']));
 
-		}
+		} 
 
 		public function MAJ_commodity($id_dos, $commodity){
-
+			
 			//Log
 			if ($this-> getDossier($id_dos)['commodity'] != $commodity) {
-
+				
 				$colonne = $this-> getNomColonneClient('commodity', $_GET['id_cli'], $_GET['id_mod_trans'], $_GET['id_mod_trac']);
 				$this-> creerLogDossier($colonne, $commodity, $id_dos, $_SESSION['id_util']);
 
@@ -62028,13 +61991,13 @@
 												WHERE id_dos = ?");
 			$requete-> execute(array($entree['commodity'], $entree['id_dos']));
 
-		}
+		} 
 
 		public function MAJ_num_lic($id_dos, $num_lic){
-
+			
 			//Log
 			if ($this-> getDossier($id_dos)['num_lic'] != $num_lic) {
-
+				
 				$colonne = $this-> getNomColonneClient('num_lic', $_GET['id_cli'], $_GET['id_mod_trans'], $_GET['id_mod_trac']);
 				$this-> creerLogDossier($colonne, $num_lic, $id_dos, $_SESSION['id_util']);
 
@@ -62047,13 +62010,13 @@
 												WHERE id_dos = ?");
 			$requete-> execute(array($entree['num_lic'], $entree['id_dos']));
 
-		}
+		} 
 
 		public function MAJ_amicongo_arriv($id_dos, $amicongo_arriv){
-
+			
 			//Log
 			if ($this-> getDossier($id_dos)['amicongo_arriv'] != $amicongo_arriv) {
-
+				
 				$colonne = $this-> getNomColonneClient('amicongo_arriv', $_GET['id_cli'], $_GET['id_mod_trans'], $_GET['id_mod_trac']);
 				$this-> creerLogDossier($colonne, $amicongo_arriv, $id_dos, $_SESSION['id_util']);
 
@@ -62066,13 +62029,13 @@
 												WHERE id_dos = ?");
 			$requete-> execute(array($entree['amicongo_arriv'], $entree['id_dos']));
 
-		}
+		} 
 
 		public function MAJ_insp_receiv($id_dos, $insp_receiv){
-
+			
 			//Log
 			if ($this-> getDossier($id_dos)['insp_receiv'] != $insp_receiv) {
-
+				
 				$colonne = $this-> getNomColonneClient('insp_receiv', $_GET['id_cli'], $_GET['id_mod_trans'], $_GET['id_mod_trac']);
 				$this-> creerLogDossier($colonne, $insp_receiv, $id_dos, $_SESSION['id_util']);
 
@@ -62085,13 +62048,13 @@
 												WHERE id_dos = ?");
 			$requete-> execute(array($entree['insp_receiv'], $entree['id_dos']));
 
-		}
+		} 
 
 		public function MAJ_ir($id_dos, $ir){
-
+			
 			//Log
 			if ($this-> getDossier($id_dos)['ir'] != $ir) {
-
+				
 				$colonne = $this-> getNomColonneClient('ir', $_GET['id_cli'], $_GET['id_mod_trans'], $_GET['id_mod_trac']);
 				$this-> creerLogDossier($colonne, $ir, $id_dos, $_SESSION['id_util']);
 
@@ -62104,13 +62067,13 @@
 												WHERE id_dos = ?");
 			$requete-> execute(array($entree['ir'], $entree['id_dos']));
 
-		}
+		} 
 
 		public function MAJ_regul_ir($id_dos, $regul_ir){
-
+			
 			//Log
 			if ($this-> getDossier($id_dos)['regul_ir'] != $regul_ir) {
-
+				
 				$colonne = $this-> getNomColonneClient('regul_ir', $_GET['id_cli'], $_GET['id_mod_trans'], $_GET['id_mod_trac']);
 				$this-> creerLogDossier($colonne, $regul_ir, $id_dos, $_SESSION['id_util']);
 
@@ -62123,13 +62086,13 @@
 												WHERE id_dos = ?");
 			$requete-> execute(array($entree['regul_ir'], $entree['id_dos']));
 
-		}
+		} 
 
 		public function MAJ_remarque($id_dos, $remarque){
-
+			
 			//Log
 			if ($this-> getDossier($id_dos)['remarque'] != $remarque) {
-
+				
 				$colonne = $this-> getNomColonneClient('remarque', $_GET['id_cli'], $_GET['id_mod_trans'], $_GET['id_mod_trac']);
 				$this-> creerLogDossier($colonne, $remarque, $id_dos, $_SESSION['id_util']);
 
@@ -62142,17 +62105,17 @@
 												WHERE id_dos = ?");
 			$requete-> execute(array($entree['remarque'], $entree['id_dos']));
 
-		}
+		} 
 
 		public function MAJ_statut($id_dos, $statut){
-
+			
 			include('connexion.php');
 			$entree['id_dos'] = $id_dos;
 			$entree['statut'] = $statut;
 
 			//Log
 			if ($this-> getDossier($id_dos)['statut'] != $statut) {
-
+				
 				$colonne = $this-> getNomColonneClient('statut', $_GET['id_cli'], $_GET['id_mod_trans'], $_GET['id_mod_trac']);
 				$this-> creerLogDossier($colonne, $statut, $id_dos, $_SESSION['id_util']);
 
@@ -62162,13 +62125,13 @@
 												WHERE id_dos = ?");
 			$requete-> execute(array($entree['statut'], $entree['id_dos']));
 
-		}
+		} 
 
 		public function MAJ_date_ext_temporelle($id_dos, $date_ext_temporelle){
-
+			
 			//Log
 			if ($this-> getDossier($id_dos)['date_ext_temporelle'] != $date_ext_temporelle) {
-
+				
 				$colonne = $this-> getNomColonneClient('date_ext_temporelle', $_GET['id_cli'], $_GET['id_mod_trans'], $_GET['id_mod_trac']);
 				$this-> creerLogDossier($colonne, $date_ext_temporelle, $id_dos, $_SESSION['id_util']);
 
@@ -62181,13 +62144,13 @@
 												WHERE id_dos = ?");
 			$requete-> execute(array($entree['date_ext_temporelle'], $entree['id_dos']));
 
-		}
+		} 
 
 		public function MAJ_fob($id_dos, $fob){
-
+			
 			//Log
 			if ($this-> getDossier($id_dos)['fob'] != $fob) {
-
+				
 				$colonne = $this-> getNomColonneClient('fob', $_GET['id_cli'], $_GET['id_mod_trans'], $_GET['id_mod_trac']);
 				$this-> creerLogDossier($colonne, $fob, $id_dos, $_SESSION['id_util']);
 
@@ -62200,10 +62163,10 @@
 												WHERE id_dos = ?");
 			$requete-> execute(array($entree['fob'], $entree['id_dos']));
 
-		}
+		} 
 
 		public function MAJ_fact_suiv_lic($num_lic, $fact_suiv_lic){
-
+			
 			include('connexion.php');
 			$entree['num_lic'] = $num_lic;
 			$entree['fact_suiv_lic'] = $fact_suiv_lic;
@@ -62211,11 +62174,11 @@
 												WHERE num_lic = ?");
 			$requete-> execute(array($entree['fact_suiv_lic'], $entree['num_lic']));
 
-		}
+		} 
 
 		public function MAJ_fret($id_dos, $fret){
-
-
+			
+			
 			$this-> creerLogDossier('Fret', $fret, $id_dos, $_SESSION['id_util']);
 
 			include('connexion.php');
@@ -62225,12 +62188,12 @@
 												WHERE id_dos = ?");
 			$requete-> execute(array($entree['fret'], $entree['id_dos']));
 
-		}
+		} 
 
 		public function MAJ_assurance($id_dos, $assurance){
-
+			
 			//Log
-
+						
 			$this-> creerLogDossier('Assurance', $assurance, $id_dos, $_SESSION['id_util']);
 
 			include('connexion.php');
@@ -62240,12 +62203,12 @@
 												WHERE id_dos = ?");
 			$requete-> execute(array($entree['assurance'], $entree['id_dos']));
 
-		}
+		} 
 
 		public function MAJ_autre_frais($id_dos, $autre_frais){
-
+			
 			//Log
-
+						
 			$this-> creerLogDossier('Autre frais', $autre_frais, $id_dos, $_SESSION['id_util']);
 
 
@@ -62256,12 +62219,12 @@
 												WHERE id_dos = ?");
 			$requete-> execute(array($entree['autre_frais'], $entree['id_dos']));
 
-		}
+		} 
 
 		public function MAJ_duree_loyer($id_dos, $duree_loyer){
-
+			
 			//Log
-
+						
 			$this-> creerLogDossier('Loyer', $duree_loyer, $id_dos, $_SESSION['id_util']);
 
 
@@ -62272,19 +62235,19 @@
 												WHERE id_dos = ?");
 			$requete-> execute(array($entree['duree_loyer'], $entree['id_dos']));
 
-		}
+		} 
 
 		public function grouper_marchandise($id_dos){
-
+			
 			include('connexion.php');
 			$entree['id_dos'] = $id_dos;
 
-			$requete1 = $connexion-> prepare("SELECT nom_march, num_av, ref_fact,
-													code_tarif_march, position_av, origine,
-													provenance, code_add,
-													SUM(nbr_bags) AS nbr_bags,
-													SUM(qte) AS qte,
-													SUM(poids) AS poids,
+			$requete1 = $connexion-> prepare("SELECT nom_march, num_av, ref_fact, 
+													code_tarif_march, position_av, origine, 
+													provenance, code_add, 
+													SUM(nbr_bags) AS nbr_bags, 
+													SUM(qte) AS qte, 
+													SUM(poids) AS poids, 
 													SUM(fob) AS fob
 												FROM marchandise_dossier
 												WHERE id_dos = ?
@@ -62305,13 +62268,13 @@
 
 			}$requete1-> closeCursor();
 
-		}
+		} 
 
 		public function MAJ_supplier($id_dos, $supplier){
-
+			
 			//Log
 			if ($this-> getDossier($id_dos)['supplier'] != $supplier) {
-
+				
 				$colonne = $this-> getNomColonneClient('supplier', $_GET['id_cli'], $_GET['id_mod_trans'], $_GET['id_mod_trac']);
 				$this-> creerLogDossier($colonne, $supplier, $id_dos, $_SESSION['id_util']);
 
@@ -62324,13 +62287,13 @@
 												WHERE id_dos = ?");
 			$requete-> execute(array($entree['supplier'], $entree['id_dos']));
 
-		}
+		} 
 
 		public function MAJ_bl($id_dos, $bl){
-
+			
 			//Log
 			if ($this-> getDossier($id_dos)['bl'] != $bl) {
-
+				
 				$colonne = $this-> getNomColonneClient('bl', $_GET['id_cli'], $_GET['id_mod_trans'], $_GET['id_mod_trac']);
 				$this-> creerLogDossier($colonne, $bl, $id_dos, $_SESSION['id_util']);
 
@@ -62343,13 +62306,13 @@
 												WHERE id_dos = ?");
 			$requete-> execute(array($entree['bl'], $entree['id_dos']));
 
-		}
+		} 
 
 		public function MAJ_pv_mine($id_dos, $pv_mine){
-
+			
 			//Log
 			if ($this-> getDossier($id_dos)['pv_mine'] != $pv_mine) {
-
+				
 				$colonne = $this-> getNomColonneClient('pv_mine', $_GET['id_cli'], $_GET['id_mod_trans'], $_GET['id_mod_trac']);
 				$this-> creerLogDossier($colonne, $pv_mine, $id_dos, $_SESSION['id_util']);
 
@@ -62362,13 +62325,13 @@
 												WHERE id_dos = ?");
 			$requete-> execute(array($entree['pv_mine'], $entree['id_dos']));
 
-		}
+		} 
 
 		public function MAJ_transporter($id_dos, $transporter){
-
+			
 			//Log
 			if ($this-> getDossier($id_dos)['transporter'] != $transporter) {
-
+				
 				$colonne = $this-> getNomColonneClient('transporter', $_GET['id_cli'], $_GET['id_mod_trans'], $_GET['id_mod_trac']);
 				$this-> creerLogDossier($colonne, $transporter, $id_dos, $_SESSION['id_util']);
 
@@ -62381,12 +62344,12 @@
 												WHERE id_dos = ?");
 			$requete-> execute(array($entree['transporter'], $entree['id_dos']));
 
-		}
+		} 
 		public function MAJ_demande_attestation($id_dos, $demande_attestation){
-
+			
 			//Log
 			if ($this-> getDossier($id_dos)['demande_attestation'] != $demande_attestation) {
-
+				
 				$colonne = $this-> getNomColonneClient('demande_attestation', $_GET['id_cli'], $_GET['id_mod_trans'], $_GET['id_mod_trac']);
 				$this-> creerLogDossier($colonne, $demande_attestation, $id_dos, $_SESSION['id_util']);
 
@@ -62399,12 +62362,12 @@
 												WHERE id_dos = ?");
 			$requete-> execute(array($entree['demande_attestation'], $entree['id_dos']));
 
-		}
+		} 
 		public function MAJ_assay_date($id_dos, $assay_date){
-
+			
 			//Log
 			if ($this-> getDossier($id_dos)['assay_date'] != $assay_date) {
-
+				
 				$colonne = $this-> getNomColonneClient('assay_date', $_GET['id_cli'], $_GET['id_mod_trans'], $_GET['id_mod_trac']);
 				$this-> creerLogDossier($colonne, $assay_date, $id_dos, $_SESSION['id_util']);
 
@@ -62417,12 +62380,12 @@
 												WHERE id_dos = ?");
 			$requete-> execute(array($entree['assay_date'], $entree['id_dos']));
 
-		}
+		} 
 		public function MAJ_ceec_in($id_dos, $ceec_in){
-
+			
 			//Log
 			if ($this-> getDossier($id_dos)['ceec_in'] != $ceec_in) {
-
+				
 				$colonne = $this-> getNomColonneClient('ceec_in', $_GET['id_cli'], $_GET['id_mod_trans'], $_GET['id_mod_trac']);
 				$this-> creerLogDossier($colonne, $ceec_in, $id_dos, $_SESSION['id_util']);
 
@@ -62435,12 +62398,12 @@
 												WHERE id_dos = ?");
 			$requete-> execute(array($entree['ceec_in'], $entree['id_dos']));
 
-		}
+		} 
 		public function MAJ_ceec_out($id_dos, $ceec_out){
-
+			
 			//Log
 			if ($this-> getDossier($id_dos)['ceec_out'] != $ceec_out) {
-
+				
 				$colonne = $this-> getNomColonneClient('ceec_out', $_GET['id_cli'], $_GET['id_mod_trans'], $_GET['id_mod_trac']);
 				$this-> creerLogDossier($colonne, $ceec_out, $id_dos, $_SESSION['id_util']);
 
@@ -62453,12 +62416,12 @@
 												WHERE id_dos = ?");
 			$requete-> execute(array($entree['ceec_out'], $entree['id_dos']));
 
-		}
+		} 
 		public function MAJ_min_div_in($id_dos, $min_div_in){
-
+			
 			//Log
 			if ($this-> getDossier($id_dos)['min_div_in'] != $min_div_in) {
-
+				
 				$colonne = $this-> getNomColonneClient('min_div_in', $_GET['id_cli'], $_GET['id_mod_trans'], $_GET['id_mod_trac']);
 				$this-> creerLogDossier($colonne, $min_div_in, $id_dos, $_SESSION['id_util']);
 
@@ -62471,12 +62434,12 @@
 												WHERE id_dos = ?");
 			$requete-> execute(array($entree['min_div_in'], $entree['id_dos']));
 
-		}
+		} 
 		public function MAJ_min_div_out($id_dos, $min_div_out){
-
+			
 			//Log
 			if ($this-> getDossier($id_dos)['min_div_out'] != $min_div_out) {
-
+				
 				$colonne = $this-> getNomColonneClient('min_div_out', $_GET['id_cli'], $_GET['id_mod_trans'], $_GET['id_mod_trac']);
 				$this-> creerLogDossier($colonne, $min_div_out, $id_dos, $_SESSION['id_util']);
 
@@ -62489,12 +62452,12 @@
 												WHERE id_dos = ?");
 			$requete-> execute(array($entree['min_div_out'], $entree['id_dos']));
 
-		}
+		} 
 		public function MAJ_gov_in($id_dos, $gov_in){
-
+			
 			//Log
 			if ($this-> getDossier($id_dos)['gov_in'] != $gov_in) {
-
+				
 				$colonne = $this-> getNomColonneClient('gov_in', $_GET['id_cli'], $_GET['id_mod_trans'], $_GET['id_mod_trac']);
 				$this-> creerLogDossier($colonne, $gov_in, $id_dos, $_SESSION['id_util']);
 
@@ -62507,12 +62470,12 @@
 												WHERE id_dos = ?");
 			$requete-> execute(array($entree['gov_in'], $entree['id_dos']));
 
-		}
+		} 
 		public function MAJ_gov_out($id_dos, $gov_out){
-
+			
 			//Log
 			if ($this-> getDossier($id_dos)['gov_out'] != $gov_out) {
-
+				
 				$colonne = $this-> getNomColonneClient('gov_out', $_GET['id_cli'], $_GET['id_mod_trans'], $_GET['id_mod_trac']);
 				$this-> creerLogDossier($colonne, $gov_out, $id_dos, $_SESSION['id_util']);
 
@@ -62525,12 +62488,12 @@
 												WHERE id_dos = ?");
 			$requete-> execute(array($entree['gov_out'], $entree['id_dos']));
 
-		}
+		} 
 		public function MAJ_dispatch_date($id_dos, $dispatch_date){
-
+			
 			//Log
 			if ($this-> getDossier($id_dos)['dispatch_date'] != $dispatch_date) {
-
+				
 				$colonne = $this-> getNomColonneClient('dispatch_date', $_GET['id_cli'], $_GET['id_mod_trans'], $_GET['id_mod_trac']);
 				$this-> creerLogDossier($colonne, $dispatch_date, $id_dos, $_SESSION['id_util']);
 
@@ -62543,12 +62506,12 @@
 												WHERE id_dos = ?");
 			$requete-> execute(array($entree['dispatch_date'], $entree['id_dos']));
 
-		}
+		} 
 		public function MAJ_end_form($id_dos, $end_form){
-
+			
 			//Log
 			if ($this-> getDossier($id_dos)['end_form'] != $end_form) {
-
+				
 				$colonne = $this-> getNomColonneClient('end_form', $_GET['id_cli'], $_GET['id_mod_trans'], $_GET['id_mod_trac']);
 				$this-> creerLogDossier($colonne, $end_form, $id_dos, $_SESSION['id_util']);
 
@@ -62561,12 +62524,12 @@
 												WHERE id_dos = ?");
 			$requete-> execute(array($entree['end_form'], $entree['id_dos']));
 
-		}
+		} 
 		public function MAJ_exit_drc($id_dos, $exit_drc){
-
+			
 			//Log
 			if ($this-> getDossier($id_dos)['exit_drc'] != $exit_drc) {
-
+				
 				$colonne = $this-> getNomColonneClient('exit_drc', $_GET['id_cli'], $_GET['id_mod_trans'], $_GET['id_mod_trac']);
 				$this-> creerLogDossier($colonne, $exit_drc, $id_dos, $_SESSION['id_util']);
 
@@ -62579,12 +62542,12 @@
 												WHERE id_dos = ?");
 			$requete-> execute(array($entree['exit_drc'], $entree['id_dos']));
 
-		}
+		} 
 		public function MAJ_site_load($id_dos, $site_load){
-
+			
 			//Log
 			if ($this-> getDossier($id_dos)['site_load'] != $site_load) {
-
+				
 				$colonne = $this-> getNomColonneClient('site_load', $_GET['id_cli'], $_GET['id_mod_trans'], $_GET['id_mod_trac']);
 				$this-> creerLogDossier($colonne, $site_load, $id_dos, $_SESSION['id_util']);
 
@@ -62597,12 +62560,12 @@
 												WHERE id_dos = ?");
 			$requete-> execute(array($entree['site_load'], $entree['id_dos']));
 
-		}
+		} 
 		public function MAJ_num_lot($id_dos, $num_lot){
-
+			
 			//Log
 			if ($this-> getDossier($id_dos)['num_lot'] != $num_lot) {
-
+				
 				$colonne = $this-> getNomColonneClient('num_lot', $_GET['id_cli'], $_GET['id_mod_trans'], $_GET['id_mod_trac']);
 				$this-> creerLogDossier($colonne, $num_lot, $id_dos, $_SESSION['id_util']);
 
@@ -62615,12 +62578,12 @@
 												WHERE id_dos = ?");
 			$requete-> execute(array($entree['num_lot'], $entree['id_dos']));
 
-		}
+		} 
 		public function MAJ_nbre_seal($id_dos, $nbre_seal){
-
+			
 			//Log
 			if ($this-> getDossier($id_dos)['nbre_seal'] != $nbre_seal) {
-
+				
 				$colonne = $this-> getNomColonneClient('nbre_seal', $_GET['id_cli'], $_GET['id_mod_trans'], $_GET['id_mod_trac']);
 				$this-> creerLogDossier($colonne, $nbre_seal, $id_dos, $_SESSION['id_util']);
 
@@ -62633,12 +62596,12 @@
 												WHERE id_dos = ?");
 			$requete-> execute(array($entree['nbre_seal'], $entree['id_dos']));
 
-		}
+		} 
 		public function MAJ_dgda_seal($id_dos, $dgda_seal){
-
+			
 			//Log
 			if ($this-> getDossier($id_dos)['dgda_seal'] != $dgda_seal) {
-
+				
 				$colonne = $this-> getNomColonneClient('dgda_seal', $_GET['id_cli'], $_GET['id_mod_trans'], $_GET['id_mod_trac']);
 				$this-> creerLogDossier($colonne, $dgda_seal, $id_dos, $_SESSION['id_util']);
 
@@ -62651,12 +62614,12 @@
 												WHERE id_dos = ?");
 			$requete-> execute(array($entree['dgda_seal'], $entree['id_dos']));
 
-		}
+		} 
 		public function MAJ_total_dgda_seal($id_dos, $total_dgda_seal){
-
+			
 			//Log
 			if ($this-> getDossier($id_dos)['total_dgda_seal'] != $total_dgda_seal) {
-
+				
 				$colonne = $this-> getNomColonneClient('total_dgda_seal', $_GET['id_cli'], $_GET['id_mod_trans'], $_GET['id_mod_trac']);
 				$this-> creerLogDossier($colonne, $total_dgda_seal, $id_dos, $_SESSION['id_util']);
 
@@ -62669,12 +62632,12 @@
 												WHERE id_dos = ?");
 			$requete-> execute(array($entree['total_dgda_seal'], $entree['id_dos']));
 
-		}
+		} 
 		public function MAJ_dispatch_pweto($id_dos, $dispatch_pweto){
-
+			
 			//Log
 			if ($this-> getDossier($id_dos)['dispatch_pweto'] != $dispatch_pweto) {
-
+				
 				$colonne = $this-> getNomColonneClient('dispatch_pweto', $_GET['id_cli'], $_GET['id_mod_trans'], $_GET['id_mod_trac']);
 				$this-> creerLogDossier($colonne, $dispatch_pweto, $id_dos, $_SESSION['id_util']);
 
@@ -62687,12 +62650,12 @@
 												WHERE id_dos = ?");
 			$requete-> execute(array($entree['dispatch_pweto'], $entree['id_dos']));
 
-		}
+		} 
 		public function MAJ_arrival_pweto($id_dos, $arrival_pweto){
-
+			
 			//Log
 			if ($this-> getDossier($id_dos)['arrival_pweto'] != $arrival_pweto) {
-
+				
 				$colonne = $this-> getNomColonneClient('arrival_pweto', $_GET['id_cli'], $_GET['id_mod_trans'], $_GET['id_mod_trac']);
 				$this-> creerLogDossier($colonne, $arrival_pweto, $id_dos, $_SESSION['id_util']);
 
@@ -62705,12 +62668,12 @@
 												WHERE id_dos = ?");
 			$requete-> execute(array($entree['arrival_pweto'], $entree['id_dos']));
 
-		}
+		} 
 		public function MAJ_barge_load($id_dos, $barge_load){
-
+			
 			//Log
 			if ($this-> getDossier($id_dos)['barge_load'] != $barge_load) {
-
+				
 				$colonne = $this-> getNomColonneClient('barge_load', $_GET['id_cli'], $_GET['id_mod_trans'], $_GET['id_mod_trac']);
 				$this-> creerLogDossier($colonne, $barge_load, $id_dos, $_SESSION['id_util']);
 
@@ -62723,12 +62686,12 @@
 												WHERE id_dos = ?");
 			$requete-> execute(array($entree['barge_load'], $entree['id_dos']));
 
-		}
+		} 
 		public function MAJ_barge_dispatch_date($id_dos, $barge_dispatch_date){
-
+			
 			//Log
 			if ($this-> getDossier($id_dos)['barge_dispatch_date'] != $barge_dispatch_date) {
-
+				
 				$colonne = $this-> getNomColonneClient('barge_dispatch_date', $_GET['id_cli'], $_GET['id_mod_trans'], $_GET['id_mod_trac']);
 				$this-> creerLogDossier($colonne, $barge_dispatch_date, $id_dos, $_SESSION['id_util']);
 
@@ -62741,12 +62704,12 @@
 												WHERE id_dos = ?");
 			$requete-> execute(array($entree['barge_dispatch_date'], $entree['id_dos']));
 
-		}
+		} 
 		public function MAJ_doc_receiv($id_dos, $doc_receiv){
-
+			
 			//Log
 			if ($this-> getDossier($id_dos)['doc_receiv'] != $doc_receiv) {
-
+				
 				$colonne = $this-> getNomColonneClient('doc_receiv', $_GET['id_cli'], $_GET['id_mod_trans'], $_GET['id_mod_trac']);
 				$this-> creerLogDossier($colonne, $doc_receiv, $id_dos, $_SESSION['id_util']);
 
@@ -62759,13 +62722,13 @@
 												WHERE id_dos = ?");
 			$requete-> execute(array($entree['doc_receiv'], $entree['id_dos']));
 
-		}
+		} 
 
 		public function MAJ_load_date($id_dos, $load_date){
-
+			
 			//Log
 			if ($this-> getDossier($id_dos)['load_date'] != $load_date) {
-
+				
 				$colonne = $this-> getNomColonneClient('load_date', $_GET['id_cli'], $_GET['id_mod_trans'], $_GET['id_mod_trac']);
 				$this-> creerLogDossier($colonne, $load_date, $id_dos, $_SESSION['id_util']);
 
@@ -62778,13 +62741,13 @@
 												WHERE id_dos = ?");
 			$requete-> execute(array($entree['load_date'], $entree['id_dos']));
 
-		}
+		} 
 
 		public function MAJ_nbr_bags($id_dos, $nbr_bags){
-
+			
 			//Log
 			if ($this-> getDossier($id_dos)['nbr_bags'] != $nbr_bags) {
-
+				
 				$colonne = $this-> getNomColonneClient('nbr_bags', $_GET['id_cli'], $_GET['id_mod_trans'], $_GET['id_mod_trac']);
 				$this-> creerLogDossier($colonne, $nbr_bags, $id_dos, $_SESSION['id_util']);
 
@@ -62797,12 +62760,12 @@
 												WHERE id_dos = ?");
 			$requete-> execute(array($entree['nbr_bags'], $entree['id_dos']));
 
-		}
+		} 
 		public function MAJ_docs_sncc($id_dos, $docs_sncc){
-
+			
 			//Log
 			if ($this-> getDossier($id_dos)['docs_sncc'] != $docs_sncc) {
-
+				
 				$colonne = $this-> getNomColonneClient('docs_sncc', $_GET['id_cli'], $_GET['id_mod_trans'], $_GET['id_mod_trac']);
 				$this-> creerLogDossier($colonne, $docs_sncc, $id_dos, $_SESSION['id_util']);
 
@@ -62815,12 +62778,12 @@
 												WHERE id_dos = ?");
 			$requete-> execute(array($entree['docs_sncc'], $entree['id_dos']));
 
-		}
+		} 
 		public function MAJ_sncc_sakania($id_dos, $sncc_sakania){
-
+			
 			//Log
 			if ($this-> getDossier($id_dos)['sncc_sakania'] != $sncc_sakania) {
-
+				
 				$colonne = $this-> getNomColonneClient('sncc_sakania', $_GET['id_cli'], $_GET['id_mod_trans'], $_GET['id_mod_trac']);
 				$this-> creerLogDossier($colonne, $sncc_sakania, $id_dos, $_SESSION['id_util']);
 
@@ -62833,12 +62796,12 @@
 												WHERE id_dos = ?");
 			$requete-> execute(array($entree['sncc_sakania'], $entree['id_dos']));
 
-		}
+		} 
 		public function MAJ_sakania_date($id_dos, $sakania_date){
-
+			
 			//Log
 			if ($this-> getDossier($id_dos)['sakania_date'] != $sakania_date) {
-
+				
 				$colonne = $this-> getNomColonneClient('sakania_date', $_GET['id_cli'], $_GET['id_mod_trans'], $_GET['id_mod_trac']);
 				$this-> creerLogDossier($colonne, $sakania_date, $id_dos, $_SESSION['id_util']);
 
@@ -62851,12 +62814,12 @@
 												WHERE id_dos = ?");
 			$requete-> execute(array($entree['sakania_date'], $entree['id_dos']));
 
-		}
+		} 
 		public function MAJ_destination($id_dos, $destination){
-
+			
 			//Log
 			if ($this-> getDossier($id_dos)['destination'] != $destination) {
-
+				
 				$colonne = $this-> getNomColonneClient('destination', $_GET['id_cli'], $_GET['id_mod_trans'], $_GET['id_mod_trac']);
 				$this-> creerLogDossier($colonne, $destination, $id_dos, $_SESSION['id_util']);
 
@@ -62871,10 +62834,10 @@
 
 		}
 		public function MAJ_impala_sncc($id_dos, $impala_sncc){
-
+			
 			//Log
 			if ($this-> getDossier($id_dos)['impala_sncc'] != $impala_sncc) {
-
+				
 				$colonne = $this-> getNomColonneClient('impala_sncc', $_GET['id_cli'], $_GET['id_mod_trans'], $_GET['id_mod_trac']);
 				$this-> creerLogDossier($colonne, $impala_sncc, $id_dos, $_SESSION['id_util']);
 
@@ -62887,10 +62850,10 @@
 												WHERE id_dos = ?");
 			$requete-> execute(array($entree['impala_sncc'], $entree['id_dos']));
 
-		}
+		} 
 
 		public function MAJ_delay_reason($id_dos, $delay_reason){
-
+			
 			$this-> creerLogDossier('delay_reason', $delay_reason, $id_dos, $_SESSION['id_util']);
 
 			include('connexion.php');
@@ -62900,13 +62863,13 @@
 												WHERE id_dos = ?");
 			$requete-> execute(array($entree['delay_reason'], $entree['id_dos']));
 
-		}
+		} 
 
 		public function MAJ_barge($id_dos, $barge){
-
+			
 			//Log
 			if ($this-> getDossier($id_dos)['barge'] != $barge) {
-
+				
 				$colonne = $this-> getNomColonneClient('barge', $_GET['id_cli'], $_GET['id_mod_trans'], $_GET['id_mod_trac']);
 				$this-> creerLogDossier($colonne, $barge, $id_dos, $_SESSION['id_util']);
 
@@ -62919,13 +62882,13 @@
 												WHERE id_dos = ?");
 			$requete-> execute(array($entree['barge'], $entree['id_dos']));
 
-		}
+		} 
 
 		public function MAJ_ship_num($id_dos, $ship_num){
-
+			
 			//Log
 			if ($this-> getDossier($id_dos)['ship_num'] != $ship_num) {
-
+				
 				$colonne = $this-> getNomColonneClient('ship_num', $_GET['id_cli'], $_GET['id_mod_trans'], $_GET['id_mod_trac']);
 				$this-> creerLogDossier($colonne, $ship_num, $id_dos, $_SESSION['id_util']);
 
@@ -62938,13 +62901,13 @@
 												WHERE id_dos = ?");
 			$requete-> execute(array($entree['ship_num'], $entree['id_dos']));
 
-		}
+		} 
 
 		public function MAJ_kapulo_load($id_dos, $kapulo_load){
-
+			
 			//Log
 			if ($this-> getDossier($id_dos)['kapulo_load'] != $kapulo_load) {
-
+				
 				$colonne = $this-> getNomColonneClient('kapulo_load', $_GET['id_cli'], $_GET['id_mod_trans'], $_GET['id_mod_trac']);
 				$this-> creerLogDossier($colonne, $kapulo_load, $id_dos, $_SESSION['id_util']);
 
@@ -62960,10 +62923,10 @@
 		}
 
 		public function MAJ_facture($id_dos, $facture){
-
+			
 			//Log
 			if ($this-> getDossier($id_dos)['facture'] != $facture) {
-
+				
 				$colonne = $this-> getNomColonneClient('facture', $_GET['id_cli'], $_GET['id_mod_trans'], $_GET['id_mod_trac']);
 				$this-> creerLogDossier($colonne, $facture, $id_dos, $_SESSION['id_util']);
 
@@ -62976,13 +62939,13 @@
 												WHERE id_dos = ?");
 			$requete-> execute(array($entree['facture'], $entree['id_dos']));
 
-		}
+		} 
 
 		public function MAJ_bond_warehouse($id_dos, $bond_warehouse){
-
+			
 			//Log
 			if ($this-> getDossier($id_dos)['bond_warehouse'] != $bond_warehouse) {
-
+				
 				$colonne = $this-> getNomColonneClient('bond_warehouse', $_GET['id_cli'], $_GET['id_mod_trans'], $_GET['id_mod_trac']);
 				$this-> creerLogDossier($colonne, $bond_warehouse, $id_dos, $_SESSION['id_util']);
 
@@ -62995,14 +62958,14 @@
 												WHERE id_dos = ?");
 			$requete-> execute(array($entree['bond_warehouse'], $entree['id_dos']));
 
-		}
+		} 
 
 		// lmc_id
 		public function MAJ_lmc_id($id_dos, $lmc_id){
-
+			
 			//Log
 			if ($this-> getDossier($id_dos)['lmc_id'] != $lmc_id) {
-
+				
 				$this-> creerLogDossier('lmc_id', $lmc_id, $id_dos, $_SESSION['id_util']);
 
 			}
@@ -63014,14 +62977,14 @@
 												WHERE id_dos = ?");
 			$requete-> execute(array($entree['lmc_id'], $entree['id_dos']));
 
-		}
+		} 
 
 		// ogefrem_ref_fact
 		public function MAJ_ogefrem_ref_fact($id_dos, $ogefrem_ref_fact){
-
+			
 			//Log
 			if ($this-> getDossier($id_dos)['ogefrem_ref_fact'] != $ogefrem_ref_fact) {
-
+				
 				$this-> creerLogDossier('ogefrem_ref_fact', $ogefrem_ref_fact, $id_dos, $_SESSION['id_util']);
 
 			}
@@ -63033,10 +62996,10 @@
 												WHERE id_dos = ?");
 			$requete-> execute(array($entree['ogefrem_ref_fact'], $entree['id_dos']));
 
-		}
+		} 
 
 		public function MAJ_apurement_lic($num_lic, $apurement){
-
+			
 			include('connexion.php');
 			$entree['num_lic'] = $num_lic;
 			$entree['apurement'] = $apurement;
@@ -63044,10 +63007,10 @@
 												WHERE num_lic = ?");
 			$requete-> execute(array($entree['apurement'], $entree['num_lic']));
 
-		}
-
+		} 
+		
 		public function MAJ_affichier_tracking($num_lic, $affichier_tracking){
-
+			
 			include('connexion.php');
 			$entree['num_lic'] = $num_lic;
 			$entree['affichier_tracking'] = $affichier_tracking;
@@ -63055,14 +63018,14 @@
 												WHERE num_lic = ?");
 			$requete-> execute(array($entree['affichier_tracking'], $entree['num_lic']));
 
-		}
+		} 
 
 		/*
 		MAJ dossier logistique
 		*/
 
 		public function MAJ_ref_mca_logistic($ref_dos, $ref_mca){
-
+			
 			include('connexion.php');
 			$entree['ref_dos'] = $ref_dos;
 			$entree['ref_mca'] = $ref_mca;
@@ -63070,10 +63033,10 @@
 												WHERE ref_dos = ?");
 			$requete-> execute(array($entree['ref_mca'], $entree['ref_dos']));
 
-		}
+		} 
 
 		public function MAJ_road_manif_logistic($ref_dos, $road_manif){
-
+			
 			include('connexion.php');
 			$entree['ref_dos'] = $ref_dos;
 			$entree['road_manif'] = $road_manif;
@@ -63081,10 +63044,10 @@
 												WHERE ref_dos = ?");
 			$requete-> execute(array($entree['road_manif'], $entree['ref_dos']));
 
-		}
+		} 
 
 		public function MAJ_ref_fact_logistic($ref_dos, $ref_fact){
-
+			
 			include('connexion.php');
 			$entree['ref_dos'] = $ref_dos;
 			$entree['ref_fact'] = $ref_fact;
@@ -63092,10 +63055,10 @@
 												WHERE ref_dos = ?");
 			$requete-> execute(array($entree['ref_fact'], $entree['ref_dos']));
 
-		}
+		} 
 
 		public function MAJ_ref_batch_logistic($ref_dos, $ref_batch){
-
+			
 			include('connexion.php');
 			$entree['ref_dos'] = $ref_dos;
 			$entree['ref_batch'] = $ref_batch;
@@ -63103,10 +63066,10 @@
 												WHERE ref_dos = ?");
 			$requete-> execute(array($entree['ref_batch'], $entree['ref_dos']));
 
-		}
+		} 
 
 		public function MAJ_poids_logistic($ref_dos, $poids){
-
+			
 			include('connexion.php');
 			$entree['ref_dos'] = $ref_dos;
 			$entree['poids'] = $poids;
@@ -63114,10 +63077,10 @@
 												WHERE ref_dos = ?");
 			$requete-> execute(array($entree['poids'], $entree['ref_dos']));
 
-		}
+		} 
 
 		public function MAJ_ref_po_logistic($ref_dos, $ref_po){
-
+			
 			include('connexion.php');
 			$entree['ref_dos'] = $ref_dos;
 			$entree['ref_po'] = $ref_po;
@@ -63125,10 +63088,10 @@
 												WHERE ref_dos = ?");
 			$requete-> execute(array($entree['ref_po'], $entree['ref_dos']));
 
-		}
+		} 
 
 		public function MAJ_montant_po_logistic($ref_dos, $montant_po){
-
+			
 			include('connexion.php');
 			$entree['ref_dos'] = $ref_dos;
 			$entree['montant_po'] = $montant_po;
@@ -63136,10 +63099,10 @@
 												WHERE ref_dos = ?");
 			$requete-> execute(array($entree['montant_po'], $entree['ref_dos']));
 
-		}
+		} 
 
 		public function MAJ_origine_logistic($ref_dos, $origine){
-
+			
 			include('connexion.php');
 			$entree['ref_dos'] = $ref_dos;
 			$entree['origine'] = $origine;
@@ -63147,10 +63110,10 @@
 												WHERE ref_dos = ?");
 			$requete-> execute(array($entree['origine'], $entree['ref_dos']));
 
-		}
+		} 
 
 		public function MAJ_destination_logistic($ref_dos, $destination){
-
+			
 			include('connexion.php');
 			$entree['ref_dos'] = $ref_dos;
 			$entree['destination'] = $destination;
@@ -63158,10 +63121,10 @@
 												WHERE ref_dos = ?");
 			$requete-> execute(array($entree['destination'], $entree['ref_dos']));
 
-		}
+		} 
 
 		public function MAJ_date_dep_fbm_logistic($ref_dos, $date_dep_fbm){
-
+			
 			include('connexion.php');
 			$entree['ref_dos'] = $ref_dos;
 			$entree['date_dep_fbm'] = $date_dep_fbm;
@@ -63169,10 +63132,10 @@
 												WHERE ref_dos = ?");
 			$requete-> execute(array($entree['date_dep_fbm'], $entree['ref_dos']));
 
-		}
+		} 
 
 		public function MAJ_transit_logistic($ref_dos, $transit){
-
+			
 			include('connexion.php');
 			$entree['ref_dos'] = $ref_dos;
 			$entree['transit'] = $transit;
@@ -63180,10 +63143,10 @@
 												WHERE ref_dos = ?");
 			$requete-> execute(array($entree['transit'], $entree['ref_dos']));
 
-		}
+		} 
 
 		public function MAJ_date_transit_logistic($ref_dos, $date_transit){
-
+			
 			include('connexion.php');
 			$entree['ref_dos'] = $ref_dos;
 			$entree['date_transit'] = $date_transit;
@@ -63191,10 +63154,10 @@
 												WHERE ref_dos = ?");
 			$requete-> execute(array($entree['date_transit'], $entree['ref_dos']));
 
-		}
+		} 
 
 		public function MAJ_date_fd_logistic($ref_dos, $date_fd){
-
+			
 			include('connexion.php');
 			$entree['ref_dos'] = $ref_dos;
 			$entree['date_fd'] = $date_fd;
@@ -63202,10 +63165,10 @@
 												WHERE ref_dos = ?");
 			$requete-> execute(array($entree['date_fd'], $entree['ref_dos']));
 
-		}
+		} 
 
 		public function MAJ_deliv_date_logistic($ref_dos, $deliv_date){
-
+			
 			include('connexion.php');
 			$entree['ref_dos'] = $ref_dos;
 			$entree['deliv_date'] = $deliv_date;
@@ -63213,10 +63176,10 @@
 												WHERE ref_dos = ?");
 			$requete-> execute(array($entree['deliv_date'], $entree['ref_dos']));
 
-		}
+		} 
 
 		public function MAJ_ref_pod_logistic($ref_dos, $ref_pod){
-
+			
 			include('connexion.php');
 			$entree['ref_dos'] = $ref_dos;
 			$entree['ref_pod'] = $ref_pod;
@@ -63224,10 +63187,10 @@
 												WHERE ref_dos = ?");
 			$requete-> execute(array($entree['ref_pod'], $entree['ref_dos']));
 
-		}
+		} 
 
 		public function MAJ_statut_logistic($ref_dos, $statut){
-
+			
 			include('connexion.php');
 			$entree['ref_dos'] = $ref_dos;
 			$entree['statut'] = $statut;
@@ -63235,10 +63198,10 @@
 												WHERE ref_dos = ?");
 			$requete-> execute(array($entree['statut'], $entree['ref_dos']));
 
-		}
+		} 
 
 		public function MAJ_remarque_logistic($ref_dos, $remarque){
-
+			
 			include('connexion.php');
 			$entree['ref_dos'] = $ref_dos;
 			$entree['remarque'] = $remarque;
@@ -63246,10 +63209,10 @@
 												WHERE ref_dos = ?");
 			$requete-> execute(array($entree['remarque'], $entree['ref_dos']));
 
-		}
+		} 
 
 		public function MAJ_point_load_logistic($ref_dos, $point_load){
-
+			
 			include('connexion.php');
 			$entree['ref_dos'] = $ref_dos;
 			$entree['point_load'] = $point_load;
@@ -63257,9 +63220,9 @@
 												WHERE ref_dos = ?");
 			$requete-> execute(array($entree['point_load'], $entree['ref_dos']));
 
-		}
+		} 
 		public function MAJ_horse_logistic($ref_dos, $horse){
-
+			
 			include('connexion.php');
 			$entree['ref_dos'] = $ref_dos;
 			$entree['horse'] = $horse;
@@ -63267,9 +63230,9 @@
 												WHERE ref_dos = ?");
 			$requete-> execute(array($entree['horse'], $entree['ref_dos']));
 
-		}
+		} 
 		public function MAJ_trailer_1_logistic($ref_dos, $trailer_1){
-
+			
 			include('connexion.php');
 			$entree['ref_dos'] = $ref_dos;
 			$entree['trailer_1'] = $trailer_1;
@@ -63277,9 +63240,9 @@
 												WHERE ref_dos = ?");
 			$requete-> execute(array($entree['trailer_1'], $entree['ref_dos']));
 
-		}
+		} 
 		public function MAJ_nom_chauf_logistic($ref_dos, $nom_chauf){
-
+			
 			include('connexion.php');
 			$entree['ref_dos'] = $ref_dos;
 			$entree['nom_chauf'] = $nom_chauf;
@@ -63287,9 +63250,9 @@
 												WHERE ref_dos = ?");
 			$requete-> execute(array($entree['nom_chauf'], $entree['ref_dos']));
 
-		}
+		} 
 		public function MAJ_lic_num_logistic($ref_dos, $lic_num){
-
+			
 			include('connexion.php');
 			$entree['ref_dos'] = $ref_dos;
 			$entree['lic_num'] = $lic_num;
@@ -63297,9 +63260,9 @@
 												WHERE ref_dos = ?");
 			$requete-> execute(array($entree['lic_num'], $entree['ref_dos']));
 
-		}
+		} 
 		public function MAJ_tel_chauf_logistic($ref_dos, $tel_chauf){
-
+			
 			include('connexion.php');
 			$entree['ref_dos'] = $ref_dos;
 			$entree['tel_chauf'] = $tel_chauf;
@@ -63307,9 +63270,9 @@
 												WHERE ref_dos = ?");
 			$requete-> execute(array($entree['tel_chauf'], $entree['ref_dos']));
 
-		}
+		} 
 		public function MAJ_date_load_logistic($ref_dos, $date_load){
-
+			
 			include('connexion.php');
 			$entree['ref_dos'] = $ref_dos;
 			$entree['date_load'] = $date_load;
@@ -63317,9 +63280,9 @@
 												WHERE ref_dos = ?");
 			$requete-> execute(array($entree['date_load'], $entree['ref_dos']));
 
-		}
+		} 
 		public function MAJ_date_dispatch_logistic($ref_dos, $date_dispatch){
-
+			
 			include('connexion.php');
 			$entree['ref_dos'] = $ref_dos;
 			$entree['date_dispatch'] = $date_dispatch;
@@ -63327,9 +63290,9 @@
 												WHERE ref_dos = ?");
 			$requete-> execute(array($entree['date_dispatch'], $entree['ref_dos']));
 
-		}
+		} 
 		public function MAJ_frontiere_logistic($ref_dos, $frontiere){
-
+			
 			include('connexion.php');
 			$entree['ref_dos'] = $ref_dos;
 			$entree['frontiere'] = $frontiere;
@@ -63337,9 +63300,9 @@
 												WHERE ref_dos = ?");
 			$requete-> execute(array($entree['frontiere'], $entree['ref_dos']));
 
-		}
+		} 
 		public function MAJ_front_in_logistic($ref_dos, $front_in){
-
+			
 			include('connexion.php');
 			$entree['ref_dos'] = $ref_dos;
 			$entree['front_in'] = $front_in;
@@ -63347,9 +63310,9 @@
 												WHERE ref_dos = ?");
 			$requete-> execute(array($entree['front_in'], $entree['ref_dos']));
 
-		}
+		}  
 		public function MAJ_front_out_logistic($ref_dos, $front_out){
-
+			
 			include('connexion.php');
 			$entree['ref_dos'] = $ref_dos;
 			$entree['front_out'] = $front_out;
@@ -63357,9 +63320,9 @@
 												WHERE ref_dos = ?");
 			$requete-> execute(array($entree['front_out'], $entree['ref_dos']));
 
-		}
+		}  
 		public function MAJ_localisation_logistic($ref_dos, $localisation){
-
+			
 			include('connexion.php');
 			$entree['ref_dos'] = $ref_dos;
 			$entree['localisation'] = $localisation;
@@ -63367,14 +63330,14 @@
 												WHERE ref_dos = ?");
 			$requete-> execute(array($entree['localisation'], $entree['ref_dos']));
 
-		}
+		} 
 
 		public function MAJ_send_mail_facture_dossier($ref_fact, $id_util_mail){
 
 			include('connexion.php');
 			$entree['ref_fact'] = $ref_fact;
 			$entree['id_util_mail'] = $id_util_mail;
-
+			
 			$requete = $connexion-> prepare("UPDATE facture_dossier SET id_util_mail = ?, date_mail = NOW()
 												WHERE ref_fact = ?");
 			$requete-> execute(array($entree['id_util_mail'], $entree['ref_fact']));
@@ -63386,7 +63349,7 @@
 			include('connexion.php');
 			$entree['ref_fact'] = $ref_fact;
 			$entree['tax_duty_part'] = $tax_duty_part;
-
+			
 			$requete = $connexion-> prepare("UPDATE facture_dossier SET tax_duty_part = ?
 												WHERE ref_fact = ?");
 			$requete-> execute(array($entree['tax_duty_part'], $entree['ref_fact']));
@@ -63398,7 +63361,7 @@
 			include('connexion.php');
 			$entree['ref_fact'] = $ref_fact;
 			$entree['validation'] = $validation;
-
+			
 			$requete = $connexion-> prepare("UPDATE facture_dossier SET validation = ?, id_util_validation = ?, date_validation = NOW()
 												WHERE ref_fact = ?");
 			$requete-> execute(array($entree['validation'], $_SESSION['id_util'], $entree['ref_fact']));
@@ -63410,7 +63373,7 @@
 			include('connexion.php');
 			$entree['ref_note'] = $ref_note;
 			$entree['validation'] = $validation;
-
+			
 			$requete = $connexion-> prepare("UPDATE note_debit SET validation = ?, id_util_validation = ?, date_validation = NOW()
 												WHERE ref_note = ?");
 			$requete-> execute(array($entree['validation'], $_SESSION['id_util'], $entree['ref_note']));
@@ -63433,7 +63396,7 @@
 
 		//Methode permettant de supprimer
 		public function deleteLicenceUpload($id_mod_lic, $id_util){
-
+			
 			include('connexion.php');
 			$entree['id_mod_lic'] = $id_mod_lic;
 			$entree['id_util'] = $id_util;
@@ -63447,7 +63410,7 @@
 													AND etat = '0'");
 			$requete-> execute(array($entree['id_mod_lic'], $entree['id_util']));
 
-		}
+		} 
 
 		public function supprimerFactureDossier($ref_fact){
 
@@ -63533,7 +63496,7 @@
 		}
 
 		public function deleteDossierUpload($id_mod_lic, $id_util){
-
+			
 			include('connexion.php');
 			$entree['id_mod_lic'] = $id_mod_lic;
 			$entree['id_util'] = $id_util;
@@ -63547,10 +63510,10 @@
 													AND etat = '0'");
 			$requete-> execute(array($entree['id_mod_lic'], $entree['id_util']));
 
-		}
+		} 
 
 		public function deleteDossierUploadTracking($id_mod_lic, $id_util){
-
+			
 			include('connexion.php');
 			$entree['id_mod_lic'] = $id_mod_lic;
 			$entree['id_util'] = $id_util;
@@ -63564,10 +63527,10 @@
 													AND etat = '0'");
 			$requete-> execute(array($entree['id_mod_lic'], $entree['id_util']));
 
-		}
+		} 
 
 		public function deleteDossierEBUpload($id_util){
-
+			
 			include('connexion.php');
 			$entree['id_util'] = $id_util;
 
@@ -63579,10 +63542,10 @@
 													AND etat = '0'");
 			$requete-> execute(array($entree['id_util']));
 
-		}
+		} 
 
 		public function deleteDossier($id_dos){
-
+			
 			include('connexion.php');
 			$entree['id_dos'] = $id_dos;
 
@@ -63593,10 +63556,10 @@
 												WHERE id_dos = ?");
 			$requete-> execute(array($entree['id_dos']));
 
-		}
+		} 
 
 		public function getServiceFees(){
-
+			
 			include('connexion.php');
 			$nbre = 0;
 
@@ -63632,7 +63595,7 @@
 			<input type="hidden" name="nbre" value="<?php echo $nbre;?>">
 			<?php
 
-		}
+		} 
 
 
 		public function getNoteDebitAjax($id_cli, $id_mod_lic, $statut){
@@ -63657,15 +63620,15 @@
 													DATE_FORMAT(note.date_create, '%d/%m/%Y') AS date_note,
 													dep.nom_dep AS nom_dep,
 													CONCAT('<button class=\"btn btn-xs bg-info square-btn-adjust\" onclick=\"window.open(\'',mnd.view_note,'?ref_note=',note.ref_note,'\',\'pop3\',\'width=1000,height=800\');\" title=\"View note\">
-									                    <i class=\"fas fa-eye\"></i>
+									                    <i class=\"fas fa-eye\"></i> 
 									                </button> <button class=\"btn btn-xs bg-primary square-btn-adjust\" onclick=\"validerNoteDebit(\'',note.ref_note,'\');\" title=\"Validate\">
-									                    <i class=\"fas fa-check\"></i>
-									                </button>
+									                    <i class=\"fas fa-check\"></i> 
+									                </button> 
 									                <button class=\"btn btn-xs bg-warning square-btn-adjust\" onclick=\"modal_edit_note_debit(\'',note.ref_note,'\', \'',note.date_create,'\');\" title=\"Edit\">
-									                    <i class=\"fas fa-edit\"></i>
+									                    <i class=\"fas fa-edit\"></i> 
 									                </button>
 									                <button class=\"btn btn-xs bg-danger square-btn-adjust\" onclick=\"supprimerNoteDebit(\'',note.ref_note,'\');\" title=\"Delete\">
-									                    <i class=\"fas fa-times\"></i>
+									                    <i class=\"fas fa-times\"></i> 
 									                </button>') AS action,
 													(
 														SUM(IF(det.tva='1',
@@ -63698,10 +63661,10 @@
 													DATE_FORMAT(note.date_create, '%d/%m/%Y') AS date_note,
 													dep.nom_dep AS nom_dep,
 													CONCAT('<button class=\"btn btn-xs bg-info square-btn-adjust\" onclick=\"window.open(\'',mnd.view_note,'?ref_note=',note.ref_note,'\',\'pop3\',\'width=1000,height=800\');\" title=\"View note\">
-											                    <i class=\"fas fa-eye\"></i>
+											                    <i class=\"fas fa-eye\"></i> 
 											                </button>
 									                <button class=\"btn btn-xs bg-warning square-btn-adjust\" onclick=\"modal_edit_note_debit(\'',note.ref_note,'\', \'',note.date_create,'\');\" title=\"Edit\">
-									                    <i class=\"fas fa-edit\"></i>
+									                    <i class=\"fas fa-edit\"></i> 
 									                </button>') AS action,
 													(
 														SUM(IF(det.tva='1',
@@ -63743,15 +63706,15 @@
 		function delete_aff_modele_note_debit($id_model_nd, $id_cli, $id_mod_lic, $id_dep){
 			include("connexion.php");
 
-			$entree['id_model_nd'] = $id_model_nd;
-			$entree['id_cli'] = $id_cli;
-			$entree['id_mod_lic'] = $id_mod_lic;
+			$entree['id_model_nd'] = $id_model_nd; 
+			$entree['id_cli'] = $id_cli; 
+			$entree['id_mod_lic'] = $id_mod_lic; 
 			$entree['id_dep'] = $id_dep;
 
 			$requete = $connexion-> prepare('DELETE FROM affectation_modele_note_debit_client
-												WHERE id_model_nd = ?
+												WHERE id_model_nd = ? 
 													AND id_cli = ?
-													AND id_mod_lic = ?
+													AND id_mod_lic = ? 
 													AND id_dep =?');
 			$requete-> execute(array($entree['id_model_nd'], $entree['id_cli'], $entree['id_mod_lic'], $entree['id_dep']));
 
@@ -63760,9 +63723,9 @@
 		function add_commentaire_dossier($id_dos, $id_col, $valeur){
 			include("connexion.php");
 
-			$entree['id_dos'] = $id_dos;
-			$entree['id_col'] = $id_col;
-			$entree['valeur'] = $valeur;
+			$entree['id_dos'] = $id_dos; 
+			$entree['id_col'] = $id_col; 
+			$entree['valeur'] = $valeur; 
 			// $entree['id_dep'] = $id_dep;
 
 			$requete = $connexion-> prepare('INSERT INTO commentaire_dossier(id_dos, id_col, valeur, id_util)
@@ -63774,9 +63737,9 @@
 		function add_aff_modele_note_debit($id_model_nd, $id_cli, $id_mod_lic, $id_dep){
 			include("connexion.php");
 
-			$entree['id_model_nd'] = $id_model_nd;
-			$entree['id_cli'] = $id_cli;
-			$entree['id_mod_lic'] = $id_mod_lic;
+			$entree['id_model_nd'] = $id_model_nd; 
+			$entree['id_cli'] = $id_cli; 
+			$entree['id_mod_lic'] = $id_mod_lic; 
 			$entree['id_dep'] = $id_dep;
 
 			$requete = $connexion-> prepare('INSERT INTO affectation_modele_note_debit_client(id_model_nd, id_cli, id_mod_lic, id_dep)
@@ -63799,7 +63762,7 @@
 			$entree['id_util_visa_dept'] = $id_util_visa_dept;
 			$entree['id_dep'] = $id_dep;
 
-			$requete = $connexion-> prepare('INSERT INTO demande_fond(id_dept, id_site, beneficiaire, id_cli,
+			$requete = $connexion-> prepare('INSERT INTO demande_fond(id_dept, id_site, beneficiaire, id_cli, 
 																		cash, montant, usd, libelle, id_util_visa_dept, id_util, id_dep)
 												VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
 			$requete-> execute(array($entree['id_dept'], $entree['id_site'], $entree['beneficiaire'], $entree['id_cli'], $entree['cash'], $entree['montant'], $entree['usd'], $entree['libelle'], $entree['id_util_visa_dept'], $_SESSION['id_util'], $_POST['id_dep']));
@@ -63822,16 +63785,16 @@
 			$entree['id_df'] = $id_df;
 
 			$requete = $connexion-> prepare('UPDATE demande_fond
-												SET id_dept = ?,
-													id_site = ?,
-													beneficiaire = ?,
-													id_cli = ?,
-													cash = ?,
-													montant = ?,
-													usd = ?,
-													libelle = ?,
-													id_util_visa_dept = ?,
-													id_util = ?,
+												SET id_dept = ?, 
+													id_site = ?, 
+													beneficiaire = ?, 
+													id_cli = ?, 
+													cash = ?, 
+													montant = ?, 
+													usd = ?, 
+													libelle = ?, 
+													id_util_visa_dept = ?, 
+													id_util = ?, 
 													id_dep = ?,
 													id_util_reject_dept = NULL,
 													date_reject_dept = NULL,
@@ -63886,13 +63849,13 @@
 															</span>') AS btn_action
 											FROM demande_fond df
 												LEFT JOIN depense dep
-													ON df.id_dep = dep.id_dep
+													ON df.id_dep = dep.id_dep 
 												LEFT JOIN site
-													ON df.id_site = site.id_site
+													ON df.id_site = site.id_site 
 												LEFT JOIN departement dept
 													ON df.id_dept = dept.id_dept
 												LEFT JOIN client cl
-													ON df.id_cli = cl.id_cli
+													ON df.id_cli = cl.id_cli 
 												LEFT JOIN utilisateur util
 													ON df.id_util = util.id_util
 												-- LEFT JOIN depense_dossier depdos
@@ -63957,13 +63920,13 @@
 															</span>') AS btn_action
 											FROM demande_fond df
 												LEFT JOIN depense dep
-													ON df.id_dep = dep.id_dep
+													ON df.id_dep = dep.id_dep 
 												LEFT JOIN site
-													ON df.id_site = site.id_site
+													ON df.id_site = site.id_site 
 												LEFT JOIN departement dept
 													ON df.id_dept = dept.id_dept
 												LEFT JOIN client cl
-													ON df.id_cli = cl.id_cli
+													ON df.id_cli = cl.id_cli 
 												LEFT JOIN utilisateur util
 													ON df.id_util = util.id_util
 											$sqlView
@@ -64000,7 +63963,7 @@
 												util.nom_util AS nom_util,
 												IF(df.usd='1', 'USD', 'CDF') AS monnaie,
 												IF(df.cash='1', 'CASH', 'BANK') AS label_cash,
-
+												
 												IF(df.id_util_reject_dept IS NOT NULL,
 													'Rejected',
 													IF(df.date_visa_dept IS NULL,
@@ -64060,7 +64023,7 @@
 												util.nom_util AS nom_util,
 												IF(df.usd='1', 'USD', 'CDF') AS monnaie,
 												IF(df.cash='1', 'CASH', 'BANK') AS label_cash,
-
+												
 												IF(df.id_util_reject_dept IS NOT NULL,
 													'Rejected',
 													IF(df.date_visa_dept IS NULL,
@@ -64221,7 +64184,7 @@
 												util.nom_util AS nom_util,
 												IF(df.usd='1', 'USD', 'CDF') AS monnaie,
 												IF(df.cash='1', 'CASH', 'BANK') AS label_cash,
-
+												
 												IF(df.id_util_reject_dept IS NOT NULL,
 													'Rejected',
 													IF(df.date_visa_dept IS NULL,
@@ -64390,7 +64353,7 @@
 			$entree['montant_fact'] = $montant_fact;
 
 			$requete = $connexion-> prepare("UPDATE demande_fond
-												SET a_facturer = ?, montant_fact = ?,
+												SET a_facturer = ?, montant_fact = ?, 
 													id_util_visa_dept = ?, date_visa_dept = NOW()
 												WHERE id_df = ?");
 			$requete-> execute(array($entree['a_facturer'], $entree['montant_fact'], $_SESSION['id_util'], $entree['id_df']));
@@ -64405,7 +64368,7 @@
 			$entree['nom_recep_fond'] = $nom_recep_fond;
 
 			$requete = $connexion-> prepare("UPDATE demande_fond
-												SET ref_decaiss = ?, montant_decaiss = ?,
+												SET ref_decaiss = ?, montant_decaiss = ?, 
 													id_util_decaiss = ?, date_decaiss = NOW(),
 													nom_recep_fond = ?
 												WHERE id_df = ?");
@@ -64454,10 +64417,10 @@
 			include('connexion.php');
 			// $entree['id_df'] = $id_df;
 
-			$requete = $connexion-> prepare("SELECT *
-												FROM demande_fond
-												WHERE id_util = ?
-												ORDER BY id_df DESC
+			$requete = $connexion-> prepare("SELECT * 
+												FROM demande_fond 
+												WHERE id_util = ? 
+												ORDER BY id_df DESC 
 												LIMIT 0, 1");
 			$requete-> execute(array($_SESSION['id_util']));
 			$reponse = $requete-> fetch();
@@ -64525,7 +64488,7 @@
 			}
 			// echo $mot_cle;
 			$table = '';
-
+			
 			$requete = $connexion-> prepare("SELECT dos.ref_dos AS ref_dos,
 															dos.id_dos AS id_dos
 														FROM dossier dos, client cl
@@ -64550,7 +64513,7 @@
 							<td>'.$reponse['ref_dos'].'</td>
 						</tr>';
 			}$requete-> closeCursor();
-
+			
 			return $table;
 
 		}
@@ -64567,7 +64530,7 @@
 			}
 			// echo $mot_cle;
 			$table = '';
-
+			
 			$requete = $connexion-> query("SELECT dos.ref_dos AS ref_dos,
 															dos.id_dos AS id_dos
 														FROM dossier dos, client cl, depense_dossier depdos, demande_fond df
@@ -64585,7 +64548,7 @@
 							<td>'.$reponse['ref_dos'].'</td>
 						</tr>';
 			}$requete-> closeCursor();
-
+			
 			return $table;
 
 		}
@@ -64596,7 +64559,7 @@
 			$entree['id_df'] = $id_df;
 
 			$table = '';
-
+			
 			$requete = $connexion-> prepare("SELECT dos.ref_dos AS ref_dos,
 															dos.id_dos AS id_dos,
 															depdos.montant AS montant,
@@ -64618,7 +64581,7 @@
 							<td><span class="btn btn-xs text-danger"  onclick="delete_depense_dossier(\''.$reponse['id_dos'].'\', \''.$reponse['id_df'].'\');"><i class="fa fa-times"></i></span></td>
 						</tr>';
 			}$requete-> closeCursor();
-
+			
 			return $table;
 
 		}
@@ -64629,7 +64592,7 @@
 			$entree['id_cli'] = $id_cli;
 
 			$table = '';
-
+			
 			$requete = $connexion-> prepare("SELECT num_lic,
 													SUBSTRING(num_lic, 1, 10) AS label_num_lic
 												FROM licence
@@ -64644,7 +64607,7 @@
                 </a>
 				<?php
 			}$requete-> closeCursor();
-
+			
 			// return $table;
 
 		}
@@ -64666,7 +64629,7 @@
 							<td>All Files</td>
 						</tr>
 						<tr><td><hr></td></tr>';
-
+			
 			$requete = $connexion-> prepare("SELECT num_lic,
 													SUBSTRING(num_lic, 1, 10) AS label_num_lic
 												FROM licence
@@ -64683,7 +64646,7 @@
 							<td>'.$reponse['num_lic'].'</td>
 						</tr>';
 			}$requete-> closeCursor();
-
+			
 			return $table;
 
 		}
@@ -64756,7 +64719,7 @@
 			$rows = array();
 			$compteur = 0;
 
-			$requete = $connexion-> query("SELECT dos.ref_dos AS ref_dos,
+			$requete = $connexion-> query("SELECT dos.ref_dos AS ref_dos, 
 												dos.remarque AS remarque,
 												cl.nom_cli AS nom_cli
 											FROM dossier dos, client cl
@@ -64797,14 +64760,14 @@
 
 			return $ref_dos;
 		}
-
+		
 		public function new_file_other_service($ref_dos, $id_cli, $remarque){
 			include('connexion.php');
 			$entree['ref_dos'] = $ref_dos;
 			$entree['id_cli'] = $id_cli;
 			$entree['remarque'] = $remarque;
 
-			$requete = $connexion-> prepare("INSERT INTO dossier(ref_dos, id_cli, remarque, id_util, num_lic, id_mod_lic)
+			$requete = $connexion-> prepare("INSERT INTO dossier(ref_dos, id_cli, remarque, id_util, num_lic, id_mod_lic) 
 												VALUES(?, ?, ?, ?, 'N/A', 3)");
 			$requete-> execute(array($entree['ref_dos'], $entree['id_cli'], $entree['remarque'], $_SESSION['id_util']));
 
@@ -64844,7 +64807,7 @@
 			$rows = array();
 			$compteur = 0;
 
-			$requete = $connexion-> query("SELECT DATE_FORMAT(dos.date_decl, '%d/%m/%Y') AS date_decl,
+			$requete = $connexion-> query("SELECT DATE_FORMAT(dos.date_decl, '%d/%m/%Y') AS date_decl, 
 												dos.roe_decl AS roe_decl,
 												CONCAT('<a class=\"dropdown-item\" href=\"#\" onclick=\"window.open(\'popUpRoe_decl.php?date_decl=',dos.date_decl,'&roe_decl=',dos.roe_decl,'&bank_rate=0\',\'popUpRoe_decl\', \'width=1000,height=800\');\">',COUNT(dos.id_dos),'</a>') AS nbre_dos
 											FROM dossier dos, affectation_client_modele_licence aff
@@ -64877,7 +64840,7 @@
 			$rows = array();
 			$compteur = 0;
 
-			$requete = $connexion-> prepare("SELECT DATE_FORMAT(dos.date_decl, '%d/%m/%Y') AS date_decl,
+			$requete = $connexion-> prepare("SELECT DATE_FORMAT(dos.date_decl, '%d/%m/%Y') AS date_decl, 
 												dos.ref_decl AS ref_decl,
 												dos.roe_decl AS roe_decl,
 												dos.ref_dos AS ref_dos,
@@ -64908,7 +64871,7 @@
 			include('connexion.php');
 			$entree['date_decl'] = $date_decl;
 			$entree['roe_decl'] = $roe_decl;
-
+			
 			$requete = $connexion-> prepare('UPDATE dossier dos, affectation_client_modele_licence aff
 												SET dos.roe_decl = ?
 												WHERE dos.date_decl = ?
@@ -64917,198 +64880,7 @@
 													AND aff.bank_rate = "0"');
 			$requete-> execute(array($entree['roe_decl'], $entree['date_decl']));
 
-		}
+		} 
 
-	// ============================================================================
-	// MÉTHODES OPTIMISÉES POUR LE MENU GAUCHE AVEC CHARGEMENT DIFFÉRÉ
-	// ============================================================================
-
-	/**
-	 * Version optimisée de afficherMenuTracking avec chargement différé des clients
-	 */
-	public function afficherMenuTrackingOptimized(){
-		include("connexion.php");
-		if(!isset($_GET['id_mod_lic'])){
-			$_GET['id_mod_lic'] = '';
-		}
-		$id_mod_lic = $_GET['id_mod_lic'];
-		$id_cli = '';
-		$active = '';
-		$open = '';
-		$reponse['id_cli'] = '';
-
-		if($_SESSION['id_role'] == '1' || $_SESSION['id_role'] == '6' || $_SESSION['id_role'] == '7' || $_SESSION['id_role'] == '8' || $_SESSION['id_role'] == '9' || $_SESSION['id_role'] == '10' || $_SESSION['id_role'] == '11' || $_SESSION['id_role'] == '14'){
-			$sql = "SELECT id_mod_lic,
-						nom_mod_lic,
-						sigle_mod_lic
-					FROM modele_licence
-					WHERE id_etat = 1
-						AND id_mod_lic < 3
-					ORDER BY rang_lic ASC";
-
-			$requete = $connexion-> query($sql);
-			while($reponse = $requete-> fetch()){
-				if( (isset($_GET['id_mod_trac'])) && ($reponse['id_mod_lic'] == $_GET['id_mod_trac']) ){
-					$active = 'active';
-					$open = ' menu-open';
-				}else{
-					$active = '';
-					$open = '';
-				}
-				$menu_id = 'tracking_menu_' . $reponse['id_mod_lic'];
-				?>
-				<li class="nav-item has-treeview <?php echo $open;?>">
-			        <a href="#" class="nav-link <?php echo $active;?>"
-			           data-lazy-menu="tracking-clients"
-			           data-id-mod-lic="<?php echo $reponse['id_mod_lic'];?>"
-			           data-target="<?php echo $menu_id;?>">
-			          <i class="nav-icon fas fa-file"></i>
-			          <p>
-			            <?php echo $reponse['nom_mod_lic'];?>
-			            <i class="right fas fa-angle-left"></i>
-			          </p>
-			        </a>
-		            <ul class="nav nav-treeview" id="<?php echo $menu_id;?>">
-		            	<li class="nav-item">
-			                <a href="dashboardDossier.php?id_cli=&amp;id_mod_trac=<?php echo $id_mod_lic;?>" class="nav-link">
-		                  	&nbsp;&nbsp;&nbsp;&nbsp;<i class="nav-icon fas fa-tachometer-alt"></i>
-		                  	<p>Dashboard <?php echo $reponse['sigle_mod_lic'];?></p>
-					        </a>
-				        </li>
-		              	<li class="nav-item">
-			                <a href="sydonia_upload.php?id_mod_trac=<?php echo $reponse['id_mod_lic'];?>&amp;id_cli=<?php echo $id_cli;?>" class="nav-link">
-			                  &nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-upload nav-icon"></i>
-			                  <p>SYDONIA</p>
-			                </a>
-			            </li>
-		              	<!-- Les clients seront chargés ici via AJAX au clic -->
-		            </ul>
-			    </li>
-				<?php
-			}$requete-> closeCursor();
-		}
 	}
-
-	/**
-	 * Version optimisée de afficherMenuTrackingLogistique avec chargement différé des clients
-	 */
-	public function afficherMenuTrackingLogistiqueOptimized(){
-		include("connexion.php");
-		if(!isset($_GET['id_mod_lic'])){
-			$_GET['id_mod_lic'] = '';
-		}
-		$id_mod_lic = $_GET['id_mod_lic'];
-		$id_cli = '';
-		$active = '';
-		$open = '';
-		$reponse['id_cli'] = '';
-
-		if($_SESSION['id_role'] == '1' || $_SESSION['id_role'] == '6' || $_SESSION['id_role'] == '7' || $_SESSION['id_role'] == '8' || $_SESSION['id_role'] == '9' || $_SESSION['id_role'] == '10' || $_SESSION['id_role'] == '11'){
-			$sql = "SELECT id_trans,
-						nom_trans
-					FROM transit
-					ORDER BY nom_trans";
-
-			$requete = $connexion-> query($sql);
-			while($reponse = $requete-> fetch()){
-				if( (isset($_GET['id_trans'])) && ($reponse['id_trans'] == $_GET['id_trans']) ){
-					$active = 'active';
-					$open = ' menu-open';
-				}else{
-					$active = '';
-					$open = '';
-				}
-				$menu_id = 'logistique_menu_' . $reponse['id_trans'];
-				?>
-				<li class="nav-item has-treeview <?php echo $open;?>">
-			        <a href="#" class="nav-link <?php echo $active;?>"
-			           data-lazy-menu="logistique-clients"
-			           data-id-trans="<?php echo $reponse['id_trans'];?>"
-			           data-target="<?php echo $menu_id;?>">
-			          <i class="nav-icon fas fa-file"></i>
-			          <p>
-			            <?php echo $reponse['nom_trans'];?>
-			            <i class="right fas fa-angle-left"></i>
-			          </p>
-			        </a>
-		            <ul class="nav nav-treeview" id="<?php echo $menu_id;?>">
-		              	<!-- Les clients seront chargés ici via AJAX au clic -->
-		            </ul>
-			    </li>
-				<?php
-			}$requete-> closeCursor();
-		}
-	}
-
-	/**
-	 * Version optimisée de afficherMenuFacturation avec chargement différé des clients
-	 */
-	public function afficherMenuFacturationOptimized(){
-		include("connexion.php");
-		if(!isset($_GET['id_mod_lic'])){
-			$_GET['id_mod_lic'] = '';
-		}
-		$id_mod_lic = $_GET['id_mod_lic'];
-		$id_cli = '';
-		$active = '';
-		$open = '';
-		$reponse['id_cli'] = '';
-
-		if($_SESSION['id_role'] == '1' || $_SESSION['id_role'] == 12){
-			$sql = "SELECT id_mod_lic,
-						nom_mod_lic,
-						sigle_mod_lic
-					FROM modele_licence
-					WHERE id_etat = 1
-					ORDER BY rang_lic ASC";
-
-			$requete = $connexion-> query($sql);
-			while($reponse = $requete-> fetch()){
-				if( (isset($_GET['id_mod_lic_fact'])) && ($reponse['id_mod_lic'] == $_GET['id_mod_lic_fact']) ){
-					$active = 'active';
-					$open = ' menu-open';
-				}else{
-					$active = '';
-					$open = '';
-				}
-				$menu_id = 'facturation_menu_' . $reponse['id_mod_lic'];
-				?>
-				<li class="nav-item has-treeview <?php echo $open;?>">
-			        <a class="nav-link <?php echo $active;?>"
-			           data-lazy-menu="facturation-clients"
-			           data-id-mod-lic="<?php echo $reponse['id_mod_lic'];?>"
-			           data-target="<?php echo $menu_id;?>">
-			          <i class="nav-icon fas fa-file"></i>
-			          <p>
-			            <?php echo $reponse['nom_mod_lic'];?>
-			            <i class="right fas fa-angle-left"></i>
-			          </p>
-			        </a>
-		            <ul class="nav nav-treeview" id="<?php echo $menu_id;?>">
-						<li class="nav-item">
-			                <a href="dashboardFactureDossier.php?id_mod_lic_fact=<?php echo $reponse['id_mod_lic'];?>&id_cli=" class="nav-link">
-			                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-tachometer-alt nav-icon"></i>
-			                  <p>Dashboard</p>
-			                </a>
-			            </li>
-		              	<!-- Les clients seront chargés ici via AJAX au clic -->
-		            </ul>
-			    </li>
-				<?php
-			}$requete-> closeCursor();
-		}
-
-		if ($this-> getUtilisateur($_SESSION['id_util'])['config_invoice']=='1') {
-        	?>
-			<li class="nav-item">
-	            <a href="config_invoice.php" class="nav-link">
-	              <i class="fa fa-cogs nav-icon"></i>
-	              <p>Settings</p>
-	            </a>
-	        </li>
-        	<?php
-        }
-	}
-
-}
 ?>
