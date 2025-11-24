@@ -40,6 +40,93 @@ $pdf->SetSubject('act');
 $pdf->SetKeywords('act');
 
 
+//Qrcode DGI de la facture
+$facture_dgi_info = $maClasse->getFactureGlobale($_GET['ref_fact']);
+
+// Vérifier si la facture est normalisée DGI
+if (!empty($facture_dgi_info['code_UID']) && !empty($facture_dgi_info['code_DEF_DGI'])) {
+	// Utiliser la chaîne QR code complète si disponible, sinon la construire
+	if (!empty($facture_dgi_info['qrcode_string_DGI'])) {
+		$qr_data_string = $facture_dgi_info['qrcode_string_DGI'];
+	} else {
+		// Format: RDCF01;NIM;CODE_DEF;NIF;DATETIME
+		$dateTime = !empty($facture_dgi_info['date_DGI'])
+			? date('YmdHis', strtotime($facture_dgi_info['date_DGI']))
+			: date('YmdHis');
+
+		$qr_data_string = 'RDCF01;'
+			. ($facture_dgi_info['nim_DGI'] ?? 'CD01002974-1') . ';'
+			. $facture_dgi_info['code_DEF_DGI'] . ';'
+			. ($facture_dgi_info['nif_DGI'] ?? 'A1809181A') . ';'
+			. $dateTime;
+	}
+
+	// Préparer les informations d'affichage
+	$nim_display = $facture_dgi_info['nim_DGI'] ?? 'CD01002974-1';
+	$compteur_display = $facture_dgi_info['compteur_DGI'] ?? '';
+	$date_heure_display = !empty($facture_dgi_info['date_DGI'])
+		? date('d/m/Y H:i:s', strtotime($facture_dgi_info['date_DGI']))
+		: '';
+
+	// Section DGI à afficher en bas de la facture
+	$section_dgi_bas = '<tr>
+			<td width="100%"></td>
+		</tr>
+		<tr>
+			<td width="100%" style="text-align: center; font-size: 6px; font-weight: bold;">--- ÉLÉMENTS DE SÉCURITÉ DE LA FACTURE NORMALISÉE ---</td>
+		</tr>
+		<tr>
+			<td width="100%" style="border: 1px solid black; padding: 5px;">
+				<table width="100%" cellpadding="2" cellspacing="0">
+					<tr>
+						<td width="25%" style="border-right: 1px solid black; text-align: center; vertical-align: middle;">
+							<img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=' . urlencode($qr_data_string) . '" style="width: 80px; height: 80px;" />
+						</td>
+						<td width="75%" style="padding-left: 10px; vertical-align: top;">
+							<table width="100%" cellpadding="1" cellspacing="0">
+								<tr>
+									<td style="font-size: 7px; line-height: 1.4;">
+										<strong>Code UID:</strong>
+										' . htmlspecialchars($facture_dgi_info['code_UID']) . '
+									</td>
+									<td style="font-size: 7px; line-height: 1.4;">
+										<strong>Code DEF/DGI:</strong>
+										' . htmlspecialchars($facture_dgi_info['code_DEF_DGI']) . '
+									</td>
+								</tr>
+								<tr>
+									<td style="font-size: 7px; line-height: 1.4;">
+										<strong>DEF NID:</strong>
+										' . htmlspecialchars($nim_display) . '
+									</td>
+									<td style="font-size: 7px; line-height: 1.4;">
+										<strong>DEF Compteurs:</strong>
+										' . htmlspecialchars($compteur_display) . '
+									</td>
+								</tr>
+								<tr>
+									<td colspan="2" style="font-size: 7px; line-height: 1.4;">
+										<strong>DEF Heure:</strong>
+										' . htmlspecialchars($date_heure_display) . '
+									</td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+				</table>
+			</td>
+		</tr>';
+
+	// Variables vides pour les comptes bancaires (QR code retiré)
+	$qrcode_dgi_cell = '';
+	$qrcode_dgi_cell_double = '';
+} else {
+	$qrcode_dgi_cell = '';
+	$qrcode_dgi_cell_double = '';
+	$section_dgi_bas = ''; // Pas de section DGI si la facture n'est pas normalisée
+}
+//FIN Qrcode DGI de la facture
+
 //Qrcode de la facture
 //On verifie si le QrCode existe deja
 // $ref_fact = str_replace(' ', '', str_replace('/', '_', $_GET['ref_fact']));
@@ -521,6 +608,7 @@ $tbl = <<<EOD
 		<tr>
 			<td width="100%" style="border: 1px solid black; text-align: center; font-size: 7px;">Thank you for you business!</td>
 		</tr>
+		$section_dgi_bas
 	</table>
 	</bodystyle="font-weight: bold;">
 	</html>
