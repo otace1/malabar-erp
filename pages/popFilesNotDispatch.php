@@ -34,6 +34,8 @@
                       <th>Date Of Expiration</th>
                       <th>Weight</th>
                       <th>Loading Date</th>
+                      <th>Nbr.Seals</th>
+                      <th>Seals No</th>
                       <th>BP Details Received Date</th>
                       <th>PV Div Mines</th>
                       <th>Demande d'Attestation</th>
@@ -149,6 +151,12 @@
           className: 'dt-body-right'
         },
         {"data":"load_date",
+          className: 'dt-body-center'
+        },
+        {"data":"nbre_seal",
+          className: 'dt-body-center'
+        },
+        {"data":"dgda_seal",
           className: 'dt-body-center'
         },
         {"data":"doc_receiv",

@@ -33,6 +33,8 @@
                       <th>License Num</th>
                       <th>Date Of Expiration</th>
                       <th>Weight</th>
+                      <th>Nbr.Seals</th>
+                      <th>Seals No</th>
                       <th>Loading Date</th>
                       <th>BP Details Received Date</th>
                       <th>PV Div Mines</th>
@@ -147,6 +149,12 @@
         {"data":"poids",
           render: DataTable.render.number( null, null, 3, null ),
           className: 'dt-body-right'
+        },
+        {"data":"nbre_seal",
+          className: 'dt-body-center'
+        },
+        {"data":"dgda_seal",
+          className: 'dt-body-center'
         },
         {"data":"load_date",
           className: 'dt-body-center'

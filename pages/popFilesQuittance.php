@@ -32,6 +32,8 @@
                       <th>Lot Num</th>
                       <th>Ref.Fact.</th>
                       <th>License Num</th>
+                      <th>Nbr.Seals</th>
+                      <th>Seals No</th>
                       <th>Declaration Ref.</th>
                       <th>Declaration Date</th>
                       <th>Liquidation Ref.</th>
@@ -120,6 +122,12 @@
         },
         {"data":"num_lic",
           className: 'dt-body-center text-nowrap'
+        },
+        {"data":"nbre_seal",
+          className: 'dt-body-center'
+        },
+        {"data":"dgda_seal",
+          className: 'dt-body-center'
         },
         {"data":"ref_decl",
           className: 'dt-body-center'

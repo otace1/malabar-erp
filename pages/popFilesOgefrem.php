@@ -30,6 +30,8 @@
                       <th>Mode of Transport</th>
                       <th>Product</th>
                       <th>Truck/Wagon</th>
+                      <th>Nbr.Seals</th>
+                      <th>Seals No</th>
                       <th>Loading Date</th>
                       <th>OGEFREM Invoice #</th>
                       <th>Client Invoiced #</th>
@@ -113,6 +115,12 @@
           className: 'dt-body-center'
         },
         {"data":"truck",
+          className: 'dt-body-center'
+        },
+        {"data":"nbre_seal",
+          className: 'dt-body-center'
+        },
+        {"data":"dgda_seal",
           className: 'dt-body-center'
         },
         {"data":"load_date",
