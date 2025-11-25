@@ -1,7 +1,9 @@
 <?php
 
 /**
- * Script AJAX pour normaliser une facture avec la DGI
+ * Script AJAX pour normaliser une facture d'avoir (FA) avec la DGI
+ * IMPORTANT: Le processus est IDENTIQUE à normaliser_facture_dgi.php
+ * Seule différence: type = 'FA' au lieu de 'FV'
  */
 
 header('Content-Type: application/json; charset=utf-8');
@@ -55,6 +57,35 @@ try {
         exit;
     }
 
+    // Vérifier si la facture a déjà une facture d'avoir
+    if (!empty($facture_data['code_UID_FA'])) {
+        echo json_encode([
+            'success' => false,
+            'error' => 'Cette facture a déjà une facture d\'avoir normalisée DGI'
+        ]);
+        exit;
+    }
+
+    // IMPORTANT: Vérifier que la facture FV a bien été normalisée (code_UID existe)
+    if (empty($facture_data['code_UID'])) {
+        echo json_encode([
+            'success' => false,
+            'error' => 'Cette facture doit d\'abord être normalisée (FV) avant de créer une facture d\'avoir (FA)'
+        ]);
+        exit;
+    }
+
+    // Récupérer le Code DEF de la facture FV originale (référence obligatoire pour FA)
+    $code_def_fv = $facture_data['code_DEF_DGI'];
+
+    if (empty($code_def_fv)) {
+        echo json_encode([
+            'success' => false,
+            'error' => 'Code DEF DGI manquant - impossible de créer la facture d\'avoir'
+        ]);
+        exit;
+    }
+
     // 2. Récupérer les détails de la facture (articles/débours)
     $query_items = $connexion->prepare("
         SELECT
@@ -80,7 +111,7 @@ try {
         exit;
     }
 
-    // 3. Préparer les articles pour l'API DGI
+    // 3. Préparer les articles pour l'API DGI (prix POSITIFS pour FA)
     $articles = [];
     $total_amount = 0;
 
@@ -95,22 +126,22 @@ try {
             $price = $montant * $roe_decl;
         }
 
-        $quantity = 1; // Pour les débours, quantité = 1
+        $quantity = 1;
         $total_amount += $price;
 
         $articles[] = [
             'code' => 'DEB' . ($item['id_deb'] ?? rand(1000, 9999)),
             'name' => $item['nom_deb'] ?? $item['abr_deb'] ?? 'Service',
-            'type' => 'SER', // SER = Service (car ce sont des débours/services)
-            'price' => round($price, 2),
+            'type' => 'SER',
+            'price' => round($price, 2),  // POSITIF
             'quantity' => $quantity,
-            'taxGroup' => ($item['tva'] == '1') ? 'B' : 'A' // B = 16% TVA, A = 0%
+            'taxGroup' => ($item['tva'] == '1') ? 'B' : 'A'
         ];
     }
 
     // 4. Préparer les informations du client
     $client = [
-        'type' => 'PP', // PP = Personne Physique, PM = Personne Morale
+        'type' => 'PP',
         'name' => $facture_data['nom_cli'] ?? 'Client Anonyme',
         'nif' => null,
         'contact' => null,
@@ -119,7 +150,7 @@ try {
 
     // 5. Préparer le paiement
     $paiements = [[
-        'name' => 'ESPECES', // ESPECES, MOBILEMONEY, CHEQUE, VIREMENT, CARTE
+        'name' => 'ESPECES',
         'amount' => $total_amount
     ]];
 
@@ -129,74 +160,88 @@ try {
         'name' => $facture_data['nom_util'] ?? 'Opérateur'
     ];
 
-    // 7. Initialiser l'API et créer la facture normalisée
+    // 7. Initialiser l'API et créer la facture d'avoir
     $apiClient = new DgiApiClient(API_BASE_URL, API_TOKEN);
     $factureNormalisee = new FactureNormalisee($apiClient, ENTREPRISE_NIF, ENTREPRISE_EMCF_ID);
 
-    // Type de facture: FV = Facture de Vente, FA = Facture d'Avoir, FT = Facture Temporaire
-    $typeFacture = 'FV';
-
-    $result = $factureNormalisee->creer($articles, $client, $paiements, $operator, $typeFacture, null, $ref_fact);
+    // IMPORTANT: Créer une FA avec référence au code_DEF_DGI de la FV
+    $result = $factureNormalisee->creer(
+        $articles,
+        $client,
+        $paiements,
+        $operator,
+        'FA',  // Type FA
+        $code_def_fv,  // Référence à la FV originale
+        $ref_fact  // Référence de la facture (ref_fact)
+    );
 
     // 8. Si succès, enregistrer dans la base de données
     if ($result['success']) {
+        // La FA a son propre UID généré par l'API
+        $uid_fa = $result['uid'];
+
+        // IMPORTANT: Mettre à NULL les champs DGI normaux et remplir les champs _FA
         $update_query = $connexion->prepare("
             UPDATE facture_dossier
             SET
-                code_UID = ?,
-                code_DEF_DGI = ?,
-                nim_DGI = ?,
-                type_facture_DGI = ?,
-                nif_DGI = ?,
-                compteur_DGI = ?,
-                qrcode_string_DGI = ?,
-                id_util_DGI = ?,
-                date_DGI = NOW(),
+                -- Mettre à NULL les champs DGI normaux (FV)
+                code_UID = NULL,
+                code_DEF_DGI = NULL,
+                nim_DGI = NULL,
+                type_facture_DGI = NULL,
+                nif_DGI = NULL,
+                compteur_DGI = NULL,
+                qrcode_string_DGI = NULL,
+                id_util_DGI = NULL,
+                date_DGI = NULL,
 
-                -- Mettre à NULL les champs FA lors de la normalisation FV
-                code_UID_FA = NULL,
-                code_DEF_DGI_FA = NULL,
-                nim_DGI_FA = NULL,
-                type_facture_DGI_FA = NULL,
-                nif_DGI_FA = NULL,
-                compteur_DGI_FA = NULL,
-                qrcode_string_DGI_FA = NULL,
-                id_util_DGI_FA = NULL,
-                date_DGI_FA = NULL,
-                facture_origine_ref = NULL
+                -- Remplir les champs _FA (Facture d'Avoir)
+                code_UID_FA = ?,
+                code_DEF_DGI_FA = ?,
+                nim_DGI_FA = ?,
+                type_facture_DGI_FA = ?,
+                nif_DGI_FA = ?,
+                compteur_DGI_FA = ?,
+                qrcode_string_DGI_FA = ?,
+                id_util_DGI_FA = ?,
+                date_DGI_FA = NOW(),
+                facture_origine_ref = ?
             WHERE ref_fact = ?
         ");
 
         $update_query->execute([
-            $result['uid'],
-            $result['codeDEFDGI'],
+            $uid_fa,  // ← UID de la FV = UID de la FA
+            $result['codeDEFDGI'] ?? '',
             $result['nim'] ?? ENTREPRISE_EMCF_ID,
-            $typeFacture,
+            $result['typeFacture'] ?? 'FA',
             $result['nif'] ?? ENTREPRISE_NIF,
             $result['counters'] ?? '',
             $result['qrCode'] ?? '',
             $facture_data['id_util'],
+            $ref_fact, // Référence de la facture d'origine
             $ref_fact
         ]);
 
         echo json_encode([
             'success' => true,
-            'message' => 'Facture normalisée avec succès',
+            'message' => 'Facture d\'avoir créée avec succès',
             'data' => [
-                'uid' => $result['uid'],
-                'codeDEFDGI' => $result['codeDEFDGI'],
+                'uid' => $uid_fa,  // UID généré par l'API pour la FA
+                'codeDEFDGI' => $result['codeDEFDGI'] ?? '',
                 'nim' => $result['nim'] ?? ENTREPRISE_EMCF_ID,
-                'typeFacture' => $typeFacture,
+                'typeFacture' => 'FA',
                 'nif' => $result['nif'] ?? ENTREPRISE_NIF,
                 'compteur' => $result['counters'] ?? '',
-                'qrCode' => $result['qrCode'],
-                'dateTime' => $result['dateTime']
+                'qrCode' => $result['qrCode'] ?? '',
+                'dateTime' => $result['dateTime'] ?? date('Y-m-d H:i:s'),
+                'factureOrigine' => $ref_fact,
+                'codeDEFFVReference' => $code_def_fv
             ]
         ]);
     } else {
         echo json_encode([
             'success' => false,
-            'error' => $result['error'] ?? 'Erreur lors de la normalisation',
+            'error' => $result['error'] ?? 'Erreur lors de la normalisation de la facture d\'avoir',
             'details' => $result
         ]);
     }
