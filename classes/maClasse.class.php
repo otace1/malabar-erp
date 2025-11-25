@@ -16354,27 +16354,31 @@
 													fd.transmission AS transmission,
 													fd.type_fact AS type_fact,
 													fd.id_mod_lic AS id_mod_lic,
+													fd.code_UID AS code_UID,
+													fd.code_UID_FA AS code_UID_FA,
 													mf.edit_page AS edit_page,
 													mf.view_page AS view_page,
 													mf.excel AS excel,
-													CONCAT(CONCAT('<button class=\"btn btn-xs bg-info square-btn-adjust\" onclick=\"window.open(\'',mf.view_page,'?ref_fact=',fd.ref_fact,'\',\'pop3\',\'width=1000,height=800\');\" title=\"View invoice\">
-									                    <i class=\"fas fa-eye\"></i> 
+													CONCAT(CONCAT('<button class=\"btn btn-xs bg-info square-btn-adjust\" onclick=\"window.open(\'',
+													    IF(fd.code_UID IS NOT NULL, 'viewImportInvoiceSingle2023DGI.php', mf.view_page),
+													    '?ref_fact=',fd.ref_fact,'\',\'pop3\',\'width=1000,height=800\');\" title=\"View invoice\">
+									                    <i class=\"fas fa-eye\"></i>
 									                </button>'),' ',
 									                IF(mf.excel IS NOT NULL, CONCAT('<button class=\"btn btn-xs bg-success square-btn-adjust\" onclick=\"window.location.replace(\'',mf.excel,'?ref_fact=',fd.ref_fact,'\',\'pop4\',\'width=1000,height=800\');\" title=\"Export Annex\">
-									                    <i class=\"fas fa-file-excel\"></i> 
+									                    <i class=\"fas fa-file-excel\"></i>
 									                </button>'), ''),' ',
 									                IF(mf.edit_page IS NOT NULL, CONCAT('<button class=\"btn btn-xs bg-warning square-btn-adjust\" onclick=\"editerFacture(\'',fd.ref_fact,'\', \'',mf.edit_page,'\');\" title=\"Edit\">
-									                    <i class=\"fas fa-edit\"></i> 
+									                    <i class=\"fas fa-edit\"></i>
 									                </button>'), ''),' ',
 									                CONCAT('<button class=\"btn btn-xs bg-purple square-btn-adjust\" onclick=\"modal_send_invoice(\'',fd.ref_fact,'\');\" title=\"Validate\">
-									                    <i class=\"fas fa-envelope\"></i> 
+									                    <i class=\"fas fa-envelope\"></i>
 									                </button>'),' ',
 									                CONCAT('<button class=\"btn btn-xs bg-secondary square-btn-adjust\" onclick=\"modal_dossiers_facture(\'',fd.ref_fact,'\');\" title=\"Files in invoice\">
-									                    <i class=\"fas fa-cogs\"></i> 
+									                    <i class=\"fas fa-cogs\"></i>
 									                </button> <button class=\"btn btn-xs bg-danger square-btn-adjust\" onclick=\"supprimerFacture(\'',fd.ref_fact,'\');\" title=\"Delete\">
-									                    <i class=\"fas fa-times\"></i> 
+									                    <i class=\"fas fa-times\"></i>
 									                </button>')) AS action
- 												FROM facture_dossier fd, client cl, utilisateur u, modele_facture mf
+												FROM facture_dossier fd, client cl, utilisateur u, modele_facture mf
 												WHERE fd.id_mod_lic = ?
 													AND fd.id_util = u.id_util
 													AND fd.id_cli = cl.id_cli
@@ -16400,21 +16404,21 @@
 													mf.view_page AS view_page,
 													mf.excel AS excel,
 													CONCAT(CONCAT('<button class=\"btn btn-xs bg-info square-btn-adjust\" onclick=\"window.open(\'',mf.view_page,'?ref_fact=',fd.ref_fact,'\',\'pop3\',\'width=1000,height=800\');\" title=\"View invoice\">
-									                    <i class=\"fas fa-eye\"></i> 
+									                    <i class=\"fas fa-eye\"></i>
 									                </button>'),' ',
 									                IF(mf.excel IS NOT NULL, CONCAT('<button class=\"btn btn-xs bg-success square-btn-adjust\" onclick=\"window.location.replace(\'',mf.excel,'?ref_fact=',fd.ref_fact,'\',\'pop4\',\'width=1000,height=800\');\" title=\"Export Annex\">
-									                    <i class=\"fas fa-file-excel\"></i> 
+									                    <i class=\"fas fa-file-excel\"></i>
 									                </button>'), ''),' ',
 									                IF(mf.edit_page IS NOT NULL, CONCAT('<button class=\"btn btn-xs bg-warning square-btn-adjust\" onclick=\"editerFacture(\'',fd.ref_fact,'\', \'',mf.edit_page,'\');\" title=\"Edit\">
-									                    <i class=\"fas fa-edit\"></i> 
+									                    <i class=\"fas fa-edit\"></i>
 									                </button>'), ''),' ',
 									                CONCAT('<button class=\"btn btn-xs bg-purple square-btn-adjust\" onclick=\"modal_send_invoice(\'',fd.ref_fact,'\');\" title=\"Validate\">
-									                    <i class=\"fas fa-envelope\"></i> 
+									                    <i class=\"fas fa-envelope\"></i>
 									                </button>'),' ',
 									                CONCAT('<button class=\"btn btn-xs bg-secondary square-btn-adjust\" onclick=\"modal_dossiers_facture(\'',fd.ref_fact,'\');\" title=\"Files in invoice\">
-									                    <i class=\"fas fa-cogs\"></i> 
+									                    <i class=\"fas fa-cogs\"></i>
 									                </button> <button class=\"btn btn-xs bg-danger square-btn-adjust\" onclick=\"supprimerFacture(\'',fd.ref_fact,'\');\" title=\"Delete\">
-									                    <i class=\"fas fa-times\"></i> 
+									                    <i class=\"fas fa-times\"></i>
 									                </button>')) AS action
  												FROM facture_dossier fd, client cl, utilisateur u, modele_facture mf
 												WHERE fd.id_mod_lic = ?
@@ -16425,6 +16429,83 @@
 													AND fd.date_mail IS NOT NULL
 													AND fd.id_cli = ?
 												ORDER BY fd.date_fact ASC");
+			}else if ($statut=='invoice_waiting_to_send_dgi') {
+				// Version DGI avec bouton Normaliser - utilisée uniquement par listerFactureDossierDGI.php
+				$requete = $connexion-> prepare("SELECT fd.ref_fact AS ref_fact,
+													DATE_FORMAT(fd.date_fact, '%d/%m/%Y') AS date_fact,
+													fd.validation AS validation,
+													fd.id_march AS id_march,
+													fd.type_fact AS type_fact,
+													cl.nom_cli AS nom_cli,
+													cl.id_cli AS id_cli,
+													u.nom_util AS nom_util,
+													u.validation_facture AS validation_facture,
+													fd.transmission AS transmission,
+													fd.type_fact AS type_fact,
+													fd.id_mod_lic AS id_mod_lic,
+													fd.code_UID AS code_UID,
+													mf.edit_page AS edit_page,
+													mf.view_page AS view_page,
+													mf.excel AS excel,
+													CONCAT(CONCAT('<button class=\"btn btn-xs bg-info square-btn-adjust\" onclick=\"window.open(\'',mf.view_page,'?ref_fact=',fd.ref_fact,'\',\'pop3\',\'width=1000,height=800\');\" title=\"View invoice\">
+									                    <i class=\"fas fa-eye\"></i>
+									                </button>'),' ',
+									                IF(mf.excel IS NOT NULL, CONCAT('<button class=\"btn btn-xs bg-success square-btn-adjust\" onclick=\"window.location.replace(\'',mf.excel,'?ref_fact=',fd.ref_fact,'\',\'pop4\',\'width=1000,height=800\');\" title=\"Export Annex\">
+									                    <i class=\"fas fa-file-excel\"></i>
+									                </button>'), ''),' ',
+									                IF(mf.edit_page IS NOT NULL, CONCAT('<button class=\"btn btn-xs bg-warning square-btn-adjust\" onclick=\"editerFacture(\'',fd.ref_fact,'\', \'',mf.edit_page,'\');\" title=\"Edit\">
+									                    <i class=\"fas fa-edit\"></i>
+									                </button>'), ''),' ',
+									                CONCAT('<button class=\"btn btn-xs bg-purple square-btn-adjust\" onclick=\"modal_send_invoice(\'',fd.ref_fact,'\');\" title=\"Send Email\">
+									                    <i class=\"fas fa-envelope\"></i>
+									                </button>'),' ',
+									                IF(fd.code_UID IS NULL, CONCAT('<button class=\"btn btn-xs bg-primary square-btn-adjust\" onclick=\"normaliserFactureDGI(\'',fd.ref_fact,'\');\" title=\"Standardize with DGI\">
+									                    <i class=\"fas fa-qrcode\"></i> FV DGI
+									                </button> '), ''),' ',
+									                CONCAT('<button class=\"btn btn-xs bg-secondary square-btn-adjust\" onclick=\"modal_dossiers_facture(\'',fd.ref_fact,'\');\" title=\"Files in invoice\">
+									                    <i class=\"fas fa-cogs\"></i>
+									                </button> <button class=\"btn btn-xs bg-danger square-btn-adjust\" onclick=\"supprimerFacture(\'',fd.ref_fact,'\');\" title=\"Delete\">
+									                    <i class=\"fas fa-times\"></i>
+									                </button>')) AS action
+												FROM facture_dossier fd, client cl, utilisateur u, modele_facture mf
+												WHERE fd.id_mod_lic = ?
+													AND fd.id_util = u.id_util
+													AND fd.id_cli = cl.id_cli
+													AND fd.id_mod_fact = mf.id_mod_fact
+													AND fd.validation = '1'
+													AND fd.date_mail IS NULL
+													AND fd.id_cli = ?
+													AND fd.code_UID IS NULL
+												ORDER BY fd.date_fact DESC");
+			}else if ($statut=='invoice_normalized_dgi') {
+				$requete = $connexion-> prepare("SELECT fd.ref_fact AS ref_fact,
+													DATE_FORMAT(fd.date_fact, '%d/%m/%Y') AS date_fact,
+													fd.code_UID AS code_UID,
+													fd.code_DEF_DGI AS code_DEF_DGI,
+													fd.code_UID_FA AS code_UID_FA,
+													fd.date_DGI AS date_DGI,
+													u.nom_util AS nom_util,
+													CONCAT(
+													    CONCAT('<button class=\"btn btn-xs bg-info square-btn-adjust\" onclick=\"window.open(\'viewImportInvoiceSingle2023DGI.php?ref_fact=',fd.ref_fact,'\',\'pop3\',\'width=1000,height=800\');\" title=\"View invoice with QR Code\">
+													        <i class=\"fas fa-eye\"></i>
+													    </button> '),' ',
+													    IF(fd.code_UID_FA IS NOT NULL,
+													        CONCAT('<button class=\"btn btn-xs square-btn-adjust\" style=\"background-color: #28a745; color: white;\" onclick=\"afficherDetailsAvoirDGI(\'',fd.ref_fact,'\');\" title=\"Voir Facture d\'Avoir DGI\">
+													            <i class=\"fas fa-qrcode\"></i> FA DGI
+													        </button> '),
+													        CONCAT('<button class=\"btn btn-xs square-btn-adjust\" style=\"background-color: #dc3545; color: white;\" onclick=\"normaliserFactureAvoirDGI(\'',fd.ref_fact,'\');\" title=\"Créer Facture d\'Avoir DGI\">
+													            <i class=\"fas fa-qrcode\"></i> FA DGI
+													        </button> ')
+													    )
+													) AS action
+ 												FROM facture_dossier fd, client cl, utilisateur u
+												WHERE fd.id_mod_lic = ?
+													AND fd.id_util = u.id_util
+													AND fd.id_cli = cl.id_cli
+													AND fd.validation = '1'
+													AND fd.code_UID IS NOT NULL
+													AND fd.id_cli = ?
+												ORDER BY fd.date_DGI DESC");
 			}
 			$requete-> execute(array($entree['id_mod_lic'], $entree['id_cli']));
 			while ($reponse = $requete-> fetch()) {
