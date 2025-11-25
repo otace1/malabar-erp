@@ -42,29 +42,52 @@ $pdf->SetKeywords('act');
 //Qrcode DGI de la facture
 $facture_dgi_info = $maClasse->getFactureGlobale($_GET['ref_fact']);
 
-// Vérifier si la facture est normalisée DGI
-if (!empty($facture_dgi_info['code_UID']) && !empty($facture_dgi_info['code_DEF_DGI'])) {
-	// Utiliser la chaîne QR code complète si disponible, sinon la construire
-	if (!empty($facture_dgi_info['qrcode_string_DGI'])) {
-		$qr_data_string = $facture_dgi_info['qrcode_string_DGI'];
+// Déterminer quel type de facture afficher (priorité aux FA)
+$is_facture_avoir = !empty($facture_dgi_info['code_UID_FA']) && !empty($facture_dgi_info['code_DEF_DGI_FA']);
+$is_facture_normale = !empty($facture_dgi_info['code_UID']) && !empty($facture_dgi_info['code_DEF_DGI']);
+
+// Vérifier si la facture est normalisée DGI (FA ou FV)
+if ($is_facture_avoir || $is_facture_normale) {
+	// Sélectionner les champs appropriés selon le type de facture
+	if ($is_facture_avoir) {
+		$code_uid = $facture_dgi_info['code_UID_FA'];
+		$code_def = $facture_dgi_info['code_DEF_DGI_FA'];
+		$qr_data_string = $facture_dgi_info['qrcode_string_DGI_FA'] ?? '';
+		$nim = $facture_dgi_info['nim_DGI_FA'] ?? 'CD01002974-1';
+		$compteur = $facture_dgi_info['compteur_DGI_FA'] ?? '';
+		$date_dgi = $facture_dgi_info['date_DGI_FA'];
+		$type_facture = '<strong style="color: #dc3545;">FACTURE D\'AVOIR (FA)</strong>';
+		$titre_section = '--- ÉLÉMENTS DE SÉCURITÉ DE LA FACTURE D\'AVOIR NORMALISÉE (FA) ---';
+		$ref_facture_origine = !empty($facture_dgi_info['code_UID']) ? '<tr><td colspan="2" style="font-size: 7px; line-height: 1.4;"><strong>Facture Origine UID:</strong> ' . htmlspecialchars($facture_dgi_info['code_UID']) . '</td></tr>' : '';
 	} else {
+		$code_uid = $facture_dgi_info['code_UID'];
+		$code_def = $facture_dgi_info['code_DEF_DGI'];
+		$qr_data_string = $facture_dgi_info['qrcode_string_DGI'] ?? '';
+		$nim = $facture_dgi_info['nim_DGI'] ?? 'CD01002974-1';
+		$compteur = $facture_dgi_info['compteur_DGI'] ?? '';
+		$date_dgi = $facture_dgi_info['date_DGI'];
+		// $type_facture = '<strong style="color: #28a745;">FACTURE DE VENTE (FV)</strong>';
+		$titre_section = '--- ÉLÉMENTS DE SÉCURITÉ DE LA FACTURE NORMALISÉE ---';
+		$ref_facture_origine = '';
+	}
+
+	// Construire la chaîne QR code si elle n'existe pas
+	if (empty($qr_data_string)) {
 		// Format: RDCF01;NIM;CODE_DEF;NIF;DATETIME
-		$dateTime = !empty($facture_dgi_info['date_DGI'])
-			? date('YmdHis', strtotime($facture_dgi_info['date_DGI']))
+		$dateTime = !empty($date_dgi)
+			? date('YmdHis', strtotime($date_dgi))
 			: date('YmdHis');
 
 		$qr_data_string = 'RDCF01;'
-			. ($facture_dgi_info['nim_DGI'] ?? 'CD01002974-1') . ';'
-			. $facture_dgi_info['code_DEF_DGI'] . ';'
+			. $nim . ';'
+			. $code_def . ';'
 			. ($facture_dgi_info['nif_DGI'] ?? 'A1809181A') . ';'
 			. $dateTime;
 	}
 
 	// Préparer les informations d'affichage
-	$nim_display = $facture_dgi_info['nim_DGI'] ?? 'CD01002974-1';
-	$compteur_display = $facture_dgi_info['compteur_DGI'] ?? '';
-	$date_heure_display = !empty($facture_dgi_info['date_DGI'])
-		? date('d/m/Y H:i:s', strtotime($facture_dgi_info['date_DGI']))
+	$date_heure_display = !empty($date_dgi)
+		? date('d/m/Y H:i:s', strtotime($date_dgi))
 		: '';
 
 	// Section DGI à afficher en bas de la facture
@@ -72,7 +95,7 @@ if (!empty($facture_dgi_info['code_UID']) && !empty($facture_dgi_info['code_DEF_
 			<td width="100%"></td>
 		</tr>
 		<tr>
-			<td width="100%" style="text-align: center; font-size: 6px; font-weight: bold;">--- ÉLÉMENTS DE SÉCURITÉ DE LA FACTURE NORMALISÉE ---</td>
+			<td width="100%" style="text-align: center; font-size: 6px; font-weight: bold;">' . $titre_section . '</td>
 		</tr>
 		<tr>
 			<td width="100%" style="border: 1px solid black; padding: 5px;">
@@ -84,23 +107,28 @@ if (!empty($facture_dgi_info['code_UID']) && !empty($facture_dgi_info['code_DEF_
 						<td width="75%" style="padding-left: 10px; vertical-align: top;">
 							<table width="100%" cellpadding="1" cellspacing="0">
 								<tr>
+									<td colspan="2" style="font-size: 8px; line-height: 1.4; text-align: center;">
+										' . $type_facture . '
+									</td>
+								</tr>
+								<tr>
 									<td style="font-size: 7px; line-height: 1.4;">
 										<strong>Code UID:</strong>
-										' . htmlspecialchars($facture_dgi_info['code_UID']) . '
+										' . htmlspecialchars($code_uid) . '
 									</td>
 									<td style="font-size: 7px; line-height: 1.4;">
 										<strong>Code DEF/DGI:</strong>
-										' . htmlspecialchars($facture_dgi_info['code_DEF_DGI']) . '
+										' . htmlspecialchars($code_def) . '
 									</td>
 								</tr>
 								<tr>
 									<td style="font-size: 7px; line-height: 1.4;">
 										<strong>DEF NID:</strong>
-										' . htmlspecialchars($nim_display) . '
+										' . htmlspecialchars($nim) . '
 									</td>
 									<td style="font-size: 7px; line-height: 1.4;">
 										<strong>DEF Compteurs:</strong>
-										' . htmlspecialchars($compteur_display) . '
+										' . htmlspecialchars($compteur) . '
 									</td>
 								</tr>
 								<tr>
@@ -109,6 +137,7 @@ if (!empty($facture_dgi_info['code_UID']) && !empty($facture_dgi_info['code_DEF_
 										' . htmlspecialchars($date_heure_display) . '
 									</td>
 								</tr>
+								' . $ref_facture_origine . '
 							</table>
 						</td>
 					</tr>
