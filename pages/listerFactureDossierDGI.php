@@ -600,7 +600,7 @@ include("pied.php");
       "data": {
         "id_cli": "<?php echo $_GET['id_cli']; ?>",
         "id_mod_lic": "<?php echo $_GET['id_mod_lic_fact']; ?>",
-        "statut": "invoice_waiting_to_send",
+        "statut": "invoice_waiting_to_send_dgi",
         "operation": "getInvoiceAjax"
       }
     },
@@ -1116,6 +1116,173 @@ include("pied.php");
               confirmButtonColor: '#d33'
             });
           }
+        });
+      }
+    });
+  }
+
+  // Fonction pour créer une facture d'avoir (FA) avec l'API DGI
+  function normaliserFactureAvoirDGI(ref_fact) {
+    // Confirmation avant création de la facture d'avoir
+    Swal.fire({
+      title: 'Facture d\'Avoir (FA)',
+      html: '<p>Voulez-vous créer une <strong>FACTURE D\'AVOIR</strong> pour cette facture ' + ref_fact + '?</p>' +
+        '<p style="color: red; font-size: 12px;">⚠️ ATTENTION: Les informations DGI normales (FV) seront remplacées par la facture d\'avoir (FA)</p>',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#dc3545',
+      cancelButtonColor: '#6c757d',
+      confirmButtonText: 'Oui, créer la facture d\'avoir!',
+      cancelButtonText: 'Annuler'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // Afficher le loader
+        Swal.fire({
+          title: 'Création de la facture d\'avoir...',
+          html: '<i class="fas fa-spinner fa-spin fa-3x"></i><br><br>Communication avec l\'API DGI...',
+          allowOutsideClick: false,
+          showConfirmButton: false
+        });
+
+        // Appel AJAX pour créer la facture d'avoir
+        $.ajax({
+          type: 'POST',
+          url: 'ajax/normaliser_facture_avoir_dgi.php',
+          data: {
+            ref_fact: ref_fact
+          },
+          dataType: 'json',
+          success: function(response) {
+            console.log('Réponse complète FA:', response);
+
+            if (response.success) {
+              // Vérifier si les données critiques sont présentes
+              var hasUID = response.data.uid != null && response.data.uid != '';
+              var hasCodeDEF = response.data.codeDEFDGI != null && response.data.codeDEFDGI != '';
+
+              var messageHTML = '<div style="text-align: left;">' +
+                '<p><strong>Facture d\'avoir créée!</strong></p>' +
+                '<p style="color: red;"><strong>Type: FA (AVOIR)</strong></p>';
+
+              if (!hasUID || !hasCodeDEF) {
+                messageHTML += '<div style="background-color: #fff3cd; padding: 10px; border-radius: 5px; margin: 10px 0;">' +
+                  '<p style="color: #856404;"><strong>⚠️ ATTENTION:</strong> Certaines données sont manquantes</p>' +
+                  '<p><strong>UID FA:</strong> ' + (response.data.uid || '<span style="color: red;">NULL</span>') + '</p>' +
+                  '<p><strong>Code DEF FA:</strong> ' + (response.data.codeDEFDGI || '<span style="color: red;">NULL</span>') + '</p>';
+
+                // Afficher les données de débogage
+                if (response.debug) {
+                  messageHTML += '<hr><p><strong>Debug Info:</strong></p>' +
+                    '<pre style="font-size: 10px; max-height: 200px; overflow: auto;">' +
+                    JSON.stringify(response.debug.full_result, null, 2) + '</pre>';
+                }
+                messageHTML += '</div>';
+              } else {
+                messageHTML += '<p><strong>UID FA:</strong><br><small>' + response.data.uid + '</small></p>' +
+                  '<p><strong>Code DEF FA:</strong><br><small>' + response.data.codeDEFDGI + '</small></p>';
+              }
+
+              messageHTML += '<p><strong>Date:</strong> ' + response.data.dateTime + '</p>' +
+                '<p><strong>Facture Origine:</strong> ' + response.data.factureOrigine + '</p>' +
+                '</div>';
+
+              // Succès de la création
+              Swal.fire({
+                title: hasUID && hasCodeDEF ? 'Succès!' : 'Attention',
+                html: messageHTML,
+                icon: hasUID && hasCodeDEF ? 'success' : 'warning',
+                confirmButtonColor: hasUID && hasCodeDEF ? '#28a745' : '#ffc107',
+                width: '700px'
+              }).then(() => {
+                // Recharger les tableaux
+                $('#invoice_waiting_to_send').DataTable().ajax.reload();
+                $('#invoice_pending_validation').DataTable().ajax.reload();
+                $('#invoice_send').DataTable().ajax.reload();
+                $('#invoice_normalized_dgi').DataTable().ajax.reload();
+              });
+            } else {
+              // Erreur lors de la création
+              Swal.fire({
+                title: 'Erreur!',
+                text: response.error || 'Une erreur est survenue lors de la création de la facture d\'avoir',
+                icon: 'error',
+                confirmButtonColor: '#d33'
+              });
+            }
+          },
+          error: function(xhr, status, error) {
+            // Erreur de connexion
+            Swal.fire({
+              title: 'Erreur de connexion!',
+              text: 'Impossible de contacter le serveur: ' + error,
+              icon: 'error',
+              confirmButtonColor: '#d33'
+            });
+          }
+        });
+      }
+    });
+  }
+
+  // Fonction pour afficher les détails d'une facture d'avoir DGI existante
+  function afficherDetailsAvoirDGI(ref_fact) {
+    // Afficher le loader
+    Swal.fire({
+      title: 'Chargement...',
+      html: '<i class="fas fa-spinner fa-spin fa-3x"></i>',
+      allowOutsideClick: false,
+      showConfirmButton: false
+    });
+
+    // Appel AJAX pour récupérer les détails de la facture d'avoir
+    $.ajax({
+      type: 'POST',
+      url: 'ajax/get_facture_avoir_dgi_details.php',
+      data: {
+        ref_fact: ref_fact
+      },
+      dataType: 'json',
+      success: function(response) {
+        if (response.success) {
+          // Afficher les détails de la facture d'avoir
+          Swal.fire({
+            title: 'Détails Facture d\'Avoir DGI',
+            html: '<div style="text-align: left; font-size: 14px;">' +
+              '<p style="background-color: #dc3545; color: white; padding: 10px; border-radius: 5px; text-align: center;"><strong>TYPE: FA (FACTURE D\'AVOIR)</strong></p>' +
+              '<hr>' +
+              '<p><strong>📄 Facture Origine:</strong><br><code>' + (response.data.facture_origine_ref || ref_fact) + '</code></p>' +
+              '<p><strong>🔑 UID FA:</strong><br><code style="font-size: 11px; word-break: break-all;">' + response.data.code_UID_FA + '</code></p>' +
+              '<p><strong>🏷️ Code DEF FA:</strong><br><code>' + response.data.code_DEF_DGI_FA + '</code></p>' +
+              '<p><strong>🏢 NIM:</strong> <code>' + (response.data.nim_DGI_FA || 'N/A') + '</code></p>' +
+              '<p><strong>📋 NIF:</strong> <code>' + (response.data.nif_DGI_FA || 'N/A') + '</code></p>' +
+              '<p><strong>🔢 Compteur:</strong> <code>' + (response.data.compteur_DGI_FA || 'N/A') + '</code></p>' +
+              '<p><strong>📅 Date Normalisation FA:</strong><br>' + (response.data.date_DGI_FA || 'N/A') + '</p>' +
+              '<p><strong>👤 Opérateur:</strong> ' + response.data.nom_util + '</p>' +
+              '<hr>' +
+              '<p style="font-size: 11px; color: #666;">QR Code String: <code>' + (response.data.qrcode_string_DGI_FA || 'N/A') + '</code></p>' +
+              '</div>',
+            icon: 'info',
+            confirmButtonColor: '#dc3545',
+            confirmButtonText: 'Fermer',
+            width: '600px'
+          });
+        } else {
+          // Erreur
+          Swal.fire({
+            title: 'Information',
+            text: response.error || 'Cette facture n\'a pas encore de facture d\'avoir normalisée',
+            icon: 'info',
+            confirmButtonColor: '#6c757d'
+          });
+        }
+      },
+      error: function(xhr, status, error) {
+        // Erreur de connexion
+        Swal.fire({
+          title: 'Erreur de connexion!',
+          text: 'Impossible de contacter le serveur: ' + error,
+          icon: 'error',
+          confirmButtonColor: '#d33'
         });
       }
     });
