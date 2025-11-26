@@ -32,11 +32,25 @@ class DgiApiClient
 
         $ch = curl_init($url);
 
+        // Préparer les données JSON si nécessaire
+        $jsonData = null;
+        if ($method === 'POST') {
+            $jsonData = json_encode($data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+        } elseif ($method === 'PUT') {
+            // IMPORTANT: Toujours envoyer un corps pour PUT, même vide, pour éviter erreur 411
+            $jsonData = $data ? json_encode($data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) : '{}';
+        }
+
         $headers = [
             "Authorization: Bearer " . $this->token,
             "Content-Type: application/json; charset=utf-8",
             "Accept: application/json"
         ];
+
+        // Ajouter Content-Length si on a des données
+        if ($jsonData !== null) {
+            $headers[] = "Content-Length: " . strlen($jsonData);
+        }
 
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -45,16 +59,12 @@ class DgiApiClient
 
         if ($method === 'POST') {
             curl_setopt($ch, CURLOPT_POST, true);
-            $jsonData = json_encode($data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
             curl_setopt($ch, CURLOPT_POSTFIELDS, $jsonData);
             error_log("JSON envoyé (POST): " . $jsonData);
         } elseif ($method === 'PUT') {
             curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PUT');
-            if ($data) {
-                $jsonData = json_encode($data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
-                curl_setopt($ch, CURLOPT_POSTFIELDS, $jsonData);
-                error_log("JSON envoyé (PUT): " . $jsonData);
-            }
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $jsonData);
+            error_log("JSON envoyé (PUT): " . $jsonData);
         }
 
         $response = curl_exec($ch);
