@@ -151,19 +151,7 @@ try {
                 compteur_DGI = ?,
                 qrcode_string_DGI = ?,
                 id_util_DGI = ?,
-                date_DGI = NOW(),
-
-                -- Mettre à NULL les champs FA lors de la normalisation FV
-                code_UID_FA = NULL,
-                code_DEF_DGI_FA = NULL,
-                nim_DGI_FA = NULL,
-                type_facture_DGI_FA = NULL,
-                nif_DGI_FA = NULL,
-                compteur_DGI_FA = NULL,
-                qrcode_string_DGI_FA = NULL,
-                id_util_DGI_FA = NULL,
-                date_DGI_FA = NULL,
-                facture_origine_ref = NULL
+                date_DGI = NOW()
             WHERE ref_fact = ?
         ");
 

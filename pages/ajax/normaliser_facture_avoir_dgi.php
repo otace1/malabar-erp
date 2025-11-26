@@ -180,21 +180,10 @@ try {
         // La FA a son propre UID généré par l'API
         $uid_fa = $result['uid'];
 
-        // IMPORTANT: Mettre à NULL les champs DGI normaux et remplir les champs _FA
+        // IMPORTANT: Remplir les champs _FA sans toucher aux champs DGI normaux (FV)
         $update_query = $connexion->prepare("
             UPDATE facture_dossier
             SET
-                -- Mettre à NULL les champs DGI normaux (FV)
-                code_UID = NULL,
-                code_DEF_DGI = NULL,
-                nim_DGI = NULL,
-                type_facture_DGI = NULL,
-                nif_DGI = NULL,
-                compteur_DGI = NULL,
-                qrcode_string_DGI = NULL,
-                id_util_DGI = NULL,
-                date_DGI = NULL,
-
                 -- Remplir les champs _FA (Facture d'Avoir)
                 code_UID_FA = ?,
                 code_DEF_DGI_FA = ?,
