@@ -57,30 +57,35 @@ try {
     // Calculer les montants HT, TVA et TTC
     $montant_ht = 0;
     $montant_tva = 0;
+    $montant_ttc = 0;
 
     foreach ($items_data as $item) {
         $montant = floatval($item['montant'] ?? 0);
+        $montant_tva_item = floatval($item['montant_tva'] ?? 0);
         $roe_decl = floatval($item['roe_decl'] ?? 1);
-        $tva = intval($item['tva'] ?? 0);
 
         // Convertir en USD si nécessaire
         if ($item['usd'] == '0') {
-            $price = $montant;
+            $price_ht = $montant;
+            $price_tva = $montant_tva_item;
         } else {
-            $price = $montant * $roe_decl;
+            $price_ht = $montant * $roe_decl;
+            $price_tva = $montant_tva_item * $roe_decl;
         }
 
         // Ajouter au montant HT
-        $montant_ht += $price;
+        $montant_ht += $price_ht;
 
-        // Si TVA applicable (tva = 1), calculer 16%
-        if ($tva == 1) {
-            $montant_tva += ($price * 0.16);
+        // Ajouter au montant TVA
+        $montant_tva += $price_tva;
+
+        // Calculer TTC : IF(det.montant_tva > 0, det.montant+det.montant_tva, det.montant)
+        if ($price_tva > 0) {
+            $montant_ttc += ($price_ht + $price_tva);
+        } else {
+            $montant_ttc += $price_ht;
         }
     }
-
-    // Calculer le TTC
-    $montant_ttc = $montant_ht + $montant_tva;
 
     // Formater les montants
     echo json_encode([
