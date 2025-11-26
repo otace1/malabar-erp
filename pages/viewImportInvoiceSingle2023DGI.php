@@ -21,7 +21,8 @@ include_once('../classes/maClasse.class.php');
 $maClasse = new MaClasse();
 
 // Charger TCPDF (compatible PHP 8.3+)
-require_once('../classes/tcpdf_loader.php');
+// require_once('../classes/tcpdf_loader.php');
+require_once('../tcpdf/tcpdf.php');
 
 
 // create new PDF document
