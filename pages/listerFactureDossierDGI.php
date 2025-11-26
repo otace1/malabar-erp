@@ -200,6 +200,40 @@ if (isset($_GET['id_cli']) && ($_GET['id_cli'] != '')) {
           <!-- /.card -->
         </div>
 
+
+
+        <div class="col-6">
+          <div class="card">
+            <div class="card-header">
+              <h5 class="card-title" style="font-weight: bold;">
+                <i class="fas fa-qrcode"></i> Facture Avoir
+              </h5>
+            </div>
+
+            <!-- /.card-header -->
+            <div class="card-body table-responsive p-0 small">
+              <table id="invoice_avoir_dgi" class="table table-dark table-bordered table-hover text-nowrap table-head-fixed table-sm">
+                <thead>
+                  <tr class="bg bg-dark">
+                    <th style="border: 1px solid white;" width="5px">#</th>
+                    <th style="border: 1px solid white;">REFERENCE</th>
+                    <th style="border: 1px solid white; text-align: center;">DATE</th>
+                    <th style="border: 1px solid white; text-align: center;">UID DGI</th>
+                    <th style="border: 1px solid white; text-align: center;">DATE DGI</th>
+                    <th style="border: 1px solid white; text-align: center;">EDITOR</th>
+                    <th style="border: 1px solid white; text-align: center;">ACTION</th>
+                  </tr>
+                </thead>
+                <tbody>
+
+                </tbody>
+              </table>
+            </div>
+            <!-- /.card-body -->
+          </div>
+          <!-- /.card -->
+        </div>
+
       </div>
     </div><!-- /.container-fluid -->
   </section>
@@ -454,6 +488,7 @@ include("pied.php");
             $('#invoice_pending_validation').DataTable().ajax.reload();
             $('#invoice_send').DataTable().ajax.reload();
             $('#invoice_normalized_dgi').DataTable().ajax.reload();
+            $('#invoice_avoir_dgi').DataTable().ajax.reload();
           }
         }
       });
@@ -536,34 +571,7 @@ include("pied.php");
     $('#modal_dossiers_facture').modal('show');
 
   }
-  // $(document).ready(function(){
 
-  //   $('#spinner-div').show();
-
-  //    $.ajax({
-  //     type: 'post',
-  //     url: 'ajax.php',
-  //     data: {operation: 'getAllInvoices', id_cli:<?php echo $_GET['id_cli']; ?>, id_mod_lic:<?php echo $_GET['id_mod_lic_fact']; ?>},
-  //     dataType: 'json',
-  //     success:function(data){
-  //       if (data.logout) {
-  //         alert(data.logout);
-  //         window.location="../deconnexion.php";
-  //       }else{
-  //         $('#invoice_pending_validation').html(data.invoice_pending_validation);
-  //         $('#nbre_invoice_pending_validation').html(data.nbre_invoice_pending_validation);
-  //         $('#invoice_waiting_to_send').html(data.invoice_waiting_to_send);
-  //         $('#nbre_invoice_waiting_to_send').html(data.nbre_invoice_waiting_to_send);
-  //         $('#invoice_send').html(data.invoice_send);
-  //         $('#nbre_invoice_send').html(data.nbre_invoice_send);
-  //       }
-  //     },
-  //     complete: function () {
-  //         $('#spinner-div').hide();//Request is complete so hide spinner
-  //     }
-  //   });
-
-  // });
 
   $('#invoice_waiting_to_send').DataTable({
     lengthMenu: [
@@ -858,6 +866,86 @@ include("pied.php");
     ]
   });
 
+  // DataTable pour les factures d'avoir DGI (FA)
+  $('#invoice_avoir_dgi').DataTable({
+    lengthMenu: [
+      [10, 100, 500, -1],
+      [10, 100, 500, 'All'],
+    ],
+    dom: 'Bfrtip',
+    buttons: [{
+        extend: 'excel',
+        text: '<i class="fa fa-file-excel"></i>',
+        className: 'btn btn-success'
+      },
+      {
+        extend: 'pageLength',
+        text: '<i class="fa fa-list"></i>',
+        className: 'btn btn-dark'
+      }
+    ],
+
+    "paging": true,
+    "lengthChange": true,
+    "searching": true,
+    "ordering": true,
+    "info": true,
+    "autoWidth": true,
+    "responsive": true,
+    "ajax": {
+      "type": "GET",
+      "url": "ajax.php",
+      "method": "post",
+      "dataSrc": {
+        "id_cli": ""
+      },
+      "data": {
+        "id_cli": "<?php echo $_GET['id_cli']; ?>",
+        "id_mod_lic": "<?php echo $_GET['id_mod_lic_fact']; ?>",
+        "statut": "invoice_avoir_dgi",
+        "operation": "getInvoiceAjax"
+      }
+    },
+    "columns": [{
+        "data": "compteur"
+      },
+      {
+        "data": "ref_fact"
+      },
+      {
+        "data": "date_fact"
+      },
+      {
+        "data": "code_UID_FA",
+        render: function(data, type, row) {
+          if (data) {
+            return '<small style="font-size:9px;">' + data.substring(0, 20) + '...</small>';
+          }
+          return '-';
+        }
+      },
+      {
+        "data": "date_DGI_FA",
+        render: function(data, type, row) {
+          if (data) {
+            var date = new Date(data);
+            return date.toLocaleDateString('fr-FR') + ' ' + date.toLocaleTimeString('fr-FR', {
+              hour: '2-digit',
+              minute: '2-digit'
+            });
+          }
+          return '-';
+        }
+      },
+      {
+        "data": "nom_util"
+      },
+      {
+        "data": "action"
+      }
+    ]
+  });
+
 
   function modal_send_invoice(ref_fact) {
     $('#spinner-div').show();
@@ -928,6 +1016,7 @@ include("pied.php");
             $('#invoice_pending_validation').DataTable().ajax.reload();
             $('#invoice_send').DataTable().ajax.reload();
             $('#invoice_normalized_dgi').DataTable().ajax.reload();
+            $('#invoice_avoir_dgi').DataTable().ajax.reload();
             alert('Email has been sended');
             $('#spinner-div').hide(); //Request is complete so hide spinner
           }
@@ -998,6 +1087,7 @@ include("pied.php");
             $('#invoice_pending_validation').DataTable().ajax.reload();
             $('#invoice_send').DataTable().ajax.reload();
             $('#invoice_normalized_dgi').DataTable().ajax.reload();
+            $('#invoice_avoir_dgi').DataTable().ajax.reload();
             alert('Invoice ' + ref_fact + ' has been validated!');
           }
         },
@@ -1035,6 +1125,7 @@ include("pied.php");
             $('#invoice_pending_validation').DataTable().ajax.reload();
             $('#invoice_send').DataTable().ajax.reload();
             $('#invoice_normalized_dgi').DataTable().ajax.reload();
+            $('#invoice_avoir_dgi').DataTable().ajax.reload();
             alert('Invoice ' + ref_fact + ' has been deleted!');
           }
         },
@@ -1049,73 +1140,140 @@ include("pied.php");
 
   // Fonction pour normaliser une facture avec l'API DGI
   function normaliserFactureDGI(ref_fact) {
-    // Confirmation avant normalisation
+    // D'abord récupérer les montants de la facture
     Swal.fire({
-      title: 'Normalisation DGI',
-      text: 'Voulez-vous normaliser cette facture ' + ref_fact + ' avec la DGI?',
-      icon: 'question',
-      showCancelButton: true,
-      confirmButtonColor: '#28a745',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Oui, normaliser!',
-      cancelButtonText: 'Annuler'
-    }).then((result) => {
-      if (result.isConfirmed) {
-        // Afficher le loader
-        Swal.fire({
-          title: 'Normalisation en cours...',
-          html: '<i class="fas fa-spinner fa-spin fa-3x"></i><br><br>Communication avec l\'API DGI...',
-          allowOutsideClick: false,
-          showConfirmButton: false
-        });
+      title: 'Chargement...',
+      html: '<i class="fas fa-spinner fa-spin fa-2x"></i>',
+      allowOutsideClick: false,
+      showConfirmButton: false
+    });
 
-        // Appel AJAX pour normaliser la facture
-        $.ajax({
-          type: 'POST',
-          url: 'ajax/normaliser_facture_dgi.php',
-          data: {
-            ref_fact: ref_fact
-          },
-          dataType: 'json',
-          success: function(response) {
-            if (response.success) {
-              // Succès de la normalisation
+    // Appel AJAX pour récupérer les montants
+    $.ajax({
+      type: 'POST',
+      url: 'ajax/get_facture_montants.php',
+      data: {
+        ref_fact: ref_fact
+      },
+      dataType: 'json',
+      success: function(montantsResponse) {
+        if (montantsResponse.success) {
+          // Afficher la confirmation avec les montants
+          Swal.fire({
+            title: 'Normalisation DGI - Facture de Vente (FV)',
+            html: '<div style="text-align: left; font-size: 14px;">' +
+              '<p><strong>📄 Référence:</strong> <code>' + ref_fact + '</code></p>' +
+              '<hr>' +
+              '<table style="width: 100%; border-collapse: collapse;">' +
+              '<tr style="background-color: #f8f9fa;">' +
+              '<td style="padding: 8px; border: 1px solid #dee2e6;"><strong>💵 Montant HT:</strong></td>' +
+              '<td style="padding: 8px; border: 1px solid #dee2e6; text-align: right;"><strong>' + montantsResponse.data.montant_ht_formatted + '</strong></td>' +
+              '</tr>' +
+              '<tr>' +
+              '<td style="padding: 8px; border: 1px solid #dee2e6;"><strong>📊 TVA (16%):</strong></td>' +
+              '<td style="padding: 8px; border: 1px solid #dee2e6; text-align: right;"><strong style="color: #007bff;">' + montantsResponse.data.montant_tva_formatted + '</strong></td>' +
+              '</tr>' +
+              '<tr style="background-color: #d4edda;">' +
+              '<td style="padding: 8px; border: 1px solid #dee2e6;"><strong>💰 TOTAL TTC:</strong></td>' +
+              '<td style="padding: 8px; border: 1px solid #dee2e6; text-align: right;"><strong style="color: #28a745; font-size: 16px;">' + montantsResponse.data.montant_ttc_formatted + '</strong></td>' +
+              '</tr>' +
+              '</table>' +
+              '<hr>' +
+              '<p style="color: #666; font-size: 12px;">⚠️ Voulez-vous normaliser cette facture avec la DGI?</p>' +
+              '</div>',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#28a745',
+            cancelButtonColor: '#6c757d',
+            confirmButtonText: '<i class="fas fa-check"></i> Oui, normaliser!',
+            cancelButtonText: '<i class="fas fa-times"></i> Annuler',
+            width: '600px'
+          }).then((result) => {
+            if (result.isConfirmed) {
+              // Afficher le loader
               Swal.fire({
-                title: 'Succès!',
-                html: '<div style="text-align: left;">' +
-                  '<p><strong>Facture normalisée avec succès!</strong></p>' +
-                  '<p><strong>UID DGI:</strong><br><small>' + response.data.uid + '</small></p>' +
-                  '<p><strong>Code DEF:</strong><br><small>' + response.data.codeDEFDGI + '</small></p>' +
-                  '<p><strong>Date:</strong> ' + response.data.dateTime + '</p>' +
-                  '</div>',
-                icon: 'success',
-                confirmButtonColor: '#28a745'
-              }).then(() => {
-                // Recharger les tableaux
-                $('#invoice_waiting_to_send').DataTable().ajax.reload();
-                $('#invoice_pending_validation').DataTable().ajax.reload();
-                $('#invoice_send').DataTable().ajax.reload();
-                $('#invoice_normalized_dgi').DataTable().ajax.reload();
+                title: 'Normalisation en cours...',
+                html: '<i class="fas fa-spinner fa-spin fa-3x"></i><br><br>📡 Communication avec l\'API DGI...',
+                allowOutsideClick: false,
+                showConfirmButton: false
               });
-            } else {
-              // Erreur lors de la normalisation
-              Swal.fire({
-                title: 'Erreur!',
-                text: response.error || 'Une erreur est survenue lors de la normalisation',
-                icon: 'error',
-                confirmButtonColor: '#d33'
+
+              // Appel AJAX pour normaliser la facture
+              $.ajax({
+                type: 'POST',
+                url: 'ajax/normaliser_facture_dgi.php',
+                data: {
+                  ref_fact: ref_fact
+                },
+                dataType: 'json',
+                success: function(response) {
+                  if (response.success) {
+                    // Succès de la normalisation
+                    Swal.fire({
+                      title: '✅ Succès!',
+                      html: '<div style="text-align: left;">' +
+                        '<p><strong>Facture normalisée avec succès!</strong></p>' +
+                        '<p style="background-color: #28a745; color: white; padding: 10px; border-radius: 5px; text-align: center;"><strong>TYPE: FV (FACTURE DE VENTE)</strong></p>' +
+                        '<hr>' +
+                        '<p><strong>🔑 UID DGI:</strong><br><code style="font-size: 11px; word-break: break-all;">' + response.data.uid + '</code></p>' +
+                        '<p><strong>🏷️ Code DEF:</strong><br><code>' + response.data.codeDEFDGI + '</code></p>' +
+                        '<p><strong>📅 Date:</strong> ' + response.data.dateTime + '</p>' +
+                        '</div>',
+                      icon: 'success',
+                      confirmButtonColor: '#28a745',
+                      confirmButtonText: 'Fermer',
+                      width: '600px'
+                    }).then(() => {
+                      // Recharger les tableaux
+                      $('#invoice_waiting_to_send').DataTable().ajax.reload();
+                      $('#invoice_pending_validation').DataTable().ajax.reload();
+                      $('#invoice_send').DataTable().ajax.reload();
+                      $('#invoice_normalized_dgi').DataTable().ajax.reload();
+                      $('#invoice_avoir_dgi').DataTable().ajax.reload();
+                    });
+                  } else {
+                    // Erreur lors de la normalisation
+                    Swal.fire({
+                      title: '❌ Erreur!',
+                      text: response.error || 'Une erreur est survenue lors de la normalisation',
+                      icon: 'error',
+                      confirmButtonColor: '#d33',
+                      confirmButtonText: 'Fermer'
+                    });
+                  }
+                },
+                error: function(xhr, status, error) {
+                  // Erreur de connexion
+                  Swal.fire({
+                    title: '❌ Erreur de connexion!',
+                    text: 'Impossible de contacter le serveur: ' + error,
+                    icon: 'error',
+                    confirmButtonColor: '#d33',
+                    confirmButtonText: 'Fermer'
+                  });
+                }
               });
             }
-          },
-          error: function(xhr, status, error) {
-            // Erreur de connexion
-            Swal.fire({
-              title: 'Erreur de connexion!',
-              text: 'Impossible de contacter le serveur: ' + error,
-              icon: 'error',
-              confirmButtonColor: '#d33'
-            });
-          }
+          });
+        } else {
+          // Erreur lors de la récupération des montants
+          Swal.fire({
+            title: '❌ Erreur!',
+            text: montantsResponse.error || 'Impossible de récupérer les montants de la facture',
+            icon: 'error',
+            confirmButtonColor: '#d33',
+            confirmButtonText: 'Fermer'
+          });
+        }
+      },
+      error: function(xhr, status, error) {
+        // Erreur de connexion
+        Swal.fire({
+          title: '❌ Erreur!',
+          text: 'Impossible de récupérer les informations de la facture: ' + error,
+          icon: 'error',
+          confirmButtonColor: '#d33',
+          confirmButtonText: 'Fermer'
         });
       }
     });
@@ -1126,14 +1284,22 @@ include("pied.php");
     // Confirmation avant création de la facture d'avoir
     Swal.fire({
       title: 'Facture d\'Avoir (FA)',
-      html: '<p>Voulez-vous créer une <strong>FACTURE D\'AVOIR</strong> pour cette facture ' + ref_fact + '?</p>' +
-        '<p style="color: red; font-size: 12px;">⚠️ ATTENTION: Les informations DGI normales (FV) seront remplacées par la facture d\'avoir (FA)</p>',
+      html: '<div style="text-align: left;">' +
+        '<p>📄 <strong>Référence:</strong> <code>' + ref_fact + '</code></p>' +
+        '<hr>' +
+        '<p>Voulez-vous créer une <strong>FACTURE D\'AVOIR (FA)</strong> pour cette facture?</p>' +
+        '<p style="color: #dc3545; font-size: 13px; background-color: #f8d7da; padding: 10px; border-radius: 5px;">' +
+        '⚠️ <strong>IMPORTANT:</strong> La facture d\'avoir sera créée en conservant les données de la facture de vente originale (FV).' +
+        '</p>' +
+        '<p style="color: #666; font-size: 12px;">Les deux ensembles de données (FV et FA) coexisteront dans le système.</p>' +
+        '</div>',
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#dc3545',
       cancelButtonColor: '#6c757d',
-      confirmButtonText: 'Oui, créer la facture d\'avoir!',
-      cancelButtonText: 'Annuler'
+      confirmButtonText: '<i class="fas fa-check"></i> Oui, créer la facture d\'avoir!',
+      cancelButtonText: '<i class="fas fa-times"></i> Annuler',
+      width: '600px'
     }).then((result) => {
       if (result.isConfirmed) {
         // Afficher le loader
@@ -1161,8 +1327,9 @@ include("pied.php");
               var hasCodeDEF = response.data.codeDEFDGI != null && response.data.codeDEFDGI != '';
 
               var messageHTML = '<div style="text-align: left;">' +
-                '<p><strong>Facture d\'avoir créée!</strong></p>' +
-                '<p style="color: red;"><strong>Type: FA (AVOIR)</strong></p>';
+                '<p><strong>Facture d\'avoir créée avec succès!</strong></p>' +
+                '<p style="background-color: #dc3545; color: white; padding: 10px; border-radius: 5px; text-align: center;"><strong>TYPE: FA (FACTURE D\'AVOIR)</strong></p>' +
+                '<hr>';
 
               if (!hasUID || !hasCodeDEF) {
                 messageHTML += '<div style="background-color: #fff3cd; padding: 10px; border-radius: 5px; margin: 10px 0;">' +
@@ -1172,26 +1339,27 @@ include("pied.php");
 
                 // Afficher les données de débogage
                 if (response.debug) {
-                  messageHTML += '<hr><p><strong>Debug Info:</strong></p>' +
+                  messageHTML += '<hr><p><strong>Informations de débogage:</strong></p>' +
                     '<pre style="font-size: 10px; max-height: 200px; overflow: auto;">' +
                     JSON.stringify(response.debug.full_result, null, 2) + '</pre>';
                 }
                 messageHTML += '</div>';
               } else {
-                messageHTML += '<p><strong>UID FA:</strong><br><small>' + response.data.uid + '</small></p>' +
-                  '<p><strong>Code DEF FA:</strong><br><small>' + response.data.codeDEFDGI + '</small></p>';
+                messageHTML += '<p><strong>🔑 UID FA:</strong><br><code style="font-size: 11px; word-break: break-all;">' + response.data.uid + '</code></p>' +
+                  '<p><strong>🏷️ Code DEF FA:</strong><br><code>' + response.data.codeDEFDGI + '</code></p>';
               }
 
-              messageHTML += '<p><strong>Date:</strong> ' + response.data.dateTime + '</p>' +
-                '<p><strong>Facture Origine:</strong> ' + response.data.factureOrigine + '</p>' +
+              messageHTML += '<p><strong>📅 Date:</strong> ' + response.data.dateTime + '</p>' +
+                '<p><strong>📄 Facture Origine:</strong> <code>' + response.data.factureOrigine + '</code></p>' +
                 '</div>';
 
               // Succès de la création
               Swal.fire({
-                title: hasUID && hasCodeDEF ? 'Succès!' : 'Attention',
+                title: hasUID && hasCodeDEF ? '✅ Succès!' : '⚠️ Attention',
                 html: messageHTML,
                 icon: hasUID && hasCodeDEF ? 'success' : 'warning',
                 confirmButtonColor: hasUID && hasCodeDEF ? '#28a745' : '#ffc107',
+                confirmButtonText: 'Fermer',
                 width: '700px'
               }).then(() => {
                 // Recharger les tableaux
@@ -1199,24 +1367,27 @@ include("pied.php");
                 $('#invoice_pending_validation').DataTable().ajax.reload();
                 $('#invoice_send').DataTable().ajax.reload();
                 $('#invoice_normalized_dgi').DataTable().ajax.reload();
+                $('#invoice_avoir_dgi').DataTable().ajax.reload();
               });
             } else {
               // Erreur lors de la création
               Swal.fire({
-                title: 'Erreur!',
+                title: '❌ Erreur!',
                 text: response.error || 'Une erreur est survenue lors de la création de la facture d\'avoir',
                 icon: 'error',
-                confirmButtonColor: '#d33'
+                confirmButtonColor: '#d33',
+                confirmButtonText: 'Fermer'
               });
             }
           },
           error: function(xhr, status, error) {
             // Erreur de connexion
             Swal.fire({
-              title: 'Erreur de connexion!',
+              title: '❌ Erreur de connexion!',
               text: 'Impossible de contacter le serveur: ' + error,
               icon: 'error',
-              confirmButtonColor: '#d33'
+              confirmButtonColor: '#d33',
+              confirmButtonText: 'Fermer'
             });
           }
         });
