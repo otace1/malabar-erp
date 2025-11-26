@@ -585,9 +585,6 @@ if (isset($_GET['ref_fact'])) {
 		</tr>
 		$taxe
 		<tr>
-			<td colspan="4"></td>
-		</tr>
-		<tr>
 			<td width="100%" style="font-weight: bold; border: 1px solid black; font-size: 7px;">&nbsp;<u>OTHER CHARGES / AUTRES FRAIS </u></td>
 		</tr>
 		<tr>
@@ -600,9 +597,6 @@ if (isset($_GET['ref_fact'])) {
 		</tr>
 		$autres_charges
 		<tr>
-			<td width="100%"></td>
-		</tr>
-		<tr>
 			<td width="100%" style="font-weight: bold; border: 1px solid black; font-size: 7px;">&nbsp;<u>OPERATIONAL COSTS / COUT OPERATIONEL</u></td>
 		</tr>
 		<tr>
@@ -614,9 +608,6 @@ if (isset($_GET['ref_fact'])) {
 			<td width="11.5%" style="font-weight: bold; border: 1px solid black; background-color: rgb(220,220,220); font-size: 7px;text-align: center;">TOTAL  EN USD</td>
 		</tr>
 		$operational_cost
-		<tr>
-			<td width="100%"></td>
-		</tr>
 		<tr>
 			<td width="100%" style="font-weight: bold; border: 1px solid black; font-size: 7px;">&nbsp;<u>SERVICE FEE / SERVICES</u></td>
 		</tr>
@@ -653,13 +644,7 @@ if (isset($_GET['ref_fact'])) {
 			VEUILLEZ TROUVER CI-DESSOUS LES DETAILS DE NOTRE COMPTE BANCAIRE
 			</td>
 		</tr>
-		<tr>
-			<td width="100%"></td>
-		</tr>
 		$banque
-		<tr>
-			<td width="100%"></td>
-		</tr>
 		<tr>
 			<td width="100%" style=" text-align: center; font-size: 7px;">Thank you for you business!</td>
 		</tr>
