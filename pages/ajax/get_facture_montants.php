@@ -33,6 +33,8 @@ try {
     $query_items = $connexion->prepare("
         SELECT
             det.*,
+            if(det.montant_tva > 0, det.montant + det.montant_tva, det.montant) as montant,
+            if(det.tva = '1' AND det.usd = '1', det.montant * 0.16, 0) as montant_tva,
             d.nom_deb,
             d.abr_deb,
             dos.roe_decl
@@ -61,22 +63,19 @@ try {
     foreach ($items_data as $item) {
         $montant = floatval($item['montant'] ?? 0);
         $roe_decl = floatval($item['roe_decl'] ?? 1);
-        $tva = intval($item['tva'] ?? 0);
+        $tva = floatval($item['montant_tva'] ?? 0);
 
         // Convertir en CDF si nécessaire (usd='0' = déjà en CDF, usd='1' = en USD à convertir)
-        if ($item['usd'] == '0') {
-            $price_ht = $montant;
-        } else {
-            $price_ht = $montant * $roe_decl;
+        if ($item['usd'] == '1') {
+            $montant = $montant * $roe_decl;
+            $tva = $tva * $roe_decl;
         }
 
         // Ajouter au montant HT
-        $montant_ht += $price_ht;
+        $montant_ht += $montant;
+        $montant_tva += $tva;
 
-        // Si TVA applicable (tva = 1), calculer 16%
-        if ($tva == 1) {
-            $montant_tva += ($price_ht * 0.16);
-        }
+
     }
 
     // Calculer le TTC
