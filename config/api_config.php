@@ -7,8 +7,17 @@
 // Configuration API
 define('API_BASE_URL', 'https://developper.dgirdc.cd/edef/api');
 
+//MALABAR
 // Token JWT (à mettre à jour régulièrement avant expiration)
 define('API_TOKEN', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6IkExMzA5MzM0THxDRDAxMDAzMDc1LTEiLCJyb2xlIjoiVGF4cGF5ZXIiLCJuYmYiOjE3NjM1NTcyMzUsImV4cCI6MTc2NzEzNTYwMCwiaWF0IjoxNzYzNTU3MjM1LCJpc3MiOiJkZXZlbG9wcGVyLmRnaXJkYy5jZCIsImF1ZCI6ImRldmVsb3BwZXIuZGdpcmRjLmNkIn0.C_PL62gzprSVvovnuDyeDLtaksCGZKQ97xAnyWpJH9M');
+
+//BELEJ
+// define('API_TOKEN', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6IkExODA5MTgxQXxDRDAxMDAyOTc0LTEiLCJyb2xlIjoiVGF4cGF5ZXIiLCJuYmYiOjE3NjQxNDk1MDUsImV4cCI6MTc2NjE4NTIwMCwiaWF0IjoxNzY0MTQ5NTA1LCJpc3MiOiJkZXZlbG9wcGVyLmRnaXJkYy5jZCIsImF1ZCI6ImRldmVsb3BwZXIuZGdpcmRjLmNkIn0.QIGdyTpW82OOl6IkolfJOBW2NPzXlqR0Hln1buuIUnA');
+
+
+// define('ENTREPRISE_NOM', 'BELEJ');
+// define('ENTREPRISE_NIF', 'A1809181A');
+// define('ENTREPRISE_EMCF_ID', 'CD01002974-1');
 
 // Informations de l'entreprise
 define('ENTREPRISE_NIF', 'A1309334L');
