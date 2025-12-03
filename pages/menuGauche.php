@@ -157,6 +157,80 @@
                     </p>
                   </a>
                 </li>
+                 <li class="nav-item has-treeview">
+              <a href="#" class="nav-link" class="nav-link">
+                <i class="fas fa-chart-bar" style="font-size: 22px; color: #17a2b8;"></i>
+                <p>
+                  <?php
+                  if ($maClasse->getUtilisateur($_SESSION['id_util'])['langue'] == 'ENG') {
+                    echo 'DGI Statistical Reports';
+                  } else if ($maClasse->getUtilisateur($_SESSION['id_util'])['langue'] == 'FR') {
+                    echo 'Rapports Statistiques DGI';
+                  }
+                  ?>
+                  <i class="right fas fa-angle-left"></i>
+                </p>
+              </a>
+              <ul class="nav nav-treeview">
+                <li class="nav-item">
+                  <a href="rapports_dgi_x.php" class="nav-link">
+                    &nbsp;&nbsp;&nbsp;<i class="fas fa-file-alt nav-icon" style="color: #28a745;"></i>
+                    <p>
+                      <?php
+                      if ($maClasse->getUtilisateur($_SESSION['id_util'])['langue'] == 'ENG') {
+                        echo 'X-Report (Current Session)';
+                      } else if ($maClasse->getUtilisateur($_SESSION['id_util'])['langue'] == 'FR') {
+                        echo 'X-Rapport (Session en Cours)';
+                      }
+                      ?>
+                    </p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="rapports_dgi_z.php" class="nav-link">
+                    &nbsp;&nbsp;&nbsp;<i class="fas fa-file-invoice nav-icon" style="color: #dc3545;"></i>
+                    <p>
+                      <?php
+                      if ($maClasse->getUtilisateur($_SESSION['id_util'])['langue'] == 'ENG') {
+                        echo 'Z-Report (Close Session)';
+                      } else if ($maClasse->getUtilisateur($_SESSION['id_util'])['langue'] == 'FR') {
+                        echo 'Z-Rapport (Clôture Session)';
+                      }
+                      ?>
+                    </p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="rapports_dgi_a.php" class="nav-link">
+                    &nbsp;&nbsp;&nbsp;<i class="fas fa-box nav-icon" style="color: #ffc107;"></i>
+                    <p>
+                      <?php
+                      if ($maClasse->getUtilisateur($_SESSION['id_util'])['langue'] == 'ENG') {
+                        echo 'A-Report (Articles)';
+                      } else if ($maClasse->getUtilisateur($_SESSION['id_util'])['langue'] == 'FR') {
+                        echo 'A-Rapport (Articles)';
+                      }
+                      ?>
+                    </p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="rapports_dgi_sessions.php" class="nav-link">
+                    &nbsp;&nbsp;&nbsp;<i class="fas fa-history nav-icon" style="color: #6c757d;"></i>
+                    <p>
+                      <?php
+                      if ($maClasse->getUtilisateur($_SESSION['id_util'])['langue'] == 'ENG') {
+                        echo 'Sessions History';
+                      } else if ($maClasse->getUtilisateur($_SESSION['id_util'])['langue'] == 'FR') {
+                        echo 'Historique Sessions';
+                      }
+                      ?>
+                    </p>
+                  </a>
+                </li>
+              </ul>
+            </li>
+            <hr>
                 <!-- <li class="nav-item">
                   <a href="balanceSheet.php" class="nav-link">
                     &nbsp;&nbsp;&nbsp;<i class="fa fa-folder-open nav-icon"></i>
@@ -665,6 +739,86 @@
             <?php
               $maClasse-> afficherMenuFacturationDebitNote();
             ?>
+            <li class="nav-item">
+                <!-- <a href="client_note_debit.php?id_mod_lic_nd=<?php echo $reponse['id_mod_lic'];?>" class="nav-link"> -->
+                <a href="#" onclick="client_note_debit();" class="nav-link">
+                  <i class="fa fa-cogs nav-icon"></i>
+                  <p>Settings</p>
+                </a>
+            </li>
+             <li class="nav-item has-treeview">
+              <a href="#" class="nav-link" class="nav-link">
+                <i class="fas fa-chart-bar" style="font-size: 22px; color: #17a2b8;"></i>
+                <p>
+                  <?php
+                  if ($maClasse->getUtilisateur($_SESSION['id_util'])['langue'] == 'ENG') {
+                    echo 'DGI Statistical Reports';
+                  } else if ($maClasse->getUtilisateur($_SESSION['id_util'])['langue'] == 'FR') {
+                    echo 'Rapports Statistiques DGI';
+                  }
+                  ?>
+                  <i class="right fas fa-angle-left"></i>
+                </p>
+              </a>
+              <ul class="nav nav-treeview">
+                <li class="nav-item">
+                  <a href="rapports_dgi_x.php" class="nav-link">
+                    &nbsp;&nbsp;&nbsp;<i class="fas fa-file-alt nav-icon" style="color: #28a745;"></i>
+                    <p>
+                      <?php
+                      if ($maClasse->getUtilisateur($_SESSION['id_util'])['langue'] == 'ENG') {
+                        echo 'X-Report (Current Session)';
+                      } else if ($maClasse->getUtilisateur($_SESSION['id_util'])['langue'] == 'FR') {
+                        echo 'X-Rapport (Session en Cours)';
+                      }
+                      ?>
+                    </p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="rapports_dgi_z.php" class="nav-link">
+                    &nbsp;&nbsp;&nbsp;<i class="fas fa-file-invoice nav-icon" style="color: #dc3545;"></i>
+                    <p>
+                      <?php
+                      if ($maClasse->getUtilisateur($_SESSION['id_util'])['langue'] == 'ENG') {
+                        echo 'Z-Report (Close Session)';
+                      } else if ($maClasse->getUtilisateur($_SESSION['id_util'])['langue'] == 'FR') {
+                        echo 'Z-Rapport (Clôture Session)';
+                      }
+                      ?>
+                    </p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="rapports_dgi_a.php" class="nav-link">
+                    &nbsp;&nbsp;&nbsp;<i class="fas fa-box nav-icon" style="color: #ffc107;"></i>
+                    <p>
+                      <?php
+                      if ($maClasse->getUtilisateur($_SESSION['id_util'])['langue'] == 'ENG') {
+                        echo 'A-Report (Articles)';
+                      } else if ($maClasse->getUtilisateur($_SESSION['id_util'])['langue'] == 'FR') {
+                        echo 'A-Rapport (Articles)';
+                      }
+                      ?>
+                    </p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="rapports_dgi_sessions.php" class="nav-link">
+                    &nbsp;&nbsp;&nbsp;<i class="fas fa-history nav-icon" style="color: #6c757d;"></i>
+                    <p>
+                      <?php
+                      if ($maClasse->getUtilisateur($_SESSION['id_util'])['langue'] == 'ENG') {
+                        echo 'Sessions History';
+                      } else if ($maClasse->getUtilisateur($_SESSION['id_util'])['langue'] == 'FR') {
+                        echo 'Historique Sessions';
+                      }
+                      ?>
+                    </p>
+                  </a>
+                </li>
+              </ul>
+            </li>
             <hr>
             <?php
             }
