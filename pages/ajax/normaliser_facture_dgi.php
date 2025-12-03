@@ -37,6 +37,9 @@ try {
         SELECT
             fd.*,
             cl.nom_cli,
+            cl.nif_cli,
+            cl.adr_cli,
+            cl.tel_cli,
             u.id_util,
             u.nom_util
         FROM facture_dossier fd
@@ -110,11 +113,11 @@ try {
 
     // 4. Préparer les informations du client
     $client = [
-        'type' => 'PP', // PP = Personne Physique, PM = Personne Morale
+        'type' => 'PM', // PM = Personne Morale (obligatoire pour toutes les factures)
         'name' => $facture_data['nom_cli'] ?? 'Client Anonyme',
-        'nif' => null,
-        'contact' => null,
-        'address' => null
+        'nif' => $facture_data['nif_cli'] ?? null,
+        'contact' => $facture_data['tel_cli'] ?? null,
+        'address' => $facture_data['adr_cli'] ?? null
     ];
 
     // 5. Préparer le paiement
