@@ -201,7 +201,7 @@ try {
 
     $par_type_facture = [];
     $par_groupe_taxation = [];
-    $par_mode_paiement = ['ESPECES' => 0];
+    $par_mode_paiement = ['VIREMENT' => 0];
 
     foreach ($factures as $facture) {
         // Récupérer les détails de la facture
@@ -298,7 +298,7 @@ try {
         }
 
         // Mode de paiement (par défaut ESPECES pour simplifier)
-        $par_mode_paiement['ESPECES'] += $montant_ttc_facture;
+        $par_mode_paiement['VIREMENT'] += $montant_ttc_facture;
 
         // Ajouter aux détails
         $factures_details[] = [

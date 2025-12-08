@@ -153,7 +153,7 @@ try {
 
     // 5. Préparer le paiement
     $paiements = [[
-        'name' => 'ESPECES',
+        'name' => 'VIREMENT',
         'amount' => $total_amount
     ]];
 

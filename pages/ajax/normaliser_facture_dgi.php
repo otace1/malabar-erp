@@ -122,7 +122,7 @@ try {
 
     // 5. Préparer le paiement
     $paiements = [[
-        'name' => 'ESPECES', // ESPECES, MOBILEMONEY, CHEQUE, VIREMENT, CARTE
+        'name' => 'VIREMENT', // ESPECES, MOBILEMONEY, CHEQUE, VIREMENT, CARTE
         'amount' => $total_amount
     ]];
 
