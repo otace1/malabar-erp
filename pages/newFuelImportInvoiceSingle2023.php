@@ -42,7 +42,7 @@
               <!-- /.card-header -->
 
               <div class="card-body table-responsive p-0">
-                
+
 <!-- <form id="enregistrerFactureImportFuel_form" method="POST" action="" data-parsley-validate enctype="multipart/form-data"> -->
 <form method="POST" id="enregistrerFactureImportFuel_form" action="" data-parsley-validate enctype="multipart/form-data">
   <input type="hidden" name="operation" id="operation" value="enregistrerFactureImportFuel">
@@ -50,7 +50,7 @@
   <div class="card-body">
 
     <div class="row">
-      
+
       <input type="hidden" name="id_cli" id="id_cli" value="<?php echo $_GET['id_cli'];?>">
       <input type="hidden" name="id_mod_lic" id="id_mod_lic" value="<?php echo $_GET['id_mod_lic_fact'];?>">
       <input type="hidden" name="id_march" id="id_march" value="<?php echo $_GET['id_march'];?>">
@@ -58,7 +58,7 @@
       <input type="hidden" name="id_mod_trans" id="id_mod_trans" value="<?php echo $_GET['id_mod_trans'];?>">
       <input type="hidden" name="consommable" id="consommable" value="<?php echo $_GET['consommable'];?>">
       <div class="col-md-3">
-        
+
           <div class="form-group">
             <label for="inputEmail3" class="col-form-label">Invoice Ref.: </label>
             <input class="form-control form-control-sm bg bg-dark" type="text" name="ref_fact" id="ref_fact" value="<?php echo $maClasse-> buildRefFactureGlobale($_GET['id_cli']);?>">
@@ -67,7 +67,7 @@
       </div>
 
       <div class="col-md-2">
-        
+
           <div class="form-group">
             <label for="inputEmail3" class="col-form-label">Liquidation Ref.:</label>
             <select class="form-control form-control-sm" onchange="get_tableau_dossier_a_facturer_liquidation(this.value);" required>
@@ -81,7 +81,7 @@
       </div>
 
       <div class="col-md-2">
-        
+
           <div class="form-group">
             <label for="inputEmail3" class="col-form-label">M3: </label>
             <input type="hidden" id="m3" name="m3">
@@ -91,7 +91,7 @@
       </div>
 
       <div class="col-md-2">
-        
+
           <div class="form-group">
             <label for="roe_decl" class="col-form-label">Rate: </label>
             <input class="form-control form-control-sm text-center" type="number" step="0.0001" id="roe_decl" name="roe_decl">
@@ -100,7 +100,7 @@
       </div>
 
       <div class="col-md-2">
-        
+
           <div class="form-group">
             <label for="roe_decl" class="col-form-label">Liquidation Amount: </label>
             <input class="form-control form-control-sm text-center" type="number" step="0.0001" id="montant_liq" name="montant_liq" required onkeyup="calculDroit2();">
@@ -109,7 +109,7 @@
       </div>
 
       <div class="col-md-4">
-        
+
         <?php
           if($_GET['id_mod_trans']==3){
             ?>
@@ -168,7 +168,6 @@
               <td>M3</td>
               <td>OPS & Admin Fees(4$)</td>
               <td>Agency Fees(2$)</td>
-              <td>Seguce Fees(120$)</td>
             </tr>
           </thead>
           <tbody id="tableau_dossier_a_facturer_liquidation"></tbody>
@@ -178,7 +177,7 @@
 
     </div>
 
-    </div>  
+    </div>
 
 
 <!-- -------VALIDATION FORMULAIRE------- -->
@@ -325,7 +324,7 @@
               $( '#form_edit_suivi_licence' ).each(function(){
                   this.reset();
               });
-              
+
               $('#facturation_suivi_licence').DataTable().ajax.reload();
               $('#modal_edit_suivi_licence').modal('hide');
               getTableauImportInvoiceSingle($('#id_mod_fact').val(), $('#id_dos').val(), $('#id_mod_lic').val(), $('#id_march').val(), $('#id_mod_trans').val(), null);
@@ -340,7 +339,7 @@
       }
 
     });
-    
+
   });
 
   function modal_edit_suivi_licence(num_lic, fact_suiv_lic){
@@ -351,7 +350,7 @@
   }
 
   function facturation_suivi_licence(id_cli, id_mod_lic){
-    
+
     $('#spinner-div').show();
 
     //  var today   = new Date();
@@ -409,12 +408,12 @@
           className: 'dt-body-center'},
         {"data":"btn_action",
           className: 'dt-body-right'}
-      ] 
+      ]
     });
     $('#spinner-div').hide();//Request is complete so hide spinner
 
     $('#modal_facturation_suivi_licence').modal('show');
-    
+
   }
   function round(num, decimalPlaces = 0) {
     return new Decimal(num).toDecimalPlaces(decimalPlaces).toNumber();
@@ -486,7 +485,7 @@
         }
       },
       complete: function () {
-        
+
         $('#spinner-div').hide();//Request is complete so hide spinner
       }
     });
@@ -506,7 +505,7 @@
           window.location="../deconnexion.php";
         }else{
           // alert('Hello');
-          
+
           //Items ------------
           $('#debours').html(data.debours);
         }
@@ -531,7 +530,7 @@
           window.location="../deconnexion.php";
         }else{
           // alert('Hello');
-          
+
           $('#debours').html(data.debours);
           // $('#template_invoice').html(data.template_invoice);
           calculTresco();
@@ -599,7 +598,7 @@
         }
 
       });
-    
+
   });
 
 
@@ -647,25 +646,25 @@
 
 
     if (Math.round(cif_usd*1000)/1000 > 0) {
-      
+
       $('#cif_usd').val(new Intl.NumberFormat('en-DE').format(Math.round(cif_usd*1000)/1000));
       // $('#cif_usd').addClass("badge badge-danger");
 
     }else{
-      
+
       $('#cif_usd').val('');
       $('#cif_usd').removeClass("badge badge-danger");
 
     }
 
     if (Math.round(cif_cdf*1000)/1000 > 0) {
-      
+
       // $('#cif_cdf').val(new Intl.NumberFormat('en-DE').format(Math.round(cif_cdf*1000)/1000));
       $('#cif_cdf').val(cif_cdf);
       // $('#cif_cdf').addClass("badge badge-danger");
 
     }else{
-      
+
       $('#cif_cdf').val('');
       $('#cif_cdf').removeClass("badge badge-danger");
 
@@ -1241,7 +1240,7 @@
     // fpi = (cif_cdf+ddi)*0.0184;
     // rri = (cif_cdf*0.0225);
     // cog = (cif_cdf*0.00457);
-    
+
     // alert(tva_ddi);
     <?php
     if($maClasse-> get_aff_client_modele_licence($_GET['id_cli'], $_GET['id_mod_lic_fact'])['bank_rate']=='0'){
@@ -1264,7 +1263,7 @@
       <?php
     }
     ?>
-    
+
 
     autres_taxes = montant_liq-(ddi+tva_ddi+fpi+tva_fpi+rri+tva_rri+cog+tva_cog+dci+tva_dci+rls+tva_rls+tva+ddi_2+tva_ddi_2+ddi_3+tva_ddi_3+ddi_4+tva_ddi_4);
 
@@ -1306,9 +1305,9 @@
       $('#autres_taxes').val('');
     }
     if (Math.round(frais_bancaire*1000)/1000 > 0) {
-      
+
       $('#frais_bancaire').val(frais_bancaire.toFixed(2));
-      
+
     }else{
       $('#frais_bancaire').val('');
     }
@@ -1345,7 +1344,7 @@
     somme_debours_liquidation = 0;
 
     for (var i = 1; i <= compteur; i++) {
-      
+
       if (parseFloat($('#debours_'+i).val()) > 0 ) {
         somme_debours_liquidation += parseFloat($('#debours_'+i).val());
       }
@@ -1396,7 +1395,7 @@
       tresco = (poids*0.5)+15;
 
     }
-   
+
 
     // if (Math.round(tresco*1000)/1000 > 0) {
     if (tresco > 0) {
