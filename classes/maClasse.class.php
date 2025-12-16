@@ -57293,7 +57293,6 @@
 				$m3 += $reponse['m3'];
 				$ops_admin_fee += $reponse['m3']*4;
 				$agency_fee += $reponse['m3']*2;
-				$seguce_fee += 120;
 
 				$table .= '<tr>
 								<input type="hidden" name="id_dos_'.$i.'" value="'.$reponse['id_dos'].'">
@@ -57320,7 +57319,6 @@
 							<td class="text-right">'.number_format($m3, 2, ',', ' ').'</td>
 							<td class="text-right">'.number_format($ops_admin_fee, 2, ',', ' ').'</td>
 							<td class="text-right">'.number_format($agency_fee, 2, ',', ' ').'</td>
-							<td class="text-right">'.number_format($seguce_fee, 2, ',', ' ').'</td>
 						</tr>';
 
 			$rows['m3'] = round($m3, 3);
