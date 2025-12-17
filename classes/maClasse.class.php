@@ -57293,14 +57293,12 @@
 				$m3 += $reponse['m3'];
 				$ops_admin_fee += $reponse['m3']*4;
 				$agency_fee += $reponse['m3']*2;
-
 				$table .= '<tr>
 								<input type="hidden" name="id_dos_'.$i.'" value="'.$reponse['id_dos'].'">
 								<input type="hidden" name="pourcentage_qte_ddi_'.$i.'" value="">
 								<input type="hidden" name="montant_tva_'.$i.'" value="0">
 								<input type="hidden" name="ops_admin_fee_'.$i.'" value="'.($reponse['m3']*4).'">
 								<input type="hidden" name="agency_fee_'.$i.'" value="'.($reponse['m3']*2).'">
-								<input type="hidden" name="seguce_fee_'.$i.'" value="120">
 								<td>'.$i.'</td>
 								<td>'.$reponse['ref_dos'].'</td>
 								<td>'.$reponse['truck'].'</td>
@@ -57308,7 +57306,6 @@
 								<td class="text-right">'.number_format($reponse['m3'], 2, ',', ' ').'</td>
 								<td class="text-right">'.number_format(($reponse['m3']*4), 2, ',', ' ').'</td>
 								<td class="text-right">'.number_format(($reponse['m3']*2), 2, ',', ' ').'</td>
-								<td class="text-right">'.number_format(120, 2, ',', ' ').'</td>
 							</tr>';
 
 			}$requete-> closeCursor();
