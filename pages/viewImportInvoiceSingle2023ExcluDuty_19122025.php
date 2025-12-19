@@ -361,7 +361,7 @@ $tbl = <<<EOD
 			</td>
 		</tr>
 		<tr>
-			<td width="45%" style="text-align: center; border: 0.3px solid black; font-weight: bold; font-size: 12px;">DEBIT NOTE</td>
+			<td width="45%" style="text-align: center; border: 0.3px solid black; font-weight: bold; font-size: 12px;">FACTURE</td>
 		</tr>
 		<br>
 		<tr>
@@ -374,8 +374,8 @@ $tbl = <<<EOD
 			<br>No.IMPORT/EXPORT: $num_imp_exp
 			<br>No.TVA: $num_tva</span></td>
 			<td width="15%" style="text-align: center;"></td>
-			<td width="15%" style="text-align: left; border: 0.3px solid black; font-size: 7px; font-weight: bold;">&nbsp;DEBIT NOTE Nº</td>
-			<td width="25%" style="text-align: center; border: 0.3px solid black; font-weight: bold; font-size: 7px;">ND-$ref_fact</td>
+			<td width="15%" style="text-align: left; border: 0.3px solid black; font-size: 7px; font-weight: bold;">&nbsp;FACTURE Nº</td>
+			<td width="25%" style="text-align: center; border: 0.3px solid black; font-weight: bold; font-size: 7px;">$ref_fact-A</td>
 		</tr>
 		<tr>
 			<td width="15%" style="text-align: center;"></td>
@@ -482,14 +482,6 @@ $tbl = <<<EOD
 		</tr>
 
 		<tr>
-			<td width="100%" style="font-weight: bold; text-align: center;">REIMBURSABLE CHARGES</td>
-		</tr>
-
-		<tr>
-			<td width="100%"></td>
-		</tr>
-
-		<tr>
 			<td width="100%" style="font-weight: bold; border: 1px solid black; font-size: 7px;">&nbsp;<u>CUSTOMS CLEARANCE FEES / FRAIS DEDOUANEMENT</u></td>
 		</tr>
 		<tr>
@@ -501,24 +493,6 @@ $tbl = <<<EOD
 			<td width="11.5%" style="font-weight: bold; border: 1px solid black; background-color: rgb(220,220,220); font-size: 7px;text-align: center;">Total/CDF</td>
 		</tr>
 		$taxe
-		<tr>
-			<td width="100%"></td>
-		</tr>
-		<tr>
-			<td width="100%" style="font-weight: bold; border: 1px solid black; font-size: 7px;">&nbsp;<u>OTHER CHARGES / AUTRES FRAIS </u></td>
-		</tr>
-		<tr>
-			<td width="49%" style="font-weight: bold; border: 1px solid black; background-color: rgb(220,220,220); font-size: 7px; text-align: center;">&nbsp;<u>Description</u></td>
-			<td width="9%" style="font-weight: bold; border: 1px solid black; background-color: rgb(220,220,220); font-size: 7px;text-align: center;">Unit</td>
-			<td width="8%" style="font-weight: bold; border: 1px solid black; background-color: rgb(220,220,220); font-size: 7px;text-align: center;">Qty</td>
-			<td width="11%" style="font-weight: bold; border: 1px solid black; background-color: rgb(220,220,220); font-size: 7px;text-align: center;">Taux/USD</td>
-			<td width="11.5%" style="font-weight: bold; border: 1px solid black; background-color: rgb(220,220,220); font-size: 7px;text-align: center;">TVA/USD</td>
-			<td width="11.5%" style="font-weight: bold; border: 1px solid black; background-color: rgb(220,220,220); font-size: 7px;text-align: center;">TOTAL  EN USD</td>
-		</tr>
-		$autres_charges
-		<tr>
-			<td width="100%"></td>
-		</tr>
 		<tr>
 			<td rowspan="9" style="text-align: center; font-weight: bold; font-size: 8px;" width="65.5%">$sceau
 			</td>
@@ -714,6 +688,21 @@ $tbl2 = <<<EOD
 			<td width="100%"></td>
 		</tr>
 
+		<tr>
+			<td width="100%" style="font-weight: bold; border: 1px solid black; font-size: 7px;">&nbsp;<u>OTHER CHARGES / AUTRES FRAIS </u></td>
+		</tr>
+		<tr>
+			<td width="49%" style="font-weight: bold; border: 1px solid black; background-color: rgb(220,220,220); font-size: 7px; text-align: center;">&nbsp;<u>Description</u></td>
+			<td width="9%" style="font-weight: bold; border: 1px solid black; background-color: rgb(220,220,220); font-size: 7px;text-align: center;">Unit</td>
+			<td width="8%" style="font-weight: bold; border: 1px solid black; background-color: rgb(220,220,220); font-size: 7px;text-align: center;">Qty</td>
+			<td width="11%" style="font-weight: bold; border: 1px solid black; background-color: rgb(220,220,220); font-size: 7px;text-align: center;">Taux/USD</td>
+			<td width="11.5%" style="font-weight: bold; border: 1px solid black; background-color: rgb(220,220,220); font-size: 7px;text-align: center;">TVA/USD</td>
+			<td width="11.5%" style="font-weight: bold; border: 1px solid black; background-color: rgb(220,220,220); font-size: 7px;text-align: center;">TOTAL  EN USD</td>
+		</tr>
+		$autres_charges
+		<tr>
+			<td width="100%"></td>
+		</tr>
 		<tr>
 			<td width="100%" style="font-weight: bold; border: 1px solid black; font-size: 7px;">&nbsp;<u>OPERATIONAL COSTS / COUT OPERATIONEL</u></td>
 		</tr>

@@ -135,8 +135,6 @@ $operational_cost = $maClasse-> getDetailFactureExportMultiple($_GET['ref_fact']
 $service_fee = $maClasse-> getDetailFactureExportMultiple($_GET['ref_fact'], '4');
 
 $totalAll = $maClasse-> getTotalFactureExportSingle($_GET['ref_fact']);
-$totalAll_A = $maClasse-> getTotalFactureExportSingle_A($_GET['ref_fact']);
-$totalAll_B = $maClasse-> getTotalFactureExportSingle_B($_GET['ref_fact']);
 
 $total = $maClasse-> getTotalForFacturePartielle($_GET['ref_fact']);
 $arsp = $maClasse-> getARSPForFacturePartielle($_GET['ref_fact']);
@@ -372,154 +370,6 @@ $tbl = <<<EOD
 		<br>
 		<br>
 		<tr>
-			<td width="45%" style="text-align: center; border: 0.3px solid black; font-weight: bold; font-size: 12px;">DEBIT NOTE</td>
-		</tr>
-		<br>
-		<tr>
-			<td width="45%" rowspan="7" style="text-align: left; border: 0.3px solid black; font-size: 7px;"><span><u>CLIENT</u></span>
-			<br><b><font size="8px">$nom_complet</font> </b>
-			<br>$adresse_client
-			<br>No.RCCM: $rccm_cli
-			<br>No.NIF.: $nif_cli
-			<br>No.IDN.: $id_nat
-			<br>No.IMPORT/EXPORT: $num_imp_exp
-			<br>No.TVA: $num_tva</td>
-			<td width="15%" style="text-align: center;"></td>
-			<td width="18%" style="text-align: left; border: 0.3px solid black; font-size: 7px;">&nbsp;N.DEBIT NOTE</td>
-			<td width="22%" style="text-align: center; border: 0.3px solid black; font-weight: bold; font-size: 7px;">ND-$ref_fact</td>
-		</tr>
-		<tr>
-			<td width="15%" style="text-align: center;"></td>
-			<td width="18%" style="text-align: left; border: 0.3px solid black; font-size: 7px;">&nbsp;Date</td>
-			<td width="22%" style="text-align: center; border: 0.3px solid black; font-weight: bold; font-size: 7px;">$date_fact</td>
-		</tr>
-
-		<tr>
-			<td width="15%" style="text-align: left; "></td>
-			<td width="40%"rowspan="2" colspan="2" style="text-align: left; border: 0.3px solid black; font-size: 7px;">&nbsp;<u>Dossier(s):</u> <br>
-			<b>$liste_dossiers</b></td>
-		</tr>
-		<tr>
-			<td width="15%" style="text-align: left; "></td>
-		</tr>
-		<tr>
-			<td width="15%" style="text-align: left; "></td>
-			<td width="18%" style="text-align: left; border: 0.3px solid black; font-size: 7px;">&nbsp;Nombre de Dossier(s): </td>
-			<td width="22%" style="text-align: center; border: 0.3px solid black; font-size: 7px; font-weight: bold;">$nbre_dos</td>
-		</tr>
-		<tr>
-			<td width="15%" style="text-align: left; "></td>
-			<td width="18%" style="text-align: left;"></td>
-			<td width="22%" style="text-align: center; font-weight: bold;"></td>
-		</tr>
-		<tr>
-			<td width="15%" style="text-align: left; "></td>
-			<td width="18%" style="text-align: left;"></td>
-			<td width="22%" style="text-align: center; font-weight: bold;"></td>
-		</tr>
-
-		<tr>
-			<td width="100%"><br></td>
-		</tr>
-
-		<tr>
-			<td width="100%" style="font-weight: bold; text-align: center;">REIMBURSABLE CHARGES</td>
-		</tr>
-
-		<tr>
-			<td width="100%"><br></td>
-		</tr>
-
-		<tr>
-			<td width="100%" style="font-weight: bold; border: 1px solid black;">&nbsp;<u>CUSTOMS CLEARANCE FEES / FRAIS DEDOUANEMENT</u></td>
-		</tr>
-		<tr>
-			<td width="49%" style="font-weight: bold; border: 1px solid black; background-color: rgb(220,220,220); text-align: center;">&nbsp;<u>Description</u></td>
-			<td width="6%" style="font-weight: bold; border: 1px solid black; background-color: rgb(220,220,220);text-align: center;">Unit</td>
-			<td width="11%" style="font-weight: bold; border: 1px solid black; background-color: rgb(220,220,220);text-align: center;">COST /USD</td>
-			<td width="11%" style="font-weight: bold; border: 1px solid black; background-color: rgb(220,220,220);text-align: center;">SUBTOTAL  USD</td>
-			<td width="11.5%" style="font-weight: bold; border: 1px solid black; background-color: rgb(220,220,220);text-align: center;">TVA- 16%</td>
-			<td width="11.5%" style="font-weight: bold; border: 1px solid black; background-color: rgb(220,220,220);text-align: center;">TOTAL  EN USD</td>
-		</tr>
-		$taxe
-		<tr>
-			<td colspan="4"></td>
-		</tr>
-		<tr>
-			<td width="100%" style="font-weight: bold; border: 1px solid black;">&nbsp;<u>OTHER CHARGES / AUTRES FRAIS </u></td>
-		</tr>
-		<tr>
-			<td width="49%" style="font-weight: bold; border: 1px solid black; background-color: rgb(220,220,220); text-align: center;">&nbsp;<u>Description</u></td>
-			<td width="6%" style="font-weight: bold; border: 1px solid black; background-color: rgb(220,220,220);text-align: center;">Unit</td>
-			<td width="11%" style="font-weight: bold; border: 1px solid black; background-color: rgb(220,220,220);text-align: center;">COST /USD</td>
-			<td width="11%" style="font-weight: bold; border: 1px solid black; background-color: rgb(220,220,220);text-align: center;">SUBTOTAL  USD</td>
-			<td width="11.5%" style="font-weight: bold; border: 1px solid black; background-color: rgb(220,220,220);text-align: center;">TVA- 16%</td>
-			<td width="11.5%" style="font-weight: bold; border: 1px solid black; background-color: rgb(220,220,220);text-align: center;">TOTAL  EN USD</td>
-		</tr>
-		$autres_charges
-		<tr>
-			<td width="100%"></td>
-		</tr>
-		$totalAll_A
-		<tr>
-			<td><br></td>
-		</tr>
-		<tr>
-			<td width="45%" style=" font-size: 6.5px;">
-			VEUILLEZ TROUVER CI-DESSOUS LES DETAILS DE NOTRE COMPTE BANCAIRE
-			</td>
-			<td width="55%" rowspan="8" style="text-align: center;">$sceau</td>
-		</tr>
-		<tr>
-			<td width="45%" style=" font-size: 6.5px;">
-			</td>
-		</tr>
-		$banque
-		<tr>
-			<td width="100%"></td>
-		</tr>
-		<tr>
-			<td width="65%" style=" font-size: 7px;">
-			LE PAIEMENT DOIT S'EFFECTUER ENDEANS 7 JOURS
-			</td>
-		</tr>
-		<tr>
-			<td width="100%"></td>
-		</tr>
-		<tr>
-			<td width="100%" style="border: 1px solid black; text-align: center; font-size: 7px;">Thank you for you business!</td>
-		</tr>
-	</table>
-	</bodystyle="font-weight: bold;">
-	</html>
-        
-EOD;
-$pdf->writeHTML($tbl, true, false, false, false, '');
-
-// add a page
-$pdf->AddPage('P', 'A4');
-
-$tbl = <<<EOD
-    <html>
-    <head>
-        <meta http-equiv = " content-type " content = " text/html; charset=utf-8" />
-    </head>
-    <body style="font-weight: bold;" style="">
-	<table>
-		<tr>
-			<td width="45%" style="text-align: center;">$logo</td>
-			<td width="55%" style="text-align: right; font-size: 5px;">
-			No. 1068, Avenue Ruwe, Quartier Makutano, <br>
-			Lubumbashi, DRC<br>
-			RCCM: 13-B-1122, ID NAT. 6-9-N91867E<br>
-			NIF : A 1309334 L<br>
-			VAT Ref # 145/DGI/DGE/INF/BN/TVA/2020<br>
-			Capital Social : 45.000.000 FC
-			</td>
-		</tr>
-		<br>
-		<br>
-		<tr>
 			<td width="45%" style="text-align: center; border: 0.3px solid black; font-weight: bold; font-size: 12px;">FACTURE</td>
 		</tr>
 		<br>
@@ -571,9 +421,35 @@ $tbl = <<<EOD
 		</tr>
 
 		<tr>
-			<td width="100%"><br></td>
+			<td width="100%" style="font-weight: bold; border: 1px solid black;">&nbsp;<u>CUSTOMS CLEARANCE FEES / FRAIS DEDOUANEMENT</u></td>
 		</tr>
-
+		<tr>
+			<td width="49%" style="font-weight: bold; border: 1px solid black; background-color: rgb(220,220,220); text-align: center;">&nbsp;<u>Description</u></td>
+			<td width="6%" style="font-weight: bold; border: 1px solid black; background-color: rgb(220,220,220);text-align: center;">Unit</td>
+			<td width="11%" style="font-weight: bold; border: 1px solid black; background-color: rgb(220,220,220);text-align: center;">COST /USD</td>
+			<td width="11%" style="font-weight: bold; border: 1px solid black; background-color: rgb(220,220,220);text-align: center;">SUBTOTAL  USD</td>
+			<td width="11.5%" style="font-weight: bold; border: 1px solid black; background-color: rgb(220,220,220);text-align: center;">TVA- 16%</td>
+			<td width="11.5%" style="font-weight: bold; border: 1px solid black; background-color: rgb(220,220,220);text-align: center;">TOTAL  EN USD</td>
+		</tr>
+		$taxe
+		<tr>
+			<td colspan="4"></td>
+		</tr>
+		<tr>
+			<td width="100%" style="font-weight: bold; border: 1px solid black;">&nbsp;<u>OTHER CHARGES / AUTRES FRAIS </u></td>
+		</tr>
+		<tr>
+			<td width="49%" style="font-weight: bold; border: 1px solid black; background-color: rgb(220,220,220); text-align: center;">&nbsp;<u>Description</u></td>
+			<td width="6%" style="font-weight: bold; border: 1px solid black; background-color: rgb(220,220,220);text-align: center;">Unit</td>
+			<td width="11%" style="font-weight: bold; border: 1px solid black; background-color: rgb(220,220,220);text-align: center;">COST /USD</td>
+			<td width="11%" style="font-weight: bold; border: 1px solid black; background-color: rgb(220,220,220);text-align: center;">SUBTOTAL  USD</td>
+			<td width="11.5%" style="font-weight: bold; border: 1px solid black; background-color: rgb(220,220,220);text-align: center;">TVA- 16%</td>
+			<td width="11.5%" style="font-weight: bold; border: 1px solid black; background-color: rgb(220,220,220);text-align: center;">TOTAL  EN USD</td>
+		</tr>
+		$autres_charges
+		<tr>
+			<td width="100%"></td>
+		</tr>
 		<tr>
 			<td width="100%" style="font-weight: bold; border: 1px solid black;">&nbsp;<u>OPERATIONAL COSTS / COUT OPERATIONEL</u></td>
 		</tr>
@@ -604,7 +480,7 @@ $tbl = <<<EOD
 		<tr>
 			<td width="100%"></td>
 		</tr>
-		$totalAll_B
+		$totalAll
 		<tr>
 			<td><br></td>
 		</tr>
