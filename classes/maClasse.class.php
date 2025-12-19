@@ -15295,34 +15295,25 @@
 													) AS ht_cdf,
 													SUM(
 														IF(det.usd="1",
-															det.montant,
-															(det.montant/dos.roe_decl)
+															det.montant+det.montant_tva,
+															((det.montant+det.montant_tva)/dos.roe_decl)
 														)
 													) AS ht_usd,
 													SUM(
 														IF(det.usd="1",
-															IF(det.tva="1",
-																det.montant*1.16,
-																det.montant
-															),
-															IF(det.tva="1",
-																(det.montant/dos.roe_decl)*1.16,
-																(det.montant/dos.roe_decl)
-															)
+															det.montant+det.montant_tva,
+															(det.montant+det.montant_tva)/dos.roe_decl
+															-- IF(det.tva="1",
+															-- 	det.montant*1.16,
+															-- 	det.montant
+															-- ),
+															-- IF(det.tva="1",
+															-- 	(det.montant/dos.roe_decl)*1.16,
+															-- 	(det.montant/dos.roe_decl)
+															-- )
 														)
 													) AS ttc_usd,
-													SUM(
-														IF(det.usd="1",
-															IF(det.tva="1",
-																det.montant*0.16,
-																0
-															),
-															IF(det.tva="1",
-																(det.montant/dos.roe_decl)*0.16,
-																0
-															)
-														)
-													) AS tva_usd,
+													"0" AS tva_usd,
 													IF(det.detail IS NOT NULL,
 														CONCAT(": ", det.detail),
 														""
