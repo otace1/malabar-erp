@@ -13719,67 +13719,7 @@
 				$total_tva = $reponse['tva_usd'];
 				$total_gen = $reponse['ttc_usd'];
 
-			if ($reponse['statut_arsp']=='1') {
-				$tbl .= '
-					<tr>
-						<td style="text-align: right; border: 0.5px solid black; font-weight: bold; background-color: rgb(220,220,220); font-size: 8px;" width="49%">TOTAL (USD)&nbsp;&nbsp;
-						</td>
-						<td style="text-align: right; border: 0.5px solid black; font-weight: bold; background-color: rgb(220,220,220); font-size: 8px;" width="6%">
-						</td>
-						<td style="text-align: center; border: 0.5px solid black; font-weight: bold; background-color: rgb(220,220,220);" width="11%">'
-							.number_format($total_cost, 2, ',', '.').
-						'&nbsp;&nbsp;</td>
-						<td style="text-align: right; border: 0.5px solid black; font-weight: bold; background-color: rgb(220,220,220);" width="11%">'
-							.number_format($sub_total, 2, ',', '.').
-						'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-						<td style="text-align: right; border: 0.5px solid black; font-weight: bold; background-color: rgb(220,220,220);" width="11.5%">'
-							.number_format($total_tva, 2, ',', '.').
-						'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-						<td style="text-align: right; border: 0.5px solid black; font-weight: bold;  background-color: rgb(220,220,220);" width="11.5%">'
-							.number_format($total_gen, 2, ',', '.').
-						'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-					</tr>
-					<tr>
-						<td width="100%"></td>
-					</tr>
-					<tr>
-						<td style="text-align: right; border: 0.5px solid black; font-size: 8px;" width="66%">ARSP Tax (1.2%  on the Agency Fees without TVA )&nbsp;&nbsp;
-						</td>
-						<td style="text-align: right; border: 0.5px solid black;" width="11%">'
-							.number_format($reponse['base_arsp'], 2, ',', '.').
-						'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-						<td style="text-align: right; border: 0.5px solid black;" width="11.5%">1.2% &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-						<td style="text-align: right; border: 0.5px solid black; " width="11.5%">'
-							.number_format($reponse['arsp'], 2, ',', '.').
-						'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-					</tr>
-					<tr>
-						<td width="100%"></td>
-					</tr>
-					<tr>
-						<td style="text-align: right; border: 0.5px solid black; font-weight: bold; background-color: rgb(220,220,220); font-size: 8px;" width="88.5%">NET PAYABLE AMOUNT EN USD&nbsp;&nbsp;
-						</td>
-						<td style="text-align: right; border: 0.5px solid black; font-weight: bold;  background-color: rgb(220,220,220);" width="11.5%">'
-							.number_format($total_gen-$reponse['arsp'], 2, ',', '.').
-						'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-					</tr>
-					<tr>
-						<td width="100%"></td>
-					</tr>
-					<tr>
-						<td style="text-align: left; font-size: 8px;" width="49%"></td>
-						<td style="text-align: center;" colspan="2" width="5.5%"></td>
-						<td style="text-align: right; font-size: 8px;" width="11%"></td>
-						<td style="text-align: right; font-size: 8px;" width="11.5%"></td>
-						<td style="text-align: right; border: 1px solid black; font-size: 8px; font-weight: bold;" width="23%">CDF &nbsp;&nbsp;'
-							// .number_format($total_gen*$reponse['roe_decl'], 2, ',', '.').
-							// .number_format(($total_gen-$reponse['arsp'])*$this-> getTauxFacture($entree['ref_fact'])['roe_decl'], 2, ',', '.').
-							.number_format(($total_gen-$reponse['arsp'])*$this-> getTauxFacture($entree['ref_fact'])['roe_decl'], 2, ',', '.').
-						'&nbsp;&nbsp;</td>
-					</tr>
-					';
-
-			}else if($reponse['id_cli']!='946' && $reponse['id_cli']!='904'){
+			 if($reponse['id_cli']!='946' && $reponse['id_cli']!='904'){
 				$tbl .= '<tr>
 						<td style="text-align: left; font-weight: bold; border-left: 1px solid black; border-right: 0.5px solid black; border-top: 0.5px solid black;" colspan="2" width="49%"></td>
 						<td style="text-align: center; border-right: 0.5px solid black; border-top: 0.5px solid black;" colspan="2" width="5.5%"></td>
@@ -15363,20 +15303,6 @@
 				$total_gen = $reponse['ttc_usd'];
 
 			$tbl .= '
-					<tr>
-						<td style="text-align: right; border: 0.5px solid black; font-weight: bold; font-size: 8px;" width="23%">Total excl. TVA &nbsp;&nbsp;
-						</td>
-						<td style="text-align: right; border: 0.5px solid black; font-weight: bold;" width="11.5%">$ '
-							.number_format($sub_total, 2, ',', '.').
-						'&nbsp;&nbsp;</td>
-					</tr>
-					<tr>
-						<td style="text-align: right; border: 0.5px solid black; font-weight: bold; font-size: 8px;" width="23%"> TVA 16% &nbsp;&nbsp;
-						</td>
-						<td style="text-align: right; border: 0.5px solid black; font-weight: bold;" width="11.5%">$ '
-							.number_format($total_tva, 2, ',', '.').
-						'&nbsp;&nbsp;</td>
-					</tr>
 					<tr>
 						<td style="text-align: right; border: 0.5px solid black; font-weight: bold; font-size: 10px; font-weight: bold; background-color: rgb(220,220,220);" width="23%">Grand Total &nbsp;&nbsp;
 						</td>
