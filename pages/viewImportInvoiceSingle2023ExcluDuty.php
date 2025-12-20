@@ -539,6 +539,14 @@ $tbl = <<<EOD
 			<td></td>
 		</tr>
 		<tr>
+			<td width="65%" style=" font-size: 7px;">
+			LE PAIEMENT DOIT S'EFFECTUER ENDEANS 7 JOURS
+			</td>
+		</tr>
+		<tr>
+			<td></td>
+		</tr>
+		<tr>
 			<td width="100%" style=" font-size: 5.5px; text-align: center;">
 			VEUILLEZ TROUVER CI-DESSOUS LES DETAILS DE NOTRE COMPTE BANCAIRE
 			</td>
