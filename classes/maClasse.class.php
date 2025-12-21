@@ -15269,34 +15269,226 @@
 												GROUP BY det.ref_fact');
 			$requete-> execute(array($entree['ref_fact']));
 			$reponse = $requete-> fetch();
-			// while($reponse = $requete-> fetch()){
-			// 	if($reponse['tva'] == '0'){
-			// 		$tva = '0';
-			// 		$ttc = $reponse['ht_usd'];
-			// 	}else{
-			// 		$tva = round(($reponse['ht_usd'] * 0.16), 2);
-			// 		$ttc = $reponse['ht_usd'] + round(($reponse['ht_usd'] * 0.16), 2);
-			// 	}
+				$total_cost = '';//$reponse['total_cost'];
+				$sub_total = $reponse['ht_usd'];
+				$total_tva = $reponse['tva_usd'];
+				$total_gen = $reponse['ttc_usd'];
 
-			// 	if ($reponse['id_deb']=='1' || $reponse['id_deb']=='2' || $reponse['id_deb']=='3' || $reponse['id_deb']=='4' || $reponse['id_deb']=='5' || $reponse['id_deb']=='6' || $reponse['id_deb']=='7' || $reponse['id_deb']=='8') {
+			$tbl .= '
+					<tr>
+						<td style="text-align: right; border: 0.5px solid black; font-weight: bold; font-size: 10px; font-weight: bold; background-color: rgb(220,220,220);" width="23%">Grand Total &nbsp;&nbsp;
+						</td>
+						<td style="text-align: right; border: 0.5px solid black; font-weight: bold; font-size: 10px; background-color: rgb(220,220,220);" width="11.5%">$ '
+							.number_format($total_gen, 2, ',', '.').
+						'&nbsp;&nbsp;</td>
+					</tr>
+					<tr>
+						<td style="text-align: right; border: 0.5px solid black; font-weight: bold; font-size: 8px;" width="23%"> Equivalent en CDF &nbsp;&nbsp;
+						</td>
+						<td style="text-align: right; border: 0.5px solid black; font-weight: bold;" width="11.5%">'
+							.number_format($total_gen*$reponse['roe_decl'], 2, ',', '.').
+						'&nbsp;&nbsp;</td>
+					</tr>
+					';
 
-			// 		$unite = number_format($reponse['poids'], 2, ',', ' ');
+			return $tbl;
+		}
 
-			// 	}else if($reponse['id_deb']=='11' && $reponse['poids']<30){
-			// 		$unite = 1;
-			// 	}else if($reponse['id_deb']=='12' && $reponse['poids']>30){
-			// 		$unite = 1;
-			// 	}else{
-			// 		$unite = 1;
-			// 	}
+		public function getTotalFactureImportSingleExcluDuty1_A($ref_fact){
+			include('connexion.php');
+			$entree['ref_fact'] = $ref_fact;
 
-			// 	$cost = $reponse['ht_usd']/$unite;
+			$total_cost = 0;
+			$sub_total = 0;
+			$total_tva = 0;
+			$total_gen = 0;
 
-			// 	$total_cost += $cost;
-			// 	$sub_total += $reponse['ht_usd'];
-			// 	$total_tva += $reponse['tva_usd'];
-			// 	$total_gen += $reponse['ttc_usd'];
+			$unite = 0;
+			$cost = 0;
 
+			$tbl = '';
+
+			$requete = $connexion-> prepare('SELECT d.nom_deb AS nom_deb, d.id_deb AS id_deb,
+													det.tva AS tva,
+													d.abr_deb AS abr_deb,
+													dos.roe_decl AS roe_decl,
+													SUM(
+														IF(d.id_deb=1 OR d.id_deb=2 OR d.id_deb=3 OR d.id_deb=4 OR d.id_deb=5 OR d.id_deb=6 OR d.id_deb=7 OR d.id_deb=8,
+																IF(det.usd=1,
+																	det.montant/dos.poids,
+																	(det.montant/dos.roe_decl)/dos.poids
+																),
+															IF(d.id_deb=11 AND dos.poids<30,
+																IF(det.usd=1,
+																	det.montant/1,
+																	(det.montant/dos.roe_decl)/1
+																),
+																IF(d.id_deb=12 AND dos.poids>=30,
+																	IF(det.usd=1,
+																		det.montant/1,
+																		(det.montant/dos.roe_decl)/1
+																	),
+																	IF(det.usd=1,
+																		det.montant/1,
+																		(det.montant/dos.roe_decl)/1
+																	)
+																	)
+																)
+														)
+													) AS total_cost,
+													SUM(det.montant) AS ht,
+													SUM(
+														IF(det.usd="1",
+															0,
+															det.montant
+														)
+													) AS ht_cdf,
+													SUM(
+														IF(det.usd="1",
+															det.montant+det.montant_tva,
+															((det.montant+det.montant_tva)/dos.roe_decl)
+														)
+													) AS ht_usd,
+													SUM(
+														IF(det.usd="1",
+															det.montant+det.montant_tva,
+															(det.montant+det.montant_tva)/dos.roe_decl
+															-- IF(det.tva="1",
+															-- 	det.montant*1.16,
+															-- 	det.montant
+															-- ),
+															-- IF(det.tva="1",
+															-- 	(det.montant/dos.roe_decl)*1.16,
+															-- 	(det.montant/dos.roe_decl)
+															-- )
+														)
+													) AS ttc_usd,
+													"0" AS tva_usd,
+													IF(det.detail IS NOT NULL,
+														CONCAT(": ", det.detail),
+														""
+													) AS detail,
+													det.unite AS unite,
+													COUNT(DISTINCT(dos.ref_decl)) AS qte,
+													dos.poids AS poids
+												FROM debours d, detail_facture_dossier det, dossier dos
+												WHERE det.ref_fact = ?
+													AND det.id_deb = d.id_deb
+													AND d.id_t_deb = 2
+													AND det.id_dos = dos.id_dos
+												GROUP BY det.ref_fact');
+			$requete-> execute(array($entree['ref_fact']));
+			$reponse = $requete-> fetch();
+				$total_cost = '';//$reponse['total_cost'];
+				$sub_total = $reponse['ht_usd'];
+				$total_tva = $reponse['tva_usd'];
+				$total_gen = $reponse['ttc_usd'];
+
+			$tbl .= '
+					<tr>
+						<td style="text-align: right; border: 0.5px solid black; font-weight: bold; font-size: 10px; font-weight: bold; background-color: rgb(220,220,220);" width="23%">Grand Total &nbsp;&nbsp;
+						</td>
+						<td style="text-align: right; border: 0.5px solid black; font-weight: bold; font-size: 10px; background-color: rgb(220,220,220);" width="11.5%">$ '
+							.number_format($total_gen, 2, ',', '.').
+						'&nbsp;&nbsp;</td>
+					</tr>
+					<tr>
+						<td style="text-align: right; border: 0.5px solid black; font-weight: bold; font-size: 8px;" width="23%"> Equivalent en CDF &nbsp;&nbsp;
+						</td>
+						<td style="text-align: right; border: 0.5px solid black; font-weight: bold;" width="11.5%">'
+							.number_format($total_gen*$reponse['roe_decl'], 2, ',', '.').
+						'&nbsp;&nbsp;</td>
+					</tr>
+					';
+
+			return $tbl;
+		}
+
+		public function getTotalFactureImportSingleExcluDuty1_B($ref_fact){
+			include('connexion.php');
+			$entree['ref_fact'] = $ref_fact;
+
+			$total_cost = 0;
+			$sub_total = 0;
+			$total_tva = 0;
+			$total_gen = 0;
+
+			$unite = 0;
+			$cost = 0;
+
+			$tbl = '';
+
+			$requete = $connexion-> prepare('SELECT d.nom_deb AS nom_deb, d.id_deb AS id_deb,
+													det.tva AS tva,
+													d.abr_deb AS abr_deb,
+													dos.roe_decl AS roe_decl,
+													SUM(
+														IF(d.id_deb=1 OR d.id_deb=2 OR d.id_deb=3 OR d.id_deb=4 OR d.id_deb=5 OR d.id_deb=6 OR d.id_deb=7 OR d.id_deb=8,
+																IF(det.usd=1,
+																	det.montant/dos.poids,
+																	(det.montant/dos.roe_decl)/dos.poids
+																),
+															IF(d.id_deb=11 AND dos.poids<30,
+																IF(det.usd=1,
+																	det.montant/1,
+																	(det.montant/dos.roe_decl)/1
+																),
+																IF(d.id_deb=12 AND dos.poids>=30,
+																	IF(det.usd=1,
+																		det.montant/1,
+																		(det.montant/dos.roe_decl)/1
+																	),
+																	IF(det.usd=1,
+																		det.montant/1,
+																		(det.montant/dos.roe_decl)/1
+																	)
+																	)
+																)
+														)
+													) AS total_cost,
+													SUM(det.montant) AS ht,
+													SUM(
+														IF(det.usd="1",
+															0,
+															det.montant
+														)
+													) AS ht_cdf,
+													SUM(
+														IF(det.usd="1",
+															det.montant+det.montant_tva,
+															((det.montant+det.montant_tva)/dos.roe_decl)
+														)
+													) AS ht_usd,
+													SUM(
+														IF(det.usd="1",
+															det.montant+det.montant_tva,
+															(det.montant+det.montant_tva)/dos.roe_decl
+															-- IF(det.tva="1",
+															-- 	det.montant*1.16,
+															-- 	det.montant
+															-- ),
+															-- IF(det.tva="1",
+															-- 	(det.montant/dos.roe_decl)*1.16,
+															-- 	(det.montant/dos.roe_decl)
+															-- )
+														)
+													) AS ttc_usd,
+													"0" AS tva_usd,
+													IF(det.detail IS NOT NULL,
+														CONCAT(": ", det.detail),
+														""
+													) AS detail,
+													det.unite AS unite,
+													COUNT(DISTINCT(dos.ref_decl)) AS qte,
+													dos.poids AS poids
+												FROM debours d, detail_facture_dossier det, dossier dos
+												WHERE det.ref_fact = ?
+													AND det.id_deb = d.id_deb
+													AND d.id_t_deb = 1
+													AND det.id_dos = dos.id_dos
+												GROUP BY det.ref_fact');
+			$requete-> execute(array($entree['ref_fact']));
+			$reponse = $requete-> fetch();
 				$total_cost = '';//$reponse['total_cost'];
 				$sub_total = $reponse['ht_usd'];
 				$total_tva = $reponse['tva_usd'];
@@ -15417,34 +15609,6 @@
 												GROUP BY det.ref_fact');
 			$requete-> execute(array($entree['ref_fact']));
 			$reponse = $requete-> fetch();
-			// while($reponse = $requete-> fetch()){
-			// 	if($reponse['tva'] == '0'){
-			// 		$tva = '0';
-			// 		$ttc = $reponse['ht_usd'];
-			// 	}else{
-			// 		$tva = round(($reponse['ht_usd'] * 0.16), 2);
-			// 		$ttc = $reponse['ht_usd'] + round(($reponse['ht_usd'] * 0.16), 2);
-			// 	}
-
-			// 	if ($reponse['id_deb']=='1' || $reponse['id_deb']=='2' || $reponse['id_deb']=='3' || $reponse['id_deb']=='4' || $reponse['id_deb']=='5' || $reponse['id_deb']=='6' || $reponse['id_deb']=='7' || $reponse['id_deb']=='8') {
-
-			// 		$unite = number_format($reponse['poids'], 2, ',', ' ');
-
-			// 	}else if($reponse['id_deb']=='11' && $reponse['poids']<30){
-			// 		$unite = 1;
-			// 	}else if($reponse['id_deb']=='12' && $reponse['poids']>30){
-			// 		$unite = 1;
-			// 	}else{
-			// 		$unite = 1;
-			// 	}
-
-			// 	$cost = $reponse['ht_usd']/$unite;
-
-			// 	$total_cost += $cost;
-			// 	$sub_total += $reponse['ht_usd'];
-			// 	$total_tva += $reponse['tva_usd'];
-			// 	$total_gen += $reponse['ttc_usd'];
-
 				$total_cost = '';//$reponse['total_cost'];
 				$sub_total = $reponse['ht_usd'];
 				$total_tva = $reponse['tva_usd'];
