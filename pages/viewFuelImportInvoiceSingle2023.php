@@ -579,6 +579,9 @@ $tbl = <<<EOD
 			<td></td>
 		</tr>
 		<tr>
+			<td></td>
+		</tr>
+		<tr>
 			<td width="100%" style=" font-size: 5.5px; text-align: center;">
 			LE PAIEMENT DOIT S'EFFECTUER ENDEANS 7 JOURS
 			</td>
