@@ -8489,13 +8489,11 @@
 							<td width="6%" style="text-align: center; border: 1 solid black; font-size: 7px;">'.$reponse['load_date'].'</td>
 							<td width="6%" style="text-align: center; border: 1 solid black; font-size: 7px;">'.$reponse['ref_decl'].'</td>
 							<td width="6%" style="text-align: center; border: 1 solid black; font-size: 7px;">'.$reponse['date_decl'].'</td>
-							<td width="7%" style="text-align: center; border: 1 solid black; font-size: 7px;">'.number_format($reponse['roe_liq'], 3, ',', '.').'</td>
 							<td width="6%" style="text-align: center; border: 1 solid black; font-size: 7px;">'.$reponse['ref_liq'].'</td>
 							<td width="6%" style="text-align: center; border: 1 solid black; font-size: 7px;">'.$reponse['date_liq'].'</td>
 							<td width="7%" style="text-align: center; border: 1 solid black; font-size: 7px;">'.number_format($reponse['liquidation_cdf'], 0, ',', '.').'</td>
 							<td width="6%" style="text-align: center; border: 1 solid black; font-size: 7px;">'.$reponse['ref_quit'].'</td>
 							<td width="6%" style="text-align: center; border: 1 solid black; font-size: 7px;">'.$reponse['date_quit'].'</td>
-							<td width="12%" style="text-align: center; border: 1 solid black; font-size: 7px;">'.$this-> getDataBancaire($reponse['id_bank_liq'])['nom_banq'].'</td>
 							<td width="7%" style="text-align: center; border: 1 solid black; font-size: 7px;">'.number_format($reponse['roe_decl'], 4, ',', '.').'</td>
 							<td width="7%" style="text-align: center; border: 1 solid black; font-size: 7px;">'.number_format($reponse['liquidation_usd'], 2, ',', '.').'</td>
 						</tr>
@@ -13784,30 +13782,6 @@
 						'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
 						<td style="text-align: right; border: 0.5px solid black; font-weight: bold;  background-color: rgb(220,220,220);" width="11.5%">'
 							.number_format($total_gen, 2, ',', '.').
-						'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-					</tr>
-					<tr>
-						<td width="100%"></td>
-					</tr>
-					<tr>
-						<td style="text-align: right; border: 0.5px solid black; font-size: 8px;" width="66%">ARSP Tax (1.2%  on the Agency Fees without TVA )&nbsp;&nbsp;
-						</td>
-						<td style="text-align: right; border: 0.5px solid black;" width="11%">'
-							.number_format($reponse['base_arsp'], 2, ',', '.').
-						'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-						<td style="text-align: right; border: 0.5px solid black;" width="11.5%">1.2% &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-						<td style="text-align: right; border: 0.5px solid black; " width="11.5%">'
-							.number_format($reponse['arsp'], 2, ',', '.').
-						'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-					</tr>
-					<tr>
-						<td width="100%"></td>
-					</tr>
-					<tr>
-						<td style="text-align: right; border: 0.5px solid black; font-weight: bold; background-color: rgb(220,220,220); font-size: 8px;" width="88.5%">NET PAYABLE AMOUNT EN USD&nbsp;&nbsp;
-						</td>
-						<td style="text-align: right; border: 0.5px solid black; font-weight: bold;  background-color: rgb(220,220,220);" width="11.5%">'
-							.number_format($total_gen-$reponse['arsp'], 2, ',', '.').
 						'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
 					</tr>
 					<tr>
