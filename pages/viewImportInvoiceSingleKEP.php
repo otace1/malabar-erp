@@ -101,6 +101,11 @@ $dossiers = $maClasse-> getDossierFactureExportSingle($_GET['ref_fact']);
 
 $ref_fact = $_GET['ref_fact'];//$maClasse-> getNumFactureEnCours($_GET['facture']);
 
+// if ($maClasse-> getFactureGlobale($_GET['ref_fact'])['tax_duty_part']=='Exclude') {
+	header("Location: viewImportInvoiceSingle2023ExcluDuty.php?ref_fact=$ref_fact");
+// }
+
+
 if ($maClasse-> getFactureGlobale($_GET['ref_fact'])['tax_duty_part']=='Exclude') {
 	header("Location: viewImportInvoiceSingle2023ExcluDuty.php?ref_fact=$ref_fact");
 }
