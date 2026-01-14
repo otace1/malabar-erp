@@ -16095,7 +16095,7 @@
 				$total_tva = $reponse['tva_usd'];
 				$total_gen = $reponse['ttc_usd'];
 
-			if (($reponse['id_cli']=='916' || $reponse['id_cli']=='965' || $reponse['id_cli']=='989' || $reponse['id_cli']=='923' || $reponse['id_cli']=='864' || $reponse['id_cli']=='913' || $reponse['id_cli']=='856' || $reponse['id_cli']=='918' || $reponse['id_cli']=='903' || $reponse['id_cli']=='865' || $reponse['id_cli']=='973' || $reponse['id_cli']=='982') && $reponse['statut_arsp']=='1') {
+			if (($reponse['id_cli']=='916' || $reponse['id_cli']=='965' || $reponse['id_cli']=='989' || $reponse['id_cli']=='923' || $reponse['id_cli']=='864' || $reponse['id_cli']=='913' || $reponse['id_cli']=='856' || $reponse['id_cli']=='918' || $reponse['id_cli']=='903' || $reponse['id_cli']=='865' || $reponse['id_cli']=='973' || $reponse['id_cli']=='982' || $reponse['id_cli']=='990') && $reponse['statut_arsp']=='1') {
 
 				$tbl .= '
 					<tr>
