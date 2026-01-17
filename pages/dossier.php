@@ -6,7 +6,7 @@
 
   $client = $maClasse-> getElementClient($_GET['id_cli']);
   //$client = '';
-  
+
 
 
   if( isset($_GET['id_march']) && ($_GET['id_march'] != '')){
@@ -102,30 +102,30 @@
 
     //if ($_GET['id_mod_trac'] == 1) {
 
-      $maClasse-> updateMultipleFilesExport($_POST['debut'], $_POST['fin'], $_GET['id_cli'], $_GET['id_mod_trans'], 
+      $maClasse-> updateMultipleFilesExport($_POST['debut'], $_POST['fin'], $_GET['id_cli'], $_GET['id_mod_trans'],
                                       $_GET['id_mod_trac']);
 
-      
+
 
     /*}elseif ($_GET['id_mod_trac'] == 2) {
-      $maClasse-> updateMultipleFiles($_POST['debut'], $_POST['fin'], $_POST['klsa_arriv'], 
-                                    $_POST['crossing_date'], $_POST['wiski_arriv'], $_POST['wiski_dep'], 
-                                    $_POST['amicong_arriv'], $_POST['insp_receiv'], $_POST['ir'], 
-                                    $_POST['ref_crf'], $_POST['date_crf'], $_POST['dgda_in'], $_POST['ref_decl'], 
-                                    $_POST['ref_liq'], $_POST['date_liq'], $_POST['ref_quit'], 
-                                    $_POST['date_quit'], $_POST['custom_deliv'], $_POST['cleared'], 
-                                    $_POST['dispatch_deliv'], $_POST['statut'], $_POST['remarque'], 
-                                    $_POST['nbre'], $_GET['id_cli'], $_GET['id_mod_trans'], 
+      $maClasse-> updateMultipleFiles($_POST['debut'], $_POST['fin'], $_POST['klsa_arriv'],
+                                    $_POST['crossing_date'], $_POST['wiski_arriv'], $_POST['wiski_dep'],
+                                    $_POST['amicong_arriv'], $_POST['insp_receiv'], $_POST['ir'],
+                                    $_POST['ref_crf'], $_POST['date_crf'], $_POST['dgda_in'], $_POST['ref_decl'],
+                                    $_POST['ref_liq'], $_POST['date_liq'], $_POST['ref_quit'],
+                                    $_POST['date_quit'], $_POST['custom_deliv'], $_POST['cleared'],
+                                    $_POST['dispatch_deliv'], $_POST['statut'], $_POST['remarque'],
+                                    $_POST['nbre'], $_GET['id_cli'], $_GET['id_mod_trans'],
                                     $_GET['id_mod_trac'], $_GET['commodity']);
     }*/
   }
 
-for ($i=1; $i <= 15 ; $i++) { 
+for ($i=1; $i <= 15 ; $i++) {
 
   if(isset($_POST['updateDossier__'.$i]) && ($_POST['updateDossier__'.$i]!='')){
 
       $maClasse-> MAJ_ref_dos($_POST['id_dos__'.$i], $_POST['ref_dos_'.$i]);
-      $maClasse-> updateFile($_POST['id_dos__'.$i], $_GET['id_cli'], $_GET['id_mod_trans'], 
+      $maClasse-> updateFile($_POST['id_dos__'.$i], $_GET['id_cli'], $_GET['id_mod_trans'],
                                       $_GET['id_mod_trac'], $i);
   }
 }
@@ -135,7 +135,7 @@ for ($i=1; $i <= 15 ; $i++) {
 
   if(isset($_POST['update'])){
 
-    for ($i=1; $i <= $_POST['nbre'] ; $i++) { 
+    for ($i=1; $i <= $_POST['nbre'] ; $i++) {
 
 
       if (isset($_POST['statut_'.$i]) && ($_POST['statut_'.$i] != '')) {
@@ -212,43 +212,43 @@ for ($i=1; $i <= 15 ; $i++) {
       if (isset($_POST['poids_'.$i]) && ($_POST['poids_'.$i] != '')) {
         $maClasse-> MAJ_poids($_POST['id_dos_'.$i], $_POST['poids_'.$i]);
       }
-      
+
       if (isset($_POST['horse_'.$i]) && ($_POST['horse_'.$i] != '')) {
         $maClasse-> MAJ_horse($_POST['id_dos_'.$i], $_POST['horse_'.$i]);
       }
-      
+
       if (isset($_POST['trailer_1_'.$i]) && ($_POST['trailer_1_'.$i] != '')) {
         $maClasse-> MAJ_trailer_1($_POST['id_dos_'.$i], $_POST['trailer_1_'.$i]);
       }
-      
+
       if (isset($_POST['trailer_2_'.$i]) && ($_POST['trailer_2_'.$i] != '')) {
         $maClasse-> MAJ_trailer_2($_POST['id_dos_'.$i], $_POST['trailer_2_'.$i]);
       }
-      
+
       if (isset($_POST['pied_container_'.$i]) && ($_POST['pied_container_'.$i] != '')) {
         $maClasse-> MAJ_pied_container($_POST['id_dos_'.$i], $_POST['pied_container_'.$i]);
       }
-      
+
       if (isset($_POST['container_'.$i]) && ($_POST['container_'.$i] != '')) {
         $maClasse-> MAJ_container($_POST['id_dos_'.$i], $_POST['container_'.$i]);
       }
-      
+
       if (isset($_POST['crossing_date_'.$i]) && ($_POST['crossing_date_'.$i] != '')) {
         $maClasse-> MAJ_crossing_date($_POST['id_dos_'.$i], $_POST['crossing_date_'.$i]);
       }
-      
+
       if (isset($_POST['wiski_arriv_'.$i]) && ($_POST['wiski_arriv_'.$i] != '')) {
         $maClasse-> MAJ_wiski_arriv($_POST['id_dos_'.$i], $_POST['wiski_arriv_'.$i]);
       }
-      
+
       if (isset($_POST['wiski_dep_'.$i]) && ($_POST['wiski_dep_'.$i] != '')) {
         $maClasse-> MAJ_wiski_dep($_POST['id_dos_'.$i], $_POST['wiski_dep_'.$i]);
       }
-      
+
       if (isset($_POST['ref_crf_'.$i]) && ($_POST['ref_crf_'.$i] != '')) {
         $maClasse-> MAJ_ref_crf($_POST['id_dos_'.$i], $_POST['ref_crf_'.$i]);
       }
-      
+
       if (isset($_POST['date_crf_'.$i]) && ($_POST['date_crf_'.$i] != '')) {
         $maClasse-> MAJ_date_crf($_POST['id_dos_'.$i], $_POST['date_crf_'.$i]);
       }
@@ -280,19 +280,19 @@ for ($i=1; $i <= 15 ; $i++) {
       if (isset($_POST['po_ref_'.$i]) && ($_POST['po_ref_'.$i] != '')) {
         $maClasse-> MAJ_po_ref($_POST['id_dos_'.$i], $_POST['po_ref_'.$i]);
       }
-      
+
       if (isset($_POST['road_manif_'.$i]) && ($_POST['road_manif_'.$i] != '')) {
         $maClasse-> MAJ_road_manif($_POST['id_dos_'.$i], $_POST['road_manif_'.$i]);
       }
-      
+
       if (isset($_POST['m3_'.$i]) && ($_POST['m3_'.$i] != '')) {
         $maClasse-> MAJ_m3($_POST['id_dos_'.$i], $_POST['m3_'.$i]);
       }
-      
+
       if (isset($_POST['arr_bond_'.$i]) && ($_POST['arr_bond_'.$i] != '')) {
         $maClasse-> MAJ_arr_bond($_POST['id_dos_'.$i], $_POST['arr_bond_'.$i]);
       }
-      
+
       if (isset($_POST['custom_deliv_'.$i]) && ($_POST['custom_deliv_'.$i] != '')) {
         $maClasse-> MAJ_custom_deliv($_POST['id_dos_'.$i], $_POST['custom_deliv_'.$i]);
         if (isset($_POST['dispatch_deliv_'.$i]) && ($_POST['dispatch_deliv_'.$i] != '') && isset($_POST['dgda_out_'.$i]) && ($_POST['dgda_out_'.$i] != '')) {
@@ -300,23 +300,23 @@ for ($i=1; $i <= 15 ; $i++) {
           $maClasse-> MAJ_statut($_POST['id_dos_'.$i], 'CLEARING COMPLETED');
         }
       }
-      
+
       if (isset($_POST['lshi_arriv_'.$i]) && ($_POST['lshi_arriv_'.$i] != '')) {
         $maClasse-> MAJ_lshi_arriv($_POST['id_dos_'.$i], $_POST['lshi_arriv_'.$i]);
       }
-      
+
       if (isset($_POST['dispatch_klsa_'.$i]) && ($_POST['dispatch_klsa_'.$i] != '')) {
         $maClasse-> MAJ_dispatch_klsa($_POST['id_dos_'.$i], $_POST['dispatch_klsa_'.$i]);
       }
-      
+
       if (isset($_POST['dispatch_deliv_'.$i]) && ($_POST['dispatch_deliv_'.$i] != '')) {
         $maClasse-> MAJ_dispatch_deliv($_POST['id_dos_'.$i], $_POST['dispatch_deliv_'.$i]);
       }
-      
+
       if (isset($_POST['arrival_date_'.$i]) && ($_POST['arrival_date_'.$i] != '')) {
         $maClasse-> MAJ_arrival_date($_POST['id_dos_'.$i], $_POST['arrival_date_'.$i]);
       }
-      
+
       if (isset($_POST['cleared_'.$i]) && ($_POST['cleared_'.$i] != '')) {
         $maClasse-> MAJ_cleared($_POST['id_dos_'.$i], $_POST['cleared_'.$i]);
       }
@@ -365,7 +365,7 @@ for ($i=1; $i <= 15 ; $i++) {
         $maClasse-> MAJ_remarque($_POST['id_dos_'.$i], $_POST['remarque_'.$i]);
       }
 
-      
+
       if (isset($_POST['amicongo_arriv_'.$i]) && ($_POST['amicongo_arriv_'.$i] != '')) {
         $maClasse-> MAJ_amicongo_arriv($_POST['id_dos_'.$i], $_POST['amicongo_arriv_'.$i]);
       }
@@ -397,7 +397,7 @@ for ($i=1; $i <= 15 ; $i++) {
       }
 
 
-      //------ Ajout Exportation 
+      //------ Ajout Exportation
 
       if (isset($_POST['pv_mine_'.$i]) && ($_POST['pv_mine_'.$i] != '')) {
         $maClasse-> MAJ_pv_mine($_POST['id_dos_'.$i], $_POST['pv_mine_'.$i]);
@@ -454,11 +454,11 @@ for ($i=1; $i <= 15 ; $i++) {
         $maClasse-> MAJ_ref_decl($_POST['id_dos_'.$i], $_POST['ref_decl_'.$i]);
 
         if ( ((!isset($_POST['ref_liq_'.$i])) || ($_POST['ref_liq_'.$i] == '') ) && ((!isset($_POST['date_liq_'.$i])) || ($_POST['date_liq_'.$i] == '')) ) {
-          
+
           if ( ((!isset($_POST['ref_quit_'.$i])) || ($_POST['ref_quit_'.$i] == '') ) && ((!isset($_POST['date_quit_'.$i])) || ($_POST['date_quit_'.$i] == '')) && ($_GET['id_mod_trac'] == '1') ) {
-            
+
             $maClasse-> MAJ_statut($_POST['id_dos_'.$i], 'DECLARATION');
-            
+
           }
         }
 
@@ -469,11 +469,11 @@ for ($i=1; $i <= 15 ; $i++) {
         $maClasse-> MAJ_date_decl($_POST['id_dos_'.$i], $_POST['date_decl_'.$i]);
 
         if ( ((!isset($_POST['ref_liq_'.$i])) || ($_POST['ref_liq_'.$i] == '') ) && ((!isset($_POST['date_liq_'.$i])) || ($_POST['date_liq_'.$i] == '')) ) {
-          
+
           if ( ((!isset($_POST['ref_quit_'.$i])) || ($_POST['ref_quit_'.$i] == '') ) && ((!isset($_POST['date_quit_'.$i])) || ($_POST['date_quit_'.$i] == '')) && ($_GET['id_mod_trac'] == '1') ) {
-            
+
             $maClasse-> MAJ_statut($_POST['id_dos_'.$i], 'DECLARATION');
-            
+
           }
         }
 
@@ -487,7 +487,7 @@ for ($i=1; $i <= 15 ; $i++) {
         }
 
       }
-      
+
       if (isset($_POST['ref_liq_'.$i]) && ($_POST['ref_liq_'.$i] != '')) {
         $maClasse-> MAJ_ref_liq($_POST['id_dos_'.$i], $_POST['ref_liq_'.$i]);
 
@@ -499,13 +499,13 @@ for ($i=1; $i <= 15 ; $i++) {
 
       if (isset($_POST['date_liq_'.$i]) && ($_POST['date_liq_'.$i] != '')) {
         $maClasse-> MAJ_date_liq($_POST['id_dos_'.$i], $_POST['date_liq_'.$i]);
-        
+
         if ((!isset($_POST['dgda_out_'.$i]) || ($_POST['dgda_out_'.$i]=='')) && ($_GET['id_mod_trac']=='1')) {
           $maClasse-> MAJ_statut($_POST['id_dos_'.$i], 'LIQUIDATED');
         }
 
       }
-      
+
       if (isset($_POST['dgda_out_'.$i]) && ($_POST['dgda_out_'.$i] != '')) {
         $maClasse-> MAJ_dgda_out($_POST['id_dos_'.$i], $_POST['dgda_out_'.$i]);
         if ( ($_GET['id_mod_trac'] == '2') && ($_GET['id_cli'] == '869') ) {
@@ -561,7 +561,7 @@ for ($i=1; $i <= 15 ; $i++) {
         }
 
       }
-      
+
       if (isset($_POST['end_form_'.$i]) && ($_POST['end_form_'.$i] != '')) {
         $maClasse-> MAJ_end_form($_POST['id_dos_'.$i], $_POST['end_form_'.$i]);
         //$maClasse-> MAJ_cleared($_POST['id_dos_'.$i], 1);
@@ -637,7 +637,7 @@ for ($i=1; $i <= 15 ; $i++) {
         $maClasse-> MAJ_sakania_date($_POST['id_dos_'.$i], $_POST['sakania_date_'.$i]);
       }
 
- 
+
       if (isset($_POST['destination_'.$i]) && ($_POST['destination_'.$i] != '')) {
         $maClasse-> MAJ_destination($_POST['id_dos_'.$i], $_POST['destination_'.$i]);
       }else{
@@ -729,18 +729,18 @@ for ($i=1; $i <= 15 ; $i++) {
   }
 
   if (isset($_POST['nouvelleLicence'])) {
-    
-    $maClasse-> creerEBTracking($_POST['num_lic'], $_POST['date_val'], $_POST['poids'], 
-                                $_POST['unit_mes'], $_GET['id_cli'], $_GET['id_march'], 
-                                $_POST['date_exp'], $_SESSION['id_util'], $_POST['destination'], 
+
+    $maClasse-> creerEBTracking($_POST['num_lic'], $_POST['date_val'], $_POST['poids'],
+                                $_POST['unit_mes'], $_GET['id_cli'], $_GET['id_march'],
+                                $_POST['date_exp'], $_SESSION['id_util'], $_POST['destination'],
                                 $_POST['acheteur'], $_POST['id_mod_trans'], $_POST['id_banq']);
 
   }
 
   if (isset($_POST['activationLicence'])) {
-    
-    for ($i=1; $i <= $_POST['nbre'] ; $i++) { 
-      
+
+    for ($i=1; $i <= $_POST['nbre'] ; $i++) {
+
       $maClasse-> MAJ_affichier_tracking($_POST['num_lic_'.$i], $_POST['affichier_tracking_'.$i]);
 
     }
@@ -783,14 +783,14 @@ for ($i=1; $i <= 15 ; $i++) {
 
                               if ( isset($_POST['ref_dos_'.$i]) && ($_POST['ref_dos_'.$i]!='') && isset($_POST['num_lic_'.$i]) && ($_POST['num_lic_'.$i]!='') && isset($_POST['poids_'.$i]) && ($_POST['poids_'.$i] != '') ) {
 
-                                $maClasse-> creerDossierIBAcid($_POST['ref_dos_'.$i], $_POST['mca_b_ref_'.$i], $_GET['id_cli'], 
-                                                        $_POST['ref_fact_'.$i], $_POST['t1_'.$i], 
-                                                        $_POST['poids_'.$i], $_POST['num_lic_'.$i], 
-                                                        $_GET['id_mod_trac'], $_GET['id_march'], 
-                                                        $_GET['id_mod_trans'], $_SESSION['id_util'], 
-                                                        $_POST['horse_'.$i], $_POST['trailer_1_'.$i], 
-                                                        $_POST['trailer_2_'.$i], $_POST['klsa_arriv_'.$i], 
-                                                        $_POST['crossing_date_'.$i], 
+                                $maClasse-> creerDossierIBAcid($_POST['ref_dos_'.$i], $_POST['mca_b_ref_'.$i], $_GET['id_cli'],
+                                                        $_POST['ref_fact_'.$i], $_POST['t1_'.$i],
+                                                        $_POST['poids_'.$i], $_POST['num_lic_'.$i],
+                                                        $_GET['id_mod_trac'], $_GET['id_march'],
+                                                        $_GET['id_mod_trans'], $_SESSION['id_util'],
+                                                        $_POST['horse_'.$i], $_POST['trailer_1_'.$i],
+                                                        $_POST['trailer_2_'.$i], $_POST['klsa_arriv_'.$i],
+                                                        $_POST['crossing_date_'.$i],
                                                         $_POST['wiski_arriv_'.$i], $_POST['wiski_dep_'.$i],
                                                         $_POST['ref_crf_'.$i], $_POST['date_crf_'.$i], $_POST['fob_'.$i]);
                               }
@@ -799,51 +799,51 @@ for ($i=1; $i <= 15 ; $i++) {
 
                           }else{
 
-                            $maClasse-> creerDossierIB($_POST['ref_dos'], 
-                                                      $_POST['mca_b_ref'], $_GET['id_cli'], $_POST['ref_fact'], 
-                                                      $_POST['fob'],$_POST['fret'], $_POST['assurance'], 
-                                                      $_POST['autre_frais'], $_POST['num_lic'], $_GET['id_mod_trac'], 
+                            $maClasse-> creerDossierIB($_POST['ref_dos'],
+                                                      $_POST['mca_b_ref'], $_GET['id_cli'], $_POST['ref_fact'],
+                                                      $_POST['fob'],$_POST['fret'], $_POST['assurance'],
+                                                      $_POST['autre_frais'], $_POST['num_lic'], $_GET['id_mod_trac'],
                                                       $_GET['id_march'], $_GET['id_mod_trans'],
                                                       NULL, $_POST['cod'], $_SESSION['id_util'],
-                                                      $_POST['road_manif'], $_POST['date_preal'], $_POST['t1'], 
-                                                      $_POST['poids'], $_POST['po_ref'], $_POST['commodity'], 
-                                                      $_POST['horse'], $_POST['trailer_1'], $_POST['trailer_2'], 
-                                                      $_POST['cod'], $_POST['date_crf'], NULL, $_POST['supplier'], 
-                                                      $_POST['temporelle'], 
-                                                      $_POST['frontiere'], 
+                                                      $_POST['road_manif'], $_POST['date_preal'], $_POST['t1'],
+                                                      $_POST['poids'], $_POST['po_ref'], $_POST['commodity'],
+                                                      $_POST['horse'], $_POST['trailer_1'], $_POST['trailer_2'],
+                                                      $_POST['cod'], $_POST['date_crf'], NULL, $_POST['supplier'],
+                                                      $_POST['temporelle'],
+                                                      $_POST['frontiere'],
                                                       $_POST['regime']);
 
                           }
 
                         }
                         else if($_GET['id_mod_trac'] == '1' && ($_GET['id_march'] == '18' || $_GET['id_march'] == '21' || $_GET['id_march'] == '22')){
-                          $maClasse-> creerDossierIB($_POST['ref_dos'], $_POST['mca_b_ref'], $_GET['id_cli'], $_POST['ref_fact'], 
-                                                      $_POST['fob'],$_POST['fret'], $_POST['assurance'], 
-                                                      $_POST['autre_frais'], $_POST['num_lic'], $_GET['id_mod_trac'], 
+                          $maClasse-> creerDossierIB($_POST['ref_dos'], $_POST['mca_b_ref'], $_GET['id_cli'], $_POST['ref_fact'],
+                                                      $_POST['fob'],$_POST['fret'], $_POST['assurance'],
+                                                      $_POST['autre_frais'], $_POST['num_lic'], $_GET['id_mod_trac'],
                                                       $_GET['id_march'], $_GET['id_mod_trans'],
                                                       NULL, $_POST['cod'], $_SESSION['id_util'],
-                                                      $_POST['road_manif'], $_POST['date_preal'], $_POST['t1'], 
-                                                      $_POST['poids'], $_POST['po_ref'], $_POST['commodity'], 
-                                                      $_POST['horse'], $_POST['trailer_1'], $_POST['trailer_2'], 
-                                                      $_POST['cod'], $_POST['date_crf'], NULL, $_POST['supplier'], 
+                                                      $_POST['road_manif'], $_POST['date_preal'], $_POST['t1'],
+                                                      $_POST['poids'], $_POST['po_ref'], $_POST['commodity'],
+                                                      $_POST['horse'], $_POST['trailer_1'], $_POST['trailer_2'],
+                                                      $_POST['cod'], $_POST['date_crf'], NULL, $_POST['supplier'],
                                                       $_POST['temporelle']);
                         }
                         else if($_GET['id_mod_trac'] == '1'){
 
                           if ($_GET['id_cli'] == '874') {
-                            
-                            for ($i=1; $i <= $_POST['nbre'] ; $i++) { 
-                              
+
+                            for ($i=1; $i <= $_POST['nbre'] ; $i++) {
+
                               if ( isset($_POST['ref_dos_'.$i]) && ($_POST['ref_dos_'.$i]!='') && isset($_POST['num_lic_'.$i]) && ($_POST['num_lic_'.$i]!='') && isset($_POST['num_lot_'.$i]) && ($_POST['num_lot_'.$i] != '') ) {
 
-                                $maClasse-> creerDossierEBAMC($_POST['ref_dos_'.$i], $_GET['id_cli'], 
-                                                      $_POST['num_lic_'.$i], $_GET['id_march'], 
-                                                      1, $_GET['id_mod_trans'], 
-                                                      $_SESSION['id_util'], $_POST['num_lot_'.$i], 
-                                                      $_POST['horse_'.$i], $_POST['trailer_1_'.$i], 
-                                                      $_POST['trailer_2_'.$i], $_POST['site_load_'.$i], 
-                                                      $_POST['destination_'.$i], $_POST['barge_'.$i], 
-                                                      $_POST['nbr_bags_'.$i], $_POST['poids_'.$i], 
+                                $maClasse-> creerDossierEBAMC($_POST['ref_dos_'.$i], $_GET['id_cli'],
+                                                      $_POST['num_lic_'.$i], $_GET['id_march'],
+                                                      1, $_GET['id_mod_trans'],
+                                                      $_SESSION['id_util'], $_POST['num_lot_'.$i],
+                                                      $_POST['horse_'.$i], $_POST['trailer_1_'.$i],
+                                                      $_POST['trailer_2_'.$i], $_POST['site_load_'.$i],
+                                                      $_POST['destination_'.$i], $_POST['barge_'.$i],
+                                                      $_POST['nbr_bags_'.$i], $_POST['poids_'.$i],
                                                       $_POST['kapulo_load_'.$i], $_POST['ship_num_'.$i]);
 
                               }
@@ -852,7 +852,7 @@ for ($i=1; $i <= 15 ; $i++) {
 
                           }else{
 
-                            for ($i=1; $i <= $_POST['nbre'] ; $i++) { 
+                            for ($i=1; $i <= $_POST['nbre'] ; $i++) {
                               /*
                             ?>
                             <script type="text/javascript">
@@ -862,22 +862,22 @@ for ($i=1; $i <= 15 ; $i++) {
                             */
                               if ( isset($_POST['ref_dos_'.$i]) && ($_POST['ref_dos_'.$i]!='') && isset($_POST['num_lic_'.$i]) && ($_POST['num_lic_'.$i]!='') && isset($_POST['num_lot_'.$i]) && ($_POST['num_lot_'.$i] != '') ) {
 
-                                $maClasse-> creerDossierEB($_POST['ref_dos_'.$i], $_GET['id_cli'], 
-                                                      $_POST['num_lic_'.$i], $_GET['id_march'], 
-                                                      1, $_GET['id_mod_trans'], 
-                                                      $_SESSION['id_util'], $_POST['num_lot_'.$i], 
-                                                      $_POST['horse_'.$i], $_POST['trailer_1_'.$i], 
-                                                      $_POST['trailer_2_'.$i], $_POST['site_load_'.$i], 
-                                                      $_POST['destination_'.$i], $_POST['transporter_'.$i], 
-                                                      $_POST['nbr_bags_'.$i], $_POST['poids_'.$i], 
-                                                      $_POST['load_date_'.$i], $_POST['dgda_seal_'.$i], 
+                                $maClasse-> creerDossierEB($_POST['ref_dos_'.$i], $_GET['id_cli'],
+                                                      $_POST['num_lic_'.$i], $_GET['id_march'],
+                                                      1, $_GET['id_mod_trans'],
+                                                      $_SESSION['id_util'], $_POST['num_lot_'.$i],
+                                                      $_POST['horse_'.$i], $_POST['trailer_1_'.$i],
+                                                      $_POST['trailer_2_'.$i], $_POST['site_load_'.$i],
+                                                      $_POST['destination_'.$i], $_POST['transporter_'.$i],
+                                                      $_POST['nbr_bags_'.$i], $_POST['poids_'.$i],
+                                                      $_POST['load_date_'.$i], $_POST['dgda_seal_'.$i],
                                                       $_POST['container_'.$i], $_POST['pied_container_'.$i]);
 
                               }
 
                           }
 
-                          
+
 
                           }
 
@@ -1013,22 +1013,22 @@ for ($i=1; $i <= 15 ; $i++) {
                     </form>
                     <?php
                      /* if($_GET['id_mod_trac'] == '1' && $_SESSION['id_role'] != '7' && $_SESSION['id_role'] != '8' && $_SESSION['id_role'] != '9' && $_SESSION['id_role'] != '10'){
-                        ?>  
+                        ?>
                     <button class="btn btn-xs btn-info square-btn-adjust" data-toggle="modal" data-target=".updateExport" <?php echo $maClasse-> getDataUtilisateur($_SESSION['id_util'])['tracking_enab']?>>
                         <i class="fa fa-edit"></i> Update Multiple Files
                     </button>
                         <?php
                       }else */if(/*$_GET['id_mod_trac'] == '2' && */$_SESSION['id_role'] != '7' && $_SESSION['id_role'] != '8' && $_SESSION['id_role'] != '9' && $_SESSION['id_role'] != '10'){
-                        ?>  
+                        ?>
                     <button class="btn btn-xs btn-info square-btn-adjust" data-toggle="modal" data-target=".update" <?php echo $maClasse-> getDataUtilisateur($_SESSION['id_util'])['tracking_enab']?>>
                         <i class="fa fa-edit"></i> Update Multiple Files
                     </button>
                         <?php
                       }
-                      
+
                       //echo date('y');
                     ?>
-                    
+
                     <button type="button" class="btn btn-xs small btn-success dropdown-toggle dropdown-icon" data-toggle="dropdown">
                       <i class="fas fa-file-excel"></i> Export
                       <div class="dropdown-menu small" role="menu">
@@ -1050,13 +1050,6 @@ for ($i=1; $i <= 15 ; $i++) {
                           Export <?php echo $maClasse-> getMarchandise($_GET['id_march']);?> 2024 Files
                         </a>
                         <a class="dropdown-item" href="#"><hr></a>
-                        <a class="dropdown-item"onclick="window.location.replace('exportExcel2.php?id_cli=<?php echo $_GET['id_cli']; ?>&id_mod_trans=<?php echo $_GET['id_mod_trans']; ?>&id_mod_trac=<?php echo $_GET['id_mod_trac']; ?>&commodity=<?php echo $_GET['commodity']; ?>&statut=<?php echo $_GET['statut'];?>&id_march=&annee=2023','pop1','width=80,height=80');">
-                          Export All 2023 Files
-                        </a>
-                        <a class="dropdown-item"onclick="window.location.replace('exportExcel2.php?id_cli=<?php echo $_GET['id_cli']; ?>&id_mod_trans=<?php echo $_GET['id_mod_trans']; ?>&id_mod_trac=<?php echo $_GET['id_mod_trac']; ?>&commodity=<?php echo $_GET['commodity']; ?>&statut=<?php echo $_GET['statut'];?>&id_march=<?php echo $_GET['id_march'];?>&annee=2023','pop1','width=80,height=80');">
-                          Export <?php echo $maClasse-> getMarchandise($_GET['id_march']);?> 2023 Files
-                        </a>
-                        <a class="dropdown-item" href="#"><hr></a>
                       </div>
                     </button>
 
@@ -1065,7 +1058,7 @@ for ($i=1; $i <= 15 ; $i++) {
               <!-- /.card-header -->
 
                 <?php
-                  
+
                         $nombre_dossier_par_page = $maClasse-> getUtilisateur($_SESSION['id_util'])['ligne'];
                         $debut_affichage_pagination = 1;
 
@@ -1090,7 +1083,7 @@ for ($i=1; $i <= 15 ; $i++) {
                            $page = 1;
                         }
                         $premiere_entree=($page_actuelle-1)*$nombre_dossier_par_page; // On calcul la première entrée à lire
-                        
+
 
                 ?>
             <form method="POST" action="">
@@ -1101,7 +1094,7 @@ for ($i=1; $i <= 15 ; $i++) {
                       </button>
                     </div>
                   </div>
-                  
+
               <div class="card-body table-responsive p-0 cadre-tableau-de-donnees">
     <div id="alert_message"></div>
 
@@ -1120,12 +1113,12 @@ for ($i=1; $i <= 15 ; $i++) {
                   </thead>
                   <tbody>
                     <?php
-                        
+
 
                         if (isset($_POST['rech'])) {
-                          
-                          $maClasse-> afficherRowDossierClientModeTransportModeLicence2Recherche($_POST['ref_dos'], $_GET['id_cli'], 
-                                                $_GET['id_mod_trans'], $_GET['id_mod_trac'], $_GET['commodity'], 
+
+                          $maClasse-> afficherRowDossierClientModeTransportModeLicence2Recherche($_POST['ref_dos'], $_GET['id_cli'],
+                                                $_GET['id_mod_trans'], $_GET['id_mod_trac'], $_GET['commodity'],
                                                 $_GET['id_march'], $_GET['statut'], $_GET['num_lic'], $_GET['cleared']);
                           ?>
                           <tr>
@@ -1138,9 +1131,9 @@ for ($i=1; $i <= 15 ; $i++) {
                         }
 
 
-                        $maClasse-> afficherRowDossierClientModeTransportModeLicence2($_GET['id_cli'], 
-                                                $_GET['id_mod_trans'], $_GET['id_mod_trac'], $_GET['commodity'], 
-                                                $premiere_entree, $nombre_dossier_par_page, $_GET['id_march'], 
+                        $maClasse-> afficherRowDossierClientModeTransportModeLicence2($_GET['id_cli'],
+                                                $_GET['id_mod_trans'], $_GET['id_mod_trac'], $_GET['commodity'],
+                                                $premiere_entree, $nombre_dossier_par_page, $_GET['id_march'],
                                                 $_GET['statut'], $_GET['num_lic'], $_GET['cleared']);
 
 
@@ -1156,9 +1149,9 @@ for ($i=1; $i <= 15 ; $i++) {
                       </button>
                     </div>
                   </div>
-                  
-                    
-        
+
+
+
                     </form>
               <div>
                 <hr>
@@ -1606,7 +1599,7 @@ if( isset($_GET['id_mod_trac']) && ($_GET['id_mod_trac']=='2' && $_GET['id_cli']
           <span id="msg_check_camion"></span>
         </div>
         <div class="col-md-12">
-          
+
             <div class="card">
               <div class="card-header d-flex p-0">
                 <h3 class="card-title p-3"></h3>
@@ -1619,14 +1612,14 @@ if( isset($_GET['id_mod_trac']) && ($_GET['id_mod_trac']=='2' && $_GET['id_cli']
                 <div class="tab-content">
                   <div class="tab-pane active" id="tab_1">
                     <div class="row">
-                      
+
                       <input type="hidden" name="id_cli" id="id_cli" value="<?php echo $_GET['id_cli'];?>" class="form-control form-control-sm cc-exp" required>
 
                       <div class="col-md-3">
                         <label for="x_card_code" class="control-label mb-1">MCA FILE NUMBER</label>
                         <input type="text" name="ref_dos" id="ref_dos_a" onblur="function_mca_b_ref_a()" value="<?php echo $maClasse-> getMcaFile($_GET['id_cli'], $_GET['id_mod_trans']);?>" class="form-control form-control-sm cc-exp" required>
                       </div>
-                
+
                       <div class="col-md-3">
                         <label for="x_card_code" class="control-label mb-1">PRE-ALERT DATE</label>
                         <input type="date" id="date_new" onchange="is_weekend(this.value);" name="date_preal" class="form-control form-control-sm cc-exp">
@@ -1720,11 +1713,11 @@ if( isset($_GET['id_mod_trac']) && ($_GET['id_mod_trac']=='2' && $_GET['id_cli']
                       <input type="hidden" name="supplier" value="" class="form-control form-control-sm cc-exp">
                       <div class="col-md-3">
                         <label for="x_card_code" class="control-label mb-1">BALANCE FOB LICENCE</label>
-                        
+
                         <!-- <input type="text" id="balance_fob_licence" name="balance_fob" class="form-control form-control-sm cc-exp"> -->
                         <span id="balance_fob_licence" class="balance_fob_licence" name="balance_fob_licence"></span>
                       </div>
-             
+
                       <div class="col-md-3">
                         <label for="x_card_code" class="control-label mb-1">CRF REF</label>
                         <!-- <input type="text" name="cod" class="form-control form-control-sm cc-exp"> -->
@@ -1740,17 +1733,17 @@ if( isset($_GET['id_mod_trac']) && ($_GET['id_mod_trac']=='2' && $_GET['id_cli']
 
                       <div class="col-md-3">
                         <label for="x_card_code" class="control-label mb-1">BALANCE FOB PARTIELLE</label>
-                        
+
                         <!-- <input type="text" id="balance_fob_licence" name="balance_fob" class="form-control form-control-sm cc-exp"> -->
                         <span id="balance_fob_partielle" name="balance_fob_partielle"></span>
                       </div>
-             
+
                       <div class="col-md-3">
                         <label for="x_card_code" class="control-label mb-1">FOB DECLAREE</label>
                         <span id="fob" class="fob" name="fob"></span>
                         <!-- <input type="number" min="0" step="0.001" name="fob" class="form-control form-control-sm cc-exp"> -->
                       </div>
-             
+
                       <div class="col-md-3">
                         <label for="x_card_code" class="control-label mb-1">FRET</label>
                         <!--<span id="fret"></span>-->
@@ -1771,11 +1764,11 @@ if( isset($_GET['id_mod_trac']) && ($_GET['id_mod_trac']=='2' && $_GET['id_cli']
 
                       <div class="col-md-3">
                         <label for="x_card_code" class="control-label mb-1">BALANCE WEIGHT</label>
-                        
+
                         <!-- <input type="text" id="balance_fob_licence" name="balance_fob" class="form-control form-control-sm cc-exp"> -->
                         <span id="balance_poids_licence" class="balance_poids_licence" name="balance_poids_licence"></span>
                       </div>
-             
+
                       <div class="col-md-3">
                         <label for="x_card_code" class="control-label mb-1">WEIGHT</label>
                         <!-- <input type="number" min="0" step="0.001" name="poids" class="form-control form-control-sm cc-exp"> -->
@@ -1803,16 +1796,16 @@ if( isset($_GET['id_mod_trac']) && ($_GET['id_mod_trac']=='2' && $_GET['id_cli']
                       <!-- <input type="hidden" name="supplier" value="" class="form-control form-control-sm cc-exp"> -->
                       <div class="col-md-3">
                         <label for="x_card_code" class="control-label mb-1">FOURNISSEUR</label>
-                        
+
                         <input type="text" name="supplier" class="form-control form-control-sm cc-exp">
                       </div>
-             
+
                       <div class="col-md-3">
                         <label for="x_card_code" class="control-label mb-1">FOB DECLAREE</label>
                         <!-- <span id="fob"></span> -->
                         <input type="number" min="0" step="0.001" name="fob" class="form-control form-control-sm cc-exp">
                       </div>
-             
+
                       <div class="col-md-3">
                         <label for="x_card_code" class="control-label mb-1">FRET</label>
                         <!--<span id="fret"></span>-->
@@ -1869,7 +1862,7 @@ if( isset($_GET['id_mod_trac']) && ($_GET['id_mod_trac']=='2' && $_GET['id_cli']
                         <label for="x_card_code" class="control-label mb-1">AV AVEC MASK</label>
                         <span id="cod_dos_1"></span>
                       </div>-->
-             
+
                       <div class="col-md-3">
                         <label for="x_card_code" class="control-label mb-1">T1</label>
                         <input type="text" name="t1" class="form-control form-control-sm cc-exp">
@@ -1985,7 +1978,7 @@ if( isset($_GET['id_mod_trac']) && ($_GET['id_mod_trac']=='2' && $_GET['id_cli']
             </div>
         </div>
 <!-- ------------------------------------------------------------------ -->
-          
+
         </div>
       </div>
       <div class="modal-footer justify-content-between">
@@ -1999,7 +1992,7 @@ if( isset($_GET['id_mod_trac']) && ($_GET['id_mod_trac']=='2' && $_GET['id_cli']
   <!-- /.modal-dialog -->
 </div>
 <script type="text/javascript">
-  
+
   $(document).ready(function(){
     function_mca_b_ref_a();
   });
@@ -2009,7 +2002,7 @@ if( isset($_GET['id_mod_trac']) && ($_GET['id_mod_trac']=='2' && $_GET['id_cli']
     var today   = new Date();
     var annee = today.getYear();
     $('#annee').val(annee);
-    
+
     // const xmas = new Date("1995-12-25");
     // const year = xmas.getYear(); // returns 95
 
@@ -2057,7 +2050,7 @@ if( isset($_GET['id_mod_trac']) && ($_GET['id_mod_trac']=='2' && $_GET['id_cli']
         <div class="row">
 <!-- ------------------------------------------------------------------ -->
         <div class="col-md-12">
-          
+
             <div class="card">
               <div class="card-header d-flex p-0">
                 <h3 class="card-title p-3"></h3>
@@ -2070,7 +2063,7 @@ if( isset($_GET['id_mod_trac']) && ($_GET['id_mod_trac']=='2' && $_GET['id_cli']
                 <div class="tab-content">
                   <div class="tab-pane active" id="tab_1">
                     <div class="row">
-                      
+
 
                       <div class="col-md-3">
                         <label for="x_card_code" class="control-label mb-1">CLIENT</label>
@@ -2078,7 +2071,7 @@ if( isset($_GET['id_mod_trac']) && ($_GET['id_mod_trac']=='2' && $_GET['id_cli']
                             <option value="<?php echo $_GET['id_cli'];?>"><?php echo $maClasse-> getNomClient($_GET['id_cli']);?></option>
                             <?php
                                 //$maClasse->selectionnerClientModeleLicence($modele['id_mod_lic']);
-                              
+
                             ?>
                         </select>
                       </div>
@@ -2087,7 +2080,7 @@ if( isset($_GET['id_mod_trac']) && ($_GET['id_mod_trac']=='2' && $_GET['id_cli']
                         <label for="x_card_code" class="control-label mb-1">MCA FILE NUMBER</label>
                         <input type="text" name="ref_dos" id="ref_dos_c" onblur="function_mca_b_ref_c()" value="<?php echo $maClasse-> getMcaFileExport($_GET['id_cli'], $_GET['id_mod_trans'], $_GET['id_march'], $_GET['id_mod_trac'], 1);?>" class="form-control cc-exp" required>
                       </div>
-                
+
                       <div class="col-md-3">
                         <label for="x_card_code" class="control-label mb-1">N<sup><u>o</u></sup> FACTURE</label>
                         <input type="text" name="ref_fact" class="form-control cc-exp" required>
@@ -2117,16 +2110,16 @@ if( isset($_GET['id_mod_trac']) && ($_GET['id_mod_trac']=='2' && $_GET['id_cli']
                       <input type="hidden" name="supplier" value="" class="form-control cc-exp">
                       <!-- <div class="col-md-3">
                         <label for="x_card_code" class="control-label mb-1">FOURNISSEUR</label>
-                        
+
                         <input type="text" name="supplier" class="form-control cc-exp">
                       </div> -->
-             
+
                       <div class="col-md-3">
                         <label for="x_card_code" class="control-label mb-1">FOB DECLAREE</label>
                         <!-- <span id="fob"></span> -->
                         <input type="number" min="0" step="0.001" name="fob" class="form-control cc-exp">
                       </div>
-             
+
                       <div class="col-md-3">
                         <label for="x_card_code" class="control-label mb-1">FRET</label>
                         <!--<span id="fret"></span>-->
@@ -2150,8 +2143,8 @@ if( isset($_GET['id_mod_trac']) && ($_GET['id_mod_trac']=='2' && $_GET['id_cli']
                         <input type="number" min="0" step="0.001" name="poids" class="form-control cc-exp">
                       </div>
 
-                      <input type="hidden" name="cod" value="" class="form-control cc-exp"> 
-<!-- 
+                      <input type="hidden" name="cod" value="" class="form-control cc-exp">
+<!--
                       <div class="col-md-3">
                         <label for="x_card_code" class="control-label mb-1">CRF REF</label>
                         <input type="text" name="cod" class="form-control cc-exp">
@@ -2176,16 +2169,16 @@ if( isset($_GET['id_mod_trac']) && ($_GET['id_mod_trac']=='2' && $_GET['id_cli']
                       <input type="hidden" name="supplier" value="" class="form-control cc-exp">
                       <!-- <div class="col-md-3">
                         <label for="x_card_code" class="control-label mb-1">FOURNISSEUR</label>
-                        
+
                         <input type="text" name="supplier" class="form-control cc-exp">
                       </div> -->
-             
+
                       <div class="col-md-3">
                         <label for="x_card_code" class="control-label mb-1">FOB DECLAREE</label>
                         <!-- <span id="fob"></span> -->
                         <input type="number" min="0" step="0.001" name="fob" class="form-control cc-exp">
                       </div>
-             
+
                       <div class="col-md-3">
                         <label for="x_card_code" class="control-label mb-1">FRET</label>
                         <!--<span id="fret"></span>-->
@@ -2209,8 +2202,8 @@ if( isset($_GET['id_mod_trac']) && ($_GET['id_mod_trac']=='2' && $_GET['id_cli']
                         <input type="number" min="0" step="0.001" name="poids" class="form-control cc-exp">
                       </div>
 
-                      <input type="hidden" name="cod" value="" class="form-control cc-exp"> 
-<!-- 
+                      <input type="hidden" name="cod" value="" class="form-control cc-exp">
+<!--
                       <div class="col-md-3">
                         <label for="x_card_code" class="control-label mb-1">CRF REF</label>
                         <input type="text" name="cod" class="form-control cc-exp">
@@ -2219,7 +2212,7 @@ if( isset($_GET['id_mod_trac']) && ($_GET['id_mod_trac']=='2' && $_GET['id_cli']
                           <?php
                         }
                       ?>
-                      <input type="hidden" name="po_ref" value="" class="form-control cc-exp"> 
+                      <input type="hidden" name="po_ref" value="" class="form-control cc-exp">
                       <input type="hidden"  onchange="is_weekend(this.value);" value="" name="date_crf" class="form-control cc-exp">
                       <!-- <div class="col-md-3">
                         <label for="x_card_code" class="control-label mb-1">CRF RECEIVED DATE</label>
@@ -2244,7 +2237,7 @@ if( isset($_GET['id_mod_trac']) && ($_GET['id_mod_trac']=='2' && $_GET['id_cli']
                         <label for="x_card_code" class="control-label mb-1">AV AVEC MASK</label>
                         <span id="cod_dos_1"></span>
                       </div>-->
-             
+
                       <div class="col-md-3">
                         <label for="x_card_code" class="control-label mb-1">PRE-ALERT DATE</label>
                         <input type="date" id="date_new" onchange="is_weekend(this.value);" name="date_preal" class="form-control cc-exp">
@@ -2346,7 +2339,7 @@ if( isset($_GET['id_mod_trac']) && ($_GET['id_mod_trac']=='2' && $_GET['id_cli']
             </div>
         </div>
 <!-- ------------------------------------------------------------------ -->
-          
+
         </div>
       </div>
       <div class="modal-footer justify-content-between">
@@ -2361,7 +2354,7 @@ if( isset($_GET['id_mod_trac']) && ($_GET['id_mod_trac']=='2' && $_GET['id_cli']
 </div>
 
 <script type="text/javascript">
-  
+
   $(document).ready(function(){
     function_mca_b_ref_c();
   });
@@ -2371,7 +2364,7 @@ if( isset($_GET['id_mod_trac']) && ($_GET['id_mod_trac']=='2' && $_GET['id_cli']
     var today   = new Date();
     var annee = today.getYear();
     $('#annee').val(annee);
-    
+
     // const xmas = new Date("1995-12-25");
     // const year = xmas.getYear(); // returns 95
 
@@ -2414,11 +2407,11 @@ include('nouveauExport.php');
 <?php
 
 if(isset($_GET['id_mod_trac']) && isset($_GET['id_mod_trac'])){
-  
+
 
   $modele = $maClasse-> getElementModeleLicence($_GET['id_mod_trac']);
   //$marchandise = $maClasse-> getElementMarchandise($_GET['id_march']);
-  
+
 ?>
 
 <div class="modal fade update" id="modal-default">
