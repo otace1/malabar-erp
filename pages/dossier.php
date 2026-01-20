@@ -1094,33 +1094,22 @@ if (isset($_POST['activationLicence'])) {
                 <button type="button" class="btn btn-xs small btn-success dropdown-toggle dropdown-icon" data-toggle="dropdown">
                   <i class="fas fa-file-excel"></i> Export
                   <div class="dropdown-menu small" role="menu">
-                    <a class="dropdown-item" onclick="window.location.replace('exportExcel2.php?id_cli=<?php echo $_GET['id_cli']; ?>&id_mod_trans=<?php echo $_GET['id_mod_trans']; ?>&id_mod_trac=<?php echo $_GET['id_mod_trac']; ?>&commodity=<?php echo $_GET['commodity']; ?>&statut=<?php echo $_GET['statut']; ?>&id_march=&annee=2026','pop1','width=80,height=80');">
-                      Export All 2026 Files
+                    <?php
+                      for ($annee_export_file=date('Y'); $annee_export_file >= 2023 ; $annee_export_file--) { 
+                        ?>
+                    <a class="dropdown-item small" onclick="window.location.replace('exportExcel2.php?id_cli=<?php echo $_GET['id_cli']; ?>&id_mod_trans=<?php echo $_GET['id_mod_trans']; ?>&id_mod_trac=<?php echo $_GET['id_mod_trac']; ?>&commodity=<?php echo $_GET['commodity']; ?>&statut=<?php echo $_GET['statut']; ?>&id_march=&annee=<?php echo $annee_export_file;?>','pop1','width=80,height=80');">
+                      Export All <?php echo $annee_export_file;?> Files
                     </a>
-                    <a class="dropdown-item" onclick="window.location.replace('exportExcel2.php?id_cli=<?php echo $_GET['id_cli']; ?>&id_mod_trans=<?php echo $_GET['id_mod_trans']; ?>&id_mod_trac=<?php echo $_GET['id_mod_trac']; ?>&commodity=<?php echo $_GET['commodity']; ?>&statut=<?php echo $_GET['statut']; ?>&id_march=<?php echo $_GET['id_march']; ?>&annee=2026','pop1','width=80,height=80');">
-                      Export <?php echo $maClasse->getMarchandise($_GET['id_march']); ?> 2026 Files
+                    <a class="dropdown-item small" onclick="window.location.replace('exportExcel2.php?id_cli=<?php echo $_GET['id_cli']; ?>&id_mod_trans=<?php echo $_GET['id_mod_trans']; ?>&id_mod_trac=<?php echo $_GET['id_mod_trac']; ?>&commodity=<?php echo $_GET['commodity']; ?>&statut=<?php echo $_GET['statut']; ?>&id_march=<?php echo $_GET['id_march']; ?>&annee=<?php echo $annee_export_file;?>','pop1','width=80,height=80');">
+                      Export <?php echo $maClasse->getMarchandise($_GET['id_march']); ?> <?php echo $annee_export_file;?> Files
                     </a>
-                    <a class="dropdown-item" href="#">
+                    <a class="dropdown-item small" href="#">
                       <hr>
                     </a>
-                    <a class="dropdown-item" onclick="window.location.replace('exportExcel2.php?id_cli=<?php echo $_GET['id_cli']; ?>&id_mod_trans=<?php echo $_GET['id_mod_trans']; ?>&id_mod_trac=<?php echo $_GET['id_mod_trac']; ?>&commodity=<?php echo $_GET['commodity']; ?>&statut=<?php echo $_GET['statut']; ?>&id_march=&annee=2025','pop1','width=80,height=80');">
-                      Export All 2025 Files
-                    </a>
-                    <a class="dropdown-item" onclick="window.location.replace('exportExcel2.php?id_cli=<?php echo $_GET['id_cli']; ?>&id_mod_trans=<?php echo $_GET['id_mod_trans']; ?>&id_mod_trac=<?php echo $_GET['id_mod_trac']; ?>&commodity=<?php echo $_GET['commodity']; ?>&statut=<?php echo $_GET['statut']; ?>&id_march=<?php echo $_GET['id_march']; ?>&annee=2025','pop1','width=80,height=80');">
-                      Export <?php echo $maClasse->getMarchandise($_GET['id_march']); ?> 2025 Files
-                    </a>
-                    <a class="dropdown-item" href="#">
-                      <hr>
-                    </a>
-                    <a class="dropdown-item" onclick="window.location.replace('exportExcel2.php?id_cli=<?php echo $_GET['id_cli']; ?>&id_mod_trans=<?php echo $_GET['id_mod_trans']; ?>&id_mod_trac=<?php echo $_GET['id_mod_trac']; ?>&commodity=<?php echo $_GET['commodity']; ?>&statut=<?php echo $_GET['statut']; ?>&id_march=&annee=2024','pop1','width=80,height=80');">
-                      Export All 2024 Files
-                    </a>
-                    <a class="dropdown-item" onclick="window.location.replace('exportExcel2.php?id_cli=<?php echo $_GET['id_cli']; ?>&id_mod_trans=<?php echo $_GET['id_mod_trans']; ?>&id_mod_trac=<?php echo $_GET['id_mod_trac']; ?>&commodity=<?php echo $_GET['commodity']; ?>&statut=<?php echo $_GET['statut']; ?>&id_march=<?php echo $_GET['id_march']; ?>&annee=2024','pop1','width=80,height=80');">
-                      Export <?php echo $maClasse->getMarchandise($_GET['id_march']); ?> 2024 Files
-                    </a>
-                    <a class="dropdown-item" href="#">
-                      <hr>
-                    </a>
+                        <?php
+                      }
+                    ?>
+                    
                   </div>
                 </button>
 
