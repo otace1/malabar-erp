@@ -10865,11 +10865,13 @@
 													SUM(
 														IF(det.usd="1",
 															IF(det.tva="1",
-																det.montant*1.16,
+																-- det.montant*1.16,
+																IF(d.id_t_deb="1", det.montant_tva*1.16, det.montant*1.16),
 																det.montant
 															),
 															IF(det.tva="1",
-																(det.montant/dos.roe_decl)*1.16,
+																-- (det.montant/dos.roe_decl)*1.16,
+																IF(d.id_t_deb="1", (det.montant_tva/dos.roe_decl)*1.16, (det.montant/dos.roe_decl)*1.16),
 																(det.montant/dos.roe_decl)
 															)
 														)
@@ -10877,11 +10879,13 @@
 													SUM(
 														IF(det.usd="1",
 															IF(det.tva="1",
-																det.montant*0.16,
+																-- det.montant*0.16,
+																IF(d.id_t_deb="1", det.montant_tva*0.16, det.montant*0.16),
 																0
 															),
 															IF(det.tva="1",
-																(det.montant/dos.roe_decl)*0.16,
+																-- (det.montant/dos.roe_decl)*0.16,
+																IF(d.id_t_deb="1", (det.montant_tva/dos.roe_decl)*0.16, (det.montant/dos.roe_decl)*0.16),
 																0
 															)
 														)
