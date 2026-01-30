@@ -624,8 +624,6 @@ $tbl = <<<EOD
 			<td width="7%" style="text-align: center; border: 1 solid black; font-weight: bold; font-size: 7px;"><span><br>Liq. Amt. CDF</span></td>
 			<td width="6%" style="text-align: center; border: 1 solid black; font-weight: bold; font-size: 7px;"><span><br>Quittance Ref.</span></td>
 			<td width="6%" style="text-align: center; border: 1 solid black; font-weight: bold; font-size: 7px;"><span><br>Quittance Date</span></td>
-			<td width="12%" style="text-align: center; border: 1 solid black; font-weight: bold; font-size: 7px;"><span><br>Bank</span></td>
-			<td width="7%" style="text-align: center; border: 1 solid black; font-weight: bold; font-size: 7px;"><span><br>Bank Rate</span></td>
 			<td width="7%" style="text-align: center; border: 1 solid black; font-weight: bold; font-size: 7px;"><span><br>Liq. Amt. USD</span></td>
 		</tr>
 		$dossiers4
