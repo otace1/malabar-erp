@@ -1095,7 +1095,7 @@ if (isset($_POST['activationLicence'])) {
                   <i class="fas fa-file-excel"></i> Export
                   <div class="dropdown-menu small" role="menu">
                     <?php
-                      for ($annee_export_file=date('Y'); $annee_export_file >= 2023 ; $annee_export_file--) { 
+                      for ($annee_export_file=date('Y'); $annee_export_file >= 2022 ; $annee_export_file--) { 
                         ?>
                     <a class="dropdown-item small" onclick="window.location.replace('exportExcel2.php?id_cli=<?php echo $_GET['id_cli']; ?>&id_mod_trans=<?php echo $_GET['id_mod_trans']; ?>&id_mod_trac=<?php echo $_GET['id_mod_trac']; ?>&commodity=<?php echo $_GET['commodity']; ?>&statut=<?php echo $_GET['statut']; ?>&id_march=&annee=<?php echo $annee_export_file;?>','pop1','width=80,height=80');">
                       Export All <?php echo $annee_export_file;?> Files
