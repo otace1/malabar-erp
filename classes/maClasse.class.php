@@ -14014,7 +14014,8 @@
 					</tr>
 					';
 
-			}else if($reponse['id_cli']!='946' && $reponse['id_cli']!='904'){
+			// }else if($reponse['id_cli']!='946' && $reponse['id_cli']!='904'){
+			}else if($reponse['id_cli']!='946'){
 				$tbl .= '<tr>
 						<td style="text-align: left; font-weight: bold; border-left: 1px solid black; border-right: 0.5px solid black; border-top: 0.5px solid black;" colspan="2" width="49%"></td>
 						<td style="text-align: center; border-right: 0.5px solid black; border-top: 0.5px solid black;" colspan="2" width="5.5%"></td>
